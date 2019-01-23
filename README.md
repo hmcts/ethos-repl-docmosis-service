@@ -34,6 +34,32 @@ You can run the application by executing following command:
 
 The application will start locally on `http://localhost:8081`
 
+
+## Docker container
+
+### Docker image
+
+Build the docker image
+
+```bash
+    docker build . -t docmosis:latest
+```
+
+### Docker compose 
+
+Run the service with all its dependencies
+
+```bash
+    docker-compose -f docker/app.yml up -d
+```
+
+To stop the service
+
+```bash
+    docker-compose -f docker/app.yml down
+```
+
+
 ## Developing
 
 ### Unit tests
@@ -51,6 +77,7 @@ To run all checks (including unit tests) please execute following command:
 ```bash
     ./gradlew check
 ```
+
 
 ## License
 
