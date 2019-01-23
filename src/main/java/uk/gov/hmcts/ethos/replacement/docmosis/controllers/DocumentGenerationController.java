@@ -27,18 +27,18 @@ public class DocumentGenerationController {
         this.documentGenerationService = documentGenerationService;
     }
 
-    @GetMapping(value = "/generateDocument")
-    public ResponseEntity<Object> generateDocument() {
-        log.info("Generation Success: ");
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-//    @PostMapping(value = "/generateDocument", consumes = APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Object> generateDocument(@RequestBody DocumentRequest documentRequest) {
-//        boolean generationSuccess = documentGenerationService.processDocumentRequest(documentRequest);
-//        log.info("Generation Success: " + generationSuccess);
+//    @GetMapping(value = "/generateDocument")
+//    public ResponseEntity<Object> generateDocument() {
+//        log.info("Generation Success: ");
 //        return new ResponseEntity<>(HttpStatus.OK);
 //    }
+
+    @PostMapping(value = "/generateDocument", consumes = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> generateDocument(@RequestBody DocumentRequest documentRequest) {
+        boolean generationSuccess = documentGenerationService.processDocumentRequest(documentRequest);
+        log.info("Generation Success: " + generationSuccess);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 //    @PostMapping(value = "/case-orchestration/notify/hwf-successful", consumes = APPLICATION_JSON_VALUE)
