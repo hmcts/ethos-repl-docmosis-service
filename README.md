@@ -1,6 +1,6 @@
 # Ethos Replacement Doc Generation Service
 
-This application generates documents using Docmosis -> Tornado.
+This application generates documents from templates using Docmosis -> Tornado.
 
 ## Getting started
 
