@@ -4,30 +4,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.DocumentRequest;
-
-import java.io.IOException;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 
 @Service("documentGenerationService")
 public class DocumentGenerationService {
 
     private static final Logger log = LoggerFactory.getLogger(DocumentGenerationService.class);
-
     private final TornadoService tornadoService;
+    private static final String MESSAGE = "Failed to generate document for case id : ";
+    private static final String EXCEPTION = " Exception :";
 
     @Autowired
     public DocumentGenerationService(TornadoService tornadoService) {
         this.tornadoService = tornadoService;
     }
 
-    public boolean processDocumentRequest(DocumentRequest documentRequest) {
-        log.info("Processing document request " + documentRequest.getCreatedDate());
+    public void processDocumentRequest(CCDRequest ccdRequest, String authToken) {
+        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+        //log.info("Auth Token: " + authToken);
+        log.info("Case Details: " + caseDetails);
         try {
-            //tornadoService.documentGeneration(documentRequest, "WelcomeTemplate.doc");
-            tornadoService.documentGeneration(documentRequest, "PostponementRequestGenericTest.odt");
-        } catch (IOException e) {
-            e.printStackTrace();
+            tornadoService.documentGeneration(ccdRequest.getCaseDetails(), "PostponementRequestGenericTest.odt");
+        } catch (Exception ex) {
+            log.error(MESSAGE + caseDetails.getCaseId() + EXCEPTION + ex.getMessage());
         }
-        return true;
     }
+
 }
