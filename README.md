@@ -1,6 +1,6 @@
 # Ethos Replacement Doc Generation Service
 
-This application generate documents using Docmosis -> Tornado.
+This application generates documents from templates using Docmosis -> Tornado.
 
 ## Getting started
 
@@ -34,6 +34,14 @@ You can run the application by executing following command:
 
 The application will start locally on `http://localhost:8081`
 
+### API documentation
+
+API documentation is provided with Swagger:
+UI to interact with the API resources
+
+```bash
+    http://localhost:8081/swagger-ui.html
+```
 
 ## Docker container
 
@@ -42,7 +50,7 @@ The application will start locally on `http://localhost:8081`
 Build the docker image
 
 ```bash
-    docker build . -t docmosis:latest
+    docker build . -t hmcts/ethos-repl-docmosis-service:latest
 ```
 
 ### Docker compose 
