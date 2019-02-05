@@ -7,12 +7,14 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.6.2'
     }
 }
 
 plugins {
     id 'jacoco'
     id 'net.ltgt.apt' version '0.10'
+    id 'org.sonarqube' version '2.6.2'
     id 'java'
 }
 
@@ -20,6 +22,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.sonarqube'
 apply plugin: 'jacoco'
 
 group = 'uk.gov.hmcts.ethos.replacement'
@@ -51,6 +54,26 @@ dependencies {
     compile (group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger)
 }
 
+jar {
+    archiveName 'ethos-repl-docmosis-service.jar'
+}
+
+def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis/model/**',
+                       '**/uk/gov/hmcts/reform/ethos/replacement/docmosis/CaseOrchestrationApplication'
+]
+
+sonarqube {
+    println "echo sonarqube"
+    properties {
+        property "sonar.exclusions", sonarExclusions.join(', ')
+        property "sonar.projectKey", "ethos-repl-docmosis-service"
+        property "sonar.dynamicAnalysis", "reuseReports"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/test.exec"
+        property "sonar.dependencyCheck.reportPath", "${project.buildDir}/reports/dependency-check-report.xml"
+    }
+}
 
 jacocoTestReport {
     executionData(test)
