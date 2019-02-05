@@ -30,11 +30,11 @@ module "repl-docmosis-backend" {
   common_tags  = "${var.common_tags}"
 
   app_settings                         = {
-    POSTGRES_HOST                      = "${module.recipe-database.host_name}"
-    POSTGRES_PORT                      = "${module.recipe-database.postgresql_listen_port}"
-    POSTGRES_DATABASE                  = "${module.recipe-database.postgresql_database}"
-    POSTGRES_USER                      = "${module.recipe-database.user_name}"
-    POSTGRES_PASSWORD                  = "${module.recipe-database.postgresql_password}"
+//    POSTGRES_HOST                      = "${module.recipe-database.host_name}"
+//    POSTGRES_PORT                      = "${module.recipe-database.postgresql_listen_port}"
+//    POSTGRES_DATABASE                  = "${module.recipe-database.postgresql_database}"
+//    POSTGRES_USER                      = "${module.recipe-database.user_name}"
+//    POSTGRES_PASSWORD                  = "${module.recipe-database.postgresql_password}"
     WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = "${var.autoheal}"
   }
 }
@@ -45,7 +45,7 @@ module "key-vault" {
   env                     = "${var.env}"
   tenant_id               = "${var.tenant_id}"
   object_id               = "${var.jenkins_AAD_objectId}"
-  resource_group_name     = "${module.recipe-backend.resource_group_name}"
+  resource_group_name     = "${module.repl-docmosis-backend.resource_group_name}"
   # dcd_cc-dev group object ID
   product_group_object_id = "38f9dea6-e861-4a50-9e73-21e64f563537"
 }
