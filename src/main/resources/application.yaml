@@ -1,0 +1,16 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          heapdump,liquibase,loggers,prometheus,threaddump,info,metrics,health
+  health:
+    db:
+      enabled: true
+    defaults:
+      enabled: true
+    diskspace:
+      enabled: true
+
+server:
+  port: 8081
