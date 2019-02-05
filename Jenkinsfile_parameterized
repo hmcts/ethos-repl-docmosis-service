@@ -1,0 +1,39 @@
+#!groovy
+@Library(value="Infrastructure", changelog=false) _
+
+def apiTestSecrets = [ 'ethos-${env}' :
+  [
+    secret('test-client-key-store', 'TEST_CLIENT_KEY_STORE'),
+    secret('test-client-key-store-password', 'TEST_CLIENT_KEY_STORE_PASSWORD'),
+    secret('test-client-subscription-key', 'TEST_CLIENT_SUBSCRIPTION_KEY')
+  ]
+]
+
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+  [ $class: 'AzureKeyVaultSecret',
+    secretType: 'Secret',
+    name: secretName,
+    version: '',
+    envVariable: envVar
+  ]
+}
+
+properties([
+  parameters([
+    string(name: 'PRODUCT_NAME', defaultValue: 'ethos', description: ''),
+    string(name: 'APP', defaultValue: 'repl-docmosis-backend', description: ''),
+    string(name: 'TYPE', defaultValue: 'java', description: ''),
+    string(name: 'ENVIRONMENT', defaultValue: 'sandbox', description: 'Environment where code should be build and deployed'),
+    choice(name: 'SUBSCRIPTION', choices: 'sandbox\nnonprod\nprod\nhmctsdemo', description: 'Azure subscriptions available to build in')
+  ]),
+  [$class: 'GithubProjectProperty', projectUrlStr: 'github.com/hmcts/ethos-repl-docmosis-service'],
+  pipelineTriggers([[$class: 'GitHubPushTrigger']])
+])
+
+withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
+  enableApiGatewayTest()
+
+  onNonPR() {
+    loadVaultSecrets(apiTestSecrets)
+  }
+}
