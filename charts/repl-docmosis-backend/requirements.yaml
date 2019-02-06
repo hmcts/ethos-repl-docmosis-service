@@ -1,0 +1,4 @@
+dependencies:
+  - name: java
+    version: 0.0.5
+    repository: '@hmcts'

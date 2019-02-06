@@ -4,4 +4,4 @@ metadata:
   name: ${SERVICE_NAME}-config
   namespace: ${NAMESPACE}
 data:
-  RECIPE_BACKEND_URL: "http://ethos-repl-docmosis-service-saat.service.core-compute-saat.internal"
+  REPL_DOCMOSIS_BACKEND_URL: "http://ethos-repl-docmosis-service-saat.service.core-compute-saat.internal"
