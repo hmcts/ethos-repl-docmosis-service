@@ -19,5 +19,4 @@ withPipeline(type, product, component) {
   enableDockerBuild()
   enableDeployToAKS()
   installCharts()
-  enablePerformanceTest()
 }
