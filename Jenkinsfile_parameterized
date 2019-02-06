@@ -21,8 +21,3 @@ properties([
   [$class: 'GithubProjectProperty', projectUrlStr: 'github.com/hmcts/ethos-repl-docmosis-service'],
   pipelineTriggers([[$class: 'GitHubPushTrigger']])
 ])
-
-withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
-  enableApiGatewayTest()
-
-}
