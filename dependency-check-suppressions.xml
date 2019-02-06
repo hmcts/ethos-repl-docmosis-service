@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
+
+  <suppress>
+    <notes><![CDATA[ old version pulled by springfox (swagger) ]]></notes>
+    <gav regex="true">^com\.google\.guava:guava:.*$</gav>
+    <cve>CVE-2018-10237</cve>
+  </suppress>
+
+  <suppress>
+    <notes><![CDATA[ pulled by latest hystrix ]]></notes>
+    <gav regex="true">^org\.bouncycastle:bcprov-jdk15on:.*$</gav>
+    <cpe>cpe:/a:bouncycastle:legion-of-the-bouncy-castle-java-crytography-api</cpe>
+  </suppress>
+
+  <suppress>
+    <notes><![CDATA[
+   file name: d3js-3.4.11.jar
+   ]]></notes>
+    <gav regex="true">^org\.webjars:d3js:.*$</gav>
+    <cve>CVE-2017-16044</cve>
+  </suppress>
+  
+  <suppress>
+    <notes><![CDATA[ slf4j only has a beta version released with the 'fix', looks like lots of changes in it... ]]></notes>
+    <cve>CVE-2018-8088</cve>
+  </suppress>
+
+  <suppress>
+   <notes><![CDATA[
+   need to be on spring boot 2.x for the fix, suppressing as this is a test project
+   ]]></notes>
+   <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
+   <cpe>cpe:/a:fasterxml:jackson-databind</cpe>
+ </suppress>
+
+</suppressions>
