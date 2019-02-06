@@ -27,8 +27,7 @@ public class HealthCheckTest {
 
     @Test
     @Category(SmokeTest.class)
-    public void
-    healthcheck_returns_200() {
+    public void healthcheck_returns_200() {
         get("/health").then().statusCode(200);
     }
 }
