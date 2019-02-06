@@ -1,13 +1,6 @@
 #!groovy
 @Library(value="Infrastructure", changelog=false) _
 
-def apiTestSecrets = [ 'ethos-${env}' :
-  [
-    secret('test-client-key-store', 'TEST_CLIENT_KEY_STORE'),
-    secret('test-client-key-store-password', 'TEST_CLIENT_KEY_STORE_PASSWORD'),
-    secret('test-client-subscription-key', 'TEST_CLIENT_SUBSCRIPTION_KEY')
-  ]
-]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
   [ $class: 'AzureKeyVaultSecret',
@@ -32,8 +25,4 @@ properties([
 
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
   enableApiGatewayTest()
-
-  onNonPR() {
-    loadVaultSecrets(apiTestSecrets)
-  }
 }
