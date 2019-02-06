@@ -53,7 +53,6 @@ dependencies {
     testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.6'
     compile(group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger)
     compile (group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger)
-    testCompile group: 'com.typesafe', name: 'config', version: '1.3.2'
 }
 
 jar {
@@ -87,21 +86,11 @@ sourceSets {
         compileClasspath += main.output + test.output
         runtimeClasspath += main.output + test.output
     }
-    apiGateway {
-        java {
-            compileClasspath += main.output + test.output
-            runtimeClasspath += main.output + test.output
-            srcDir 'src/test/gateway/java'
-        }
-        resources.srcDir 'src/test/gateway/resources'
-    }
 }
 
 configurations {
     functionalCompile.extendsFrom testCompile
     functionalRuntime.extendsFrom testRuntime
-    apiGatewayCompile.extendsFrom testCompile
-    apiGatewayRuntime.extendsFrom testRuntime
 }
 
 task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verification') {
@@ -116,11 +105,6 @@ task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verificatio
 task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
     testClassesDirs = sourceSets.functional.output.classesDirs
     classpath = sourceSets.functional.runtimeClasspath
-}
-
-task apiGateway(type: Test, description: 'Runs the smoke tests for API gateway.', group: 'Verification') {
-    testClassesDirs = sourceSets.apiGateway.output.classesDirs
-    classpath = sourceSets.apiGateway.runtimeClasspath
 }
 
 jacocoTestReport {
