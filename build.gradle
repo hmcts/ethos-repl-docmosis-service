@@ -50,6 +50,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.4'
     
     testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.6'
     compile(group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger)
     compile (group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger)
 }
@@ -73,6 +74,37 @@ sonarqube {
         property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/test.exec"
         property "sonar.dependencyCheck.reportPath", "${project.buildDir}/reports/dependency-check-report.xml"
     }
+}
+
+sourceSets {
+    test {
+        java.srcDir 'src/test/java'
+    }
+    functional {
+        java.srcDir 'src/test/functional/java'
+        resources.srcDir 'src/test/resources'
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+}
+
+configurations {
+    functionalCompile.extendsFrom testCompile
+    functionalRuntime.extendsFrom testRuntime
+}
+
+task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verification') {
+    testClassesDirs = sourceSets.functional.output.classesDirs
+    classpath = sourceSets.functional.runtimeClasspath
+
+    useJUnit {
+        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
+    }
+}
+
+task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
+    testClassesDirs = sourceSets.functional.output.classesDirs
+    classpath = sourceSets.functional.runtimeClasspath
 }
 
 jacocoTestReport {
