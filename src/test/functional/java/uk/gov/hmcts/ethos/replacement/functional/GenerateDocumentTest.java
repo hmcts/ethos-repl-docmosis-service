@@ -25,8 +25,8 @@ public class GenerateDocumentTest {
     }
 
     @Test
-    public void
-    recipes_list_returns_200() {
-        get("/generateDocument").then().statusCode(200);
+    public void generate_document_returns_405() {
+        //TODO
+        get("/generateDocument").then().statusCode(405);
     }
 }
