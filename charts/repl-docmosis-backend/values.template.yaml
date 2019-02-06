@@ -1,0 +1,6 @@
+java:
+  applicationPort: 8081
+  environment:
+  # Don't modify below here
+  image: ${IMAGE_NAME}
+  ingressHost: ${SERVICE_FQDN}
