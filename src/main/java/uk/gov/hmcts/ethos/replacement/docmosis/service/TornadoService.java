@@ -19,7 +19,9 @@ public class TornadoService {
 
     private static final Logger log = LoggerFactory.getLogger(TornadoService.class);
 
-    private static final String DWS_RENDER_URL = "http://tornado:8080/rs/render";
+    //private static final String DWS_RENDER_URL = "http://tornado:8080/rs/render";
+
+    private static final String DWS_RENDER_URL = "https://docmosis-development.platform.hmcts.net/rs/render";
 
     void documentGeneration(CaseDetails caseDetails, String templateName) throws IOException {
         // Set your access Key if you configure it in Tornado
