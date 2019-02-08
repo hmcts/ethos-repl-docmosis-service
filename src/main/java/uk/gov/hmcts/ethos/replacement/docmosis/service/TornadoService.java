@@ -43,7 +43,7 @@ public class TornadoService {
                 }
             }
         } catch (ConnectException e) {
-            log.error("Unable to connect to Docmosis: {0}", e.getMessage());
+            log.error("Unable to connect to Docmosis: " + e.getMessage());
             log.error("If you have a proxy, you will need the Proxy aware example code.");
             System.exit(2);
         } finally {
@@ -55,9 +55,9 @@ public class TornadoService {
 
     private HttpURLConnection createConnection() throws IOException {
         String tornadoURL = tornadoConfiguration.getUrl();
-        log.info("TORNADO URL: {0}", tornadoURL);
+        log.info("TORNADO URL: " + tornadoURL);
         HttpURLConnection conn = (HttpURLConnection) new URL(tornadoURL).openConnection();
-        log.info("Connecting [directly] to {0}", tornadoURL);
+        log.info("Connecting [directly] to " + tornadoURL);
         conn.setRequestMethod("POST");
         conn.setUseCaches(false);
         conn.setDoOutput(true);
@@ -69,7 +69,7 @@ public class TornadoService {
 
     private void buildInstruction(HttpURLConnection conn, CaseDetails caseDetails, String templateName) throws IOException {
         StringBuilder sb = Helper.buildDocumentContent(caseDetails, templateName, tornadoConfiguration.getAccessKey());
-        log.info("Sending request: {0}", sb.toString());
+        log.info("Sending request: " + sb.toString());
         // send the instruction in UTF-8 encoding so that most character sets are available
         OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
         os.write(sb.toString());
@@ -85,7 +85,7 @@ public class TornadoService {
                 fos.write(buff, 0, bytesRead);
             }
         }
-        log.info("File created: {0}", file.getAbsolutePath());
+        log.info("File created: " + file.getAbsolutePath());
     }
 
 }
