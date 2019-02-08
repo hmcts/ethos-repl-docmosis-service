@@ -14,7 +14,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static java.net.HttpURLConnection.HTTP_OK;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.outputFileName;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.OUTPUT_FILE_NAME;
 
 @Service("tornadoService")
 @RequiredArgsConstructor
@@ -24,12 +24,7 @@ public class TornadoService {
 
     private static final Logger log = LoggerFactory.getLogger(TornadoService.class);
 
-    //private static final String DWS_RENDER_URL = "http://tornado:8080/rs/render";
-    //private static final String DWS_RENDER_URL = "https://docmosis-development.platform.hmcts.net/rs/render";
-
     void documentGeneration(CaseDetails caseDetails, String templateName) throws IOException {
-        // Set your access Key if you configure it in Tornado
-        //String accessKey = "";
         HttpURLConnection conn = null;
         try {
             conn = createConnection();
@@ -48,7 +43,7 @@ public class TornadoService {
                 }
             }
         } catch (ConnectException e) {
-            log.error("Unable to connect to Docmosis:" + e.getMessage());
+            log.error("Unable to connect to Docmosis: {0}", e.getMessage());
             log.error("If you have a proxy, you will need the Proxy aware example code.");
             System.exit(2);
         } finally {
@@ -59,10 +54,10 @@ public class TornadoService {
     }
 
     private HttpURLConnection createConnection() throws IOException {
-        String DWS_RENDER_URL = tornadoConfiguration.getUrl();
-        log.info("TORNADO URL: " + DWS_RENDER_URL);
-        HttpURLConnection conn = (HttpURLConnection) new URL(DWS_RENDER_URL).openConnection();
-        log.info("Connecting [directly] to " + DWS_RENDER_URL);
+        String tornadoURL = tornadoConfiguration.getUrl();
+        log.info("TORNADO URL: {0}", tornadoURL);
+        HttpURLConnection conn = (HttpURLConnection) new URL(tornadoURL).openConnection();
+        log.info("Connecting [directly] to {0}", tornadoURL);
         conn.setRequestMethod("POST");
         conn.setUseCaches(false);
         conn.setDoOutput(true);
@@ -73,8 +68,8 @@ public class TornadoService {
     }
 
     private void buildInstruction(HttpURLConnection conn, CaseDetails caseDetails, String templateName) throws IOException {
-        StringBuffer sb = Helper.buildDocumentContent(caseDetails, templateName, tornadoConfiguration.getAccessKey());
-        log.info("Sending request:" + sb.toString());
+        StringBuilder sb = Helper.buildDocumentContent(caseDetails, templateName, tornadoConfiguration.getAccessKey());
+        log.info("Sending request: {0}", sb.toString());
         // send the instruction in UTF-8 encoding so that most character sets are available
         OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
         os.write(sb.toString());
@@ -84,13 +79,13 @@ public class TornadoService {
     private void createDocument(HttpURLConnection conn) throws IOException{
         byte[] buff = new byte[1000];
         int bytesRead;
-        File file = new File(outputFileName);
+        File file = new File(OUTPUT_FILE_NAME);
         try (FileOutputStream fos = new FileOutputStream(file)) {
             while ((bytesRead = conn.getInputStream().read(buff, 0, buff.length)) != -1) {
                 fos.write(buff, 0, bytesRead);
             }
         }
-        log.info("File created:" + file.getAbsolutePath());
+        log.info("File created: {0}", file.getAbsolutePath());
     }
 
 }
