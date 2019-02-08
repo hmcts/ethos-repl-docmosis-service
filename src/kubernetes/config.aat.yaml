@@ -5,3 +5,6 @@ metadata:
   namespace: ${NAMESPACE}
 data:
   REPL_DOCMOSIS_BACKEND_URL: "http://ethos-repl-docmosis-service-aat.service.core-compute-aat.internal"
+  ENVIRONMENT_NAME : "aat"
+  TORNADO_URL : "http://tornado:8080/rs/render"
+  TORNADO_ACCESS_KEY : ""
