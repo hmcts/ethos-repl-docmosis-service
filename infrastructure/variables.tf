@@ -12,6 +12,14 @@ variable "env" {
   type = "string"
 }
 
+variable "tornado_url" {
+  default = "http://tornado:8080/rs/render"
+}
+
+variable "tornado_access_key" {
+  default = ""
+}
+
 variable "subscription" {
   type = "string"
 }

@@ -28,12 +28,13 @@ public class Helper {
         return !isNullOrEmpty(date) ? LocalDateTime.parse(date).format(newPattern) : "";
     }
 
-    public static StringBuffer buildDocumentContent(CaseDetails caseDetails, String templateName) {
+    public static StringBuffer buildDocumentContent(CaseDetails caseDetails, String templateName, String accessKey) {
         StringBuffer sb = new StringBuffer();
 
         // Start building the instruction
         sb.append("{\n");
-        //sb.append("\"accessKey\":\"").append(accessKey).append("\",\n");
+        sb.append("\"accessKey\":\"").append(accessKey).append("\",\n");
+        //sb.append("\"accessKey\":\"").append("ZDYxMTkzZTQtMGY2Mi00NDM1LWIyN2ItNGRkNzdjOTczMjAwOjQ1NTE0ODQ").append("\",\n");
         sb.append("\"templateName\":\"").append(templateName).append("\",\n");
         sb.append("\"outputName\":\"").append(outputFileName).append("\",\n");
 
