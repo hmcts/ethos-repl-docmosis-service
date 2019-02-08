@@ -11,3 +11,11 @@ output "api_gateway_url" {
 output "vaultName" {
   value = "${module.key-vault.key_vault_name}"
 }
+
+output "tornado_url" {
+  value = "${var.tornado_url}"
+}
+
+output "tornado_access_key" {
+  value = "${var.tornado_access_key}"
+}

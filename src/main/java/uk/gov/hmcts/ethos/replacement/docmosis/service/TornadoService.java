@@ -1,8 +1,10 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import java.io.*;
@@ -15,13 +17,15 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.outputFileName;
 
 @Service("tornadoService")
+@RequiredArgsConstructor
 public class TornadoService {
+
+    private final TornadoConfiguration tornadoConfiguration;
 
     private static final Logger log = LoggerFactory.getLogger(TornadoService.class);
 
     //private static final String DWS_RENDER_URL = "http://tornado:8080/rs/render";
-
-    private static final String DWS_RENDER_URL = "https://docmosis-development.platform.hmcts.net/rs/render";
+    //private static final String DWS_RENDER_URL = "https://docmosis-development.platform.hmcts.net/rs/render";
 
     void documentGeneration(CaseDetails caseDetails, String templateName) throws IOException {
         // Set your access Key if you configure it in Tornado
@@ -55,6 +59,8 @@ public class TornadoService {
     }
 
     private HttpURLConnection createConnection() throws IOException {
+        String DWS_RENDER_URL = tornadoConfiguration.getUrl();
+        log.info("TORNADO URL: " + DWS_RENDER_URL);
         HttpURLConnection conn = (HttpURLConnection) new URL(DWS_RENDER_URL).openConnection();
         log.info("Connecting [directly] to " + DWS_RENDER_URL);
         conn.setRequestMethod("POST");
@@ -67,7 +73,7 @@ public class TornadoService {
     }
 
     private void buildInstruction(HttpURLConnection conn, CaseDetails caseDetails, String templateName) throws IOException {
-        StringBuffer sb = Helper.buildDocumentContent(caseDetails, templateName);
+        StringBuffer sb = Helper.buildDocumentContent(caseDetails, templateName, tornadoConfiguration.getAccessKey());
         log.info("Sending request:" + sb.toString());
         // send the instruction in UTF-8 encoding so that most character sets are available
         OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
