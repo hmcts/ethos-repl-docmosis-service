@@ -29,7 +29,7 @@ public class CaseDataTest {
 
 
     @Test
-    public void shouldCreateAddressFromJson() {
+    public void shouldCreateCaseDataFromJson() {
         assertThat(caseData.getCaseNote(), is("1111"));
         assertThat(caseData.getPositionType(), is("Single"));
         assertThat(caseData.getReceiptDate(), is("20 Jan 2019"));
