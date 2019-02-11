@@ -10,8 +10,8 @@ import static org.junit.Assert.*;
 
 public class HelperTest {
 
-    private CaseData caseData;
     private CaseDetails caseDetails;
+    private CaseDetails caseDetailsEmpty;
 
     @Before
     public void setUp() throws Exception {
@@ -43,15 +43,23 @@ public class HelperTest {
                     "\"claimant_fax_number\": \"\",\n" +
                     "\"claimant_email_address\": \"samt@gmail.com\",\n" +
                     "\"claimant_contact_preference\": \"By email\"},"
+                + "\"scheduleType\": {\n" +
+                    "\"scheduleDateTime\": \"2017-01-25T10:10:10.000\",\n" +
+                    "\"scheduleClerk\": \"Clerk\",\n" +
+                    "\"scheduleJudge\": \"Judge\"},"
                 + " \"tribunalOffice\" : \"tribunalOffice\", "
                 + "\"respondentType\": {\n" +
                     "\"respondent_name\": \"Brindley Pines Associates Limited\"}"
                 + "} ";
         ObjectMapper mapper = new ObjectMapper();
-        caseData = mapper.readValue(json, CaseData.class);
+        CaseData caseData = mapper.readValue(json, CaseData.class);
         caseDetails = new CaseDetails();
         caseDetails.setCaseId("2222");
         caseDetails.setCaseData(caseData);
+
+        CaseData caseData1 = new CaseData();
+        caseDetailsEmpty = new CaseDetails();
+        caseDetailsEmpty.setCaseData(caseData1);
     }
 
     @Test
@@ -71,6 +79,9 @@ public class HelperTest {
                 "\"representativeEmailAddress\":\"batman@gotham.com\",\n" +
                 "\"representativeReference\":\"PCODE 24\",\n" +
                 "\"ifRefused\":\"false\",\n" +
+                "\"hearingDate\":\"25 Jan 2017\",\n" +
+                "\"clerk\":\"Clerk\",\n" +
+                "\"judgeSurname\":\"Judge\",\n" +
                 "\"createdDate\":\"\",\n" +
                 "\"receivedDate\":\"\",\n" +
                 "\"caseNo\":\"2222\",\n" +
@@ -93,5 +104,21 @@ public class HelperTest {
                 "}\n" +
                 "}\n";
         assertEquals(Helper.buildDocumentContent(caseDetails, "template", "").toString(), result);
+    }
+
+    @Test
+    public void buildDocumentWithNotContent() {
+        String result = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"template\",\n" +
+                "\"outputName\":\"myWelcome.doc\",\n" +
+                "\"data\":{\n" +
+                "\"ifRefused\":\"false\",\n" +
+                "\"createdDate\":\"\",\n" +
+                "\"receivedDate\":\"\",\n" +
+                "\"caseNo\":\"null\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(Helper.buildDocumentContent(caseDetailsEmpty, "template", "").toString(), result);
     }
 }
