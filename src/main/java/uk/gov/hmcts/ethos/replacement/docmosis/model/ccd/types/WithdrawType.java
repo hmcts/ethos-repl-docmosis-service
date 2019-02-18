@@ -6,13 +6,9 @@ import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class ReferToETJType {
+public class WithdrawType {
 
-    @JsonProperty("referralJudge")
-    private String referralJudge;
-    @JsonProperty("referralOutcome")
-    private String referralOutcome;
-    @JsonProperty("referralExplanation")
-    private String referralExplanation;
+    @JsonProperty("withdrawTextArea")
+    private String withdrawTextArea;
 
 }

@@ -6,10 +6,12 @@ import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class JurCodesType {
+public class EstHearingType {
 
-    @JsonProperty("juridictionCodesList")
-    private String juridictionCodesList;
-    @JsonProperty("juridictionCodesSubList1")
-    private String juridictionCodesSubList1;
+    @JsonProperty("fromDays")
+    private String fromDays;
+    @JsonProperty("fromHours")
+    private String fromHours;
+    @JsonProperty("fromMinues")
+    private String fromMinutes;
 }
