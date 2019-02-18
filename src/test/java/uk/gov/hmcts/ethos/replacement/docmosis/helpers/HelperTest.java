@@ -6,6 +6,10 @@ import org.junit.Test;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Objects;
+
 import static org.junit.Assert.*;
 
 public class HelperTest {
@@ -15,47 +19,10 @@ public class HelperTest {
 
     @Before
     public void setUp() throws Exception {
-        String json = "{"
-                + " \"caseNote\" : \"1111\", "
-                + " \"positionType\" : \"Single\", "
-                + " \"representedType\": {\n" +
-                    "\"if_represented\": \"Yes\",\n" +
-                    "\"name_of_representative\": \"Batman & Robin\",\n" +
-                    "\"name_of_organisation\": \"Batman & Robin Associates\",\n" +
-                    "\"representative_phone_number\": \"0207 111 4477\",\n" +
-                    "\"representative_fax_number\": \"0207 111 4478\",\n" +
-                    "\"representative_dx_number\": \"123456 Gotham\",\n" +
-                    "\"representative_email_address\": \"batman@gotham.com\",\n" +
-                    "\"representative_reference\": \"PCODE 24\"},"
-                + " \"userLocation\" : \"Bath\", "
-                + " \"locationType\" : \"City\", "
-                + " \"caseType\" : \"Single\", "
-                + " \"feeGroupReference\" : \"1212\", "
-                + " \"claimantType\": {\n" +
-                    "\"claimant_title\": \"Mr \",\n" +
-                    "\"claimant_first_name\": \"Sam \",\n" +
-                    "\"claimant_initials\": \"S \",\n" +
-                    "\"claimant_last_name\": \"Thornhill\",\n" +
-                    "\"claimant_date_of_birth\": \"1990-02-25\",\n" +
-                    "\"claimant_gender\": \"male\",\n" +
-                    "\"claimant_phone_number\": \"0203 4445678\",\n" +
-                    "\"claimant_mobile_number\": \"0208 111 2222\",\n" +
-                    "\"claimant_fax_number\": \"\",\n" +
-                    "\"claimant_email_address\": \"samt@gmail.com\",\n" +
-                    "\"claimant_contact_preference\": \"By email\"},"
-                + "\"scheduleType\": {\n" +
-                    "\"scheduleDateTime\": \"2017-01-25T10:10:10.000\",\n" +
-                    "\"scheduleClerk\": \"Clerk\",\n" +
-                    "\"scheduleJudge\": \"Judge\"},"
-                + " \"tribunalOffice\" : \"tribunalOffice\", "
-                + "\"respondentType\": {\n" +
-                    "\"respondent_name\": \"Brindley Pines Associates Limited\"}"
-                + "} ";
+        String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+                .getResource("caseDetailsTest.json")).toURI())));
         ObjectMapper mapper = new ObjectMapper();
-        CaseData caseData = mapper.readValue(json, CaseData.class);
-        caseDetails = new CaseDetails();
-        caseDetails.setCaseId("2222");
-        caseDetails.setCaseData(caseData);
+        caseDetails = mapper.readValue(json, CaseDetails.class);
 
         CaseData caseData1 = new CaseData();
         caseDetailsEmpty = new CaseDetails();
@@ -69,38 +36,19 @@ public class HelperTest {
                 "\"templateName\":\"template\",\n" +
                 "\"outputName\":\"myWelcome.doc\",\n" +
                 "\"data\":{\n" +
-                "\"ifRepresented\":\"true\",\n" +
-                "\"nameOfRepresentative\":\"Batman & Robin\",\n" +
-                "\"nameOfOrganisation\":\"Batman & Robin Associates\",\n" +
-                "\"representativeAddress\":\"null\",\n" +
-                "\"representativePhoneNumber\":\"0207 111 4477\",\n" +
-                "\"representativeFaxNumber\":\"0207 111 4478\",\n" +
-                "\"representativeDxNumber\":\"123456 Gotham\",\n" +
-                "\"representativeEmailAddress\":\"batman@gotham.com\",\n" +
-                "\"representativeReference\":\"PCODE 24\",\n" +
-                "\"ifRefused\":\"false\",\n" +
-                "\"hearingDate\":\"25 Jan 2017\",\n" +
-                "\"clerk\":\"Clerk\",\n" +
-                "\"judgeSurname\":\"Judge\",\n" +
-                "\"createdDate\":\"\",\n" +
-                "\"receivedDate\":\"\",\n" +
-                "\"caseNo\":\"2222\",\n" +
-                "\"claimant\":\"Thornhill\",\n" +
-                "\"claimantTitle\":\"Mr  \",\n" +
-                "\"claimantFirstName\":\"Sam  \",\n" +
-                "\"claimantInitials\":\"S  \",\n" +
-                "\"claimantLastName\":\"Thornhill\",\n" +
-                "\"claimantDateOfBirth\":\"25 Feb 1990\",\n" +
-                "\"claimantGender\":\"male\",\n" +
-                "\"claimantAddressUK\":\"null\",\n" +
-                "\"claimantPhoneNumber\":\"0203 4445678\",\n" +
-                "\"claimantMobileNumber\":\"0208 111 2222\",\n" +
-                "\"claimantFaxNumber\":\"\",\n" +
-                "\"claimantEmailAddress\":\"samt@gmail.com\",\n" +
-                "\"claimantContactPreference\":\"By email\",\n" +
-                "\"respondent\":\"Brindley Pines Associates Limited\",\n" +
-                "\"respondentName\":\"Brindley Pines Associates Limited\",\n" +
-                "\"respondentAddress\":\"null\",\n" +
+                "\"add_name\":\"ClaimantRepresentative\",\n" +
+                "\"add_add1\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"app_name\":\"ClaimantRepresentative\",\n" +
+                "\"resp_name\":\"string\",\n" +
+                "\"opp_name\":\"string\",\n" +
+                "\"opp_add1\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
+                "\"hearing_time\":\"10:10 AM\",\n" +
+                "\"EstLengthOfHearing\":\"3\",\n" +
+                "\"user_name\":\"Juan Diego\",\n" +
+                "\"curr_date\":\"Tue, 12 Mar 2019\",\n" +
+                "\"todayPlus28Days\":\"Tue, 9 Apr 2019\",\n" +
+                "\"case_no_year\":\"123456789\",\n" +
                 "}\n" +
                 "}\n";
         assertEquals(Helper.buildDocumentContent(caseDetails, "template", "").toString(), result);
@@ -113,10 +61,10 @@ public class HelperTest {
                 "\"templateName\":\"template\",\n" +
                 "\"outputName\":\"myWelcome.doc\",\n" +
                 "\"data\":{\n" +
-                "\"ifRefused\":\"false\",\n" +
-                "\"createdDate\":\"\",\n" +
-                "\"receivedDate\":\"\",\n" +
-                "\"caseNo\":\"null\",\n" +
+                "\"user_name\":\"null\",\n" +
+                "\"curr_date\":\"\",\n" +
+                "\"todayPlus28Days\":\"\",\n" +
+                "\"case_no_year\":\"null\",\n" +
                 "}\n" +
                 "}\n";
         assertEquals(Helper.buildDocumentContent(caseDetailsEmpty, "template", "").toString(), result);

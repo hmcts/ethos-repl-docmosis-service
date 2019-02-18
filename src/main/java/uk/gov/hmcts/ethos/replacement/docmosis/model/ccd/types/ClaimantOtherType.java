@@ -6,9 +6,8 @@ import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class ScheduleAttendanceType {
+public class ClaimantOtherType {
 
-    @JsonProperty("scheduleParticipants")
-    private String scheduleParticipants;
-
+    @JsonProperty("claimant_company_name")
+    private String claimantCompanyName;
 }

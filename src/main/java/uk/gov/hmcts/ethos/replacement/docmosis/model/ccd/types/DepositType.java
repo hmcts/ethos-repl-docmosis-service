@@ -8,18 +8,26 @@ import lombok.Data;
 @Data
 public class DepositType {
 
-    @JsonProperty("depositParty")
-    private String depositParty;
-    @JsonProperty("depositCovers")
-    private String depositCovers;
-    @JsonProperty("depositStatus")
-    private String depositStatus;
-    @JsonProperty("depositamount")
+    @JsonProperty("Deposit_amount")
     private String depositAmount;
-    @JsonProperty("depositDueDate")
-    private String depositDueDate;
-    @JsonProperty("depositOrderSent")
+    @JsonProperty("deposit_requested_by")
+    private String depositRequestedBy;
+    @JsonProperty("deposit_covers")
+    private String depositCovers;
+    @JsonProperty("deposit_order_sent")
     private String depositOrderSent;
-    @JsonProperty("depositRequestJudge")
-    private String depositRequestJudge;
+    @JsonProperty("deposit_due")
+    private String depositDue;
+    @JsonProperty("deposit_received")
+    private String depositReceived;
+    @JsonProperty("deposit_time_ext")
+    private String depositTimeExt;
+    @JsonProperty("deposit_time_ext_due")
+    private String depositTimeExtDue;
+    @JsonProperty("deposit_refund")
+    private String depositRefund;
+    @JsonProperty("deposit_refund_date")
+    private String depositRefundDate;
+    @JsonProperty("deposit_jurisdiction_codes")
+    private String depositJurisdictionCodes;
 }
