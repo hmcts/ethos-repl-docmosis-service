@@ -10,4 +10,16 @@ public class PanelType {
 
     @JsonProperty("panelMember")
     private String panelMember;
+    @JsonProperty("panelJudge")
+    private String panelJudge;
+    @JsonProperty("panelClerk")
+    private String panelClerk;
+    @JsonProperty("panelLayMember")
+    private String panelLayMember;
+    @JsonProperty("panelOtherMember")
+    private String panelOtherMember;
+    @JsonProperty("panelMedicalExpert")
+    private String panelMedicalExpert;
+    @JsonProperty("panelIndependentExpert")
+    private String panelIndependentExpert;
 }

@@ -2,10 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ScheduleType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,16 +13,26 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 public class Helper {
 
     private static DateTimeFormatter OLD_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static DateTimeFormatter NEW_PATTERN = DateTimeFormatter.ofPattern("d MMM yyyy");
+    private static DateTimeFormatter NEW_PATTERN_DATE = DateTimeFormatter.ofPattern("E, d MMM yyyy");
+    private static DateTimeFormatter NEW_PATTERN_TIME = DateTimeFormatter.ofPattern("hh:mm a");
 
     public static final String OUTPUT_FILE_NAME = "myWelcome.doc";
 
     private static String formatLocalDate(String date) {
-        return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_PATTERN).format(NEW_PATTERN) : "";
+        return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_PATTERN).format(NEW_PATTERN_DATE) : "";
     }
 
-    private static String formatLocalDateTime(String date) {
-        return !isNullOrEmpty(date) ? LocalDateTime.parse(date).format(NEW_PATTERN) : "";
+    private static String formatLocalDatePlusDays(String date, long days) {
+        return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_PATTERN).plusDays(days).format(NEW_PATTERN_DATE) : "";
+
+    }
+
+    private static String formatLocalDateTimeToDate(String date) {
+        return !isNullOrEmpty(date) ? LocalDateTime.parse(date).format(NEW_PATTERN_DATE) : "";
+    }
+
+    private static String formatLocalDateTimeToTime(String date) {
+        return !isNullOrEmpty(date) ? LocalDateTime.parse(date).format(NEW_PATTERN_TIME) : "";
     }
 
     public static StringBuilder buildDocumentContent(CaseDetails caseDetails, String templateName, String accessKey) {
@@ -42,55 +49,46 @@ public class Helper {
         sb.append("\"data\":{\n");
 
         CaseData caseData = caseDetails.getCaseData();
-        if (caseData.getRepresentedType() != null) {
-            RepresentedType representedType = caseData.getRepresentedType();
-            String represented = representedType.getIfRepresented().equals("Yes") ? "true" : "false";
-            sb.append("\"ifRepresented\":\"").append(represented).append(NEW_LINE);
-            sb.append("\"nameOfRepresentative\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"nameOfOrganisation\":\"").append(representedType.getNameOfOrganisation()).append(NEW_LINE);
-            sb.append("\"representativeAddress\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
-            sb.append("\"representativePhoneNumber\":\"").append(representedType.getRepresentativePhoneNumber()).append(NEW_LINE);
-            sb.append("\"representativeFaxNumber\":\"").append(representedType.getRepresentativeFaxNumber()).append(NEW_LINE);
-            sb.append("\"representativeDxNumber\":\"").append(representedType.getRepresentativeDxNumber()).append(NEW_LINE);
-            sb.append("\"representativeEmailAddress\":\"").append(representedType.getRepresentativeEmailAddress()).append(NEW_LINE);
-            sb.append("\"representativeReference\":\"").append(representedType.getRepresentativeReference()).append(NEW_LINE);
+        if (caseData.getIfCRepresented() != null) {
+            if (caseData.getIfCRepresented().equals("Yes")) {
+                RepresentedType representedType = caseData.getCRepresentedType();
+                sb.append("\"add_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+                sb.append("\"add_add1\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
+                sb.append("\"app_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+            } else {
+                ClaimantType claimantType = caseData.getClaimantType();
+                sb.append("\"add_name\":\"").append(claimantType.getClaimantName()).append(NEW_LINE);
+                sb.append("\"add_add1\":\"").append(claimantType.getClaimantAddressUK()).append(NEW_LINE);
+                sb.append("\"app_name\":\"").append(claimantType.getClaimantName()).append(NEW_LINE);
+            }
         }
-        sb.append("\"ifRefused\":\"").append("false").append(NEW_LINE);
-
-        if (caseData.getScheduleType() != null) {
-            ScheduleType scheduleType = caseData.getScheduleType();
-            sb.append("\"hearingDate\":\"").append(formatLocalDateTime(scheduleType.getScheduleDateTime())).append(NEW_LINE);
-            sb.append("\"clerk\":\"").append(scheduleType.getScheduleClerk()).append(NEW_LINE);
-            sb.append("\"judgeSurname\":\"").append(scheduleType.getScheduleJudge()).append(NEW_LINE);
+        if (caseData.getIfRRepresented() != null) {
+            if (caseData.getIfRRepresented().equals("Yes")) {
+                RepresentedType representedType = caseData.getRRepresentedType();
+                sb.append("\"resp_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+                sb.append("\"opp_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+                sb.append("\"opp_add1\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
+            } else {
+                RespondentSumType respondentType = caseData.getRespondentSumType();
+                sb.append("\"resp_name\":\"").append(respondentType.getRespondentName()).append(NEW_LINE);
+                sb.append("\"opp_name\":\"").append(respondentType.getRespondentName()).append(NEW_LINE);
+                sb.append("\"opp_add1\":\"").append(respondentType.getRespondentAddress()).append(NEW_LINE);
+            }
         }
+        if (caseData.getHearingType() != null) {
+            HearingType hearingType = caseData.getHearingType();
+            sb.append("\"hearing_date\":\"").append(formatLocalDateTimeToDate(hearingType.getHearingDate())).append(NEW_LINE);
+            sb.append("\"hearing_time\":\"").append(formatLocalDateTimeToTime(hearingType.getHearingDate())).append(NEW_LINE);
+            //sb.append("\"hearing_venue\":\"").append(hearingType.getEstHearing().).append(NEW_LINE);
+            if (hearingType.getEstHearing() != null) {
+                sb.append("\"EstLengthOfHearing\":\"").append(hearingType.getEstHearing().getFromHours()).append(NEW_LINE);
+            }
 
-        sb.append("\"createdDate\":\"").append(formatLocalDate(caseData.getReceiptDate())).append(NEW_LINE);
-        sb.append("\"receivedDate\":\"").append(formatLocalDate(caseData.getReceiptDate())).append(NEW_LINE);
-        sb.append("\"caseNo\":\"").append(caseDetails.getCaseId()).append(NEW_LINE);
-
-        if (caseData.getClaimantType() != null) {
-            ClaimantType claimantType = caseData.getClaimantType();
-            sb.append("\"claimant\":\"").append(claimantType.getClaimantLastName()).append(NEW_LINE);
-            sb.append("\"claimantTitle\":\"").append(claimantType.getClaimantTitle()).append(" ").append(NEW_LINE);
-            sb.append("\"claimantFirstName\":\"").append(claimantType.getClaimantFirstName()).append(" ").append(NEW_LINE);
-            sb.append("\"claimantInitials\":\"").append(claimantType.getClaimantInitials()).append(" ").append(NEW_LINE);
-            sb.append("\"claimantLastName\":\"").append(claimantType.getClaimantLastName()).append(NEW_LINE);
-            sb.append("\"claimantDateOfBirth\":\"").append(formatLocalDate(claimantType.getClaimantDateOfBirth())).append(NEW_LINE);
-            sb.append("\"claimantGender\":\"").append(claimantType.getClaimantGender()).append(NEW_LINE);
-            sb.append("\"claimantAddressUK\":\"").append(claimantType.getClaimantAddressUK()).append(NEW_LINE);
-            sb.append("\"claimantPhoneNumber\":\"").append(claimantType.getClaimantPhoneNumber()).append(NEW_LINE);
-            sb.append("\"claimantMobileNumber\":\"").append(claimantType.getClaimantMobileNumber()).append(NEW_LINE);
-            sb.append("\"claimantFaxNumber\":\"").append(claimantType.getClaimantFaxNumber()).append(NEW_LINE);
-            sb.append("\"claimantEmailAddress\":\"").append(claimantType.getClaimantEmailAddress()).append(NEW_LINE);
-            sb.append("\"claimantContactPreference\":\"").append(claimantType.getClaimantContactPreference()).append(NEW_LINE);
         }
-
-        if (caseData.getRespondentType() != null) {
-            RespondentType respondentType = caseData.getRespondentType();
-            sb.append("\"respondent\":\"").append(respondentType.getRespondentName()).append(NEW_LINE);
-            sb.append("\"respondentName\":\"").append(respondentType.getRespondentName()).append(NEW_LINE);
-            sb.append("\"respondentAddress\":\"").append(respondentType.getRespondentAddress()).append(NEW_LINE);
-        }
+        sb.append("\"user_name\":\"").append(caseData.getClerkResponsible()).append(NEW_LINE);
+        sb.append("\"curr_date\":\"").append(formatLocalDate(caseData.getReceiptDate())).append(NEW_LINE);
+        sb.append("\"todayPlus28Days\":\"").append(formatLocalDatePlusDays(caseData.getReceiptDate(), 28)).append(NEW_LINE);
+        sb.append("\"case_no_year\":\"").append(caseDetails.getCaseId()).append(NEW_LINE);
 
         sb.append("}\n");
         sb.append("}\n");
