@@ -14,23 +14,28 @@ import static org.junit.Assert.*;
 
 public class HelperTest {
 
-    private CaseDetails caseDetails;
+    private CaseDetails caseDetails1;
+    private CaseDetails caseDetails2;
     private CaseDetails caseDetailsEmpty;
 
     @Before
     public void setUp() throws Exception {
-        String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
-                .getResource("caseDetailsTest.json")).toURI())));
-        ObjectMapper mapper = new ObjectMapper();
-        caseDetails = mapper.readValue(json, CaseDetails.class);
+        caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
+        caseDetails2 = generateCaseDetails("caseDetailsTest2.json");
 
-        CaseData caseData1 = new CaseData();
         caseDetailsEmpty = new CaseDetails();
-        caseDetailsEmpty.setCaseData(caseData1);
+        caseDetailsEmpty.setCaseData(new CaseData());
+    }
+
+    private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
+        String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+                .getResource(jsonFileName)).toURI())));
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(json, CaseDetails.class);
     }
 
     @Test
-    public void buildDocumentContent() {
+    public void buildDocumentContent1() {
         String result = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"template\",\n" +
@@ -51,7 +56,32 @@ public class HelperTest {
                 "\"case_no_year\":\"123456789\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails, "template", "").toString(), result);
+        assertEquals(Helper.buildDocumentContent(caseDetails1, "template", "").toString(), result);
+    }
+
+    @Test
+    public void buildDocumentContent2() {
+        String result = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"template\",\n" +
+                "\"outputName\":\"myWelcome.doc\",\n" +
+                "\"data\":{\n" +
+                "\"add_name\":\"Mr Rodriguez Anton\",\n" +
+                "\"add_add1\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
+                "\"app_name\":\"Mr Rodriguez Anton\",\n" +
+                "\"resp_name\":\"ClaimantRepresentative\",\n" +
+                "\"opp_name\":\"ClaimantRepresentative\",\n" +
+                "\"opp_add1\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
+                "\"hearing_time\":\"10:10 AM\",\n" +
+                "\"EstLengthOfHearing\":\"3\",\n" +
+                "\"user_name\":\"Juan Diego\",\n" +
+                "\"curr_date\":\"Tue, 12 Mar 2019\",\n" +
+                "\"todayPlus28Days\":\"Tue, 9 Apr 2019\",\n" +
+                "\"case_no_year\":\"123456789\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(Helper.buildDocumentContent(caseDetails2, "template", "").toString(), result);
     }
 
     @Test
