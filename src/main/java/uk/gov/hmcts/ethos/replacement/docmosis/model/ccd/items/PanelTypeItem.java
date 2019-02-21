@@ -7,7 +7,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.PanelType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class PanelItem {
+public class PanelTypeItem {
 
     @JsonProperty("id")
     private String id;
