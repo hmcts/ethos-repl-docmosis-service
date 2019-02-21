@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.model.ccd;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class CaseData {
     @JsonProperty("c_RepresentedType")
     private RepresentedType cRepresentedType;
     @JsonProperty("claimantCollection")
-    private List<ClaimantType> claimantCollection;
+    private List<ClaimantTypeItem> claimantCollection;
     @JsonProperty("receiptDate")
     private String receiptDate;
     @JsonProperty("broughtForwardDate")
@@ -46,29 +47,27 @@ public class CaseData {
     @JsonProperty("r_RepresentedType")
     private RepresentedType rRepresentedType;
     @JsonProperty("respondentCollection")
-    private List<RespondentSumType> respondentCollection;
+    private List<RespondentSumTypeItem> respondentCollection;
     @JsonProperty("positionType")
     private String positionType;
     @JsonProperty("locationType")
     private String locationType;
-    @JsonProperty("hearingType")
-    private HearingType hearingType;
     @JsonProperty("hearingCollection")
-    private List<HearingType> hearingCollection;
+    private List<HearingTypeItem> hearingCollection;
     @JsonProperty("depositCollection")
-    private List<DepositType> depositCollection;
+    private List<DepositTypeItem> depositCollection;
     @JsonProperty("judgementCollection")
-    private List<JudgementType> judgementCollection;
+    private List<JudgementTypeItem> judgementCollection;
     @JsonProperty("judgementDetailsCollection")
-    private List<JudgementDetailsType> judgementDetailsCollection;
+    private List<JudgementDetailsTypeItem> judgementDetailsCollection;
     @JsonProperty("costsCollection")
-    private List<CostsType> costsCollection;
+    private List<CostsTypeItem> costsCollection;
     @JsonProperty("disposeType")
     private DisposeType disposeType;
     @JsonProperty("NH_JudgementType")
     private NhJudgementType nhJudgementType;
     @JsonProperty("jurCodesCollection")
-    private List<JurCodesType> jurCodesCollection;
+    private List<JurCodesTypeItem> jurCodesCollection;
     @JsonProperty("tribunalOffice")
     private String tribunalOffice;
     @JsonProperty("acasOffice")
@@ -82,11 +81,11 @@ public class CaseData {
     @JsonProperty("addSubMultipleComment")
     private String addSubMultipleComment;
     @JsonProperty("panelCollection")
-    private List<PanelType> panelCollection;
+    private List<PanelTypeItem> panelCollection;
     @JsonProperty("documentCollection")
-    private List<DocumentType> documentCollection;
+    private List<DocumentTypeItem> documentCollection;
     @JsonProperty("referToETJ")
-    private List<ReferralType> referToETJ;
+    private List<ReferralTypeItem> referToETJ;
     @JsonProperty("responseType")
     private ResponseType responseType;
     @JsonProperty("withdrawType")
