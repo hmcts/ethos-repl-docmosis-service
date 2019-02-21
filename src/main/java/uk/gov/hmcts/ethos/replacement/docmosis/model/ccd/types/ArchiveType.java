@@ -10,5 +10,4 @@ public class ArchiveType {
 
     @JsonProperty("archiveTextArea")
     private String archiveTextArea;
-
 }

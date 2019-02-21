@@ -8,6 +8,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.Objects;
 
 import static org.junit.Assert.*;
@@ -47,12 +48,15 @@ public class HelperTest {
                 "\"resp_name\":\"string\",\n" +
                 "\"opp_name\":\"string\",\n" +
                 "\"opp_add1\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"hearing_time\":\"10:10 AM\",\n" +
+                "\"hearing_time\":\"11:00 AM\",\n" +
+                "\"hearing_venue\":\"Manchester\",\n" +
                 "\"EstLengthOfHearing\":\"3\",\n" +
                 "\"user_name\":\"Juan Diego\",\n" +
-                "\"curr_date\":\"Tue, 12 Mar 2019\",\n" +
-                "\"todayPlus28Days\":\"Tue, 9 Apr 2019\",\n" +
+                "\"app_date\":\"Tue, 12 Mar 2019\",\n" +
+                "\"curr_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"todayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"case_no_year\":\"123456789\",\n" +
                 "}\n" +
                 "}\n";
@@ -73,11 +77,13 @@ public class HelperTest {
                 "\"opp_name\":\"ClaimantRepresentative\",\n" +
                 "\"opp_add1\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
                 "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"hearing_time\":\"10:10 AM\",\n" +
+                "\"hearing_time\":\"11:00 AM\",\n" +
+                "\"hearing_venue\":\"Manchester\",\n" +
                 "\"EstLengthOfHearing\":\"3\",\n" +
                 "\"user_name\":\"Juan Diego\",\n" +
-                "\"curr_date\":\"Tue, 12 Mar 2019\",\n" +
-                "\"todayPlus28Days\":\"Tue, 9 Apr 2019\",\n" +
+                "\"app_date\":\"Tue, 12 Mar 2019\",\n" +
+                "\"curr_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"todayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"case_no_year\":\"123456789\",\n" +
                 "}\n" +
                 "}\n";
@@ -92,8 +98,9 @@ public class HelperTest {
                 "\"outputName\":\"myWelcome.doc\",\n" +
                 "\"data\":{\n" +
                 "\"user_name\":\"null\",\n" +
-                "\"curr_date\":\"\",\n" +
-                "\"todayPlus28Days\":\"\",\n" +
+                "\"app_date\":\"\",\n" +
+                "\"curr_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"todayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"case_no_year\":\"null\",\n" +
                 "}\n" +
                 "}\n";
