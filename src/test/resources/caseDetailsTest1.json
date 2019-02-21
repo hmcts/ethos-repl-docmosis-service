@@ -65,15 +65,37 @@
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
-    "hearingType": {
-      "Est_Hearing": {
-        "fromDays": "2",
-        "fromHours": "3",
-        "fromMinues": "4"
-      },
-      "HearingType": "Single",
-      "Hearing_date": "2019-11-25T10:10:10.000"
-    },
+    "hearingCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "Est_Hearing": {
+            "fromDays": "2",
+            "fromHours": "3",
+            "fromMinues": "4"
+          },
+          "HearingType": "Single",
+          "Hearing_date": "2019-11-25",
+          "Hearing_judge_name": "JudgeName"
+        }
+      }
+    ],
+    "respondentCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "respondent_address": {
+            "AddressLine1": "11 Small Street",
+            "AddressLine2": "22 House",
+            "Country": "UK",
+            "County": "North West",
+            "PostCode": "M12 42R",
+            "PostTown": "Manchester"
+          },
+          "respondent_name": "Antonio Vazquez"
+        }
+      }
+    ],
     "if_C_represented": "Yes",
     "if_R_represented": "No",
     "locationType": "Manchester",
