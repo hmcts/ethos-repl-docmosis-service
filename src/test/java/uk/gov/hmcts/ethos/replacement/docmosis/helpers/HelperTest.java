@@ -17,12 +17,18 @@ public class HelperTest {
 
     private CaseDetails caseDetails1;
     private CaseDetails caseDetails2;
+    private CaseDetails caseDetails3;
+    private CaseDetails caseDetails4;
+    private CaseDetails caseDetails5;
     private CaseDetails caseDetailsEmpty;
 
     @Before
     public void setUp() throws Exception {
         caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
         caseDetails2 = generateCaseDetails("caseDetailsTest2.json");
+        caseDetails3 = generateCaseDetails("caseDetailsTest3.json");
+        caseDetails4 = generateCaseDetails("caseDetailsTest4.json");
+        caseDetails5 = generateCaseDetails("caseDetailsTest5.json");
 
         caseDetailsEmpty = new CaseDetails();
         caseDetailsEmpty.setCaseData(new CaseData());
@@ -90,6 +96,81 @@ public class HelperTest {
                 "}\n" +
                 "}\n";
         assertEquals(Helper.buildDocumentContent(caseDetails2, "").toString(), result);
+    }
+
+    @Test
+    public void buildDocumentContent3() {
+        String result = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"Part_3.docx\",\n" +
+                "\"outputName\":\"myWelcome.docx\",\n" +
+                "\"data\":{\n" +
+                "\"add_name\":\"ClaimantRepresentative\",\n" +
+                "\"add_add1\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"app_name\":\"ClaimantRepresentative\",\n" +
+                "\"resp_name\":\"string\",\n" +
+                "\"opp_name\":\"string\",\n" +
+                "\"opp_add1\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"resp_others\":\"Antonio Vazquez\",\n" +
+                "\"t3_2\":\"true\",\n" +
+                "\"user_name\":\"Juan Diego\",\n" +
+                "\"app_date\":\"Tue, 12 Mar 2019\",\n" +
+                "\"curr_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"todayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"case_no_year\":\"123456789\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(Helper.buildDocumentContent(caseDetails3, "").toString(), result);
+    }
+
+    @Test
+    public void buildDocumentContent4() {
+        String result = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"Part_4.docx\",\n" +
+                "\"outputName\":\"myWelcome.docx\",\n" +
+                "\"data\":{\n" +
+                "\"add_name\":\"ClaimantRepresentative\",\n" +
+                "\"add_add1\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"app_name\":\"ClaimantRepresentative\",\n" +
+                "\"resp_name\":\"string\",\n" +
+                "\"opp_name\":\"string\",\n" +
+                "\"opp_add1\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"resp_others\":\"Antonio Vazquez\",\n" +
+                "\"t4_2\":\"true\",\n" +
+                "\"user_name\":\"Juan Diego\",\n" +
+                "\"app_date\":\"Tue, 12 Mar 2019\",\n" +
+                "\"curr_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"todayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"case_no_year\":\"123456789\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(Helper.buildDocumentContent(caseDetails4, "").toString(), result);
+    }
+
+    @Test
+    public void buildDocumentContent5() {
+        String result = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"Part_5.docx\",\n" +
+                "\"outputName\":\"myWelcome.docx\",\n" +
+                "\"data\":{\n" +
+                "\"add_name\":\"ClaimantRepresentative\",\n" +
+                "\"add_add1\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"app_name\":\"ClaimantRepresentative\",\n" +
+                "\"resp_name\":\"string\",\n" +
+                "\"opp_name\":\"string\",\n" +
+                "\"opp_add1\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"resp_others\":\"Antonio Vazquez\",\n" +
+                "\"t5_2\":\"true\",\n" +
+                "\"user_name\":\"Juan Diego\",\n" +
+                "\"app_date\":\"\",\n" +
+                "\"curr_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"todayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"case_no_year\":\"123456789\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(Helper.buildDocumentContent(caseDetails5, "").toString(), result);
     }
 
     @Test

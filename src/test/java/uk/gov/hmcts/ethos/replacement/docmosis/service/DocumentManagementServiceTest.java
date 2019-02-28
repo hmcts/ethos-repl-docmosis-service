@@ -45,11 +45,12 @@ public class DocumentManagementServiceTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     private File file;
+    private String markup;
 
     @Before
     public void setUp() {
         file = createTestFile();
-
+        markup = "<a target=\"_blank\" href=\"http://localhost:3453/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary\">Document</a>";
         when(authTokenGenerator.generate()).thenReturn("authString");
         documentManagementService = new DocumentManagementService(documentUploadClient, authTokenGenerator, userService);
     }
@@ -62,6 +63,7 @@ public class DocumentManagementServiceTest {
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
                 .thenReturn(successfulDocumentManagementUploadResponse());
         URI documentSelfPath = documentManagementService.uploadDocument("authString", file);
+        assertEquals(documentManagementService.generateMarkupDocument(documentSelfPath), markup);
         assertNotNull(documentSelfPath);
         assertEquals("/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4", documentSelfPath.getPath());
     }
