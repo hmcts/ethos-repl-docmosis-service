@@ -18,5 +18,6 @@ public class CCDCallbackResponse {
     private CaseData data;
     private List<String> errors;
     private List<String> warnings;
+    private String confirmation_header;
 }
 
