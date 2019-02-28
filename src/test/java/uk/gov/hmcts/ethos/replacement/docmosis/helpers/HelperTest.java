@@ -35,12 +35,12 @@ public class HelperTest {
         return mapper.readValue(json, CaseDetails.class);
     }
 
-    //@Test
+    @Test
     public void buildDocumentContent1() {
         String result = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"Part_1.docx\",\n" +
-                "\"outputName\":\"myWelcome.doc\",\n" +
+                "\"outputName\":\"myWelcome.docx\",\n" +
                 "\"data\":{\n" +
                 "\"add_name\":\"ClaimantRepresentative\",\n" +
                 "\"add_add1\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
@@ -64,12 +64,12 @@ public class HelperTest {
         assertEquals(Helper.buildDocumentContent(caseDetails1, "").toString(), result);
     }
 
-    //@Test
+    @Test
     public void buildDocumentContent2() {
         String result = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"Part_2.docx\",\n" +
-                "\"outputName\":\"myWelcome.doc\",\n" +
+                "\"outputName\":\"myWelcome.docx\",\n" +
                 "\"data\":{\n" +
                 "\"add_name\":\"Mr Anton Rodriguez\",\n" +
                 "\"add_add1\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
@@ -92,12 +92,12 @@ public class HelperTest {
         assertEquals(Helper.buildDocumentContent(caseDetails2, "").toString(), result);
     }
 
-   // @Test
+    @Test
     public void buildDocumentWithNotContent() {
         String result = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\".docx\",\n" +
-                "\"outputName\":\"myWelcome.doc\",\n" +
+                "\"outputName\":\"myWelcome.docx\",\n" +
                 "\"data\":{\n" +
                 "\"user_name\":\"null\",\n" +
                 "\"app_date\":\"\",\n" +
