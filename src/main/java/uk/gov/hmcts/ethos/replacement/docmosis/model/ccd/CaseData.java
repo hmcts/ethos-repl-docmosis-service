@@ -102,4 +102,6 @@ public class CaseData {
     private AdditionalType additionalType;
     @JsonProperty("reconsiderationType")
     private ReconsiderationType reconsiderationType;
+    @JsonProperty("correspondenceType")
+    private CorrespondenceType correspondenceType;
 }
