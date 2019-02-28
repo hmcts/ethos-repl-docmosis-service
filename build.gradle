@@ -50,7 +50,8 @@ repositories {
 }
 
 def versions = [
-        springfoxSwagger        : '2.9.2'
+        springfoxSwagger        : '2.9.2',
+        reformJavaLogging: '3.0.2'
 ]
 
 dependencies {
@@ -73,7 +74,7 @@ dependencies {
     compile group: 'io.github.openfeign', name: 'feign-httpclient', version: '10.0.1'
     compile group: 'io.github.openfeign', name: 'feign-core', version: '9.5.1'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
-    
+    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.reformJavaLogging
 }
 
 jar {
