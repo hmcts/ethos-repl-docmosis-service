@@ -63,6 +63,10 @@
       "claimant_surname": "Rodriguez",
       "claimant_title1": "Mr"
     },
+    "correspondenceType": {
+        "topLevel_Documents": "Part_1",
+        "part_1_Documents": "1.2"
+    },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
     "hearingCollection": [

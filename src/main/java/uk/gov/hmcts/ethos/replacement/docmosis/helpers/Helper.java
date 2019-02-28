@@ -6,10 +6,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumType
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
@@ -17,9 +17,9 @@ public class Helper {
 
     private static DateTimeFormatter OLD_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static DateTimeFormatter NEW_PATTERN_DATE = DateTimeFormatter.ofPattern("E, d MMM yyyy");
-    private static DateTimeFormatter NEW_PATTERN_TIME = DateTimeFormatter.ofPattern("hh:mm a");
+    //private static DateTimeFormatter NEW_PATTERN_TIME = DateTimeFormatter.ofPattern("hh:mm a");
     private static String NEW_LINE = "\",\n";
-    public static final String OUTPUT_FILE_NAME = "myWelcome.doc";
+    public static final String OUTPUT_FILE_NAME = "myWelcome.docx";
 
     private static String formatLocalDate(String date) {
         return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_PATTERN).format(NEW_PATTERN_DATE) : "";
@@ -41,14 +41,16 @@ public class Helper {
 //        return !isNullOrEmpty(date) ? LocalDateTime.parse(date).format(NEW_PATTERN_TIME) : "";
 //    }
 
-    public static StringBuilder buildDocumentContent(CaseDetails caseDetails, String templateName, String accessKey) {
+    public static StringBuilder buildDocumentContent(CaseDetails caseDetails, String accessKey) {
+        String FILE_EXTENSION = ".odt";
         StringBuilder sb = new StringBuilder();
         CaseData caseData = caseDetails.getCaseData();
+        String templateName = getTemplateName(caseData);
 
         // Start building the instruction
         sb.append("{\n");
         sb.append("\"accessKey\":\"").append(accessKey).append(NEW_LINE);
-        sb.append("\"templateName\":\"").append(templateName).append(NEW_LINE);
+        sb.append("\"templateName\":\"").append(templateName).append(FILE_EXTENSION).append(NEW_LINE);
         sb.append("\"outputName\":\"").append(OUTPUT_FILE_NAME).append(NEW_LINE);
 
         // Building the document data
@@ -56,8 +58,7 @@ public class Helper {
         sb.append(getClaimantData(caseData));
         sb.append(getRespondentData(caseData));
         sb.append(getHearingData(caseData));
-
-        //Correspondence all of them and check for null
+        sb.append(getCorrespondenceData(caseData));
 
         //Add judge_surname and app_date curr_date should be now!!!
         sb.append("\"user_name\":\"").append(caseData.getClerkResponsible()).append(NEW_LINE);
@@ -106,11 +107,11 @@ public class Helper {
             sb.append("\"opp_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"opp_add1\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
         } else {
-            if (caseData.getRespondentSumType() != null) {
-                RespondentSumType respondentType = caseData.getRespondentSumType();
-                sb.append("\"resp_name\":\"").append(respondentType.getRespondentName()).append(NEW_LINE);
-                sb.append("\"opp_name\":\"").append(respondentType.getRespondentName()).append(NEW_LINE);
-                sb.append("\"opp_add1\":\"").append(respondentType.getRespondentAddress()).append(NEW_LINE);
+            Optional<RespondentSumType> respondentType = Optional.ofNullable(caseData.getRespondentSumType());
+            if (respondentType.isPresent()) {
+                sb.append("\"resp_name\":\"").append(respondentType.get().getRespondentName()).append(NEW_LINE);
+                sb.append("\"opp_name\":\"").append(respondentType.get().getRespondentName()).append(NEW_LINE);
+                sb.append("\"opp_add1\":\"").append(respondentType.get().getRespondentAddress()).append(NEW_LINE);
             }
         }
         if (caseData.getRespondentCollection() != null && caseData.getRespondentCollection().size() > 0) {
@@ -135,6 +136,49 @@ public class Helper {
             if (hearingType.getEstHearing() != null) {
                 sb.append("\"EstLengthOfHearing\":\"").append(hearingType.getEstHearing().getFromHours()).append(NEW_LINE);
             }
+        }
+        return sb;
+    }
+
+    private static String getTemplateName(CaseData caseData) {
+        Optional<CorrespondenceType> correspondenceType = Optional.ofNullable(caseData.getCorrespondenceType());
+        if (correspondenceType.isPresent()) {
+            return correspondenceType.get().getTopLevelDocuments();
+        } else {
+            return "";
+        }
+    }
+
+    private static String getSectionName(CaseData caseData) {
+        String sectionName = "";
+        Optional<CorrespondenceType> correspondenceType = Optional.ofNullable(caseData.getCorrespondenceType());
+        if (correspondenceType.isPresent()) {
+            if (correspondenceType.get().getPart1Documents() != null) sectionName = correspondenceType.get().getPart1Documents();
+            if (correspondenceType.get().getPart2Documents() != null) sectionName = correspondenceType.get().getPart2Documents();
+            if (correspondenceType.get().getPart3Documents() != null) sectionName = correspondenceType.get().getPart3Documents();
+            if (correspondenceType.get().getPart4Documents() != null) sectionName = correspondenceType.get().getPart4Documents();
+            if (correspondenceType.get().getPart5Documents() != null) sectionName = correspondenceType.get().getPart5Documents();
+            if (correspondenceType.get().getPart6Documents() != null) sectionName = correspondenceType.get().getPart6Documents();
+            if (correspondenceType.get().getPart7Documents() != null) sectionName = correspondenceType.get().getPart7Documents();
+            if (correspondenceType.get().getPart8Documents() != null) sectionName = correspondenceType.get().getPart8Documents();
+            if (correspondenceType.get().getPart9Documents() != null) sectionName = correspondenceType.get().getPart9Documents();
+            if (correspondenceType.get().getPart10Documents() != null) sectionName = correspondenceType.get().getPart10Documents();
+            if (correspondenceType.get().getPart11Documents() != null) sectionName = correspondenceType.get().getPart11Documents();
+            if (correspondenceType.get().getPart12Documents() != null) sectionName = correspondenceType.get().getPart12Documents();
+            if (correspondenceType.get().getPart13Documents() != null) sectionName = correspondenceType.get().getPart13Documents();
+            if (correspondenceType.get().getPart14Documents() != null) sectionName = correspondenceType.get().getPart14Documents();
+            if (correspondenceType.get().getPart15Documents() != null) sectionName = correspondenceType.get().getPart15Documents();
+            if (correspondenceType.get().getPart16Documents() != null) sectionName = correspondenceType.get().getPart16Documents();
+            if (correspondenceType.get().getPart17Documents() != null) sectionName = correspondenceType.get().getPart17Documents();
+        }
+        return sectionName;
+    }
+
+    private static StringBuilder getCorrespondenceData(CaseData caseData) {
+        String sectionName = getSectionName(caseData);
+        StringBuilder sb = new StringBuilder();
+        if (!sectionName.equals("")) {
+            sb.append("\"").append("t").append(sectionName.replace(".", "_")).append("\":\"").append("true").append(NEW_LINE);
         }
         return sb;
     }

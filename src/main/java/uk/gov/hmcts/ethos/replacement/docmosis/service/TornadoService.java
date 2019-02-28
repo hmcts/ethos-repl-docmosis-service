@@ -10,6 +10,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -21,18 +22,19 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.OUTPUT_FILE
 public class TornadoService {
 
     private final TornadoConfiguration tornadoConfiguration;
-
+    private final DocumentManagementService documentManagementService;
     private static final Logger log = LoggerFactory.getLogger(TornadoService.class);
 
-    void documentGeneration(CaseDetails caseDetails, String templateName) throws IOException {
+    String documentGeneration(String authToken, CaseDetails caseDetails) throws IOException {
         HttpURLConnection conn = null;
+        String filePath = "";
         try {
             conn = createConnection();
             log.info("Connected");
-            buildInstruction(conn, caseDetails, templateName);
+            buildInstruction(conn, caseDetails);
             int status = conn.getResponseCode();
             if (status == HTTP_OK) {
-                createDocument(conn);
+                filePath = createDocument(authToken, conn);
             } else {
                 log.error("Our call failed: status = " + status);
                 log.error("message:" + conn.getResponseMessage());
@@ -51,6 +53,7 @@ public class TornadoService {
                 conn.disconnect();
             }
         }
+        return filePath;
     }
 
     private HttpURLConnection createConnection() throws IOException {
@@ -67,8 +70,8 @@ public class TornadoService {
         return conn;
     }
 
-    private void buildInstruction(HttpURLConnection conn, CaseDetails caseDetails, String templateName) throws IOException {
-        StringBuilder sb = Helper.buildDocumentContent(caseDetails, templateName, tornadoConfiguration.getAccessKey());
+    private void buildInstruction(HttpURLConnection conn, CaseDetails caseDetails) throws IOException {
+        StringBuilder sb = Helper.buildDocumentContent(caseDetails, tornadoConfiguration.getAccessKey());
         log.info("Sending request: " + sb.toString());
         // send the instruction in UTF-8 encoding so that most character sets are available
         OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
@@ -76,7 +79,7 @@ public class TornadoService {
         os.flush();
     }
 
-    private void createDocument(HttpURLConnection conn) throws IOException{
+    private String createDocument(String authToken, HttpURLConnection conn) throws IOException{
         byte[] buff = new byte[1000];
         int bytesRead;
         File file = new File(OUTPUT_FILE_NAME);
@@ -86,6 +89,11 @@ public class TornadoService {
             }
         }
         log.info("File created: " + file.getAbsolutePath());
+
+        URI documentSelfPath = documentManagementService.uploadDocument(authToken, file);
+        String markupURL = documentManagementService.generateMarkupDocument(documentSelfPath);
+        log.info("MarkupURL: " + markupURL);
+        return markupURL;
     }
 
 }

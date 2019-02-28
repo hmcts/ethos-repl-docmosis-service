@@ -33,6 +33,10 @@ module "repl-docmosis-backend" {
     WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = "${var.autoheal}"
     TORNADO_URL                        = "${var.tornado_url}"
     TORNADO_ACCESS_KEY                 = "${var.tornado_access_key}"
+    IDAM_USER_BASE_URI                 = "${var.idam_api_url}"
+    DOCUMENT_MANAGEMENT_URL            = "${var.dm_url}"
+    DOCUMENT_MANAGEMENT_CASEWORKERROLE = "caseworker-ethos"
+    SERVICE_AUTH_PROVIDER_URL          = "${var.s2s_url}"
   }
 }
 
