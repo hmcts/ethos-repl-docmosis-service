@@ -13,7 +13,7 @@ variable "env" {
 }
 
 variable "tornado_url" {
-  default = "http://tornado:8080/rs/render"
+  default = "http://tornado:8082/rs/render"
 }
 
 variable "tornado_access_key" {
@@ -56,4 +56,16 @@ variable "autoheal" {
   description = "Enabling Proactive Auto Heal for Webapps"
   type        = "string"
   default     = "True"
+}
+
+variable "idam_api_url" {
+  default = "http://betaDevBccidamAppLB.reform.hmcts.net:80"
+}
+
+variable "dm_url" {
+  default = "http://dm-store:8080"
+}
+
+variable "s2s_url" {
+  default = "http://service-auth-provider-api:8080"
 }
