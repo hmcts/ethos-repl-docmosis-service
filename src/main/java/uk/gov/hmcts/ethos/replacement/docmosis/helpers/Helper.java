@@ -115,11 +115,11 @@ public class Helper {
             }
         }
         if (caseData.getRespondentCollection() != null && caseData.getRespondentCollection().size() > 0) {
-            List<String> resp_others = new ArrayList<>();
+            List<String> respOthers = new ArrayList<>();
             for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
-                resp_others.add(respondentSumTypeItem.getValue().getRespondentName());
+                respOthers.add(respondentSumTypeItem.getValue().getRespondentName());
             }
-            sb.append("\"resp_others\":\"").append(String.join(", ", resp_others)).append(NEW_LINE);
+            sb.append("\"resp_others\":\"").append(String.join(", ", respOthers)).append(NEW_LINE);
         }
         return sb;
     }
