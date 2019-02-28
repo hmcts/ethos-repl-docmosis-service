@@ -8,13 +8,17 @@ services:
     ports:
       - 8081:8081
     environment:
-      TORNADO_URL: "http://tornado:8080/rs/render"
+      TORNADO_URL: "http://tornado:8082/rs/render"
       TORNADO_ACCESS_KEY: ""
+      IDAM_API_URL: "http://idam-api:8080"
+      DOCUMENT_MANAGEMENT_URL: "http://dm-store:8080"
+      DOCUMENT_MANAGEMENT_CASEWORKERROLE: "caseworker-ethos"
+      SERVICE_AUTH_PROVIDER_URL: "http://service-auth-provider-api:8080"
 
   tornado:
     image: "hmcts/tornado:latest"
     ports:
-      - 8080:8080
+      - 8082:8082
     environment:
       DOCMOSIS_KEY: "0OAD-KLTH-JALO-MLIA-DBBH-1ELH-XBKQ-GS91-23ED-8-2358"
       DOCMOSIS_SITE: "Free Trial License"

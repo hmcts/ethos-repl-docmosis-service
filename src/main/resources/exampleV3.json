@@ -1,26 +1,6 @@
 {
   "case_details": {
     "case_data": {
-      "NH_JudgementType": {
-        "NH_JudgementDecision": "guilty",
-        "NH_JudgementTextArea": "guilty"
-      },
-      "acasOffice": "Manchester",
-      "addSubMultipleComment": "Comment",
-      "additionalType": {
-        "additional_accepted1": "additional_accepted1",
-        "additional_accepted2": "additional_accepted2",
-        "additional_conciliation_track": "additional_conciliation_track",
-        "additional_emp_claim_made": "additional_emp_claim_made",
-        "additional_ind_expert": "additional_ind_expert",
-        "additional_live_appeal": "additional_live_appeal",
-        "additional_sensitive": "string"
-      },
-      "archiveType": {
-        "archiveTextArea": "archiveTextArea"
-      },
-      "backFromJudge": "backFromJudge",
-      "broughtForwardDate": "broughtForwardDate",
       "c_RepresentedType": {
         "name_of_organisation": "ClaimantOrganisation",
         "name_of_representative": "ClaimantRepresentative",

@@ -11,7 +11,7 @@ public class DocumentType {
     @JsonProperty("typeOfDocument")
     private String typeOfDocument;
     @JsonProperty("uploadedDocument")
-    private String uploadedDocument;
+    private UploadedDocumentType uploadedDocument;
     @JsonProperty("ownerDocument")
     private String ownerDocument;
     @JsonProperty("creationDate")

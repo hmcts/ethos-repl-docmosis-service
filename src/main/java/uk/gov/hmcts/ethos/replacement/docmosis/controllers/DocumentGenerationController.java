@@ -13,7 +13,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 
-
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -22,6 +21,8 @@ public class DocumentGenerationController {
     private static final Logger log = LoggerFactory.getLogger(DocumentGenerationController.class);
 
     private static final String LOG_MESSAGE = "received notification request for case reference :    ";
+
+    private static final String GENERATED_DOCUMENT_URL = "Please download the document from : ";
 
     private final DocumentGenerationService documentGenerationService;
 
@@ -42,9 +43,12 @@ public class DocumentGenerationController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        documentGenerationService.processDocumentRequest(ccdRequest, userToken);
+        String filePath = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        return ResponseEntity.ok(CCDCallbackResponse.builder().data(caseData).build());
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .confirmation_header(GENERATED_DOCUMENT_URL + filePath)
+                .build());
     }
 
 }

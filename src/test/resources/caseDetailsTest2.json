@@ -61,6 +61,10 @@
         }
       }
     ],
+    "correspondenceType": {
+      "topLevel_Documents": "Part_2",
+      "part_2_Documents": "2.2A"
+    },
     "if_C_represented": "No",
     "if_R_represented": "Yes",
     "locationType": "Manchester",

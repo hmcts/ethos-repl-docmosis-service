@@ -1,3 +1,6 @@
 api_gateway_test_certificate_thumbprint = "4A98AB1CFFBA46CACBC7D8D3E10FDA667261DFAA"
 tornado_url = "https://docmosis-development.platform.hmcts.net/rs/render"
 tornado_access_key = "ZDYxMTkzZTQtMGY2Mi00NDM1LWIyN2ItNGRkNzdjOTczMjAwOjQ1NTE0ODQ"
+idam_api_url = "http://betaDevBccidamAppLB.reform.hmcts.net:80"
+dm_url = "http://dm-store:8080"
+s2s_url = "http://service-auth-provider-api:8080"
