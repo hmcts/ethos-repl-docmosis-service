@@ -42,7 +42,7 @@ public class Helper {
 //    }
 
     public static StringBuilder buildDocumentContent(CaseDetails caseDetails, String accessKey) {
-        String FILE_EXTENSION = ".odt";
+        String FILE_EXTENSION = ".docx";
         StringBuilder sb = new StringBuilder();
         CaseData caseData = caseDetails.getCaseData();
         String templateName = getTemplateName(caseData);
