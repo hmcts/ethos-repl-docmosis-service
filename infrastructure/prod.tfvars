@@ -1,4 +1,7 @@
 capacity = "2"
 api_gateway_test_certificate_thumbprint = "8A13CF9CC991EDE7A2A227E4153A54F6E3157774"
-tornado_url = "http://tornado:8080/rs/render"
+tornado_url = "http://tornado:8082/rs/render"
 tornado_access_key = ""
+idam_api_url = "https://idam-api.platform.hmcts.net"
+dm_url = "http://dm-store.platform.hmcts.net"
+s2s_url = "http://service-auth-provider-api.platform.hmcts.net"

@@ -5,6 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class ClaimantType {
@@ -14,9 +20,9 @@ public class ClaimantType {
     @JsonProperty("claimant_title_other")
     private String claimantTitleOther;
     @JsonProperty("claimant_forenames")
-    private String claimantLastName;
+    private String claimantForenames;
     @JsonProperty("claimant_surname")
-    private String claimantFirstName;
+    private String claimantSurname;
     @JsonProperty("claimant_date_of_birth")
     private String claimantDateOfBirth;
     @JsonProperty("claimant_gender")
@@ -35,6 +41,14 @@ public class ClaimantType {
     private String claimantContactPreference;
 
     public String getClaimantName() {
-        return String.join(" ", claimantTitle, claimantFirstName, claimantLastName);
+        return String.join(" ", notNullOrEmptyAtt(new ArrayList<>(), Arrays.asList(claimantTitle,
+                claimantTitleOther, claimantForenames, claimantSurname)));
+    }
+
+    private List<String> notNullOrEmptyAtt(List<String> fullClaimantName, List<String> attributes) {
+        for (String aux : attributes) {
+            if (!isNullOrEmpty(aux)) fullClaimantName.add(aux);
+        }
+        return fullClaimantName;
     }
 }

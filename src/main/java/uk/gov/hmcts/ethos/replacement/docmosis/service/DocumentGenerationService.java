@@ -20,16 +20,17 @@ public class DocumentGenerationService {
         this.tornadoService = tornadoService;
     }
 
-    public void processDocumentRequest(CCDRequest ccdRequest, String authToken) {
+    public String processDocumentRequest(CCDRequest ccdRequest, String authToken) {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
-        //log.info("Auth Token: " + authToken);
+        log.info("Auth Token: " + authToken);
         log.info("Case Details: " + caseDetails);
+        String filePath = "";
         try {
-//            tornadoService.documentGeneration(ccdRequest.getCaseDetails(), "PostponementRequestGenericTest.docx");
-            tornadoService.documentGeneration(ccdRequest.getCaseDetails(), "1.14.docx");
+            filePath = tornadoService.documentGeneration(authToken, ccdRequest.getCaseDetails());
         } catch (Exception ex) {
             log.error(MESSAGE + caseDetails.getCaseId() + EXCEPTION + ex.toString());
         }
+        return filePath;
     }
 
 }
