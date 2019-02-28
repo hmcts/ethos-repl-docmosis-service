@@ -68,14 +68,15 @@ public class DocumentManagementServiceTest {
 
     @Test
     public void uploadDocumentToDocumentManagementThrowsException() throws IOException, URISyntaxException {
+        expectedException.expect(DocumentManagementException.class);
+        expectedException.expectMessage("Unable to upload document example.docx to document management");
         UserDetails userDetails = new UserDetails("id", "mail@mail.com",
                 "userFirstName", "userLastName", Collections.singletonList("role"));
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
                 .thenReturn(unsuccessfulDocumentManagementUploadResponse());
         documentManagementService.uploadDocument("authString", file);
-        expectedException.expect(DocumentManagementException.class);
-        expectedException.expectMessage("Unable to upload document example.docx to document management");
+
     }
 
     private File createTestFile() {
