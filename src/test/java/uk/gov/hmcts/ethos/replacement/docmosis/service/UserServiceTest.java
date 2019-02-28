@@ -6,12 +6,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
-
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 
 public class UserServiceTest {
 
@@ -31,7 +29,17 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getUserDetails() {
+    public void shouldHaveUserDetails() {
         assertEquals(userService.getUserDetails("TOKEN"), userDetails);
+    }
+
+    @Test
+    public void shouldCheckAllUserDetails() {
+        assertEquals(userService.getUserDetails("TOKEN"), userDetails);
+        assertEquals(userService.getUserDetails("TOKEN").getEmail(), "example@gmail.com");
+        assertEquals(userService.getUserDetails("TOKEN").getForename(), "Smith");
+        assertEquals(userService.getUserDetails("TOKEN").getRoles(), Collections.singletonList("Worker"));
+        assertEquals(userService.getUserDetails("TOKEN").getSurname(), Optional.of("John"));
+        assertEquals(userService.getUserDetails("TOKEN").toString(), userDetails.toString());
     }
 }
