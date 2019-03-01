@@ -1,5 +1,6 @@
 java:
   applicationPort: 8081
+    APPINSIGHTS_INSTRUMENTATIONKEY: ${APPINSIGHTS_INSTRUMENTATIONKEY}
   environment:
   # Don't modify below here
   image: ${IMAGE_NAME}

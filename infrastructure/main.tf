@@ -19,15 +19,16 @@ locals {
 }
 
 module "repl-docmosis-backend" {
-  source              = "git@github.com:hmcts/cnp-module-webapp?ref=master"
-  product             = "${var.product}-${local.app}"
-  location            = "${var.location}"
-  env                 = "${var.env}"
-  ilbIp               = "${var.ilbIp}"
-  subscription        = "${var.subscription}"
-  is_frontend         = false
-  capacity            = "${var.capacity}"
-  common_tags         = "${var.common_tags}"
+  source                          = "git@github.com:hmcts/cnp-module-webapp?ref=master"
+  product                         = "${var.product}-${local.app}"
+  location                        = "${var.location}"
+  env                             = "${var.env}"
+  ilbIp                           = "${var.ilbIp}"
+  subscription                    = "${var.subscription}"
+  is_frontend                     = false
+  capacity                        = "${var.capacity}"
+  common_tags                     = "${var.common_tags}"
+  appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
 
   app_settings                         = {
     WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = "${var.autoheal}"
