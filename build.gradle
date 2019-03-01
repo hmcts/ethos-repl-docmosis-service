@@ -74,7 +74,7 @@ dependencies {
     compile group: 'io.github.openfeign', name: 'feign-httpclient', version: '10.0.1'
     compile group: 'io.github.openfeign', name: 'feign-core', version: '9.5.1'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
-    //compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.reformJavaLogging
+    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.reformJavaLogging
 }
 
 jar {
@@ -122,13 +122,13 @@ task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verificatio
     useJUnit {
         includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
     }
-//    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
+    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
 }
 
 task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
     testClassesDirs = sourceSets.functional.output.classesDirs
     classpath = sourceSets.functional.runtimeClasspath
-//    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
+    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
 }
 
 jacocoTestReport {
