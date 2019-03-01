@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsights;
+//import uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsights;
 import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
@@ -29,8 +29,8 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsights.DOCUMENT_NAME;
-import static uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsightsEvent.DOCUMENT_MANAGEMENT_UPLOAD_FAILURE;
+//import static uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsights.DOCUMENT_NAME;
+//import static uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsightsEvent.DOCUMENT_MANAGEMENT_UPLOAD_FAILURE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.ResourceLoader.successfulDocumentManagementUploadResponse;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.ResourceLoader.unsuccessfulDocumentManagementUploadResponse;
 
@@ -43,8 +43,8 @@ public class DocumentManagementServiceTest {
     private AuthTokenGenerator authTokenGenerator;
     @Mock
     private UserService userService;
-    @Mock
-    private AppInsights appInsights;
+    //@Mock
+    //private AppInsights appInsights;
     @InjectMocks
     private DocumentManagementService documentManagementService;
     @Rule
@@ -58,7 +58,7 @@ public class DocumentManagementServiceTest {
         file = createTestFile();
         markup = "<a target=\"_blank\" href=\"http://localhost:3453/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary\">Document</a>";
         when(authTokenGenerator.generate()).thenReturn("authString");
-        documentManagementService = new DocumentManagementService(documentUploadClient, authTokenGenerator, userService, appInsights);
+        documentManagementService = new DocumentManagementService(documentUploadClient, authTokenGenerator, userService);
     }
 
     @Test
@@ -84,7 +84,7 @@ public class DocumentManagementServiceTest {
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
                 .thenReturn(unsuccessfulDocumentManagementUploadResponse());
         documentManagementService.uploadDocument("authString", file);
-        verify(appInsights).trackEvent(DOCUMENT_MANAGEMENT_UPLOAD_FAILURE, DOCUMENT_NAME, anyString());
+        //verify(appInsights).trackEvent(DOCUMENT_MANAGEMENT_UPLOAD_FAILURE, DOCUMENT_NAME, anyString());
 
     }
 
