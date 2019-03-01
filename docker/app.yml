@@ -14,6 +14,7 @@ services:
       DOCUMENT_MANAGEMENT_URL: "http://dm-store:8080"
       DOCUMENT_MANAGEMENT_CASEWORKERROLE: "caseworker-ethos"
       SERVICE_AUTH_PROVIDER_URL: "http://service-auth-provider-api:8080"
+      APPINSIGHTS_INSTRUMENTATIONKEY: "key"
 
   tornado:
     image: "hmcts/tornado:latest"
