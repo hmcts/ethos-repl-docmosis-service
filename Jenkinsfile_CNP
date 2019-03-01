@@ -11,6 +11,7 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     secretType: 'Secret',
     name: secretName,
     version: '',
+    AppInsightsInstrumentationKey: 'APPINSIGHTS_INSTRUMENTATIONKEY',
     envVariable: envVar
   ]
 }
