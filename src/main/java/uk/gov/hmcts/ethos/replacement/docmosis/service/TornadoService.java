@@ -1,8 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
@@ -18,12 +17,12 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.OUTPUT_FILE_NAME;
 
 @Service("tornadoService")
+@Slf4j
 @RequiredArgsConstructor
 public class TornadoService {
 
     private final TornadoConfiguration tornadoConfiguration;
     private final DocumentManagementService documentManagementService;
-    private static final Logger log = LoggerFactory.getLogger(TornadoService.class);
 
     String documentGeneration(String authToken, CaseDetails caseDetails) throws IOException {
         HttpURLConnection conn = null;
