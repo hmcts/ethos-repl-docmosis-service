@@ -46,25 +46,29 @@ public class HelperTest {
         String result = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"Part_1.docx\",\n" +
-                "\"outputName\":\"myWelcome.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"add_name\":\"ClaimantRepresentative\",\n" +
-                "\"add_add1\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"app_name\":\"ClaimantRepresentative\",\n" +
-                "\"resp_name\":\"string\",\n" +
-                "\"opp_name\":\"string\",\n" +
-                "\"opp_add1\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"claimant_full_name\":\"ClaimantRepresentative\",\n" +
+                "\"Claimant\":\"ClaimantRepresentative\",\n" +
+                "\"claimant_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"claimant_email_address\":\"example@gmail.com\",\n" +
+                "\"representative_reference\":\"1111111\",\n" +
+                "\"Respondent\":\"string\",\n" +
+                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
                 "\"hearing_time\":\"11:00 AM\",\n" +
                 "\"hearing_venue\":\"Manchester\",\n" +
                 "\"EstLengthOfHearing\":\"3\",\n" +
                 "\"t1_2\":\"true\",\n" +
-                "\"user_name\":\"Juan Diego\",\n" +
-                "\"app_date\":\"Tue, 12 Mar 2019\",\n" +
-                "\"curr_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"todayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"case_no_year\":\"123456789\",\n" +
+                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
+                "\"Court_Telephone\":\"0121 600 7780\",\n" +
+                "\"Court_Fax\":\"01264 347 999\",\n" +
+                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Case_No\":\"123456789\",\n" +
                 "}\n" +
                 "}\n";
         assertEquals(Helper.buildDocumentContent(caseDetails1, "").toString(), result);
@@ -75,24 +79,27 @@ public class HelperTest {
         String result = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"Part_2.docx\",\n" +
-                "\"outputName\":\"myWelcome.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"add_name\":\"Mr Anton Rodriguez\",\n" +
-                "\"add_add1\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"app_name\":\"Mr Anton Rodriguez\",\n" +
-                "\"resp_name\":\"ClaimantRepresentative\",\n" +
-                "\"opp_name\":\"ClaimantRepresentative\",\n" +
-                "\"opp_add1\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"claimant_full_name\":\"Mr A Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A Rodriguez\",\n" +
+                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
+                "\"claimant_email_address\":\"anton@gmail.com\",\n" +
+                "\"Respondent\":\"ClaimantRepresentative\",\n" +
+                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
                 "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
                 "\"hearing_time\":\"11:00 AM\",\n" +
                 "\"hearing_venue\":\"Manchester\",\n" +
                 "\"EstLengthOfHearing\":\"3\",\n" +
                 "\"t2_2A\":\"true\",\n" +
-                "\"user_name\":\"Juan Diego\",\n" +
-                "\"app_date\":\"Tue, 12 Mar 2019\",\n" +
-                "\"curr_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"todayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"case_no_year\":\"123456789\",\n" +
+                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
+                "\"Court_Telephone\":\"0121 600 7780\",\n" +
+                "\"Court_Fax\":\"01264 347 999\",\n" +
+                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Case_No\":\"123456789\",\n" +
                 "}\n" +
                 "}\n";
         assertEquals(Helper.buildDocumentContent(caseDetails2, "").toString(), result);
@@ -103,21 +110,24 @@ public class HelperTest {
         String result = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"Part_3.docx\",\n" +
-                "\"outputName\":\"myWelcome.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"add_name\":\"ClaimantRepresentative\",\n" +
-                "\"add_add1\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"app_name\":\"ClaimantRepresentative\",\n" +
-                "\"resp_name\":\"string\",\n" +
-                "\"opp_name\":\"string\",\n" +
-                "\"opp_add1\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
+                "\"claimant_email_address\":\"anton@gmail.com\",\n" +
+                "\"Respondent\":\"string\",\n" +
+                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"t3_2\":\"true\",\n" +
-                "\"user_name\":\"Juan Diego\",\n" +
-                "\"app_date\":\"Tue, 12 Mar 2019\",\n" +
-                "\"curr_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"todayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"case_no_year\":\"123456789\",\n" +
+                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
+                "\"Court_Telephone\":\"0121 600 7780\",\n" +
+                "\"Court_Fax\":\"01264 347 999\",\n" +
+                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Case_No\":\"123456789\",\n" +
                 "}\n" +
                 "}\n";
         assertEquals(Helper.buildDocumentContent(caseDetails3, "").toString(), result);
@@ -128,21 +138,25 @@ public class HelperTest {
         String result = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"Part_4.docx\",\n" +
-                "\"outputName\":\"myWelcome.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"add_name\":\"ClaimantRepresentative\",\n" +
-                "\"add_add1\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"app_name\":\"ClaimantRepresentative\",\n" +
-                "\"resp_name\":\"string\",\n" +
-                "\"opp_name\":\"string\",\n" +
-                "\"opp_add1\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"claimant_full_name\":\"ClaimantRepresentative\",\n" +
+                "\"Claimant\":\"ClaimantRepresentative\",\n" +
+                "\"claimant_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"claimant_email_address\":\"example@gmail.com\",\n" +
+                "\"representative_reference\":\"1111111\",\n" +
+                "\"Respondent\":\"string\",\n" +
+                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"t4_2\":\"true\",\n" +
-                "\"user_name\":\"Juan Diego\",\n" +
-                "\"app_date\":\"Tue, 12 Mar 2019\",\n" +
-                "\"curr_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"todayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"case_no_year\":\"123456789\",\n" +
+                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
+                "\"Court_Telephone\":\"0121 600 7780\",\n" +
+                "\"Court_Fax\":\"01264 347 999\",\n" +
+                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Case_No\":\"123456789\",\n" +
                 "}\n" +
                 "}\n";
         assertEquals(Helper.buildDocumentContent(caseDetails4, "").toString(), result);
@@ -153,21 +167,25 @@ public class HelperTest {
         String result = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"Part_5.docx\",\n" +
-                "\"outputName\":\"myWelcome.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"add_name\":\"ClaimantRepresentative\",\n" +
-                "\"add_add1\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"app_name\":\"ClaimantRepresentative\",\n" +
-                "\"resp_name\":\"string\",\n" +
-                "\"opp_name\":\"string\",\n" +
-                "\"opp_add1\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"claimant_full_name\":\"ClaimantRepresentative\",\n" +
+                "\"Claimant\":\"ClaimantRepresentative\",\n" +
+                "\"claimant_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"claimant_email_address\":\"example@gmail.com\",\n" +
+                "\"representative_reference\":\"1111111\",\n" +
+                "\"Respondent\":\"string\",\n" +
+                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"t5_2\":\"true\",\n" +
-                "\"user_name\":\"Juan Diego\",\n" +
-                "\"app_date\":\"\",\n" +
-                "\"curr_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"todayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"case_no_year\":\"123456789\",\n" +
+                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
+                "\"Court_Telephone\":\"0121 600 7780\",\n" +
+                "\"Court_Fax\":\"01264 347 999\",\n" +
+                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Case_No\":\"123456789\",\n" +
                 "}\n" +
                 "}\n";
         assertEquals(Helper.buildDocumentContent(caseDetails5, "").toString(), result);
@@ -178,13 +196,16 @@ public class HelperTest {
         String result = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\".docx\",\n" +
-                "\"outputName\":\"myWelcome.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"user_name\":\"null\",\n" +
-                "\"app_date\":\"\",\n" +
-                "\"curr_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"todayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"case_no_year\":\"null\",\n" +
+                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
+                "\"Court_Telephone\":\"0121 600 7780\",\n" +
+                "\"Court_Fax\":\"01264 347 999\",\n" +
+                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Clerk\":\"null\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Case_No\":\"null\",\n" +
                 "}\n" +
                 "}\n";
         assertEquals(Helper.buildDocumentContent(caseDetailsEmpty, "").toString(), result);
