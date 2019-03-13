@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -22,12 +21,12 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsights.DO
 import static uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsightsEvent.DOCUMENT_MANAGEMENT_UPLOAD_FAILURE;
 
 @Service
+@Slf4j
 @ConditionalOnProperty(prefix = "document_management", name = "url")
 public class DocumentManagementService {
 
     private static final String FILES_NAME = "files";
     private static final String APPLICATION_DOCX_VALUE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-    private static final Logger log = LoggerFactory.getLogger(DocumentManagementService.class);
     private DocumentUploadClientApi documentUploadClient;
     private AuthTokenGenerator authTokenGenerator;
     private UserService userService;
