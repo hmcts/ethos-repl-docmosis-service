@@ -19,7 +19,7 @@ public class Helper {
     private static DateTimeFormatter NEW_PATTERN_DATE = DateTimeFormatter.ofPattern("E, d MMM yyyy");
     //private static DateTimeFormatter NEW_PATTERN_TIME = DateTimeFormatter.ofPattern("hh:mm a");
     private static String NEW_LINE = "\",\n";
-    public static final String OUTPUT_FILE_NAME = "myWelcome.docx";
+    public static final String OUTPUT_FILE_NAME = "document.docx";
 
     private static String formatLocalDate(String date) {
         return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_PATTERN).format(NEW_PATTERN_DATE) : "";
@@ -59,20 +59,14 @@ public class Helper {
         sb.append(getRespondentData(caseData));
         sb.append(getHearingData(caseData));
         sb.append(getCorrespondenceData(caseData));
+        sb.append(getCourtData(caseData));
 
         //Add judge_surname and app_date curr_date should be now!!!
-        sb.append("\"user_name\":\"").append(caseData.getClerkResponsible()).append(NEW_LINE);
-        sb.append("\"app_date\":\"").append(formatLocalDate(caseData.getReceiptDate())).append(NEW_LINE);
-        sb.append("\"curr_date\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
-        sb.append("\"todayPlus28Days\":\"").append(formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
-        sb.append("\"case_no_year\":\"").append(caseDetails.getCaseId()).append(NEW_LINE);
-
-//        sb.append("\"OFF_ADDRESS\":\"").append("13th floor, Centre City Tower, 5-7 Hill Street, Birmingham, B5 4UU").append(NEW_LINE);
-//        sb.append("\"off_phoneno\":\"").append("0121 600 7780").append(NEW_LINE);
-//        sb.append("\"off_faxno\":\"").append("01264 347 999").append(NEW_LINE);
-//        //sb.append("\"OfficeDXAddress\":\"").append(caseDetails.getCaseId()).append(NEW_LINE);
-//        sb.append("\"OfficeEMailAddress\":\"").append("BirminghamOfficeET@hmcts.gov.uk").append(NEW_LINE);
-//        sb.append("\"AppRepOwnRef\":\"").append("123455223").append(NEW_LINE);
+        sb.append("\"Clerk\":\"").append(caseData.getClerkResponsible()).append(NEW_LINE);
+        //sb.append("\"app_date\":\"").append(formatLocalDate(caseData.getReceiptDate())).append(NEW_LINE);
+        sb.append("\"TODAY_DATE\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
+        //sb.append("\"todayPlus28Days\":\"").append(formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
+        sb.append("\"Case_No\":\"").append(caseDetails.getCaseId()).append(NEW_LINE);
 
         sb.append("}\n");
         sb.append("}\n");
@@ -80,20 +74,22 @@ public class Helper {
         return sb;
     }
 
-
     private static StringBuilder getClaimantData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
         if (caseData.getIfCRepresented() != null) {
             if (caseData.getIfCRepresented().equals("Yes")) {
                 RepresentedType representedType = caseData.getCRepresentedType();
-                sb.append("\"add_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
-                sb.append("\"add_add1\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
-                sb.append("\"app_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+                sb.append("\"claimant_full_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+                sb.append("\"Claimant\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+                sb.append("\"claimant_addressUK\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
+                sb.append("\"claimant_email_address\":\"").append(representedType.getRepresentativeEmailAddress()).append(NEW_LINE);
+                sb.append("\"representative_reference\":\"").append(representedType.getRepresentativeReference()).append(NEW_LINE);
             } else {
                 ClaimantType claimantType = caseData.getClaimantType();
-                sb.append("\"add_name\":\"").append(claimantType.getClaimantName()).append(NEW_LINE);
-                sb.append("\"add_add1\":\"").append(claimantType.getClaimantAddressUK()).append(NEW_LINE);
-                sb.append("\"app_name\":\"").append(claimantType.getClaimantName()).append(NEW_LINE);
+                sb.append("\"claimant_full_name\":\"").append(claimantType.getClaimantName()).append(NEW_LINE);
+                sb.append("\"Claimant\":\"").append(claimantType.getClaimantName()).append(NEW_LINE);
+                sb.append("\"claimant_addressUK\":\"").append(claimantType.getClaimantAddressUK()).append(NEW_LINE);
+                sb.append("\"claimant_email_address\":\"").append(claimantType.getClaimantEmailAddress()).append(NEW_LINE);
             }
         }
         return sb;
@@ -103,15 +99,13 @@ public class Helper {
         StringBuilder sb = new StringBuilder();
         if (caseData.getIfRRepresented() != null && caseData.getIfRRepresented().equals("Yes")) {
             RepresentedType representedType = caseData.getRRepresentedType();
-            sb.append("\"resp_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"opp_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"opp_add1\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
+            sb.append("\"Respondent\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"respondent_addressUK\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
         } else {
             Optional<RespondentSumType> respondentType = Optional.ofNullable(caseData.getRespondentSumType());
             if (respondentType.isPresent()) {
-                sb.append("\"resp_name\":\"").append(respondentType.get().getRespondentName()).append(NEW_LINE);
-                sb.append("\"opp_name\":\"").append(respondentType.get().getRespondentName()).append(NEW_LINE);
-                sb.append("\"opp_add1\":\"").append(respondentType.get().getRespondentAddress()).append(NEW_LINE);
+                sb.append("\"Respondent\":\"").append(respondentType.get().getRespondentName()).append(NEW_LINE);
+                sb.append("\"respondent_addressUK\":\"").append(respondentType.get().getRespondentAddress()).append(NEW_LINE);
             }
         }
         if (caseData.getRespondentCollection() != null && caseData.getRespondentCollection().size() > 0) {
@@ -180,6 +174,16 @@ public class Helper {
         if (!sectionName.equals("")) {
             sb.append("\"").append("t").append(sectionName.replace(".", "_")).append("\":\"").append("true").append(NEW_LINE);
         }
+        return sb;
+    }
+
+    private static StringBuilder getCourtData(CaseData caseData) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"Court_Address\":\"").append("13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU").append(NEW_LINE);
+        sb.append("\"Court_Telephone\":\"").append("0121 600 7780").append(NEW_LINE);
+        sb.append("\"Court_Fax\":\"").append("01264 347 999").append(NEW_LINE);
+        sb.append("\"Court_DX\":\"").append("123456789").append(NEW_LINE);
+        sb.append("\"Court_Email\":\"").append("ManchesterOfficeET@hmcts.gov.uk").append(NEW_LINE);
         return sb;
     }
 }
