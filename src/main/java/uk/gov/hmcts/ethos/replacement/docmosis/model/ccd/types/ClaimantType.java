@@ -8,6 +8,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
@@ -42,7 +43,14 @@ public class ClaimantType {
 
     public String getClaimantName() {
         return String.join(" ", notNullOrEmptyAtt(new ArrayList<>(), Arrays.asList(claimantTitle,
-                claimantTitleOther, claimantForenames, claimantSurname)));
+                claimantTitleOther, getInitials(), claimantSurname)));
+    }
+
+    private String getInitials() {
+        if (!isNullOrEmpty(claimantForenames)) {
+            return Arrays.stream(claimantForenames.split(" ")).map(str -> str.substring(0, 1)).collect(Collectors.joining(" "));
+        }
+        return "";
     }
 
     private List<String> notNullOrEmptyAtt(List<String> fullClaimantName, List<String> attributes) {
