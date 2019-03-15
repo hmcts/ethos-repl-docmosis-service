@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +48,7 @@ public class DocumentGenerationControllerTest {
 
     private MockMvc mvc;
     private JsonNode requestContent;
-
+    private DocumentInfo documentInfo;
 
     private void doRequestSetUp() throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -59,11 +60,12 @@ public class DocumentGenerationControllerTest {
     public void setUp() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
         doRequestSetUp();
+        documentInfo = DocumentInfo.builder().description(DOC_NAME).build();
     }
 
     @Test
     public void generateDocumentOk() throws Exception {
-        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(DOC_NAME);
+        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
 
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())

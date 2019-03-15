@@ -8,10 +8,8 @@ import lombok.Data;
 @Data
 public class EstHearingType {
 
-    @JsonProperty("fromDays")
-    private String fromDays;
-    @JsonProperty("fromHours")
-    private String fromHours;
-    @JsonProperty("fromMinues")
-    private String fromMinutes;
+    @JsonProperty("est_Hearing_length_number")
+    private String estHearingLengthNumber;
+    @JsonProperty("est_Hearing_length_num")
+    private String estHearingLengthNum;
 }

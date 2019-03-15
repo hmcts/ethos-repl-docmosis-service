@@ -7,9 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDCallbackResponse;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -41,12 +40,23 @@ public class DocumentGenerationController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        String filePath = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        DocumentInfo documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
+
         return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .confirmation_header(GENERATED_DOCUMENT_URL + filePath)
+                .data(ccdRequest.getCaseDetails().getCaseData())
+                .confirmation_header(GENERATED_DOCUMENT_URL + documentInfo.getMarkUp())
+                .significant_item(generateSignificantItem(documentInfo))
                 .build());
+    }
+
+    private SignificantItem generateSignificantItem(DocumentInfo documentInfo) {
+        SignificantItem significantItem = SignificantItem.builder()
+                .url(documentInfo.getUrl())
+                .description(documentInfo.getDescription())
+                .type(SignificantItemType.DOCUMENT.name())
+                .build();
+        log.info("URL for document: " + significantItem.getUrl());
+        return significantItem;
     }
 
 }

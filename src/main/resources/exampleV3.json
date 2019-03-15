@@ -24,7 +24,6 @@
       "caseNote": "Example of Case Note",
       "caseType": "Single",
       "claimantType": {
-        "claimantName": "Anton",
         "claimant_addressUK": {
           "AddressLine1": "34",
           "AddressLine2": "Low Street",
