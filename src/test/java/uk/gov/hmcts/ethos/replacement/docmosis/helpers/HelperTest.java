@@ -59,7 +59,7 @@ public class HelperTest {
                 "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
                 "\"hearing_time\":\"11:00 AM\",\n" +
                 "\"hearing_venue\":\"Manchester\",\n" +
-                "\"EstLengthOfHearing\":\"3\",\n" +
+                "\"EstLengthOfHearing\":\"2\",\n" +
                 "\"t1_2\":\"true\",\n" +
                 "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
                 "\"Court_Telephone\":\"0121 600 7780\",\n" +
@@ -90,7 +90,7 @@ public class HelperTest {
                 "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
                 "\"hearing_time\":\"11:00 AM\",\n" +
                 "\"hearing_venue\":\"Manchester\",\n" +
-                "\"EstLengthOfHearing\":\"3\",\n" +
+                "\"EstLengthOfHearing\":\"2\",\n" +
                 "\"t2_2A\":\"true\",\n" +
                 "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
                 "\"Court_Telephone\":\"0121 600 7780\",\n" +

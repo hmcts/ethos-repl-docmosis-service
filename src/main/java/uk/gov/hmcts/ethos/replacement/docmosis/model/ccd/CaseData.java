@@ -14,14 +14,16 @@ public class CaseData {
 
     @JsonProperty("caseNote")
     private String caseNote;
-    @JsonProperty("caseAssignee")
-    private String caseAssignee;
+//    @JsonProperty("caseAssignee")
+//    private String caseAssignee;
     @JsonProperty("caseType")
     private String caseType;
     @JsonProperty("multipleType")
     private String multipleType;
     @JsonProperty("multipleReference")
     private String multipleReference;
+    @JsonProperty("claimantIndType")
+    private ClaimantIndType claimantIndType;
     @JsonProperty("claimantType")
     private ClaimantType claimantType;
     @JsonProperty("claimantOtherType")
@@ -50,8 +52,8 @@ public class CaseData {
     private List<RespondentSumTypeItem> respondentCollection;
     @JsonProperty("positionType")
     private String positionType;
-    @JsonProperty("locationType")
-    private String locationType;
+    @JsonProperty("fileLocation")
+    private String fileLocation;
     @JsonProperty("hearingCollection")
     private List<HearingTypeItem> hearingCollection;
     @JsonProperty("depositCollection")
