@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 
 @Service("documentGenerationService")
 @Slf4j
@@ -19,17 +20,17 @@ public class DocumentGenerationService {
         this.tornadoService = tornadoService;
     }
 
-    public String processDocumentRequest(CCDRequest ccdRequest, String authToken) {
+    public DocumentInfo processDocumentRequest(CCDRequest ccdRequest, String authToken) {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
         log.info("Auth Token: " + authToken);
         log.info("Case Details: " + caseDetails);
-        String filePath = "";
+        DocumentInfo documentInfo = new DocumentInfo();
         try {
-            filePath = tornadoService.documentGeneration(authToken, ccdRequest.getCaseDetails());
+            documentInfo = tornadoService.documentGeneration(authToken, ccdRequest.getCaseDetails());
         } catch (Exception ex) {
             log.error(MESSAGE + caseDetails.getCaseId() + EXCEPTION + ex.toString());
         }
-        return filePath;
+        return documentInfo;
     }
 
 }

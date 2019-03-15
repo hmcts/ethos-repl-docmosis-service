@@ -5,7 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
+
 import java.io.*;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
@@ -24,16 +28,16 @@ public class TornadoService {
     private final TornadoConfiguration tornadoConfiguration;
     private final DocumentManagementService documentManagementService;
 
-    String documentGeneration(String authToken, CaseDetails caseDetails) throws IOException {
+    DocumentInfo documentGeneration(String authToken, CaseDetails caseDetails) throws IOException {
         HttpURLConnection conn = null;
-        String filePath = "";
+        DocumentInfo documentInfo = new DocumentInfo();
         try {
             conn = createConnection();
             log.info("Connected");
             buildInstruction(conn, caseDetails);
             int status = conn.getResponseCode();
             if (status == HTTP_OK) {
-                filePath = createDocument(authToken, conn);
+                documentInfo = createDocument(authToken, conn, caseDetails);
             } else {
                 log.error("Our call failed: status = " + status);
                 log.error("message:" + conn.getResponseMessage());
@@ -52,7 +56,7 @@ public class TornadoService {
                 conn.disconnect();
             }
         }
-        return filePath;
+        return documentInfo;
     }
 
     private HttpURLConnection createConnection() throws IOException {
@@ -78,7 +82,7 @@ public class TornadoService {
         os.flush();
     }
 
-    private String createDocument(String authToken, HttpURLConnection conn) throws IOException{
+    private DocumentInfo createDocument(String authToken, HttpURLConnection conn, CaseDetails caseDetails) throws IOException {
         byte[] buff = new byte[1000];
         int bytesRead;
         File file = new File(OUTPUT_FILE_NAME);
@@ -90,9 +94,18 @@ public class TornadoService {
         log.info("File created: " + file.getAbsolutePath());
 
         URI documentSelfPath = documentManagementService.uploadDocument(authToken, file);
-        String markupURL = documentManagementService.generateMarkupDocument(documentSelfPath);
-        log.info("MarkupURL: " + markupURL);
-        return markupURL;
+        return generateDocumentInfo(caseDetails,
+                documentSelfPath,
+                documentManagementService.generateMarkupDocument(documentManagementService.generateDownloadableURL(documentSelfPath)));
     }
 
+    private DocumentInfo generateDocumentInfo(CaseDetails caseDetails, URI documentSelfPath, String markupURL) {
+        log.info("MarkupURL: "+markupURL);
+        return DocumentInfo.builder()
+                .type(SignificantItemType.DOCUMENT.name())
+                .description(Helper.getDocumentName(caseDetails.getCaseData()))
+                .markUp(markupURL)
+                .url(documentSelfPath.getScheme()+"://127.0.0.1:3453"+documentSelfPath.getRawPath()+"/binary")
+                .build();
+    }
 }

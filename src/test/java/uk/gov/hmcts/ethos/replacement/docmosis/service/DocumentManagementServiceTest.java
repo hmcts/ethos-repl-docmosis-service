@@ -70,7 +70,8 @@ public class DocumentManagementServiceTest {
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
                 .thenReturn(successfulDocumentManagementUploadResponse());
         URI documentSelfPath = documentManagementService.uploadDocument("authString", file);
-        assertEquals(documentManagementService.generateMarkupDocument(documentSelfPath), markup);
+        String documentDownloadableURL = documentManagementService.generateDownloadableURL(documentSelfPath);
+        assertEquals(documentManagementService.generateMarkupDocument(documentDownloadableURL), markup);
         assertNotNull(documentSelfPath);
         assertEquals("/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4", documentSelfPath.getPath());
     }

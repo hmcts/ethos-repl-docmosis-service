@@ -24,7 +24,6 @@
     "caseNote": "Example of Case Note",
     "caseType": "Single",
     "claimantType": {
-      "claimantName": "Anton",
       "claimant_addressUK": {
         "AddressLine1": "34",
         "AddressLine2": "Low Street",
@@ -34,13 +33,15 @@
         "PostTown": "Manchester"
       },
       "claimant_contact_preference": "Post",
-      "claimant_date_of_birth": "1990-02-25",
       "claimant_email_address": "anton@gmail.com",
       "claimant_fax_number": "07577136570",
+      "claimant_mobile_number": "07577136570",
+      "claimant_phone_number": "07577136570"
+    },
+    "claimantIndType": {
+      "claimant_date_of_birth": "1990-02-25",
       "claimant_forenames": "Anton",
       "claimant_gender": "Male",
-      "claimant_mobile_number": "07577136570",
-      "claimant_phone_number": "07577136570",
       "claimant_surname": "Rodriguez",
       "claimant_title1": "Mr"
     },
@@ -51,9 +52,8 @@
         "id" : "123345",
         "value" : {
           "Est_Hearing": {
-            "fromDays": "2",
-            "fromHours": "3",
-            "fromMinues": "4"
+            "est_Hearing_length_number": "2",
+            "est_Hearing_length_num": "3"
           },
           "HearingType": "Single",
           "Hearing_date": "2019-11-25",
