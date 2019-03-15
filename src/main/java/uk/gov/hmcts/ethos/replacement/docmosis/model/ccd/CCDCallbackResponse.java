@@ -19,5 +19,6 @@ public class CCDCallbackResponse {
     private List<String> errors;
     private List<String> warnings;
     private String confirmation_header;
+    private SignificantItem significant_item;
 }
 
