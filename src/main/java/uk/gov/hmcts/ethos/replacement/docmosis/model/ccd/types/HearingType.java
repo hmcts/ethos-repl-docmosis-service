@@ -12,14 +12,12 @@ public class HearingType {
     private String hearingListOrAllocated;
     @JsonProperty("Hearing_date")
     private String hearingDate;
-    @JsonProperty("HearingType")
+    @JsonProperty("Hearing_type")
     private String hearingType;
     @JsonProperty("Est_Hearing")
     private EstHearingType estHearing;
-    @JsonProperty("Hearing_sit_alone")
+    @JsonProperty("HearingSitAlone")
     private String hearingSitAlone;
-    @JsonProperty("Hearing_notes")
-    private String hearingNotes;
     @JsonProperty("Hearing_stage")
     private String hearingStage;
     @JsonProperty("Hearing_part_heard")
@@ -38,7 +36,7 @@ public class HearingType {
     private String hearingEmpeMember;
     @JsonProperty("Hearing_attendance")
     private AttendeeType hearingAttendance;
-    @JsonProperty("Hearing_judgment_reference")
-    private String hearingJudgmentReference;
+    @JsonProperty("Hearing_notes")
+    private String hearingNotes;
 
 }

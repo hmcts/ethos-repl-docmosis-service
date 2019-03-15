@@ -18,7 +18,7 @@ public class CaseDataTest {
                 + " \"positionType\" : \"Single\", "
                 + " \"receiptDate\" : \"20 Jan 2019\", "
                 + " \"userLocation\" : \"Bath\", "
-                + " \"locationType\" : \"City\", "
+                + " \"fileLocation\" : \"City\", "
                 + " \"caseType\" : \"Single\", "
                 + " \"feeGroupReference\" : \"1212\", "
                 + " \"tribunalOffice\" : \"tribunalOffice\" "
@@ -34,7 +34,7 @@ public class CaseDataTest {
         assertThat(caseData.getPositionType(), is("Single"));
         assertThat(caseData.getReceiptDate(), is("20 Jan 2019"));
         assertThat(caseData.getUserLocation(), is("Bath"));
-        assertThat(caseData.getLocationType(), is("City"));
+        assertThat(caseData.getFileLocation(), is("City"));
         assertThat(caseData.getCaseType(), is("Single"));
         assertThat(caseData.getFeeGroupReference(), is("1212"));
         assertThat(caseData.getTribunalOffice(), is("tribunalOffice"));

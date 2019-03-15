@@ -64,13 +64,13 @@ public class DocumentManagementService {
         }
     }
 
-    private String generateDownloadableURL(URI documentSelf) {
+    String generateDownloadableURL(URI documentSelf) {
         return documentSelf.getScheme() + "://localhost:3453" + documentSelf.getRawPath() + "/binary";
         //return documentSelf.getScheme() + "://" + documentSelf.getAuthority() + documentSelf.getRawPath() + "/binary";
     }
 
-    String generateMarkupDocument(URI documentSelf) {
-        return "<a target=\"_blank\" href=\"" + generateDownloadableURL(documentSelf) + "\">Document</a>";
+    String generateMarkupDocument(String documentDownloadableURL) {
+        return "<a target=\"_blank\" href=\"" + documentDownloadableURL + "\">Document</a>";
     }
 
 }

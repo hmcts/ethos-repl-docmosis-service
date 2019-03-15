@@ -86,8 +86,9 @@ public class Helper {
                 sb.append("\"representative_reference\":\"").append(representedType.getRepresentativeReference()).append(NEW_LINE);
             } else {
                 ClaimantType claimantType = caseData.getClaimantType();
-                sb.append("\"claimant_full_name\":\"").append(claimantType.getClaimantName()).append(NEW_LINE);
-                sb.append("\"Claimant\":\"").append(claimantType.getClaimantName()).append(NEW_LINE);
+                ClaimantIndType claimantIndType = caseData.getClaimantIndType();
+                sb.append("\"claimant_full_name\":\"").append(claimantIndType.claimantFullName()).append(NEW_LINE);
+                sb.append("\"Claimant\":\"").append(claimantIndType.claimantFullName()).append(NEW_LINE);
                 sb.append("\"claimant_addressUK\":\"").append(claimantType.getClaimantAddressUK()).append(NEW_LINE);
                 sb.append("\"claimant_email_address\":\"").append(claimantType.getClaimantEmailAddress()).append(NEW_LINE);
             }
@@ -128,10 +129,14 @@ public class Helper {
             //sb.append("\"hearing_time\":\"").append(formatLocalDateTimeToTime(hearingType.getHearingDate())).append(NEW_LINE);
             //sb.append("\"hearing_venue\":\"").append(hearingType.getEstHearing().).append(NEW_LINE);
             if (hearingType.getEstHearing() != null) {
-                sb.append("\"EstLengthOfHearing\":\"").append(hearingType.getEstHearing().getFromHours()).append(NEW_LINE);
+                sb.append("\"EstLengthOfHearing\":\"").append(hearingType.getEstHearing().getEstHearingLengthNumber()).append(NEW_LINE);
             }
         }
         return sb;
+    }
+
+    public static String getDocumentName(CaseData caseData) {
+        return getTemplateName(caseData) + "_" + getSectionName(caseData);
     }
 
     private static String getTemplateName(CaseData caseData) {
