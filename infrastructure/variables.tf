@@ -46,11 +46,11 @@ variable "common_tags" {
 }
 
 # thumbprint of the SSL certificate for API gateway tests
-//variable api_gateway_test_certificate_thumbprint {
-//  type = "string"
-//  # keeping this empty by default, so that no thumbprint will match
-//  default = ""
-//}
+variable api_gateway_test_certificate_thumbprint {
+  type = "string"
+  # keeping this empty by default, so that no thumbprint will match
+  default = ""
+}
 
 variable "autoheal" {
   description = "Enabling Proactive Auto Heal for Webapps"
