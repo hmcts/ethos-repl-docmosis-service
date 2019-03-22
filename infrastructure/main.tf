@@ -51,7 +51,7 @@ module "repl-docmosis-backend" {
 }
 
 data "azurerm_key_vault" "ethos_key_vault" {
-  name                = "${local.vaultName}"
+  name                = "${local.vaultGroupName}"
   resource_group_name = "${local.vaultGroupName}"
 }
 
