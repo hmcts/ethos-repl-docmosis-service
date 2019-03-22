@@ -8,8 +8,16 @@ output "api_gateway_url" {
   value = "https://core-api-mgmt-${var.env}.azure-api.net/${local.api_base_path}"
 }
 
+//output "vaultName" {
+//  value = "${module.key-vault.key_vault_name}"
+//}
+
 output "vaultName" {
-  value = "${module.key-vault.key_vault_name}"
+  value = "${local.vaultName}"
+}
+
+output "vaultUri" {
+  value = "${local.vaultUri}"
 }
 
 output "tornado_url" {
