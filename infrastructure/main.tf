@@ -6,6 +6,11 @@ locals {
   app = "repl-docmosis-backend"
   create_api = "${var.env != "preview" && var.env != "spreview"}"
 
+  previewVaultName = "${var.product}-aat"
+  nonPreviewVaultName = "${var.product}-${var.env}"
+  vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
+  vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+
   # list of the thumbprints of the SSL certificates that should be accepted by the API (gateway)
   allowed_certificate_thumbprints = [
     # API tests
@@ -19,7 +24,7 @@ locals {
 }
 
 module "repl-docmosis-backend" {
-  source                          = "git@github.com:hmcts/cnp-module-webapp?ref=master"
+  source                          = "git@github.com:hmcts/moj-module-webapp.git"
   product                         = "${var.product}-${local.app}"
   location                        = "${var.location}"
   env                             = "${var.env}"
@@ -42,17 +47,22 @@ module "repl-docmosis-backend" {
   }
 }
 
-module "key-vault" {
-  source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
-  product                 = "${var.product}"
-  env                     = "${var.env}"
-  tenant_id               = "${var.tenant_id}"
-  object_id               = "${var.jenkins_AAD_objectId}"
-  resource_group_name     = "${module.repl-docmosis-backend.resource_group_name}"
-  # dcd_cc-dev group object ID
-  product_group_object_id = "38f9dea6-e861-4a50-9e73-21e64f563537"
-  common_tags             = "${var.common_tags}"
+data "azurerm_key_vault" "ethos_key_vault" {
+  name                = "${local.vaultName}"
+  resource_group_name = "${local.vaultName}"
 }
+
+//module "key-vault" {
+//  source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
+//  product                 = "${var.product}"
+//  env                     = "${var.env}"
+//  tenant_id               = "${var.tenant_id}"
+//  object_id               = "${var.jenkins_AAD_objectId}"
+//  resource_group_name     = "${module.repl-docmosis-backend.resource_group_name}"
+//  # dcd_cc-dev group object ID
+//  product_group_object_id = "38f9dea6-e861-4a50-9e73-21e64f563537"
+//  common_tags             = "${var.common_tags}"
+//}
 
 # region API (gateway)
 
