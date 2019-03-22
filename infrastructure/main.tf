@@ -6,8 +6,8 @@ locals {
   app = "repl-docmosis-backend"
   create_api = "${var.env != "preview" && var.env != "spreview"}"
 
-  previewVaultName = "${var.product}-aat"
-  nonPreviewVaultName = "${var.product}-${var.env}"
+  previewVaultName = "${var.product}-${local.app}-aat"
+  nonPreviewVaultName = "${var.product}-${local.app}-${var.env}"
   vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
   vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
 
