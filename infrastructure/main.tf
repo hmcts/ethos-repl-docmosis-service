@@ -9,10 +9,10 @@ locals {
   previewVaultName = "${var.product}-aat"
   nonPreviewVaultName = "${var.product}-${var.env}"
   vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
-  vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
-  previewVaultGroupName = "${var.product}-${local.app}-aat"
-  nonPreviewVaultGroupName = "${var.product}-${local.app}-${var.env}"
-  vaultGroupName = "${var.env == "preview" ? local.previewVaultGroupName : local.nonPreviewVaultGroupName}"
+//  vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+//  previewVaultGroupName = "${var.product}-${local.app}-aat"
+//  nonPreviewVaultGroupName = "${var.product}-${local.app}-${var.env}"
+//  vaultGroupName = "${var.env == "preview" ? local.previewVaultGroupName : local.nonPreviewVaultGroupName}"
 
   # list of the thumbprints of the SSL certificates that should be accepted by the API (gateway)
 //  allowed_certificate_thumbprints = [
@@ -27,7 +27,8 @@ locals {
 }
 
 module "repl-docmosis-backend" {
-  source                          = "git@github.com:hmcts/moj-module-webapp.git"
+  source                          = "git@github.com:hmcts/cnp-module-webapp?ref=master"
+  //source                          = "git@github.com:hmcts/moj-module-webapp.git"
   product                         = "${var.product}-${local.app}"
   location                        = "${var.location}"
   env                             = "${var.env}"
@@ -50,22 +51,23 @@ module "repl-docmosis-backend" {
   }
 }
 
-data "azurerm_key_vault" "ethos_key_vault" {
-  name                = "${local.vaultName}"
-  resource_group_name = "${local.vaultName}"
-}
-
-//module "key-vault" {
-//  source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
-//  product                 = "${var.product}"
-//  env                     = "${var.env}"
-//  tenant_id               = "${var.tenant_id}"
-//  object_id               = "${var.jenkins_AAD_objectId}"
-//  resource_group_name     = "${module.repl-docmosis-backend.resource_group_name}"
-//  # dcd_cc-dev group object ID
-//  product_group_object_id = "38f9dea6-e861-4a50-9e73-21e64f563537"
-//  common_tags             = "${var.common_tags}"
+//data "azurerm_key_vault" "ethos_key_vault" {
+//  name                = "${local.vaultName}"
+//  resource_group_name = "${local.vaultName}"
 //}
+
+module "key-vault" {
+  source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
+  product                 = "${var.product}"
+  env                     = "${var.env}"
+  tenant_id               = "${var.tenant_id}"
+  object_id               = "${var.jenkins_AAD_objectId}"
+  //resource_group_name     = "${module.repl-docmosis-backend.resource_group_name}"
+  resource_group_name     = "${local.vaultName}"
+  # dcd_cc-dev group object ID
+  product_group_object_id = "38f9dea6-e861-4a50-9e73-21e64f563537"
+  common_tags             = "${var.common_tags}"
+}
 
 # region API (gateway)
 
