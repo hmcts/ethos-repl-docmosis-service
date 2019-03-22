@@ -1,5 +1,5 @@
 provider "azurerm" {
-  version = "1.19.0"
+  version = "1.23.0"
 }
 
 locals {
@@ -51,8 +51,8 @@ module "repl-docmosis-backend" {
 }
 
 data "azurerm_key_vault" "ethos_key_vault" {
-  name                = "${local.vaultGroupName}"
-  resource_group_name = "${local.vaultGroupName}"
+  name                = "${local.vaultName}"
+  resource_group_name = "${local.vaultName}"
 }
 
 //module "key-vault" {
