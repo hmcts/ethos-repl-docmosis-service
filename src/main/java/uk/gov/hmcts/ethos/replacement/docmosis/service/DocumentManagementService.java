@@ -44,12 +44,16 @@ public class DocumentManagementService {
     URI uploadDocument(String authorisation, File doc) {
         try {
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, doc.getName(), APPLICATION_DOCX_VALUE, FileCopyUtils.copyToByteArray(doc));
+            log.info("Authrosation: " + authorisation);
+            String token = authTokenGenerator.generate();
+            log.info("AuthTokenGenerator: " + token);
             UploadResponse response = documentUploadClient.upload(
                     authorisation,
-                    authTokenGenerator.generate(),
+                    token,
                     userService.getUserDetails(authorisation).getId(),
                     singletonList(file)
             );
+            log.info("Not coming here: ");
             Document document = response.getEmbedded().getDocuments().stream()
                     .findFirst()
                     .orElseThrow(() ->
