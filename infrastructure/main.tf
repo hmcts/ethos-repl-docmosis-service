@@ -51,10 +51,10 @@ module "repl-docmosis-backend" {
   }
 }
 
-data "azurerm_key_vault" "ethos_key_vault" {
-  name                = "${local.vaultName}"
-  resource_group_name = "${local.vaultGroupName}"
-}
+//data "azurerm_key_vault" "ethos_key_vault" {
+//  name                = "${local.vaultName}"
+//  resource_group_name = "${local.vaultGroupName}"
+//}
 
 //data "azurerm_key_vault_secret" "s2s_secret" {
 //  name = "ethos-repl-docmosis-s2s-secret"
