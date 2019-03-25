@@ -5,3 +5,4 @@ java:
   # Don't modify below here
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
+  IDAM_S2S_AUTH_TOTP_SECRET: ${ETHOS_REPL_DOCMOSIS_S2S_SECRET}

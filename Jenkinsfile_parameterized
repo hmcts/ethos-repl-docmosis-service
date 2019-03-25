@@ -7,6 +7,7 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     secretType: 'Secret',
     name: secretName,
     version: '',
+    ethos-repl-docmosis-s2s-secret: 'ETHOS_REPL_DOCMOSIS_S2S_SECRET',
     AppInsightsInstrumentationKey: 'APPINSIGHTS_INSTRUMENTATIONKEY',
     envVariable: envVar
   ]
