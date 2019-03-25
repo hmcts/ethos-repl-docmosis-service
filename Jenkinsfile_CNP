@@ -7,7 +7,6 @@ def product = "ethos"
 def component = "repl-docmosis-backend"
 
 List<LinkedHashMap<String, Object>> secrets = [
-  secret('ethos-repl-docmosis-s2s-secret', 'ETHOS_REPL_DOCMOSIS_S2S_SECRET'),
   secret('AppInsightsInstrumentationKey', 'APPINSIGHTS_INSTRUMENTATIONKEY')
 ]
 
