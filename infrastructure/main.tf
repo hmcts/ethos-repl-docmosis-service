@@ -9,7 +9,7 @@ locals {
   previewVaultName = "${var.product}-aat"
   nonPreviewVaultName = "${var.product}-${var.env}"
   vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
-//  vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+  vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
   previewVaultGroupName = "${var.product}-${local.app}-aat"
   nonPreviewVaultGroupName = "${var.product}-${local.app}-${var.env}"
   vaultGroupName = "${var.env == "preview" ? local.previewVaultGroupName : local.nonPreviewVaultGroupName}"
@@ -28,7 +28,6 @@ locals {
 
 module "repl-docmosis-backend" {
   source                          = "git@github.com:hmcts/cnp-module-webapp?ref=master"
-  //source                          = "git@github.com:hmcts/moj-module-webapp.git"
   product                         = "${var.product}-${local.app}"
   location                        = "${var.location}"
   env                             = "${var.env}"
@@ -43,6 +42,7 @@ module "repl-docmosis-backend" {
     WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = "${var.autoheal}"
     TORNADO_URL                        = "${var.tornado_url}"
     TORNADO_ACCESS_KEY                 = "${var.tornado_access_key}"
+    IDAM_S2S_AUTH_TOTP_SECRET          = "${data.azurerm_key_vault_secret.s2s_secret.value}"
     IDAM_USER_BASE_URI                 = "${var.idam_api_url}"
     //CCD_DATA_STORE_API_URL             = "${var.ccd_data_store_api_url}"
     DOCUMENT_MANAGEMENT_URL            = "${var.dm_url}"
@@ -51,10 +51,15 @@ module "repl-docmosis-backend" {
   }
 }
 
-//data "azurerm_key_vault" "ethos_key_vault" {
-//  name                = "${local.vaultName}"
-//  resource_group_name = "${local.vaultName}"
-//}
+data "azurerm_key_vault" "ethos_key_vault" {
+  name                = "${local.vaultName}"
+  resource_group_name = "${local.vaultGroupName}"
+}
+
+data "azurerm_key_vault_secret" "s2s_secret" {
+  name = "ethos-repl-docmosis-s2s-secret"
+  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+}
 
 module "key-vault" {
   source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
@@ -62,7 +67,6 @@ module "key-vault" {
   env                     = "${var.env}"
   tenant_id               = "${var.tenant_id}"
   object_id               = "${var.jenkins_AAD_objectId}"
-  //resource_group_name     = "${module.repl-docmosis-backend.resource_group_name}"
   resource_group_name     = "${local.vaultGroupName}"
   # dcd_cc-dev group object ID
   product_group_object_id = "38f9dea6-e861-4a50-9e73-21e64f563537"
