@@ -6,18 +6,22 @@ def type = "java"
 def product = "ethos"
 def component = "repl-docmosis-backend"
 
+List<LinkedHashMap<String, Object>> secrets = [
+  secret('ethos-repl-docmosis-s2s-secret', 'ETHOS_REPL_DOCMOSIS_S2S_SECRET'),
+  secret('AppInsightsInstrumentationKey', 'APPINSIGHTS_INSTRUMENTATIONKEY')
+]
+
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
   [ $class: 'AzureKeyVaultSecret',
     secretType: 'Secret',
     name: secretName,
     version: '',
-    ethos-repl-docmosis-s2s-secret: 'ETHOS_REPL_DOCMOSIS_S2S_SECRET',
-    AppInsightsInstrumentationKey: 'APPINSIGHTS_INSTRUMENTATIONKEY',
     envVariable: envVar
   ]
 }
 
 withPipeline(type, product, component) {
+  loadVaultSecrets(secrets)
   enableDockerBuild()
   installCharts()
   enableSlackNotifications('#ethos-repl-manchester')
