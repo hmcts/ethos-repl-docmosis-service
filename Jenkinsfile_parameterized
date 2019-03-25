@@ -1,15 +1,13 @@
 #!groovy
 @Library(value="Infrastructure", changelog=false) _
 
-List<LinkedHashMap<String, Object>> secrets = [
-  secret('AppInsightsInstrumentationKey', 'APPINSIGHTS_INSTRUMENTATIONKEY')
-]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
   [ $class: 'AzureKeyVaultSecret',
     secretType: 'Secret',
     name: secretName,
     version: '',
+    AppInsightsInstrumentationKey: 'APPINSIGHTS_INSTRUMENTATIONKEY',
     envVariable: envVar
   ]
 }
@@ -27,6 +25,5 @@ properties([
 ])
 
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
-   loadVaultSecrets(secrets)
-   enableSlackNotifications('#ethos-repl-manchester')
+    enableSlackNotifications('#ethos-repl-manchester')
 }
