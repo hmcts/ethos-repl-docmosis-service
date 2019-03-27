@@ -41,19 +41,15 @@ public class DocumentManagementService {
         this.appInsights = appInsights;
     }
 
-    URI uploadDocument(String authorisation, File doc) {
+    URI uploadDocument(String authToken, File doc) {
         try {
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, doc.getName(), APPLICATION_DOCX_VALUE, FileCopyUtils.copyToByteArray(doc));
-            log.info("Authrosation: " + authorisation);
-            String token = authTokenGenerator.generate();
-            log.info("AuthTokenGenerator: " + token);
             UploadResponse response = documentUploadClient.upload(
-                    authorisation,
-                    token,
-                    userService.getUserDetails(authorisation).getId(),
+                    authToken,
+                    authTokenGenerator.generate(),
+                    userService.getUserDetails(authToken).getId(),
                     singletonList(file)
             );
-            log.info("Not coming here: ");
             Document document = response.getEmbedded().getDocuments().stream()
                     .findFirst()
                     .orElseThrow(() ->

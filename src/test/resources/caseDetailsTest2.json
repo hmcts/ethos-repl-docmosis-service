@@ -20,8 +20,7 @@
     },
     "backFromJudge": "backFromJudge",
     "broughtForwardDate": "broughtForwardDate",
-    "caseAssignee": "Manchester",
-    "caseNote": "Example of Case Note",
+    "caseNotes": "Example of Case Note",
     "caseType": "Single",
     "claimantType": {
       "claimant_addressUK": {
