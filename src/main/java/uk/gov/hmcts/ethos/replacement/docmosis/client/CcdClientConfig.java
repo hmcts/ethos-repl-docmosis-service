@@ -36,22 +36,16 @@ public class CcdClientConfig {
         this.authTokenGenerator = authTokenGenerator;
     }
 
-    URI buildStartCaseCreationUrl(String uid, String jid, String ctid) {
-        return fromHttpUrl(CCD_DATA_STORE_API_BASE_URL +
-                String.format(START_CASE_CREATION_URL_CASEWORKER_FORMAT, uid, jid, ctid, EVENT_TRIGGER_ID))
-                .build().toUri();
+    String buildStartCaseCreationUrl(String uid, String jid, String ctid) {
+        return String.format(CCD_DATA_STORE_API_BASE_URL + START_CASE_CREATION_URL_CASEWORKER_FORMAT, uid, jid, ctid, EVENT_TRIGGER_ID);
     }
 
-    URI buildSubmitCaseCreationUrl(String uid, String jid, String ctid) {
-        return fromHttpUrl(CCD_DATA_STORE_API_BASE_URL +
-                String.format(SUBMIT_CASE_CREATION_URL_CASEWORKER_FORMAT, uid, jid, ctid))
-                .build().toUri();
+    String buildSubmitCaseCreationUrl(String uid, String jid, String ctid) {
+        return String.format(CCD_DATA_STORE_API_BASE_URL + SUBMIT_CASE_CREATION_URL_CASEWORKER_FORMAT, uid, jid, ctid);
     }
 
-    URI buildRetrieveCaseUrl(String uid, String jid, String ctid, String cid) {
-        return fromHttpUrl(CCD_DATA_STORE_API_BASE_URL +
-                String.format(RETRIEVE_CASE_URL_CASEWORKER_FORMAT, uid, jid, ctid, cid))
-                .build().toUri();
+    String buildRetrieveCaseUrl(String uid, String jid, String ctid, String cid) {
+        return String.format(CCD_DATA_STORE_API_BASE_URL + RETRIEVE_CASE_URL_CASEWORKER_FORMAT, uid, jid, ctid, cid);
     }
 
     HttpHeaders buildHeaders(String authToken) {

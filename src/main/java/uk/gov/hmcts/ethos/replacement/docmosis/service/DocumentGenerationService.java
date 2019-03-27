@@ -24,13 +24,11 @@ public class DocumentGenerationService {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
         log.info("Auth Token: " + authToken);
         log.info("Case Details: " + caseDetails);
-        DocumentInfo documentInfo;
         try {
-            documentInfo = tornadoService.documentGeneration(authToken, ccdRequest.getCaseDetails());
+            return tornadoService.documentGeneration(authToken, ccdRequest.getCaseDetails());
         } catch (Exception ex) {
             throw new DocumentManagementException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }
-        return documentInfo;
     }
 
 }
