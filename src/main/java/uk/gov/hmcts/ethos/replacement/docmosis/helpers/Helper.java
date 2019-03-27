@@ -60,7 +60,7 @@ public class Helper {
         sb.append(getRespondentData(caseData));
         sb.append(getHearingData(caseData));
         sb.append(getCorrespondenceData(caseData));
-        sb.append(getCourtData(caseData));
+        sb.append(getCourtData());
 
         //Add judge_surname and app_date curr_date should be now!!!
         sb.append("\"Clerk\":\"").append(caseData.getClerkResponsible()).append(NEW_LINE);
@@ -183,7 +183,7 @@ public class Helper {
         return sb;
     }
 
-    private static StringBuilder getCourtData(CaseData caseData) {
+    private static StringBuilder getCourtData() {
         StringBuilder sb = new StringBuilder();
         sb.append("\"Court_Address\":\"").append("13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU").append(NEW_LINE);
         sb.append("\"Court_Telephone\":\"").append("0121 600 7780").append(NEW_LINE);

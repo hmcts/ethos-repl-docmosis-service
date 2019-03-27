@@ -8,6 +8,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -39,7 +41,7 @@ public class CcdClientConfigTest {
     }
 
     @Test
-    public void buildHeaders() {
+    public void buildHeaders() throws IOException {
         when(authTokenGenerator.generate()).thenReturn("authString");
         HttpHeaders httpHeaders = ccdClientConfig.buildHeaders("authString");
         assertEquals("[Authorization:\"authString\", ServiceAuthorization:\"authString\", " +

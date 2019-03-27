@@ -35,11 +35,11 @@ public class UserServiceTest {
 
     @Test
     public void shouldCheckAllUserDetails() {
-        assertEquals(userService.getUserDetails("TOKEN"), userDetails);
-        assertEquals(userService.getUserDetails("TOKEN").getEmail(), "example@gmail.com");
-        assertEquals(userService.getUserDetails("TOKEN").getForename(), "Smith");
-        assertEquals(userService.getUserDetails("TOKEN").getRoles(), Collections.singletonList("Worker"));
-        assertEquals(userService.getUserDetails("TOKEN").getSurname(), Optional.of("John"));
-        assertEquals(userService.getUserDetails("TOKEN").toString(), userDetails.toString());
+        assertEquals(userDetails, userService.getUserDetails("TOKEN"));
+        assertEquals("example@gmail.com", userService.getUserDetails("TOKEN").getEmail());
+        assertEquals("Smith", userService.getUserDetails("TOKEN").getForename());
+        assertEquals(Collections.singletonList("Worker"), userService.getUserDetails("TOKEN").getRoles());
+        assertEquals(Optional.of("John"), userService.getUserDetails("TOKEN").getSurname());
+        assertEquals(userDetails.toString(), userService.getUserDetails("TOKEN").toString());
     }
 }
