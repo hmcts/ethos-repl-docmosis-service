@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCreationForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorkerService;
 
@@ -43,7 +44,8 @@ public class CaseActionsForCaseWorkerController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        caseCreationForCaseWorkerService.caseCreationRequest(ccdRequest, userToken);
+        SubmitEvent submitEvent = caseCreationForCaseWorkerService.caseCreationRequest(ccdRequest, userToken);
+        log.info("Case created correctly with case Id: " + submitEvent.getCaseId());
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(ccdRequest.getCaseDetails().getCaseData())
                 .build());
@@ -61,7 +63,8 @@ public class CaseActionsForCaseWorkerController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        caseRetrievalForCaseWorkerService.caseRetrievalRequest(ccdRequest, userToken);
+        SubmitEvent submitEvent = caseRetrievalForCaseWorkerService.caseRetrievalRequest(ccdRequest, userToken);
+        log.info("Case received correctly: " + submitEvent);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(ccdRequest.getCaseDetails().getCaseData())
                 .build());
