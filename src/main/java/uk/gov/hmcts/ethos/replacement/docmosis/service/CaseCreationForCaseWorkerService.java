@@ -19,15 +19,14 @@ public class CaseCreationForCaseWorkerService {
         this.ccdClient = ccdClient;
     }
 
-    public void caseCreationRequest(CCDRequest ccdRequest, String authToken) {
+    public SubmitEvent caseCreationRequest(CCDRequest ccdRequest, String authToken) {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
         log.info("EventId: " + ccdRequest.getEventId());
         log.info("Auth Token: " + authToken);
         log.info("Case Details: " + caseDetails);
         try {
-            SubmitEvent submitEvent = ccdClient.submitCaseCreation(authToken, caseDetails,
+            return ccdClient.submitCaseCreation(authToken, caseDetails,
                     ccdClient.startCaseCreation(authToken, caseDetails));
-            log.info("Case created correctly with case Id: " + submitEvent.getCaseId());
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }

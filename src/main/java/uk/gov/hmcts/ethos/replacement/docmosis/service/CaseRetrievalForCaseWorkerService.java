@@ -19,14 +19,13 @@ public class CaseRetrievalForCaseWorkerService {
         this.ccdClient = ccdClient;
     }
 
-    public void caseRetrievalRequest(CCDRequest ccdRequest, String authToken) {
+    public SubmitEvent caseRetrievalRequest(CCDRequest ccdRequest, String authToken) {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
         log.info("EventId: " + ccdRequest.getEventId());
         log.info("Auth Token: " + authToken);
         log.info("Case Details: " + caseDetails);
         try {
-            SubmitEvent ccdRequest1 = ccdClient.retrieveCase(authToken, caseDetails, "1550576532211563");
-            log.info("Case received correctly: " + ccdRequest1);
+            return ccdClient.retrieveCase(authToken, caseDetails, "1550576532211563");
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }

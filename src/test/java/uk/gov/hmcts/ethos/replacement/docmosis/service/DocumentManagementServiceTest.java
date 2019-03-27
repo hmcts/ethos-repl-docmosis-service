@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-//import uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsights;
 import uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsights;
 import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
