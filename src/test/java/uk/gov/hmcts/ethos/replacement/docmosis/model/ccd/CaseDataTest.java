@@ -14,7 +14,7 @@ public class CaseDataTest {
     @Before
     public void setUp() throws Exception {
         String json = "{"
-                + " \"caseNote\" : \"1111\", "
+                + " \"caseNotes\" : \"1111\", "
                 + " \"positionType\" : \"Single\", "
                 + " \"receiptDate\" : \"20 Jan 2019\", "
                 + " \"userLocation\" : \"Bath\", "
@@ -30,7 +30,7 @@ public class CaseDataTest {
 
     @Test
     public void shouldCreateCaseDataFromJson() {
-        assertThat(caseData.getCaseNote(), is("1111"));
+        assertThat(caseData.getCaseNotes(), is("1111"));
         assertThat(caseData.getPositionType(), is("Single"));
         assertThat(caseData.getReceiptDate(), is("20 Jan 2019"));
         assertThat(caseData.getUserLocation(), is("Bath"));
