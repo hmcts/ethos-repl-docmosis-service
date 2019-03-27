@@ -15,7 +15,7 @@ public class UserService {
         this.idamApi = idamApi;
     }
 
-    UserDetails getUserDetails(String authorisation) {
+    public UserDetails getUserDetails(String authorisation) {
         return idamApi.retrieveUserDetails(authorisation);
     }
 }

@@ -45,13 +45,6 @@ variable "common_tags" {
   type = "map"
 }
 
-# thumbprint of the SSL certificate for API gateway tests
-//variable api_gateway_test_certificate_thumbprint {
-//  type = "string"
-//  # keeping this empty by default, so that no thumbprint will match
-//  default = ""
-//}
-
 variable "autoheal" {
   description = "Enabling Proactive Auto Heal for Webapps"
   type        = "string"
@@ -62,9 +55,9 @@ variable "idam_api_url" {
   default = "http://betaDevBccidamAppLB.reform.hmcts.net:80"
 }
 
-//variable "ccd_data_store_api_url" {
-//  default = "http://ccd-data-store-api:4452"
-//}
+variable "ccd_data_store_api_url" {
+  default = "http://ccd-data-store-api:4452"
+}
 
 variable "dm_url" {
   default = "http://dm-store:8080"
