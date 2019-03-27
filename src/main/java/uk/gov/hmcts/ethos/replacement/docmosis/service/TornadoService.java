@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 
@@ -20,8 +19,8 @@ import java.nio.charset.StandardCharsets;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.OUTPUT_FILE_NAME;
 
-@Service("tornadoService")
 @Slf4j
+@Service("tornadoService")
 @RequiredArgsConstructor
 public class TornadoService {
 

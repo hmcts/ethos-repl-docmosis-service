@@ -12,10 +12,8 @@ import java.util.List;
 @Data
 public class CaseData {
 
-    @JsonProperty("caseNote")
-    private String caseNote;
-//    @JsonProperty("caseAssignee")
-//    private String caseAssignee;
+    @JsonProperty("caseNotes")
+    private String caseNotes;
     @JsonProperty("caseType")
     private String caseType;
     @JsonProperty("multipleType")
@@ -31,7 +29,7 @@ public class CaseData {
     @JsonProperty("if_C_represented")
     private String ifCRepresented;
     @JsonProperty("c_RepresentedType")
-    private RepresentedType cRepresentedType;
+    private RepresentedType c_RepresentedType;
     @JsonProperty("claimantCollection")
     private List<ClaimantTypeItem> claimantCollection;
     @JsonProperty("receiptDate")
@@ -47,7 +45,7 @@ public class CaseData {
     @JsonProperty("if_R_represented")
     private String ifRRepresented;
     @JsonProperty("r_RepresentedType")
-    private RepresentedType rRepresentedType;
+    private RepresentedType r_RepresentedType;
     @JsonProperty("respondentCollection")
     private List<RespondentSumTypeItem> respondentCollection;
     @JsonProperty("positionType")
@@ -67,7 +65,7 @@ public class CaseData {
     @JsonProperty("disposeType")
     private DisposeType disposeType;
     @JsonProperty("NH_JudgementType")
-    private NhJudgementType nhJudgementType;
+    private NhJudgementType NH_JudgementType;
     @JsonProperty("jurCodesCollection")
     private List<JurCodesTypeItem> jurCodesCollection;
     @JsonProperty("tribunalOffice")
@@ -93,7 +91,7 @@ public class CaseData {
     @JsonProperty("withdrawType")
     private WithdrawType withdrawType;
     @JsonProperty("archiveType")
-    private ArchiveType archiveTYpe;
+    private ArchiveType archiveType;
     @JsonProperty("referredToJudge")
     private String referredToJudge;
     @JsonProperty("backFromJudge")
