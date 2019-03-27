@@ -6,6 +6,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumType
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +79,7 @@ public class Helper {
         StringBuilder sb = new StringBuilder();
         if (caseData.getIfCRepresented() != null) {
             if (caseData.getIfCRepresented().equals("Yes")) {
-                RepresentedType representedType = caseData.getCRepresentedType();
+                RepresentedType representedType = caseData.getC_RepresentedType();
                 sb.append("\"claimant_full_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
                 sb.append("\"Claimant\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
                 sb.append("\"claimant_addressUK\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
@@ -99,7 +100,7 @@ public class Helper {
     private static StringBuilder getRespondentData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
         if (caseData.getIfRRepresented() != null && caseData.getIfRRepresented().equals("Yes")) {
-            RepresentedType representedType = caseData.getRRepresentedType();
+            RepresentedType representedType = caseData.getR_RepresentedType();
             sb.append("\"Respondent\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"respondent_addressUK\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
         } else {

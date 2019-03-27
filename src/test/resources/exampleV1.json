@@ -5,8 +5,7 @@
         "NH_JudgementDecision": "guilty",
         "NH_JudgementTextArea": "guilty"
       },
-      "caseAssignee": "Case Assignee",
-      "caseNote": "Example note",
+      "caseNotes": "Example note",
       "caseType": "Single",
       "claimantCollection": [
         {

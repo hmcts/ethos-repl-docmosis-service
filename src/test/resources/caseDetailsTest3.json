@@ -39,8 +39,7 @@
       "representative_preference": "Post",
       "representative_reference": "1111111"
     },
-    "caseAssignee": "Manchester",
-    "caseNote": "Example of Case Note",
+    "caseNotes": "Example of Case Note",
     "caseType": "Single",
     "claimantType": {
       "claimant_addressUK": {

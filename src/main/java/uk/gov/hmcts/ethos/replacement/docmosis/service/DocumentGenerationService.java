@@ -3,17 +3,17 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 
-@Service("documentGenerationService")
 @Slf4j
+@Service("documentGenerationService")
 public class DocumentGenerationService {
 
     private final TornadoService tornadoService;
     private static final String MESSAGE = "Failed to generate document for case id : ";
-    private static final String EXCEPTION = " Exception :";
 
     @Autowired
     public DocumentGenerationService(TornadoService tornadoService) {
@@ -24,11 +24,11 @@ public class DocumentGenerationService {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
         log.info("Auth Token: " + authToken);
         log.info("Case Details: " + caseDetails);
-        DocumentInfo documentInfo = new DocumentInfo();
+        DocumentInfo documentInfo;
         try {
             documentInfo = tornadoService.documentGeneration(authToken, ccdRequest.getCaseDetails());
         } catch (Exception ex) {
-            log.error(MESSAGE + caseDetails.getCaseId() + EXCEPTION + ex.toString());
+            throw new DocumentManagementException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }
         return documentInfo;
     }

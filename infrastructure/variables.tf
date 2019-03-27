@@ -62,9 +62,9 @@ variable "idam_api_url" {
   default = "http://betaDevBccidamAppLB.reform.hmcts.net:80"
 }
 
-//variable "ccd_data_store_api_url" {
-//  default = "http://ccd-data-store-api:4452"
-//}
+variable "ccd_data_store_api_url" {
+  default = "http://ccd-data-store-api:4452"
+}
 
 variable "dm_url" {
   default = "http://dm-store:8080"

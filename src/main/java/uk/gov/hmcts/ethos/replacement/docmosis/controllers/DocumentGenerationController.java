@@ -50,6 +50,7 @@ public class DocumentGenerationController {
     }
 
     private SignificantItem generateSignificantItem(DocumentInfo documentInfo) {
+        log.info("generateSignificantItem for document: " + documentInfo);
         SignificantItem significantItem = SignificantItem.builder()
                 .url(documentInfo.getUrl())
                 .description(documentInfo.getDescription())
