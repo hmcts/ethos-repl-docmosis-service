@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
@@ -52,7 +53,7 @@ public class CcdClientTest {
         caseDetails.setCaseData(new CaseData());
     }
     @Test
-    public void startCaseCreation() {
+    public void startCaseCreation() throws IOException {
         HttpEntity<Object> httpEntity = new HttpEntity<>(null);
         ResponseEntity<CCDRequest> responseEntity = new ResponseEntity<>(HttpStatus.OK);
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
@@ -64,7 +65,7 @@ public class CcdClientTest {
     }
 
     @Test
-    public void submitCaseCreation() {
+    public void submitCaseCreation() throws IOException {
         HttpEntity<CaseDataContent> httpEntity = new HttpEntity<>(CaseDataContent.builder().build(), null);
         ResponseEntity<SubmitEvent> responseEntity = new ResponseEntity<>(HttpStatus.OK);
         when(caseDataBuilder.buildCaseDataContent(eq(caseDetails), eq(ccdRequest))).thenReturn(CaseDataContent.builder().build());
@@ -77,7 +78,7 @@ public class CcdClientTest {
     }
 
     @Test
-    public void retrieveCase() {
+    public void retrieveCase() throws IOException {
         HttpEntity<Object> httpEntity = new HttpEntity<>(null);
         ResponseEntity<SubmitEvent> responseEntity = new ResponseEntity<>(HttpStatus.OK);
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);

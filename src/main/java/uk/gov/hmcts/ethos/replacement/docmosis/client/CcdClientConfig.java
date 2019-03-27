@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
+import java.io.IOException;
+
 @Slf4j
 @Component
 public class CcdClientConfig {
@@ -44,8 +46,10 @@ public class CcdClientConfig {
         return String.format(RETRIEVE_CASE_URL_CASEWORKER_FORMAT, CCD_DATA_STORE_API_BASE_URL, uid, jid, ctid, cid);
     }
 
-    HttpHeaders buildHeaders(String authToken) {
+    HttpHeaders buildHeaders(String authToken) throws IOException {
         HttpHeaders headers = new HttpHeaders();
+        if (!authToken.matches("[a-zA-Z0-9]++"))
+            throw new IOException();
         headers.add(HttpHeaders.AUTHORIZATION, authToken);
         headers.add(SERVICE_AUTHORIZATION, authTokenGenerator.generate());
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
