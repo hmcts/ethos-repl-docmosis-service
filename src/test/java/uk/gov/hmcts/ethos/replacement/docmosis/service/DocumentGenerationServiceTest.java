@@ -38,4 +38,5 @@ public class DocumentGenerationServiceTest {
         DocumentInfo documentInfo1 = documentGenerationService.processDocumentRequest(ccdRequest, "authToken");
         assertEquals(documentInfo1, documentInfo);
     }
+
 }
