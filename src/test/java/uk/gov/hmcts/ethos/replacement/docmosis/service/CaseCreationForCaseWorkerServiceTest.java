@@ -10,6 +10,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -33,7 +35,7 @@ public class CaseCreationForCaseWorkerServiceTest {
     }
 
     @Test
-    public void caseCreationRequest() {
+    public void caseCreationRequest() throws IOException {
         when(ccdClient.startCaseCreation(anyString(), any())).thenReturn(ccdRequest);
         when(ccdClient.submitCaseCreation(anyString(), any(), any())).thenReturn(submitEvent);
         SubmitEvent submitEvent1 = caseCreationForCaseWorkerService.caseCreationRequest(ccdRequest, "authToken");
