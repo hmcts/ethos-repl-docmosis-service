@@ -9,6 +9,8 @@ import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 
+import java.io.IOException;
+
 @Slf4j
 @Component
 public class CcdClient {
@@ -27,7 +29,7 @@ public class CcdClient {
         this.ccdClientConfig = ccdClientConfig;
     }
 
-    public CCDRequest startCaseCreation(String authToken, CaseDetails caseDetails) {
+    public CCDRequest startCaseCreation(String authToken, CaseDetails caseDetails) throws IOException {
         HttpEntity<String> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
         String uri = ccdClientConfig.buildStartCaseCreationUrl(userService.getUserDetails(authToken).getId(), caseDetails.getJurisdiction(),
@@ -35,7 +37,7 @@ public class CcdClient {
         return restTemplate.exchange(uri, HttpMethod.GET, request, CCDRequest.class).getBody();
     }
 
-    public SubmitEvent submitCaseCreation(String authToken, CaseDetails caseDetails, CCDRequest req) {
+    public SubmitEvent submitCaseCreation(String authToken, CaseDetails caseDetails, CCDRequest req) throws IOException {
         HttpEntity<CaseDataContent> request =
                 new HttpEntity<>(caseDataBuilder.buildCaseDataContent(caseDetails, req), ccdClientConfig.buildHeaders(authToken));
         String uri = ccdClientConfig.buildSubmitCaseCreationUrl(userService.getUserDetails(authToken).getId(), caseDetails.getJurisdiction(),
@@ -43,7 +45,7 @@ public class CcdClient {
         return restTemplate.exchange(uri, HttpMethod.POST, request, SubmitEvent.class).getBody();
     }
 
-    public SubmitEvent retrieveCase(String authToken, CaseDetails caseDetails, String cid) {
+    public SubmitEvent retrieveCase(String authToken, CaseDetails caseDetails, String cid) throws IOException {
         HttpEntity<CCDRequest> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
         String uri = ccdClientConfig.buildRetrieveCaseUrl(userService.getUserDetails(authToken).getId(), caseDetails.getJurisdiction(),
