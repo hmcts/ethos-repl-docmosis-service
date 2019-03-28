@@ -52,7 +52,7 @@ variable "autoheal" {
 }
 
 variable "idam_api_url" {
-  default = "http://betaDevBccidamAppLB.reform.hmcts.net:80"
+  default = "http://idam-api:8080"
 }
 
 variable "ccd_data_store_api_url" {
