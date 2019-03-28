@@ -107,7 +107,7 @@ public class TornadoService {
                 .type(SignificantItemType.DOCUMENT.name())
                 .description(Helper.getDocumentName(caseDetails.getCaseData()))
                 .markUp(markupURL)
-                .url(documentSelfPath.getScheme()+documentSelfPath.getHost()+documentSelfPath.getRawPath()+"/binary")
+                .url("http://gateway-ccd.demo.platform.hmcts.net"+documentSelfPath.getRawPath()+"/binary")
                 .build();
     }
 }
