@@ -93,6 +93,7 @@ public class TornadoService {
         log.info("File created: " + file.getAbsolutePath());
 
         URI documentSelfPath = documentManagementService.uploadDocument(authToken, file);
+        log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
         return generateDocumentInfo(caseDetails,
                 documentSelfPath,
                 documentManagementService.generateMarkupDocument(documentManagementService.generateDownloadableURL(documentSelfPath)));
@@ -100,11 +101,13 @@ public class TornadoService {
 
     private DocumentInfo generateDocumentInfo(CaseDetails caseDetails, URI documentSelfPath, String markupURL) {
         log.info("MarkupURL: "+markupURL);
+        log.info("DocumentSelfPath: " + documentSelfPath.toString());
+        //http://gateway-ccd.demo.platform.hmcts.net
         return DocumentInfo.builder()
                 .type(SignificantItemType.DOCUMENT.name())
                 .description(Helper.getDocumentName(caseDetails.getCaseData()))
                 .markUp(markupURL)
-                .url(documentSelfPath.getScheme()+"://127.0.0.1:3453"+documentSelfPath.getRawPath()+"/binary")
+                .url("http://gateway-ccd.demo.platform.hmcts.net"+documentSelfPath.getRawPath()+"/binary")
                 .build();
     }
 }

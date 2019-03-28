@@ -59,6 +59,7 @@ public class DocumentManagementService {
             return URI.create(document.links.self.href);
         } catch (Exception ex) {
             appInsights.trackEvent(DOCUMENT_MANAGEMENT_UPLOAD_FAILURE, DOCUMENT_NAME, doc.getName());
+            log.info("Exception: " + ex.getMessage());
             throw new DocumentManagementException(String.format("Unable to upload document %s to document management",
                     doc.getName()), ex);
         }
