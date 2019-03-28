@@ -33,7 +33,7 @@ module "repl-docmosis-backend" {
     TORNADO_URL                        = "${var.tornado_url}"
     TORNADO_ACCESS_KEY                 = "${var.tornado_access_key}"
     //IDAM_S2S_AUTH_TOTP_SECRET          = "${data.azurerm_key_vault_secret.s2s_secret.value}"
-    IDAM_USER_BASE_URI                 = "${var.idam_api_url}"
+    IDAM_API_URL                       = "${var.idam_api_url}"
     CCD_DATA_STORE_API_URL             = "${var.ccd_data_store_api_url}"
     DOCUMENT_MANAGEMENT_URL            = "${var.dm_url}"
     DOCUMENT_MANAGEMENT_CASEWORKERROLE = "caseworker-ethos"
