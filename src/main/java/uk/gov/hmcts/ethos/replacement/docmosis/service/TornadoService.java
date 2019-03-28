@@ -101,11 +101,13 @@ public class TornadoService {
 
     private DocumentInfo generateDocumentInfo(CaseDetails caseDetails, URI documentSelfPath, String markupURL) {
         log.info("MarkupURL: "+markupURL);
+        log.info("DocumentSelfPath: " + documentSelfPath.toString());
+        //http://gateway-ccd.demo.platform.hmcts.net
         return DocumentInfo.builder()
                 .type(SignificantItemType.DOCUMENT.name())
                 .description(Helper.getDocumentName(caseDetails.getCaseData()))
                 .markUp(markupURL)
-                .url(documentSelfPath.getScheme()+"://127.0.0.1:3453"+documentSelfPath.getRawPath()+"/binary")
+                .url(documentSelfPath.getScheme()+documentSelfPath.getHost()+documentSelfPath.getRawPath()+"/binary")
                 .build();
     }
 }

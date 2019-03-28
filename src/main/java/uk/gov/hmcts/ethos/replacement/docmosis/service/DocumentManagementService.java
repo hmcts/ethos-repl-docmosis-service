@@ -43,20 +43,13 @@ public class DocumentManagementService {
 
     URI uploadDocument(String authToken, File doc) {
         try {
-            log.info("Coming to upload Document");
-            String id = userService.getUserDetails(authToken).getId();
-            log.info("User id: " + id);
-            String token = authTokenGenerator.generate();
-            log.info("Token generated: " + token);
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, doc.getName(), APPLICATION_DOCX_VALUE, FileCopyUtils.copyToByteArray(doc));
-            log.info("Multi part file created");
             UploadResponse response = documentUploadClient.upload(
                     authToken,
-                    token,
-                    id,
+                    authTokenGenerator.generate(),
+                    userService.getUserDetails(authToken).getId(),
                     singletonList(file)
             );
-            log.info("Response created");
             Document document = response.getEmbedded().getDocuments().stream()
                     .findFirst()
                     .orElseThrow(() ->
@@ -66,7 +59,7 @@ public class DocumentManagementService {
             return URI.create(document.links.self.href);
         } catch (Exception ex) {
             appInsights.trackEvent(DOCUMENT_MANAGEMENT_UPLOAD_FAILURE, DOCUMENT_NAME, doc.getName());
-            log.info("Exception created: " + ex.getMessage());
+            log.info("Exception: " + ex.getMessage());
             throw new DocumentManagementException(String.format("Unable to upload document %s to document management",
                     doc.getName()), ex);
         }
