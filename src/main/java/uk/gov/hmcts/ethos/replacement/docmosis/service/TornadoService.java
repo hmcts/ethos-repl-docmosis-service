@@ -93,6 +93,7 @@ public class TornadoService {
         log.info("File created: " + file.getAbsolutePath());
 
         URI documentSelfPath = documentManagementService.uploadDocument(authToken, file);
+        log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
         return generateDocumentInfo(caseDetails,
                 documentSelfPath,
                 documentManagementService.generateMarkupDocument(documentManagementService.generateDownloadableURL(documentSelfPath)));
