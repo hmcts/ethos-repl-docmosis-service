@@ -17,6 +17,7 @@ services:
       SERVICE_AUTH_PROVIDER_URL: "http://service-auth-provider-api:8080"
       CCD_GATEWAY_BASE_URL: "http://127.0.0.1:3453"
       APPINSIGHTS_INSTRUMENTATIONKEY: "key"
+      ETHOS_S2S_SECRET: "AAAAAAAAAAAAAAAC"
 
   tornado:
     image: "hmcts/tornado:latest"
