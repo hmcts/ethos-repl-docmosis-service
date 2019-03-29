@@ -9,7 +9,7 @@ locals {
   previewVaultName = "${var.product}-aat"
   nonPreviewVaultName = "${var.product}-${var.env}"
   vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
-  //vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+  vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
   previewVaultGroupName = "${var.product}-${local.app}-aat"
   nonPreviewVaultGroupName = "${var.product}-${local.app}-${var.env}"
   vaultGroupName = "${var.env == "preview" ? local.previewVaultGroupName : local.nonPreviewVaultGroupName}"
@@ -31,25 +31,32 @@ module "repl-docmosis-backend" {
   app_settings                         = {
     WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = "${var.autoheal}"
     TORNADO_URL                        = "${var.tornado_url}"
-    TORNADO_ACCESS_KEY                 = "${var.tornado_access_key}"
-    //IDAM_S2S_AUTH_TOTP_SECRET          = "${data.azurerm_key_vault_secret.s2s_secret.value}"
+    TORNADO_ACCESS_KEY                 = "${data.azurerm_key_vault_secret.tornado_access_key.value}"
+    ETHOS_S2S_SECRET                   = "${data.azurerm_key_vault_secret.s2s_secret.value}"
     IDAM_API_URL                       = "${var.idam_api_url}"
     CCD_DATA_STORE_API_URL             = "${var.ccd_data_store_api_url}"
     DOCUMENT_MANAGEMENT_URL            = "${var.dm_url}"
     DOCUMENT_MANAGEMENT_CASEWORKERROLE = "caseworker-ethos"
     SERVICE_AUTH_PROVIDER_URL          = "${var.s2s_url}"
+    MICRO_SERVICE                      = "${var.micro_service}"
+    CCD_GATEWAY_BASE_URL               = "${var.ccd_gateway_url}"
   }
 }
 
-//data "azurerm_key_vault" "ethos_key_vault" {
-//  name                = "${local.vaultName}"
-//  resource_group_name = "${local.vaultGroupName}"
-//}
+data "azurerm_key_vault" "ethos_key_vault" {
+  name                = "${local.vaultName}"
+  resource_group_name = "${local.vaultGroupName}"
+}
 
-//data "azurerm_key_vault_secret" "s2s_secret" {
-//  name = "ethos-repl-docmosis-s2s-secret"
-//  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
-//}
+data "azurerm_key_vault_secret" "s2s_secret" {
+  name = "ethos-s2s-secret"
+  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+}
+
+data "azurerm_key_vault_secret" "tornado_access_key" {
+  name = "tornado-access-key"
+  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+}
 
 module "key-vault" {
   source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=master"

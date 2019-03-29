@@ -22,6 +22,8 @@ public class ServiceTokenGeneratorConfiguration {
             @Value("${idam.s2s-auth.microservice}") String microService,
         ServiceAuthorisationApi serviceAuthorisationApi
     ) {
+        log.info("Secret: " + secret);
+        log.info("MicroService: " + microService);
         return AuthTokenGeneratorFactory.createDefaultGenerator(secret, microService, serviceAuthorisationApi);
     }
 

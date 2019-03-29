@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
@@ -26,6 +27,8 @@ public class TornadoService {
 
     private final TornadoConfiguration tornadoConfiguration;
     private final DocumentManagementService documentManagementService;
+    @Value("${ccd_gateway_base_url}")
+    private String ccdGatewayBaseUrl;
 
     DocumentInfo documentGeneration(String authToken, CaseDetails caseDetails) throws IOException {
         HttpURLConnection conn = null;
@@ -101,13 +104,11 @@ public class TornadoService {
 
     private DocumentInfo generateDocumentInfo(CaseDetails caseDetails, URI documentSelfPath, String markupURL) {
         log.info("MarkupURL: "+markupURL);
-        log.info("DocumentSelfPath: " + documentSelfPath.toString());
-        //http://gateway-ccd.demo.platform.hmcts.net
         return DocumentInfo.builder()
                 .type(SignificantItemType.DOCUMENT.name())
                 .description(Helper.getDocumentName(caseDetails.getCaseData()))
                 .markUp(markupURL)
-                .url("http://gateway-ccd.demo.platform.hmcts.net"+documentSelfPath.getRawPath()+"/binary")
+                .url(ccdGatewayBaseUrl + documentSelfPath.getRawPath() + "/binary")
                 .build();
     }
 }
