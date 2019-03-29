@@ -18,6 +18,7 @@ services:
       CCD_GATEWAY_BASE_URL: "http://127.0.0.1:3453"
       APPINSIGHTS_INSTRUMENTATIONKEY: "key"
       ETHOS_S2S_SECRET: "AAAAAAAAAAAAAAAC"
+      MICRO_SERVICE: "ccd_gw"
 
   tornado:
     image: "hmcts/tornado:latest"
