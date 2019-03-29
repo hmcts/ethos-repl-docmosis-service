@@ -11,9 +11,9 @@ output "vaultName" {
   value = "${local.vaultName}"
 }
 
-//output "vaultUri" {
-//  value = "${local.vaultUri}"
-//}
+output "vaultUri" {
+  value = "${local.vaultUri}"
+}
 
 output "tornado_url" {
   value = "${var.tornado_url}"
