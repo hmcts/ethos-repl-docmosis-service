@@ -1,5 +1,4 @@
 tornado_url = "https://docmosis-development.platform.hmcts.net/rs/render"
-tornado_access_key = "ZDYxMTkzZTQtMGY2Mi00NDM1LWIyN2ItNGRkNzdjOTczMjAwOjQ1NTE0ODQ"
 idam_api_url = "https://preprod-idamapi.reform.hmcts.net:3511"
 ccd_data_store_api_url = "http://ccd-data-store-api-demo.service.core-compute-demo.internal"
 dm_url = "http://dm-store-demo.service.core-compute-demo.internal"
