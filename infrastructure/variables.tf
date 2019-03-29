@@ -16,13 +16,13 @@ variable "tornado_url" {
   default = "http://tornado:8082/rs/render"
 }
 
-variable "tornado_access_key" {
-  default = ""
-}
-
-variable "ethos_s2s_secret" {
-  default = "AAAAAAAAAAAAAAAC"
-}
+//variable "tornado_access_key" {
+//  default = ""
+//}
+//
+//variable "ethos_s2s_secret" {
+//  default = "AAAAAAAAAAAAAAAC"
+//}
 
 variable "subscription" {
   type = "string"

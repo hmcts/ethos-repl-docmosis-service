@@ -19,9 +19,9 @@ output "tornado_url" {
   value = "${var.tornado_url}"
 }
 
-output "tornado_access_key" {
-  value = "${var.tornado_access_key}"
-}
+//output "tornado_access_key" {
+//  value = "${var.tornado_access_key}"
+//}
 
 output "idam_api_url" {
   value = "${var.idam_api_url}"
