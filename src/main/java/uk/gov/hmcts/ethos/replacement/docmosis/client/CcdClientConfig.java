@@ -48,8 +48,9 @@ public class CcdClientConfig {
 
     HttpHeaders buildHeaders(String authToken) throws IOException {
         HttpHeaders headers = new HttpHeaders();
-        if (!authToken.matches("[a-zA-Z0-9]++"))
-            throw new IOException();
+        if (!authToken.matches("[a-zA-Z0-9._\\s\\S]+$")) {
+            throw new IOException("authToken regex exception");
+        }
         headers.add(HttpHeaders.AUTHORIZATION, authToken);
         headers.add(SERVICE_AUTHORIZATION, authTokenGenerator.generate());
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);

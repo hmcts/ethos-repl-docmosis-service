@@ -12,3 +12,6 @@ data:
   CCD_DATA_STORE_API_URL: "http://ccd-data-store-api:4452"
   DOCUMENT_MANAGEMENT_URL: "http://dm-store:8080"
   SERVICE_AUTH_PROVIDER_URL: "http://service-auth-provider-api:8080"
+  CCD_GATEWAY_BASE_URL: "http://127.0.0.1:3453"
+  ETHOS_S2S_SECRET: "AAAAAAAAAAAAAAAC"
+  MICRO_SERVICE: "ccd_gw"

@@ -2,6 +2,8 @@ java:
   applicationPort: 8081
   environment:
     APPINSIGHTS_INSTRUMENTATIONKEY: ${APPINSIGHTS_INSTRUMENTATIONKEY}
+    ETHOS_S2S_SECRET: ${ETHOS_S2S_SECRET}
+    TORNADO_ACCESS_KEY: ${TORNADO_ACCESS_KEY}
   # Don't modify below here
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}

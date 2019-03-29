@@ -51,13 +51,11 @@ public class DocumentGenerationController {
 
     private SignificantItem generateSignificantItem(DocumentInfo documentInfo) {
         log.info("generateSignificantItem for document: " + documentInfo);
-        SignificantItem significantItem = SignificantItem.builder()
+        return SignificantItem.builder()
                 .url(documentInfo.getUrl())
                 .description(documentInfo.getDescription())
                 .type(SignificantItemType.DOCUMENT.name())
                 .build();
-        log.info("URL for document: " + significantItem.getUrl());
-        return significantItem;
     }
 
 }

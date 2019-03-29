@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -31,6 +32,8 @@ public class DocumentManagementService {
     private AuthTokenGenerator authTokenGenerator;
     private UserService userService;
     private AppInsights appInsights;
+    @Value("${ccd_gateway_base_url}")
+    private String ccdGatewayBaseUrl;
 
     @Autowired
     public DocumentManagementService(DocumentUploadClientApi documentUploadClient, AuthTokenGenerator authTokenGenerator,
@@ -43,6 +46,7 @@ public class DocumentManagementService {
 
     URI uploadDocument(String authToken, File doc) {
         try {
+            log.info("ccdGatewayBaseUrl: " + ccdGatewayBaseUrl);
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, doc.getName(), APPLICATION_DOCX_VALUE, FileCopyUtils.copyToByteArray(doc));
             UploadResponse response = documentUploadClient.upload(
                     authToken,
@@ -66,8 +70,7 @@ public class DocumentManagementService {
     }
 
     String generateDownloadableURL(URI documentSelf) {
-        return documentSelf.getScheme() + "://localhost:3453" + documentSelf.getRawPath() + "/binary";
-        //return documentSelf.getScheme() + "://" + documentSelf.getAuthority() + documentSelf.getRawPath() + "/binary";
+        return ccdGatewayBaseUrl + documentSelf.getRawPath() + "/binary";
     }
 
     String generateMarkupDocument(String documentDownloadableURL) {

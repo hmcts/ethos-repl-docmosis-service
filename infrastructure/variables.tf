@@ -16,10 +16,6 @@ variable "tornado_url" {
   default = "http://tornado:8082/rs/render"
 }
 
-variable "tornado_access_key" {
-  default = ""
-}
-
 variable "subscription" {
   type = "string"
 }
@@ -65,6 +61,14 @@ variable "dm_url" {
 
 variable "s2s_url" {
   default = "http://service-auth-provider-api:8080"
+}
+
+variable "micro_service" {
+  default = "ccd_gw"
+}
+
+variable "ccd_gateway_url" {
+  default = "http://127.0.0.1:3453"
 }
 
 variable "appinsights_instrumentation_key" {
