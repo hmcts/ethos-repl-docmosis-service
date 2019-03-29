@@ -28,7 +28,7 @@ public class TornadoService {
     private final TornadoConfiguration tornadoConfiguration;
     private final DocumentManagementService documentManagementService;
     @Value("${ccd_gateway_base_url}")
-    private String gatewayCcdUrl;
+    private String ccdGatewayBaseUrl;
 
     DocumentInfo documentGeneration(String authToken, CaseDetails caseDetails) throws IOException {
         HttpURLConnection conn = null;
@@ -108,7 +108,7 @@ public class TornadoService {
                 .type(SignificantItemType.DOCUMENT.name())
                 .description(Helper.getDocumentName(caseDetails.getCaseData()))
                 .markUp(markupURL)
-                .url(gatewayCcdUrl + documentSelfPath.getRawPath() + "/binary")
+                .url(ccdGatewayBaseUrl + documentSelfPath.getRawPath() + "/binary")
                 .build();
     }
 }
