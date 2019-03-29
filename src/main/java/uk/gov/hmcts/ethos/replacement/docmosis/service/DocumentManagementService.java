@@ -33,7 +33,7 @@ public class DocumentManagementService {
     private UserService userService;
     private AppInsights appInsights;
     @Value("${ccd_gateway_base_url}")
-    private String gatewayCcdUrl;
+    private String ccdGatewayBaseUrl;
 
     @Autowired
     public DocumentManagementService(DocumentUploadClientApi documentUploadClient, AuthTokenGenerator authTokenGenerator,
@@ -46,6 +46,7 @@ public class DocumentManagementService {
 
     URI uploadDocument(String authToken, File doc) {
         try {
+            log.info("ccdGatewayBaseUrl: " + ccdGatewayBaseUrl);
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, doc.getName(), APPLICATION_DOCX_VALUE, FileCopyUtils.copyToByteArray(doc));
             UploadResponse response = documentUploadClient.upload(
                     authToken,
@@ -69,7 +70,7 @@ public class DocumentManagementService {
     }
 
     String generateDownloadableURL(URI documentSelf) {
-        return gatewayCcdUrl + documentSelf.getRawPath() + "/binary";
+        return ccdGatewayBaseUrl + documentSelf.getRawPath() + "/binary";
     }
 
     String generateMarkupDocument(String documentDownloadableURL) {

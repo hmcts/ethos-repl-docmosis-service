@@ -71,6 +71,10 @@ variable "s2s_url" {
   default = "http://service-auth-provider-api:8080"
 }
 
+variable "micro_service" {
+  default = "ccd_gw"
+}
+
 variable "ccd_gateway_url" {
   default = "http://127.0.0.1:3453"
 }

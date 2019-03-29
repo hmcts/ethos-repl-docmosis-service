@@ -38,6 +38,7 @@ module "repl-docmosis-backend" {
     DOCUMENT_MANAGEMENT_URL            = "${var.dm_url}"
     DOCUMENT_MANAGEMENT_CASEWORKERROLE = "caseworker-ethos"
     SERVICE_AUTH_PROVIDER_URL          = "${var.s2s_url}"
+    MICRO_SERVICE                      = "${var.micro_service}"
     CCD_GATEWAY_BASE_URL               = "${var.ccd_gateway_url}"
   }
 }

@@ -4,3 +4,4 @@ ccd_data_store_api_url = "http://ccd-data-store-api-saat.service.core-compute-sa
 dm_url = "http://dm-store-saat.service.core-compute-saat.internal"
 s2s_url = "https://rpe-service-auth-provider-saat.service.core-compute-saat.internal"
 ccd_gateway_url = "https://gateway-ccd.saat.platform.hmcts.net"
+micro_service = "sscs"
