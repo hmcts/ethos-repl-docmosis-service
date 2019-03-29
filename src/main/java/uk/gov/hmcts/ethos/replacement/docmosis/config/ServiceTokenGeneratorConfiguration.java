@@ -23,7 +23,7 @@ public class ServiceTokenGeneratorConfiguration {
         ServiceAuthorisationApi serviceAuthorisationApi
     ) {
         log.info("Secret: " + secret);
-        log.info("Microservice: " + microService);
+        log.info("MicroService: " + microService);
         return AuthTokenGeneratorFactory.createDefaultGenerator(secret, microService, serviceAuthorisationApi);
     }
 
