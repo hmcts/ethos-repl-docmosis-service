@@ -9,7 +9,7 @@ locals {
   previewVaultName = "${var.product}-aat"
   nonPreviewVaultName = "${var.product}-${var.env}"
   vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
-  //vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+  vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
   previewVaultGroupName = "${var.product}-${local.app}-aat"
   nonPreviewVaultGroupName = "${var.product}-${local.app}-${var.env}"
   vaultGroupName = "${var.env == "preview" ? local.previewVaultGroupName : local.nonPreviewVaultGroupName}"
@@ -38,13 +38,14 @@ module "repl-docmosis-backend" {
     DOCUMENT_MANAGEMENT_URL            = "${var.dm_url}"
     DOCUMENT_MANAGEMENT_CASEWORKERROLE = "caseworker-ethos"
     SERVICE_AUTH_PROVIDER_URL          = "${var.s2s_url}"
+    CCD_GATEWAY_BASE_URL               = "${var.ccd_gateway_url}"
   }
 }
 
-//data "azurerm_key_vault" "ethos_key_vault" {
-//  name                = "${local.vaultName}"
-//  resource_group_name = "${local.vaultGroupName}"
-//}
+data "azurerm_key_vault" "ethos_key_vault" {
+  name                = "${local.vaultName}"
+  resource_group_name = "${local.vaultGroupName}"
+}
 
 //data "azurerm_key_vault_secret" "s2s_secret" {
 //  name = "ethos-repl-docmosis-s2s-secret"
