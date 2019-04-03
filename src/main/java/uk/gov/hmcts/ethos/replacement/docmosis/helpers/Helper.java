@@ -81,14 +81,21 @@ public class Helper {
             if (caseData.getIfCRepresented().equals("Yes")) {
                 RepresentedType representedType = caseData.getC_RepresentedType();
                 sb.append("\"claimant_full_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+                sb.append("\"claimant_rep_full_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+                sb.append("\"Claimant_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
                 sb.append("\"Claimant\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
                 sb.append("\"claimant_addressUK\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
+                sb.append("\"claimant_rep_addressUK\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
                 sb.append("\"claimant_email_address\":\"").append(representedType.getRepresentativeEmailAddress()).append(NEW_LINE);
+                sb.append("\"claimant_rep_email_address\":\"").append(representedType.getRepresentativeEmailAddress()).append(NEW_LINE);
                 sb.append("\"representative_reference\":\"").append(representedType.getRepresentativeReference()).append(NEW_LINE);
+                sb.append("\"claimant_rep_reference\":\"").append(representedType.getRepresentativeReference()).append(NEW_LINE);
+                sb.append("\"claimant_reference\":\"").append(representedType.getRepresentativeReference()).append(NEW_LINE);
             } else {
                 ClaimantType claimantType = caseData.getClaimantType();
                 ClaimantIndType claimantIndType = caseData.getClaimantIndType();
                 sb.append("\"claimant_full_name\":\"").append(claimantIndType.claimantFullName()).append(NEW_LINE);
+                sb.append("\"Claimant_name\":\"").append(claimantIndType.claimantFullName()).append(NEW_LINE);
                 sb.append("\"Claimant\":\"").append(claimantIndType.claimantFullName()).append(NEW_LINE);
                 sb.append("\"claimant_addressUK\":\"").append(claimantType.getClaimantAddressUK()).append(NEW_LINE);
                 sb.append("\"claimant_email_address\":\"").append(claimantType.getClaimantEmailAddress()).append(NEW_LINE);
@@ -102,11 +109,22 @@ public class Helper {
         if (caseData.getIfRRepresented() != null && caseData.getIfRRepresented().equals("Yes")) {
             RepresentedType representedType = caseData.getR_RepresentedType();
             sb.append("\"Respondent\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"Respondent_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"respondent_full_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"respondent_representative\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"respondent_rep_full_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"respondent_addressUK\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
+            sb.append("\"respondent_rep_addressUK\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
+            sb.append("\"respondent_reference\":\"").append(representedType.getRepresentativeReference()).append(NEW_LINE);
+            sb.append("\"respondent_rep_reference\":\"").append(representedType.getRepresentativeReference()).append(NEW_LINE);
+            sb.append("\"respondent_email_address\":\"").append(representedType.getRepresentativeEmailAddress()).append(NEW_LINE);
+            sb.append("\"respondent_rep_email_address\":\"").append(representedType.getRepresentativeEmailAddress()).append(NEW_LINE);
         } else {
             Optional<RespondentSumType> respondentType = Optional.ofNullable(caseData.getRespondentSumType());
             if (respondentType.isPresent()) {
                 sb.append("\"Respondent\":\"").append(respondentType.get().getRespondentName()).append(NEW_LINE);
+                sb.append("\"Respondent_name\":\"").append(respondentType.get().getRespondentName()).append(NEW_LINE);
+                sb.append("\"respondent_full_name\":\"").append(respondentType.get().getRespondentName()).append(NEW_LINE);
                 sb.append("\"respondent_addressUK\":\"").append(respondentType.get().getRespondentAddress()).append(NEW_LINE);
             }
         }
