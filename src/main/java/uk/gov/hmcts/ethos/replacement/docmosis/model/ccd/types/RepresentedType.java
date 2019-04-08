@@ -9,10 +9,16 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 @Data
 public class RepresentedType {
 
+    @JsonProperty("rep_Type")
+    private String repType;
+    @JsonProperty("resp_rep_name")
+    private String respRepName;
     @JsonProperty("name_of_representative")
     private String nameOfRepresentative;
     @JsonProperty("name_of_organisation")
     private String nameOfOrganisation;
+    @JsonProperty("representative_reference")
+    private String representativeReference;
     @JsonProperty("representative_address")
     private Address representativeAddress;
     @JsonProperty("representative_dx_number")
@@ -25,8 +31,6 @@ public class RepresentedType {
     private String representativeFaxNumber;
     @JsonProperty("representative_email_address")
     private String representativeEmailAddress;
-    @JsonProperty("representative_reference")
-    private String representativeReference;
     @JsonProperty("representative_preference")
     private String representativePreference;
 

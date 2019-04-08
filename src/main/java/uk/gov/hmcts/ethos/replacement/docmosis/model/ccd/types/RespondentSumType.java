@@ -13,5 +13,15 @@ public class RespondentSumType {
     private String respondentName;
     @JsonProperty("respondent_address")
     private Address respondentAddress;
+    @JsonProperty("respondent_phone1")
+    private String respondentPhone1;
+    @JsonProperty("respondent_phone2")
+    private String respondentPhone2;
+    @JsonProperty("respondent_fax")
+    private String respondentFax;
+    @JsonProperty("respondent_email")
+    private String respondentEmail;
+    @JsonProperty("respondent_contact_preference")
+    private String respondentContactPreference;
 
 }

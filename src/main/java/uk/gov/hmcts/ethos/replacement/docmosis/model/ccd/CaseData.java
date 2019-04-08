@@ -12,24 +12,24 @@ import java.util.List;
 @Data
 public class CaseData {
 
-    @JsonProperty("caseNotes")
-    private String caseNotes;
+    @JsonProperty("tribunalOffices")
+    private TribunalOfficeVenueType tribunalOffices;
     @JsonProperty("caseType")
     private String caseType;
     @JsonProperty("multipleType")
     private String multipleType;
     @JsonProperty("multipleReference")
     private String multipleReference;
+    @JsonProperty("claimant_TypeOfClaimant")
+    private String claimantTypeOfClaimant;
+    @JsonProperty("claimant_Company")
+    private String claimantCompany;
     @JsonProperty("claimantIndType")
     private ClaimantIndType claimantIndType;
     @JsonProperty("claimantType")
     private ClaimantType claimantType;
     @JsonProperty("claimantOtherType")
     private ClaimantOtherType claimantOtherType;
-    @JsonProperty("if_C_represented")
-    private String ifCRepresented;
-    @JsonProperty("c_RepresentedType")
-    private RepresentedType c_RepresentedType;
     @JsonProperty("claimantCollection")
     private List<ClaimantTypeItem> claimantCollection;
     @JsonProperty("receiptDate")
@@ -40,18 +40,18 @@ public class CaseData {
     private String feeGroupReference;
     @JsonProperty("respondentSumType")
     private RespondentSumType respondentSumType;
-    @JsonProperty("respondentType")
-    private RespondentType respondentType;
-    @JsonProperty("if_R_represented")
-    private String ifRRepresented;
-    @JsonProperty("r_RepresentedType")
-    private RepresentedType r_RepresentedType;
+    @JsonProperty("repSumType")
+    private RepresentedType repSumType;
     @JsonProperty("respondentCollection")
     private List<RespondentSumTypeItem> respondentCollection;
+    @JsonProperty("repCollection")
+    private List<RepresentedTypeItem> repCollection;
     @JsonProperty("positionType")
     private String positionType;
     @JsonProperty("fileLocation")
     private String fileLocation;
+    @JsonProperty("hearingType")
+    private HearingType hearingType;
     @JsonProperty("hearingCollection")
     private List<HearingTypeItem> hearingCollection;
     @JsonProperty("depositCollection")
@@ -68,8 +68,6 @@ public class CaseData {
     private NhJudgementType NH_JudgementType;
     @JsonProperty("jurCodesCollection")
     private List<JurCodesTypeItem> jurCodesCollection;
-    @JsonProperty("tribunalOffice")
-    private String tribunalOffice;
     @JsonProperty("acasOffice")
     private String acasOffice;
     @JsonProperty("clerkResponsible")
@@ -88,6 +86,8 @@ public class CaseData {
     private List<ReferralTypeItem> referToETJ;
     @JsonProperty("responseType")
     private ResponseType responseType;
+    @JsonProperty("responseTypeCollection")
+    private List<ResponseTypeItem> responseTypeCollection;
     @JsonProperty("withdrawType")
     private WithdrawType withdrawType;
     @JsonProperty("archiveType")
@@ -96,12 +96,13 @@ public class CaseData {
     private String referredToJudge;
     @JsonProperty("backFromJudge")
     private String backFromJudge;
-    @JsonProperty("responseReceived")
-    private String responseReceived;
     @JsonProperty("additionalType")
     private AdditionalType additionalType;
     @JsonProperty("reconsiderationType")
     private ReconsiderationType reconsiderationType;
     @JsonProperty("correspondenceType")
     private CorrespondenceType correspondenceType;
+    @JsonProperty("caseNotes")
+    private String caseNotes;
+
 }

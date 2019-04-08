@@ -20,25 +20,6 @@
     },
     "backFromJudge": "backFromJudge",
     "broughtForwardDate": "broughtForwardDate",
-    "c_RepresentedType": {
-      "name_of_organisation": "ClaimantOrganisation",
-      "name_of_representative": "ClaimantRepresentative",
-      "representative_address": {
-        "AddressLine1": "56 Block C",
-        "AddressLine2": "Ellesmere Street",
-        "Country": "UK",
-        "County": "Lancashire",
-        "PostCode": "M3 KJR",
-        "PostTown": "Manchester"
-      },
-      "representative_dx_number": "222222222",
-      "representative_email_address": "example@gmail.com",
-      "representative_fax_number": "07577136570",
-      "representative_mobile_number": "07577136570",
-      "representative_phone_number": "07577136570",
-      "representative_preference": "Post",
-      "representative_reference": "1111111"
-    },
     "caseNotes": "Example of Case Note",
     "caseType": "Single",
     "claimantType": {
@@ -83,12 +64,36 @@
             "PostCode": "M12 42R",
             "PostTown": "Manchester"
           },
-          "respondent_name": "Antonio Vazquez"
+          "respondent_name": "Antonio Vazquez",
+          "respondent_contact_preference": "Post",
+          "respondent_email": "Antonio@gmail.com",
+          "respondent_fax": "07577136570",
+          "respondent_phone1": "07577136570",
+          "respondent_phone2": "07577136570"
         }
       }
     ],
-    "if_C_represented": "Yes",
-    "if_R_represented": "No",
+    "repSumType": {
+      "rep_Type": "Claimant",
+      "resp_rep_name" : "RepresentativeNameClaimant",
+      "name_of_organisation": "RepresentativeOrganisation",
+      "name_of_representative": "RepresentativeNameClaimant",
+      "representative_address": {
+        "AddressLine1": "56 Block C",
+        "AddressLine2": "Ellesmere Street",
+        "Country": "UK",
+        "County": "Lancashire",
+        "PostCode": "M3 KJR",
+        "PostTown": "Manchester"
+      },
+      "representative_dx_number": "222222222",
+      "representative_email_address": "example@gmail.com",
+      "representative_fax_number": "07577136570",
+      "representative_mobile_number": "07577136570",
+      "representative_phone_number": "07577136570",
+      "representative_preference": "Post",
+      "representative_reference": "1111111"
+    },
     "locationType": "Manchester",
     "multipleReference": "No",
     "multipleType": "No",
@@ -100,6 +105,32 @@
       "reconsideration_hearing_date": "2019-03-12",
       "who_applied?": "nobody"
     },
+    "repCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "rep_Type": "Respondent",
+          "resp_rep_name" : "RepresentativeNameRespondent",
+          "name_of_organisation": "RepresentativeOrganisation",
+          "name_of_representative": "RepresentativeNameRespondent",
+          "representative_address": {
+            "AddressLine1": "56 Block C",
+            "AddressLine2": "Ellesmere Street",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M3 KJR",
+            "PostTown": "Manchester"
+          },
+          "representative_dx_number": "3333333333",
+          "representative_email_address": "example@gmail.com",
+          "representative_fax_number": "07577136570",
+          "representative_mobile_number": "07577136570",
+          "representative_phone_number": "07577136570",
+          "representative_preference": "Post",
+          "representative_reference": "3333333333"
+        }
+      }
+    ],
     "respondentSumType": {
       "respondent_address": {
         "AddressLine1": "54 Ellesmere Street",
@@ -107,16 +138,14 @@
         "Country": "UK",
         "County": "North West",
         "PostCode": "M15 4QR",
-        "PostTown": "Manchester"
+        "PostTown": "Manchester",
+        "respondent_contact_preference": "Post",
+        "respondent_email": "Antonio@gmail.com",
+        "respondent_fax": "07577136570",
+        "respondent_phone1": "07577136570",
+        "respondent_phone2": "07577136570"
       },
       "respondent_name": "string"
-    },
-    "respondentType": {
-      "respondent_contact_preference": "Post",
-      "respondent_email": "Antonio@gmail.com",
-      "respondent_fax": "07577136570",
-      "respondent_phone1": "07577136570",
-      "respondent_phone2": "07577136570"
     },
     "responseReceived": "none",
     "responseType": {
@@ -127,7 +156,14 @@
       "response_status": "Status",
       "response_to_claim": "No"
     },
-    "tribunalOffice": "Manchester",
+    "tribunalOffices": {
+      "associatedTribunalOffice": "",
+      "venueNameManchester": "Manchester",
+      "venueNameScotland": "",
+      "venueNameLondonSouth": "",
+      "venueNameLondonCentral": "",
+      "venueNameLondonEast": ""
+    },
     "userLocation": "Liverpool",
     "withdrawType": {
       "withdrawTextArea": "Nothing"

@@ -21,7 +21,14 @@ public class CaseDataTest {
                 + " \"fileLocation\" : \"City\", "
                 + " \"caseType\" : \"Single\", "
                 + " \"feeGroupReference\" : \"1212\", "
-                + " \"tribunalOffice\" : \"tribunalOffice\" "
+                + " \"tribunalOffices\": {\n" +
+                "      \"associatedTribunalOffice\": \"\",\n" +
+                "      \"venueNameManchester\": \"Manchester\",\n" +
+                "      \"venueNameScotland\": \"\",\n" +
+                "      \"venueNameLondonSouth\": \"\",\n" +
+                "      \"venueNameLondonCentral\": \"\",\n" +
+                "      \"venueNameLondonEast\": \"\"\n" +
+                "    }"
                 + "} ";
         ObjectMapper mapper = new ObjectMapper();
         caseData = mapper.readValue(json, CaseData.class);
@@ -37,6 +44,6 @@ public class CaseDataTest {
         assertThat(caseData.getFileLocation(), is("City"));
         assertThat(caseData.getCaseType(), is("Single"));
         assertThat(caseData.getFeeGroupReference(), is("1212"));
-        assertThat(caseData.getTribunalOffice(), is("tribunalOffice"));
+        assertThat(caseData.getTribunalOffices().getVenueNameManchester(), is("Manchester"));
     }
 }
