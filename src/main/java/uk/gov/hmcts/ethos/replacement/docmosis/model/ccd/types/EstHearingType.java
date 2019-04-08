@@ -12,4 +12,8 @@ public class EstHearingType {
     private String estHearingLengthNumber;
     @JsonProperty("est_Hearing_length_num")
     private String estHearingLengthNum;
+
+    public String toString() {
+        return String.join(" ", estHearingLengthNumber, estHearingLengthNum);
+    }
 }
