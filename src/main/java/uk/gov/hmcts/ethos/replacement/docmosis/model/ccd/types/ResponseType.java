@@ -8,12 +8,20 @@ import lombok.Data;
 @Data
 public class ResponseType {
 
+    @JsonProperty("responseReceivedDate")
+    private String responseReceivedDate;
+    @JsonProperty("responseRespondentName")
+    private String responseRespondentName;
     @JsonProperty("response_status")
     private String responseStatus;
-    @JsonProperty("response_received")
-    private String responseReceived;
     @JsonProperty("response_to_claim")
     private String responseToClaim;
+    @JsonProperty("rejection_reason")
+    private String rejectionReason;
+    @JsonProperty("rejection_reason_other")
+    private String rejectionReasonOther;
+    @JsonProperty("responseNotes")
+    private String responseNotes;
     @JsonProperty("response_referred_to_judge")
     private String response_ReferredToJudge;
     @JsonProperty("response_returned_from_judge")
