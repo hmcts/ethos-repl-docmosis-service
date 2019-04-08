@@ -20,9 +20,11 @@
     },
     "backFromJudge": "backFromJudge",
     "broughtForwardDate": "broughtForwardDate",
-    "c_RepresentedType": {
-      "name_of_organisation": "ClaimantOrganisation",
-      "name_of_representative": "ClaimantRepresentative",
+    "repSumType": {
+      "rep_Type": "Claimant",
+      "resp_rep_name" : "RepresentativeNameClaimant",
+      "name_of_organisation": "RepresentativeOrganisation",
+      "name_of_representative": "RepresentativeNameClaimant",
       "representative_address": {
         "AddressLine1": "56 Block C",
         "AddressLine2": "Ellesmere Street",
@@ -75,7 +77,7 @@
         "value" : {
           "Est_Hearing": {
             "est_Hearing_length_number": "2",
-            "est_Hearing_length_num": "3"
+            "est_Hearing_length_num": "days"
           },
           "HearingType": "Single",
           "Hearing_date": "2019-11-25",
@@ -95,12 +97,15 @@
             "PostCode": "M12 42R",
             "PostTown": "Manchester"
           },
-          "respondent_name": "Antonio Vazquez"
+          "respondent_name": "Antonio Vazquez",
+          "respondent_contact_preference": "Post",
+          "respondent_email": "Antonio@gmail.com",
+          "respondent_fax": "07577136570",
+          "respondent_phone1": "07577136570",
+          "respondent_phone2": "07577136570"
         }
       }
     ],
-    "if_C_represented": "Yes",
-    "if_R_represented": "No",
     "locationType": "Manchester",
     "multipleReference": "No",
     "multipleType": "No",
@@ -122,9 +127,7 @@
         "PostCode": "M15 4QR",
         "PostTown": "Manchester"
       },
-      "respondent_name": "string"
-    },
-    "respondentType": {
+      "respondent_name": "string",
       "respondent_contact_preference": "Post",
       "respondent_email": "Antonio@gmail.com",
       "respondent_fax": "07577136570",
@@ -133,14 +136,26 @@
     },
     "responseReceived": "none",
     "responseType": {
+      "responseReceivedDate" : "23/12/2019",
+      "responseRespondentName" : "RespondentName",
       "response_received": "Yes",
       "response_referred_to_judge": "Yes",
       "response_required_info_absent?": "Yes",
       "response_returned_from_judge": "Yes",
       "response_status": "Status",
+      "rejection_reason" : "none",
+      "rejection_reason_other" : "none",
+      "responseNotes" : "notes",
       "response_to_claim": "No"
     },
-    "tribunalOffice": "Manchester",
+    "tribunalOffices": {
+      "associatedTribunalOffice": "",
+      "venueNameManchester": "Manchester",
+      "venueNameScotland?": "",
+      "venueNameLondonSouth": "",
+      "venueNameLondonCentral": "",
+      "venueNameLondonEast": ""
+    },
     "userLocation": "Liverpool",
     "withdrawType": {
       "withdrawTextArea": "Nothing"
