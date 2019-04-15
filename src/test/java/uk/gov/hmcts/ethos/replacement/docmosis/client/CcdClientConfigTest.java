@@ -41,6 +41,24 @@ public class CcdClientConfigTest {
     }
 
     @Test
+    public void buildRetrieveCasesUrl() {
+        String uri = ccdClientConfig.buildRetrieveCasesUrl("1123", "TRIBUNALS", "TRIB_03");
+        assertEquals("null/caseworkers/1123/jurisdictions/TRIBUNALS/case-types/TRIB_03/cases?state=1_Initiation", uri);
+    }
+
+    @Test
+    public void buildStartEventForCaseUrl() {
+        String uri = ccdClientConfig.buildStartEventForCaseUrl("1123", "TRIBUNALS", "TRIB_03", "1222222");
+        assertEquals("null/caseworkers/1123/jurisdictions/TRIBUNALS/case-types/TRIB_03/cases/1222222/event-triggers/amendCaseDetails/token", uri);
+    }
+
+    @Test
+    public void buildSubmitEventForCaseUrl() {
+        String uri = ccdClientConfig.buildSubmitEventForCaseUrl("1123", "TRIBUNALS", "TRIB_03", "1222222");
+        assertEquals("null/caseworkers/1123/jurisdictions/TRIBUNALS/case-types/TRIB_03/cases/1222222/events", uri);
+    }
+
+    @Test
     public void buildHeaders() throws IOException {
         when(authTokenGenerator.generate()).thenReturn("authString");
         HttpHeaders httpHeaders = ccdClientConfig.buildHeaders("authString");

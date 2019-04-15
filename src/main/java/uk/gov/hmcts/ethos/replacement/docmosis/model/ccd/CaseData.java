@@ -13,7 +13,7 @@ import java.util.List;
 public class CaseData {
 
     @JsonProperty("tribunalOffices")
-    private TribunalOfficeVenueType tribunalOffices;
+    private String tribunalOffices;
     @JsonProperty("caseType")
     private String caseType;
     @JsonProperty("multipleType")

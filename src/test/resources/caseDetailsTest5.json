@@ -156,14 +156,7 @@
       "response_status": "Status",
       "response_to_claim": "No"
     },
-    "tribunalOffices": {
-      "associatedTribunalOffice": "",
-      "venueNameManchester": "Manchester",
-      "venueNameScotland": "",
-      "venueNameLondonSouth": "",
-      "venueNameLondonCentral": "",
-      "venueNameLondonEast": ""
-    },
+    "tribunalOffices": "Manchester",
     "userLocation": "Liverpool",
     "withdrawType": {
       "withdrawTextArea": "Nothing"
