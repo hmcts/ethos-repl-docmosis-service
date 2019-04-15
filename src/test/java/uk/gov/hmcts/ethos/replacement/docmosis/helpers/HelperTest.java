@@ -63,7 +63,7 @@ public class HelperTest {
                 "\"Respondent_name\":\"string\",\n" +
                 "\"respondent_full_name\":\"string\",\n" +
                 "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
+                "\"resp_others\":\"Antonio Vazquez, Juan Garcia\",\n" +
                 "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
                 "\"hearing_time\":\"11:00 AM\",\n" +
                 "\"hearing_venue\":\"Manchester\",\n" +

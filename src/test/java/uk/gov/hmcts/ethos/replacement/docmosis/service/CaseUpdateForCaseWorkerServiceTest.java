@@ -8,11 +8,11 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -20,10 +20,10 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class CaseRetrievalForCaseWorkerServiceTest {
+public class CaseUpdateForCaseWorkerServiceTest {
 
     @InjectMocks
-    private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
+    private CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService;
     @Mock
     private CcdClient ccdClient;
     private CCDRequest ccdRequest;
@@ -31,24 +31,20 @@ public class CaseRetrievalForCaseWorkerServiceTest {
 
     @Before
     public void setUp() {
+        CaseDetails caseDetails;
         ccdRequest = new CCDRequest();
         submitEvent = new SubmitEvent();
-        caseRetrievalForCaseWorkerService = new CaseRetrievalForCaseWorkerService(ccdClient);
+        caseDetails = new CaseDetails();
+        caseDetails.setCaseData(new CaseData());
+        ccdRequest.setCaseDetails(caseDetails);
+        caseUpdateForCaseWorkerService = new CaseUpdateForCaseWorkerService(ccdClient);
     }
 
     @Test
-    public void caseRetrievalRequest() throws IOException {
-        when(ccdClient.retrieveCase(anyString(), any(), any())).thenReturn(submitEvent);
-        SubmitEvent submitEvent1 = caseRetrievalForCaseWorkerService.caseRetrievalRequest(ccdRequest, "authToken");
+    public void caseCreationRequest() throws IOException {
+        when(ccdClient.startEventForCase(anyString(), any(), anyString())).thenReturn(ccdRequest);
+        when(ccdClient.submitEventForCase(anyString(), any(), any(), anyString())).thenReturn(submitEvent);
+        SubmitEvent submitEvent1 = caseUpdateForCaseWorkerService.caseUpdateRequest(ccdRequest, "authToken");
         assertEquals(submitEvent1, submitEvent);
     }
-
-    @Test
-    public void casesRetrievalRequest() throws IOException {
-        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
-        when(ccdClient.retrieveCases(anyString(), any())).thenReturn(submitEventList);
-        List<SubmitEvent> submitEventList1 = caseRetrievalForCaseWorkerService.casesRetrievalRequest(ccdRequest, "authToken");
-        assertEquals(submitEventList1, submitEventList);
-    }
-
 }

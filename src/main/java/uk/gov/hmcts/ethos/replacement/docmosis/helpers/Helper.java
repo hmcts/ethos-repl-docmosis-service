@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
@@ -147,10 +148,10 @@ public class Helper {
             }
         }
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
-            List<String> respOthers = new ArrayList<>();
-            for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
-                respOthers.add(respondentSumTypeItem.getValue().getRespondentName());
-            }
+            List<String> respOthers = caseData.getRespondentCollection()
+                    .stream()
+                    .map(respondentSumTypeItem -> respondentSumTypeItem.getValue().getRespondentName())
+                    .collect(Collectors.toList());
             sb.append("\"resp_others\":\"").append(String.join(", ", respOthers)).append(NEW_LINE);
         }
         return sb;
@@ -158,7 +159,7 @@ public class Helper {
 
     private static StringBuilder getHearingData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
-        if (caseData.getHearingCollection() != null && caseData.getHearingCollection().size() > 0) {
+        if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             HearingType hearingType = caseData.getHearingCollection().get(0).getValue();
             sb.append("\"hearing_date\":\"").append(formatLocalDate(hearingType.getHearingDate())).append(NEW_LINE);
             sb.append("\"hearing_time\":\"").append("11:00 AM").append(NEW_LINE);
@@ -186,28 +187,28 @@ public class Helper {
     }
 
     private static String getSectionName(CaseData caseData) {
-        String sectionName = "";
         Optional<CorrespondenceType> correspondenceType = Optional.ofNullable(caseData.getCorrespondenceType());
         if (correspondenceType.isPresent()) {
-            if (correspondenceType.get().getPart1Documents() != null) sectionName = correspondenceType.get().getPart1Documents();
-            if (correspondenceType.get().getPart2Documents() != null) sectionName = correspondenceType.get().getPart2Documents();
-            if (correspondenceType.get().getPart3Documents() != null) sectionName = correspondenceType.get().getPart3Documents();
-            if (correspondenceType.get().getPart4Documents() != null) sectionName = correspondenceType.get().getPart4Documents();
-            if (correspondenceType.get().getPart5Documents() != null) sectionName = correspondenceType.get().getPart5Documents();
-            if (correspondenceType.get().getPart6Documents() != null) sectionName = correspondenceType.get().getPart6Documents();
-            if (correspondenceType.get().getPart7Documents() != null) sectionName = correspondenceType.get().getPart7Documents();
-            if (correspondenceType.get().getPart8Documents() != null) sectionName = correspondenceType.get().getPart8Documents();
-            if (correspondenceType.get().getPart9Documents() != null) sectionName = correspondenceType.get().getPart9Documents();
-            if (correspondenceType.get().getPart10Documents() != null) sectionName = correspondenceType.get().getPart10Documents();
-            if (correspondenceType.get().getPart11Documents() != null) sectionName = correspondenceType.get().getPart11Documents();
-            if (correspondenceType.get().getPart12Documents() != null) sectionName = correspondenceType.get().getPart12Documents();
-            if (correspondenceType.get().getPart13Documents() != null) sectionName = correspondenceType.get().getPart13Documents();
-            if (correspondenceType.get().getPart14Documents() != null) sectionName = correspondenceType.get().getPart14Documents();
-            if (correspondenceType.get().getPart15Documents() != null) sectionName = correspondenceType.get().getPart15Documents();
-            if (correspondenceType.get().getPart16Documents() != null) sectionName = correspondenceType.get().getPart16Documents();
-            if (correspondenceType.get().getPart17Documents() != null) sectionName = correspondenceType.get().getPart17Documents();
+            CorrespondenceType correspondence = correspondenceType.get();
+            if (correspondence.getPart1Documents() != null) return correspondence.getPart1Documents();
+            if (correspondence.getPart2Documents() != null) return correspondence.getPart2Documents();
+            if (correspondence.getPart3Documents() != null) return correspondence.getPart3Documents();
+            if (correspondence.getPart4Documents() != null) return correspondence.getPart4Documents();
+            if (correspondence.getPart5Documents() != null) return correspondence.getPart5Documents();
+            if (correspondence.getPart6Documents() != null) return correspondence.getPart6Documents();
+            if (correspondence.getPart7Documents() != null) return correspondence.getPart7Documents();
+            if (correspondence.getPart8Documents() != null) return correspondence.getPart8Documents();
+            if (correspondence.getPart9Documents() != null) return correspondence.getPart9Documents();
+            if (correspondence.getPart10Documents() != null) return correspondence.getPart10Documents();
+            if (correspondence.getPart11Documents() != null) return correspondence.getPart11Documents();
+            if (correspondence.getPart12Documents() != null) return correspondence.getPart12Documents();
+            if (correspondence.getPart13Documents() != null) return correspondence.getPart13Documents();
+            if (correspondence.getPart14Documents() != null) return correspondence.getPart14Documents();
+            if (correspondence.getPart15Documents() != null) return correspondence.getPart15Documents();
+            if (correspondence.getPart16Documents() != null) return correspondence.getPart16Documents();
+            if (correspondence.getPart17Documents() != null) return correspondence.getPart17Documents();
         }
-        return sectionName;
+        return "";
     }
 
     private static StringBuilder getCorrespondenceData(CaseData caseData) {

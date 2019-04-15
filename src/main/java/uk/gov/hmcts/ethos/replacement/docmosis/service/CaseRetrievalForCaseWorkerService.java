@@ -7,11 +7,13 @@ import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.CaseCreationException;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 
+import java.util.List;
+
 @Slf4j
 @Service("CaseRetrievalForCaseWorkerService")
 public class CaseRetrievalForCaseWorkerService {
 
-    private static final String MESSAGE = "Failed to create new case for case id : ";
+    private static final String MESSAGE = "Failed to retrieve case for : ";
     private CcdClient ccdClient;
 
     @Autowired
@@ -30,4 +32,17 @@ public class CaseRetrievalForCaseWorkerService {
             throw new CaseCreationException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }
     }
+
+    public List<SubmitEvent> casesRetrievalRequest(CCDRequest ccdRequest, String authToken) {
+        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+        log.info("EventId: " + ccdRequest.getEventId());
+        log.info("Auth Token: " + authToken);
+        log.info("Case Details: " + caseDetails);
+        try {
+            return ccdClient.retrieveCases(authToken, caseDetails);
+        } catch (Exception ex) {
+            throw new CaseCreationException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
+        }
+    }
+
 }
