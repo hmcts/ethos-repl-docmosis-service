@@ -5,7 +5,4 @@ public class CaseCreationException extends RuntimeException {
         super(message);
     }
 
-    public CaseCreationException(String message, Throwable t) {
-        super(message, t);
-    }
 }
