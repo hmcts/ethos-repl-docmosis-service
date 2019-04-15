@@ -41,6 +41,8 @@
       "representative_preference": "Post",
       "representative_reference": "1111111"
     },
+    "repCollection" : [
+    ],
     "caseNotes": "Example of Case Note",
     "caseType": "Single",
     "claimantType": {

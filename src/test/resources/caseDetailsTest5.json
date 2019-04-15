@@ -46,7 +46,7 @@
     },
     "correspondenceType": {
         "topLevel_Documents": "Part_5",
-        "part_1_Documents": "5.2"
+        "part_5_Documents": "5.2"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
@@ -106,6 +106,30 @@
       "who_applied?": "nobody"
     },
     "repCollection": [
+      {
+        "id" : "1233245",
+        "value" : {
+          "rep_Type": "Claimant",
+          "resp_rep_name" : "RepresentativeNameClaimant",
+          "name_of_organisation": "RepresentativeOrganisation",
+          "name_of_representative": "RepresentativeNameClaimant",
+          "representative_address": {
+            "AddressLine1": "56 Block C",
+            "AddressLine2": "Ellesmere Street",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M3 KJR",
+            "PostTown": "Manchester"
+          },
+          "representative_dx_number": "3333333333",
+          "representative_email_address": "example@gmail.com",
+          "representative_fax_number": "07577136570",
+          "representative_mobile_number": "07577136570",
+          "representative_phone_number": "07577136570",
+          "representative_preference": "Post",
+          "representative_reference": "3333333333"
+        }
+      },
       {
         "id" : "123345",
         "value" : {
