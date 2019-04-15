@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,6 +54,7 @@ public class CcdClientTest {
         caseDetails.setCaseTypeId("Type1");
         caseDetails.setCaseData(new CaseData());
     }
+
     @Test
     public void startCaseCreation() throws IOException {
         HttpEntity<Object> httpEntity = new HttpEntity<>(null);
@@ -86,6 +89,43 @@ public class CcdClientTest {
         when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(SubmitEvent.class))).thenReturn(responseEntity);
         ccdClient.retrieveCase("authToken", caseDetails, "111111");
         verify(restTemplate).exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(SubmitEvent.class));
+        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
+    public void retrieveCases() throws IOException {
+        HttpEntity<Object> httpEntity = new HttpEntity<>(null);
+        ResponseEntity<List<SubmitEvent>> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
+        when(ccdClientConfig.buildRetrieveCasesUrl(any(), any(), any())).thenReturn(uri);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(new ParameterizedTypeReference<List<SubmitEvent>>(){}))).thenReturn(responseEntity);
+        ccdClient.retrieveCases("authToken", caseDetails);
+        verify(restTemplate).exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(new ParameterizedTypeReference<List<SubmitEvent>>(){}));
+        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
+    public void startEventForCase() throws IOException {
+        HttpEntity<Object> httpEntity = new HttpEntity<>(null);
+        ResponseEntity<CCDRequest> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
+        when(ccdClientConfig.buildStartEventForCaseUrl(any(), any(), any(), any())).thenReturn(uri);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(CCDRequest.class))).thenReturn(responseEntity);
+        ccdClient.startEventForCase("authToken", caseDetails, anyString());
+        verify(restTemplate).exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(CCDRequest.class));
+        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
+    public void submitEventForCase() throws IOException {
+        HttpEntity<CaseDataContent> httpEntity = new HttpEntity<>(CaseDataContent.builder().build(), null);
+        ResponseEntity<SubmitEvent> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        when(caseDataBuilder.buildCaseDataContent(eq(caseDetails), eq(ccdRequest))).thenReturn(CaseDataContent.builder().build());
+        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
+        when(ccdClientConfig.buildSubmitEventForCaseUrl(any(), any(), any(), any())).thenReturn(uri);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(SubmitEvent.class))).thenReturn(responseEntity);
+        ccdClient.submitEventForCase("authToken", caseDetails, ccdRequest, "111111");
+        verify(restTemplate).exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(SubmitEvent.class));
         verifyNoMoreInteractions(restTemplate);
     }
 }

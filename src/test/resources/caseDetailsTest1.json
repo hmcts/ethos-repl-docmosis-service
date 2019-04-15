@@ -104,6 +104,25 @@
           "respondent_phone1": "07577136570",
           "respondent_phone2": "07577136570"
         }
+      },
+      {
+        "id" : "123345678",
+        "value" : {
+          "respondent_address": {
+            "AddressLine1": "12 Small Street",
+            "AddressLine2": "24 House",
+            "Country": "UK",
+            "County": "North West",
+            "PostCode": "M12 4ED",
+            "PostTown": "Manchester"
+          },
+          "respondent_name": "Juan Garcia",
+          "respondent_contact_preference": "Post",
+          "respondent_email": "JuanGarcia@gmail.com",
+          "respondent_fax": "07577136570",
+          "respondent_phone1": "07577136570",
+          "respondent_phone2": "07577136570"
+        }
       }
     ],
     "locationType": "Manchester",
@@ -148,14 +167,7 @@
       "responseNotes" : "notes",
       "response_to_claim": "No"
     },
-    "tribunalOffices": {
-      "associatedTribunalOffice": "",
-      "venueNameManchester": "Manchester",
-      "venueNameScotland?": "",
-      "venueNameLondonSouth": "",
-      "venueNameLondonCentral": "",
-      "venueNameLondonEast": ""
-    },
+    "tribunalOffices": "Manchester",
     "userLocation": "Liverpool",
     "withdrawType": {
       "withdrawTextArea": "Nothing"
