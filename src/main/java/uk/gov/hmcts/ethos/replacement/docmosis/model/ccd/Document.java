@@ -1,18 +1,17 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.model.ccd;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 @Builder
 public class Document {
+    @JsonProperty("document_url")
     private String url;
-    private String name;
-    private String type;
-    private String description;
+    @JsonProperty("document_binary_url")
+    private String binaryUrl;
+    @JsonProperty("document_filename")
+    private String fileName;
 
 }

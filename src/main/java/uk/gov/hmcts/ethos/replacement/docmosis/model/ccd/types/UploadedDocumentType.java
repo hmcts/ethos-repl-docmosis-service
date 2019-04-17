@@ -6,7 +6,7 @@ import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class UploadedDocumentType {
+class UploadedDocumentType {
 
     @JsonProperty("document_binary_url")
     private String documentBinaryUrl;
