@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Document;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
@@ -10,6 +11,8 @@ public class JudgementType {
 
     @JsonProperty("non_hearing_judgment")
     private String nonHearingJudgment;
+    @JsonProperty("hearing_number")
+    private String hearingNumber;
     @JsonProperty("judgement_type_q")
     private String judgementTypeQ;
     @JsonProperty("liability_default")
@@ -25,9 +28,7 @@ public class JudgementType {
     @JsonProperty("judgement_outcome")
     private String judgementOutcome;
     @JsonProperty("judgement_outcome_doc")
-    private String judgementOutcomeDoc;
-    @JsonProperty("hearing_number")
-    private String hearingNumber;
+    private Document judgementOutcomeDoc;
     @JsonProperty("judgement_details")
     private JudgementDetailsType judgementDetails;
     @JsonProperty("Judgement_costs")
