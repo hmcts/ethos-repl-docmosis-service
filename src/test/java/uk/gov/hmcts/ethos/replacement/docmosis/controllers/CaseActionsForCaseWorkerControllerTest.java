@@ -47,6 +47,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String RETRIEVE_CASE_URL = "/retrieveCase";
     private static final String RETRIEVE_CASES_URL = "/retrieveCases";
     private static final String UPDATE_CASE_URL = "/updateCase";
+    private static final String DEFAULT_FIXED_LIST_URL = "/defaultFixedList";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -121,6 +122,18 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void updateCase() throws Exception {
         when(caseUpdateForCaseWorkerService.caseUpdateRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(submitEvent);
         mvc.perform(post(UPDATE_CASE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void defaultFixedList() throws Exception {
+        mvc.perform(post(DEFAULT_FIXED_LIST_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -209,4 +222,14 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
     }
+
+    @Test
+    public void defaultFixedListError400() throws Exception {
+        mvc.perform(post(DEFAULT_FIXED_LIST_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
 }
