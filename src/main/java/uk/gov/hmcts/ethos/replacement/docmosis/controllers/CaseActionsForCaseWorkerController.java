@@ -7,9 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDCallbackResponse;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCreationForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseUpdateForCaseWorkerService;
@@ -116,5 +114,25 @@ public class CaseActionsForCaseWorkerController {
                 .build());
     }
 
+    @PostMapping(value = "/defaultFixedList", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "update a fixed list with a default value.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> defaultFixedList(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        ccdRequest.getCaseDetails().getCaseData().setTribunalOffices("Manchester");
+        //ccdRequest.getCaseDetails().getCaseData().setFeeGroupReference("123456789123");
+        //ccdRequest.getCaseDetails().getCaseData().getClaimantType().setClaimantContactPreference("Email");
+        log.info("Default value added to fixed lists");
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(ccdRequest.getCaseDetails().getCaseData())
+                .build());
+    }
 
 }
