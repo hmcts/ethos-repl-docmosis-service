@@ -8,15 +8,23 @@ import lombok.Data;
 @Data
 public class ReconsiderationType {
 
-    @JsonProperty("application_date")
-    private String applicationDate;
-    @JsonProperty("who_applied?")
+    @JsonProperty("judgment_number")
+    private String judgmentNumber;
+    @JsonProperty("nonHearing")
+    private String nonHearing;
+    @JsonProperty("response_dateET1")
+    private String responseDateET1;
+    @JsonProperty("response_dateET3")
+    private String responseDateET3;
+    @JsonProperty("whoApplied")
     private String whoApplied;
+    @JsonProperty("respondentName")
+    private String respondentName;
+    @JsonProperty("respondentRepName")
+    private String respondentRepName;
+    @JsonProperty("applicableTo")
+    private String applicableTo;
     @JsonProperty("judge's_direction")
     private String judgeDirection;
-    @JsonProperty("reconsideration_hearing_date")
-    private String reconsiderationHearingDate;
-    @JsonProperty("judge's_decision")
-    private String judgeDecision;
 
 }

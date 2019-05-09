@@ -1,5 +1,8 @@
 {
   "case_data": {
+    "ethosCaseReference" : "123456",
+    "multipleOthers" : "no",
+    "claimantRepresentedQuestion" : "no",
     "NH_JudgementType": {
       "NH_JudgementDecision": "guilty",
       "NH_JudgementTextArea": "guilty"
@@ -19,7 +22,6 @@
       "archiveTextArea": "archiveTextArea"
     },
     "backFromJudge": "backFromJudge",
-    "broughtForwardDate": "broughtForwardDate",
     "caseNotes": "Example of Case Note",
     "caseType": "Single",
     "claimantType": {
@@ -33,15 +35,14 @@
       },
       "claimant_contact_preference": "Post",
       "claimant_email_address": "anton@gmail.com",
-      "claimant_fax_number": "07577136570",
       "claimant_mobile_number": "07577136570",
       "claimant_phone_number": "07577136570"
     },
     "claimantIndType": {
       "claimant_date_of_birth": "1990-02-25",
-      "claimant_forenames": "Anton",
+      "claimant_first_names": "Anton",
       "claimant_gender": "Male",
-      "claimant_surname": "Rodriguez",
+      "claimant_last_name": "Rodriguez",
       "claimant_title1": "Mr"
     },
     "clerkResponsible": "Juan Diego",
@@ -54,18 +55,28 @@
             "est_Hearing_length_number": "2",
             "est_Hearing_length_num": "hours"
           },
-          "HearingType": "Single",
-          "Hearing_date": "2019-11-25",
+          "Hearing_type": "Single",
+          "Hearing_venue": "Manchester",
+          "Hearing_date_start": "2019-11-25T12:11:00.000",
           "Hearing_judge_name": "JudgeName"
         }
       }
     ],
+    "HearingType": {
+      "Est_Hearing": {
+        "est_Hearing_length_number": "2",
+        "est_Hearing_length_num": "days"
+      },
+      "Hearing_type": "Single",
+      "Hearing_venue": "Manchester",
+      "Hearing_date_start": "2019-11-25T12:11:00.000",
+      "Hearing_judge_name": "JudgeName"
+    },
     "correspondenceType": {
       "topLevel_Documents": "Part_2",
       "part_2_Documents": "2.2A"
     },
-    "repSumType": {
-      "rep_Type": "Respondent",
+    "representativeRespondentType": {
       "resp_rep_name" : "RepresentativeNameRespondent",
       "name_of_organisation": "RepresentativeOrganisation",
       "name_of_representative": "RepresentativeNameRespondent",
@@ -79,7 +90,6 @@
       },
       "representative_dx_number": "222222222",
       "representative_email_address": "example@gmail.com",
-      "representative_fax_number": "07577136570",
       "representative_mobile_number": "07577136570",
       "representative_phone_number": "07577136570",
       "representative_preference": "Post",
@@ -109,7 +119,6 @@
       "respondent_name": "string",
       "respondent_contact_preference": "Post",
       "respondent_email": "Antonio@gmail.com",
-      "respondent_fax": "07577136570",
       "respondent_phone1": "07577136570",
       "respondent_phone2": "07577136570"
     },
@@ -122,7 +131,6 @@
       "response_status": "Status",
       "response_to_claim": "No"
     },
-    "tribunalOffices": "Manchester",
     "userLocation": "Liverpool",
     "withdrawType": {
       "withdrawTextArea": "Nothing"
