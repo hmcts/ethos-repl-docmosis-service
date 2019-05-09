@@ -20,8 +20,7 @@ public class CaseDataTest {
                 + " \"userLocation\" : \"Bath\", "
                 + " \"fileLocation\" : \"City\", "
                 + " \"caseType\" : \"Single\", "
-                + " \"feeGroupReference\" : \"1212\", "
-                + " \"tribunalOffices\": \"Manchester\" "
+                + " \"feeGroupReference\" : \"1212\" "
                 + "} ";
         ObjectMapper mapper = new ObjectMapper();
         caseData = mapper.readValue(json, CaseData.class);
@@ -37,6 +36,5 @@ public class CaseDataTest {
         assertThat(caseData.getFileLocation(), is("City"));
         assertThat(caseData.getCaseType(), is("Single"));
         assertThat(caseData.getFeeGroupReference(), is("1212"));
-        assertThat(caseData.getTribunalOffices(), is("Manchester"));
     }
 }

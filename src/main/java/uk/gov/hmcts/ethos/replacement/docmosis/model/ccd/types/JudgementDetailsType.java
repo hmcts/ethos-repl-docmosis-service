@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class JudgementDetailsType {
 
+    @JsonProperty("folio_number")
+    private String folioNumber;
     @JsonProperty("reconsideration")
     private String reconsideration;
     @JsonProperty("reasons_given")
@@ -34,4 +36,6 @@ public class JudgementDetailsType {
     private String adjustment;
     @JsonProperty("adjustment_%")
     private String adjustmentPercentage;
+    @JsonProperty("panelMembers")
+    private PanelType panelMembers;
 }

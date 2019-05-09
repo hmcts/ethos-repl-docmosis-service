@@ -126,8 +126,7 @@ public class CaseActionsForCaseWorkerController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        ccdRequest.getCaseDetails().getCaseData().setTribunalOffices("Manchester");
-        //ccdRequest.getCaseDetails().getCaseData().setFeeGroupReference("123456789123");
+        ccdRequest.getCaseDetails().getCaseData().setFeeGroupReference("123456789123");
         //ccdRequest.getCaseDetails().getCaseData().getClaimantType().setClaimantContactPreference("Email");
         log.info("Default value added to fixed lists");
         return ResponseEntity.ok(CCDCallbackResponse.builder()
