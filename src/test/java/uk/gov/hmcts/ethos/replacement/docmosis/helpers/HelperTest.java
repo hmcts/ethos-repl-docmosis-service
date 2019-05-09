@@ -25,6 +25,9 @@ public class HelperTest {
     private CaseDetails caseDetails8;
     private CaseDetails caseDetails9;
     private CaseDetails caseDetailsEmpty;
+    private CaseDetails caseDetailsScot1;
+    private CaseDetails caseDetailsScot2;
+    private CaseDetails caseDetailsScot3;
 
     @Before
     public void setUp() throws Exception {
@@ -37,6 +40,9 @@ public class HelperTest {
         caseDetails7 = generateCaseDetails("caseDetailsTest7.json");
         caseDetails8 = generateCaseDetails("caseDetailsTest8.json");
         caseDetails9 = generateCaseDetails("caseDetailsTest9.json");
+        caseDetailsScot1 = generateCaseDetails("caseDetailsScotTest1.json");
+        caseDetailsScot2 = generateCaseDetails("caseDetailsScotTest2.json");
+        caseDetailsScot3 = generateCaseDetails("caseDetailsScotTest3.json");
 
         caseDetailsEmpty = new CaseDetails();
         caseDetailsEmpty.setCaseData(new CaseData());
@@ -73,9 +79,17 @@ public class HelperTest {
                 "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
                 "\"resp_others\":\"Antonio Vazquez, Juan Garcia\",\n" +
                 "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"hearing_time\":\"11:00 AM\",\n" +
-                "\"hearing_venue\":\"Manchester\",\n" +
+                "\"Hearing_Date\":\"Mon, 25 Nov 2019\",\n" +
+                "\"Hearing_date_time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
+                "\"Hearing_Date_Time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
+                "\"hearing_date_time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
+                "\"Hearing_venue\":\"Manchester\",\n" +
+                "\"hearing_address\":\"Manchester\",\n" +
+                "\"Hearing_Address\":\"Manchester\",\n" +
                 "\"EstLengthOfHearing\":\"2 days\",\n" +
+                "\"Hearing_Duration\":\"2 days\",\n" +
+                "\"hearing_duration\":\"2 days\",\n" +
+                "\"hearing_length\":\"2 days\",\n" +
                 "\"t1_2\":\"true\",\n" +
                 "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
                 "\"Court_Telephone\":\"0121 600 7780\",\n" +
@@ -115,9 +129,17 @@ public class HelperTest {
                 "\"respondent_email_address\":\"example@gmail.com\",\n" +
                 "\"respondent_rep_email_address\":\"example@gmail.com\",\n" +
                 "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"hearing_time\":\"11:00 AM\",\n" +
-                "\"hearing_venue\":\"Manchester\",\n" +
+                "\"Hearing_Date\":\"Mon, 25 Nov 2019\",\n" +
+                "\"Hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
+                "\"Hearing_Date_Time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
+                "\"hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
+                "\"Hearing_venue\":\"Manchester\",\n" +
+                "\"hearing_address\":\"Manchester\",\n" +
+                "\"Hearing_Address\":\"Manchester\",\n" +
                 "\"EstLengthOfHearing\":\"2 hours\",\n" +
+                "\"Hearing_Duration\":\"2 hours\",\n" +
+                "\"hearing_duration\":\"2 hours\",\n" +
+                "\"hearing_length\":\"2 hours\",\n" +
                 "\"t2_2A\":\"true\",\n" +
                 "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
                 "\"Court_Telephone\":\"0121 600 7780\",\n" +
@@ -228,8 +250,8 @@ public class HelperTest {
                 "\"respondent_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
                 "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
                 "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_reference\":\"3333333333\",\n" +
-                "\"respondent_rep_reference\":\"3333333333\",\n" +
+                "\"respondent_reference\":\"1111111\",\n" +
+                "\"respondent_rep_reference\":\"1111111\",\n" +
                 "\"respondent_email_address\":\"example@gmail.com\",\n" +
                 "\"respondent_rep_email_address\":\"example@gmail.com\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
@@ -266,17 +288,10 @@ public class HelperTest {
                 "\"representative_reference\":\"1111111\",\n" +
                 "\"claimant_rep_reference\":\"1111111\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
-                "\"Respondent\":\"RepresentativeNameRespondent\",\n" +
-                "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_representative\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_reference\":\"3333333333\",\n" +
-                "\"respondent_rep_reference\":\"3333333333\",\n" +
-                "\"respondent_email_address\":\"example@gmail.com\",\n" +
-                "\"respondent_rep_email_address\":\"example@gmail.com\",\n" +
+                "\"Respondent\":\"RespondentName\",\n" +
+                "\"Respondent_name\":\"RespondentName\",\n" +
+                "\"respondent_full_name\":\"RespondentName\",\n" +
+                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"t6_2\":\"true\",\n" +
                 "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
@@ -311,22 +326,23 @@ public class HelperTest {
                 "\"representative_reference\":\"1111111\",\n" +
                 "\"claimant_rep_reference\":\"1111111\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
-                "\"Respondent\":\"RepresentativeNameRespondent\",\n" +
-                "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_representative\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_reference\":\"3333333333\",\n" +
-                "\"respondent_rep_reference\":\"3333333333\",\n" +
-                "\"respondent_email_address\":\"example@gmail.com\",\n" +
-                "\"respondent_rep_email_address\":\"example@gmail.com\",\n" +
+                "\"Respondent\":\"Antonio Rodriguez\",\n" +
+                "\"Respondent_name\":\"Antonio Rodriguez\",\n" +
+                "\"respondent_full_name\":\"Antonio Rodriguez\",\n" +
+                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"hearing_date\":\"\",\n" +
-                "\"hearing_time\":\"11:00 AM\",\n" +
-                "\"hearing_venue\":\"Manchester\",\n" +
+                "\"Hearing_Date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_Date_Time\":\"\",\n" +
+                "\"hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"Manchester\",\n" +
+                "\"hearing_address\":\"Manchester\",\n" +
+                "\"Hearing_Address\":\"Manchester\",\n" +
                 "\"EstLengthOfHearing\":\"2 hours\",\n" +
+                "\"Hearing_Duration\":\"2 hours\",\n" +
+                "\"hearing_duration\":\"2 hours\",\n" +
+                "\"hearing_length\":\"2 hours\",\n" +
                 "\"t7_2\":\"true\",\n" +
                 "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
                 "\"Court_Telephone\":\"0121 600 7780\",\n" +
@@ -360,22 +376,23 @@ public class HelperTest {
                 "\"representative_reference\":\"1111111\",\n" +
                 "\"claimant_rep_reference\":\"1111111\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
-                "\"Respondent\":\"RepresentativeNameRespondent\",\n" +
-                "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_representative\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_reference\":\"3333333333\",\n" +
-                "\"respondent_rep_reference\":\"3333333333\",\n" +
-                "\"respondent_email_address\":\"example@gmail.com\",\n" +
-                "\"respondent_rep_email_address\":\"example@gmail.com\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
+                "\"Respondent\":\"Joan Zamorano\",\n" +
+                "\"Respondent_name\":\"Joan Zamorano\",\n" +
+                "\"respondent_full_name\":\"Joan Zamorano\",\n" +
+                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"resp_others\":\"Antonio Vazquez, Mikey McCollier\",\n" +
                 "\"hearing_date\":\"\",\n" +
-                "\"hearing_time\":\"11:00 AM\",\n" +
-                "\"hearing_venue\":\"Manchester\",\n" +
+                "\"Hearing_Date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_Date_Time\":\"\",\n" +
+                "\"hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"Manchester\",\n" +
+                "\"hearing_address\":\"Manchester\",\n" +
+                "\"Hearing_Address\":\"Manchester\",\n" +
                 "\"EstLengthOfHearing\":\"2 hours\",\n" +
+                "\"Hearing_Duration\":\"2 hours\",\n" +
+                "\"hearing_duration\":\"2 hours\",\n" +
+                "\"hearing_length\":\"2 hours\",\n" +
                 "\"t8_2\":\"true\",\n" +
                 "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
                 "\"Court_Telephone\":\"0121 600 7780\",\n" +
@@ -409,22 +426,23 @@ public class HelperTest {
                 "\"representative_reference\":\"1111111\",\n" +
                 "\"claimant_rep_reference\":\"1111111\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
-                "\"Respondent\":\"RepresentativeNameRespondent\",\n" +
-                "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_representative\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_reference\":\"3333333333\",\n" +
-                "\"respondent_rep_reference\":\"3333333333\",\n" +
-                "\"respondent_email_address\":\"example@gmail.com\",\n" +
-                "\"respondent_rep_email_address\":\"example@gmail.com\",\n" +
+                "\"Respondent\":\"Raul Gonzalez\",\n" +
+                "\"Respondent_name\":\"Raul Gonzalez\",\n" +
+                "\"respondent_full_name\":\"Raul Gonzalez\",\n" +
+                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"hearing_date\":\"\",\n" +
-                "\"hearing_time\":\"11:00 AM\",\n" +
-                "\"hearing_venue\":\"Manchester\",\n" +
+                "\"Hearing_Date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_Date_Time\":\"\",\n" +
+                "\"hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"Manchester\",\n" +
+                "\"hearing_address\":\"Manchester\",\n" +
+                "\"Hearing_Address\":\"Manchester\",\n" +
                 "\"EstLengthOfHearing\":\"2 hours\",\n" +
+                "\"Hearing_Duration\":\"2 hours\",\n" +
+                "\"hearing_duration\":\"2 hours\",\n" +
+                "\"hearing_length\":\"2 hours\",\n" +
                 "\"t9_2\":\"true\",\n" +
                 "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
                 "\"Court_Telephone\":\"0121 600 7780\",\n" +
@@ -459,5 +477,137 @@ public class HelperTest {
                 "}\n" +
                 "}\n";
         assertEquals(Helper.buildDocumentContent(caseDetailsEmpty, "").toString(), result);
+    }
+
+    @Test
+    public void buildDocumentContentScot1() {
+        String result = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"Part_1_Scot.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
+                "\"data\":{\n" +
+                "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
+                "\"claimant_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
+                "\"Claimant_name\":\"RepresentativeNameClaimant\",\n" +
+                "\"Claimant\":\"RepresentativeNameClaimant\",\n" +
+                "\"claimant_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"claimant_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"claimant_email_address\":\"example@gmail.com\",\n" +
+                "\"claimant_rep_email_address\":\"example@gmail.com\",\n" +
+                "\"representative_reference\":\"1111111\",\n" +
+                "\"claimant_rep_reference\":\"1111111\",\n" +
+                "\"claimant_reference\":\"1111111\",\n" +
+                "\"Respondent\":\"string\",\n" +
+                "\"Respondent_name\":\"string\",\n" +
+                "\"respondent_full_name\":\"string\",\n" +
+                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"resp_others\":\"Antonio Vazquez, Juan Garcia\",\n" +
+                "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
+                "\"Hearing_Date\":\"Mon, 25 Nov 2019\",\n" +
+                "\"Hearing_date_time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
+                "\"Hearing_Date_Time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
+                "\"hearing_date_time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
+                "\"Hearing_venue\":\"Manchester\",\n" +
+                "\"hearing_address\":\"Manchester\",\n" +
+                "\"Hearing_Address\":\"Manchester\",\n" +
+                "\"EstLengthOfHearing\":\"2 days\",\n" +
+                "\"Hearing_Duration\":\"2 days\",\n" +
+                "\"hearing_duration\":\"2 days\",\n" +
+                "\"hearing_length\":\"2 days\",\n" +
+                "\"t_Scot_7_1\":\"true\",\n" +
+                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
+                "\"Court_Telephone\":\"0121 600 7780\",\n" +
+                "\"Court_Fax\":\"01264 347 999\",\n" +
+                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Case_No\":\"123456789\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(Helper.buildDocumentContent(caseDetailsScot1, "").toString(), result);
+    }
+
+    @Test
+    public void buildDocumentContentScot2() {
+        String result = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"Part_2_Scot.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
+                "\"data\":{\n" +
+                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
+                "\"claimant_email_address\":\"anton@gmail.com\",\n" +
+                "\"claimant_full_name\":\"Mr A Rodriguez\",\n" +
+                "\"Claimant_name\":\"Mr A Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A Rodriguez\",\n" +
+                "\"Respondent\":\"RepresentativeNameRespondent\",\n" +
+                "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
+                "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
+                "\"respondent_representative\":\"RepresentativeNameRespondent\",\n" +
+                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
+                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_reference\":\"1111111\",\n" +
+                "\"respondent_rep_reference\":\"1111111\",\n" +
+                "\"respondent_email_address\":\"example@gmail.com\",\n" +
+                "\"respondent_rep_email_address\":\"example@gmail.com\",\n" +
+                "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
+                "\"Hearing_Date\":\"Mon, 25 Nov 2019\",\n" +
+                "\"Hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
+                "\"Hearing_Date_Time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
+                "\"hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
+                "\"Hearing_venue\":\"Manchester\",\n" +
+                "\"hearing_address\":\"Manchester\",\n" +
+                "\"Hearing_Address\":\"Manchester\",\n" +
+                "\"EstLengthOfHearing\":\"2 hours\",\n" +
+                "\"Hearing_Duration\":\"2 hours\",\n" +
+                "\"hearing_duration\":\"2 hours\",\n" +
+                "\"hearing_length\":\"2 hours\",\n" +
+                "\"t_Scot_24\":\"true\",\n" +
+                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
+                "\"Court_Telephone\":\"0121 600 7780\",\n" +
+                "\"Court_Fax\":\"01264 347 999\",\n" +
+                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Case_No\":\"123456789\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(Helper.buildDocumentContent(caseDetailsScot2, "").toString(), result);
+    }
+
+    @Test
+    public void buildDocumentContentScot3() {
+        String result = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"Part_3_Scot.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
+                "\"data\":{\n" +
+                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
+                "\"claimant_email_address\":\"anton@gmail.com\",\n" +
+                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"Respondent\":\"string\",\n" +
+                "\"Respondent_name\":\"string\",\n" +
+                "\"respondent_full_name\":\"string\",\n" +
+                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"resp_others\":\"Antonio Vazquez\",\n" +
+                "\"t_Scot_34\":\"true\",\n" +
+                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
+                "\"Court_Telephone\":\"0121 600 7780\",\n" +
+                "\"Court_Fax\":\"01264 347 999\",\n" +
+                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Case_No\":\"123456789\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(Helper.buildDocumentContent(caseDetailsScot3, "").toString(), result);
     }
 }
