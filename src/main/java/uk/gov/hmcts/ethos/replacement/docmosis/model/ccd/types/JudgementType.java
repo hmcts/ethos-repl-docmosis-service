@@ -25,14 +25,12 @@ public class JudgementType {
     private String dateJudgmentMade;
     @JsonProperty("date_judgment_sent")
     private String dateJudgmentSent;
-    @JsonProperty("judgement_outcome")
-    private String judgementOutcome;
+    @JsonProperty("judgement_notes")
+    private String judgementNotes;
     @JsonProperty("judgement_outcome_doc")
     private Document judgementOutcomeDoc;
     @JsonProperty("judgement_details")
     private JudgementDetailsType judgementDetails;
     @JsonProperty("Judgement_costs")
     private CostsType judgementCosts;
-    @JsonProperty("reconsideration")
-    private ReconsiderationType reconsideration;
 }

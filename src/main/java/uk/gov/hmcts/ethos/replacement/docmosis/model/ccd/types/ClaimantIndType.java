@@ -19,10 +19,10 @@ public class ClaimantIndType {
     private String claimantTitle;
     @JsonProperty("claimant_title_other")
     private String claimantTitleOther;
-    @JsonProperty("claimant_forenames")
-    private String claimantForenames;
-    @JsonProperty("claimant_surname")
-    private String claimantSurname;
+    @JsonProperty("claimant_first_names")
+    private String claimantFirstNames;
+    @JsonProperty("claimant_last_name")
+    private String claimantLastName;
     @JsonProperty("claimant_date_of_birth")
     private String claimantDateOfBirth;
     @JsonProperty("claimant_gender")
@@ -30,12 +30,12 @@ public class ClaimantIndType {
 
     public String claimantFullName() {
         return String.join(" ", notNullOrEmptyAtt(new ArrayList<>(), Arrays.asList(claimantTitle,
-                claimantTitleOther, getInitials(), claimantSurname)));
+                claimantTitleOther, getInitials(), claimantLastName)));
     }
 
     private String getInitials() {
-        if (!isNullOrEmpty(claimantForenames)) {
-            return Arrays.stream(claimantForenames.split(" ")).map(str -> str.substring(0, 1)).collect(Collectors.joining(" "));
+        if (!isNullOrEmpty(claimantFirstNames)) {
+            return Arrays.stream(claimantFirstNames.split(" ")).map(str -> str.substring(0, 1)).collect(Collectors.joining(" "));
         }
         return "";
     }
