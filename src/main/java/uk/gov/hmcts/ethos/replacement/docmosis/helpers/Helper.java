@@ -2,14 +2,11 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,31 +15,28 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 public class Helper {
 
-    private static DateTimeFormatter OLD_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static DateTimeFormatter NEW_PATTERN_DATE = DateTimeFormatter.ofPattern("E, d MMM yyyy");
+    private static DateTimeFormatter OLD_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private static DateTimeFormatter NEW_DATE_PATTERN = DateTimeFormatter.ofPattern("E, d MMM yyyy");
+    private static DateTimeFormatter NEW_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("E, d MMM yyyy HH:mm:ss");
     //private static DateTimeFormatter NEW_PATTERN_TIME = DateTimeFormatter.ofPattern("hh:mm a");
     private static String NEW_LINE = "\",\n";
     public static final String OUTPUT_FILE_NAME = "document.docx";
 
     private static String formatLocalDate(String date) {
-        return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_PATTERN).format(NEW_PATTERN_DATE) : "";
+        return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_DATE_TIME_PATTERN).format(NEW_DATE_PATTERN) : "";
+    }
+
+    private static String formatLocalDateTime(String date) {
+        return !isNullOrEmpty(date) ? LocalDateTime.parse(date, OLD_DATE_TIME_PATTERN).format(NEW_DATE_TIME_PATTERN) : "";
     }
 
     static String formatCurrentDatePlusDays(LocalDate date, long days) {
-        return !isNullOrEmpty(date.toString()) ? date.plusDays(days).format(NEW_PATTERN_DATE) : "";
+        return !isNullOrEmpty(date.toString()) ? date.plusDays(days).format(NEW_DATE_PATTERN) : "";
     }
 
     static String formatCurrentDate(LocalDate date) {
-        return !isNullOrEmpty(date.toString()) ? date.format(NEW_PATTERN_DATE) : "";
+        return !isNullOrEmpty(date.toString()) ? date.format(NEW_DATE_PATTERN) : "";
     }
-
-//    private static String formatLocalDateTimeToDate(String date) {
-//        return !isNullOrEmpty(date) ? LocalDateTime.parse(date).format(NEW_PATTERN_DATE) : "";
-//    }
-//
-//    private static String formatLocalDateTimeToTime(String date) {
-//        return !isNullOrEmpty(date) ? LocalDateTime.parse(date).format(NEW_PATTERN_TIME) : "";
-//    }
 
     public static StringBuilder buildDocumentContent(CaseDetails caseDetails, String accessKey) {
         String FILE_EXTENSION = ".docx";
@@ -62,10 +56,10 @@ public class Helper {
         sb.append(getRespondentData(caseData));
         sb.append(getHearingData(caseData));
         sb.append(getCorrespondenceData(caseData));
+        sb.append(getCorrespondenceScotData(caseData));
         sb.append(getCourtData());
 
         sb.append("\"Clerk\":\"").append(caseData.getClerkResponsible()).append(NEW_LINE);
-        //sb.append("\"app_date\":\"").append(formatLocalDate(caseData.getReceiptDate())).append(NEW_LINE);
         sb.append("\"TODAY_DATE\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
         sb.append("\"TodayPlus28Days\":\"").append(formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
         sb.append("\"Case_No\":\"").append(caseDetails.getCaseId()).append(NEW_LINE);
@@ -76,37 +70,21 @@ public class Helper {
         return sb;
     }
 
-    private static RepresentedType getRepresentation(CaseData caseData, String type) {
-        RepresentedType representedType = caseData.getRepSumType();
-        if (representedType != null && representedType.getRepType().equals(type)) {
-            return representedType;
-        }
-        List<RepresentedTypeItem> representedTypeCollection = caseData.getRepCollection();
-        if (representedTypeCollection != null && !representedTypeCollection.isEmpty()) {
-            for (RepresentedTypeItem rep : representedTypeCollection) {
-                if (rep.getValue().getRepType().equals(type)) {
-                    return rep.getValue();
-                }
-            }
-        }
-        return null;
-    }
-
     private static StringBuilder getClaimantData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
-        RepresentedType representedType = getRepresentation(caseData, "Claimant");
-        if (representedType != null) {
-            sb.append("\"claimant_full_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"claimant_rep_full_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"Claimant_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"Claimant\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"claimant_addressUK\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
-            sb.append("\"claimant_rep_addressUK\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
-            sb.append("\"claimant_email_address\":\"").append(representedType.getRepresentativeEmailAddress()).append(NEW_LINE);
-            sb.append("\"claimant_rep_email_address\":\"").append(representedType.getRepresentativeEmailAddress()).append(NEW_LINE);
-            sb.append("\"representative_reference\":\"").append(representedType.getRepresentativeReference()).append(NEW_LINE);
-            sb.append("\"claimant_rep_reference\":\"").append(representedType.getRepresentativeReference()).append(NEW_LINE);
-            sb.append("\"claimant_reference\":\"").append(representedType.getRepresentativeReference()).append(NEW_LINE);
+        RepresentedTypeC representedTypeC = caseData.getRepresentativeClaimantType();
+        if (representedTypeC != null) {
+            sb.append("\"claimant_full_name\":\"").append(representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"claimant_rep_full_name\":\"").append(representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"Claimant_name\":\"").append(representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"Claimant\":\"").append(representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"claimant_addressUK\":\"").append(representedTypeC.getRepresentativeAddress()).append(NEW_LINE);
+            sb.append("\"claimant_rep_addressUK\":\"").append(representedTypeC.getRepresentativeAddress()).append(NEW_LINE);
+            sb.append("\"claimant_email_address\":\"").append(representedTypeC.getRepresentativeEmailAddress()).append(NEW_LINE);
+            sb.append("\"claimant_rep_email_address\":\"").append(representedTypeC.getRepresentativeEmailAddress()).append(NEW_LINE);
+            sb.append("\"representative_reference\":\"").append(representedTypeC.getRepresentativeReference()).append(NEW_LINE);
+            sb.append("\"claimant_rep_reference\":\"").append(representedTypeC.getRepresentativeReference()).append(NEW_LINE);
+            sb.append("\"claimant_reference\":\"").append(representedTypeC.getRepresentativeReference()).append(NEW_LINE);
         } else {
             Optional<ClaimantType> claimantType = Optional.ofNullable(caseData.getClaimantType());
             if (claimantType.isPresent()) {
@@ -125,19 +103,19 @@ public class Helper {
 
     private static StringBuilder getRespondentData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
-        RepresentedType representedType = getRepresentation(caseData, "Respondent");
-        if (representedType != null) {
-            sb.append("\"Respondent\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"Respondent_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"respondent_full_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"respondent_representative\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"respondent_rep_full_name\":\"").append(representedType.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"respondent_addressUK\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
-            sb.append("\"respondent_rep_addressUK\":\"").append(representedType.getRepresentativeAddress()).append(NEW_LINE);
-            sb.append("\"respondent_reference\":\"").append(representedType.getRepresentativeReference()).append(NEW_LINE);
-            sb.append("\"respondent_rep_reference\":\"").append(representedType.getRepresentativeReference()).append(NEW_LINE);
-            sb.append("\"respondent_email_address\":\"").append(representedType.getRepresentativeEmailAddress()).append(NEW_LINE);
-            sb.append("\"respondent_rep_email_address\":\"").append(representedType.getRepresentativeEmailAddress()).append(NEW_LINE);
+        RepresentedTypeR representedTypeR = caseData.getRepresentativeRespondentType();
+        if (representedTypeR != null) {
+            sb.append("\"Respondent\":\"").append(representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"Respondent_name\":\"").append(representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"respondent_full_name\":\"").append(representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"respondent_representative\":\"").append(representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"respondent_rep_full_name\":\"").append(representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"respondent_addressUK\":\"").append(representedTypeR.getRepresentativeAddress()).append(NEW_LINE);
+            sb.append("\"respondent_rep_addressUK\":\"").append(representedTypeR.getRepresentativeAddress()).append(NEW_LINE);
+            sb.append("\"respondent_reference\":\"").append(representedTypeR.getRepresentativeReference()).append(NEW_LINE);
+            sb.append("\"respondent_rep_reference\":\"").append(representedTypeR.getRepresentativeReference()).append(NEW_LINE);
+            sb.append("\"respondent_email_address\":\"").append(representedTypeR.getRepresentativeEmailAddress()).append(NEW_LINE);
+            sb.append("\"respondent_rep_email_address\":\"").append(representedTypeR.getRepresentativeEmailAddress()).append(NEW_LINE);
         } else {
             Optional<RespondentSumType> respondentType = Optional.ofNullable(caseData.getRespondentSumType());
             if (respondentType.isPresent()) {
@@ -147,6 +125,7 @@ public class Helper {
                 sb.append("\"respondent_addressUK\":\"").append(respondentType.get().getRespondentAddress()).append(NEW_LINE);
             }
         }
+        //Currently not checking caseData.getRepCollection(). Should create a list with names and check if represented or not
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             List<String> respOthers = caseData.getRespondentCollection()
                     .stream()
@@ -159,22 +138,31 @@ public class Helper {
 
     private static StringBuilder getHearingData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
+        //Currently checking collection not the HearingType
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             HearingType hearingType = caseData.getHearingCollection().get(0).getValue();
-            sb.append("\"hearing_date\":\"").append(formatLocalDate(hearingType.getHearingDate())).append(NEW_LINE);
-            sb.append("\"hearing_time\":\"").append("11:00 AM").append(NEW_LINE);
-            sb.append("\"hearing_venue\":\"").append("Manchester").append(NEW_LINE);
-            //sb.append("\"hearing_time\":\"").append(formatLocalDateTimeToTime(hearingType.getHearingDate())).append(NEW_LINE);
-            //sb.append("\"hearing_venue\":\"").append(hearingType.getEstHearing().).append(NEW_LINE);
+            sb.append("\"hearing_date\":\"").append(formatLocalDate(hearingType.getHearingDateStart())).append(NEW_LINE);
+            sb.append("\"Hearing_Date\":\"").append(formatLocalDate(hearingType.getHearingDateStart())).append(NEW_LINE);
+            sb.append("\"Hearing_date_time\":\"").append(formatLocalDateTime(hearingType.getHearingDateStart())).append(NEW_LINE);
+            sb.append("\"Hearing_Date_Time\":\"").append(formatLocalDateTime(hearingType.getHearingDateStart())).append(NEW_LINE);
+            sb.append("\"hearing_date_time\":\"").append(formatLocalDateTime(hearingType.getHearingDateStart())).append(NEW_LINE);
+            sb.append("\"Hearing_venue\":\"").append(hearingType.getHearingVenue()).append(NEW_LINE);
+            sb.append("\"hearing_address\":\"").append(hearingType.getHearingVenue()).append(NEW_LINE);
+            sb.append("\"Hearing_Address\":\"").append(hearingType.getHearingVenue()).append(NEW_LINE);
             if (hearingType.getEstHearing() != null) {
                 sb.append("\"EstLengthOfHearing\":\"").append(hearingType.getEstHearing()).append(NEW_LINE);
+                sb.append("\"Hearing_Duration\":\"").append(hearingType.getEstHearing()).append(NEW_LINE);
+                sb.append("\"hearing_duration\":\"").append(hearingType.getEstHearing()).append(NEW_LINE);
+                sb.append("\"hearing_length\":\"").append(hearingType.getEstHearing()).append(NEW_LINE);
             }
         }
         return sb;
     }
 
     public static String getDocumentName(CaseData caseData) {
-        return getTemplateName(caseData) + "_" + getSectionName(caseData);
+        String ewSection = getSectionName(caseData);
+        String sectionName = ewSection.equals("") ? getScotSectionName(caseData) : ewSection;
+        return getTemplateName(caseData) + "_" + sectionName;
     }
 
     private static String getTemplateName(CaseData caseData) {
@@ -182,7 +170,12 @@ public class Helper {
         if (correspondenceType.isPresent()) {
             return correspondenceType.get().getTopLevelDocuments();
         } else {
-            return "";
+            Optional<CorrespondenceScotType> correspondenceScotType = Optional.ofNullable(caseData.getCorrespondenceScotType());
+            if (correspondenceScotType.isPresent()) {
+                return correspondenceScotType.get().getTopLevelScotDocuments();
+            } else {
+                return "";
+            }
         }
     }
 
@@ -211,11 +204,44 @@ public class Helper {
         return "";
     }
 
+    private static String getScotSectionName(CaseData caseData) {
+        Optional<CorrespondenceScotType> correspondenceScotTypeOptional = Optional.ofNullable(caseData.getCorrespondenceScotType());
+        if (correspondenceScotTypeOptional.isPresent()) {
+            CorrespondenceScotType correspondenceScotType = correspondenceScotTypeOptional.get();
+            if (correspondenceScotType.getPart1ScotDocuments() != null) return correspondenceScotType.getPart1ScotDocuments();
+            if (correspondenceScotType.getPart2ScotDocuments() != null) return correspondenceScotType.getPart2ScotDocuments();
+            if (correspondenceScotType.getPart3ScotDocuments() != null) return correspondenceScotType.getPart3ScotDocuments();
+            if (correspondenceScotType.getPart4ScotDocuments() != null) return correspondenceScotType.getPart4ScotDocuments();
+            if (correspondenceScotType.getPart5ScotDocuments() != null) return correspondenceScotType.getPart5ScotDocuments();
+            if (correspondenceScotType.getPart6ScotDocuments() != null) return correspondenceScotType.getPart6ScotDocuments();
+            if (correspondenceScotType.getPart7ScotDocuments() != null) return correspondenceScotType.getPart7ScotDocuments();
+            if (correspondenceScotType.getPart8ScotDocuments() != null) return correspondenceScotType.getPart8ScotDocuments();
+            if (correspondenceScotType.getPart9ScotDocuments() != null) return correspondenceScotType.getPart9ScotDocuments();
+            if (correspondenceScotType.getPart10ScotDocuments() != null) return correspondenceScotType.getPart10ScotDocuments();
+            if (correspondenceScotType.getPart11ScotDocuments() != null) return correspondenceScotType.getPart11ScotDocuments();
+            if (correspondenceScotType.getPart12ScotDocuments() != null) return correspondenceScotType.getPart12ScotDocuments();
+            if (correspondenceScotType.getPart13ScotDocuments() != null) return correspondenceScotType.getPart13ScotDocuments();
+            if (correspondenceScotType.getPart14ScotDocuments() != null) return correspondenceScotType.getPart14ScotDocuments();
+            if (correspondenceScotType.getPart15ScotDocuments() != null) return correspondenceScotType.getPart15ScotDocuments();
+            if (correspondenceScotType.getPart16ScotDocuments() != null) return correspondenceScotType.getPart16ScotDocuments();
+        }
+        return "";
+    }
+
     private static StringBuilder getCorrespondenceData(CaseData caseData) {
         String sectionName = getSectionName(caseData);
         StringBuilder sb = new StringBuilder();
         if (!sectionName.equals("")) {
             sb.append("\"").append("t").append(sectionName.replace(".", "_")).append("\":\"").append("true").append(NEW_LINE);
+        }
+        return sb;
+    }
+
+    private static StringBuilder getCorrespondenceScotData(CaseData caseData) {
+        String scotSectionName = getScotSectionName(caseData);
+        StringBuilder sb = new StringBuilder();
+        if (!scotSectionName.equals("")) {
+            sb.append("\"").append("t_Scot_").append(scotSectionName.replace(".", "_")).append("\":\"").append("true").append(NEW_LINE);
         }
         return sb;
     }

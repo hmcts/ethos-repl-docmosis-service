@@ -12,12 +12,14 @@ import java.util.List;
 @Data
 public class CaseData {
 
-    @JsonProperty("tribunalOffices")
-    private String tribunalOffices;
+    @JsonProperty("ethosCaseReference")
+    private String ethosCaseReference;
     @JsonProperty("caseType")
     private String caseType;
     @JsonProperty("multipleType")
     private String multipleType;
+    @JsonProperty("multipleOthers")
+    private String multipleOthers;
     @JsonProperty("multipleReference")
     private String multipleReference;
     @JsonProperty("claimant_TypeOfClaimant")
@@ -30,22 +32,20 @@ public class CaseData {
     private ClaimantType claimantType;
     @JsonProperty("claimantOtherType")
     private ClaimantOtherType claimantOtherType;
-    @JsonProperty("claimantCollection")
-    private List<ClaimantTypeItem> claimantCollection;
     @JsonProperty("receiptDate")
     private String receiptDate;
-    @JsonProperty("broughtForwardDate")
-    private String broughtForwardDate;
     @JsonProperty("feeGroupReference")
     private String feeGroupReference;
     @JsonProperty("respondentSumType")
     private RespondentSumType respondentSumType;
-    @JsonProperty("repSumType")
-    private RepresentedType repSumType;
+    @JsonProperty("representativeClaimantType")
+    private RepresentedTypeC representativeClaimantType;
+    @JsonProperty("representativeRespondentType")
+    private RepresentedTypeR representativeRespondentType;
     @JsonProperty("respondentCollection")
     private List<RespondentSumTypeItem> respondentCollection;
     @JsonProperty("repCollection")
-    private List<RepresentedTypeItem> repCollection;
+    private List<RepresentedTypeRItem> repCollection;
     @JsonProperty("positionType")
     private String positionType;
     @JsonProperty("fileLocation")
@@ -100,9 +100,17 @@ public class CaseData {
     private AdditionalType additionalType;
     @JsonProperty("reconsiderationType")
     private ReconsiderationType reconsiderationType;
+    @JsonProperty("reconsiderationCollection")
+    private List<ReconsiderationTypeItem> reconsiderationCollection;
     @JsonProperty("correspondenceType")
     private CorrespondenceType correspondenceType;
+    @JsonProperty("correspondenceScotType")
+    private CorrespondenceScotType correspondenceScotType;
     @JsonProperty("caseNotes")
     private String caseNotes;
+    @JsonProperty("claimantWorkAddress")
+    private ClaimantWorkAddressType claimantWorkAddress;
+    @JsonProperty("claimantRepresentedQuestion")
+    private String claimantRepresentedQuestion;
 
 }
