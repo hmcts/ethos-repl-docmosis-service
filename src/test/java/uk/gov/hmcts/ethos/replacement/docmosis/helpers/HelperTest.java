@@ -29,7 +29,6 @@ public class HelperTest {
     private CaseDetails caseDetailsScot1;
     private CaseDetails caseDetailsScot2;
     private CaseDetails caseDetailsScot3;
-    private CaseDetails caseDetailsTemplates;
 
     @Before
     public void setUp() throws Exception {
@@ -615,50 +614,64 @@ public class HelperTest {
 
     @Test
     public void buildDocumentTemplates() {
-        caseDetailsTemplates = new CaseDetails();
+        CaseDetails caseDetailsTemplates = new CaseDetails();
         CaseData caseData = new CaseData();
+        CorrespondenceScotType correspondenceScotType = new CorrespondenceScotType();
         String topLevel = "Part_3_Scot";
         String part = "32";
-        caseData.setCorrespondenceScotType(createCorrespondenceType(topLevel, part));
+        correspondenceScotType.setTopLevelScotDocuments(topLevel);
+        correspondenceScotType.setPart3ScotDocuments(part);
+        caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
         topLevel = "Part_4_Scot";
         part = "42";
-        caseData.setCorrespondenceScotType(createCorrespondenceType(topLevel, part));
+        correspondenceScotType = new CorrespondenceScotType();
+        correspondenceScotType.setTopLevelScotDocuments(topLevel);
+        correspondenceScotType.setPart4ScotDocuments(part);
+        caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
         topLevel = "Part_5_Scot";
         part = "52";
-        caseData.setCorrespondenceScotType(createCorrespondenceType(topLevel, part));
+        correspondenceScotType = new CorrespondenceScotType();
+        correspondenceScotType.setTopLevelScotDocuments(topLevel);
+        correspondenceScotType.setPart5ScotDocuments(part);
+        caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
         topLevel = "Part_6_Scot";
         part = "62";
-        caseData.setCorrespondenceScotType(createCorrespondenceType(topLevel, part));
+        correspondenceScotType = new CorrespondenceScotType();
+        correspondenceScotType.setTopLevelScotDocuments(topLevel);
+        correspondenceScotType.setPart6ScotDocuments(part);
+        caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
         topLevel = "Part_7_Scot";
         part = "72";
-        caseData.setCorrespondenceScotType(createCorrespondenceType(topLevel, part));
+        correspondenceScotType = new CorrespondenceScotType();
+        correspondenceScotType.setTopLevelScotDocuments(topLevel);
+        correspondenceScotType.setPart7ScotDocuments(part);
+        caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
         topLevel = "Part_15_Scot";
         part = "152";
-        caseData.setCorrespondenceScotType(createCorrespondenceType(topLevel, part));
+        correspondenceScotType = new CorrespondenceScotType();
+        correspondenceScotType.setTopLevelScotDocuments(topLevel);
+        correspondenceScotType.setPart15ScotDocuments(part);
+        caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
         topLevel = "Part_16_Scot";
         part = "162";
-        caseData.setCorrespondenceScotType(createCorrespondenceType(topLevel, part));
+        correspondenceScotType = new CorrespondenceScotType();
+        correspondenceScotType.setTopLevelScotDocuments(topLevel);
+        correspondenceScotType.setPart16ScotDocuments(part);
+        caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
-    }
-
-    private CorrespondenceScotType createCorrespondenceType(String topLevel, String part) {
-        CorrespondenceScotType correspondenceScotType = new CorrespondenceScotType();
-        correspondenceScotType.setTopLevelScotDocuments(topLevel);
-        correspondenceScotType.setPart3ScotDocuments(part);
-        return correspondenceScotType;
     }
 
     private String getJson(String topLevel, String part) {
