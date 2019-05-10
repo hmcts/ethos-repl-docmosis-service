@@ -22,7 +22,6 @@
             "claimant_contact_preference": "Post",
             "claimant_date_of_birth": "1990-02-25",
             "claimant_email_address": "example@gmail.com",
-            "claimant_fax_number": "07577136570",
             "claimant_first_name": "Andrew",
             "claimant_gender": "Male",
             "claimant_initials": "AC",
@@ -44,15 +43,14 @@
         },
         "claimant_contact_preference": "Post",
         "claimant_email_address": "anton@gmail.com",
-        "claimant_fax_number": "07577136570",
         "claimant_mobile_number": "07577136570",
         "claimant_phone_number": "07577136570"
       },
       "claimantIndType": {
         "claimant_date_of_birth": "1990-02-25",
-        "claimant_forenames": "Anton Juliet",
+        "claimant_first_names": "Anton Juliet",
         "claimant_gender": "Male",
-        "claimant_surname": "Rodriguez",
+        "claimant_last_name": "Rodriguez",
         "claimant_title1": "Mr"
       },
       "disposeType": {
@@ -92,7 +90,6 @@
         },
         "representative_dx_number": "12121212",
         "representative_email_address": "danW@gmail.com",
-        "representative_fax_number": "string",
         "representative_mobile_number": "07577136570",
         "representative_phone_number": "07577136570",
         "representative_preference": "Email",
@@ -112,7 +109,6 @@
             },
             "respondent_contact_preference": "Phone",
             "respondent_email": "07577136570",
-            "respondent_fax": "07577136570",
             "respondent_name": "Robin",
             "respondent_phone1": "07577136570",
             "respondent_phone2": "07577136570"
@@ -131,7 +127,6 @@
         },
         "respondent_contact_preference": "Phone",
         "respondent_email": "josh@gmail.com",
-        "respondent_fax": "07577136570",
         "respondent_name": "Josh",
         "respondent_phone1": "07577136570",
         "respondent_phone2": "07577136570"

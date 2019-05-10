@@ -34,7 +34,6 @@
         },
         "representative_dx_number": "222222222",
         "representative_email_address": "example@gmail.com",
-        "representative_fax_number": "07577136570",
         "representative_mobile_number": "07577136570",
         "representative_phone_number": "07577136570",
         "representative_preference": "Post",
@@ -55,7 +54,6 @@
         "claimant_contact_preference": "Post",
         "claimant_date_of_birth": "1990-02-25",
         "claimant_email_address": "anton@gmail.com",
-        "claimant_fax_number": "07577136570",
         "claimant_forenames": "Anton",
         "claimant_gender": "Male",
         "claimant_mobile_number": "07577136570",
@@ -79,7 +77,7 @@
               "fromMinues": "4"
             },
             "HearingType": "Single",
-            "Hearing_date": "2019-11-25",
+            "Hearing_date_start": "2019-11-25 12:11:00",
             "Hearing_judge_name": "JudgeName"
           }
         }
@@ -128,7 +126,6 @@
       "respondentType": {
         "respondent_contact_preference": "Post",
         "respondent_email": "Antonio@gmail.com",
-        "respondent_fax": "07577136570",
         "respondent_phone1": "07577136570",
         "respondent_phone2": "07577136570"
       },
