@@ -25,5 +25,5 @@ services:
     ports:
       - 8082:8082
     environment:
-      DOCMOSIS_KEY: "0OAD-KLTH-JALO-MLIA-DBBH-1ELH-XBKQ-GS91-23ED-8-2358"
-      DOCMOSIS_SITE: "Free Trial License"
+      DOCMOSIS_KEY: "FNAD-KLTH-JAMO-DKIA-JAEE-7ILH-YKFQ-FR42-A8FA-A-268E"
+      DOCMOSIS_SITE: "Licensed To: Ministry Of Justice.  For use with single project: Reform Document Generation"

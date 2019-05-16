@@ -9,12 +9,28 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    //jcenter()
+    //maven { url "https://dl.bintray.com/hmcts/hmcts-maven" }
+    //maven { url "http://repo.maven.apache.org/maven2" }
+    //maven { url 'https://repo.spring.io/libs-milestone' }
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.9.0'
+    testCompile (group: 'org.docx4j', name: 'docx4j', version: '3.3.5') {
+        exclude module: 'slf4j-log4j12'
+    }
+    testCompile group: 'com.auth0', name: 'java-jwt', version: '3.8.0'
+    testCompile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.1'
     testCompile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
+    testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.3.RELEASE'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.1.3.RELEASE'
+    testCompile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.1.1.RELEASE'
+    testCompile group: 'io.github.openfeign', name: 'feign-jackson', version: '10.0.1'
+    testCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
+    testCompile group: 'com.warrenstrange', name: 'googleauth', version: '1.2.0'
 }
 
 task componentTest(type: Test, description: 'Runs the Component Test .', group: 'Verification') {
