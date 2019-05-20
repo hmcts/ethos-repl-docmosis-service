@@ -1,11 +1,13 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.CaseCreationException;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +22,10 @@ public class DefaultValuesReaderService {
 
     public DefaultValues getDefaultValues(String filePath) {
         List<String> values = new ArrayList<>();
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath)) {
-            WorkbookFactory.create(inputStream).getSheetAt(0).forEach(row -> {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
+             Workbook workbook = WorkbookFactory.create(inputStream)) {
+
+            workbook.getSheetAt(0).forEach(row -> {
                 if (row.getRowNum() != 0) {
                     row.forEach(cell -> {
                         if (cell.getColumnIndex() == 1) {
