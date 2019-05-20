@@ -70,7 +70,9 @@ dependencies {
     testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.6'
     compile(group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger)
     compile (group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger)
-
+    compile group: 'org.apache.poi', name: 'poi', version: '3.9'
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.9'
+    
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
     compile group: 'uk.gov.hmcts.reform', name: 'document-management-client', version: '4.0.2'
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
