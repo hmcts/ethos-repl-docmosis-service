@@ -81,5 +81,33 @@
         <notes><![CDATA[ tomcat-embed-core-9.0.16.jar  ]]></notes>
         <cve>CVE-2019-0232</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2017-5644  ]]></notes>
+        <cve>CVE-2017-5644</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2018-1000632  ]]></notes>
+        <cve>CVE-2018-1000632</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-9527  ]]></notes>
+        <cve>CVE-2014-9527</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2017-12626  ]]></notes>
+        <cve>CVE-2017-12626</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-3529  ]]></notes>
+        <cve>CVE-2014-3529</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-3574  ]]></notes>
+        <cve>CVE-2014-3574</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2016-5000  ]]></notes>
+        <cve>CVE-2016-5000</cve>
+    </suppress>
 
 </suppressions>
