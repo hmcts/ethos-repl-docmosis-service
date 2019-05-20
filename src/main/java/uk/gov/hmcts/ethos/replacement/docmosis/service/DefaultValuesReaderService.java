@@ -20,8 +20,7 @@ public class DefaultValuesReaderService {
 
     public DefaultValues getDefaultValues(String filePath) {
         List<String> values = new ArrayList<>();
-        try {
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath)) {
             WorkbookFactory.create(inputStream).getSheetAt(0).forEach(row -> {
                 if (row.getRowNum() != 0) {
                     row.forEach(cell -> {
