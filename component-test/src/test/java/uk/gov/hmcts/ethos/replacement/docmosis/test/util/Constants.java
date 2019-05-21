@@ -5,6 +5,7 @@ public class Constants {
     //General constants
     public static final String BASE_URL = "http://localhost:8081";
     public static final String URL_GEN_DOCUMENT = "/generateDocument";
+    public static final String URL_GEN_TOKEN = "http://localhost:4501/testing-support/lease?id=1&role=ccd-import";
     public static final String DOWNLOAD_FOLDER = "src/test/resources/documents/";
 
     //Test Case Data files
@@ -12,5 +13,5 @@ public class Constants {
 
     //Individual Template files
     public static final String TEMPLATE_PATH_ENG = "src/test/resources/templates/Part_#VERSION#.docx";
-    public static final String TEMPLATE_PATH_SCOT = "src/test/resources/templates/Part_Scot_#VERSION#.docx";
+    public static final String TEMPLATE_PATH_SCOT = "src/test/resources/templates/Part_#VERSION#_Scot.docx";
 }

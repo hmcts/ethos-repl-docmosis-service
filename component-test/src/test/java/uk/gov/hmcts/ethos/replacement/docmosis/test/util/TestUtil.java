@@ -12,7 +12,6 @@ import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
-import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -25,15 +24,13 @@ import java.util.regex.Pattern;
 @Component
 public class TestUtil {
 
-    private AuthTokenGenerator authTokenGenerator;
-
     private static String authToken;
+    private String topLevel;
+    private String childLevel;
 
     @Autowired
-    public TestUtil(AuthTokenGenerator authTokenGenerator) {
-        this.authTokenGenerator = authTokenGenerator;
-        authToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJvM3JkazRyYW1ub3Q3bGNidmljMzltMmowMCIsInN1YiI6IjIyIiwiaWF0IjoxNTU4MDAwMjMzLCJleHAiOjE1NTgwMjkwMzMsImRhdGEiOiJjYXNld29ya2VyLGNhc2V3b3JrZXItdGVzdCxjYXNld29ya2VyLXB1YmxpY2xhdy1sb2NhbEF1dGhvcml0eSxjYXNld29ya2VyLXB1YmxpY2xhdyxjYXNld29ya2VyLXB1YmxpY2xhdy1jb3VydGFkbWluLGNhc2V3b3JrZXIsY2FzZXdvcmtlci1sb2ExLGNhc2V3b3JrZXItdGVzdC1sb2ExLGNhc2V3b3JrZXItcHVibGljbGF3LWxvY2FsQXV0aG9yaXR5LWxvYTEsY2FzZXdvcmtlci1wdWJsaWNsYXctbG9hMSxjYXNld29ya2VyLXB1YmxpY2xhdy1jb3VydGFkbWluLWxvYTEsY2FzZXdvcmtlci1sb2ExIiwidHlwZSI6IkFDQ0VTUyIsImlkIjoiMjIiLCJmb3JlbmFtZSI6IkVyaWMiLCJzdXJuYW1lIjoiQ29vcGVyIiwiZGVmYXVsdC1zZXJ2aWNlIjoiQ0NEIiwibG9hIjoxLCJkZWZhdWx0LXVybCI6Imh0dHBzOi8vbG9jYWxob3N0OjkwMDAvcG9jL2NjZCIsImdyb3VwIjoiY2FzZXdvcmtlciJ9.g2OQeDfUdkO-QGHbV71r53M4uF-hj2r9-ew2rFlQiTg";
-        if (authToken == null) authToken = this.authTokenGenerator.generate();
+    public TestUtil() {
+        if (authToken == null) authToken = ResponseUtil.getAuthToken();
     }
 
     public void executeGenerateDocumentTest(String topLevel, String childLevel) throws IOException, JAXBException, Docx4JException {
@@ -41,6 +38,9 @@ public class TestUtil {
     }
 
     public void executeGenerateDocumentTest(String topLevel, String childLevel, boolean isScotland) throws IOException, JAXBException, Docx4JException {
+
+        this.topLevel = topLevel;
+        this.childLevel = childLevel;
 
         String payLoad = FileUtils.readFileToString(new File(Constants.TEST_DATA_CASE1));
         CCDRequest ccdRequest = JsonUtil.getCaseDetails(payLoad, topLevel, childLevel);
@@ -62,24 +62,38 @@ public class TestUtil {
 
         String templatePath;
 
-        String templateVersion = topLevel + "." + childLevel;
-        if (isScotland) templatePath = Constants.TEMPLATE_PATH_SCOT.replace("#VERSION#", templateVersion);
-        else templatePath = Constants.TEMPLATE_PATH_ENG.replace("#VERSION#", templateVersion);
+        if (isScotland) templatePath = Constants.TEMPLATE_PATH_SCOT.replace("#VERSION#", topLevel);
+        else templatePath = Constants.TEMPLATE_PATH_ENG.replace("#VERSION#", topLevel);
 
-        compareDocuments(new File(templatePath), new File(downloadedFilePath), DocumentUtil.buildDocumentContent(ccdRequest.getCaseDetails(), "authToken"));
+        compareDocuments(new File(templatePath), new File(downloadedFilePath), DocumentUtil.buildDocumentContent(ccdRequest.getCaseDetails(), "authToken"), isScotland);
 
     }
 
-    private void compareDocuments(File expectedDocument, File actualDocument, String testData) throws JAXBException, Docx4JException, IOException {
+    private void compareDocuments(File expectedDocument, File actualDocument, String testData, boolean isScotland) throws JAXBException, Docx4JException, IOException {
 
-        List<String> expectedTextElements = Docx4jUtil.getAllTextElementsFromDocument(expectedDocument);
+        String docVersion;
+
+        if (isScotland) {
+            if (StringUtils.isEmpty(this.topLevel)) docVersion = "";
+            else {
+                if (StringUtils.isEmpty(this.childLevel)) docVersion = "Scot_" + this.topLevel;
+                else docVersion = "Scot_" + this.topLevel + "_" + this.childLevel;
+            }
+        } else {
+            if (StringUtils.isEmpty(this.childLevel)) docVersion = "";
+            else docVersion = this.topLevel + "_" + this.childLevel;
+        }
+
+        List<String> expectedTextElements = Docx4jUtil.getSelectedTextElementsFromDocument(expectedDocument, docVersion);
         List<String> actualTextElements = Docx4jUtil.getAllTextElementsFromDocument(actualDocument);
 
         int itemCount = 0;
         StringBuilder stringBuilder = new StringBuilder();
 
+        Pattern patternStartTag = Pattern.compile("^[0-9a-zA-Z_]+>>$");
+
         for (String key : expectedTextElements) {
-            if (key.startsWith("<<cs")  || key.startsWith("<<else") || key.startsWith("<<##")) continue;
+            if (key.startsWith("<<cs")  || key.startsWith("<<else") || key.startsWith("<<##") || patternStartTag.matcher(key).matches()) continue;
 
             Pattern pattern = Pattern.compile(".*<<([\\w]+).*");
             Matcher matcher = pattern.matcher(key);
