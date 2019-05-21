@@ -13,7 +13,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.test.util.TestUtil;
 @Category(ComponentTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class)
-public class DocumentGenerationComponentTest {
+public class DocMosisScotPart3ComponentTest {
 
 
     @Autowired
@@ -24,18 +24,18 @@ public class DocumentGenerationComponentTest {
     }
 
     @Test
-    public void generateDocument_Part1_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "1");
+    public void generateDocument_Part_Scot_15() throws Exception {
+        testUtil.executeGenerateDocumentTest("15", "", true);
     }
 
     @Test
-    public void generateDocument_Part1_1A() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "1A");
+    public void generateDocument_Part_Scot_16() throws Exception {
+        testUtil.executeGenerateDocumentTest("16", "", true);
     }
 
     @Test
-    public void generateDocument_Part1_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "2");
+    public void generateDocument_Part_Scot_16_1() throws Exception {
+        testUtil.executeGenerateDocumentTest("", "", true);
     }
 
     @After
