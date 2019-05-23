@@ -27,14 +27,14 @@ docker-compose -f docker/app.yml pull
 #Start CCD and Docmosis services
 docker-compose -f docker/app.yml up -d
 
-##Wait until all services are up
+#Wait until all services are up
 echo ""
 echo "Waiting for the services to come up.. "
 echo ""
 output=`docker ps | grep -i 'starting'`
 while [[ ${output}  != '' ]]
 do
-    sleep 30
+    sleep 10
     output=`docker ps | grep -i 'starting'`
 done
 echo "All Services started successfully"
@@ -45,4 +45,4 @@ echo ""
 ../../ccd-docker/bin/ccd-add-role.sh caseworker-publiclaw
 ../../ccd-docker/bin/ccd-add-role.sh caseworker-publiclaw-courtadmin
 ../../ccd-docker/bin/ccd-add-role.sh caseworker-publiclaw-judiciary
-../../ccd-docker/bin/ccd-import-definition.sh src/test/resources/config/CCD_EmpTrib_Manc_v1.0.00.xlsx
+../../ccd-docker/bin/ccd-import-definition.sh src/test/resources/config/CCD_EmpTrib_Manc_v1.0.03.xlsx
