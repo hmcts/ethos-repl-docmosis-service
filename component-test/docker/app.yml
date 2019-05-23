@@ -219,8 +219,8 @@ services:
 
   dm-store:
     image: "hmcts/dm-store:${DM_STORE_TAG:-latest}"
-    mem_limit: 500M
-    mem_reservation: 400M
+    mem_limit: 1G
+    mem_reservation: 800M
     command: --wait-for-database 30
     healthcheck:
       disable: true
@@ -277,8 +277,8 @@ services:
 
   azure-storage-emulator-azurite:
     image: arafato/azurite
-    mem_limit: 10M
-    mem_reservation: 5M
+    mem_limit: 50M
+    mem_reservation: 30M
     ports:
       - 10000:10000
     environment:
