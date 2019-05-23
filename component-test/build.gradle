@@ -9,10 +9,10 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    //jcenter()
-    //maven { url "https://dl.bintray.com/hmcts/hmcts-maven" }
-    //maven { url "http://repo.maven.apache.org/maven2" }
-    //maven { url 'https://repo.spring.io/libs-milestone' }
+    jcenter()
+    maven { url "https://dl.bintray.com/hmcts/hmcts-maven" }
+    maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url 'https://repo.spring.io/libs-milestone' }
 }
 
 dependencies {
@@ -31,6 +31,11 @@ dependencies {
     testCompile group: 'io.github.openfeign', name: 'feign-jackson', version: '10.0.1'
     testCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
     testCompile group: 'com.warrenstrange', name: 'googleauth', version: '1.2.0'
+    testCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
+}
+
+test {
+    exclude '**/*ComponentTest*'
 }
 
 task componentTest(type: Test, description: 'Runs the Component Test .', group: 'Verification') {

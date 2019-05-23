@@ -2,8 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.test.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.CCDRequest;
 
 import java.io.IOException;
 

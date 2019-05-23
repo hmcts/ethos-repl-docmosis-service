@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.test.util;
 
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.CaseData;
+import uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.CaseDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.types.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
