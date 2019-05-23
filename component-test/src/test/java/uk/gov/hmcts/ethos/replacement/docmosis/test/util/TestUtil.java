@@ -11,7 +11,7 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.CCDRequest;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
