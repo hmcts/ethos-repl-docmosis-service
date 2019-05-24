@@ -8,13 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCreationForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseUpdateForCaseWorkerService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.POST_DEFAULT_XLSX_FILE_PATH;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.PRE_DEFAULT_XLSX_FILE_PATH;
 
 @Slf4j
 @RestController
@@ -28,13 +32,17 @@ public class CaseActionsForCaseWorkerController {
 
     private final CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService;
 
+    private final DefaultValuesReaderService defaultValuesReaderService;
+
     @Autowired
     public CaseActionsForCaseWorkerController(CaseCreationForCaseWorkerService caseCreationForCaseWorkerService,
                                               CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
-                                              CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService) {
+                                              CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService,
+                                              DefaultValuesReaderService defaultValuesReaderService) {
         this.caseCreationForCaseWorkerService = caseCreationForCaseWorkerService;
         this.caseRetrievalForCaseWorkerService = caseRetrievalForCaseWorkerService;
         this.caseUpdateForCaseWorkerService = caseUpdateForCaseWorkerService;
+        this.defaultValuesReaderService = defaultValuesReaderService;
     }
 
     @PostMapping(value = "/createCase", consumes = APPLICATION_JSON_VALUE)
@@ -114,21 +122,41 @@ public class CaseActionsForCaseWorkerController {
                 .build());
     }
 
-    @PostMapping(value = "/defaultFixedList", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "update a fixed list with a default value.")
+    @PostMapping(value = "/preDefaultValues", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "update pre default values in a case.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = CCDCallbackResponse.class),
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<CCDCallbackResponse> defaultFixedList(
+    public ResponseEntity<CCDCallbackResponse> preDefaultValues(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        ccdRequest.getCaseDetails().getCaseData().setFeeGroupReference("123456789123");
-        //ccdRequest.getCaseDetails().getCaseData().getClaimantType().setClaimantContactPreference("Email");
-        log.info("Default value added to fixed lists");
+        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH);
+        ccdRequest.getCaseDetails().getCaseData().setClaimantTypeOfClaimant(defaultValues.getClaimantTypeOfClaimant());
+        log.info("Pre Default values added to the case: " + defaultValues);
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(ccdRequest.getCaseDetails().getCaseData())
+                .build());
+    }
+
+    @PostMapping(value = "/postDefaultValues", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "update the case with some default values after submitted.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> postDefaultValues(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH);
+        ccdRequest.getCaseDetails().getCaseData().setPositionType(defaultValues.getPositionType());
+        log.info("Post Default values added to the case: " + defaultValues);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(ccdRequest.getCaseDetails().getCaseData())
                 .build());

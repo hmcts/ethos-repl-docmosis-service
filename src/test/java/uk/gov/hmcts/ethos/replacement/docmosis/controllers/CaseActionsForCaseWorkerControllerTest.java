@@ -16,9 +16,11 @@ import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCreationForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseUpdateForCaseWorkerService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 
 import javax.ws.rs.core.MediaType;
 import java.io.File;
@@ -35,6 +37,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.POST_DEFAULT_XLSX_FILE_PATH;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.PRE_DEFAULT_XLSX_FILE_PATH;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringRunner.class)
@@ -47,7 +51,8 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String RETRIEVE_CASE_URL = "/retrieveCase";
     private static final String RETRIEVE_CASES_URL = "/retrieveCases";
     private static final String UPDATE_CASE_URL = "/updateCase";
-    private static final String DEFAULT_FIXED_LIST_URL = "/defaultFixedList";
+    private static final String PRE_DEFAULT_VALUES_URL = "/preDefaultValues";
+    private static final String POST_DEFAULT_VALUES_URL = "/postDefaultValues";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -61,9 +66,13 @@ public class CaseActionsForCaseWorkerControllerTest {
     @MockBean
     private CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService;
 
+    @MockBean
+    private DefaultValuesReaderService defaultValuesReaderService;
+
     private MockMvc mvc;
     private JsonNode requestContent;
     private SubmitEvent submitEvent;
+    private DefaultValues defaultValues;
 
     private void doRequestSetUp() throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -76,6 +85,7 @@ public class CaseActionsForCaseWorkerControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
         doRequestSetUp();
         submitEvent = new SubmitEvent();
+        defaultValues = DefaultValues.builder().positionType("Awaiting ET3").claimantTypeOfClaimant("Individual").build();
     }
 
     @Test
@@ -132,8 +142,22 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
-    public void defaultFixedList() throws Exception {
-        mvc.perform(post(DEFAULT_FIXED_LIST_URL)
+    public void preDefaultValues() throws Exception {
+        when(defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH)).thenReturn(defaultValues);
+        mvc.perform(post(PRE_DEFAULT_VALUES_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void postDefaultValues() throws Exception {
+        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH)).thenReturn(defaultValues);
+        mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -224,12 +248,43 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
-    public void defaultFixedListError400() throws Exception {
-        mvc.perform(post(DEFAULT_FIXED_LIST_URL)
+    public void preDefaultValuesError400() throws Exception {
+        mvc.perform(post(PRE_DEFAULT_VALUES_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void preDefaultValuesError500() throws Exception {
+        when(defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH)).thenThrow(feignError());
+
+        mvc.perform(post(PRE_DEFAULT_VALUES_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void postDefaultValuesError400() throws Exception {
+        mvc.perform(post(POST_DEFAULT_VALUES_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void postDefaultValuesError500() throws Exception {
+        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH)).thenThrow(feignError());
+
+        mvc.perform(post(POST_DEFAULT_VALUES_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
     }
 
 }

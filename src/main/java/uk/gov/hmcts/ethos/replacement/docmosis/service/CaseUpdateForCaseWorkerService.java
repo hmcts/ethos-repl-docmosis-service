@@ -8,17 +8,23 @@ import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.CaseCreationException;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
+
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.POST_DEFAULT_XLSX_FILE_PATH;
 
 @Slf4j
 @Service("CaseUpdateForCaseWorkerService")
 public class CaseUpdateForCaseWorkerService {
 
     private static final String MESSAGE = "Failed to update case for case id : ";
-    private CcdClient ccdClient;
+    private final CcdClient ccdClient;
+    private final DefaultValuesReaderService defaultValuesReaderService;
 
     @Autowired
-    public CaseUpdateForCaseWorkerService(CcdClient ccdClient) {
+    public CaseUpdateForCaseWorkerService(CcdClient ccdClient,
+                                          DefaultValuesReaderService defaultValuesReaderService) {
         this.ccdClient = ccdClient;
+        this.defaultValuesReaderService = defaultValuesReaderService;
     }
 
     public SubmitEvent caseUpdateRequest(CCDRequest ccdRequest, String authToken) {
@@ -27,10 +33,13 @@ public class CaseUpdateForCaseWorkerService {
         log.info("Auth Token: " + authToken);
         log.info("Case Details: " + caseDetails);
         try {
-            CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseDetails, "1554715626304100");
+            String caseId = ccdRequest.getCaseDetails().getCaseId();
+            CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseDetails, caseId);
             log.info("------------ RETURNED REQUEST: " + returnedRequest);
-            caseDetails.getCaseData().setFeeGroupReference("123456789000");
-            return ccdClient.submitEventForCase(authToken, caseDetails, returnedRequest, "1554715626304100");
+            DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH);
+            ccdRequest.getCaseDetails().getCaseData().setPositionType(defaultValues.getPositionType());
+            log.info("Post Default values added to the case: " + defaultValues);
+            return ccdClient.submitEventForCase(authToken, caseDetails, returnedRequest, caseId);
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }
