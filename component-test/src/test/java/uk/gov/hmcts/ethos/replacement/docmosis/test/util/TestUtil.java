@@ -53,7 +53,7 @@ public class TestUtil {
 
         Assert.assertEquals(200, response.getStatusCode());
 
-        Pattern pattern = Pattern.compile("http://127.0.0.1:3453/documents/[a-z0-9\\-]+/binary");
+        Pattern pattern = Pattern.compile("http://localhost:3453/documents/[a-z0-9\\-]+/binary");
         String url = ResponseUtil.getUrlFromResponse(response);
 
         Assert.assertTrue(pattern.matcher(url).matches());
