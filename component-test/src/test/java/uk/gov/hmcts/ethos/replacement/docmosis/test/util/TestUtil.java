@@ -33,26 +33,33 @@ public class TestUtil {
         if (authToken == null) authToken = ResponseUtil.getAuthToken();
     }
 
-    public void executeGenerateDocumentTest(String topLevel, String childLevel) throws IOException, JAXBException, Docx4JException {
-        executeGenerateDocumentTest(topLevel, childLevel, false);
+    public void executeGenerateDocumentTest(String topLevel, String childLevel, String expectedValue) throws IOException, JAXBException, Docx4JException {
+        executeGenerateDocumentTest(topLevel, childLevel, expectedValue, false);
     }
 
-    public void executeGenerateDocumentTest(String topLevel, String childLevel, boolean isScotland) throws IOException, JAXBException, Docx4JException {
+    public void executeGenerateDocumentTest(String topLevel, String childLevel, String expectedValue, boolean isScotland) throws IOException, JAXBException, Docx4JException {
 
         this.topLevel = topLevel;
         this.childLevel = childLevel;
 
-        String payLoad = FileUtils.readFileToString(new File(Constants.TEST_DATA_CASE1));
-        CCDRequest ccdRequest = JsonUtil.getCaseDetails(payLoad, topLevel, childLevel);
+        CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel);
 
-        RequestSpecification httpRequest = RestAssured.given();
-        httpRequest.header("Authorization", authToken);
-        httpRequest.header("Content-Type", ContentType.JSON);
-        httpRequest.body(ccdRequest);
-        Response response = httpRequest.post(Constants.BASE_URL + Constants.URL_GEN_DOCUMENT);
+        Response response = getResponse(ccdRequest);
 
-        Assert.assertEquals(200, response.getStatusCode());
+        verifyDocument(topLevel, expectedValue, isScotland, ccdRequest, response);
 
+    }
+
+    public void verifyDocMosisPayload(String topLevel, String childLevel) throws IOException {
+        this.topLevel = topLevel;
+        this.childLevel = childLevel;
+
+        CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel);
+
+        Response response = getResponse(ccdRequest);
+    }
+
+    private void verifyDocument(String topLevel, String expectedValue, boolean isScotland, CCDRequest ccdRequest, Response response) throws IOException, JAXBException, Docx4JException {
         Pattern pattern = Pattern.compile("http://localhost:3453/documents/[a-z0-9\\-]+/binary");
         String url = ResponseUtil.getUrlFromResponse(response);
 
@@ -65,11 +72,26 @@ public class TestUtil {
         if (isScotland) templatePath = Constants.TEMPLATE_PATH_SCOT.replace("#VERSION#", topLevel);
         else templatePath = Constants.TEMPLATE_PATH_ENG.replace("#VERSION#", topLevel);
 
-        compareDocuments(new File(templatePath), new File(downloadedFilePath), DocumentUtil.buildDocumentContent(ccdRequest.getCaseDetails(), "authToken"), isScotland);
-
+        existsInDocument(expectedValue, new File(downloadedFilePath), DocumentUtil.buildDocumentContent(ccdRequest.getCaseDetails(), "authToken"), isScotland);
     }
 
-    private void compareDocuments(File expectedDocument, File actualDocument, String testData, boolean isScotland) throws JAXBException, Docx4JException, IOException {
+    private Response getResponse(CCDRequest ccdRequest) {
+        RequestSpecification httpRequest = RestAssured.given();
+        httpRequest.header("Authorization", authToken);
+        httpRequest.header("Content-Type", ContentType.JSON);
+        httpRequest.body(ccdRequest);
+        Response response = httpRequest.post(Constants.BASE_URL + Constants.URL_GEN_DOCUMENT);
+
+        Assert.assertEquals(200, response.getStatusCode());
+        return response;
+    }
+
+    private CCDRequest getCcdRequest(String topLevel, String childLevel) throws IOException {
+        String payLoad = FileUtils.readFileToString(new File(Constants.TEST_DATA_CASE1));
+        return JsonUtil.getCaseDetails(payLoad, topLevel, childLevel);
+    }
+
+    private void existsInDocument(String expectedValue, File actualDocument, String testData, boolean isScotland) throws JAXBException, Docx4JException, IOException {
 
         String docVersion;
 
@@ -84,39 +106,18 @@ public class TestUtil {
             else docVersion = this.topLevel + "_" + this.childLevel;
         }
 
-        List<String> expectedTextElements = Docx4jUtil.getSelectedTextElementsFromDocument(expectedDocument, docVersion);
         List<String> actualTextElements = Docx4jUtil.getAllTextElementsFromDocument(actualDocument);
 
-        int itemCount = 0;
-        StringBuilder stringBuilder = new StringBuilder();
-
-        Pattern patternStartTag = Pattern.compile("^[0-9a-zA-Z_]+>>$");
-
-        for (String key : expectedTextElements) {
-            if (key.startsWith("<<cs")  || key.startsWith("<<else") || key.startsWith("<<##") || patternStartTag.matcher(key).matches()) continue;
-
-            Pattern pattern = Pattern.compile(".*<<([\\w]+).*");
+        boolean hasMatched=false;
+        for (String key : actualTextElements) {
+            Pattern pattern = Pattern.compile(".*" + expectedValue + ".*");
             Matcher matcher = pattern.matcher(key);
             if (matcher.matches()) {
-                key = matcher.group(1);
-
-                if (key != null) {
-                    String expectedData = JsonUtil.getValue(testData, key);
-                    String actualData = actualTextElements.get(itemCount);
-                    if (actualData.endsWith(",")) actualData = actualData.substring(0, actualData.lastIndexOf(','));
-
-                    if (expectedData == null) Assert.fail("Expected value missing in test data for key: " + key);
-
-                    if (!expectedData.equals(actualData)) stringBuilder.append("Expected: " + expectedData + "; Actual: " + actualData);
-                }
-//                else {
-//                    Assert.assertEquals(key, actualTextElements.get(itemCount).trim());
-//                }
+                hasMatched=true;
+                break;
             }
-
-            itemCount++;
         }
 
-        Assert.assertTrue("Below expected values doesn't match actual: \n" + stringBuilder.toString(), StringUtils.isEmpty(stringBuilder.toString()));
+        Assert.assertTrue("Expected value "+ expectedValue + " + doesn't exist in Document with version: "+  docVersion +" \n", hasMatched);
     }
 }

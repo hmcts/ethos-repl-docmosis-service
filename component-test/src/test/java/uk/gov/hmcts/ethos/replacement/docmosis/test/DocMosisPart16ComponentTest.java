@@ -25,27 +25,27 @@ public class DocMosisPart16ComponentTest {
 
     @Test
     public void generateDocument_Part16_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("16", "1");
+        testUtil.executeGenerateDocumentTest("16", "1", "");
     }
 
     @Test
     public void generateDocument_Part16_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("16", "2");
+        testUtil.executeGenerateDocumentTest("16", "2", "");
     }
 
     @Test
     public void generateDocument_Part16_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("16", "3");
+        testUtil.executeGenerateDocumentTest("16", "3", "");
     }
 
     @Test
     public void generateDocument_Part16_4() throws Exception {
-        testUtil.executeGenerateDocumentTest("16", "4");
+        testUtil.executeGenerateDocumentTest("16", "4", "");
     }
 
     @Test
     public void generateDocument_Part16_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("16", "");
+        testUtil.executeGenerateDocumentTest("16", "", "");
     }
 
     @After

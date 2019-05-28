@@ -25,117 +25,117 @@ public class DocMosisPart3ComponentTest {
 
     @Test
     public void generateDocument_Part3_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "1");
+        testUtil.executeGenerateDocumentTest("3", "1", "");
     }
 
     @Test
     public void generateDocument_Part3_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "2");
+        testUtil.executeGenerateDocumentTest("3", "2", "");
     }
 
     @Test
     public void generateDocument_Part3_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "3");
+        testUtil.executeGenerateDocumentTest("3", "3", "");
     }
 
     @Test
     public void generateDocument_Part3_4() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "4");
+        testUtil.executeGenerateDocumentTest("3", "4", "");
     }
 
     @Test
     public void generateDocument_Part3_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "5");
+        testUtil.executeGenerateDocumentTest("3", "5", "");
     }
 
     @Test
     public void generateDocument_Part3_6() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "6");
+        testUtil.executeGenerateDocumentTest("3", "6", "");
     }
 
     @Test
     public void generateDocument_Part3_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "7");
+        testUtil.executeGenerateDocumentTest("3", "7", "");
     }
 
     @Test
     public void generateDocument_Part3_8() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "8");
+        testUtil.executeGenerateDocumentTest("3", "8", "");
     }
 
     @Test
     public void generateDocument_Part3_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "9");
+        testUtil.executeGenerateDocumentTest("3", "9", "");
     }
 
     @Test
     public void generateDocument_Part3_10() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "10");
+        testUtil.executeGenerateDocumentTest("3", "10", "");
     }
 
     @Test
     public void generateDocument_Part3_11() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "11");
+        testUtil.executeGenerateDocumentTest("3", "11", "");
     }
 
     @Test
     public void generateDocument_Part3_12() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "12");
+        testUtil.executeGenerateDocumentTest("3", "12", "");
     }
 
     @Test
     public void generateDocument_Part3_13() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "13");
+        testUtil.executeGenerateDocumentTest("3", "13", "");
     }
 
     @Test
     public void generateDocument_Part3_14() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "14");
+        testUtil.executeGenerateDocumentTest("3", "14", "");
     }
 
     @Test
     public void generateDocument_Part3_15() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "15");
+        testUtil.executeGenerateDocumentTest("3", "15", "");
     }
 
     @Test
     public void generateDocument_Part3_16() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "16");
+        testUtil.executeGenerateDocumentTest("3", "16", "");
     }
 
     @Test
     public void generateDocument_Part3_17() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "17");
+        testUtil.executeGenerateDocumentTest("3", "17", "");
     }
 
     @Test
     public void generateDocument_Part3_18() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "18");
+        testUtil.executeGenerateDocumentTest("3", "18", "");
     }
 
     @Test
     public void generateDocument_Part3_19() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "19");
+        testUtil.executeGenerateDocumentTest("3", "19", "");
     }
 
     @Test
     public void generateDocument_Part3_20() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "20");
+        testUtil.executeGenerateDocumentTest("3", "20", "");
     }
 
     @Test
     public void generateDocument_Part3_21() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "21");
+        testUtil.executeGenerateDocumentTest("3", "21", "");
     }
 
     @Test
     public void generateDocument_Part3_22() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "22");
+        testUtil.executeGenerateDocumentTest("3", "22", "");
     }
 
     @Test
     public void generateDocument_Part3_23() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "");
+        testUtil.executeGenerateDocumentTest("3", "", "");
     }
 
     @After

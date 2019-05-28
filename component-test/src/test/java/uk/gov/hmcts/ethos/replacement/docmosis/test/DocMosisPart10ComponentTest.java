@@ -25,82 +25,82 @@ public class DocMosisPart10ComponentTest {
 
     @Test
     public void generateDocument_Part10_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "1");
+        testUtil.executeGenerateDocumentTest("10", "1", "");
     }
 
     @Test
     public void generateDocument_Part10_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "2");
+        testUtil.executeGenerateDocumentTest("10", "2", "");
     }
 
     @Test
     public void generateDocument_Part10_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "3");
+        testUtil.executeGenerateDocumentTest("10", "3", "");
     }
 
     @Test
     public void generateDocument_Part10_4() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "4");
+        testUtil.executeGenerateDocumentTest("10", "4", "");
     }
 
     @Test
     public void generateDocument_Part10_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "5");
+        testUtil.executeGenerateDocumentTest("10", "5", "");
     }
 
     @Test
     public void generateDocument_Part10_6() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "6");
+        testUtil.executeGenerateDocumentTest("10", "6", "");
     }
 
     @Test
     public void generateDocument_Part10_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "7");
+        testUtil.executeGenerateDocumentTest("10", "7", "");
     }
 
     @Test
     public void generateDocument_Part10_8() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "8");
+        testUtil.executeGenerateDocumentTest("10", "8", "");
     }
 
     @Test
     public void generateDocument_Part10_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "9");
+        testUtil.executeGenerateDocumentTest("10", "9", "");
     }
 
     @Test
     public void generateDocument_Part10_10() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "10");
+        testUtil.executeGenerateDocumentTest("10", "10", "");
     }
 
     @Test
     public void generateDocument_Part10_11() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "11");
+        testUtil.executeGenerateDocumentTest("10", "11", "");
     }
 
     @Test
     public void generateDocument_Part10_12() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "12");
+        testUtil.executeGenerateDocumentTest("10", "12", "");
     }
 
     @Test
     public void generateDocument_Part10_13() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "13");
+        testUtil.executeGenerateDocumentTest("10", "13", "");
     }
 
     @Test
     public void generateDocument_Part10_14() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "14");
+        testUtil.executeGenerateDocumentTest("10", "14", "");
     }
 
     @Test
     public void generateDocument_Part10_15() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "15");
+        testUtil.executeGenerateDocumentTest("10", "15", "");
     }
 
     @Test
     public void generateDocument_Part10_16() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "");
+        testUtil.executeGenerateDocumentTest("10", "", "");
     }
 
     @After

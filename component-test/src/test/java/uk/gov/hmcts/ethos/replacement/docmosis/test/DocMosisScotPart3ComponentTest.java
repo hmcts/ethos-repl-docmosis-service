@@ -25,17 +25,17 @@ public class DocMosisScotPart3ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_15() throws Exception {
-        testUtil.executeGenerateDocumentTest("15", "", true);
+        testUtil.executeGenerateDocumentTest("15", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_16() throws Exception {
-        testUtil.executeGenerateDocumentTest("16", "", true);
+        testUtil.executeGenerateDocumentTest("16", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_16_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", true);
+        testUtil.executeGenerateDocumentTest("", "", "", true);
     }
 
     @After
