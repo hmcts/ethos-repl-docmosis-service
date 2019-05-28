@@ -25,97 +25,97 @@ public class DocMosisScotPart10ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_71() throws Exception {
-        testUtil.executeGenerateDocumentTest("71", "", true);
+        testUtil.executeGenerateDocumentTest("71", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_72() throws Exception {
-        testUtil.executeGenerateDocumentTest("72", "", true);
+        testUtil.executeGenerateDocumentTest("72", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_73() throws Exception {
-        testUtil.executeGenerateDocumentTest("73", "", true);
+        testUtil.executeGenerateDocumentTest("73", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_74() throws Exception {
-        testUtil.executeGenerateDocumentTest("74", "", true);
+        testUtil.executeGenerateDocumentTest("74", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_75() throws Exception {
-        testUtil.executeGenerateDocumentTest("75", "", true);
+        testUtil.executeGenerateDocumentTest("75", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_76() throws Exception {
-        testUtil.executeGenerateDocumentTest("76", "", true);
+        testUtil.executeGenerateDocumentTest("76", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_78() throws Exception {
-        testUtil.executeGenerateDocumentTest("78", "", true);
+        testUtil.executeGenerateDocumentTest("78", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_79() throws Exception {
-        testUtil.executeGenerateDocumentTest("79", "", true);
+        testUtil.executeGenerateDocumentTest("79", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_80() throws Exception {
-        testUtil.executeGenerateDocumentTest("80", "", true);
+        testUtil.executeGenerateDocumentTest("80", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_81() throws Exception {
-        testUtil.executeGenerateDocumentTest("81", "", true);
+        testUtil.executeGenerateDocumentTest("81", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_82() throws Exception {
-        testUtil.executeGenerateDocumentTest("82", "", true);
+        testUtil.executeGenerateDocumentTest("82", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_83() throws Exception {
-        testUtil.executeGenerateDocumentTest("83", "", true);
+        testUtil.executeGenerateDocumentTest("83", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_84() throws Exception {
-        testUtil.executeGenerateDocumentTest("84", "", true);
+        testUtil.executeGenerateDocumentTest("84", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_85() throws Exception {
-        testUtil.executeGenerateDocumentTest("85", "", true);
+        testUtil.executeGenerateDocumentTest("85", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_86() throws Exception {
-        testUtil.executeGenerateDocumentTest("86", "", true);
+        testUtil.executeGenerateDocumentTest("86", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_87() throws Exception {
-        testUtil.executeGenerateDocumentTest("87", "", true);
+        testUtil.executeGenerateDocumentTest("87", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_90() throws Exception {
-        testUtil.executeGenerateDocumentTest("90", "", true);
+        testUtil.executeGenerateDocumentTest("90", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_91() throws Exception {
-        testUtil.executeGenerateDocumentTest("91", "", true);
+        testUtil.executeGenerateDocumentTest("91", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_91B() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", true);
+        testUtil.executeGenerateDocumentTest("", "", "", true);
     }
 
     @After

@@ -25,52 +25,52 @@ public class DocMosisPart14ComponentTest {
 
     @Test
     public void generateDocument_Part14_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "1");
+        testUtil.executeGenerateDocumentTest("14", "1", "");
     }
 
     @Test
     public void generateDocument_Part14_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "2");
+        testUtil.executeGenerateDocumentTest("14", "2", "");
     }
 
     @Test
     public void generateDocument_Part14_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "3");
+        testUtil.executeGenerateDocumentTest("14", "3", "");
     }
 
     @Test
     public void generateDocument_Part14_4() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "4");
+        testUtil.executeGenerateDocumentTest("14", "4", "");
     }
 
     @Test
     public void generateDocument_Part14_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "5");
+        testUtil.executeGenerateDocumentTest("14", "5", "");
     }
 
     @Test
     public void generateDocument_Part14_6() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "6");
+        testUtil.executeGenerateDocumentTest("14", "6", "");
     }
 
     @Test
     public void generateDocument_Part14_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "7");
+        testUtil.executeGenerateDocumentTest("14", "7", "");
     }
 
     @Test
     public void generateDocument_Part14_8() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "8");
+        testUtil.executeGenerateDocumentTest("14", "8", "");
     }
 
     @Test
     public void generateDocument_Part14_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "9");
+        testUtil.executeGenerateDocumentTest("14", "9", "");
     }
 
     @Test
     public void generateDocument_Part14_10() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "10");
+        testUtil.executeGenerateDocumentTest("14", "10", "");
     }
 
     @After

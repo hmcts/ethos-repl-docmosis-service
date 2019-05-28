@@ -25,32 +25,32 @@ public class DocMosisScotPart7ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_58() throws Exception {
-        testUtil.executeGenerateDocumentTest("58", "", true);
+        testUtil.executeGenerateDocumentTest("58", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_59() throws Exception {
-        testUtil.executeGenerateDocumentTest("59", "", true);
+        testUtil.executeGenerateDocumentTest("59", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_60() throws Exception {
-        testUtil.executeGenerateDocumentTest("60", "", true);
+        testUtil.executeGenerateDocumentTest("60", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_61() throws Exception {
-        testUtil.executeGenerateDocumentTest("61", "", true);
+        testUtil.executeGenerateDocumentTest("61", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_62() throws Exception {
-        testUtil.executeGenerateDocumentTest("62", "", true);
+        testUtil.executeGenerateDocumentTest("62", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_63() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", true);
+        testUtil.executeGenerateDocumentTest("", "", "", true);
     }
 
     @After

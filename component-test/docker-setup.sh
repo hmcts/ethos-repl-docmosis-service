@@ -22,10 +22,10 @@ fi
 ../../ccd-docker/ccd set ccd-case-management-web demo
 
 #Pull necessary images from docker registry
-docker-compose -f docker/app.yml pull
+../../ccd-docker/ccd compose pull
 
 #Start CCD and Docmosis services
-docker-compose -f docker/app.yml up -d
+../../ccd-docker/ccd compose up -d
 
 #Wait until all services are up
 echo ""
@@ -40,9 +40,10 @@ done
 echo "All Services started successfully"
 echo ""
 
-../../ccd-docker/bin/idam-create-caseworker.sh caseworker,caseworker-test,caseworker-publiclaw-localAuthority,caseworker-publiclaw,caseworker-publiclaw-courtadmin eric.la.cooper@gmail.com password Cooper Eric
-../../ccd-docker/bin/ccd-add-role.sh caseworker-publiclaw-localAuthority
-../../ccd-docker/bin/ccd-add-role.sh caseworker-publiclaw
-../../ccd-docker/bin/ccd-add-role.sh caseworker-publiclaw-courtadmin
-../../ccd-docker/bin/ccd-add-role.sh caseworker-publiclaw-judiciary
-../../ccd-docker/bin/ccd-import-definition.sh src/test/resources/config/CCD_EmpTrib_Manc_v1.0.03.xlsx
+#Execute these steps manually
+#../../ccd-docker/bin/idam-create-caseworker.sh caseworker,caseworker-test,caseworker-employment-tribunal-manchester,caseworker-employment,caseworker-employment-tribunal-manchester-caseofficer eric.la.cooper@gmail.com password Cooper Eric
+#../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-manchester
+#../../ccd-docker/bin/ccd-add-role.sh caseworker-employment
+#../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-manchester-caseofficer
+#../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-manchester-casesupervisor
+#../../ccd-docker/bin/ccd-import-definition.sh src/test/resources/config/CCD_EmpTrib_Manc_v1.0.09.xlsx

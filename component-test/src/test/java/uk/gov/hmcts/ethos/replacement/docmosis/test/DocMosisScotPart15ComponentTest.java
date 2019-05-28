@@ -25,72 +25,72 @@ public class DocMosisScotPart15ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_159() throws Exception {
-        testUtil.executeGenerateDocumentTest("159", "", true);
+        testUtil.executeGenerateDocumentTest("159", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_160() throws Exception {
-        testUtil.executeGenerateDocumentTest("160", "", true);
+        testUtil.executeGenerateDocumentTest("160", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_161() throws Exception {
-        testUtil.executeGenerateDocumentTest("161", "", true);
+        testUtil.executeGenerateDocumentTest("161", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_162() throws Exception {
-        testUtil.executeGenerateDocumentTest("162", "", true);
+        testUtil.executeGenerateDocumentTest("162", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_163() throws Exception {
-        testUtil.executeGenerateDocumentTest("163", "", true);
+        testUtil.executeGenerateDocumentTest("163", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_164() throws Exception {
-        testUtil.executeGenerateDocumentTest("164", "", true);
+        testUtil.executeGenerateDocumentTest("164", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_165() throws Exception {
-        testUtil.executeGenerateDocumentTest("165", "", true);
+        testUtil.executeGenerateDocumentTest("165", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_166() throws Exception {
-        testUtil.executeGenerateDocumentTest("166", "", true);
+        testUtil.executeGenerateDocumentTest("166", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_167() throws Exception {
-        testUtil.executeGenerateDocumentTest("167", "", true);
+        testUtil.executeGenerateDocumentTest("167", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_168() throws Exception {
-        testUtil.executeGenerateDocumentTest("168", "", true);
+        testUtil.executeGenerateDocumentTest("168", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_169() throws Exception {
-        testUtil.executeGenerateDocumentTest("169", "", true);
+        testUtil.executeGenerateDocumentTest("169", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_170() throws Exception {
-        testUtil.executeGenerateDocumentTest("170", "", true);
+        testUtil.executeGenerateDocumentTest("170", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_171() throws Exception {
-        testUtil.executeGenerateDocumentTest("171", "", true);
+        testUtil.executeGenerateDocumentTest("171", "", "", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_172() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", true);
+        testUtil.executeGenerateDocumentTest("", "", "", true);
     }
 
     @After

@@ -25,82 +25,82 @@ public class DocMosisPart12ComponentTest {
 
     @Test
     public void generateDocument_Part12_1C() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "1C");
+        testUtil.executeGenerateDocumentTest("12", "1C", "");
     }
 
     @Test
     public void generateDocument_Part12_1R() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "1R");
+        testUtil.executeGenerateDocumentTest("12", "1R", "");
     }
 
     @Test
     public void generateDocument_Part12_2C() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "2C");
+        testUtil.executeGenerateDocumentTest("12", "2C", "");
     }
 
     @Test
     public void generateDocument_Part12_2R() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "2R");
+        testUtil.executeGenerateDocumentTest("12", "2R", "");
     }
 
     @Test
     public void generateDocument_Part12_3C() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "3C");
+        testUtil.executeGenerateDocumentTest("12", "3C", "");
     }
 
     @Test
     public void generateDocument_Part12_3R() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "3R");
+        testUtil.executeGenerateDocumentTest("12", "3R", "");
     }
 
     @Test
     public void generateDocument_Part12_4C() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "4C");
+        testUtil.executeGenerateDocumentTest("12", "4C", "");
     }
 
     @Test
     public void generateDocument_Part12_4R() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "4R");
+        testUtil.executeGenerateDocumentTest("12", "4R", "");
     }
 
     @Test
     public void generateDocument_Part12_5C() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "5C");
+        testUtil.executeGenerateDocumentTest("12", "5C", "");
     }
 
     @Test
     public void generateDocument_Part12_5R() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "5R");
+        testUtil.executeGenerateDocumentTest("12", "5R", "");
     }
 
     @Test
     public void generateDocument_Part12_6C() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "6C");
+        testUtil.executeGenerateDocumentTest("12", "6C", "");
     }
 
     @Test
     public void generateDocument_Part12_6R() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "6R");
+        testUtil.executeGenerateDocumentTest("12", "6R", "");
     }
 
     @Test
     public void generateDocument_Part12_7C() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "7C");
+        testUtil.executeGenerateDocumentTest("12", "7C", "");
     }
 
     @Test
     public void generateDocument_Part12_7R() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "7R");
+        testUtil.executeGenerateDocumentTest("12", "7R", "");
     }
 
     @Test
     public void generateDocument_Part12_8C() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "8C");
+        testUtil.executeGenerateDocumentTest("12", "8C", "");
     }
 
     @Test
     public void generateDocument_Part12_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "");
+        testUtil.executeGenerateDocumentTest("12", "", "");
     }
 
     @After
