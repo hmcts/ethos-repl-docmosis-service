@@ -3,7 +3,7 @@ version: '2.1'
 
 services:
   ccd-case-management-web:
-    image: "hmcts/ccd-case-management-web:${CCD_CASE_MANAGEMENT_WEB_TAG:-latest}"
+    image: "${CCD_CASE_MANAGEMENT_WEB_USE_LOCAL-hmcts.azurecr.io/}hmcts/ccd-case-management-web:${CCD_CASE_MANAGEMENT_WEB_TAG:-latest}"
     mem_limit: 500M
     mem_reservation: 100M
     container_name: ccd-case-management-web
@@ -19,7 +19,7 @@ services:
       - ccd-api-gateway
 
   ccd-api-gateway:
-    image: "hmcts/ccd-api-gateway:${CCD_API_GATEWAY_TAG:-latest}"
+    image: "${CCD_API_GATEWAY_USE_LOCAL-hmcts.azurecr.io/}hmcts/ccd-api-gateway-web:${CCD_API_GATEWAY_TAG:-latest}"
     mem_limit: 100M
     mem_reservation: 80M
     container_name: ccd-api-gateway
@@ -47,7 +47,7 @@ services:
       - ccd-data-store-api
 
   authentication-web:
-    image: docker.artifactory.reform.hmcts.net/auth/authentication-web:latest
+    image: hmcts.azurecr.io/hmcts/tidam-authentication-web:latest
     mem_limit: 50M
     mem_reservation: 40M
     environment:

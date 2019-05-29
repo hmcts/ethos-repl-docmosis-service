@@ -43,7 +43,7 @@ services:
 #      DOCMOSIS_SITE: "Free Trial License"
 
   ccd-user-profile-api:
-    image: "hmcts/ccd-user-profile-api:${CCD_USER_PROFILE_API_TAG:-latest}"
+    image: "${CCD_USER_PROFILE_API_USE_LOCAL-hmcts.azurecr.io/}hmcts/ccd-user-profile-api:${CCD_USER_PROFILE_API_TAG:-latest}"
     mem_limit: 500M
     mem_reservation: 400M
     environment:
@@ -67,7 +67,7 @@ services:
       - service-auth-provider-api
 
   ccd-definition-store-api:
-    image: "hmcts/ccd-definition-store-api:${CCD_DEFINITION_STORE_API_TAG:-latest}"
+    image: "${CCD_DEFINITION_STORE_API_USE_LOCAL-hmcts.azurecr.io/}hmcts/ccd-definition-store-api:${CCD_DEFINITION_STORE_API_TAG:-latest}"
     mem_limit: 500M
     mem_reservation: 400M
     environment:
@@ -97,7 +97,7 @@ services:
       - service-auth-provider-api
 
   ccd-data-store-api:
-    image: "hmcts/ccd-data-store-api:${CCD_DATA_STORE_API_TAG:-latest}"
+    image: "${CCD_DATA_STORE_API_USE_LOCAL-hmcts.azurecr.io/}hmcts/ccd-data-store-api:${CCD_DATA_STORE_API_TAG:-latest}"
     mem_limit: 500M
     mem_reservation: 400M
     environment:
@@ -131,7 +131,7 @@ services:
       - service-auth-provider-api
 
   idam-api:
-    image: docker.artifactory.reform.hmcts.net/auth/idam-api:latest
+    image: hmcts.azurecr.io/hmcts/tidam-api:latest
     mem_limit: 1G
     mem_reservation: 800M
     healthcheck:
@@ -178,7 +178,7 @@ services:
       - smtp-server
 
   service-auth-provider-api:
-    image: hmcts/service-auth-provider-app
+    image: hmcts.azurecr.io/hmcts/rpe-service-auth-provider:latest
     mem_limit: 400M
     mem_reservation: 300M
     healthcheck:
