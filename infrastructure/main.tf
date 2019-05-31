@@ -65,7 +65,7 @@ module "key-vault" {
   tenant_id               = "${var.tenant_id}"
   object_id               = "${var.jenkins_AAD_objectId}"
   resource_group_name     = "${local.vaultGroupName}"
-  # dcd_cc-dev group object ID
-  product_group_object_id = "38f9dea6-e861-4a50-9e73-21e64f563537"
+  # dcd_group_ethos_v2 group object ID
+  product_group_object_id = "414c132d-5160-42b3-bbff-43a2e1daafcf"
   common_tags             = "${var.common_tags}"
 }
