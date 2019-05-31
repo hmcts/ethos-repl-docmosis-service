@@ -109,5 +109,9 @@
         <notes><![CDATA[ CVE-2016-5000  ]]></notes>
         <cve>CVE-2016-5000</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ tomcat-embed-websocket-9.0.16.jar: CVE-2019-0221  ]]></notes>
+        <cve>CVE-2019-0221</cve>
+    </suppress>
 
 </suppressions>
