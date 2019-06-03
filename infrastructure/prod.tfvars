@@ -5,4 +5,4 @@ ccd_data_store_api_url = "http://ccd-data-store-api-prod.service.core-compute-pr
 dm_url = "http://dm-store-prod.service.core-compute-prod.internal"
 s2s_url = "https://rpe-service-auth-provider-prod.service.core-compute-prod.internal"
 ccd_gateway_url = "https://gateway.ccd.platform.hmcts.net"
-micro_service = "sscs"
+micro_service = "ethos_repl_service"
