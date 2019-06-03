@@ -59,10 +59,15 @@ public class Helper {
         sb.append(getCorrespondenceScotData(caseData));
         sb.append(getCourtData());
 
+        sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts\":\"")
+                .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
+        sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts\":\"")
+                .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
+
         sb.append("\"Clerk\":\"").append(caseData.getClerkResponsible()).append(NEW_LINE);
         sb.append("\"TODAY_DATE\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
         sb.append("\"TodayPlus28Days\":\"").append(formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
-        sb.append("\"Case_No\":\"").append(caseDetails.getCaseId()).append(NEW_LINE);
+        sb.append("\"Case_No\":\"").append(caseDetails.getCaseData().getEthosCaseReference()).append(NEW_LINE);
 
         sb.append("}\n");
         sb.append("}\n");
@@ -73,15 +78,15 @@ public class Helper {
     private static StringBuilder getClaimantData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
         RepresentedTypeC representedTypeC = caseData.getRepresentativeClaimantType();
+        Optional<ClaimantIndType> claimantIndType = Optional.ofNullable(caseData.getClaimantIndType());
         if (representedTypeC != null) {
             sb.append("\"claimant_full_name\":\"").append(representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"claimant_rep_full_name\":\"").append(representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"Claimant_name\":\"").append(representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"Claimant\":\"").append(representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"claimant_addressUK\":\"").append(representedTypeC.getRepresentativeAddress()).append(NEW_LINE);
             sb.append("\"claimant_rep_addressUK\":\"").append(representedTypeC.getRepresentativeAddress()).append(NEW_LINE);
-            sb.append("\"claimant_email_address\":\"").append(representedTypeC.getRepresentativeEmailAddress()).append(NEW_LINE);
-            sb.append("\"claimant_rep_email_address\":\"").append(representedTypeC.getRepresentativeEmailAddress()).append(NEW_LINE);
+            //sb.append("\"claimant_email_address\":\"").append(representedTypeC.getRepresentativeEmailAddress()).append(NEW_LINE);
+            //sb.append("\"claimant_rep_email_address\":\"").append(representedTypeC.getRepresentativeEmailAddress()).append(NEW_LINE);
             sb.append("\"representative_reference\":\"").append(representedTypeC.getRepresentativeReference()).append(NEW_LINE);
             sb.append("\"claimant_rep_reference\":\"").append(representedTypeC.getRepresentativeReference()).append(NEW_LINE);
             sb.append("\"claimant_reference\":\"").append(representedTypeC.getRepresentativeReference()).append(NEW_LINE);
@@ -89,23 +94,24 @@ public class Helper {
             Optional<ClaimantType> claimantType = Optional.ofNullable(caseData.getClaimantType());
             if (claimantType.isPresent()) {
                 sb.append("\"claimant_addressUK\":\"").append(claimantType.get().getClaimantAddressUK()).append(NEW_LINE);
-                sb.append("\"claimant_email_address\":\"").append(claimantType.get().getClaimantEmailAddress()).append(NEW_LINE);
+                sb.append("\"claimant_rep_addressUK\":\"").append(claimantType.get().getClaimantAddressUK()).append(NEW_LINE);
+                //sb.append("\"claimant_email_address\":\"").append(claimantType.get().getClaimantEmailAddress()).append(NEW_LINE);
             }
-            Optional<ClaimantIndType> claimantIndType = Optional.ofNullable(caseData.getClaimantIndType());
             if (claimantIndType.isPresent()) {
-                sb.append("\"claimant_full_name\":\"").append(claimantIndType.get().claimantFullName()).append(NEW_LINE);
                 sb.append("\"Claimant_name\":\"").append(claimantIndType.get().claimantFullName()).append(NEW_LINE);
-                sb.append("\"Claimant\":\"").append(claimantIndType.get().claimantFullName()).append(NEW_LINE);
+                sb.append("\"claimant_full_name\":\"").append(claimantIndType.get().claimantFullName()).append(NEW_LINE);
+                sb.append("\"claimant_rep_full_name\":\"").append(claimantIndType.get().claimantFullName()).append(NEW_LINE);
             }
         }
+        claimantIndType.ifPresent(claimantIndType1 -> sb.append("\"Claimant\":\"").append(claimantIndType1.claimantFullName()).append(NEW_LINE));
         return sb;
     }
 
     private static StringBuilder getRespondentData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
         RepresentedTypeR representedTypeR = caseData.getRepresentativeRespondentType();
+        Optional<RespondentSumType> respondentType = Optional.ofNullable(caseData.getRespondentSumType());
         if (representedTypeR != null) {
-            sb.append("\"Respondent\":\"").append(representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"Respondent_name\":\"").append(representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"respondent_full_name\":\"").append(representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"respondent_representative\":\"").append(representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
@@ -114,18 +120,17 @@ public class Helper {
             sb.append("\"respondent_rep_addressUK\":\"").append(representedTypeR.getRepresentativeAddress()).append(NEW_LINE);
             sb.append("\"respondent_reference\":\"").append(representedTypeR.getRepresentativeReference()).append(NEW_LINE);
             sb.append("\"respondent_rep_reference\":\"").append(representedTypeR.getRepresentativeReference()).append(NEW_LINE);
-            sb.append("\"respondent_email_address\":\"").append(representedTypeR.getRepresentativeEmailAddress()).append(NEW_LINE);
-            sb.append("\"respondent_rep_email_address\":\"").append(representedTypeR.getRepresentativeEmailAddress()).append(NEW_LINE);
+            //sb.append("\"respondent_email_address\":\"").append(representedTypeR.getRepresentativeEmailAddress()).append(NEW_LINE);
+            //sb.append("\"respondent_rep_email_address\":\"").append(representedTypeR.getRepresentativeEmailAddress()).append(NEW_LINE);
         } else {
-            Optional<RespondentSumType> respondentType = Optional.ofNullable(caseData.getRespondentSumType());
             if (respondentType.isPresent()) {
-                sb.append("\"Respondent\":\"").append(respondentType.get().getRespondentName()).append(NEW_LINE);
                 sb.append("\"Respondent_name\":\"").append(respondentType.get().getRespondentName()).append(NEW_LINE);
                 sb.append("\"respondent_full_name\":\"").append(respondentType.get().getRespondentName()).append(NEW_LINE);
+                sb.append("\"respondent_rep_full_name\":\"").append(respondentType.get().getRespondentName()).append(NEW_LINE);
                 sb.append("\"respondent_addressUK\":\"").append(respondentType.get().getRespondentAddress()).append(NEW_LINE);
+                sb.append("\"respondent_rep_addressUK\":\"").append(respondentType.get().getRespondentAddress()).append(NEW_LINE);
             }
         }
-        //Currently not checking caseData.getRepCollection(). Should create a list with names and check if represented or not
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             List<String> respOthers = caseData.getRespondentCollection()
                     .stream()
@@ -133,6 +138,7 @@ public class Helper {
                     .collect(Collectors.toList());
             sb.append("\"resp_others\":\"").append(String.join(", ", respOthers)).append(NEW_LINE);
         }
+        respondentType.ifPresent(respondentSumType -> sb.append("\"Respondent\":\"").append(respondentSumType.getRespondentName()).append(NEW_LINE));
         return sb;
     }
 
@@ -190,7 +196,6 @@ public class Helper {
             if (correspondence.getPart5Documents() != null) return correspondence.getPart5Documents();
             if (correspondence.getPart6Documents() != null) return correspondence.getPart6Documents();
             if (correspondence.getPart7Documents() != null) return correspondence.getPart7Documents();
-            if (correspondence.getPart8Documents() != null) return correspondence.getPart8Documents();
             if (correspondence.getPart9Documents() != null) return correspondence.getPart9Documents();
             if (correspondence.getPart10Documents() != null) return correspondence.getPart10Documents();
             if (correspondence.getPart11Documents() != null) return correspondence.getPart11Documents();
@@ -216,7 +221,6 @@ public class Helper {
             if (correspondenceScotType.getPart6ScotDocuments() != null) return correspondenceScotType.getPart6ScotDocuments();
             if (correspondenceScotType.getPart7ScotDocuments() != null) return correspondenceScotType.getPart7ScotDocuments();
             if (correspondenceScotType.getPart8ScotDocuments() != null) return correspondenceScotType.getPart8ScotDocuments();
-            if (correspondenceScotType.getPart9ScotDocuments() != null) return correspondenceScotType.getPart9ScotDocuments();
             if (correspondenceScotType.getPart10ScotDocuments() != null) return correspondenceScotType.getPart10ScotDocuments();
             if (correspondenceScotType.getPart11ScotDocuments() != null) return correspondenceScotType.getPart11ScotDocuments();
             if (correspondenceScotType.getPart12ScotDocuments() != null) return correspondenceScotType.getPart12ScotDocuments();
