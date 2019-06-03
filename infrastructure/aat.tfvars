@@ -4,4 +4,4 @@ ccd_data_store_api_url = "http://ccd-data-store-api-aat.service.core-compute-aat
 dm_url = "http://dm-store-aat.service.core-compute-aat.internal"
 s2s_url = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
 ccd_gateway_url = "https://gateway-ccd.aat.platform.hmcts.net"
-micro_service = "sscs"
+micro_service = "ethos_repl_service"
