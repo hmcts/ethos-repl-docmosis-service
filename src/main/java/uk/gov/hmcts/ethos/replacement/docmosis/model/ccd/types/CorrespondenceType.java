@@ -10,38 +10,36 @@ public class CorrespondenceType {
 
     @JsonProperty("topLevel_Documents")
     private String topLevelDocuments;
-    @JsonProperty("part_1_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00026")
     private String part1Documents;
-    @JsonProperty("part_2_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00027")
     private String part2Documents;
-    @JsonProperty("part_3_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00028")
     private String part3Documents;
-    @JsonProperty("part_4_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00029")
     private String part4Documents;
-    @JsonProperty("part_5_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00030")
     private String part5Documents;
-    @JsonProperty("Part_6_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00031")
     private String part6Documents;
-    @JsonProperty("Part_7_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00032")
     private String part7Documents;
-    @JsonProperty("Part_8_Documents")
-    private String part8Documents;
-    @JsonProperty("Part_9_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00033")
     private String part9Documents;
-    @JsonProperty("Part_10_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00034")
     private String part10Documents;
-    @JsonProperty("Part_11_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00035")
     private String part11Documents;
-    @JsonProperty("Part_12_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00036")
     private String part12Documents;
-    @JsonProperty("Part_13_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00037")
     private String part13Documents;
-    @JsonProperty("Part_14_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00038")
     private String part14Documents;
-    @JsonProperty("Part_15_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00039")
     private String part15Documents;
-    @JsonProperty("Part_16_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00040")
     private String part16Documents;
-    @JsonProperty("Part_17_Documents")
+    @JsonProperty("EM-TRB-EGW-ENG-00041")
     private String part17Documents;
 }
