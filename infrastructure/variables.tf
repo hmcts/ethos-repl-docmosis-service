@@ -64,7 +64,7 @@ variable "s2s_url" {
 }
 
 variable "micro_service" {
-  default = "ccd_gw"
+  default = "ethos_repl_service"
 }
 
 variable "ccd_gateway_url" {
