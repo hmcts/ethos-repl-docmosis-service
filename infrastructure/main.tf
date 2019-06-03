@@ -49,7 +49,7 @@ data "azurerm_key_vault" "ethos_key_vault" {
 }
 
 data "azurerm_key_vault_secret" "s2s_secret" {
-  name = "ethos-s2s-secret"
+  name = "ethos-repl-service-s2s-secret"
   vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
 }
 
