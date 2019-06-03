@@ -73,8 +73,8 @@
       "Hearing_judge_name": "JudgeName"
     },
     "correspondenceType": {
-      "topLevel_Documents": "Part_2",
-      "part_2_Documents": "2.2A"
+      "topLevel_Documents": "EM-TRB-EGW-ENG-00027",
+      "EM-TRB-EGW-ENG-00027": "2.2A"
     },
     "representativeRespondentType": {
       "resp_rep_name" : "RepresentativeNameRespondent",
@@ -116,7 +116,7 @@
         "PostCode": "M15 4QR",
         "PostTown": "Manchester"
       },
-      "respondent_name": "string",
+      "respondent_name": "Francisco",
       "respondent_contact_preference": "Post",
       "respondent_email": "Antonio@gmail.com",
       "respondent_phone1": "07577136570",
