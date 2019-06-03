@@ -10,36 +10,34 @@ public class CorrespondenceScotType {
 
     @JsonProperty("topLevel_Scot_Documents")
     private String topLevelScotDocuments;
-    @JsonProperty("part_1_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00042")
     private String part1ScotDocuments;
-    @JsonProperty("part_2_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00043")
     private String part2ScotDocuments;
-    @JsonProperty("part_3_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00044")
     private String part3ScotDocuments;
-    @JsonProperty("part_4_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00045")
     private String part4ScotDocuments;
-    @JsonProperty("part_5_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00046")
     private String part5ScotDocuments;
-    @JsonProperty("Part_6_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00047")
     private String part6ScotDocuments;
-    @JsonProperty("Part_7_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00048")
     private String part7ScotDocuments;
-    @JsonProperty("Part_8_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00049")
     private String part8ScotDocuments;
-    @JsonProperty("Part_9_Scot_Documents")
-    private String part9ScotDocuments;
-    @JsonProperty("Part_10_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00050")
     private String part10ScotDocuments;
-    @JsonProperty("Part_11_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00051")
     private String part11ScotDocuments;
-    @JsonProperty("Part_12_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00052")
     private String part12ScotDocuments;
-    @JsonProperty("Part_13_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00053")
     private String part13ScotDocuments;
-    @JsonProperty("Part_14_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00054")
     private String part14ScotDocuments;
-    @JsonProperty("Part_15_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00055")
     private String part15ScotDocuments;
-    @JsonProperty("Part_16_Scot_Documents")
+    @JsonProperty("EM-TRB-SCO-ENG-00056")
     private String part16ScotDocuments;
 }
