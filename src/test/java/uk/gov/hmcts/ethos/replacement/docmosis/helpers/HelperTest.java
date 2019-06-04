@@ -151,8 +151,8 @@ public class HelperTest {
                 "\"i2_2A_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"Mon, 3 Jun 2019\",\n" +
-                "\"TodayPlus28Days\":\"Mon, 1 Jul 2019\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -188,8 +188,8 @@ public class HelperTest {
                 "\"i3_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"Mon, 3 Jun 2019\",\n" +
-                "\"TodayPlus28Days\":\"Mon, 1 Jul 2019\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -228,8 +228,8 @@ public class HelperTest {
                 "\"i4_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"Mon, 3 Jun 2019\",\n" +
-                "\"TodayPlus28Days\":\"Mon, 1 Jul 2019\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -271,8 +271,8 @@ public class HelperTest {
                 "\"i5_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"Mon, 3 Jun 2019\",\n" +
-                "\"TodayPlus28Days\":\"Mon, 1 Jul 2019\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -311,8 +311,8 @@ public class HelperTest {
                 "\"i6_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"Mon, 3 Jun 2019\",\n" +
-                "\"TodayPlus28Days\":\"Mon, 1 Jul 2019\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -363,8 +363,8 @@ public class HelperTest {
                 "\"i7_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"Mon, 3 Jun 2019\",\n" +
-                "\"TodayPlus28Days\":\"Mon, 1 Jul 2019\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -415,8 +415,8 @@ public class HelperTest {
                 "\"i8_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"Mon, 3 Jun 2019\",\n" +
-                "\"TodayPlus28Days\":\"Mon, 1 Jul 2019\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -467,8 +467,8 @@ public class HelperTest {
                 "\"i9_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"Mon, 3 Jun 2019\",\n" +
-                "\"TodayPlus28Days\":\"Mon, 1 Jul 2019\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -542,8 +542,8 @@ public class HelperTest {
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot7_1_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"Mon, 3 Jun 2019\",\n" +
-                "\"TodayPlus28Days\":\"Mon, 1 Jul 2019\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -593,8 +593,8 @@ public class HelperTest {
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot24_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"Mon, 3 Jun 2019\",\n" +
-                "\"TodayPlus28Days\":\"Mon, 1 Jul 2019\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -630,8 +630,8 @@ public class HelperTest {
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot34_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"Mon, 3 Jun 2019\",\n" +
-                "\"TodayPlus28Days\":\"Mon, 1 Jul 2019\",\n" +
+                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
