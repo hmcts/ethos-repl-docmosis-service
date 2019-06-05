@@ -48,12 +48,18 @@ public class DocumentManagementService {
         try {
             log.info("ccdGatewayBaseUrl: " + ccdGatewayBaseUrl);
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, doc.getName(), APPLICATION_DOCX_VALUE, FileCopyUtils.copyToByteArray(doc));
+            log.info("Before getting token");
+            String token = authTokenGenerator.generate();
+            log.info("After getting token: " + token);
+            String id = userService.getUserDetails(authToken).getId();
+            log.info("After getting id: " + id);
             UploadResponse response = documentUploadClient.upload(
                     authToken,
-                    authTokenGenerator.generate(),
-                    userService.getUserDetails(authToken).getId(),
+                    token,
+                    id,
                     singletonList(file)
             );
+            log.info("Response: " + response.toString());
             Document document = response.getEmbedded().getDocuments().stream()
                     .findFirst()
                     .orElseThrow(() ->
