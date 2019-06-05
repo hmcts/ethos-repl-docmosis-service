@@ -73,8 +73,8 @@
       "Hearing_judge_name": "JudgeName"
     },
     "correspondenceScotType": {
-      "topLevel_Scot_Documents": "Part_2_Scot",
-      "part_2_Scot_Documents": "24"
+      "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-00043",
+      "EM-TRB-SCO-ENG-00043": "24"
     },
     "representativeRespondentType": {
       "resp_rep_name" : "RepresentativeNameRespondent",
