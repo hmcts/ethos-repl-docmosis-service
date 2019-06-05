@@ -46,8 +46,8 @@
       "claimant_title1": "Mr"
     },
     "correspondenceType": {
-        "topLevel_Documents": "Part_5",
-        "part_5_Documents": "5.2"
+        "topLevel_Documents": "EM-TRB-EGW-ENG-00030",
+        "EM-TRB-EGW-ENG-00030": "5.2"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
@@ -181,7 +181,7 @@
         "respondent_phone1": "07577136570",
         "respondent_phone2": "07577136570"
       },
-      "respondent_name": "string"
+      "respondent_name": "Francisco"
     },
     "responseReceived": "none",
     "responseType": {

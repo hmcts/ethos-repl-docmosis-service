@@ -54,6 +54,7 @@ public class DocumentManagementService {
                     userService.getUserDetails(authToken).getId(),
                     singletonList(file)
             );
+            log.info("Response: " + response.toString());
             Document document = response.getEmbedded().getDocuments().stream()
                     .findFirst()
                     .orElseThrow(() ->

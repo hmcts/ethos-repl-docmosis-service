@@ -46,8 +46,8 @@
       "claimant_title1": "Mr"
     },
     "correspondenceType": {
-        "topLevel_Documents": "Part_4",
-        "part_4_Documents": "4.2"
+        "topLevel_Documents": "EM-TRB-EGW-ENG-00029",
+        "EM-TRB-EGW-ENG-00029": "4.2"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
@@ -115,7 +115,7 @@
         "PostCode": "M15 4QR",
         "PostTown": "Manchester"
       },
-      "respondent_name": "string",
+      "respondent_name": "Francisco",
       "respondent_contact_preference": "Post",
       "respondent_email": "Antonio@gmail.com",
       "respondent_phone1": "07577136570",

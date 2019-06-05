@@ -32,7 +32,7 @@ module "repl-docmosis-backend" {
     WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = "${var.autoheal}"
     TORNADO_URL                        = "${var.tornado_url}"
     TORNADO_ACCESS_KEY                 = "${data.azurerm_key_vault_secret.tornado_access_key.value}"
-    ETHOS_S2S_SECRET                   = "${data.azurerm_key_vault_secret.s2s_secret.value}"
+    ETHOS_S2S_SECRET_KEY               = "${data.azurerm_key_vault_secret.ethos-repl-service-s2s-secret.value}"
     IDAM_API_URL                       = "${var.idam_api_url}"
     CCD_DATA_STORE_API_URL             = "${var.ccd_data_store_api_url}"
     DOCUMENT_MANAGEMENT_URL            = "${var.dm_url}"
@@ -48,8 +48,8 @@ data "azurerm_key_vault" "ethos_key_vault" {
   resource_group_name = "${local.vaultGroupName}"
 }
 
-data "azurerm_key_vault_secret" "s2s_secret" {
-  name = "ethos-s2s-secret"
+data "azurerm_key_vault_secret" "ethos-repl-service-s2s-secret" {
+  name = "ethos-repl-service-s2s-secret"
   vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
 }
 
@@ -65,7 +65,7 @@ module "key-vault" {
   tenant_id               = "${var.tenant_id}"
   object_id               = "${var.jenkins_AAD_objectId}"
   resource_group_name     = "${local.vaultGroupName}"
-  # dcd_cc-dev group object ID
-  product_group_object_id = "38f9dea6-e861-4a50-9e73-21e64f563537"
+  # dcd_group_ethos_v2 group object ID
+  product_group_object_id = "414c132d-5160-42b3-bbff-43a2e1daafcf"
   common_tags             = "${var.common_tags}"
 }

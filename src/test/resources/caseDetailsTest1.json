@@ -78,8 +78,8 @@
       "claimant_work_phone_number": "07577136570"
     },
     "correspondenceType": {
-        "topLevel_Documents": "Part_1",
-        "part_1_Documents": "1.2"
+        "topLevel_Documents": "EM-TRB-EGW-ENG-00026",
+        "EM-TRB-EGW-ENG-00026": "1.2"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
@@ -179,7 +179,7 @@
         "PostCode": "M15 4QR",
         "PostTown": "Manchester"
       },
-      "respondent_name": "string",
+      "respondent_name": "Francisco",
       "respondent_contact_preference": "Post",
       "respondent_email": "Antonio@gmail.com",
       "respondent_phone1": "07577136570",
