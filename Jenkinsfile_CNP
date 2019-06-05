@@ -8,7 +8,7 @@ def component = "repl-docmosis-backend"
 
 List<LinkedHashMap<String, Object>> secrets = [
   secret('AppInsightsInstrumentationKey', 'APPINSIGHTS_INSTRUMENTATIONKEY'),
-  secret('ethos-repl-service-s2s-secret', 'ETHOS_S2S_SECRET'),
+  secret('ethos-repl-service-s2s-secret', 'ETHOS_S2S_SECRET_KEY'),
   secret('tornado-access-key', 'TORNADO_ACCESS_KEY')
 ]
 
