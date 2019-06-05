@@ -25,27 +25,27 @@ public class DocMosisScotPart12ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_99() throws Exception {
-        testUtil.executeGenerateDocumentTest("99", "", "", true);
+        testUtil.executeGenerateDocumentTest("99", "", "RECONSIDERATION OF JUDGMENT - REJECTION", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_100() throws Exception {
-        testUtil.executeGenerateDocumentTest("100", "", "", true);
+        testUtil.executeGenerateDocumentTest("100", "", "APPLICATION FOR RECONSIDERATION OF JUDGMENT REFUSED", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_101() throws Exception {
-        testUtil.executeGenerateDocumentTest("101", "", "", true);
+        testUtil.executeGenerateDocumentTest("101", "", "requesting the Tribunal’s judgment be reconsidered", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_102() throws Exception {
-        testUtil.executeGenerateDocumentTest("102", "", "", true);
+        testUtil.executeGenerateDocumentTest("102", "", "RECONSIDERATION OF JUDGMENT \\(TRIBUNAL ON ITS OWN INITIATIVE\\)", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_103() throws Exception {
-        testUtil.executeGenerateDocumentTest("103", "", "", true);
+        testUtil.executeGenerateDocumentTest("103", "", "RECONSIDERATION OF JUDGMENT WITHOUT A HEARING", true);
     }
 
     @After

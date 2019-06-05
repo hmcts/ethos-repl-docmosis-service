@@ -26,17 +26,17 @@ public class DocMosisPart15ComponentTest {
 
     @Test
     public void generateDocument_Part15_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("15", "1", "");
+        testUtil.executeGenerateDocumentTest("15", "1", "Thank you for your interest in judicial mediation");
     }
 
     @Test
     public void generateDocument_Part15_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("15", "2", "");
+        testUtil.executeGenerateDocumentTest("15", "2", "NOTICE OF PRELIMINARY HEARING BY TELEPHONE");
     }
 
     @Test
     public void generateDocument_Part15_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("15", "", "");
+        testUtil.executeGenerateDocumentTest("15", "", "NOTICE OF JUDICIAL MEDIATION PRELIMINARY HEARING");
     }
 
 

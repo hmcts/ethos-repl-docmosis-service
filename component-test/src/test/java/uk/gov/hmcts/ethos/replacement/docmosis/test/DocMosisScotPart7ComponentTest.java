@@ -25,32 +25,32 @@ public class DocMosisScotPart7ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_58() throws Exception {
-        testUtil.executeGenerateDocumentTest("58", "", "", true);
+        testUtil.executeGenerateDocumentTest("58", "", "STRIKE OUT WARNING TO CLAIMANT", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_59() throws Exception {
-        testUtil.executeGenerateDocumentTest("59", "", "", true);
+        testUtil.executeGenerateDocumentTest("59", "", "STRIKE OUT WARNING TO RESPONDENT", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_60() throws Exception {
-        testUtil.executeGenerateDocumentTest("60", "", "", true);
+        testUtil.executeGenerateDocumentTest("60", "", "is struck out under rule 37 of the Rules contained in Schedule 1", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_61() throws Exception {
-        testUtil.executeGenerateDocumentTest("61", "", "", true);
+        testUtil.executeGenerateDocumentTest("61", "", "RESULT OF STRIKE OUT APPLICATION", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_62() throws Exception {
-        testUtil.executeGenerateDocumentTest("62", "", "", true);
+        testUtil.executeGenerateDocumentTest("62", "", "ORDER TO PAY A DEPOSIT", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_63() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "", true);
+        testUtil.executeGenerateDocumentTest("", "", "The allegation/argument", true);
     }
 
     @After
