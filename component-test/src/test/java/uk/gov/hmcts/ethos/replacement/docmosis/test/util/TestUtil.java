@@ -8,7 +8,9 @@ import groovy.util.logging.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.json.JSONException;
 import org.junit.Assert;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.CCDRequest;
@@ -50,13 +52,19 @@ public class TestUtil {
 
     }
 
-    public void verifyDocMosisPayload(String topLevel, String childLevel) throws IOException {
+    public void verifyDocMosisPayload(String topLevel, String childLevel) throws IOException, JSONException {
         this.topLevel = topLevel;
         this.childLevel = childLevel;
 
         CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel);
 
         Response response = getResponse(ccdRequest);
+
+        String actualPayload = LogUtil.getDocMosisPayload();
+
+        String expectedPayload = DocumentUtil.buildDocumentContent(ccdRequest.getCaseDetails(), "Bearer auth");
+
+        JSONAssert.assertEquals(expectedPayload, actualPayload, true);
     }
 
     private void verifyDocument(String topLevel, String expectedValue, boolean isScotland, CCDRequest ccdRequest, Response response) throws IOException, JAXBException, Docx4JException {

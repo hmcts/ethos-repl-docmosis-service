@@ -25,72 +25,72 @@ public class DocMosisScotPart11ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_92() throws Exception {
-        testUtil.executeGenerateDocumentTest("92", "", "", true);
+        testUtil.executeGenerateDocumentTest("92", "", "EMPLOYMENT TRIBUNAL JUDGMENT", true);
     }
 
     @Test
-    public void generateDocument_Part_Scot_92A() throws Exception {
-        testUtil.executeGenerateDocumentTest("92A", "", "", true);
+    public void generateDocument_Part_Scot_92_A() throws Exception {
+        testUtil.executeGenerateDocumentTest("92", "A", "\\[Insert judgment details\\]", true);
     }
 
     @Test
-    public void generateDocument_Part_Scot_92B() throws Exception {
-        testUtil.executeGenerateDocumentTest("92B", "", "", true);
+    public void generateDocument_Part_Scot_92_B() throws Exception {
+        testUtil.executeGenerateDocumentTest("92", "B", "Recoupment of Jobseeker’s Allowance, Income Support and Income related Employment and", true);
     }
 
     @Test
-    public void generateDocument_Part_Scot_92C() throws Exception {
-        testUtil.executeGenerateDocumentTest("92C", "", "", true);
+    public void generateDocument_Part_Scot_92_C() throws Exception {
+        testUtil.executeGenerateDocumentTest("92", "C", "Recoupment of Jobseeker's Allowance, Income Support and income-related", true);
     }
 
     @Test
-    public void generateDocument_Part_Scot_92D() throws Exception {
-        testUtil.executeGenerateDocumentTest("92D", "", "", true);
+    public void generateDocument_Part_Scot_92_D() throws Exception {
+        testUtil.executeGenerateDocumentTest("92", "D", "Amount by which the monetary award exceeds the prescribed element", true);
     }
 
     @Test
-    public void generateDocument_Part_Scot_92E() throws Exception {
-        testUtil.executeGenerateDocumentTest("92E", "", "", true);
+    public void generateDocument_Part_Scot_92_E() throws Exception {
+        testUtil.executeGenerateDocumentTest("92", "E", "NOTIFICATION OF RECOUPMENT - PROTECTIVE AWARD", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_93() throws Exception {
-        testUtil.executeGenerateDocumentTest("93", "", "", true);
+        testUtil.executeGenerateDocumentTest("93", "", "REASONS FOR DECISION OF EMPLOYMENT TRIBUNAL", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_93A() throws Exception {
-        testUtil.executeGenerateDocumentTest("93A", "", "", true);
+        testUtil.executeGenerateDocumentTest("93", "A", "REFUSAL OF LATE REQUEST FOR WRITTEN REASONS", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_93B() throws Exception {
-        testUtil.executeGenerateDocumentTest("93B", "", "", true);
+        testUtil.executeGenerateDocumentTest("93", "B", "Although your application is out of time the Judge considers that it is in the interests of justice to", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_94() throws Exception {
-        testUtil.executeGenerateDocumentTest("94", "", "", true);
+        testUtil.executeGenerateDocumentTest("94", "", "NOTE FOLLOWING A PRELIMINARY HEARING", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_95() throws Exception {
-        testUtil.executeGenerateDocumentTest("95", "", "", true);
+        testUtil.executeGenerateDocumentTest("95", "", "In accordance with the power set out in Rule 69 of the Employment Tribunal Rules of Procedure", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_96() throws Exception {
-        testUtil.executeGenerateDocumentTest("96", "", "", true);
+        testUtil.executeGenerateDocumentTest("96", "", "I enclose a corrected copy of the Judgment / Case Management Order and a certificate of correction", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_97() throws Exception {
-        testUtil.executeGenerateDocumentTest("97", "", "", true);
+        testUtil.executeGenerateDocumentTest("97", "", "INTEREST ON TRIBUNAL AWARDS: GUIDANCE NOTE", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_98() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "", true);
+        testUtil.executeGenerateDocumentTest("", "", "GUIDANCE NOTE IN DISCRIMINATION CASES", true);
     }
 
 

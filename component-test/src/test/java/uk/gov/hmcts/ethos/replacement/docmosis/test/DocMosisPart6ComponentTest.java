@@ -25,67 +25,67 @@ public class DocMosisPart6ComponentTest {
 
     @Test
     public void generateDocument_Part6_1C() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "1C", "");
+        testUtil.executeGenerateDocumentTest("6", "1C", "STRIKE OUT WARNING");
     }
 
     @Test
     public void generateDocument_Part6_1R() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "1R", "");
+        testUtil.executeGenerateDocumentTest("6", "1R", "STRIKE OUT WARNING");
     }
 
     @Test
     public void generateDocument_Part6_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "2", "");
+        testUtil.executeGenerateDocumentTest("6", "2", "The claim is struck out");
     }
 
     @Test
     public void generateDocument_Part6_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "3", "");
+        testUtil.executeGenerateDocumentTest("6", "3", "The complaint of \\[Identify complaint\\] is struck out");
     }
 
     @Test
     public void generateDocument_Part6_4() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "4", "");
+        testUtil.executeGenerateDocumentTest("6", "4", "The response is struck out\\.");
     }
 
     @Test
     public void generateDocument_Part6_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "5", "");
+        testUtil.executeGenerateDocumentTest("6", "5", "The response is struck out in part");
     }
 
     @Test
     public void generateDocument_Part6_6() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "6", "");
+        testUtil.executeGenerateDocumentTest("6", "6", "Thank you for informing the Tribunal that you have withdrawn your claim");
     }
 
     @Test
     public void generateDocument_Part6_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "7", "");
+        testUtil.executeGenerateDocumentTest("6", "7", "WITHDRAWAL OF PART OF CLAIM");
     }
 
     @Test
     public void generateDocument_Part6_8() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "8", "");
+        testUtil.executeGenerateDocumentTest("6", "8", "The proceedings are dismissed following a withdrawal of the claim by the claimant");
     }
 
     @Test
     public void generateDocument_Part6_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "9", "");
+        testUtil.executeGenerateDocumentTest("6", "9", "dismissed following a withdrawal by the claimant");
     }
 
     @Test
     public void generateDocument_Part6_10() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "10", "");
+        testUtil.executeGenerateDocumentTest("6", "10", "has directed that a judgment dismissing the claim is not issued");
     }
 
     @Test
     public void generateDocument_Part6_11C() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "11C", "");
+        testUtil.executeGenerateDocumentTest("6", "11C", "the hearing will be cancelled");
     }
 
     @Test
     public void generateDocument_Part6_12() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "", "");
+        testUtil.executeGenerateDocumentTest("6", "", "the hearing will be cancelled");
     }
 
     @After

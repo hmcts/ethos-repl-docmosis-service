@@ -25,27 +25,27 @@ public class DocMosisScotPart13ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_104() throws Exception {
-        testUtil.executeGenerateDocumentTest("104", "", "", true);
+        testUtil.executeGenerateDocumentTest("104", "", "WASTED COSTS ORDER REFUSED", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_105() throws Exception {
-        testUtil.executeGenerateDocumentTest("105", "", "", true);
+        testUtil.executeGenerateDocumentTest("105", "", "APPLICATION FOR AN EXPENSES ORDER", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_105A() throws Exception {
-        testUtil.executeGenerateDocumentTest("105A", "", "", true);
+        testUtil.executeGenerateDocumentTest("105", "A", "EXPENSES ORDER/PREPARATION TIME ORDER", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_106() throws Exception {
-        testUtil.executeGenerateDocumentTest("106", "", "", true);
+        testUtil.executeGenerateDocumentTest("106", "", "APPLICATION FOR A WASTED COSTS ORDER", true);
     }
 
     @Test
-    public void generateDocument_Part_Scot_106A() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "", true);
+    public void generateDocument_Part_Scot_106_A() throws Exception {
+        testUtil.executeGenerateDocumentTest("", "", "An Employment Judge is considering making a wasted costs against you in favour of", true);
     }
 
 

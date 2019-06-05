@@ -25,62 +25,62 @@ public class DocMosisPart7ComponentTest {
 
     @Test
     public void generateDocument_Part7_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "1", "");
+        testUtil.executeGenerateDocumentTest("7", "1", "It will be heard by an Employment Judge at");
     }
 
     @Test
     public void generateDocument_Part7_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "2", "");
+        testUtil.executeGenerateDocumentTest("7", "2", "To take part you should telephone \\[insert phone_number\\] on time");
     }
 
     @Test
     public void generateDocument_Part7_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "3", "");
+        testUtil.executeGenerateDocumentTest("7", "3", "GUIDANCE NOTES FOR PARTIES");
     }
 
     @Test
     public void generateDocument_Part7_4C() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "4C", "");
+        testUtil.executeGenerateDocumentTest("7", "4C", "considers that the claimant’s allegations or arguments");
     }
 
     @Test
     public void generateDocument_Part7_4R() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "4R", "");
+        testUtil.executeGenerateDocumentTest("7", "4R", "considers that the respondent’s allegations or arguments");
     }
 
     @Test
     public void generateDocument_Part7_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "5", "");
+        testUtil.executeGenerateDocumentTest("7", "5", "  NOTE ACCOMPANYING DEPOSIT ORDER");
     }
 
     @Test
     public void generateDocument_Part7_6C() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "6C", "");
+        testUtil.executeGenerateDocumentTest("7", "6C", "The claim \\[ The complaint of \\] is struck out");
     }
 
     @Test
     public void generateDocument_Part7_6R() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "6R", "");
+        testUtil.executeGenerateDocumentTest("7", "6R", "The response is struck out");
     }
 
     @Test
     public void generateDocument_Part7_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "7", "");
+        testUtil.executeGenerateDocumentTest("7", "7", "The hearing will take place at.*within 28 days");
     }
 
     @Test
     public void generateDocument_Part7_8() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "8", "");
+        testUtil.executeGenerateDocumentTest("7", "8", "The hearing will be conducted by telephone");
     }
 
     @Test
     public void generateDocument_Part7_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "9", "");
+        testUtil.executeGenerateDocumentTest("7", "9", "Please ensure that you attend so that the discussion can start on time");
     }
 
     @Test
     public void generateDocument_Part7_10() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "", "");
+        testUtil.executeGenerateDocumentTest("7", "", "To take part you should telephone  on time and enter the access code  when prompted");
     }
 
     @After

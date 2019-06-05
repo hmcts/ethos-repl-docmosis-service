@@ -25,37 +25,37 @@ public class DocMosisPart17ComponentTest {
 
     @Test
     public void generateDocument_Part17_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("17", "1", "");
+        testUtil.executeGenerateDocumentTest("17", "1", "ACKNOWLEDGEMENT OF APPEAL");
     }
 
     @Test
     public void generateDocument_Part17_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("17", "2", "");
+        testUtil.executeGenerateDocumentTest("17", "2", "The Tribunal office has received a Notice of Appeal against");
     }
 
     @Test
     public void generateDocument_Part17_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("17", "3", "");
+        testUtil.executeGenerateDocumentTest("17", "3", "NOTICE OF APPEAL HEARING");
     }
 
     @Test
     public void generateDocument_Part17_4() throws Exception {
-        testUtil.executeGenerateDocumentTest("17", "4", "");
+        testUtil.executeGenerateDocumentTest("17", "4", "HEALTH & SAFETY AT WORK ETC ACT 1974: NOTICE OF APPEAL");
     }
 
     @Test
     public void generateDocument_Part17_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("17", "5", "");
+        testUtil.executeGenerateDocumentTest("17", "5", "IN THE MATTER OF the Employment Tribunals Rules of Procedure 2013");
     }
 
     @Test
     public void generateDocument_Part17_6() throws Exception {
-        testUtil.executeGenerateDocumentTest("17", "6", "");
+        testUtil.executeGenerateDocumentTest("17", "6", "NOTES ON TRIBUNAL JUDGMENTS");
     }
 
     @Test
     public void generateDocument_Part17_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("17", "", "");
+        testUtil.executeGenerateDocumentTest("17", "", "ACKNOWLEDGMENT OF WITHDRAWAL OF APPEAL");
     }
 
     @After

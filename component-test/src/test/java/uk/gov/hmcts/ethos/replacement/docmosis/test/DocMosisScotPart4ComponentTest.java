@@ -25,42 +25,47 @@ public class DocMosisScotPart4ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_18() throws Exception {
-        testUtil.executeGenerateDocumentTest("18", "", "", true);
+        testUtil.executeGenerateDocumentTest("18", "", "ACKNOWLEDGMENT OF EMPLOYER’S CONTRACT CLAIM", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_19() throws Exception {
-        testUtil.executeGenerateDocumentTest("19", "", "", true);
+        testUtil.executeGenerateDocumentTest("19", "", "Rejection of EMPLOYER’S CONTRACT CLAIM", true);
+    }
+
+    @Test
+    public void generateDocument_Part_Scot_19_A() throws Exception {
+        testUtil.executeGenerateDocumentTest("19", "A", "RECONSIDERATION OF DECISION TO REJECT EMPLOYER’S CONTRACT CLAIM", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_20() throws Exception {
-        testUtil.executeGenerateDocumentTest("20", "", "", true);
+        testUtil.executeGenerateDocumentTest("20", "", "NOTICE OF EMPLOYER’S CONTRACT CLAIM", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_21() throws Exception {
-        testUtil.executeGenerateDocumentTest("21", "", "", true);
+        testUtil.executeGenerateDocumentTest("21", "", "ACKNOWLEDGMENT OF RESPONSE TO EMPLOYER’S CONTRACT CLAIM", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_22() throws Exception {
-        testUtil.executeGenerateDocumentTest("22", "", "", true);
+        testUtil.executeGenerateDocumentTest("22", "", "NOTICE OF RESPONSE TO EMPLOYER’S CONTRACT CLAIM", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_23() throws Exception {
-        testUtil.executeGenerateDocumentTest("23", "", "", true);
+        testUtil.executeGenerateDocumentTest("23", "", "REJECTION OF RESPONSE TO EMPLOYER’S CONTRACT CLAIM", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_24() throws Exception {
-        testUtil.executeGenerateDocumentTest("24", "", "", true);
+        testUtil.executeGenerateDocumentTest("24", "", "EXTENSION OF TIME FOR RESPONSE TO EMPLOYER’S CONTRACT CLAIM", true);
     }
 
     @Test
-    public void generateDocument_Part_Scot_24_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "", true);
+    public void generateDocument_Part_Scot_25() throws Exception {
+        testUtil.executeGenerateDocumentTest("", "", "EXTENSION OF TIME FOR RESPONSE TO CONTRACT CLAIM REFUSED", true);
     }
 
     @After
