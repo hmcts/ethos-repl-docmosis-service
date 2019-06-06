@@ -406,13 +406,13 @@ public class HelperTest {
                 "\"Hearing_Duration\":\"2 hours\",\n" +
                 "\"hearing_duration\":\"2 hours\",\n" +
                 "\"hearing_length\":\"2 hours\",\n" +
-                "\"t8_2\":\"true\",\n" +
+                "\"t10_2\":\"true\",\n" +
                 "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
                 "\"Court_Telephone\":\"0121 600 7780\",\n" +
                 "\"Court_Fax\":\"01264 347 999\",\n" +
                 "\"Court_DX\":\"123456789\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"i8_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i10_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
@@ -643,14 +643,14 @@ public class HelperTest {
         CaseDetails caseDetailsTemplates = new CaseDetails();
         CaseData caseData = new CaseData();
         CorrespondenceScotType correspondenceScotType = new CorrespondenceScotType();
-        String topLevel = "EM-TRB-SCO-ENG-00044";
+        String topLevel = "Part_3_Scot";
         String part = "32";
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
         correspondenceScotType.setPart3ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
-        topLevel = "EM-TRB-SCO-ENG-00045";
+        topLevel = "Part_4_Scot";
         part = "42";
         correspondenceScotType = new CorrespondenceScotType();
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
@@ -658,7 +658,7 @@ public class HelperTest {
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
-        topLevel = "EM-TRB-SCO-ENG-00046";
+        topLevel = "Part_5_Scot";
         part = "52";
         correspondenceScotType = new CorrespondenceScotType();
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
@@ -666,7 +666,7 @@ public class HelperTest {
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
-        topLevel = "EM-TRB-SCO-ENG-00047";
+        topLevel = "Part_6_Scot";
         part = "62";
         correspondenceScotType = new CorrespondenceScotType();
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
@@ -674,7 +674,7 @@ public class HelperTest {
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
-        topLevel = "EM-TRB-SCO-ENG-00048";
+        topLevel = "Part_7_Scot";
         part = "72";
         correspondenceScotType = new CorrespondenceScotType();
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
@@ -682,7 +682,7 @@ public class HelperTest {
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
-        topLevel = "EM-TRB-SCO-ENG-00049";
+        topLevel = "Part_15_Scot";
         part = "152";
         correspondenceScotType = new CorrespondenceScotType();
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
@@ -690,7 +690,7 @@ public class HelperTest {
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
-        topLevel = "EM-TRB-SCO-ENG-00050";
+        topLevel = "Part_16_Scot";
         part = "162";
         correspondenceScotType = new CorrespondenceScotType();
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
