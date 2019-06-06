@@ -74,7 +74,7 @@
     },
     "correspondenceType": {
       "topLevel_Documents": "EM-TRB-EGW-ENG-00027",
-      "EM-TRB-EGW-ENG-00027": "2.2A"
+      "part_2_Documents": "2.2A"
     },
     "representativeRespondentType": {
       "resp_rep_name" : "RepresentativeNameRespondent",

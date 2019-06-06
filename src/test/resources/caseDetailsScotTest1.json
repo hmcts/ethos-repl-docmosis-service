@@ -78,8 +78,8 @@
       "claimant_work_phone_number": "07577136570"
     },
     "correspondenceScotType": {
-        "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-00042",
-        "EM-TRB-SCO-ENG-00042": "7.1"
+      "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-00042",
+      "part_1_Scot_Documents": "7.1"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
