@@ -14,7 +14,7 @@ public class ResponseType {
     private String responseRespondentName;
     @JsonProperty("response_status")
     private String responseStatus;
-    @JsonProperty("response_to_claim")
+    @JsonProperty("responseToClaim")
     private String responseToClaim;
     @JsonProperty("rejection_reason")
     private String rejectionReason;

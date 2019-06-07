@@ -252,14 +252,14 @@ public class HelperTest {
                 "\"claimant_rep_reference\":\"1111111\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_representative\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
+                "\"Respondent_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_full_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_representative\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent1\",\n" +
                 "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
                 "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_reference\":\"1111111\",\n" +
-                "\"respondent_rep_reference\":\"1111111\",\n" +
+                "\"respondent_reference\":\"3333333333\",\n" +
+                "\"respondent_rep_reference\":\"3333333333\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"t5_2\":\"true\",\n" +
@@ -295,11 +295,14 @@ public class HelperTest {
                 "\"claimant_rep_reference\":\"1111111\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"RespondentName\",\n" +
-                "\"respondent_full_name\":\"RespondentName\",\n" +
-                "\"respondent_rep_full_name\":\"RespondentName\",\n" +
-                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"Respondent_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_full_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_representative\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_reference\":\"3333333333\",\n" +
+                "\"respondent_rep_reference\":\"3333333333\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"RespondentName\",\n" +
                 "\"t6_2\":\"true\",\n" +
@@ -335,11 +338,14 @@ public class HelperTest {
                 "\"claimant_rep_reference\":\"1111111\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"Antonio Rodriguez\",\n" +
-                "\"respondent_full_name\":\"Antonio Rodriguez\",\n" +
-                "\"respondent_rep_full_name\":\"Antonio Rodriguez\",\n" +
-                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"Respondent_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_full_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_representative\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_reference\":\"3333333333\",\n" +
+                "\"respondent_rep_reference\":\"3333333333\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Antonio Rodriguez\",\n" +
                 "\"hearing_date\":\"\",\n" +
