@@ -36,6 +36,8 @@ public class JudgementDetailsType {
     private String adjustment;
     @JsonProperty("adjustment_%")
     private String adjustmentPercentage;
-    @JsonProperty("panelMembers")
-    private PanelType panelMembers;
+    @JsonProperty("panelMember1")
+    private PanelType panelMember1;
+    @JsonProperty("panelMember2")
+    private PanelType panelMember2;
 }

@@ -46,8 +46,8 @@
       "claimant_title1": "Mr"
     },
     "correspondenceType": {
-        "topLevel_Documents": "EM-TRB-EGW-ENG-00032",
-        "EM-TRB-EGW-ENG-00032": "7.2"
+      "topLevel_Documents": "EM-TRB-EGW-ENG-00032",
+      "Part_7_Documents": "7.2"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",

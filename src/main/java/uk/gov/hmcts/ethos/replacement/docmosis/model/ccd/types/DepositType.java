@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Document;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
@@ -28,6 +29,8 @@ public class DepositType {
     private String depositRefund;
     @JsonProperty("deposit_refund_date")
     private String depositRefundDate;
-    @JsonProperty("deposit_jurisdiction_codes")
-    private String depositJurisdictionCodes;
+    @JsonProperty("depositNotes")
+    private String depositNotes;
+    @JsonProperty("depositDoc")
+    private Document depositDoc;
 }

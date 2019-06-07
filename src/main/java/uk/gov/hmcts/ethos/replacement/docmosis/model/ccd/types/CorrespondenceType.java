@@ -10,36 +10,36 @@ public class CorrespondenceType {
 
     @JsonProperty("topLevel_Documents")
     private String topLevelDocuments;
-    @JsonProperty("EM-TRB-EGW-ENG-00026")
+    @JsonProperty("part_1_Documents")
     private String part1Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00027")
+    @JsonProperty("part_2_Documents")
     private String part2Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00028")
+    @JsonProperty("part_3_Documents")
     private String part3Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00029")
+    @JsonProperty("part_4_Documents")
     private String part4Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00030")
+    @JsonProperty("part_5_Documents")
     private String part5Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00031")
+    @JsonProperty("Part_6_Documents")
     private String part6Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00032")
+    @JsonProperty("Part_7_Documents")
     private String part7Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00033")
+    @JsonProperty("Part_9_Documents")
     private String part9Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00034")
+    @JsonProperty("Part_10_Documents")
     private String part10Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00035")
+    @JsonProperty("Part_11_Documents")
     private String part11Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00036")
+    @JsonProperty("Part_12_Documents")
     private String part12Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00037")
+    @JsonProperty("Part_13_Documents")
     private String part13Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00038")
+    @JsonProperty("Part_14_Documents")
     private String part14Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00039")
+    @JsonProperty("Part_15_Documents")
     private String part15Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00040")
+    @JsonProperty("Part_16_Documents")
     private String part16Documents;
-    @JsonProperty("EM-TRB-EGW-ENG-00041")
+    @JsonProperty("Part_17_Documents")
     private String part17Documents;
 }
