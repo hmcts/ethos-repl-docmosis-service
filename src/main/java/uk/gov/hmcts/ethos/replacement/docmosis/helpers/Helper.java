@@ -2,6 +2,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
 import java.time.LocalDate;
@@ -57,7 +59,7 @@ public class Helper {
         sb.append(getHearingData(caseData));
         sb.append(getCorrespondenceData(caseData));
         sb.append(getCorrespondenceScotData(caseData));
-        sb.append(getCourtData());
+        sb.append(getCourtData(caseDetails));
 
         sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts\":\"")
                 .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
@@ -109,9 +111,10 @@ public class Helper {
 
     private static StringBuilder getRespondentData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
-        RepresentedTypeR representedTypeR = caseData.getRepresentativeRespondentType();
+        List<RepresentedTypeRItem> representedTypeRList = caseData.getRepCollection();
         Optional<RespondentSumType> respondentType = Optional.ofNullable(caseData.getRespondentSumType());
-        if (representedTypeR != null) {
+        if (representedTypeRList != null && !representedTypeRList.isEmpty()) {
+            RepresentedTypeR representedTypeR = representedTypeRList.get(0).getValue();
             sb.append("\"Respondent_name\":\"").append(representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"respondent_full_name\":\"").append(representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"respondent_representative\":\"").append(representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
@@ -250,7 +253,11 @@ public class Helper {
         return sb;
     }
 
-    private static StringBuilder getCourtData() {
+    private static StringBuilder getCourtData(CaseDetails caseDetails) {
+//        String caseTypeId = caseDetails.getCaseTypeId();
+//        if (caseTypeId.equals("EmpTrib_MVP_1.0_Manc")) {
+//
+//        }
         StringBuilder sb = new StringBuilder();
         sb.append("\"Court_Address\":\"").append("13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU").append(NEW_LINE);
         sb.append("\"Court_Telephone\":\"").append("0121 600 7780").append(NEW_LINE);

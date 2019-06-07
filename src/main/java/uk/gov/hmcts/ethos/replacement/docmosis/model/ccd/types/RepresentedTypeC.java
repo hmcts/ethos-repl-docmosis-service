@@ -21,7 +21,7 @@ public class RepresentedTypeC {
     private String representativeOccupationOther;
     @JsonProperty("representative_address")
     private Address representativeAddress;
-    @JsonProperty("representative_dx_number")
+    @JsonProperty("representative_dx")
     private String representativeDxNumber;
     @JsonProperty("representative_phone_number")
     private String representativePhoneNumber;
