@@ -22,7 +22,7 @@ public class HearingType {
     private String hearingType;
     @JsonProperty("Est_Hearing")
     private EstHearingType estHearing;
-    @JsonProperty("HearingSitAlone")
+    @JsonProperty("hearingSitAlone")
     private String hearingSitAlone;
     @JsonProperty("Hearing_allocate")
     private String hearingAllocate;

@@ -22,6 +22,8 @@ public class CaseData {
     private String multipleOthers;
     @JsonProperty("multipleReference")
     private String multipleReference;
+    @JsonProperty("leadClaimant")
+    private String leadClaimant;
     @JsonProperty("claimant_TypeOfClaimant")
     private String claimantTypeOfClaimant;
     @JsonProperty("claimant_Company")
@@ -32,6 +34,8 @@ public class CaseData {
     private ClaimantType claimantType;
     @JsonProperty("claimantOtherType")
     private ClaimantOtherType claimantOtherType;
+    @JsonProperty("preAcceptCase")
+    private CasePreAcceptType preAcceptCase;
     @JsonProperty("receiptDate")
     private String receiptDate;
     @JsonProperty("feeGroupReference")
@@ -40,8 +44,6 @@ public class CaseData {
     private RespondentSumType respondentSumType;
     @JsonProperty("representativeClaimantType")
     private RepresentedTypeC representativeClaimantType;
-    @JsonProperty("representativeRespondentType")
-    private RepresentedTypeR representativeRespondentType;
     @JsonProperty("respondentCollection")
     private List<RespondentSumTypeItem> respondentCollection;
     @JsonProperty("repCollection")
@@ -54,8 +56,8 @@ public class CaseData {
     private HearingType hearingType;
     @JsonProperty("hearingCollection")
     private List<HearingTypeItem> hearingCollection;
-    @JsonProperty("depositCollection")
-    private List<DepositTypeItem> depositCollection;
+    @JsonProperty("depositType")
+    private DepositType depositType;
     @JsonProperty("judgementCollection")
     private List<JudgementTypeItem> judgementCollection;
     @JsonProperty("judgementDetailsCollection")
@@ -108,6 +110,8 @@ public class CaseData {
     private CorrespondenceScotType correspondenceScotType;
     @JsonProperty("caseNotes")
     private String caseNotes;
+    @JsonProperty("caseDocument")
+    private String caseDocument;
     @JsonProperty("claimantWorkAddress")
     private ClaimantWorkAddressType claimantWorkAddress;
     @JsonProperty("claimantRepresentedQuestion")
