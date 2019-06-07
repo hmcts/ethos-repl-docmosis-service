@@ -68,7 +68,7 @@ public class TestUtil {
     }
 
     private void verifyDocument(String topLevel, String expectedValue, boolean isScotland, CCDRequest ccdRequest, Response response) throws IOException, JAXBException, Docx4JException {
-        Pattern pattern = Pattern.compile("http://localhost:3453/documents/[a-z0-9\\-]+/binary");
+        Pattern pattern = Pattern.compile("http://127.0.0.1:3453/documents/[a-z0-9\\-]+/binary");
         String url = ResponseUtil.getUrlFromResponse(response);
 
         Assert.assertTrue(pattern.matcher(url).matches());
@@ -80,7 +80,7 @@ public class TestUtil {
         if (isScotland) templatePath = Constants.TEMPLATE_PATH_SCOT.replace("#VERSION#", topLevel);
         else templatePath = Constants.TEMPLATE_PATH_ENG.replace("#VERSION#", topLevel);
 
-        existsInDocument(expectedValue, new File(downloadedFilePath), DocumentUtil.buildDocumentContent(ccdRequest.getCaseDetails(), "authToken"), isScotland);
+        existsInDocument(expectedValue, new File(downloadedFilePath), isScotland);
     }
 
     private Response getResponse(CCDRequest ccdRequest) {
@@ -99,7 +99,7 @@ public class TestUtil {
         return JsonUtil.getCaseDetails(payLoad, topLevel, childLevel);
     }
 
-    private void existsInDocument(String expectedValue, File actualDocument, String testData, boolean isScotland) throws JAXBException, Docx4JException, IOException {
+    private void existsInDocument(String expectedValue, File actualDocument, boolean isScotland) throws JAXBException, Docx4JException {
 
         String docVersion;
 
@@ -126,6 +126,6 @@ public class TestUtil {
             }
         }
 
-        Assert.assertTrue("Expected value "+ expectedValue + " + doesn't exist in Document with version: "+  docVersion +" \n", hasMatched);
+        Assert.assertTrue("Expected value \""+ expectedValue + "\" doesn't exist in Document with version: "+  docVersion +" \n", hasMatched);
     }
 }
