@@ -10,8 +10,4 @@ public class Constants {
 
     //Test Case Data files
     public static final String TEST_DATA_CASE1 = "src/test/resources/testData/caseDetailsTest1.json";
-
-    //Individual Template files
-    public static final String TEMPLATE_PATH_ENG = "src/test/resources/templates/Part_#VERSION#.docx";
-    public static final String TEMPLATE_PATH_SCOT = "src/test/resources/templates/Part_#VERSION#_Scot.docx";
 }

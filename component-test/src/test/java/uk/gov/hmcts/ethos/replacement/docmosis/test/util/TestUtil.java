@@ -75,11 +75,6 @@ public class TestUtil {
 
         String downloadedFilePath = FileUtil.downloadFileFromUrl(url, authToken);
 
-        String templatePath;
-
-        if (isScotland) templatePath = Constants.TEMPLATE_PATH_SCOT.replace("#VERSION#", topLevel);
-        else templatePath = Constants.TEMPLATE_PATH_ENG.replace("#VERSION#", topLevel);
-
         existsInDocument(expectedValue, new File(downloadedFilePath), isScotland);
     }
 
