@@ -2,7 +2,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
@@ -59,7 +58,7 @@ public class Helper {
         sb.append(getHearingData(caseData));
         sb.append(getCorrespondenceData(caseData));
         sb.append(getCorrespondenceScotData(caseData));
-        sb.append(getCourtData(caseDetails));
+        sb.append(getCourtData(caseData));
 
         sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts\":\"")
                 .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
@@ -253,17 +252,19 @@ public class Helper {
         return sb;
     }
 
-    private static StringBuilder getCourtData(CaseDetails caseDetails) {
-//        String caseTypeId = caseDetails.getCaseTypeId();
-//        if (caseTypeId.equals("EmpTrib_MVP_1.0_Manc")) {
-//
-//        }
+    private static StringBuilder getCourtData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\"Court_Address\":\"").append("13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU").append(NEW_LINE);
-        sb.append("\"Court_Telephone\":\"").append("0121 600 7780").append(NEW_LINE);
-        sb.append("\"Court_Fax\":\"").append("01264 347 999").append(NEW_LINE);
-        sb.append("\"Court_DX\":\"").append("123456789").append(NEW_LINE);
-        sb.append("\"Court_Email\":\"").append("ManchesterOfficeET@hmcts.gov.uk").append(NEW_LINE);
+//        sb.append("\"Court_Address\":\"").append("13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU").append(NEW_LINE);
+//        sb.append("\"Court_Telephone\":\"").append("0121 600 7780").append(NEW_LINE);
+//        sb.append("\"Court_Fax\":\"").append("01264 347 999").append(NEW_LINE);
+//        sb.append("\"Court_DX\":\"").append("123456789").append(NEW_LINE);
+//        sb.append("\"Court_Email\":\"").append("ManchesterOfficeET@hmcts.gov.uk").append(NEW_LINE);
+
+        sb.append("\"Court_Address\":\"").append(caseData.getTribunalCorrespondenceAddress()).append(NEW_LINE);
+        sb.append("\"Court_Telephone\":\"").append(caseData.getTribunalCorrespondenceTelephone()).append(NEW_LINE);
+        sb.append("\"Court_Fax\":\"").append(caseData.getTribunalCorrespondenceFax()).append(NEW_LINE);
+        sb.append("\"Court_DX\":\"").append(caseData.getTribunalCorrespondenceDX()).append(NEW_LINE);
+        sb.append("\"Court_Email\":\"").append(caseData.getTribunalCorrespondenceEmail()).append(NEW_LINE);
         return sb;
     }
 }
