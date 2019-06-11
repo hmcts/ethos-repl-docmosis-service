@@ -92,10 +92,10 @@ public class HelperTest {
                 "\"hearing_duration\":\"2 days\",\n" +
                 "\"hearing_length\":\"2 days\",\n" +
                 "\"t1_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i1_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -143,10 +143,10 @@ public class HelperTest {
                 "\"hearing_duration\":\"2 hours\",\n" +
                 "\"hearing_length\":\"2 hours\",\n" +
                 "\"t2_2A\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i2_2A_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -180,10 +180,10 @@ public class HelperTest {
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"t3_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i3_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -220,10 +220,10 @@ public class HelperTest {
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"t4_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i4_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -263,10 +263,10 @@ public class HelperTest {
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"t5_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i5_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -306,10 +306,10 @@ public class HelperTest {
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"RespondentName\",\n" +
                 "\"t6_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i6_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -361,10 +361,10 @@ public class HelperTest {
                 "\"hearing_duration\":\"2 hours\",\n" +
                 "\"hearing_length\":\"2 hours\",\n" +
                 "\"t7_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i7_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -413,10 +413,10 @@ public class HelperTest {
                 "\"hearing_duration\":\"2 hours\",\n" +
                 "\"hearing_length\":\"2 hours\",\n" +
                 "\"t10_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i10_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -465,10 +465,10 @@ public class HelperTest {
                 "\"hearing_duration\":\"2 hours\",\n" +
                 "\"hearing_length\":\"2 hours\",\n" +
                 "\"t9_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i9_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -488,11 +488,11 @@ public class HelperTest {
                 "\"templateName\":\".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Court_Address\":\"null\",\n" +
+                "\"Court_Telephone\":\"null\",\n" +
+                "\"Court_Fax\":\"null\",\n" +
+                "\"Court_DX\":\"null\",\n" +
+                "\"Court_Email\":\"null\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"null\",\n" +
@@ -540,11 +540,11 @@ public class HelperTest {
                 "\"hearing_duration\":\"2 days\",\n" +
                 "\"hearing_length\":\"2 days\",\n" +
                 "\"t_Scot_7_1\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Court_Address\":\"35 High Landing G3 6AD, Glasgow\",\n" +
+                "\"Court_Telephone\":\"03577123270\",\n" +
+                "\"Court_Fax\":\"07127126570\",\n" +
+                "\"Court_DX\":\"1234567\",\n" +
+                "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot7_1_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
@@ -591,11 +591,11 @@ public class HelperTest {
                 "\"hearing_duration\":\"2 hours\",\n" +
                 "\"hearing_length\":\"2 hours\",\n" +
                 "\"t_Scot_24\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Court_Address\":\"35 High Landing G3 6AD, Glasgow\",\n" +
+                "\"Court_Telephone\":\"03577123270\",\n" +
+                "\"Court_Fax\":\"07127126570\",\n" +
+                "\"Court_DX\":\"1234567\",\n" +
+                "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot24_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
@@ -628,11 +628,11 @@ public class HelperTest {
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"string\",\n" +
                 "\"t_Scot_34\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Court_Address\":\"35 High Landing G3 6AD, Glasgow\",\n" +
+                "\"Court_Telephone\":\"03577123270\",\n" +
+                "\"Court_Fax\":\"07127126570\",\n" +
+                "\"Court_DX\":\"1234567\",\n" +
+                "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot34_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
@@ -713,11 +713,11 @@ public class HelperTest {
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"t_Scot_" + part + "\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Court_Address\":\"null\",\n" +
+                "\"Court_Telephone\":\"null\",\n" +
+                "\"Court_Fax\":\"null\",\n" +
+                "\"Court_DX\":\"null\",\n" +
+                "\"Court_Email\":\"null\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot"+ part +"_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"null\",\n" +

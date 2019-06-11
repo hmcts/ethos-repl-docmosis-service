@@ -12,6 +12,16 @@ import java.util.List;
 @Data
 public class CaseData {
 
+    @JsonProperty("tribunalCorrespondenceAddress")
+    private String tribunalCorrespondenceAddress;
+    @JsonProperty("tribunalCorrespondenceTelephone")
+    private String tribunalCorrespondenceTelephone;
+    @JsonProperty("tribunalCorrespondenceFax")
+    private String tribunalCorrespondenceFax;
+    @JsonProperty("tribunalCorrespondenceDX")
+    private String tribunalCorrespondenceDX;
+    @JsonProperty("tribunalCorrespondenceEmail")
+    private String tribunalCorrespondenceEmail;
     @JsonProperty("ethosCaseReference")
     private String ethosCaseReference;
     @JsonProperty("caseType")
@@ -111,7 +121,7 @@ public class CaseData {
     @JsonProperty("caseNotes")
     private String caseNotes;
     @JsonProperty("caseDocument")
-    private String caseDocument;
+    private Document caseDocument;
     @JsonProperty("claimantWorkAddress")
     private ClaimantWorkAddressType claimantWorkAddress;
     @JsonProperty("claimantRepresentedQuestion")
