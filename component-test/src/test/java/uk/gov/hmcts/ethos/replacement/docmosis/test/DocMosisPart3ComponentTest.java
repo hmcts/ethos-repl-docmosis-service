@@ -25,7 +25,7 @@ public class DocMosisPart3ComponentTest {
 
     @Test
     public void generateDocument_Part3_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "1", "Article 4(d) of the Employment Tribunals Extension of Jurisdiction");
+        testUtil.executeGenerateDocumentTest("3", "1", "Article 4\\(d\\) of the Employment Tribunals Extension of Jurisdiction");
     }
 
     @Test

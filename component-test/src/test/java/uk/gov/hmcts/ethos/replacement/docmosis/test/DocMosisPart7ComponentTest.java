@@ -30,7 +30,7 @@ public class DocMosisPart7ComponentTest {
 
     @Test
     public void generateDocument_Part7_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "2", "To take part you should telephone \\[insert phone_number\\] on time");
+        testUtil.executeGenerateDocumentTest("7", "2", "To take part you should telephone");
     }
 
     @Test
@@ -55,7 +55,7 @@ public class DocMosisPart7ComponentTest {
 
     @Test
     public void generateDocument_Part7_6C() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "6C", "The claim \\[ The complaint of \\] is struck out");
+        testUtil.executeGenerateDocumentTest("7", "6C", "The Order was sent to the claimant on");
     }
 
     @Test

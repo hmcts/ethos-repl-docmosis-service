@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.junit.Assert;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.CCDRequest;
 
@@ -30,6 +31,9 @@ public class TestUtil {
     private String topLevel;
     private String childLevel;
 
+    @Value("${docmosis.docgen.url}")
+    private String docGenUrl;
+
     @Autowired
     public TestUtil() {
         if (authToken == null) authToken = ResponseUtil.getAuthToken();
@@ -44,7 +48,7 @@ public class TestUtil {
         this.topLevel = topLevel;
         this.childLevel = childLevel;
 
-        CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel);
+        CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel, isScotland);
 
         Response response = getResponse(ccdRequest);
 
@@ -52,11 +56,11 @@ public class TestUtil {
 
     }
 
-    public void verifyDocMosisPayload(String topLevel, String childLevel) throws IOException, JSONException {
+    public void verifyDocMosisPayload(String topLevel, String childLevel, boolean isScotland) throws IOException, JSONException {
         this.topLevel = topLevel;
         this.childLevel = childLevel;
 
-        CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel);
+        CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel, isScotland);
 
         Response response = getResponse(ccdRequest);
 
@@ -83,15 +87,16 @@ public class TestUtil {
         httpRequest.header("Authorization", authToken);
         httpRequest.header("Content-Type", ContentType.JSON);
         httpRequest.body(ccdRequest);
-        Response response = httpRequest.post(Constants.BASE_URL + Constants.URL_GEN_DOCUMENT);
+        Response response = httpRequest.post(docGenUrl);
 
         Assert.assertEquals(200, response.getStatusCode());
         return response;
     }
 
-    private CCDRequest getCcdRequest(String topLevel, String childLevel) throws IOException {
+    private CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland) throws IOException {
         String payLoad = FileUtils.readFileToString(new File(Constants.TEST_DATA_CASE1));
-        return JsonUtil.getCaseDetails(payLoad, topLevel, childLevel);
+
+        return JsonUtil.getCaseDetails(payLoad, topLevel, childLevel, isScotland);
     }
 
     private void existsInDocument(String expectedValue, File actualDocument, boolean isScotland) throws JAXBException, Docx4JException {
