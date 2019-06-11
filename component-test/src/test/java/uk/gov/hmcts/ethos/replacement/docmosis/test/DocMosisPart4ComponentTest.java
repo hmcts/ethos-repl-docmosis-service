@@ -30,12 +30,12 @@ public class DocMosisPart4ComponentTest {
 
     @Test
     public void generateDocument_Part4_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("4", "2", "Rule 27(1) – Initial Consideration");
+        testUtil.executeGenerateDocumentTest("4", "2", "Rule 27\\(1\\) – Initial Consideration");
     }
 
     @Test
     public void generateDocument_Part4_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("4", "3", "Rule 27(1) – Initial Consideration");
+        testUtil.executeGenerateDocumentTest("4", "3", "Rule 27\\(1\\) – Initial Consideration");
     }
 
     @Test
@@ -65,7 +65,7 @@ public class DocMosisPart4ComponentTest {
 
     @Test
     public void generateDocument_Part4_8A() throws Exception {
-        testUtil.executeGenerateDocumentTest("4", "8A", "Rule 28(3) Initial Consideration");
+        testUtil.executeGenerateDocumentTest("4", "8A", "Rule 28\\(3\\) Initial Consideration");
     }
 
     @Test
@@ -80,7 +80,7 @@ public class DocMosisPart4ComponentTest {
 
     @Test
     public void generateDocument_Part4_10() throws Exception {
-        testUtil.executeGenerateDocumentTest("4", "10", "The respondent having.*has decided to issue a judgment, a copy of which");
+        testUtil.executeGenerateDocumentTest("4", "10", "has decided to issue a judgment, a copy of which");
     }
 
     @Test

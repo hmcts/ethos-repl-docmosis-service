@@ -19,10 +19,18 @@ public class JsonUtil {
         return null;
     }
 
-    public static CCDRequest getCaseDetails(String json, String topLevel, String childLevel) throws IOException {
+    public static CCDRequest getCaseDetails(String json, String topLevel, String childLevel, boolean isScotland) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
-        json = json.replace("#TOPLEVEL#", "Part_" + topLevel);
+        int intTopLevel = Integer.parseInt(topLevel);
+
+        if (isScotland) {
+            intTopLevel += 41;
+            json = json.replace("#TOPLEVEL#", "EM-TRB-SCO-ENG-000" + intTopLevel);
+        } else {
+            intTopLevel += 25;
+            json = json.replace("#TOPLEVEL#", "EM-TRB-EGW-ENG-000" + intTopLevel);
+        }
         String templateVersion = topLevel + "." + childLevel;
         json = json.replace("#VERSION#", templateVersion);
 

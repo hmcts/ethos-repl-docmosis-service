@@ -55,7 +55,7 @@ public class DocMosisPart1ComponentTest {
 
     @Test
     public void generateDocument_Part1_4() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "4", "CLAIM NOT ACCEPTED ");
+        testUtil.executeGenerateDocumentTest("1", "4", "CLAIM NOT ACCEPTED");
     }
 
     @Test
@@ -90,22 +90,22 @@ public class DocMosisPart1ComponentTest {
 
     @Test
     public void generateDocument_Part1_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "9", "who has decided to reject it because [it is in a form which cannot sensibly be responded to]");
+        testUtil.executeGenerateDocumentTest("1", "9", "who has decided to reject it because \\[it is in a form which cannot sensibly be responded to\\]");
     }
 
     @Test
     public void generateDocument_Part1_9A() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "9A", "Rule 12 (1)(c)");
+        testUtil.executeGenerateDocumentTest("1", "9A", "Rule 12 \\(1\\)\\(c\\)");
     }
 
     @Test
     public void generateDocument_Part1_9B() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "9B", "Rule 12(1)(d)");
+        testUtil.executeGenerateDocumentTest("1", "9B", "Rule 12\\(1\\)\\(d\\)");
     }
 
     @Test
     public void generateDocument_Part1_9C() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "9C", "Rule 12(1)(f)");
+        testUtil.executeGenerateDocumentTest("1", "9C", "Rule 12\\(1\\)\\(f\\)");
     }
 
     @Test
@@ -115,7 +115,7 @@ public class DocMosisPart1ComponentTest {
 
     @Test
     public void generateDocument_Part1_11() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "11", "CLAIM REJECTION.*YOUR QUESTIONS  ANSWERED");
+        testUtil.executeGenerateDocumentTest("1", "11", "YOUR QUESTIONS  ANSWERED");
     }
 
     @Test

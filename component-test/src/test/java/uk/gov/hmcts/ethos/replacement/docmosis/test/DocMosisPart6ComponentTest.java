@@ -40,7 +40,7 @@ public class DocMosisPart6ComponentTest {
 
     @Test
     public void generateDocument_Part6_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "3", "The complaint of \\[Identify complaint\\] is struck out");
+        testUtil.executeGenerateDocumentTest("6", "3", "the Tribunal gave the claimant an opportunity to make representations or to request a hearing, as to why the the complaint of");
     }
 
     @Test

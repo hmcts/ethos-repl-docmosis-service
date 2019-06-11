@@ -24,7 +24,7 @@ public class DocMosisComponentTest {
 
     @Test
     public void verify_docmosis_payload() throws Exception {
-        testUtil.verifyDocMosisPayload("1", "1");
+        testUtil.verifyDocMosisPayload("1", "1", false);
 
     }
 
