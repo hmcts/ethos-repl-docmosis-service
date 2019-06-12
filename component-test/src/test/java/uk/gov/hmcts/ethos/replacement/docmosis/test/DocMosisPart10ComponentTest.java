@@ -1,26 +1,23 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.test;
 
+import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ethos.replacement.docmosis.test.util.TestUtil;
 
 @Category(ComponentTest.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = Application.class)
+@RunWith(SerenityRunner.class)
 public class DocMosisPart10ComponentTest {
 
 
-    @Autowired
     private TestUtil testUtil;
 
     @Before
     public void setUp() {
+        testUtil = new TestUtil();
     }
 
     @Test
@@ -60,7 +57,7 @@ public class DocMosisPart10ComponentTest {
 
     @Test
     public void generateDocument_Part10_8() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "8", "JUDGMENT having been sent to the parties on");
+        testUtil.executeGenerateDocumentTest("10", "8", "having been sent to the parties on");
     }
 
     @Test

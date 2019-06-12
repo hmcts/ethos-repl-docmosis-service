@@ -1,26 +1,23 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.test;
 
+import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ethos.replacement.docmosis.test.util.TestUtil;
 
 @Category(ComponentTest.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = Application.class)
+@RunWith(SerenityRunner.class)
 public class DocMosisPart7ComponentTest {
 
 
-    @Autowired
     private TestUtil testUtil;
 
     @Before
     public void setUp() {
+        testUtil = new TestUtil();
     }
 
     @Test
@@ -50,7 +47,7 @@ public class DocMosisPart7ComponentTest {
 
     @Test
     public void generateDocument_Part7_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "5", "  NOTE ACCOMPANYING DEPOSIT ORDER");
+        testUtil.executeGenerateDocumentTest("7", "5", "NOTE ACCOMPANYING DEPOSIT ORDER");
     }
 
     @Test
@@ -65,12 +62,12 @@ public class DocMosisPart7ComponentTest {
 
     @Test
     public void generateDocument_Part7_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "7", "The hearing will take place at.*within 28 days");
+        testUtil.executeGenerateDocumentTest("7", "7", "The hearing will take place at");
     }
 
     @Test
     public void generateDocument_Part7_8() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "8", "The hearing will be conducted by telephone");
+        testUtil.executeGenerateDocumentTest("7", "8", "CASE MANAGEMENT – BY TELEPHONE");
     }
 
     @Test

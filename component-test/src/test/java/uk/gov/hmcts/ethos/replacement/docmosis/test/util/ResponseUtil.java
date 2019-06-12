@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.test.util;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.Response;
-import com.jayway.restassured.specification.RequestSpecification;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,9 +17,9 @@ public class ResponseUtil {
         else return null;
     }
 
-    public static String getAuthToken() {
+    public static String getAuthToken(String tidamUrl) {
         RequestSpecification httpRequest = RestAssured.given();
-        Response response = httpRequest.post(Constants.URL_GEN_TOKEN);
+        Response response = httpRequest.post(tidamUrl + Constants.TOKEN_URI);
         return "Bearer " + response.body().asString();
     }
 }

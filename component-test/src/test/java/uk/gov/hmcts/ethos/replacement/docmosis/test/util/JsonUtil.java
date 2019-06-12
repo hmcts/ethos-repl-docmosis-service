@@ -25,10 +25,12 @@ public class JsonUtil {
         int intTopLevel = Integer.parseInt(topLevel);
 
         if (isScotland) {
-            intTopLevel += 41;
+            if (intTopLevel < 10) intTopLevel += 41;
+            else intTopLevel += 40;
             json = json.replace("#TOPLEVEL#", "EM-TRB-SCO-ENG-000" + intTopLevel);
         } else {
-            intTopLevel += 25;
+            if (intTopLevel < 9) intTopLevel += 25;
+            else intTopLevel += 24;
             json = json.replace("#TOPLEVEL#", "EM-TRB-EGW-ENG-000" + intTopLevel);
         }
         String templateVersion = topLevel + "." + childLevel;

@@ -1,26 +1,23 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.test;
 
+import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ethos.replacement.docmosis.test.util.TestUtil;
 
 @Category(ComponentTest.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = Application.class)
+@RunWith(SerenityRunner.class)
 public class DocMosisPart11ComponentTest {
 
 
-    @Autowired
     private TestUtil testUtil;
 
     @Before
     public void setUp() {
+        testUtil = new TestUtil();
     }
 
     @Test
@@ -60,22 +57,22 @@ public class DocMosisPart11ComponentTest {
 
     @Test
     public void generateDocument_Part11_5C() throws Exception {
-        testUtil.executeGenerateDocumentTest("11", "5C", "Both parties are asked to write to us by \\[insert date\\] setting out their views on whether the application can be determined without a hearing");
+        testUtil.executeGenerateDocumentTest("11", "5C", "setting out their views on whether the application can be determined without a hearing");
     }
 
     @Test
     public void generateDocument_Part11_5R() throws Exception {
-        testUtil.executeGenerateDocumentTest("11", "5R", "Both parties are asked to write to us by \\[insert date\\] setting out their views on whether the application can be determined without a hearing");
+        testUtil.executeGenerateDocumentTest("11", "5R", "setting out their views on whether the application can be determined without a hearing");
     }
 
     @Test
     public void generateDocument_Part11_6C() throws Exception {
-        testUtil.executeGenerateDocumentTest("11", "6C", "The claimant’s application dated \\[insert date\\] for reconsideration of the judgment sent to the parties on \\[insert date\\] is refused");
+        testUtil.executeGenerateDocumentTest("11", "6C", "The claimant’s application dated");
     }
 
     @Test
     public void generateDocument_Part11_6R() throws Exception {
-        testUtil.executeGenerateDocumentTest("11", "6R", "The respondent’s application dated \\[insert date\\] for reconsideration of the judgment sent to the parties on \\[insert date\\] is refused");
+        testUtil.executeGenerateDocumentTest("11", "6R", "The respondent’s application dated");
     }
 
     @Test
@@ -95,22 +92,22 @@ public class DocMosisPart11ComponentTest {
 
     @Test
     public void generateDocument_Part11_10() throws Exception {
-        testUtil.executeGenerateDocumentTest("11", "10", "UPON APPLICATION made by letter dated \\[insert date\\] to reconsider the judgment dated \\[insert date\\] under rule 71 of the Employment Tribunals Rules of Procedure 2013");
+        testUtil.executeGenerateDocumentTest("11", "10", "under rule 71 of the Employment Tribunals Rules of Procedure 2013");
     }
 
     @Test
     public void generateDocument_Part11_11() throws Exception {
-        testUtil.executeGenerateDocumentTest("11", "11", "UPON APPLICATION made by letter dated [insert date] to reconsider the judgment under ");
+        testUtil.executeGenerateDocumentTest("11", "11", "to reconsider the judgment under");
     }
 
     @Test
     public void generateDocument_Part11_12() throws Exception {
-        testUtil.executeGenerateDocumentTest("11", "12", "UPON APPLICATION made by letter dated \\[insert date\\] to reconsider the judgment dated \\[insert date\\] under rule 71 of the Employment Tribunals Rules of Procedure 2013, and without a hearing");
+        testUtil.executeGenerateDocumentTest("11", "12", "under rule 71 of the Employment Tribunals Rules of Procedure 2013, and without a hearing");
     }
 
     @Test
     public void generateDocument_Part11_13() throws Exception {
-        testUtil.executeGenerateDocumentTest("11", "", "UPON APPLICATION made by letter dated [insert date] to reconsider the judgment under ");
+        testUtil.executeGenerateDocumentTest("11", "", "to reconsider the judgment under");
     }
 
     @After
