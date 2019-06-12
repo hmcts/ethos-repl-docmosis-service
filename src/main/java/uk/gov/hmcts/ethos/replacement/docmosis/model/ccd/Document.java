@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.model.ccd;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-@Builder
 public class Document {
     @JsonProperty("document_url")
     private String url;

@@ -1,5 +1,10 @@
 {
   "case_data": {
+    "tribunalCorrespondenceAddress" : "35 High Landing G3 6AD, Glasgow",
+    "tribunalCorrespondenceTelephone" : "03577123270",
+    "tribunalCorrespondenceFax" : "07127126570",
+    "tribunalCorrespondenceDX" : "1234567",
+    "tribunalCorrespondenceEmail" : "GlasgowOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
     "multipleOthers" : "no",
     "claimantRepresentedQuestion" : "no",
@@ -34,7 +39,7 @@
         "PostCode": "M3 KJR",
         "PostTown": "Manchester"
       },
-      "representative_dx_number": "222222222",
+      "representative_dx": "222222222",
       "representative_email_address": "example@gmail.com",
       "representative_mobile_number": "07577136570",
       "representative_phone_number": "07577136570",
@@ -197,7 +202,7 @@
       "rejection_reason" : "none",
       "rejection_reason_other" : "none",
       "responseNotes" : "notes",
-      "response_to_claim": "No"
+      "responseToClaim": "No"
     },
     "userLocation": "Liverpool",
     "withdrawType": {
