@@ -1,9 +1,11 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.test.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,7 +14,10 @@ public class LogUtil {
 
     public static String getDocMosisPayload() throws IOException {
         Pattern pattern = Pattern.compile(".*TornadoService Sending request: (.*)");
-        for (String log : getLogs("ethos-repl-docmosis-service")) {
+
+        List<String> logs = getLogs("ethos-repl-docmosis-service");
+
+        for (String log : logs) {
             Matcher matcher = pattern.matcher(log);
             if (matcher.matches()) {
                 return matcher.group(1);
@@ -23,22 +28,25 @@ public class LogUtil {
     }
 
     public static List<String> getLogs(String containerName) throws IOException {
-        List<String> logs = new LinkedList<>();
-
         // run the Unix "ps -ef" command
         // using the Runtime exec method:
-        Process p = Runtime.getRuntime().exec("docker logs --since=10s " + containerName);
+        Process p = Runtime.getRuntime().exec("docker logs --since=20s " + containerName);
 
         BufferedReader stdInput = new BufferedReader(new
                 InputStreamReader(p.getInputStream()));
 
         // read the output from the command
         String s;
+        StringBuilder stringBuilder = new StringBuilder();
         while ((s = stdInput.readLine()) != null) {
-            logs.add(s);
-            //System.out.println(s);
+
+            if (StringUtils.isEmpty(s)) continue;
+
+            stringBuilder.append(s);
         }
 
-        return logs;
+        stdInput.close();
+
+        return Arrays.asList(stringBuilder.toString().split("[\\d]{4}-[\\d]{2}-[\\d]{2}T"));
     }
 }

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.test;
 
+import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,16 +12,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ethos.replacement.docmosis.test.util.TestUtil;
 
 @Category(ComponentTest.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = Application.class)
+@RunWith(SerenityRunner.class)
 public class DocMosisScotPart14ComponentTest {
 
 
-    @Autowired
     private TestUtil testUtil;
 
     @Before
     public void setUp() {
+        testUtil = new TestUtil();
     }
 
     @Test
