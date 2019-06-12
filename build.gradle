@@ -83,6 +83,7 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.reformJavaLogging
     compile group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: '0.0.3'
+    compile group: 'org.springframework.retry', name: 'spring-retry'
 }
 
 jar {

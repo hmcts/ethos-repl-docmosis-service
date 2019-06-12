@@ -1,5 +1,10 @@
 {
   "case_data": {
+    "tribunalCorrespondenceAddress" : "35 La Nava S3 6AD, Southampton",
+    "tribunalCorrespondenceTelephone" : "03577131270",
+    "tribunalCorrespondenceFax" : "07577126570",
+    "tribunalCorrespondenceDX" : "123456",
+    "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
     "multipleOthers" : "no",
     "claimantRepresentedQuestion" : "no",
@@ -85,7 +90,7 @@
         "PostCode": "M3 KJR",
         "PostTown": "Manchester"
       },
-      "representative_dx_number": "222222222",
+      "representative_dx": "222222222",
       "representative_email_address": "example@gmail.com",
       "representative_mobile_number": "07577136570",
       "representative_phone_number": "07577136570",
@@ -118,7 +123,7 @@
             "PostCode": "M3 KJR",
             "PostTown": "Manchester"
           },
-          "representative_dx_number": "3333333333",
+          "representative_dx": "3333333333",
           "representative_email_address": "example@gmail.com",
           "representative_mobile_number": "07577136570",
           "representative_phone_number": "07577136570",
@@ -140,7 +145,7 @@
             "PostCode": "M3 KJR",
             "PostTown": "Manchester"
           },
-          "representative_dx_number": "3333333333",
+          "representative_dx": "3333333333",
           "representative_email_address": "example@gmail.com",
           "representative_mobile_number": "07577136570",
           "representative_phone_number": "07577136570",
@@ -171,7 +176,7 @@
       "response_required_info_absent?": "Yes",
       "response_returned_from_judge": "Yes",
       "response_status": "Status",
-      "response_to_claim": "No"
+      "responseToClaim": "No"
     },
     "userLocation": "Liverpool",
     "withdrawType": {

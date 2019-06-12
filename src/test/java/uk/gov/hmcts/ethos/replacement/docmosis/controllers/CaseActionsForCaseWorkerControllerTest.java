@@ -37,8 +37,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.POST_DEFAULT_XLSX_FILE_PATH;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.PRE_DEFAULT_XLSX_FILE_PATH;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringRunner.class)
@@ -85,7 +84,15 @@ public class CaseActionsForCaseWorkerControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
         doRequestSetUp();
         submitEvent = new SubmitEvent();
-        defaultValues = DefaultValues.builder().positionType("Awaiting ET3").claimantTypeOfClaimant("Individual").build();
+        defaultValues = DefaultValues.builder()
+                .positionType("Awaiting ET3")
+                .claimantTypeOfClaimant("Individual")
+                .tribunalCorrespondenceAddress("35 La Nava S3 6AD, Southampton")
+                .tribunalCorrespondenceTelephone("3577131270")
+                .tribunalCorrespondenceFax("7577126570")
+                .tribunalCorrespondenceDX("123456")
+                .tribunalCorrespondenceEmail("manchester@gmail.com")
+                .build();
     }
 
     @Test
@@ -143,7 +150,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void preDefaultValues() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH)).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenReturn(defaultValues);
         mvc.perform(post(PRE_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -156,7 +163,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void postDefaultValues() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH)).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenReturn(defaultValues);
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -258,7 +265,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void preDefaultValuesError500() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH)).thenThrow(feignError());
+        when(defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenThrow(feignError());
 
         mvc.perform(post(PRE_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
@@ -278,7 +285,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void postDefaultValuesError500() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH)).thenThrow(feignError());
+        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenThrow(feignError());
 
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())

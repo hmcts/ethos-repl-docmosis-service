@@ -12,7 +12,7 @@
           "PostCode": "M3 KJR",
           "PostTown": "Manchester"
         },
-        "representative_dx_number": "222222222",
+        "representative_dx": "222222222",
         "representative_email_address": "example@gmail.com",
         "representative_mobile_number": "07577136570",
         "representative_phone_number": "07577136570",
@@ -116,7 +116,7 @@
         "response_required_info_absent?": "Yes",
         "response_returned_from_judge": "Yes",
         "response_status": "Status",
-        "response_to_claim": "No"
+        "responseToClaim": "No"
       },
       "tribunalOffice": "Manchester",
       "userLocation": "Liverpool",

@@ -14,6 +14,8 @@ import uk.gov.hmcts.reform.document.domain.Document;
 import uk.gov.hmcts.reform.document.domain.UploadResponse;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import java.io.File;
 import java.net.URI;
 
@@ -44,6 +46,7 @@ public class DocumentManagementService {
         this.appInsights = appInsights;
     }
 
+    @Retryable(value = {DocumentManagementException.class}, backoff = @Backoff(delay = 200))
     URI uploadDocument(String authToken, File doc) {
         try {
             log.info("ccdGatewayBaseUrl: " + ccdGatewayBaseUrl);

@@ -1,5 +1,10 @@
 {
   "case_data": {
+    "tribunalCorrespondenceAddress" : "35 High Landing G3 6AD, Glasgow",
+    "tribunalCorrespondenceTelephone" : "03577123270",
+    "tribunalCorrespondenceFax" : "07127126570",
+    "tribunalCorrespondenceDX" : "1234567",
+    "tribunalCorrespondenceEmail" : "GlasgowOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
     "multipleOthers" : "no",
     "claimantRepresentedQuestion" : "no",
@@ -105,7 +110,7 @@
       "response_required_info_absent?": "Yes",
       "response_returned_from_judge": "Yes",
       "response_status": "Status",
-      "response_to_claim": "No"
+      "responseToClaim": "No"
     },
     "userLocation": "Liverpool",
     "withdrawType": {
