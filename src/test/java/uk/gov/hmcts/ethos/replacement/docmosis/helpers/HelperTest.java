@@ -115,11 +115,11 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00027.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"Claimant_name\":\"Orlando LTD\",\n" +
+                "\"claimant_full_name\":\"Orlando LTD\",\n" +
+                "\"claimant_rep_full_name\":\"Orlando LTD\",\n" +
                 "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Claimant_name\":\"Mr A Rodriguez\",\n" +
-                "\"claimant_full_name\":\"Mr A Rodriguez\",\n" +
-                "\"claimant_rep_full_name\":\"Mr A Rodriguez\",\n" +
                 "\"Claimant\":\"Mr A Rodriguez\",\n" +
                 "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
                 "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
@@ -166,11 +166,11 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00028.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"Claimant_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_rep_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
+                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
                 "\"Respondent_name\":\"Francisco\",\n" +
                 "\"respondent_full_name\":\"Francisco\",\n" +
@@ -563,11 +563,11 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-SCO-ENG-00043.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"Claimant_name\":\"Orlando LTD\",\n" +
+                "\"claimant_full_name\":\"Orlando LTD\",\n" +
+                "\"claimant_rep_full_name\":\"Orlando LTD\",\n" +
                 "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Claimant_name\":\"Mr A Rodriguez\",\n" +
-                "\"claimant_full_name\":\"Mr A Rodriguez\",\n" +
-                "\"claimant_rep_full_name\":\"Mr A Rodriguez\",\n" +
                 "\"Claimant\":\"Mr A Rodriguez\",\n" +
                 "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
                 "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
@@ -614,11 +614,11 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-SCO-ENG-00044.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"Claimant_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_rep_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
+                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
                 "\"Respondent_name\":\"string\",\n" +
                 "\"respondent_full_name\":\"string\",\n" +

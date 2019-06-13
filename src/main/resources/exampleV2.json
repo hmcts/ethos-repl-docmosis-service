@@ -5,6 +5,7 @@
         "NH_JudgementDecision": "guilty",
         "NH_JudgementTextArea": "guilty"
       },
+      "claimant_TypeOfClaimant" : "Individual",
       "acasOffice": "Manchester",
       "addSubMultipleComment": "Comment",
       "additionalType": {
