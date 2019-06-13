@@ -130,11 +130,11 @@ public class HelperTest {
                 "\"respondent_reference\":\"1111111\",\n" +
                 "\"respondent_rep_reference\":\"1111111\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
-                "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_Date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
-                "\"Hearing_Date_Time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
-                "\"hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
+                "\"hearing_date\":\"\",\n" +
+                "\"Hearing_Date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_Date_Time\":\"\",\n" +
+                "\"hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"hearing_address\":\"Manchester\",\n" +
                 "\"Hearing_Address\":\"Manchester\",\n" +
@@ -488,17 +488,17 @@ public class HelperTest {
                 "\"templateName\":\".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"Court_Address\":\"null\",\n" +
-                "\"Court_Telephone\":\"null\",\n" +
-                "\"Court_Fax\":\"null\",\n" +
-                "\"Court_DX\":\"null\",\n" +
-                "\"Court_Email\":\"null\",\n" +
+                "\"Court_Address\":\"\",\n" +
+                "\"Court_Telephone\":\"\",\n" +
+                "\"Court_Fax\":\"\",\n" +
+                "\"Court_DX\":\"\",\n" +
+                "\"Court_Email\":\"\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"null\",\n" +
+                "\"Clerk\":\"\",\n" +
                 "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"Case_No\":\"null\",\n" +
+                "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
         assertEquals(Helper.buildDocumentContent(caseDetailsEmpty, "").toString(), result);
@@ -713,17 +713,17 @@ public class HelperTest {
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"t_Scot_" + part + "\":\"true\",\n" +
-                "\"Court_Address\":\"null\",\n" +
-                "\"Court_Telephone\":\"null\",\n" +
-                "\"Court_Fax\":\"null\",\n" +
-                "\"Court_DX\":\"null\",\n" +
-                "\"Court_Email\":\"null\",\n" +
+                "\"Court_Address\":\"\",\n" +
+                "\"Court_Telephone\":\"\",\n" +
+                "\"Court_Fax\":\"\",\n" +
+                "\"Court_DX\":\"\",\n" +
+                "\"Court_Email\":\"\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot"+ part +"_schmcts\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"null\",\n" +
+                "\"Clerk\":\"\",\n" +
                 "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"Case_No\":\"null\",\n" +
+                "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
     }
