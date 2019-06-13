@@ -8,6 +8,8 @@
     "ethosCaseReference" : "123456",
     "multipleOthers" : "no",
     "claimantRepresentedQuestion" : "no",
+    "claimant_TypeOfClaimant" : "Company",
+    "claimant_Company" : "Orlando LTD",
     "NH_JudgementType": {
       "NH_JudgementDecision": "guilty",
       "NH_JudgementTextArea": "guilty"
