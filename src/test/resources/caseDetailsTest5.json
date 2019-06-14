@@ -1,8 +1,14 @@
 {
   "case_data": {
+    "tribunalCorrespondenceAddress" : "35 La Nava S3 6AD, Southampton",
+    "tribunalCorrespondenceTelephone" : "03577131270",
+    "tribunalCorrespondenceFax" : "07577126570",
+    "tribunalCorrespondenceDX" : "123456",
+    "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
     "multipleOthers" : "no",
     "claimantRepresentedQuestion" : "no",
+    "claimant_TypeOfClaimant" : "Individual",
     "NH_JudgementType": {
       "NH_JudgementDecision": "guilty",
       "NH_JudgementTextArea": "guilty"
@@ -46,8 +52,8 @@
       "claimant_title1": "Mr"
     },
     "correspondenceType": {
-        "topLevel_Documents": "EM-TRB-EGW-ENG-00030",
-        "EM-TRB-EGW-ENG-00030": "5.2"
+      "topLevel_Documents": "EM-TRB-EGW-ENG-00030",
+      "part_5_Documents": "5.2"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
@@ -85,7 +91,7 @@
         "PostCode": "M3 KJR",
         "PostTown": "Manchester"
       },
-      "representative_dx_number": "222222222",
+      "representative_dx": "222222222",
       "representative_email_address": "example@gmail.com",
       "representative_mobile_number": "07577136570",
       "representative_phone_number": "07577136570",
@@ -103,25 +109,6 @@
       "reconsideration_hearing_date": "2019-03-12",
       "who_applied?": "nobody"
     },
-    "representativeRespondentType": {
-      "resp_rep_name" : "RepresentativeNameRespondent",
-      "name_of_organisation": "RepresentativeOrganisation",
-      "name_of_representative": "RepresentativeNameRespondent",
-      "representative_address": {
-        "AddressLine1": "56 Block C",
-        "AddressLine2": "Ellesmere Street",
-        "Country": "UK",
-        "County": "Lancashire",
-        "PostCode": "M3 KJR",
-        "PostTown": "Manchester"
-      },
-      "representative_dx_number": "222222222",
-      "representative_email_address": "example@gmail.com",
-      "representative_mobile_number": "07577136570",
-      "representative_phone_number": "07577136570",
-      "representative_preference": "Post",
-      "representative_reference": "1111111"
-    },
     "repCollection": [
       {
         "id" : "1233245",
@@ -137,7 +124,7 @@
             "PostCode": "M3 KJR",
             "PostTown": "Manchester"
           },
-          "representative_dx_number": "3333333333",
+          "representative_dx": "3333333333",
           "representative_email_address": "example@gmail.com",
           "representative_mobile_number": "07577136570",
           "representative_phone_number": "07577136570",
@@ -159,7 +146,7 @@
             "PostCode": "M3 KJR",
             "PostTown": "Manchester"
           },
-          "representative_dx_number": "3333333333",
+          "representative_dx": "3333333333",
           "representative_email_address": "example@gmail.com",
           "representative_mobile_number": "07577136570",
           "representative_phone_number": "07577136570",
@@ -190,7 +177,7 @@
       "response_required_info_absent?": "Yes",
       "response_returned_from_judge": "Yes",
       "response_status": "Status",
-      "response_to_claim": "No"
+      "responseToClaim": "No"
     },
     "userLocation": "Liverpool",
     "withdrawType": {

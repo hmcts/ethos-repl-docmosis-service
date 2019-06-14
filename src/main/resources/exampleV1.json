@@ -8,6 +8,7 @@
       "caseAssignee": "Case Assignee",
       "caseNote": "Example note",
       "caseType": "Single",
+      "claimant_TypeOfClaimant" : "Individual",
       "claimantCollection": [
         {
           "id": "1121212121",
@@ -87,7 +88,7 @@
           "PostCode": "L3567",
           "PostTown": "Liverpool"
         },
-        "representative_dx_number": "12121212",
+        "representative_dx": "12121212",
         "representative_email_address": "danW@gmail.com",
         "representative_mobile_number": "07577136570",
         "representative_phone_number": "07577136570",

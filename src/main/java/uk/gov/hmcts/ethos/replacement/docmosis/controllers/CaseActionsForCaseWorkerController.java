@@ -134,7 +134,7 @@ public class CaseActionsForCaseWorkerController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH);
+        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
         ccdRequest.getCaseDetails().getCaseData().setClaimantTypeOfClaimant(defaultValues.getClaimantTypeOfClaimant());
         log.info("Pre Default values added to the case: " + defaultValues);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
@@ -154,8 +154,13 @@ public class CaseActionsForCaseWorkerController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH);
+        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
         ccdRequest.getCaseDetails().getCaseData().setPositionType(defaultValues.getPositionType());
+        ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceAddress(defaultValues.getTribunalCorrespondenceAddress());
+        ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceTelephone(defaultValues.getTribunalCorrespondenceTelephone());
+        ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceFax(defaultValues.getTribunalCorrespondenceFax());
+        ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceDX(defaultValues.getTribunalCorrespondenceDX());
+        ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceEmail(defaultValues.getTribunalCorrespondenceEmail());
         log.info("Post Default values added to the case: " + defaultValues);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(ccdRequest.getCaseDetails().getCaseData())

@@ -10,34 +10,34 @@ public class CorrespondenceScotType {
 
     @JsonProperty("topLevel_Scot_Documents")
     private String topLevelScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00042")
+    @JsonProperty("part_1_Scot_Documents")
     private String part1ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00043")
+    @JsonProperty("part_2_Scot_Documents")
     private String part2ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00044")
+    @JsonProperty("part_3_Scot_Documents")
     private String part3ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00045")
+    @JsonProperty("part_4_Scot_Documents")
     private String part4ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00046")
+    @JsonProperty("part_5_Scot_Documents")
     private String part5ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00047")
+    @JsonProperty("Part_6_Scot_Documents")
     private String part6ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00048")
+    @JsonProperty("Part_7_Scot_Documents")
     private String part7ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00049")
+    @JsonProperty("Part_8_Scot_Documents")
     private String part8ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00050")
+    @JsonProperty("Part_10_Scot_Documents")
     private String part10ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00051")
+    @JsonProperty("Part_11_Scot_Documents")
     private String part11ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00052")
+    @JsonProperty("Part_12_Scot_Documents")
     private String part12ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00053")
+    @JsonProperty("Part_13_Scot_Documents")
     private String part13ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00054")
+    @JsonProperty("Part_14_Scot_Documents")
     private String part14ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00055")
+    @JsonProperty("Part_15_Scot_Documents")
     private String part15ScotDocuments;
-    @JsonProperty("EM-TRB-SCO-ENG-00056")
+    @JsonProperty("Part_16_Scot_Documents")
     private String part16ScotDocuments;
 }
