@@ -1,8 +1,14 @@
 {
   "case_data": {
+    "tribunalCorrespondenceAddress" : "35 High Landing G3 6AD, Glasgow",
+    "tribunalCorrespondenceTelephone" : "03577123270",
+    "tribunalCorrespondenceFax" : "07127126570",
+    "tribunalCorrespondenceDX" : "1234567",
+    "tribunalCorrespondenceEmail" : "GlasgowOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
     "multipleOthers" : "no",
     "claimantRepresentedQuestion" : "no",
+    "claimant_TypeOfClaimant" : "Individual",
     "NH_JudgementType": {
       "NH_JudgementDecision": "guilty",
       "NH_JudgementTextArea": "guilty"
@@ -46,8 +52,8 @@
       "claimant_title1": "Mr"
     },
     "correspondenceScotType": {
-        "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-00044",
-        "EM-TRB-SCO-ENG-00044": "34"
+      "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-00044",
+      "part_3_Scot_Documents": "34"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
@@ -105,7 +111,7 @@
       "response_required_info_absent?": "Yes",
       "response_returned_from_judge": "Yes",
       "response_status": "Status",
-      "response_to_claim": "No"
+      "responseToClaim": "No"
     },
     "userLocation": "Liverpool",
     "withdrawType": {
