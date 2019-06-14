@@ -4,12 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.NumberToTextConverter;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.CaseCreationException;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class DefaultValuesReaderService {
                                 values.add(cell.getStringCellValue());
                             }
                             else if(cell.getCellType() == CellType.NUMERIC) {
-                                values.add(new BigDecimal(cell.getNumericCellValue()).toPlainString());
+                                values.add(NumberToTextConverter.toText(cell.getNumericCellValue()));
                             }
                         }
                     });
