@@ -42,7 +42,7 @@ public class DocMosisScotPart13ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_106_A() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "An Employment Judge is considering making a wasted costs against you in favour of", true);
+        testUtil.executeGenerateDocumentTest("106", "A", "An Employment Judge is considering making a wasted costs against you in favour of", true);
     }
 
 

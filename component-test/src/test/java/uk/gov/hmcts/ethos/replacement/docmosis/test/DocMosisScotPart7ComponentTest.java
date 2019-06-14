@@ -47,7 +47,7 @@ public class DocMosisScotPart7ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_63() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "The allegation/argument", true);
+        testUtil.executeGenerateDocumentTest("63", "", "The allegation/argument", true);
     }
 
     @After

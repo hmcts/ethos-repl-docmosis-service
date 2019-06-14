@@ -46,7 +46,10 @@ public class TestUtil {
 
         if (authToken == null) authToken = ResponseUtil.getAuthToken(tidamUrl);
 
-        CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel, isScotland);
+        CCDRequest ccdRequest;
+
+        if (isScotland) ccdRequest = getCcdRequest(topLevel, childLevel, true, Constants.TEST_DATA_SCOT_CASE1);
+        else ccdRequest = getCcdRequest(topLevel, childLevel, false);
 
         Response response = getResponse(ccdRequest);
 

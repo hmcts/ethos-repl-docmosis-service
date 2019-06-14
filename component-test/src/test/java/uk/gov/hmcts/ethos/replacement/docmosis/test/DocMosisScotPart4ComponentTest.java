@@ -62,7 +62,7 @@ public class DocMosisScotPart4ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_25() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "EXTENSION OF TIME FOR RESPONSE TO CONTRACT CLAIM REFUSED", true);
+        testUtil.executeGenerateDocumentTest("25", "", "EXTENSION OF TIME FOR RESPONSE TO CONTRACT CLAIM REFUSED", true);
     }
 
     @After

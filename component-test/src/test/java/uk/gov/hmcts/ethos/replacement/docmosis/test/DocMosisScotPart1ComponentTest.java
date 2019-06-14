@@ -47,7 +47,7 @@ public class DocMosisScotPart1ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_3_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "3", "Your claim has been accepted at this office and the case file has been transferred to the Edinburgh office", true);
+        testUtil.executeGenerateDocumentTest("3", "3", "Edinburgh office", true);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class DocMosisScotPart1ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_3_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "5", "I am writing to you because your claim/complaint of", true);
+        testUtil.executeGenerateDocumentTest("3", "5", "I am writing to you because your", true);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class DocMosisScotPart1ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "", "Employment Judge [insert name] has reconsidered the decision without a hearing and has", true);
+        testUtil.executeGenerateDocumentTest("5", "", "has reconsidered the decision without a hearing and has", true);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class DocMosisScotPart1ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "", "", true);
+        testUtil.executeGenerateDocumentTest("7", "", "NOTICE OF CLAIM", true);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class DocMosisScotPart1ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_7_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "2", "You should do this by completing and returning the enclosed response form to ETS, Ground Floor Block C Caledonian House Greenmarket Dundee DD1 4QX", true);
+        testUtil.executeGenerateDocumentTest("7", "2", "Ground Floor Block C Caledonian House Greenmarket", true);
     }
 
     @Test
@@ -97,12 +97,12 @@ public class DocMosisScotPart1ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_7_4() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "4", "", true);
+        testUtil.executeGenerateDocumentTest("7", "4", "NOTICE OF CLAIM", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_7_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "PART OF CLAIM \\(delete as appropriate\\) ACCEPTED OUT OF TIME", true);
+        testUtil.executeGenerateDocumentTest("7", "5", "ACCEPTED OUT OF TIME", true);
     }
 
     @After

@@ -87,7 +87,7 @@ public class DocMosisScotPart15ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_172() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "Judicial Mediation Report", true);
+        testUtil.executeGenerateDocumentTest("172", "", "Judicial Mediation Report", true);
     }
 
     @After
