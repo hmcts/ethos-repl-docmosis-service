@@ -22,42 +22,42 @@ public class DocMosisScotPart5ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_26() throws Exception {
-        testUtil.executeGenerateDocumentTest("26", "", "INITIAL CONSIDERATION OF CLAIM AND RESPONSE – further INFORMATION", true);
+        testUtil.executeGenerateDocumentTest("26", "", "INITIAL CONSIDERATION OF CLAIM AND RESPONSE", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_27() throws Exception {
-        testUtil.executeGenerateDocumentTest("27", "", "Employment Judge \\[insert \\] has considered the file \\(and any further information", true);
+        testUtil.executeGenerateDocumentTest("27", "", "and any further information", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_28() throws Exception {
-        testUtil.executeGenerateDocumentTest("28", "", "Employment Judge \\[\\] has considered the file \\(and any further information provided\\)", true);
+        testUtil.executeGenerateDocumentTest("28", "", "and any further information provided", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_29() throws Exception {
-        testUtil.executeGenerateDocumentTest("29", "", "CLAIM \\(OR PART OF CLAIM\\) DISMISSED", true);
+        testUtil.executeGenerateDocumentTest("29", "", "DISMISSED", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_30() throws Exception {
-        testUtil.executeGenerateDocumentTest("30", "", "RESPONSE \\(OR PART OF RESPONSE\\) DISMISSED", true);
+        testUtil.executeGenerateDocumentTest("30", "", "DISMISSED", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_31() throws Exception {
-        testUtil.executeGenerateDocumentTest("31", "", "CLAIM \\(OR PART OF CLAIM\\) ALLOWED TO PROCEED", true);
+        testUtil.executeGenerateDocumentTest("31", "", "ALLOWED TO PROCEED", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_32() throws Exception {
-        testUtil.executeGenerateDocumentTest("32", "", "RESPONSE (OR PART OF RESPONSE) ALLOWED TO PROCEED", true);
+        testUtil.executeGenerateDocumentTest("32", "", "ALLOWED TO PROCEED", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_33() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "INITIAL CONSIDERATION OF CLAIM AND RESPONSE completed", true);
+        testUtil.executeGenerateDocumentTest("33", "", "INITIAL CONSIDERATION OF CLAIM AND RESPONSE completed", true);
     }
 
     @After

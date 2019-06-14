@@ -82,7 +82,7 @@ public class DocMosisScotPart16ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_194() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "Notice of Stage 2 Equal Value Hearing", true);
+        testUtil.executeGenerateDocumentTest("194", "", "Notice of Stage 2 Equal Value Hearing", true);
     }
 
     @After

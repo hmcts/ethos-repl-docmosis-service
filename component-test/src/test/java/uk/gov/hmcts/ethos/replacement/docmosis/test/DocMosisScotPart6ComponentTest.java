@@ -32,32 +32,32 @@ public class DocMosisScotPart6ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_35() throws Exception {
-        testUtil.executeGenerateDocumentTest("35", "", "On or before \\[insert date\\] you shall provide to \\[insert identity of party\\(ies\\) to receive", true);
+        testUtil.executeGenerateDocumentTest("35", "", "you shall provide to", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_35_A() throws Exception {
-        testUtil.executeGenerateDocumentTest("35", "A", "On or before \\[insert date\\] you shall provide to \\[insert name and address of claimant", true);
+        testUtil.executeGenerateDocumentTest("35", "A", "you shall provide to", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_36() throws Exception {
-        testUtil.executeGenerateDocumentTest("36", "", "On or before \\[insert date\\] you shall allow \\[insert name of other party/rep\\] to inspect", true);
+        testUtil.executeGenerateDocumentTest("36", "", "you shall allow", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_36_A() throws Exception {
-        testUtil.executeGenerateDocumentTest("36", "A", "On or before \\[insert date\\] you shall allow \\[insert name and address of claimant", true);
+        testUtil.executeGenerateDocumentTest("36", "A", "ORDER TO ALLOW INSPECTION OF", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_37() throws Exception {
-        testUtil.executeGenerateDocumentTest("37", "", "On or before \\[insert date\\] you shall provide \\[insert identity of party to receive", true);
+        testUtil.executeGenerateDocumentTest("37", "", "you shall provide", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_37_A() throws Exception {
-        testUtil.executeGenerateDocumentTest("37", "A", "On or before \\[insert date\\] you shall provide \\[insert name and address of claimant and", true);
+        testUtil.executeGenerateDocumentTest("37", "A", "you shall provide", true);
     }
 
     @Test
@@ -112,7 +112,7 @@ public class DocMosisScotPart6ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_47() throws Exception {
-        testUtil.executeGenerateDocumentTest("47", "", "Please find enclosed an Order/copy of an Order issued by an Employment Judge", true);
+        testUtil.executeGenerateDocumentTest("47", "", "CASE MANAGEMENT ORDER", true);
     }
 
     @Test
@@ -152,12 +152,12 @@ public class DocMosisScotPart6ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_54() throws Exception {
-        testUtil.executeGenerateDocumentTest("54", "", "Pursuant to section 11 / section 12", true);
+        testUtil.executeGenerateDocumentTest("54", "", "RESTRICTED REPORTING ORDER", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_55() throws Exception {
-        testUtil.executeGenerateDocumentTest("55", "", "RESTRICTED REPORTING ORDER", true);
+        testUtil.executeGenerateDocumentTest("55", "", "Restricted Reporting Order", true);
     }
 
     @Test
@@ -167,7 +167,7 @@ public class DocMosisScotPart6ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_57() throws Exception {
-        testUtil.executeGenerateDocumentTest("57", "", "CLAIM/RESPONSE DISMISSED \\(delete as appropriate\\)", true);
+        testUtil.executeGenerateDocumentTest("57", "", "CLAIM/RESPONSE DISMISSED", true);
     }
 
     @Test
@@ -177,12 +177,12 @@ public class DocMosisScotPart6ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_57_B() throws Exception {
-        testUtil.executeGenerateDocumentTest("57", "B", "DISMISSAL OF CLAIM/RESPONSE (delete as appropriate) SET ASIDE", true);
+        testUtil.executeGenerateDocumentTest("57", "B", "DISMISSAL OF CLAIM/RESPONSE", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_57_C() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "Notice of the hearing at which your application will be", true);
+        testUtil.executeGenerateDocumentTest("57", "C", "Notice of the hearing at which your application will be", true);
     }
 
     @After

@@ -37,7 +37,7 @@ public class DocMosisScotPart12ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_102() throws Exception {
-        testUtil.executeGenerateDocumentTest("102", "", "RECONSIDERATION OF JUDGMENT \\(TRIBUNAL ON ITS OWN INITIATIVE\\)", true);
+        testUtil.executeGenerateDocumentTest("102", "", "RECONSIDERATION OF JUDGMENT", true);
     }
 
     @Test

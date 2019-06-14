@@ -90,7 +90,7 @@ public class DocMosisScotPart14ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_121() throws Exception {
-        testUtil.executeGenerateDocumentTest("121", "", "TRANSFER OF PROCEEDINGS FROM SCOTLAND TO England and Wales", true);
+        testUtil.executeGenerateDocumentTest("121", "", "TRANSFER OF PROCEEDINGS FROM SCOTLAND", true);
     }
 
     @Test
@@ -235,7 +235,7 @@ public class DocMosisScotPart14ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_146() throws Exception {
-        testUtil.executeGenerateDocumentTest("146", "", "The Employment Tribunals (Enforcement of Orders in Other Jurisdictions)", true);
+        testUtil.executeGenerateDocumentTest("146", "", "Enforcement of Orders in Other Jurisdictions", true);
     }
 
     @Test
@@ -265,7 +265,7 @@ public class DocMosisScotPart14ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_152() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "Covering Message", true);
+        testUtil.executeGenerateDocumentTest("152", "", "Covering Message", true);
     }
 
     @After

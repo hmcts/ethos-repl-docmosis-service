@@ -27,7 +27,7 @@ public class DocMosisScotPart11ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_92_A() throws Exception {
-        testUtil.executeGenerateDocumentTest("92", "A", "\\[Insert judgment details\\]", true);
+        testUtil.executeGenerateDocumentTest("92", "A", "Insert judgment details", true);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class DocMosisScotPart11ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_98() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "GUIDANCE NOTE IN DISCRIMINATION CASES", true);
+        testUtil.executeGenerateDocumentTest("98", "", "GUIDANCE NOTE IN DISCRIMINATION CASES", true);
     }
 
 

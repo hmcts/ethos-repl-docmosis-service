@@ -57,7 +57,7 @@ public class DocMosisScotPart2ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_14_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("", "", "ACCEPTANCE OF ADDITIONAL PART OF CLAIM", true);
+        testUtil.executeGenerateDocumentTest("14", "A", "ACCEPTANCE OF ADDITIONAL PART OF CLAIM", true);
     }
 
     @After

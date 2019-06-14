@@ -47,32 +47,32 @@ public class DocMosisPart13ComponentTest {
 
     @Test
     public void generateDocument_Part13_3C() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "3C", "Thank you for your letter dated \\[insert date\\],  the contents of which are noted");
+        testUtil.executeGenerateDocumentTest("13", "3C", "Thank you for your letter dated");
     }
 
     @Test
     public void generateDocument_Part13_3R() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "3R", "Thank you for your letter dated \\[insert date\\], the contents of which are noted");
+        testUtil.executeGenerateDocumentTest("13", "3R", "Thank you for your letter dated");
     }
 
     @Test
     public void generateDocument_Part13_4C() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "4C", "Please let me have your reply in writing by \\[insert reply date\\]");
+        testUtil.executeGenerateDocumentTest("13", "4C", "Please let me have your reply in writing by");
     }
 
     @Test
     public void generateDocument_Part13_4R() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "4R", "Please let me have your reply in writing by \\[insert reply date\\]");
+        testUtil.executeGenerateDocumentTest("13", "4R", "Please let me have your reply in writing by");
     }
 
     @Test
     public void generateDocument_Part13_5C() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "5C", "Employment Judge \\[Judge surname\\] has asked for your comments on the enclosed letter");
+        testUtil.executeGenerateDocumentTest("13", "5C", "has asked for your comments on the enclosed letter");
     }
 
     @Test
     public void generateDocument_Part13_5R() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "5R", "Employment Judge \\[Judge surname\\] has asked for your comments on the enclosed letter");
+        testUtil.executeGenerateDocumentTest("13", "5R", "has asked for your comments on the enclosed letter");
     }
 
     @Test
