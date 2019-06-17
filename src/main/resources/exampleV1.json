@@ -8,6 +8,7 @@
       "caseAssignee": "Case Assignee",
       "caseNote": "Example note",
       "caseType": "Single",
+      "claimant_TypeOfClaimant" : "Individual",
       "claimantCollection": [
         {
           "id": "1121212121",

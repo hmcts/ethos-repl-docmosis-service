@@ -115,11 +115,11 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00027.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"Claimant_name\":\"Orlando LTD\",\n" +
+                "\"claimant_full_name\":\"Orlando LTD\",\n" +
+                "\"claimant_rep_full_name\":\"Orlando LTD\",\n" +
                 "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Claimant_name\":\"Mr A Rodriguez\",\n" +
-                "\"claimant_full_name\":\"Mr A Rodriguez\",\n" +
-                "\"claimant_rep_full_name\":\"Mr A Rodriguez\",\n" +
                 "\"Claimant\":\"Mr A Rodriguez\",\n" +
                 "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
                 "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
@@ -130,11 +130,11 @@ public class HelperTest {
                 "\"respondent_reference\":\"1111111\",\n" +
                 "\"respondent_rep_reference\":\"1111111\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
-                "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_Date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
-                "\"Hearing_Date_Time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
-                "\"hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
+                "\"hearing_date\":\"\",\n" +
+                "\"Hearing_Date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_Date_Time\":\"\",\n" +
+                "\"hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"hearing_address\":\"Manchester\",\n" +
                 "\"Hearing_Address\":\"Manchester\",\n" +
@@ -166,11 +166,11 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00028.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"Claimant_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_rep_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
+                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
                 "\"Respondent_name\":\"Francisco\",\n" +
                 "\"respondent_full_name\":\"Francisco\",\n" +
@@ -488,17 +488,17 @@ public class HelperTest {
                 "\"templateName\":\".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"Court_Address\":\"null\",\n" +
-                "\"Court_Telephone\":\"null\",\n" +
-                "\"Court_Fax\":\"null\",\n" +
-                "\"Court_DX\":\"null\",\n" +
-                "\"Court_Email\":\"null\",\n" +
+                "\"Court_Address\":\"\",\n" +
+                "\"Court_Telephone\":\"\",\n" +
+                "\"Court_Fax\":\"\",\n" +
+                "\"Court_DX\":\"\",\n" +
+                "\"Court_Email\":\"\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"null\",\n" +
+                "\"Clerk\":\"\",\n" +
                 "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"Case_No\":\"null\",\n" +
+                "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
         assertEquals(Helper.buildDocumentContent(caseDetailsEmpty, "").toString(), result);
@@ -563,11 +563,11 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-SCO-ENG-00043.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"Claimant_name\":\"Orlando LTD\",\n" +
+                "\"claimant_full_name\":\"Orlando LTD\",\n" +
+                "\"claimant_rep_full_name\":\"Orlando LTD\",\n" +
                 "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Claimant_name\":\"Mr A Rodriguez\",\n" +
-                "\"claimant_full_name\":\"Mr A Rodriguez\",\n" +
-                "\"claimant_rep_full_name\":\"Mr A Rodriguez\",\n" +
                 "\"Claimant\":\"Mr A Rodriguez\",\n" +
                 "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
                 "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
@@ -614,11 +614,11 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-SCO-ENG-00044.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"Claimant_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_rep_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
+                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
                 "\"Respondent_name\":\"string\",\n" +
                 "\"respondent_full_name\":\"string\",\n" +
@@ -713,17 +713,17 @@ public class HelperTest {
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"t_Scot_" + part + "\":\"true\",\n" +
-                "\"Court_Address\":\"null\",\n" +
-                "\"Court_Telephone\":\"null\",\n" +
-                "\"Court_Fax\":\"null\",\n" +
-                "\"Court_DX\":\"null\",\n" +
-                "\"Court_Email\":\"null\",\n" +
+                "\"Court_Address\":\"\",\n" +
+                "\"Court_Telephone\":\"\",\n" +
+                "\"Court_Fax\":\"\",\n" +
+                "\"Court_DX\":\"\",\n" +
+                "\"Court_Email\":\"\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot"+ part +"_schmcts\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"null\",\n" +
+                "\"Clerk\":\"\",\n" +
                 "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"Case_No\":\"null\",\n" +
+                "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
     }

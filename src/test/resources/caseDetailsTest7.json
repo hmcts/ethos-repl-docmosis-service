@@ -8,6 +8,7 @@
     "ethosCaseReference" : "123456",
     "multipleOthers" : "no",
     "claimantRepresentedQuestion" : "no",
+    "claimant_TypeOfClaimant" : "Individual",
     "NH_JudgementType": {
       "NH_JudgementDecision": "guilty",
       "NH_JudgementTextArea": "guilty"
