@@ -2,10 +2,10 @@
   "token": "Bearer authToken",
   "event_id": "123456789",
   "case_details": {
-    "id": 1560768316926932,
+    "id": 1560425118224822,
     "jurisdiction": "EMPLOYMENT",
     "state": "1_Submitted",
-    "case_type_id": "EmpTrib_MVP_1.0_Manc",
+    "case_type_id": "EmpTrib_MVP_1.0_Glas",
     "security_classification": "PUBLIC",
     "case_data": {
       "claimantWorkAddress": {
@@ -18,11 +18,11 @@
         }
       },
       "claimantRepresentedQuestion": "Yes",
-      "receiptDate": "2019-05-20",
+      "receiptDate": "2019-05-25",
       "respondentSumType": {
         "respondent_name": "Roadshow Pictures",
         "respondent_ACAS_question": "Yes",
-        "respondent_ACAS": "33453454984",
+        "respondent_ACAS": "83473985749",
         "respondent_address": {
           "AddressLine1": "Library & Community Centre",
           "AddressLine2": "1 Artizan Street",
@@ -35,9 +35,13 @@
         "claimant_employed_currently": "No",
         "claimant_disabled": "No"
       },
+      "correspondenceScotType": {
+        "topLevel_Scot_Documents": "#TOPLEVEL#",
+        "part_1_Scot_Documents": "#VERSION#"
+      },
       "caseType": "Single",
-      "feeGroupReference": "389437598959",
-      "ethosCaseReference": "20 7254687 1234",
+      "feeGroupReference": "395873459878",
+      "ethosCaseReference": "20 7254687 6433",
       "claimantType": {
         "claimant_addressUK": {
           "AddressLine1": "232 Petticoat Square",
@@ -55,17 +59,14 @@
       "claimant_TypeOfClaimant": "Individual",
       "representativeClaimantType": {
         "name_of_representative": "Danny Devito",
-        "name_of_organisation": "Devito Practice",
+        "name_of_organisation": "Devito Practice Ltd",
+        "representative_occupation": "Solicitor",
         "representative_address": {
           "AddressLine1": "5 BuntingBridge Road",
           "PostTown": "Ilford",
           "PostCode": "IG2 7LW",
           "Country": "United Kingdom"
         }
-      },
-      "correspondenceType": {
-        "topLevel_Documents": "#TOPLEVEL#",
-        "part_1_Documents": "#VERSION#"
       }
     },
     "data_classification": {
@@ -111,6 +112,13 @@
           "claimant_disabled": "PUBLIC"
         }
       },
+      "correspondenceScotType": {
+        "classification": "PUBLIC",
+        "value": {
+          "topLevel_Scot_Documents": "PUBLIC",
+          "part_1_Scot_Documents": "PUBLIC"
+        }
+      },
       "caseType": "PUBLIC",
       "feeGroupReference": "PUBLIC",
       "ethosCaseReference": "PUBLIC",
@@ -143,6 +151,7 @@
         "value": {
           "name_of_representative": "PUBLIC",
           "name_of_organisation": "PUBLIC",
+          "representative_occupation": "PUBLIC",
           "representative_address": {
             "classification": "PUBLIC",
             "value": {
@@ -153,17 +162,10 @@
             }
           }
         }
-      },
-      "correspondenceType": {
-        "classification": "PUBLIC",
-        "value": {
-          "topLevel_Documents": "PUBLIC",
-          "part_1_Documents": "PUBLIC"
-        }
       }
     },
     "after_submit_callback_response": {
-      "confirmation_header": "Please download the document from : <a target=\"_blank\" href=\"http://127.0.0.1:3453/documents/9985f7d3-db72-4d9a-8b79-300dcc7b5d98/binary\">Document</a>",
+      "confirmation_header": "Please download the document from : <a target=\"_blank\" href=\"http://127.0.0.1:3453/documents/e8c67761-a783-4d97-aeb7-929878faa03b/binary\">Document</a>",
       "confirmation_body": null
     },
     "callback_response_status_code": 200,
@@ -213,6 +215,13 @@
           "claimant_disabled": "PUBLIC"
         }
       },
+      "correspondenceScotType": {
+        "classification": "PUBLIC",
+        "value": {
+          "topLevel_Scot_Documents": "PUBLIC",
+          "part_1_Scot_Documents": "PUBLIC"
+        }
+      },
       "caseType": "PUBLIC",
       "feeGroupReference": "PUBLIC",
       "ethosCaseReference": "PUBLIC",
@@ -245,6 +254,7 @@
         "value": {
           "name_of_representative": "PUBLIC",
           "name_of_organisation": "PUBLIC",
+          "representative_occupation": "PUBLIC",
           "representative_address": {
             "classification": "PUBLIC",
             "value": {
@@ -254,13 +264,6 @@
               "Country": "PUBLIC"
             }
           }
-        }
-      },
-      "correspondenceType": {
-        "classification": "PUBLIC",
-        "value": {
-          "topLevel_Documents": "PUBLIC",
-          "part_1_Documents": "PUBLIC"
         }
       }
     }

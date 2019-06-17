@@ -42,22 +42,22 @@ public class DocMosisComponentTest {
 
     @Test
     public void verify_payload_sco_claimant_individual_not_represented() throws Exception {
-        testUtil.verifyDocMosisPayload("1", "1", false, Constants.TEST_DATA_CASE5);
+        testUtil.verifyDocMosisPayload("1", "", true, Constants.TEST_DATA_SCOT_CASE1);
     }
 
     @Test
     public void verify_payload_sco_claimant_company_not_represented() throws Exception {
-        testUtil.verifyDocMosisPayload("1", "1", false, Constants.TEST_DATA_CASE6);
+        testUtil.verifyDocMosisPayload("1", "", true, Constants.TEST_DATA_SCOT_CASE2);
     }
 
     @Test
     public void verify_payload_sco_claimant_individual_represented() throws Exception {
-        testUtil.verifyDocMosisPayload("1", "1", false, Constants.TEST_DATA_CASE7);
+        testUtil.verifyDocMosisPayload("1", "", true, Constants.TEST_DATA_SCOT_CASE3);
     }
 
     @Test
     public void verify_payload_sco_respondant_represented() throws Exception {
-        testUtil.verifyDocMosisPayload("1", "1", false, Constants.TEST_DATA_CASE8);
+        testUtil.verifyDocMosisPayload("1", "", true, Constants.TEST_DATA_SCOT_CASE4);
     }
 
     @After
