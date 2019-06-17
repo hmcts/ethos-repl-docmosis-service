@@ -13,6 +13,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.test.util.TestUtil;
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
 @WithTags({
+        @WithTag("ComponentTest"),
         @WithTag("FunctionalTest")
 })
 public class DocMosisPart1ComponentTest {

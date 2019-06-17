@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.test;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.WithTag;
+import net.thucydides.core.annotations.WithTags;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +13,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.test.util.TestUtil;
 
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
+@WithTags({
+        @WithTag("ComponentTest")
+})
 public class DocMosisComponentTest {
 
     private TestUtil testUtil;
