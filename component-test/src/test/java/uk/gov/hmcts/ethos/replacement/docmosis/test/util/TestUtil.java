@@ -66,6 +66,8 @@ public class TestUtil {
         CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel, isScotland, testDataFile);
 
         Response response = getResponse(ccdRequest);
+        String url = ResponseUtil.getUrlFromResponse(response);
+        String downloadedFilePath = FileUtil.downloadFileFromUrl(url, authToken);
 
         String actualPayload = LogUtil.getDocMosisPayload();
         actualPayload = actualPayload.substring(0, actualPayload.lastIndexOf(',')) + "}}";
