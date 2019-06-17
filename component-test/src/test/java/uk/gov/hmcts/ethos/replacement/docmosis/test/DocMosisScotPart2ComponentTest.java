@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.test;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.WithTag;
+import net.thucydides.core.annotations.WithTags;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +12,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.test.util.TestUtil;
 
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
+@WithTags({
+        @WithTag("ComponentTest"),
+        @WithTag("FunctionalTest")
+})
 public class DocMosisScotPart2ComponentTest {
 
 
@@ -21,6 +27,7 @@ public class DocMosisScotPart2ComponentTest {
     }
 
     @Test
+    @WithTag("SmokeTest")
     public void generateDocument_Part_Scot_8() throws Exception {
         testUtil.executeGenerateDocumentTest("8", "", "EXTENSION OF TIME FOR RESPONSE GRANTED", true);
     }

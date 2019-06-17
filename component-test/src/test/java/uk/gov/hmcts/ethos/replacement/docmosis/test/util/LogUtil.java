@@ -30,7 +30,7 @@ public class LogUtil {
     public static List<String> getLogs(String containerName) throws IOException {
         // run the Unix "ps -ef" command
         // using the Runtime exec method:
-        Process p = Runtime.getRuntime().exec("docker logs --since=20s " + containerName);
+        Process p = Runtime.getRuntime().exec("docker logs --since=30s " + containerName);
 
         BufferedReader stdInput = new BufferedReader(new
                 InputStreamReader(p.getInputStream()));

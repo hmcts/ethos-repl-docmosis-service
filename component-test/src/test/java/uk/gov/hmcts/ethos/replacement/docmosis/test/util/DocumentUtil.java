@@ -2,11 +2,13 @@ package uk.gov.hmcts.ethos.replacement.docmosis.test.util;
 
 import uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.CaseDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.types.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -44,10 +46,10 @@ public class DocumentUtil {
         sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts\":\"")
                 .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
 
-        sb.append("\"Clerk\":\"").append(caseData.getClerkResponsible()).append(NEW_LINE);
+        sb.append("\"Clerk\":\"").append(nullCheck(caseData.getClerkResponsible())).append(NEW_LINE);
         sb.append("\"TODAY_DATE\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
         sb.append("\"TodayPlus28Days\":\"").append(formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
-        sb.append("\"Case_No\":\"").append(caseDetails.getCaseData().getEthosCaseReference()).append(NEW_LINE);
+        sb.append("\"Case_No\":\"").append(nullCheck(caseDetails.getCaseData().getEthosCaseReference())).append(NEW_LINE);
 
         sb.append("}\n");
         sb.append("}\n");
@@ -76,12 +78,11 @@ public class DocumentUtil {
             sb.append("\"Claimant_name\": \"" + representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"claimant_full_name\": \"" + representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"claimant_rep_full_name\": \"" + representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"Claimant\": \"" + representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"Claimant\": \"" + caseData.getClaimantIndType().claimantFullName()).append(NEW_LINE);
             //sb.append("\"claimant_email_address\": \"").append(NEW_LINE);
         } else {
             ClaimantType claimantType = caseData.getClaimantType();
             ClaimantIndType claimantIndType = caseData.getClaimantIndType();
-            ClaimantOtherType claimantOtherType = caseData.getClaimantOtherType();
 
             sb.append("\"claimant_addressUK\": \"" + claimantType.getClaimantAddressUK()).append(NEW_LINE);
             String typeOfClaimant = caseData.getClaimantTypeOfClaimant();
@@ -102,16 +103,21 @@ public class DocumentUtil {
 
     private static StringBuilder getRespondentData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
-        RepresentedTypeR representedTypeR = caseData.getRepresentativeRespondentType();
-        if (representedTypeR != null) {
+
+        RespondentSumType respondentType = caseData.getRespondentSumType();
+
+        List<RepresentedTypeRItem> representedTypeRList = caseData.getRepCollection();
+        if (representedTypeRList != null && !representedTypeRList.isEmpty()) {
+            RepresentedTypeR representedTypeR = representedTypeRList.get(0).getValue();
             //sb.append("\"respondent_email_address\": \"\",");
             sb.append("\"Respondent_name\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"respondent_full_name\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"respondent_representative\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"respondent_rep_full_name\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"respondent_addressUK\": \"" + representedTypeR.getRepresentativeAddress()).append(NEW_LINE);
-            sb.append("\"respondent_rep_addressUK\": \"" + representedTypeR.getRepresentativeAddress()).append(NEW_LINE);
+            sb.append("\"respondent_reference\": \"" + nullCheck(representedTypeR.getRepresentativeReference())).append(NEW_LINE);
+            sb.append("\"respondent_rep_reference\": \"" + nullCheck(representedTypeR.getRepresentativeReference())).append(NEW_LINE);
         } else {
-            RespondentSumType respondentType = caseData.getRespondentSumType();
 
             sb.append("\"Respondent_name\": \"" + respondentType.getRespondentName()).append(NEW_LINE);
             sb.append("\"respondent_full_name\": \"" + respondentType.getRespondentName()).append(NEW_LINE);
@@ -128,9 +134,9 @@ public class DocumentUtil {
                     .collect(Collectors.toList());
             sb.append("\"resp_others\":\"").append(String.join(", ", respOthers)).append(NEW_LINE);
         }
-        if (representedTypeR != null) {
-            sb.append("\"Respondent\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
-        }
+
+        if (respondentType != null) sb.append("\"Respondent\": \"" + respondentType.getRespondentName()).append(NEW_LINE);
+
         return sb;
     }
 
@@ -248,11 +254,15 @@ public class DocumentUtil {
 
     private static StringBuilder getCourtData() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\"Court_Address\":\"").append("13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU").append(NEW_LINE);
-        sb.append("\"Court_Telephone\":\"").append("0121 600 7780").append(NEW_LINE);
-        sb.append("\"Court_Fax\":\"").append("01264 347 999").append(NEW_LINE);
-        sb.append("\"Court_DX\":\"").append("123456789").append(NEW_LINE);
-        sb.append("\"Court_Email\":\"").append("ManchesterOfficeET@hmcts.gov.uk").append(NEW_LINE);
+        sb.append("\"Court_Address\":\"").append(NEW_LINE);
+        sb.append("\"Court_Telephone\":\"").append(NEW_LINE);
+        sb.append("\"Court_Fax\":\"").append(NEW_LINE);
+        sb.append("\"Court_DX\":\"").append(NEW_LINE);
+        sb.append("\"Court_Email\":\"").append(NEW_LINE);
         return sb;
+    }
+
+    private static String nullCheck(String input) {
+        return Objects.toString(input, "");
     }
 }

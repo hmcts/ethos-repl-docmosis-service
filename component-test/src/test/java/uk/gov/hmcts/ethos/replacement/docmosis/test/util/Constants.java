@@ -14,7 +14,7 @@ public class Constants {
     public static final String TEST_DATA_CASE3 = "src/test/resources/testData/caseDetailsTest3.json";
     public static final String TEST_DATA_CASE4 = "src/test/resources/testData/caseDetailsTest4.json";
     public static final String TEST_DATA_SCOT_CASE1 = "src/test/resources/testData/caseDetailsScotTest1.json";
-    public static final String TEST_DATA_SCOT_CASE2 = "src/test/resources/testData/caseDetailsScotTest3.json";
+    public static final String TEST_DATA_SCOT_CASE2 = "src/test/resources/testData/caseDetailsScotTest2.json";
     public static final String TEST_DATA_SCOT_CASE3 = "src/test/resources/testData/caseDetailsScotTest3.json";
     public static final String TEST_DATA_SCOT_CASE4 = "src/test/resources/testData/caseDetailsScotTest4.json";
 }

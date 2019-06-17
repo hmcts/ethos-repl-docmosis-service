@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.test;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.WithTag;
+import net.thucydides.core.annotations.WithTags;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +12,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.test.util.TestUtil;
 
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
+@WithTags({
+        @WithTag("ComponentTest"),
+        @WithTag("FunctionalTest")
+})
 public class DocMosisScotPart11ComponentTest {
 
 
@@ -21,6 +27,7 @@ public class DocMosisScotPart11ComponentTest {
     }
 
     @Test
+    @WithTag("SmokeTest")
     public void generateDocument_Part_Scot_92() throws Exception {
         testUtil.executeGenerateDocumentTest("92", "", "EMPLOYMENT TRIBUNAL JUDGMENT", true);
     }

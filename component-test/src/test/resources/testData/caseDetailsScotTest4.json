@@ -34,7 +34,7 @@
         "claimant_disabled": "No"
       },
       "correspondenceScotType": {
-        "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-000#TOPLEVEL#",
+        "topLevel_Scot_Documents": "#TOPLEVEL#",
         "part_1_Scot_Documents": "#VERSION#"
       },
       "caseType": "Single",
