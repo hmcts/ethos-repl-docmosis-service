@@ -1,0 +1,64 @@
+---
+version: '2.1'
+
+services:
+  ccd-case-management-web:
+    image: "${CCD_CASE_MANAGEMENT_WEB_USE_LOCAL-hmcts.azurecr.io/}hmcts/ccd-case-management-web:${CCD_CASE_MANAGEMENT_WEB_TAG:-latest}"
+    mem_limit: 500M
+    mem_reservation: 100M
+    container_name: ccd-case-management-web
+    environment:
+      IDAM_LOGIN_URL: https://localhost:3501/login
+      CCD_GATEWAY_BASE_URL: http://localhost:3453
+      CCD_ACTIVITY_BASE_URL:
+      DM_GATEWAY_BASE_URL: https://api-gateway.dev.dm.reform.hmcts.net
+      OAUTH2_CLIENT_ID: ccd_gateway
+    ports:
+      - 3451:3451
+    depends_on:
+      - ccd-api-gateway
+
+  ccd-api-gateway:
+    image: "${CCD_API_GATEWAY_USE_LOCAL-hmcts.azurecr.io/}hmcts/ccd-api-gateway-web:${CCD_API_GATEWAY_TAG:-latest}"
+    mem_limit: 100M
+    mem_reservation: 80M
+    container_name: ccd-api-gateway
+    environment:
+      IDAM_BASE_URL: http://idam-api:8080
+      IDAM_USER_URL: http://idam-api:8080
+      IDAM_S2S_URL: http://service-auth-provider-api:8080
+      IDAM_SERVICE_KEY: "${IDAM_KEY_CCD_GATEWAY}"
+      IDAM_OAUTH2_LOGOUT_ENDPOINT: http://idam-api:8080/session/:token
+      IDAM_OAUTH2_CLIENT_ID: ccd_gateway
+      IDAM_OAUTH2_CLIENT_SECRET: "${OAUTH2_CLIENT_CCD_GATEWAY}"
+      IDAM_OAUTH2_TOKEN_ENDPOINT: http://idam-api:8080/oauth2/token
+      ADDRESS_LOOKUP_TOKEN:
+      PROXY_AGGREGATED: http://ccd-data-store-api:4452
+      PROXY_DATA: http://ccd-data-store-api:4452
+      PROXY_DEFINITION_IMPORT: http://ccd-definition-store-api:4451
+      PROXY_DEFINITION_DATA: http://ccd-definition-store-api:4451/api/data
+      PROXY_DEFINITION_DISPLAY: http://ccd-definition-store-api:4451/api/display
+      APPINSIGHTS_INSTRUMENTATIONKEY: key
+    ports:
+      - 3453:3453
+    depends_on:
+      - ccd-user-profile-api
+      - ccd-definition-store-api
+      - ccd-data-store-api
+
+  authentication-web:
+    image: hmcts.azurecr.io/hmcts/tidam-authentication-web:latest
+    mem_limit: 50M
+    mem_reservation: 40M
+    environment:
+     IDAM_API_URL: http://idam-api:8080
+     IDAM_CONTINUE_URL_VALIDATOR_ENFORCE_TLS: "false"
+     REFORM_SERVICE_NAME: idam-api
+     REFORM_TEAM: idam
+     REFORM_ENVIRONMENT: local
+    ports:
+      - 3501:8000
+    links:
+      - idam-api
+    depends_on:
+      - idam-api
