@@ -18,18 +18,27 @@ public class DefaultValuesReaderServiceTest {
     private DefaultValuesReaderService defaultValuesReaderService;
 
     private DefaultValues preDefaultValues;
-    private DefaultValues postDefaultValues;
+    private DefaultValues postDefaultValuesManchester;
+    private DefaultValues postDefaultValuesGlasgow;
 
     @Before
     public void setUp() {
         preDefaultValues = DefaultValues.builder().claimantTypeOfClaimant("Individual").build();
-        postDefaultValues = DefaultValues.builder()
+        postDefaultValuesManchester = DefaultValues.builder()
                 .positionType("Awaiting ET3")
-                .tribunalCorrespondenceAddress("35 La Nava S3 6AD, Southampton")
-                .tribunalCorrespondenceTelephone("3577131270")
-                .tribunalCorrespondenceFax("7577126570")
-                .tribunalCorrespondenceDX("123456")
-                .tribunalCorrespondenceEmail("manchester@gmail.com")
+                .tribunalCorrespondenceAddress("Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA")
+                .tribunalCorrespondenceTelephone("0161 833 6100")
+                .tribunalCorrespondenceFax("0870 739 4433")
+                .tribunalCorrespondenceDX("DX 743570")
+                .tribunalCorrespondenceEmail("Manchesteret@justice.gov.uk")
+                .build();
+        postDefaultValuesGlasgow = DefaultValues.builder()
+                .positionType("Awaiting ET3")
+                .tribunalCorrespondenceAddress("Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS")
+                .tribunalCorrespondenceTelephone("0141 204 0730")
+                .tribunalCorrespondenceFax("01264 785 177")
+                .tribunalCorrespondenceDX("DX 7435701")
+                .tribunalCorrespondenceEmail("glasgowet@justice.gov.uk")
                 .build();
     }
 
@@ -40,8 +49,14 @@ public class DefaultValuesReaderServiceTest {
     }
 
     @Test
-    public void getPostDefaultValues() {
+    public void getManchesterPostDefaultValues() {
         DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(DefaultValuesReaderService.POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID);
-        assertEquals(postDefaultValues, postDefaultValues1);
+        assertEquals(postDefaultValuesManchester, postDefaultValues1);
+    }
+
+    @Test
+    public void getGlasgowPostDefaultValues() {
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(DefaultValuesReaderService.POST_DEFAULT_XLSX_FILE_PATH, GLASGOW_CASE_TYPE_ID);
+        assertEquals(postDefaultValuesGlasgow, postDefaultValues1);
     }
 }
