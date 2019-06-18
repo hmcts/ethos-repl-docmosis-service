@@ -58,7 +58,7 @@ public class HelperTest {
 
     @Test
     public void buildDocumentContent1() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00026.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -105,12 +105,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails1, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails1, "").toString());
     }
 
     @Test
     public void buildDocumentContent2() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00027.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -118,9 +118,9 @@ public class HelperTest {
                 "\"Claimant_name\":\"Orlando LTD\",\n" +
                 "\"claimant_full_name\":\"Orlando LTD\",\n" +
                 "\"claimant_rep_full_name\":\"Orlando LTD\",\n" +
+                "\"Claimant\":\"Orlando LTD\",\n" +
                 "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Claimant\":\"Mr A Rodriguez\",\n" +
                 "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
                 "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
                 "\"respondent_representative\":\"RepresentativeNameRespondent\",\n" +
@@ -156,12 +156,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails2, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails2, "").toString());
     }
 
     @Test
     public void buildDocumentContent3() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00028.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -169,9 +169,9 @@ public class HelperTest {
                 "\"Claimant_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_rep_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
                 "\"Respondent_name\":\"Francisco\",\n" +
                 "\"respondent_full_name\":\"Francisco\",\n" +
                 "\"respondent_rep_full_name\":\"Francisco\",\n" +
@@ -193,12 +193,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails3, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails3, "").toString());
     }
 
     @Test
     public void buildDocumentContent4() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00029.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -233,12 +233,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails4, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails4, "").toString());
     }
 
     @Test
     public void buildDocumentContent5() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00030.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -276,12 +276,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails5, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails5, "").toString());
     }
 
     @Test
     public void buildDocumentContent6() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00031.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -319,12 +319,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails6, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails6, "").toString());
     }
 
     @Test
     public void buildDocumentContent7() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00032.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -374,12 +374,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails7, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails7, "").toString());
     }
 
     @Test
     public void buildDocumentContent8() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00033.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -426,12 +426,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails8, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails8, "").toString());
     }
 
     @Test
     public void buildDocumentContent9() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00034.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -478,12 +478,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails9, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails9, "").toString());
     }
 
     @Test
     public void buildDocumentWithNotContent() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -501,12 +501,12 @@ public class HelperTest {
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetailsEmpty, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsEmpty, "").toString());
     }
 
     @Test
     public void buildDocumentContentScot1() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-SCO-ENG-00042.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -553,12 +553,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetailsScot1, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot1, "").toString());
     }
 
     @Test
     public void buildDocumentContentScot2() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-SCO-ENG-00043.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -566,9 +566,9 @@ public class HelperTest {
                 "\"Claimant_name\":\"Orlando LTD\",\n" +
                 "\"claimant_full_name\":\"Orlando LTD\",\n" +
                 "\"claimant_rep_full_name\":\"Orlando LTD\",\n" +
+                "\"Claimant\":\"Orlando LTD\",\n" +
                 "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Claimant\":\"Mr A Rodriguez\",\n" +
                 "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
                 "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
                 "\"respondent_representative\":\"RepresentativeNameRespondent\",\n" +
@@ -604,12 +604,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetailsScot2, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot2, "").toString());
     }
 
     @Test
     public void buildDocumentContentScot3() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-SCO-ENG-00044.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -617,9 +617,9 @@ public class HelperTest {
                 "\"Claimant_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_rep_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
                 "\"Respondent_name\":\"string\",\n" +
                 "\"respondent_full_name\":\"string\",\n" +
                 "\"respondent_rep_full_name\":\"string\",\n" +
@@ -641,7 +641,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetailsScot3, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot3, "").toString());
     }
 
     @Test
@@ -703,7 +703,7 @@ public class HelperTest {
         correspondenceScotType.setPart16ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
     }
 
     private String getJson(String topLevel, String part) {
