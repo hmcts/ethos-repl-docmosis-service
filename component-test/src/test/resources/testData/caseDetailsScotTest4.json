@@ -1,0 +1,286 @@
+{
+  "token": "Bearer authToken",
+  "event_id": "123456789",
+  "case_details": {
+    "id": 1560766750336055,
+    "jurisdiction": "EMPLOYMENT",
+    "state": "1_Submitted",
+    "case_type_id": "EmpTrib_MVP_1.0_Glas",
+    "security_classification": "PUBLIC",
+    "case_data": {
+      "claimantWorkAddress": {
+        "claimant_work_address": {
+          "AddressLine1": "54 Princes St",
+          "PostTown": "Edinburgh",
+          "PostCode": "EH2 2SB",
+          "Country": "United Kingdom"
+        }
+      },
+      "claimantRepresentedQuestion": "No",
+      "receiptDate": "2019-05-20",
+      "respondentSumType": {
+        "respondent_name": "Natwest Ltd",
+        "respondent_ACAS_question": "Yes",
+        "respondent_ACAS": "33453454984",
+        "respondent_address": {
+          "AddressLine1": "54 Princes St",
+          "PostTown": "Edinburgh",
+          "PostCode": "EH2 2SB",
+          "Country": "United Kingdom"
+        }
+      },
+      "claimantOtherType": {
+        "claimant_employed_currently": "No",
+        "claimant_disabled": "No"
+      },
+      "correspondenceScotType": {
+        "topLevel_Scot_Documents": "#TOPLEVEL#",
+        "part_1_Scot_Documents": "#VERSION#"
+      },
+      "caseType": "Single",
+      "feeGroupReference": "398839583988",
+      "ethosCaseReference": "20 7254687 6435",
+      "claimantType": {
+        "claimant_addressUK": {
+          "AddressLine1": "93 Princes St",
+          "PostTown": "Edinburgh",
+          "PostCode": "EH2 2ER",
+          "Country": "United Kingdom"
+        }
+      },
+      "claimantIndType": {
+        "claimant_title1": "Mr",
+        "claimant_first_names": "George",
+        "claimant_last_name": "Bernardshaw",
+        "claimant_date_of_birth": "1945-10-21",
+        "claimant_gender": "Male"
+      },
+      "claimant_TypeOfClaimant": "Individual",
+      "repCollection": [
+        {
+          "value": {
+            "resp_rep_name": "Natwest Ltd",
+            "name_of_representative": "Danny Devito",
+            "name_of_organisation": "Thompsons Solicitors Scotland",
+            "representative_occupation": "Solicitor",
+            "representative_address": {
+              "AddressLine1": "20 Castle St,",
+              "PostTown": "Edinburgh",
+              "PostCode": "EH2 3AT",
+              "Country": "United Kingdom"
+            }
+          },
+          "id": "2104c1f9-89bf-421d-820a-2f4bcc16b947"
+        }
+      ]
+    },
+    "data_classification": {
+      "claimantWorkAddress": {
+        "classification": "PUBLIC",
+        "value": {
+          "claimant_work_address": {
+            "classification": "PUBLIC",
+            "value": {
+              "AddressLine1": "PUBLIC",
+              "PostTown": "PUBLIC",
+              "PostCode": "PUBLIC",
+              "Country": "PUBLIC"
+            }
+          }
+        }
+      },
+      "claimantRepresentedQuestion": "PUBLIC",
+      "receiptDate": "PUBLIC",
+      "respondentSumType": {
+        "classification": "PUBLIC",
+        "value": {
+          "respondent_name": "PUBLIC",
+          "respondent_ACAS_question": "PUBLIC",
+          "respondent_ACAS": "PUBLIC",
+          "respondent_address": {
+            "classification": "PUBLIC",
+            "value": {
+              "AddressLine1": "PUBLIC",
+              "PostTown": "PUBLIC",
+              "PostCode": "PUBLIC",
+              "Country": "PUBLIC"
+            }
+          }
+        }
+      },
+      "claimantOtherType": {
+        "classification": "PUBLIC",
+        "value": {
+          "claimant_employed_currently": "PUBLIC",
+          "claimant_disabled": "PUBLIC"
+        }
+      },
+      "correspondenceScotType": {
+        "classification": "PUBLIC",
+        "value": {
+          "topLevel_Scot_Documents": "PUBLIC",
+          "part_1_Scot_Documents": "PUBLIC"
+        }
+      },
+      "caseType": "PUBLIC",
+      "feeGroupReference": "PUBLIC",
+      "ethosCaseReference": "PUBLIC",
+      "claimantType": {
+        "classification": "PUBLIC",
+        "value": {
+          "claimant_addressUK": {
+            "classification": "PUBLIC",
+            "value": {
+              "AddressLine1": "PUBLIC",
+              "PostTown": "PUBLIC",
+              "PostCode": "PUBLIC",
+              "Country": "PUBLIC"
+            }
+          }
+        }
+      },
+      "claimantIndType": {
+        "classification": "PUBLIC",
+        "value": {
+          "claimant_title1": "PUBLIC",
+          "claimant_first_names": "PUBLIC",
+          "claimant_last_name": "PUBLIC",
+          "claimant_date_of_birth": "PUBLIC",
+          "claimant_gender": "PUBLIC"
+        }
+      },
+      "claimant_TypeOfClaimant": "PUBLIC",
+      "repCollection": {
+        "classification": "PUBLIC",
+        "value": [
+          {
+            "value": {
+              "resp_rep_name": "PUBLIC",
+              "name_of_representative": "PUBLIC",
+              "name_of_organisation": "PUBLIC",
+              "representative_occupation": "PUBLIC",
+              "representative_address": {
+                "classification": "PUBLIC",
+                "value": {
+                  "AddressLine1": "PUBLIC",
+                  "PostTown": "PUBLIC",
+                  "PostCode": "PUBLIC",
+                  "Country": "PUBLIC"
+                }
+              }
+            },
+            "id": "2104c1f9-89bf-421d-820a-2f4bcc16b947"
+          }
+        ]
+      }
+    },
+    "after_submit_callback_response": {
+      "confirmation_header": "Please download the document from : <a target=\"_blank\" href=\"http://127.0.0.1:3453/documents/5ab95d01-d04e-43a1-aa85-5edebb2298a9/binary\">Document</a>",
+      "confirmation_body": null
+    },
+    "callback_response_status_code": 200,
+    "callback_response_status": "CALLBACK_COMPLETED",
+    "delete_draft_response_status_code": null,
+    "delete_draft_response_status": null,
+    "security_classifications": {
+      "claimantWorkAddress": {
+        "classification": "PUBLIC",
+        "value": {
+          "claimant_work_address": {
+            "classification": "PUBLIC",
+            "value": {
+              "AddressLine1": "PUBLIC",
+              "PostTown": "PUBLIC",
+              "PostCode": "PUBLIC",
+              "Country": "PUBLIC"
+            }
+          }
+        }
+      },
+      "claimantRepresentedQuestion": "PUBLIC",
+      "receiptDate": "PUBLIC",
+      "respondentSumType": {
+        "classification": "PUBLIC",
+        "value": {
+          "respondent_name": "PUBLIC",
+          "respondent_ACAS_question": "PUBLIC",
+          "respondent_ACAS": "PUBLIC",
+          "respondent_address": {
+            "classification": "PUBLIC",
+            "value": {
+              "AddressLine1": "PUBLIC",
+              "PostTown": "PUBLIC",
+              "PostCode": "PUBLIC",
+              "Country": "PUBLIC"
+            }
+          }
+        }
+      },
+      "claimantOtherType": {
+        "classification": "PUBLIC",
+        "value": {
+          "claimant_employed_currently": "PUBLIC",
+          "claimant_disabled": "PUBLIC"
+        }
+      },
+      "correspondenceScotType": {
+        "classification": "PUBLIC",
+        "value": {
+          "topLevel_Scot_Documents": "PUBLIC",
+          "part_1_Scot_Documents": "PUBLIC"
+        }
+      },
+      "caseType": "PUBLIC",
+      "feeGroupReference": "PUBLIC",
+      "ethosCaseReference": "PUBLIC",
+      "claimantType": {
+        "classification": "PUBLIC",
+        "value": {
+          "claimant_addressUK": {
+            "classification": "PUBLIC",
+            "value": {
+              "AddressLine1": "PUBLIC",
+              "PostTown": "PUBLIC",
+              "PostCode": "PUBLIC",
+              "Country": "PUBLIC"
+            }
+          }
+        }
+      },
+      "claimantIndType": {
+        "classification": "PUBLIC",
+        "value": {
+          "claimant_title1": "PUBLIC",
+          "claimant_first_names": "PUBLIC",
+          "claimant_last_name": "PUBLIC",
+          "claimant_date_of_birth": "PUBLIC",
+          "claimant_gender": "PUBLIC"
+        }
+      },
+      "claimant_TypeOfClaimant": "PUBLIC",
+      "repCollection": {
+        "classification": "PUBLIC",
+        "value": [
+          {
+            "value": {
+              "resp_rep_name": "PUBLIC",
+              "name_of_representative": "PUBLIC",
+              "name_of_organisation": "PUBLIC",
+              "representative_occupation": "PUBLIC",
+              "representative_address": {
+                "classification": "PUBLIC",
+                "value": {
+                  "AddressLine1": "PUBLIC",
+                  "PostTown": "PUBLIC",
+                  "PostCode": "PUBLIC",
+                  "Country": "PUBLIC"
+                }
+              }
+            },
+            "id": "2104c1f9-89bf-421d-820a-2f4bcc16b947"
+          }
+        ]
+      }
+    }
+  }
+}

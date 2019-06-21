@@ -1,16 +1,16 @@
-package uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items;
+package uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.items;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.DepositType;
+import uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.types.JudgementDetailsType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class DepositTypeItem {
+public class JudgementDetailsTypeItem {
 
     @JsonProperty("id")
     private String id;
     @JsonProperty("value")
-    private DepositType value;
+    private JudgementDetailsType value;
 }
