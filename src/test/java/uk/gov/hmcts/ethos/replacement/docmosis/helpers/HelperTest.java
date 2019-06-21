@@ -58,7 +58,7 @@ public class HelperTest {
 
     @Test
     public void buildDocumentContent1() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00026.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -92,10 +92,10 @@ public class HelperTest {
                 "\"hearing_duration\":\"2 days\",\n" +
                 "\"hearing_length\":\"2 days\",\n" +
                 "\"t1_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i1_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -105,22 +105,22 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails1, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails1, "").toString());
     }
 
     @Test
     public void buildDocumentContent2() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00027.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"Claimant_name\":\"Orlando LTD\",\n" +
+                "\"claimant_full_name\":\"Orlando LTD\",\n" +
+                "\"claimant_rep_full_name\":\"Orlando LTD\",\n" +
+                "\"Claimant\":\"Orlando LTD\",\n" +
                 "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Claimant_name\":\"Mr A Rodriguez\",\n" +
-                "\"claimant_full_name\":\"Mr A Rodriguez\",\n" +
-                "\"claimant_rep_full_name\":\"Mr A Rodriguez\",\n" +
-                "\"Claimant\":\"Mr A Rodriguez\",\n" +
                 "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
                 "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
                 "\"respondent_representative\":\"RepresentativeNameRespondent\",\n" +
@@ -130,11 +130,11 @@ public class HelperTest {
                 "\"respondent_reference\":\"1111111\",\n" +
                 "\"respondent_rep_reference\":\"1111111\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
-                "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_Date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
-                "\"Hearing_Date_Time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
-                "\"hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
+                "\"hearing_date\":\"\",\n" +
+                "\"Hearing_Date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_Date_Time\":\"\",\n" +
+                "\"hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"hearing_address\":\"Manchester\",\n" +
                 "\"Hearing_Address\":\"Manchester\",\n" +
@@ -143,10 +143,10 @@ public class HelperTest {
                 "\"hearing_duration\":\"2 hours\",\n" +
                 "\"hearing_length\":\"2 hours\",\n" +
                 "\"t2_2A\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i2_2A_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -156,22 +156,22 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails2, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails2, "").toString());
     }
 
     @Test
     public void buildDocumentContent3() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00028.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"Claimant_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_rep_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
+                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"Respondent_name\":\"Francisco\",\n" +
                 "\"respondent_full_name\":\"Francisco\",\n" +
                 "\"respondent_rep_full_name\":\"Francisco\",\n" +
@@ -180,10 +180,10 @@ public class HelperTest {
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"t3_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i3_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -193,12 +193,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails3, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails3, "").toString());
     }
 
     @Test
     public void buildDocumentContent4() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00029.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -220,10 +220,10 @@ public class HelperTest {
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"t4_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i4_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -233,12 +233,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails4, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails4, "").toString());
     }
 
     @Test
     public void buildDocumentContent5() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00030.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -252,21 +252,21 @@ public class HelperTest {
                 "\"claimant_rep_reference\":\"1111111\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_representative\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
+                "\"Respondent_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_full_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_representative\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent1\",\n" +
                 "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
                 "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_reference\":\"1111111\",\n" +
-                "\"respondent_rep_reference\":\"1111111\",\n" +
+                "\"respondent_reference\":\"3333333333\",\n" +
+                "\"respondent_rep_reference\":\"3333333333\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"t5_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i5_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -276,12 +276,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails5, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails5, "").toString());
     }
 
     @Test
     public void buildDocumentContent6() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00031.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -295,18 +295,21 @@ public class HelperTest {
                 "\"claimant_rep_reference\":\"1111111\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"RespondentName\",\n" +
-                "\"respondent_full_name\":\"RespondentName\",\n" +
-                "\"respondent_rep_full_name\":\"RespondentName\",\n" +
-                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"Respondent_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_full_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_representative\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_reference\":\"3333333333\",\n" +
+                "\"respondent_rep_reference\":\"3333333333\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"RespondentName\",\n" +
                 "\"t6_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i6_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -316,12 +319,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails6, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails6, "").toString());
     }
 
     @Test
     public void buildDocumentContent7() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00032.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -335,11 +338,14 @@ public class HelperTest {
                 "\"claimant_rep_reference\":\"1111111\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"Antonio Rodriguez\",\n" +
-                "\"respondent_full_name\":\"Antonio Rodriguez\",\n" +
-                "\"respondent_rep_full_name\":\"Antonio Rodriguez\",\n" +
-                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"Respondent_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_full_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_representative\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_reference\":\"3333333333\",\n" +
+                "\"respondent_rep_reference\":\"3333333333\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Antonio Rodriguez\",\n" +
                 "\"hearing_date\":\"\",\n" +
@@ -355,10 +361,10 @@ public class HelperTest {
                 "\"hearing_duration\":\"2 hours\",\n" +
                 "\"hearing_length\":\"2 hours\",\n" +
                 "\"t7_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i7_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -368,12 +374,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails7, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails7, "").toString());
     }
 
     @Test
     public void buildDocumentContent8() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00033.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -406,13 +412,13 @@ public class HelperTest {
                 "\"Hearing_Duration\":\"2 hours\",\n" +
                 "\"hearing_duration\":\"2 hours\",\n" +
                 "\"hearing_length\":\"2 hours\",\n" +
-                "\"t8_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"t10_2\":\"true\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"i8_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i10_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
@@ -420,12 +426,12 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails8, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails8, "").toString());
     }
 
     @Test
     public void buildDocumentContent9() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-EGW-ENG-00034.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -459,10 +465,10 @@ public class HelperTest {
                 "\"hearing_duration\":\"2 hours\",\n" +
                 "\"hearing_length\":\"2 hours\",\n" +
                 "\"t9_2\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
+                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
+                "\"Court_Telephone\":\"03577131270\",\n" +
+                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i9_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
@@ -472,35 +478,35 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetails9, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails9, "").toString());
     }
 
     @Test
     public void buildDocumentWithNotContent() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Court_Address\":\"\",\n" +
+                "\"Court_Telephone\":\"\",\n" +
+                "\"Court_Fax\":\"\",\n" +
+                "\"Court_DX\":\"\",\n" +
+                "\"Court_Email\":\"\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"null\",\n" +
+                "\"Clerk\":\"\",\n" +
                 "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"Case_No\":\"null\",\n" +
+                "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetailsEmpty, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsEmpty, "").toString());
     }
 
     @Test
     public void buildDocumentContentScot1() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-SCO-ENG-00042.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -534,11 +540,11 @@ public class HelperTest {
                 "\"hearing_duration\":\"2 days\",\n" +
                 "\"hearing_length\":\"2 days\",\n" +
                 "\"t_Scot_7_1\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Court_Address\":\"35 High Landing G3 6AD, Glasgow\",\n" +
+                "\"Court_Telephone\":\"03577123270\",\n" +
+                "\"Court_Fax\":\"07127126570\",\n" +
+                "\"Court_DX\":\"1234567\",\n" +
+                "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot7_1_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
@@ -547,22 +553,22 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetailsScot1, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot1, "").toString());
     }
 
     @Test
     public void buildDocumentContentScot2() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-SCO-ENG-00043.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"Claimant_name\":\"Orlando LTD\",\n" +
+                "\"claimant_full_name\":\"Orlando LTD\",\n" +
+                "\"claimant_rep_full_name\":\"Orlando LTD\",\n" +
+                "\"Claimant\":\"Orlando LTD\",\n" +
                 "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Claimant_name\":\"Mr A Rodriguez\",\n" +
-                "\"claimant_full_name\":\"Mr A Rodriguez\",\n" +
-                "\"claimant_rep_full_name\":\"Mr A Rodriguez\",\n" +
-                "\"Claimant\":\"Mr A Rodriguez\",\n" +
                 "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
                 "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
                 "\"respondent_representative\":\"RepresentativeNameRespondent\",\n" +
@@ -585,11 +591,11 @@ public class HelperTest {
                 "\"hearing_duration\":\"2 hours\",\n" +
                 "\"hearing_length\":\"2 hours\",\n" +
                 "\"t_Scot_24\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Court_Address\":\"35 High Landing G3 6AD, Glasgow\",\n" +
+                "\"Court_Telephone\":\"03577123270\",\n" +
+                "\"Court_Fax\":\"07127126570\",\n" +
+                "\"Court_DX\":\"1234567\",\n" +
+                "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot24_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
@@ -598,22 +604,22 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetailsScot2, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot2, "").toString());
     }
 
     @Test
     public void buildDocumentContentScot3() {
-        String result = "{\n" +
+        String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-SCO-ENG-00044.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"Claimant_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_rep_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
+                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
                 "\"Respondent_name\":\"string\",\n" +
                 "\"respondent_full_name\":\"string\",\n" +
                 "\"respondent_rep_full_name\":\"string\",\n" +
@@ -622,11 +628,11 @@ public class HelperTest {
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"string\",\n" +
                 "\"t_Scot_34\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Court_Address\":\"35 High Landing G3 6AD, Glasgow\",\n" +
+                "\"Court_Telephone\":\"03577123270\",\n" +
+                "\"Court_Fax\":\"07127126570\",\n" +
+                "\"Court_DX\":\"1234567\",\n" +
+                "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot34_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
@@ -635,7 +641,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(Helper.buildDocumentContent(caseDetailsScot3, "").toString(), result);
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot3, "").toString());
     }
 
     @Test
@@ -643,14 +649,14 @@ public class HelperTest {
         CaseDetails caseDetailsTemplates = new CaseDetails();
         CaseData caseData = new CaseData();
         CorrespondenceScotType correspondenceScotType = new CorrespondenceScotType();
-        String topLevel = "EM-TRB-SCO-ENG-00044";
+        String topLevel = "Part_3_Scot";
         String part = "32";
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
         correspondenceScotType.setPart3ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
-        topLevel = "EM-TRB-SCO-ENG-00045";
+        topLevel = "Part_4_Scot";
         part = "42";
         correspondenceScotType = new CorrespondenceScotType();
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
@@ -658,7 +664,7 @@ public class HelperTest {
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
-        topLevel = "EM-TRB-SCO-ENG-00046";
+        topLevel = "Part_5_Scot";
         part = "52";
         correspondenceScotType = new CorrespondenceScotType();
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
@@ -666,7 +672,7 @@ public class HelperTest {
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
-        topLevel = "EM-TRB-SCO-ENG-00047";
+        topLevel = "Part_6_Scot";
         part = "62";
         correspondenceScotType = new CorrespondenceScotType();
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
@@ -674,7 +680,7 @@ public class HelperTest {
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
-        topLevel = "EM-TRB-SCO-ENG-00048";
+        topLevel = "Part_7_Scot";
         part = "72";
         correspondenceScotType = new CorrespondenceScotType();
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
@@ -682,7 +688,7 @@ public class HelperTest {
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
-        topLevel = "EM-TRB-SCO-ENG-00049";
+        topLevel = "Part_15_Scot";
         part = "152";
         correspondenceScotType = new CorrespondenceScotType();
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
@@ -690,14 +696,14 @@ public class HelperTest {
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
-        topLevel = "EM-TRB-SCO-ENG-00050";
+        topLevel = "Part_16_Scot";
         part = "162";
         correspondenceScotType = new CorrespondenceScotType();
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
         correspondenceScotType.setPart16ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
     }
 
     private String getJson(String topLevel, String part) {
@@ -707,17 +713,17 @@ public class HelperTest {
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"t_Scot_" + part + "\":\"true\",\n" +
-                "\"Court_Address\":\"13th floor, Centre City Tower, 5-7 Hill Street, Manchester, M5 4UU\",\n" +
-                "\"Court_Telephone\":\"0121 600 7780\",\n" +
-                "\"Court_Fax\":\"01264 347 999\",\n" +
-                "\"Court_DX\":\"123456789\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"Court_Address\":\"\",\n" +
+                "\"Court_Telephone\":\"\",\n" +
+                "\"Court_Fax\":\"\",\n" +
+                "\"Court_DX\":\"\",\n" +
+                "\"Court_Email\":\"\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot"+ part +"_schmcts\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"null\",\n" +
+                "\"Clerk\":\"\",\n" +
                 "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"Case_No\":\"null\",\n" +
+                "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
     }

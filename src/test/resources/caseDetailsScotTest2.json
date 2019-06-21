@@ -1,8 +1,15 @@
 {
   "case_data": {
+    "tribunalCorrespondenceAddress" : "35 High Landing G3 6AD, Glasgow",
+    "tribunalCorrespondenceTelephone" : "03577123270",
+    "tribunalCorrespondenceFax" : "07127126570",
+    "tribunalCorrespondenceDX" : "1234567",
+    "tribunalCorrespondenceEmail" : "GlasgowOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
     "multipleOthers" : "no",
     "claimantRepresentedQuestion" : "no",
+    "claimant_TypeOfClaimant" : "Company",
+    "claimant_Company" : "Orlando LTD",
     "NH_JudgementType": {
       "NH_JudgementDecision": "guilty",
       "NH_JudgementTextArea": "guilty"
@@ -74,27 +81,32 @@
     },
     "correspondenceScotType": {
       "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-00043",
-      "EM-TRB-SCO-ENG-00043": "24"
+      "part_2_Scot_Documents": "24"
     },
-    "representativeRespondentType": {
-      "resp_rep_name" : "RepresentativeNameRespondent",
-      "name_of_organisation": "RepresentativeOrganisation",
-      "name_of_representative": "RepresentativeNameRespondent",
-      "representative_address": {
-        "AddressLine1": "56 Block C",
-        "AddressLine2": "Ellesmere Street",
-        "Country": "UK",
-        "County": "Lancashire",
-        "PostCode": "M3 KJR",
-        "PostTown": "Manchester"
-      },
-      "representative_dx_number": "222222222",
-      "representative_email_address": "example@gmail.com",
-      "representative_mobile_number": "07577136570",
-      "representative_phone_number": "07577136570",
-      "representative_preference": "Post",
-      "representative_reference": "1111111"
-    },
+    "repCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "resp_rep_name" : "RepresentativeNameRespondent",
+          "name_of_organisation": "RepresentativeOrganisation",
+          "name_of_representative": "RepresentativeNameRespondent",
+          "representative_address": {
+            "AddressLine1": "56 Block C",
+            "AddressLine2": "Ellesmere Street",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M3 KJR",
+            "PostTown": "Manchester"
+          },
+          "representative_dx": "222222222",
+          "representative_email_address": "example@gmail.com",
+          "representative_mobile_number": "07577136570",
+          "representative_phone_number": "07577136570",
+          "representative_preference": "Post",
+          "representative_reference": "1111111"
+        }
+      }
+    ],
     "locationType": "Manchester",
     "multipleReference": "No",
     "multipleType": "No",
@@ -129,7 +141,7 @@
       "response_required_info_absent?": "Yes",
       "response_returned_from_judge": "Yes",
       "response_status": "Status",
-      "response_to_claim": "No"
+      "responseToClaim": "No"
     },
     "userLocation": "Liverpool",
     "withdrawType": {

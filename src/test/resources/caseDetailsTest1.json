@@ -1,11 +1,40 @@
 {
   "case_data": {
+    "tribunalCorrespondenceAddress" : "35 La Nava S3 6AD, Southampton",
+    "tribunalCorrespondenceTelephone" : "03577131270",
+    "tribunalCorrespondenceFax" : "07577126570",
+    "tribunalCorrespondenceDX" : "123456",
+    "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
     "multipleOthers" : "no",
+    "leadClaimant" : "RepresentativeLead",
     "claimantRepresentedQuestion" : "no",
+    "claimant_TypeOfClaimant" : "Individual",
     "NH_JudgementType": {
       "NH_JudgementDecision": "guilty",
       "NH_JudgementTextArea": "guilty"
+    },
+    "preAcceptCase": {
+      "caseAccepted": "Yes",
+      "dateAccepted": "25/02/2020",
+      "rejectReason": "",
+      "caseReferred": "No",
+      "caseEJReferredDate": "",
+      "caseJudge": "Judge",
+      "caseReferredDate": "None"
+    },
+    "depositType": {
+      "Deposit_amount": "£25",
+      "deposit_covers": "No",
+      "deposit_due": "£25",
+      "deposit_time_ext": "No",
+      "deposit_refund": "",
+      "deposit_refund_date": "25/02/2020",
+      "depositNotes": "None"
+    },
+    "caseDocument": {
+      "document_url": "http://dm-store/document",
+      "document_filename": "document.docx"
     },
     "acasOffice": "Manchester",
     "addSubMultipleComment": "Comment",
@@ -18,6 +47,20 @@
       "additional_live_appeal": "additional_live_appeal",
       "additional_sensitive": "string"
     },
+    "panelCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "panelMember": "panelMember",
+          "panelJudge": "panelJudge",
+          "panelClerk": "panelClerk",
+          "panelEEMember": "panelEEMember",
+          "panelERMember": "panelERMember",
+          "panelOtherMember": "panelOtherMember",
+          "panelMedicalExpert": "panelMedicalExpert"
+        }
+      }
+    ],
     "archiveType": {
       "archiveTextArea": "archiveTextArea"
     },
@@ -34,7 +77,7 @@
         "PostCode": "M3 KJR",
         "PostTown": "Manchester"
       },
-      "representative_dx_number": "222222222",
+      "representative_dx": "222222222",
       "representative_email_address": "example@gmail.com",
       "representative_mobile_number": "07577136570",
       "representative_phone_number": "07577136570",
@@ -78,8 +121,8 @@
       "claimant_work_phone_number": "07577136570"
     },
     "correspondenceType": {
-        "topLevel_Documents": "EM-TRB-EGW-ENG-00026",
-        "EM-TRB-EGW-ENG-00026": "1.2"
+      "topLevel_Documents": "EM-TRB-EGW-ENG-00026",
+      "part_1_Documents": "1.2"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
@@ -197,7 +240,7 @@
       "rejection_reason" : "none",
       "rejection_reason_other" : "none",
       "responseNotes" : "notes",
-      "response_to_claim": "No"
+      "responseToClaim": "No"
     },
     "userLocation": "Liverpool",
     "withdrawType": {
