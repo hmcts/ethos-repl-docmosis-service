@@ -27,7 +27,7 @@ public class FileUtil {
         return destinationFile;
     }
 
-    private static String getFileSuffix() {
+    public static String getFileSuffix() {
         return RandomStringUtils.randomAlphanumeric(5);
     }
 }

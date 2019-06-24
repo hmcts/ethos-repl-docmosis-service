@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 import uk.gov.hmcts.ethos.replacement.docmosis.test.ComponentTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.test.util.TestUtil;
 
+import java.io.IOException;
+
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
 @WithTags({
@@ -74,7 +76,7 @@ public class DocMosisScotPart4ComponentTest {
     }
 
     @After
-    public void tearDown() {
-
+    public void tearDown() throws IOException {
+        testUtil.deleteTempFile();
     }
 }
