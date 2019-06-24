@@ -13,7 +13,7 @@ import java.nio.file.StandardCopyOption;
 public class FileUtil {
 
     public static String downloadFileFromUrl(String strUrl, String authToken) throws IOException {
-        String destinationFile = Constants.DOWNLOAD_FOLDER + "document-" + getFileSuffix() + ".docx";
+        String destinationFile = Constants.DOWNLOAD_FOLDER + "/document-" + getFileSuffix() + ".docx";
 
         strUrl = strUrl.replace("127.0.0.1", "localhost");
 
@@ -27,7 +27,7 @@ public class FileUtil {
         return destinationFile;
     }
 
-    private static String getFileSuffix() {
+    public static String getFileSuffix() {
         return RandomStringUtils.randomAlphanumeric(5);
     }
 }

@@ -50,31 +50,3 @@ dependencies {
 test {
     exclude '**/*ComponentTest*'
 }
-
-task not_smoke(type: Test, description: 'Runs the Smoke Test .', group: 'Verification') {
-    testClassesDirs = sourceSets.test.output.classesDirs
-    classpath = sourceSets.test.runtimeClasspath
-
-    environment("tags", "SmokeTest")
-
-    useJUnit {
-        includeCategories 'uk.gov.hmcts.ethos.replacement.docmosis.test.ComponentTest'
-    }
-
-    maxHeapSize = '1G'
-    finalizedBy aggregate
-}
-
-task not_functional(type: Test, description: 'Runs the Functional Test .', group: 'Verification') {
-    testClassesDirs = sourceSets.test.output.classesDirs
-    classpath = sourceSets.test.runtimeClasspath
-
-    environment("tags", "FunctionalTest")
-
-    useJUnit {
-        includeCategories 'uk.gov.hmcts.ethos.replacement.docmosis.test.ComponentTest'
-    }
-
-    maxHeapSize = '1G'
-    finalizedBy aggregate
-}

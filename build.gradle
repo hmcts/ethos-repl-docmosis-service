@@ -135,16 +135,29 @@ task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verificatio
     testClassesDirs = sourceSets.functional.output.classesDirs
     classpath = sourceSets.functional.runtimeClasspath
 
+    environment("tags", "SmokeTest")
+
     useJUnit {
-        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
+        includeCategories 'uk.gov.hmcts.ethos.replacement.docmosis.test.ComponentTest'
     }
     environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
+
+    finalizedBy aggregate
 }
 
 task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
     testClassesDirs = sourceSets.functional.output.classesDirs
     classpath = sourceSets.functional.runtimeClasspath
+
+    environment("tags", "FunctionalTest")
+
+    useJUnit {
+        includeCategories 'uk.gov.hmcts.ethos.replacement.docmosis.test.ComponentTest'
+    }
+
     environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
+
+    finalizedBy aggregate
 }
 
 jacocoTestReport {
