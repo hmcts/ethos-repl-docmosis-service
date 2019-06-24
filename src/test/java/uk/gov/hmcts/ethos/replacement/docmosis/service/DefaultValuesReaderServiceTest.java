@@ -37,7 +37,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceAddress("Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS")
                 .tribunalCorrespondenceTelephone("0141 204 0730")
                 .tribunalCorrespondenceFax("01264 785 177")
-                .tribunalCorrespondenceDX("DX 7435701")
+                .tribunalCorrespondenceDX("DX 580003")
                 .tribunalCorrespondenceEmail("glasgowet@justice.gov.uk")
                 .build();
     }
