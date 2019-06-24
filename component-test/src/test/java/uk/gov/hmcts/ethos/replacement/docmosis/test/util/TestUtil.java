@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.test.util;
 
+import io.restassured.RestAssured;
+import io.restassured.config.RestAssuredConfig;
+import io.restassured.config.SSLConfig;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -20,19 +23,19 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static uk.gov.hmcts.ethos.replacement.docmosis.test.util.ResponseUtil.getProperty;
+
 public class TestUtil {
 
     private static String authToken;
     private String topLevel;
     private String childLevel;
 
-    private String docMosisUrl;
-
-    private String tidamUrl;
+    private String environment;
 
     public TestUtil() {
-        docMosisUrl = System.getProperty("DOCMOSIS_API_URL");
-        tidamUrl = System.getProperty("TIDAM_API_URL");
+        //environment = System.getProperty("VAULTNAME").replace("ethos-", "");
+        environment = System.getProperty("VAULTNAME").replace("ethos-", "");
     }
 
     public void executeGenerateDocumentTest(String topLevel, String childLevel, String expectedValue) throws IOException, JAXBException, Docx4JException {
@@ -44,7 +47,7 @@ public class TestUtil {
         this.topLevel = topLevel;
         this.childLevel = childLevel;
 
-        if (authToken == null) authToken = ResponseUtil.getAuthToken(tidamUrl);
+        if (authToken == null) authToken = ResponseUtil.getAuthToken(environment);
 
         CCDRequest ccdRequest;
 
@@ -61,7 +64,7 @@ public class TestUtil {
         this.topLevel = topLevel;
         this.childLevel = childLevel;
 
-        if (authToken == null) authToken = ResponseUtil.getAuthToken(tidamUrl);
+        if (authToken == null) authToken = ResponseUtil.getAuthToken(environment);
 
         CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel, isScotland, testDataFile);
 
@@ -88,12 +91,15 @@ public class TestUtil {
         existsInDocument(expectedValue, new File(downloadedFilePath), isScotland);
     }
 
-    private Response getResponse(CCDRequest ccdRequest) {
-        RequestSpecification httpRequest = SerenityRest.given();
+    private Response getResponse(CCDRequest ccdRequest) throws IOException {
+        String docmosisUrl = ResponseUtil.getProperty(environment.toLowerCase() + ".docmosis.api.url");
+
+        RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
+        RequestSpecification httpRequest = SerenityRest.given().relaxedHTTPSValidation().config(RestAssured.config);
         httpRequest.header("Authorization", authToken);
         httpRequest.header("Content-Type", ContentType.JSON);
         httpRequest.body(ccdRequest);
-        Response response = httpRequest.post(docMosisUrl + Constants.DOCGEN_URI);
+        Response response = httpRequest.post(docmosisUrl + Constants.DOCGEN_URI);
 
         Assert.assertEquals(200, response.getStatusCode());
         return response;

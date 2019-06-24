@@ -8,6 +8,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.6.2'
+        classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.11")
     }
 }
 
@@ -27,6 +28,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.sonarqube'
 apply plugin: 'org.owasp.dependencycheck'
 apply plugin: 'jacoco'
+apply plugin: 'net.serenity-bdd.aggregator'
 
 
 // https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
@@ -84,6 +86,11 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.reformJavaLogging
     compile group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: '0.0.3'
     compile group: 'org.springframework.retry', name: 'spring-retry'
+
+    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '2.0.52'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.0.52'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.0.52'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.0.52'    
 }
 
 jar {
@@ -129,15 +136,25 @@ task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verificatio
     classpath = sourceSets.functional.runtimeClasspath
 
     useJUnit {
-        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
+        includeCategories 'uk.gov.hmcts.ethos.replacement.docmosis.test.ComponentTest'
     }
     environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
+    environment("tags", "SmokeTest")
+
+    finalizedBy aggregate
 }
 
 task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
     testClassesDirs = sourceSets.functional.output.classesDirs
     classpath = sourceSets.functional.runtimeClasspath
+
+    useJUnit {
+        includeCategories 'uk.gov.hmcts.ethos.replacement.docmosis.test.ComponentTest'
+    }
     environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
+    environment("tags", "FunctionalTest")
+
+    finalizedBy aggregate
 }
 
 jacocoTestReport {
