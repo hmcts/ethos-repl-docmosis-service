@@ -22,7 +22,8 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withNightlyPipeline(type, product, component) {
-  loadVaultSecrets(secrets)
+  //setVaultName('ethos-demo')
+  //loadVaultSecrets(secrets)
   enableSlackNotifications('#ethos-repl-service')
   after('Build'){
     gradle("--info --rerun-tasks functional")
