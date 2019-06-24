@@ -19,11 +19,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.test.util.model.CCDRequest;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static uk.gov.hmcts.ethos.replacement.docmosis.test.util.ResponseUtil.getProperty;
 
 public class TestUtil {
 
@@ -33,8 +32,9 @@ public class TestUtil {
 
     private String environment;
 
+    private static String downloadedFilePath;
+
     public TestUtil() {
-        //environment = System.getProperty("VAULTNAME").replace("ethos-", "");
         environment = System.getProperty("VAULTNAME").replace("ethos-", "");
     }
 
@@ -48,6 +48,7 @@ public class TestUtil {
         this.childLevel = childLevel;
 
         if (authToken == null) authToken = ResponseUtil.getAuthToken(environment);
+        if (!authToken.startsWith("Bearer")) authToken = "Bearer " + authToken;
 
         CCDRequest ccdRequest;
 
@@ -65,12 +66,13 @@ public class TestUtil {
         this.childLevel = childLevel;
 
         if (authToken == null) authToken = ResponseUtil.getAuthToken(environment);
+        if (!authToken.startsWith("Bearer")) authToken = "Bearer " + authToken;
 
         CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel, isScotland, testDataFile);
 
         Response response = getResponse(ccdRequest);
         String url = ResponseUtil.getUrlFromResponse(response);
-        String downloadedFilePath = FileUtil.downloadFileFromUrl(url, authToken);
+        downloadedFilePath = FileUtil.downloadFileFromUrl(url, authToken);
 
         String actualPayload = LogUtil.getDocMosisPayload();
         actualPayload = actualPayload.substring(0, actualPayload.lastIndexOf(',')) + "}}";
@@ -80,13 +82,19 @@ public class TestUtil {
         JSONAssert.assertEquals(expectedPayload, actualPayload, JSONCompareMode.LENIENT);
     }
 
+    public void deleteTempFile() throws IOException {
+        if (downloadedFilePath != null) {
+            FileUtils.forceDelete(new File(downloadedFilePath));
+        }
+    }
+
     private void verifyDocument(String topLevel, String expectedValue, boolean isScotland, CCDRequest ccdRequest, Response response) throws IOException, JAXBException, Docx4JException {
         Pattern pattern = Pattern.compile(Constants.URL_PATTERN);
         String url = ResponseUtil.getUrlFromResponse(response);
 
         Assert.assertTrue(pattern.matcher(url).matches());
 
-        String downloadedFilePath = FileUtil.downloadFileFromUrl(url, authToken);
+        downloadedFilePath = FileUtil.downloadFileFromUrl(url, authToken);
 
         existsInDocument(expectedValue, new File(downloadedFilePath), isScotland);
     }
