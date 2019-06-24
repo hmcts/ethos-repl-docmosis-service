@@ -6,7 +6,7 @@ public class Constants {
     public static final String TOKEN_URI = "/testing-support/lease?id=1&role=ccd-import";
     public static final String DOCGEN_URI = "/generateDocument";
     public static final String DOWNLOAD_FOLDER = "src/test/resources/documents/";
-    public static final String URL_PATTERN = "http://.*/documents/[a-z0-9\\-]+/binary";
+    public static final String URL_PATTERN = "http.*://.*/documents/[a-z0-9\\-]+/binary";
 
     //Test Case Data files
     public static final String TEST_DATA_CASE1 = "src/test/resources/testData/caseDetailsTest1.json";
