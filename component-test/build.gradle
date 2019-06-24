@@ -51,7 +51,7 @@ test {
     exclude '**/*ComponentTest*'
 }
 
-task smoke(type: Test, description: 'Runs the Smoke Test .', group: 'Verification') {
+task not_smoke(type: Test, description: 'Runs the Smoke Test .', group: 'Verification') {
     testClassesDirs = sourceSets.test.output.classesDirs
     classpath = sourceSets.test.runtimeClasspath
 
@@ -65,11 +65,10 @@ task smoke(type: Test, description: 'Runs the Smoke Test .', group: 'Verificatio
     finalizedBy aggregate
 }
 
-task functional(type: Test, description: 'Runs the Functional Test .', group: 'Verification') {
+task not_functional(type: Test, description: 'Runs the Functional Test .', group: 'Verification') {
     testClassesDirs = sourceSets.test.output.classesDirs
     classpath = sourceSets.test.runtimeClasspath
 
-    environment("environment", "aat")
     environment("tags", "FunctionalTest")
 
     useJUnit {
