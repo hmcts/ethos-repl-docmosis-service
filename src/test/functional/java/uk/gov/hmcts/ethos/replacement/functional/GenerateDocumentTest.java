@@ -1,8 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.functional;
 
-import io.restassured.RestAssured;
 import org.junit.Before;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
