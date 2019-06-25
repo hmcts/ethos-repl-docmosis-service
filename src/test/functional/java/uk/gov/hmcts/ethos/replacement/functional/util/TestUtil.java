@@ -91,6 +91,7 @@ public class TestUtil {
         Pattern pattern = Pattern.compile(Constants.URL_PATTERN);
         String url = ResponseUtil.getUrlFromResponse(response);
 
+        Assert.assertNotNull("Null URL returned", url);
         Assert.assertTrue(pattern.matcher(url).matches());
 
         downloadedFilePath = FileUtil.downloadFileFromUrl(url, authToken);
