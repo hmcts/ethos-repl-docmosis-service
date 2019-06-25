@@ -5,6 +5,7 @@ import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import uk.gov.hmcts.ethos.replacement.functional.ComponentTest;
@@ -16,6 +17,7 @@ import uk.gov.hmcts.ethos.replacement.functional.util.TestUtil;
         @WithTag("ComponentTest"),
         @WithTag("FunctionalTest")
 })
+@Ignore
 public class PreDefaultComponentTest {
 
     private TestUtil testUtil;
