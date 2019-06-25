@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.functional.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.config.SSLConfig;
@@ -60,6 +62,48 @@ public class TestUtil {
 
     }
 
+    public void executePreDefaultValuesTest(String paramName, String paramValue, boolean isScotland, String testData) throws IOException {
+        CCDRequest ccdRequest;
+
+        if (authToken == null) authToken = ResponseUtil.getAuthToken(environment);
+        if (!authToken.startsWith("Bearer")) authToken = "Bearer " + authToken;
+
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
+        else ccdRequest = getCcdRequest("1", "", false, testData);
+
+        Response response = getResponse(ccdRequest, Constants.PRE_DEFAULT_URI);
+
+        String json = response.body().prettyPrint();
+
+        verifyElementValue(json, paramName, paramValue);
+    }
+
+    public void executePostDefaultValuesTest(String paramName, String paramValue, boolean isScotland, String testData) throws IOException {
+        CCDRequest ccdRequest;
+
+        if (authToken == null) authToken = ResponseUtil.getAuthToken(environment);
+        if (!authToken.startsWith("Bearer")) authToken = "Bearer " + authToken;
+
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
+        else ccdRequest = getCcdRequest("1", "", false, testData);
+
+        Response response = getResponse(ccdRequest, Constants.POST_DEFAULT_URI);
+
+        String json = response.body().prettyPrint();
+
+        verifyElementValue(json, paramName, paramValue);
+    }
+
+    private void verifyElementValue(String json, String paramName, String paramValue) throws IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        JsonNode rootNode = objectMapper.readTree(json);
+        JsonNode childNode = rootNode.findValue(paramName);
+
+        Assert.assertEquals(paramValue, childNode.asText());
+    }
+
     public void verifyDocMosisPayload(String topLevel, String childLevel, boolean isScotland, String testDataFile) throws IOException, JSONException {
         this.topLevel = topLevel;
         this.childLevel = childLevel;
@@ -100,6 +144,10 @@ public class TestUtil {
     }
 
     private Response getResponse(CCDRequest ccdRequest) throws IOException {
+        return getResponse(ccdRequest, Constants.DOCGEN_URI);
+    }
+
+    private Response getResponse(CCDRequest ccdRequest, String URI) throws IOException {
         String docmosisUrl = ResponseUtil.getProperty(environment.toLowerCase() + ".docmosis.api.url");
 
         RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
@@ -107,7 +155,7 @@ public class TestUtil {
         httpRequest.header("Authorization", authToken);
         httpRequest.header("Content-Type", ContentType.JSON);
         httpRequest.body(ccdRequest);
-        Response response = httpRequest.post(docmosisUrl + Constants.DOCGEN_URI);
+        Response response = httpRequest.post(docmosisUrl + URI);
 
         Assert.assertEquals(200, response.getStatusCode());
         return response;
