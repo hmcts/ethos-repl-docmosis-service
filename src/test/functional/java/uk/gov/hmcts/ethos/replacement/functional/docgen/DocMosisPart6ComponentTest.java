@@ -91,8 +91,8 @@ public class DocMosisPart6ComponentTest {
     }
 
     @Test
-    public void generateDocument_Part6_12() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "", "the hearing will be cancelled");
+    public void generateDocument_Part6_11R() throws Exception {
+        testUtil.executeGenerateDocumentTest("6", "11R", "the hearing will be cancelled");
     }
 
     @After

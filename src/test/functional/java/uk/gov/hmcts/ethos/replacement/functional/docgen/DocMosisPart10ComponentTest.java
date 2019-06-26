@@ -107,7 +107,7 @@ public class DocMosisPart10ComponentTest {
 
     @Test
     public void generateDocument_Part10_16() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "", "CORRECTED JUDGMENT");
+        testUtil.executeGenerateDocumentTest("10", "16", "CORRECTED JUDGMENT");
     }
 
     @After

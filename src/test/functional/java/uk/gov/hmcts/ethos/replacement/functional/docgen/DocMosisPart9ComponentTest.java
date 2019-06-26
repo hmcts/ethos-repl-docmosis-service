@@ -102,7 +102,7 @@ public class DocMosisPart9ComponentTest {
 
     @Test
     public void generateDocument_Part9_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("9", "", "NOTICE OF A RESTRICTED REPORTING ORDER");
+        testUtil.executeGenerateDocumentTest("9", "9", "NOTICE OF A RESTRICTED REPORTING ORDER");
     }
 
     @After
