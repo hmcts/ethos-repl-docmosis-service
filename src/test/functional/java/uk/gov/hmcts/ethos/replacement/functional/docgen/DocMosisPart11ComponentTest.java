@@ -117,7 +117,7 @@ public class DocMosisPart11ComponentTest {
 
     @Test
     public void generateDocument_Part11_13() throws Exception {
-        testUtil.executeGenerateDocumentTest("11", "", "to reconsider the judgment under");
+        testUtil.executeGenerateDocumentTest("11", "13", "to reconsider the judgment under");
     }
 
     @After

@@ -52,7 +52,7 @@ public class DocMosisPart16ComponentTest {
 
     @Test
     public void generateDocument_Part16_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("16", "", "RECEIPT OF INDEPENDENT EXPERT’S REPORT");
+        testUtil.executeGenerateDocumentTest("16", "5", "RECEIPT OF INDEPENDENT EXPERT’S REPORT");
     }
 
     @After
