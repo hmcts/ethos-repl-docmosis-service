@@ -43,7 +43,7 @@ public class DocMosisPart15ComponentTest {
 
     @Test
     public void generateDocument_Part15_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("15", "", "NOTICE OF JUDICIAL MEDIATION PRELIMINARY HEARING");
+        testUtil.executeGenerateDocumentTest("15", "3", "NOTICE OF JUDICIAL MEDIATION PRELIMINARY HEARING");
     }
 
 

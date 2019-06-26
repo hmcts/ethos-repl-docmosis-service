@@ -61,7 +61,7 @@ public class DocMosisPart17ComponentTest {
 
     @Test
     public void generateDocument_Part17_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("17", "", "ACKNOWLEDGMENT OF WITHDRAWAL OF APPEAL");
+        testUtil.executeGenerateDocumentTest("17", "7", "ACKNOWLEDGMENT OF WITHDRAWAL OF APPEAL");
     }
 
     @After

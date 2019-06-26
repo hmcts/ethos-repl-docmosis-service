@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.functional.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.config.SSLConfig;
@@ -37,27 +39,65 @@ public class TestUtil {
         environment = System.getProperty("VAULTNAME").replace("ethos-", "");
     }
 
+    public String getEnvironment() {
+        return this.environment;
+    }
+
     public void executeGenerateDocumentTest(String topLevel, String childLevel, String expectedValue) throws IOException, JAXBException, Docx4JException {
         executeGenerateDocumentTest(topLevel, childLevel, expectedValue, false);
     }
 
     public void executeGenerateDocumentTest(String topLevel, String childLevel, String expectedValue, boolean isScotland) throws IOException, JAXBException, Docx4JException {
+        if (isScotland) executeGenerateDocumentTest(topLevel, childLevel, expectedValue, true, Constants.TEST_DATA_SCOT_CASE1);
+        else executeGenerateDocumentTest(topLevel, childLevel, expectedValue, false, Constants.TEST_DATA_CASE1);
+    }
+
+    public void executeGenerateDocumentTest(String topLevel, String childLevel, String expectedValue, boolean isScotland, String testData) throws IOException, JAXBException, Docx4JException {
 
         this.topLevel = topLevel;
         this.childLevel = childLevel;
 
-        if (authToken == null) authToken = ResponseUtil.getAuthToken(environment);
-        if (!authToken.startsWith("Bearer")) authToken = "Bearer " + authToken;
+        loadAuthToken();
 
         CCDRequest ccdRequest;
 
-        if (isScotland) ccdRequest = getCcdRequest(topLevel, childLevel, true, Constants.TEST_DATA_SCOT_CASE1);
-        else ccdRequest = getCcdRequest(topLevel, childLevel, false);
+        if (isScotland) ccdRequest = getCcdRequest(topLevel, childLevel, true, testData);
+        else ccdRequest = getCcdRequest(topLevel, childLevel, false, testData);
 
         Response response = getResponse(ccdRequest);
 
         verifyDocument(topLevel, expectedValue, isScotland, ccdRequest, response);
 
+    }
+
+    public void executePreDefaultValuesTest(String paramName, String paramValue, boolean isScotland, String testData) throws IOException {
+        CCDRequest ccdRequest;
+
+        loadAuthToken();
+
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
+        else ccdRequest = getCcdRequest("1", "", false, testData);
+
+        Response response = getResponse(ccdRequest, Constants.PRE_DEFAULT_URI);
+
+        String json = response.body().prettyPrint();
+
+        verifyElementValue(json, paramName, paramValue);
+    }
+
+    public void executePostDefaultValuesTest(String paramName, String paramValue, boolean isScotland, String testData) throws IOException {
+        CCDRequest ccdRequest;
+
+        loadAuthToken();
+
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
+        else ccdRequest = getCcdRequest("1", "", false, testData);
+
+        Response response = getResponse(ccdRequest, Constants.POST_DEFAULT_URI);
+
+        String json = response.body().prettyPrint();
+
+        verifyElementValue(json, paramName, paramValue);
     }
 
     public void verifyDocMosisPayload(String topLevel, String childLevel, boolean isScotland, String testDataFile) throws IOException, JSONException {
@@ -87,6 +127,56 @@ public class TestUtil {
         }
     }
 
+    public Response getResponse(CCDRequest ccdRequest) throws IOException {
+        return getResponse(ccdRequest, Constants.DOCGEN_URI);
+    }
+
+    public Response getResponse(CCDRequest ccdRequest, String URI) throws IOException {
+        return getResponse(ccdRequest, URI, 200);
+    }
+
+    public Response getResponse(CCDRequest ccdRequest, String URI, int expectedStatusCode) throws IOException {
+        String docmosisUrl = ResponseUtil.getProperty(environment.toLowerCase() + ".docmosis.api.url");
+
+        RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
+        RequestSpecification httpRequest = SerenityRest.given().relaxedHTTPSValidation().config(RestAssured.config);
+        httpRequest.header("Authorization", authToken);
+        httpRequest.header("Content-Type", ContentType.JSON);
+        httpRequest.body(ccdRequest);
+        Response response = httpRequest.post(docmosisUrl + URI);
+
+        Assert.assertEquals(expectedStatusCode, response.getStatusCode());
+        return response;
+    }
+
+    public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, String testDataFile) throws IOException {
+        String payLoad = FileUtils.readFileToString(new File(testDataFile), "UTF-8");
+
+        return JsonUtil.getCaseDetails(payLoad, topLevel, childLevel, isScotland);
+    }
+
+
+    public void setAuthToken(String authToken) {
+        TestUtil.authToken = authToken;
+    }
+
+    public String loadAuthToken() throws IOException {
+        if (authToken == null) authToken = ResponseUtil.getAuthToken(environment);
+        if (!authToken.startsWith("Bearer")) authToken = "Bearer " + authToken;
+
+        return authToken;
+    }
+
+    private void verifyElementValue(String json, String paramName, String paramValue) throws IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        JsonNode rootNode = objectMapper.readTree(json);
+        JsonNode childNode = rootNode.findValue(paramName);
+
+        Assert.assertEquals(paramValue, childNode.asText());
+    }
+
     private void verifyDocument(String topLevel, String expectedValue, boolean isScotland, CCDRequest ccdRequest, Response response) throws IOException, JAXBException, Docx4JException {
         Pattern pattern = Pattern.compile(Constants.URL_PATTERN);
         String url = ResponseUtil.getUrlFromResponse(response);
@@ -99,28 +189,8 @@ public class TestUtil {
         existsInDocument(expectedValue, new File(downloadedFilePath), isScotland);
     }
 
-    private Response getResponse(CCDRequest ccdRequest) throws IOException {
-        String docmosisUrl = ResponseUtil.getProperty(environment.toLowerCase() + ".docmosis.api.url");
-
-        RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
-        RequestSpecification httpRequest = SerenityRest.given().relaxedHTTPSValidation().config(RestAssured.config);
-        httpRequest.header("Authorization", authToken);
-        httpRequest.header("Content-Type", ContentType.JSON);
-        httpRequest.body(ccdRequest);
-        Response response = httpRequest.post(docmosisUrl + Constants.DOCGEN_URI);
-
-        Assert.assertEquals(200, response.getStatusCode());
-        return response;
-    }
-
     private CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland) throws IOException {
         return getCcdRequest(topLevel, childLevel, isScotland, Constants.TEST_DATA_CASE1);
-    }
-
-    private CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, String testDataFile) throws IOException {
-        String payLoad = FileUtils.readFileToString(new File(testDataFile), "UTF-8");
-
-        return JsonUtil.getCaseDetails(payLoad, topLevel, childLevel, isScotland);
     }
 
     private void existsInDocument(String expectedValue, File actualDocument, boolean isScotland) throws JAXBException, Docx4JException {
