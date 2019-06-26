@@ -21,6 +21,7 @@ public class FileUtil {
         URLConnection uc = url.openConnection();
 
         uc.setRequestProperty ("Authorization", authToken);
+        uc.connect();
         InputStream in = uc.getInputStream();
         Files.copy(in, Paths.get(destinationFile), StandardCopyOption.REPLACE_EXISTING);
 

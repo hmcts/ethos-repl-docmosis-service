@@ -155,7 +155,7 @@ public class DocMosisComponentTest {
 
 
     @After
-    public void tearDown() {
-
+    public void tearDown() throws IOException {
+        testUtil.deleteTempFile();
     }
 }
