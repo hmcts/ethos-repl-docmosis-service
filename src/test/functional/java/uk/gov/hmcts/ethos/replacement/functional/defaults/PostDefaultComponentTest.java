@@ -1,19 +1,21 @@
 package uk.gov.hmcts.ethos.replacement.functional.defaults;
 
+import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
+import net.serenitybdd.rest.SerenityRest;
 import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.functional.ComponentTest;
 import uk.gov.hmcts.ethos.replacement.functional.util.Constants;
+import uk.gov.hmcts.ethos.replacement.functional.util.ResponseUtil;
 import uk.gov.hmcts.ethos.replacement.functional.util.TestUtil;
 
 import java.io.IOException;
+import java.net.URL;
 
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
@@ -60,6 +62,30 @@ public class PostDefaultComponentTest {
     public void claimant_company_with_scotland_template() throws IOException {
         executeTest(Constants.TEST_DATA_SCOT_POST_DEFAULT2, true);
     }
+
+    @Test
+    public void invoke_pre_default_endpoint_without_auth_token() throws IOException {
+        CCDRequest ccdRequest = testUtil.getCcdRequest("1", "1", false, Constants.TEST_DATA_POST_DEFAULT1);
+
+        testUtil.setAuthToken("Bearer authToken");
+        Response response = testUtil.getResponse(ccdRequest, Constants.POST_DEFAULT_URI, 401);
+    }
+
+    @Test
+    public void invoke_pre_default_endpoint_without_payload() throws IOException {
+        testUtil.loadAuthToken();
+
+        CCDRequest ccdRequest = new CCDRequest();
+
+        Response response = testUtil.getResponse(ccdRequest, Constants.POST_DEFAULT_URI, 400);
+    }
+
+    @Test
+    public void invoke_pre_default_as_get() throws IOException {
+        String docmosisUrl = ResponseUtil.getProperty(testUtil.getEnvironment().toLowerCase() + ".docmosis.api.url");
+        SerenityRest.given().get(new URL(docmosisUrl + Constants.POST_DEFAULT_URI)).then().statusCode(405);
+    }
+
 
     @After
     public void tearDown() {

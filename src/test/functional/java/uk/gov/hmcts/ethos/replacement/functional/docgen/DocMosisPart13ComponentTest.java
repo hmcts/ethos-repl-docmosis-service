@@ -47,12 +47,12 @@ public class DocMosisPart13ComponentTest {
 
     @Test
     public void generateDocument_Part13_2C() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "2C", "I refer to your letter dated [insert date], which has been placed on the file");
+        testUtil.executeGenerateDocumentTest("13", "2C", "which has been placed on the file");
     }
 
     @Test
     public void generateDocument_Part13_2R() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "2R", "I refer to your letter dated [insert date], which has been placed on the file");
+        testUtil.executeGenerateDocumentTest("13", "2R", "which has been placed on the file");
     }
 
     @Test
@@ -162,12 +162,12 @@ public class DocMosisPart13ComponentTest {
 
     @Test
     public void generateDocument_Part13_14C() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "14C", "REFUSAL OF A TRANSFER (COUNTRY TO COUNTRY)");
+        testUtil.executeGenerateDocumentTest("13", "14C", "REFUSAL OF A TRANSFER \\(COUNTRY TO COUNTRY\\)");
     }
 
     @Test
     public void generateDocument_Part13_14R() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "14R", "REFUSAL OF A TRANSFER (COUNTRY TO COUNTRY)");
+        testUtil.executeGenerateDocumentTest("13", "14R", "REFUSAL OF A TRANSFER \\(COUNTRY TO COUNTRY\\)");
     }
 
     @Test
@@ -177,12 +177,12 @@ public class DocMosisPart13ComponentTest {
 
     @Test
     public void generateDocument_Part13_16() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "16", "EMPLOYMENT TRIBUNALS ACT 1996 section 4(3)(e)");
+        testUtil.executeGenerateDocumentTest("13", "16", "EMPLOYMENT TRIBUNALS ACT 1996 section 4\\(3\\)\\(e\\)");
     }
 
     @Test
     public void generateDocument_Part13_17() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "17", "EMPLOYMENT TRIBUNALS ACT 1996 section 4(1)(b)");
+        testUtil.executeGenerateDocumentTest("13", "17", "EMPLOYMENT TRIBUNALS ACT 1996 section");
     }
 
     @Test
@@ -197,7 +197,7 @@ public class DocMosisPart13ComponentTest {
 
     @Test
     public void generateDocument_Part13_20() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "", "SETTLEMENT OF CLAIM");
+        testUtil.executeGenerateDocumentTest("13", "20", "SETTLEMENT OF CLAIM");
     }
 
     @After

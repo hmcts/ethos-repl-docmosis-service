@@ -62,42 +62,42 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_3C() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "3C", "The case remains listed for hearing on  ");
+        testUtil.executeGenerateDocumentTest("5", "3C", "The case remains listed for hearing on");
     }
 
     @Test
     public void generateDocument_Part5_3R() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "3R", "The case remains listed for hearing on [insert date]");
+        testUtil.executeGenerateDocumentTest("5", "3R", "The case remains listed for hearing on");
     }
 
     @Test
     public void generateDocument_Part5_4C() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "4C", "I refer to your application dated \\[insert date\\]. Your application will be considered at the hearing on \\[insert date\\]");
+        testUtil.executeGenerateDocumentTest("5", "4C", "I refer to your application dated");
     }
 
     @Test
     public void generateDocument_Part5_4R() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "4R", "I refer to your application dated \\[insert date\\]. Your application will be considered at the hearing on \\[insert date\\]");
+        testUtil.executeGenerateDocumentTest("5", "4R", "I refer to your application dated");
     }
 
     @Test
     public void generateDocument_Part5_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "5", "Employment Judge  is considering listing this case for a preliminary hearing to discuss case");
+        testUtil.executeGenerateDocumentTest("5", "5", "is considering listing this case for a preliminary hearing to discuss case");
     }
 
     @Test
     public void generateDocument_Part5_5A() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "5A", "The claimant(s) and the respondent(s) shall prepare full written statements containing all of the");
+        testUtil.executeGenerateDocumentTest("5", "5A", "CASE MANAGEMENT ORDER");
     }
 
     @Test
     public void generateDocument_Part5_6() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "6", "Having considered the proposals of the parties, Employment Judge  orders that they are");
+        testUtil.executeGenerateDocumentTest("5", "6", "Having considered the proposals of the parties, Employment Judge");
     }
 
     @Test
     public void generateDocument_Part5_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "7", "Having considered the proposals of the parties, Employment Judge  considers that a preliminary");
+        testUtil.executeGenerateDocumentTest("5", "7", "Having considered the proposals of the parties, Employment Judge");
     }
 
     @Test
@@ -112,7 +112,7 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_9R() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "9R", "CASE MANAGEMENT ORDER- LEAVE TO AMEND RESPONSE");
+        testUtil.executeGenerateDocumentTest("5", "9R", "CASE MANAGEMENT ORDER- LEAVE TO AMEND CLAIM");
     }
 
     @Test
@@ -192,17 +192,17 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_19A() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "19A", "A Witness Order has been sent to  requiring him / her to attend the hearing as a witness");
+        testUtil.executeGenerateDocumentTest("5", "19A", "A Witness Order has been sent to");
     }
 
     @Test
     public void generateDocument_Part5_20() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "20", "Employment Judge  has granted your request to set aside the Witness");
+        testUtil.executeGenerateDocumentTest("5", "20", "has granted your request to set aside the Witness");
     }
 
     @Test
     public void generateDocument_Part5_21() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "21", "Employment Judge  has refused your request to set aside the Witness Order");
+        testUtil.executeGenerateDocumentTest("5", "21", "has refused your request to set aside the Witness Order");
     }
 
     @Test
@@ -217,7 +217,7 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_24() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "24", "On reviewing the files in the following cases, Employment Judge  is of the opinion that the claims");
+        testUtil.executeGenerateDocumentTest("5", "24", "CONSIDERING CLAIMS TOGETHER");
     }
 
     @Test
@@ -227,7 +227,7 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_26() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "26", "\\[the claim\\] \\[the complaint of – Name the complaint\\]");
+        testUtil.executeGenerateDocumentTest("5", "26", "will stand dismissed without further order");
     }
 
     @Test
@@ -257,17 +257,17 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_32() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "32", "I refer to your application dated \\[insert date\\] to set aside the dismissal of your claim following");
+        testUtil.executeGenerateDocumentTest("5", "32", "to set aside the dismissal of your claim following");
     }
 
     @Test
     public void generateDocument_Part5_33() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "33", "I refer to your application dated \\[insert date\\] to set aside the dismissal of your response");
+        testUtil.executeGenerateDocumentTest("5", "33", "to set aside the dismissal of your response");
     }
 
     @Test
     public void generateDocument_Part5_34() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "34", "I refer to your application dated \\[insert date\\].  Employment Judge  has considered your");
+        testUtil.executeGenerateDocumentTest("5", "34", "APPLICATION TO SET ASIDE DISMISSAL OF CLAIM");
     }
 
     @Test
@@ -277,12 +277,12 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_36() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "36", "After considering the objections to the proposal to strike out \\[the claim");
+        testUtil.executeGenerateDocumentTest("5", "36", "After considering the objections to the proposal to strike out");
     }
 
     @Test
     public void generateDocument_Part5_37() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "37", "After considering the objections to the proposal to strike out \\[the response");
+        testUtil.executeGenerateDocumentTest("5", "37", "After considering the objections to the proposal to strike out");
     }
 
     @Test
@@ -307,7 +307,7 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_42() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "", "ORDER STAYING PROCEEDINGS");
+        testUtil.executeGenerateDocumentTest("5", "42", "ORDER STAYING PROCEEDINGS");
     }
 
     @After

@@ -106,8 +106,8 @@ public class DocMosisPart12ComponentTest {
     }
 
     @Test
-    public void generateDocument_Part12_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "", "WASTED COSTS ORDER APPLICATION REFUSED");
+    public void generateDocument_Part12_8R() throws Exception {
+        testUtil.executeGenerateDocumentTest("12", "8R", "WASTED COSTS ORDER APPLICATION REFUSED");
     }
 
     @After

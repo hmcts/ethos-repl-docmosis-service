@@ -87,7 +87,7 @@ public class DocMosisPart7ComponentTest {
 
     @Test
     public void generateDocument_Part7_10() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "", "To take part you should telephone  on time and enter the access code  when prompted");
+        testUtil.executeGenerateDocumentTest("7", "10", "NOTICE OF PRELIMINARY HEARING");
     }
 
     @After
