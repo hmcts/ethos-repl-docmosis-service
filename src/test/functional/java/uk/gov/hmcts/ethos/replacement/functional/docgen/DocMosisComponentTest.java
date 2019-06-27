@@ -5,10 +5,7 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
@@ -82,25 +79,25 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_eng_claimant_individual_not_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "1A", "Sir S Smith", false, Constants.TEST_DATA_CASE1);
+        testUtil.executeGenerateDocumentTest("10", "1", "Sir S Smith", false, Constants.TEST_DATA_CASE1);
     }
 
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_eng_claimant_company_not_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "1A", "ACME", false, Constants.TEST_DATA_CASE2);
+        testUtil.executeGenerateDocumentTest("10", "1", "ACME", false, Constants.TEST_DATA_CASE2);
     }
 
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_eng_claimant_individual_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "1A", "Mr A Benderas", false, Constants.TEST_DATA_CASE3);
+        testUtil.executeGenerateDocumentTest("10", "1", "Mr A Benderas", false, Constants.TEST_DATA_CASE3);
     }
 
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_eng_respondant_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "1B", "Roadshow Pictures", false, Constants.TEST_DATA_CASE4);
+        testUtil.executeGenerateDocumentTest("10", "10", "Roadshow Pictures", false, Constants.TEST_DATA_CASE4);
     }
 
     @Test
@@ -124,7 +121,7 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_sco_respondant_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "", "Roadshow Pictures", true, Constants.TEST_DATA_SCOT_CASE4);
+        testUtil.executeGenerateDocumentTest("1", "", "Natwest Ltd", true, Constants.TEST_DATA_SCOT_CASE4);
     }
 
     @Test
@@ -132,8 +129,12 @@ public class DocMosisComponentTest {
     public void invoke_pre_default_endpoint_with_invalid_auth_token() throws IOException {
         CCDRequest ccdRequest = testUtil.getCcdRequest("1", "1", false, Constants.TEST_DATA_CASE1);
 
-        testUtil.setAuthToken("Bearer authToken");
-        Response response = testUtil.getResponse(ccdRequest, Constants.DOCGEN_URI, 401);
+        try {
+            testUtil.setAuthToken("Bearer authToken");
+            Response response = testUtil.getResponse(ccdRequest, Constants.DOCGEN_URI, 401);
+        } finally {
+            testUtil.setAuthToken(null);
+        }
     }
 
     @Test

@@ -54,12 +54,17 @@ public class PreDefaultComponentTest {
         testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", "Individual", true, Constants.TEST_DATA_SCOT_PRE_DEFAULT1);
     }
 
+    @Ignore
     @Test
     public void invoke_pre_default_endpoint_without_auth_token() throws IOException {
         CCDRequest ccdRequest = testUtil.getCcdRequest("1", "1", false, Constants.TEST_DATA_PRE_DEFAULT1);
 
-        testUtil.setAuthToken("Bearer authToken");
-        Response response = testUtil.getResponse(ccdRequest, Constants.PRE_DEFAULT_URI, 401);
+        try {
+            testUtil.setAuthToken("Bearer authToken");
+            Response response = testUtil.getResponse(ccdRequest, Constants.PRE_DEFAULT_URI, 401);
+        } finally {
+            testUtil.setAuthToken(null);
+        }
     }
 
     @Test
