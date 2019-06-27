@@ -131,7 +131,7 @@ sourceSets {
     }
     functional {
         java.srcDir 'src/test/functional/java'
-        resources.srcDir 'src/test/resources'
+        resources.srcDir 'src/test/functional/resources'
         compileClasspath += main.output + test.output
         runtimeClasspath += main.output + test.output
     }
