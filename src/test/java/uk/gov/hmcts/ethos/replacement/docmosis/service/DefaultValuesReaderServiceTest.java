@@ -25,7 +25,7 @@ public class DefaultValuesReaderServiceTest {
     public void setUp() {
         preDefaultValues = DefaultValues.builder().claimantTypeOfClaimant("Individual").build();
         postDefaultValuesManchester = DefaultValues.builder()
-                .positionType("Awaiting ET3")
+                .positionType("Manually Created")
                 .tribunalCorrespondenceAddressLine1("Manchester Employment Tribunal,")
                 .tribunalCorrespondenceAddressLine2("Alexandra House,")
                 .tribunalCorrespondenceAddressLine3("14-22 The Parsonage,")
@@ -37,7 +37,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("Manchesteret@justice.gov.uk")
                 .build();
         postDefaultValuesGlasgow = DefaultValues.builder()
-                .positionType("Awaiting ET3")
+                .positionType("Manually Created")
                 .tribunalCorrespondenceAddressLine1("Eagle Building,")
                 .tribunalCorrespondenceAddressLine2("215 Bothwell Street,")
                 .tribunalCorrespondenceTown("Glasgow,")
