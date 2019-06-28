@@ -60,24 +60,29 @@ public class DefaultValuesReaderService {
 
     private DefaultValues populatePostDefaultValues(List<String> values, String caseTypeId) {
         if (caseTypeId.equals(MANCHESTER_CASE_TYPE_ID)) {
-            String tribunalCorrespondenceAddress = values.get(1);
-            String tribunalCorrespondenceTelephone = values.get(2);
             return DefaultValues.builder()
                     .positionType(values.get(0))
-                    .tribunalCorrespondenceAddress(tribunalCorrespondenceAddress)
-                    .tribunalCorrespondenceTelephone(tribunalCorrespondenceTelephone)
-                    .tribunalCorrespondenceFax(values.get(3))
-                    .tribunalCorrespondenceDX(values.get(4))
-                    .tribunalCorrespondenceEmail(values.get(5))
+                    .tribunalCorrespondenceAddressLine1(values.get(1))
+                    .tribunalCorrespondenceAddressLine2(values.get(2))
+                    .tribunalCorrespondenceAddressLine3(values.get(3))
+                    .tribunalCorrespondenceTown(values.get(4))
+                    .tribunalCorrespondencePostCode(values.get(5))
+                    .tribunalCorrespondenceTelephone(values.get(6))
+                    .tribunalCorrespondenceFax(values.get(7))
+                    .tribunalCorrespondenceDX(values.get(8))
+                    .tribunalCorrespondenceEmail(values.get(9))
                     .build();
         }
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .tribunalCorrespondenceAddress(values.get(6))
-                .tribunalCorrespondenceTelephone(values.get(7))
-                .tribunalCorrespondenceFax(values.get(8))
-                .tribunalCorrespondenceDX(values.get(9))
-                .tribunalCorrespondenceEmail(values.get(10))
+                .tribunalCorrespondenceAddressLine1(values.get(10))
+                .tribunalCorrespondenceAddressLine2(values.get(11))
+                .tribunalCorrespondenceTown(values.get(12))
+                .tribunalCorrespondencePostCode(values.get(13))
+                .tribunalCorrespondenceTelephone(values.get(14))
+                .tribunalCorrespondenceFax(values.get(15))
+                .tribunalCorrespondenceDX(values.get(16))
+                .tribunalCorrespondenceEmail(values.get(17))
                 .build();
     }
 
