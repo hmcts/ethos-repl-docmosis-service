@@ -1,6 +1,11 @@
 {
   "case_data": {
-    "tribunalCorrespondenceAddress" : "35 High Landing G3 6AD, Glasgow",
+    "tribunalCorrespondenceAddress": {
+      "AddressLine1": "Eagle Building,",
+      "AddressLine2": "215 Bothwell Street,",
+      "PostCode": "G2 7TS",
+      "PostTown": "Glasgow,"
+    },
     "tribunalCorrespondenceTelephone" : "03577123270",
     "tribunalCorrespondenceFax" : "07127126570",
     "tribunalCorrespondenceDX" : "1234567",
