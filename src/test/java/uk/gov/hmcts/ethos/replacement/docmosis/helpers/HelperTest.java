@@ -6,6 +6,7 @@ import org.junit.Test;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceScotType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceType;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -64,43 +65,42 @@ public class HelperTest {
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"Claimant_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"representative_reference\":\"1111111\",\n" +
-                "\"claimant_rep_reference\":\"1111111\",\n" +
+                "\"claimant_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 KJR\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"Francisco\",\n" +
                 "\"respondent_full_name\":\"Francisco\",\n" +
-                "\"respondent_rep_full_name\":\"Francisco\",\n" +
-                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
+                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"North West\",\n" +
+                "\"respondent_postCode\":\"M15 4QR\",\n" +
                 "\"resp_others\":\"Antonio Vazquez, Juan Garcia\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
-                "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_Date\":\"Mon, 25 Nov 2019\",\n" +
+                "\"Hearing_date\":\"Mon, 25 Nov 2019\",\n" +
                 "\"Hearing_date_time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
-                "\"Hearing_Date_Time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
-                "\"hearing_date_time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"hearing_address\":\"Manchester\",\n" +
-                "\"Hearing_Address\":\"Manchester\",\n" +
-                "\"EstLengthOfHearing\":\"2 days\",\n" +
-                "\"Hearing_Duration\":\"2 days\",\n" +
-                "\"hearing_duration\":\"2 days\",\n" +
-                "\"hearing_length\":\"2 days\",\n" +
+                "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t1_2\":\"true\",\n" +
-                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
-                "\"Court_Telephone\":\"03577131270\",\n" +
-                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
+                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i1_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
@@ -115,43 +115,42 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00027.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"Claimant_name\":\"Orlando LTD\",\n" +
                 "\"claimant_full_name\":\"Orlando LTD\",\n" +
-                "\"claimant_rep_full_name\":\"Orlando LTD\",\n" +
                 "\"Claimant\":\"Orlando LTD\",\n" +
-                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
                 "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_representative\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_addressLine1\":\"56 Block C\",\n" +
+                "\"respondent_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"Lancashire\",\n" +
+                "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"1111111\",\n" +
-                "\"respondent_rep_reference\":\"1111111\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
-                "\"hearing_date\":\"\",\n" +
-                "\"Hearing_Date\":\"\",\n" +
+                "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
-                "\"Hearing_Date_Time\":\"\",\n" +
-                "\"hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"hearing_address\":\"Manchester\",\n" +
-                "\"Hearing_Address\":\"Manchester\",\n" +
-                "\"EstLengthOfHearing\":\"2 hours\",\n" +
-                "\"Hearing_Duration\":\"2 hours\",\n" +
-                "\"hearing_duration\":\"2 hours\",\n" +
-                "\"hearing_length\":\"2 hours\",\n" +
+                "\"Hearing_duration\":\"2 hours\",\n" +
                 "\"t2_2A\":\"true\",\n" +
-                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
-                "\"Court_Telephone\":\"03577131270\",\n" +
-                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
+                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i2_2A_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
@@ -166,29 +165,38 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00028.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"Claimant_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
-                "\"claimant_rep_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Respondent_name\":\"Francisco\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
                 "\"respondent_full_name\":\"Francisco\",\n" +
-                "\"respondent_rep_full_name\":\"Francisco\",\n" +
-                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
+                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"North West\",\n" +
+                "\"respondent_postCode\":\"M15 4QR\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"t3_2\":\"true\",\n" +
-                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
-                "\"Court_Telephone\":\"03577131270\",\n" +
-                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
+                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i3_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
@@ -204,31 +212,38 @@ public class HelperTest {
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"Claimant_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"representative_reference\":\"1111111\",\n" +
-                "\"claimant_rep_reference\":\"1111111\",\n" +
+                "\"claimant_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 KJR\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"Francisco\",\n" +
                 "\"respondent_full_name\":\"Francisco\",\n" +
-                "\"respondent_rep_full_name\":\"Francisco\",\n" +
-                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
+                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"North West\",\n" +
+                "\"respondent_postCode\":\"M15 4QR\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"t4_2\":\"true\",\n" +
-                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
-                "\"Court_Telephone\":\"03577131270\",\n" +
-                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
+                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i4_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
@@ -244,34 +259,39 @@ public class HelperTest {
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"Claimant_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"representative_reference\":\"1111111\",\n" +
-                "\"claimant_rep_reference\":\"1111111\",\n" +
+                "\"claimant_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 KJR\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"RepresentativeNameRespondent1\",\n" +
                 "\"respondent_full_name\":\"RepresentativeNameRespondent1\",\n" +
-                "\"respondent_representative\":\"RepresentativeNameRespondent1\",\n" +
-                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent1\",\n" +
-                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_addressLine1\":\"56 Block C\",\n" +
+                "\"respondent_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"Lancashire\",\n" +
+                "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"respondent_rep_reference\":\"3333333333\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"t5_2\":\"true\",\n" +
-                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
-                "\"Court_Telephone\":\"03577131270\",\n" +
-                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
+                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i5_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
@@ -287,34 +307,39 @@ public class HelperTest {
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"Claimant_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"representative_reference\":\"1111111\",\n" +
-                "\"claimant_rep_reference\":\"1111111\",\n" +
+                "\"claimant_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 KJR\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"RepresentativeNameRespondent1\",\n" +
                 "\"respondent_full_name\":\"RepresentativeNameRespondent1\",\n" +
-                "\"respondent_representative\":\"RepresentativeNameRespondent1\",\n" +
-                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent1\",\n" +
-                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_addressLine1\":\"56 Block C\",\n" +
+                "\"respondent_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"Lancashire\",\n" +
+                "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"respondent_rep_reference\":\"3333333333\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"RespondentName\",\n" +
                 "\"t6_2\":\"true\",\n" +
-                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
-                "\"Court_Telephone\":\"03577131270\",\n" +
-                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
+                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i6_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
@@ -330,46 +355,43 @@ public class HelperTest {
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"Claimant_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"representative_reference\":\"1111111\",\n" +
-                "\"claimant_rep_reference\":\"1111111\",\n" +
+                "\"claimant_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 KJR\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"RepresentativeNameRespondent1\",\n" +
                 "\"respondent_full_name\":\"RepresentativeNameRespondent1\",\n" +
-                "\"respondent_representative\":\"RepresentativeNameRespondent1\",\n" +
-                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent1\",\n" +
-                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_addressLine1\":\"56 Block C\",\n" +
+                "\"respondent_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"Lancashire\",\n" +
+                "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"respondent_rep_reference\":\"3333333333\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Antonio Rodriguez\",\n" +
-                "\"hearing_date\":\"\",\n" +
-                "\"Hearing_Date\":\"\",\n" +
+                "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
-                "\"Hearing_Date_Time\":\"\",\n" +
-                "\"hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"hearing_address\":\"Manchester\",\n" +
-                "\"Hearing_Address\":\"Manchester\",\n" +
-                "\"EstLengthOfHearing\":\"2 hours\",\n" +
-                "\"Hearing_Duration\":\"2 hours\",\n" +
-                "\"hearing_duration\":\"2 hours\",\n" +
-                "\"hearing_length\":\"2 hours\",\n" +
+                "\"Hearing_duration\":\"2 hours\",\n" +
                 "\"t7_2\":\"true\",\n" +
-                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
-                "\"Court_Telephone\":\"03577131270\",\n" +
-                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
+                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i7_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
@@ -385,43 +407,42 @@ public class HelperTest {
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"Claimant_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"representative_reference\":\"1111111\",\n" +
-                "\"claimant_rep_reference\":\"1111111\",\n" +
+                "\"claimant_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 KJR\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"Joan Zamorano\",\n" +
                 "\"respondent_full_name\":\"Joan Zamorano\",\n" +
-                "\"respondent_rep_full_name\":\"Joan Zamorano\",\n" +
-                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
+                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"North West\",\n" +
+                "\"respondent_postCode\":\"M15 4QR\",\n" +
                 "\"resp_others\":\"Antonio Vazquez, Mikey McCollier\",\n" +
                 "\"Respondent\":\"Joan Zamorano\",\n" +
-                "\"hearing_date\":\"\",\n" +
-                "\"Hearing_Date\":\"\",\n" +
+                "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
-                "\"Hearing_Date_Time\":\"\",\n" +
-                "\"hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"hearing_address\":\"Manchester\",\n" +
-                "\"Hearing_Address\":\"Manchester\",\n" +
-                "\"EstLengthOfHearing\":\"2 hours\",\n" +
-                "\"Hearing_Duration\":\"2 hours\",\n" +
-                "\"hearing_duration\":\"2 hours\",\n" +
-                "\"hearing_length\":\"2 hours\",\n" +
+                "\"Hearing_duration\":\"2 hours\",\n" +
                 "\"t10_2\":\"true\",\n" +
-                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
-                "\"Court_Telephone\":\"03577131270\",\n" +
-                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
+                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i10_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
@@ -437,43 +458,42 @@ public class HelperTest {
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"Claimant_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"representative_reference\":\"1111111\",\n" +
-                "\"claimant_rep_reference\":\"1111111\",\n" +
+                "\"claimant_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 KJR\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"Raul Gonzalez\",\n" +
                 "\"respondent_full_name\":\"Raul Gonzalez\",\n" +
-                "\"respondent_rep_full_name\":\"Raul Gonzalez\",\n" +
-                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
+                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"North West\",\n" +
+                "\"respondent_postCode\":\"M15 4QR\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Raul Gonzalez\",\n" +
-                "\"hearing_date\":\"\",\n" +
-                "\"Hearing_Date\":\"\",\n" +
+                "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
-                "\"Hearing_Date_Time\":\"\",\n" +
-                "\"hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"hearing_address\":\"Manchester\",\n" +
-                "\"Hearing_Address\":\"Manchester\",\n" +
-                "\"EstLengthOfHearing\":\"2 hours\",\n" +
-                "\"Hearing_Duration\":\"2 hours\",\n" +
-                "\"hearing_duration\":\"2 hours\",\n" +
-                "\"hearing_length\":\"2 hours\",\n" +
+                "\"Hearing_duration\":\"2 hours\",\n" +
                 "\"t9_2\":\"true\",\n" +
-                "\"Court_Address\":\"35 La Nava S3 6AD, Southampton\",\n" +
-                "\"Court_Telephone\":\"03577131270\",\n" +
-                "\"Court_Fax\":\"07577126570\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
+                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i9_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
@@ -488,15 +508,14 @@ public class HelperTest {
                 "\"templateName\":\".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"Court_Address\":\"\",\n" +
-                "\"Court_Telephone\":\"\",\n" +
-                "\"Court_Fax\":\"\",\n" +
+                "\"Court_telephone\":\"\",\n" +
+                "\"Court_fax\":\"\",\n" +
                 "\"Court_DX\":\"\",\n" +
                 "\"Court_Email\":\"\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
@@ -512,43 +531,42 @@ public class HelperTest {
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"Claimant_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"representative_reference\":\"1111111\",\n" +
-                "\"claimant_rep_reference\":\"1111111\",\n" +
+                "\"claimant_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 KJR\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"Respondent_name\":\"string\",\n" +
                 "\"respondent_full_name\":\"string\",\n" +
-                "\"respondent_rep_full_name\":\"string\",\n" +
-                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
+                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"North West\",\n" +
+                "\"respondent_postCode\":\"M15 4QR\",\n" +
                 "\"resp_others\":\"Antonio Vazquez, Juan Garcia\",\n" +
                 "\"Respondent\":\"string\",\n" +
-                "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_Date\":\"Mon, 25 Nov 2019\",\n" +
+                "\"Hearing_date\":\"Mon, 25 Nov 2019\",\n" +
                 "\"Hearing_date_time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
-                "\"Hearing_Date_Time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
-                "\"hearing_date_time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"hearing_address\":\"Manchester\",\n" +
-                "\"Hearing_Address\":\"Manchester\",\n" +
-                "\"EstLengthOfHearing\":\"2 days\",\n" +
-                "\"Hearing_Duration\":\"2 days\",\n" +
-                "\"hearing_duration\":\"2 days\",\n" +
-                "\"hearing_length\":\"2 days\",\n" +
+                "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t_Scot_7_1\":\"true\",\n" +
-                "\"Court_Address\":\"35 High Landing G3 6AD, Glasgow\",\n" +
-                "\"Court_Telephone\":\"03577123270\",\n" +
-                "\"Court_Fax\":\"07127126570\",\n" +
+                "\"Court_addressLine1\":\"Eagle Building,\",\n" +
+                "\"Court_addressLine2\":\"215 Bothwell Street,\",\n" +
+                "\"Court_addressLine3\":\"\",\n" +
+                "\"Court_town\":\"Glasgow,\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"G2 7TS\",\n" +
+                "\"Court_telephone\":\"03577123270\",\n" +
+                "\"Court_fax\":\"07127126570\",\n" +
                 "\"Court_DX\":\"1234567\",\n" +
                 "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot7_1_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
@@ -563,43 +581,42 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-SCO-ENG-00043.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"Claimant_name\":\"Orlando LTD\",\n" +
                 "\"claimant_full_name\":\"Orlando LTD\",\n" +
-                "\"claimant_rep_full_name\":\"Orlando LTD\",\n" +
                 "\"Claimant\":\"Orlando LTD\",\n" +
-                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Respondent_name\":\"RepresentativeNameRespondent\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
                 "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_representative\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"56 Block C, Ellesmere Street, Manchester, Lancashire, M3 KJR, UK\",\n" +
+                "\"respondent_addressLine1\":\"56 Block C\",\n" +
+                "\"respondent_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"Lancashire\",\n" +
+                "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"1111111\",\n" +
-                "\"respondent_rep_reference\":\"1111111\",\n" +
                 "\"Respondent\":\"string\",\n" +
-                "\"hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_Date\":\"Mon, 25 Nov 2019\",\n" +
+                "\"Hearing_date\":\"Mon, 25 Nov 2019\",\n" +
                 "\"Hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
-                "\"Hearing_Date_Time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
-                "\"hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"hearing_address\":\"Manchester\",\n" +
-                "\"Hearing_Address\":\"Manchester\",\n" +
-                "\"EstLengthOfHearing\":\"2 hours\",\n" +
-                "\"Hearing_Duration\":\"2 hours\",\n" +
-                "\"hearing_duration\":\"2 hours\",\n" +
-                "\"hearing_length\":\"2 hours\",\n" +
+                "\"Hearing_duration\":\"2 hours\",\n" +
                 "\"t_Scot_24\":\"true\",\n" +
-                "\"Court_Address\":\"35 High Landing G3 6AD, Glasgow\",\n" +
-                "\"Court_Telephone\":\"03577123270\",\n" +
-                "\"Court_Fax\":\"07127126570\",\n" +
+                "\"Court_addressLine1\":\"Eagle Building,\",\n" +
+                "\"Court_addressLine2\":\"215 Bothwell Street,\",\n" +
+                "\"Court_addressLine3\":\"\",\n" +
+                "\"Court_town\":\"Glasgow,\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"G2 7TS\",\n" +
+                "\"Court_telephone\":\"03577123270\",\n" +
+                "\"Court_fax\":\"07127126570\",\n" +
                 "\"Court_DX\":\"1234567\",\n" +
                 "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot24_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
@@ -614,29 +631,38 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-SCO-ENG-00044.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"Claimant_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
-                "\"claimant_rep_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"claimant_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"claimant_rep_addressUK\":\"34, Low Street, Manchester, Lancashire, M3 6gw, UK\",\n" +
-                "\"Respondent_name\":\"string\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
                 "\"respondent_full_name\":\"string\",\n" +
-                "\"respondent_rep_full_name\":\"string\",\n" +
-                "\"respondent_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
-                "\"respondent_rep_addressUK\":\"54 Ellesmere Street, 62 Mere House, Manchester, North West, M15 4QR, UK\",\n" +
+                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
+                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"North West\",\n" +
+                "\"respondent_postCode\":\"M15 4QR\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"string\",\n" +
                 "\"t_Scot_34\":\"true\",\n" +
-                "\"Court_Address\":\"35 High Landing G3 6AD, Glasgow\",\n" +
-                "\"Court_Telephone\":\"03577123270\",\n" +
-                "\"Court_Fax\":\"07127126570\",\n" +
+                "\"Court_addressLine1\":\"Eagle Building,\",\n" +
+                "\"Court_addressLine2\":\"215 Bothwell Street,\",\n" +
+                "\"Court_addressLine3\":\"\",\n" +
+                "\"Court_town\":\"Glasgow,\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"G2 7TS\",\n" +
+                "\"Court_telephone\":\"03577123270\",\n" +
+                "\"Court_fax\":\"07127126570\",\n" +
                 "\"Court_DX\":\"1234567\",\n" +
                 "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot34_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
@@ -645,7 +671,7 @@ public class HelperTest {
     }
 
     @Test
-    public void buildDocumentTemplates() {
+    public void buildScotDocumentTemplates() {
         CaseDetails caseDetailsTemplates = new CaseDetails();
         CaseData caseData = new CaseData();
         CorrespondenceScotType correspondenceScotType = new CorrespondenceScotType();
@@ -655,7 +681,7 @@ public class HelperTest {
         correspondenceScotType.setPart3ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
         topLevel = "Part_4_Scot";
         part = "42";
         correspondenceScotType = new CorrespondenceScotType();
@@ -663,7 +689,7 @@ public class HelperTest {
         correspondenceScotType.setPart4ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
         topLevel = "Part_5_Scot";
         part = "52";
         correspondenceScotType = new CorrespondenceScotType();
@@ -671,7 +697,7 @@ public class HelperTest {
         correspondenceScotType.setPart5ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
         topLevel = "Part_6_Scot";
         part = "62";
         correspondenceScotType = new CorrespondenceScotType();
@@ -679,7 +705,7 @@ public class HelperTest {
         correspondenceScotType.setPart6ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
         topLevel = "Part_7_Scot";
         part = "72";
         correspondenceScotType = new CorrespondenceScotType();
@@ -687,7 +713,7 @@ public class HelperTest {
         correspondenceScotType.setPart7ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
         topLevel = "Part_15_Scot";
         part = "152";
         correspondenceScotType = new CorrespondenceScotType();
@@ -695,7 +721,7 @@ public class HelperTest {
         correspondenceScotType.setPart15ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(Helper.buildDocumentContent(caseDetailsTemplates, "").toString(), getJson(topLevel, part));
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
         topLevel = "Part_16_Scot";
         part = "162";
         correspondenceScotType = new CorrespondenceScotType();
@@ -706,6 +732,38 @@ public class HelperTest {
         assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
     }
 
+    @Test
+    public void buildDocumentTemplates() {
+        CaseDetails caseDetailsTemplates = new CaseDetails();
+        CaseData caseData = new CaseData();
+        CorrespondenceType correspondenceType = new CorrespondenceType();
+        String topLevel = "Part_18";
+        String part = "18A";
+        correspondenceType.setTopLevelDocuments(topLevel);
+        correspondenceType.setPart18Documents(part);
+        caseData.setCorrespondenceType(correspondenceType);
+        caseDetailsTemplates.setCaseData(caseData);
+        String result = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"Part_18.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
+                "\"data\":{\n" +
+                "\"t18A\":\"true\",\n" +
+                "\"Court_telephone\":\"\",\n" +
+                "\"Court_fax\":\"\",\n" +
+                "\"Court_DX\":\"\",\n" +
+                "\"Court_Email\":\"\",\n" +
+                "\"i18A_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"Clerk\":\"\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Case_No\":\"\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(result, Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+    }
+
     private String getJson(String topLevel, String part) {
         return "{\n" +
                 "\"accessKey\":\"\",\n" +
@@ -713,15 +771,14 @@ public class HelperTest {
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"t_Scot_" + part + "\":\"true\",\n" +
-                "\"Court_Address\":\"\",\n" +
-                "\"Court_Telephone\":\"\",\n" +
-                "\"Court_Fax\":\"\",\n" +
+                "\"Court_telephone\":\"\",\n" +
+                "\"Court_fax\":\"\",\n" +
                 "\"Court_DX\":\"\",\n" +
                 "\"Court_Email\":\"\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot"+ part +"_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"\",\n" +
-                "\"TODAY_DATE\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
