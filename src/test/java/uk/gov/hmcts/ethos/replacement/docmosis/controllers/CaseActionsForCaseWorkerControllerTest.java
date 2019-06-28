@@ -70,6 +70,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     private MockMvc mvc;
     private JsonNode requestContent;
+    private JsonNode requestContent2;
     private SubmitEvent submitEvent;
     private DefaultValues defaultValues;
 
@@ -77,6 +78,8 @@ public class CaseActionsForCaseWorkerControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         requestContent = objectMapper.readTree(new File(getClass()
                 .getResource("/exampleV1.json").toURI()));
+        requestContent2 = objectMapper.readTree(new File(getClass()
+                .getResource("/exampleV2.json").toURI()));
     }
 
     @Before
@@ -166,10 +169,23 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
-    public void postDefaultValues() throws Exception {
+    public void postDefaultValuesFromET1WithPositionTypeDefined() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenReturn(defaultValues);
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void postDefaultValues() throws Exception {
+        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenReturn(defaultValues);
+        mvc.perform(post(POST_DEFAULT_VALUES_URL)
+                .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
