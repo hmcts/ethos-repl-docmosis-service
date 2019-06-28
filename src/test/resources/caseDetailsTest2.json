@@ -1,6 +1,12 @@
 {
   "case_data": {
-    "tribunalCorrespondenceAddress" : "35 La Nava S3 6AD, Southampton",
+    "tribunalCorrespondenceAddress": {
+      "AddressLine1": "Manchester Employment Tribunal,",
+      "AddressLine2": "Alexandra House,",
+      "AddressLine3": "14-22 The Parsonage,",
+      "PostCode": "M3 2JA",
+      "PostTown": "Manchester,"
+    },
     "tribunalCorrespondenceTelephone" : "03577131270",
     "tribunalCorrespondenceFax" : "07577126570",
     "tribunalCorrespondenceDX" : "123456",

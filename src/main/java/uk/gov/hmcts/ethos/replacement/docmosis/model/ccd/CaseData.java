@@ -13,7 +13,7 @@ import java.util.List;
 public class CaseData {
 
     @JsonProperty("tribunalCorrespondenceAddress")
-    private String tribunalCorrespondenceAddress;
+    private Address tribunalCorrespondenceAddress;
     @JsonProperty("tribunalCorrespondenceTelephone")
     private String tribunalCorrespondenceTelephone;
     @JsonProperty("tribunalCorrespondenceFax")
