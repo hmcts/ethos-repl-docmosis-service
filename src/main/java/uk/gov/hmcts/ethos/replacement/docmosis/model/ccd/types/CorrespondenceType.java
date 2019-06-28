@@ -24,6 +24,8 @@ public class CorrespondenceType {
     private String part6Documents;
     @JsonProperty("Part_7_Documents")
     private String part7Documents;
+    @JsonProperty("Part_8_Documents")
+    private String part8Documents;
     @JsonProperty("Part_9_Documents")
     private String part9Documents;
     @JsonProperty("Part_10_Documents")
@@ -42,4 +44,6 @@ public class CorrespondenceType {
     private String part16Documents;
     @JsonProperty("Part_17_Documents")
     private String part17Documents;
+    @JsonProperty("Part_18_Documents")
+    private String part18Documents;
 }

@@ -15,6 +15,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseUpdateForCaseWorkerSe
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.POST_DEFAULT_XLSX_FILE_PATH;
@@ -131,8 +132,7 @@ public class CaseActionsForCaseWorkerController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> preDefaultValues(
-            @RequestBody CCDRequest ccdRequest,
-            @RequestHeader(value = "Authorization") String userToken) {
+            @RequestBody CCDRequest ccdRequest) {
         log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
         DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
         ccdRequest.getCaseDetails().getCaseData().setClaimantTypeOfClaimant(defaultValues.getClaimantTypeOfClaimant());
@@ -151,12 +151,11 @@ public class CaseActionsForCaseWorkerController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> postDefaultValues(
-            @RequestBody CCDRequest ccdRequest,
-            @RequestHeader(value = "Authorization") String userToken) {
+            @RequestBody CCDRequest ccdRequest) {
         log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
         DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
         ccdRequest.getCaseDetails().getCaseData().setPositionType(defaultValues.getPositionType());
-        ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceAddress(defaultValues.getTribunalCorrespondenceAddress());
+        ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceAddress(getTribunalCorrespondenceAddress(defaultValues));
         ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceTelephone(defaultValues.getTribunalCorrespondenceTelephone());
         ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceFax(defaultValues.getTribunalCorrespondenceFax());
         ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceDX(defaultValues.getTribunalCorrespondenceDX());
@@ -165,6 +164,16 @@ public class CaseActionsForCaseWorkerController {
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(ccdRequest.getCaseDetails().getCaseData())
                 .build());
+    }
+
+    private Address getTribunalCorrespondenceAddress(DefaultValues defaultValues) {
+        Address address = new Address();
+        address.setAddressLine1(Optional.ofNullable(defaultValues.getTribunalCorrespondenceAddressLine1()).orElse(""));
+        address.setAddressLine2(Optional.ofNullable(defaultValues.getTribunalCorrespondenceAddressLine2()).orElse(""));
+        address.setAddressLine3(Optional.ofNullable(defaultValues.getTribunalCorrespondenceAddressLine3()).orElse(""));
+        address.setPostTown(Optional.ofNullable(defaultValues.getTribunalCorrespondenceTown()).orElse(""));
+        address.setPostCode(Optional.ofNullable(defaultValues.getTribunalCorrespondencePostCode()).orElse(""));
+        return address;
     }
 
 }

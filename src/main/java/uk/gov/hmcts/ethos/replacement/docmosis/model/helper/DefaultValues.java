@@ -12,7 +12,11 @@ import lombok.NoArgsConstructor;
 public class DefaultValues {
     private String positionType;
     private String claimantTypeOfClaimant;
-    private String tribunalCorrespondenceAddress;
+    private String tribunalCorrespondenceAddressLine1;
+    private String tribunalCorrespondenceAddressLine2;
+    private String tribunalCorrespondenceAddressLine3;
+    private String tribunalCorrespondenceTown;
+    private String tribunalCorrespondencePostCode;
     private String tribunalCorrespondenceTelephone;
     private String tribunalCorrespondenceFax;
     private String tribunalCorrespondenceDX;
