@@ -153,17 +153,26 @@ public class CaseActionsForCaseWorkerController {
     public ResponseEntity<CCDCallbackResponse> postDefaultValues(
             @RequestBody CCDRequest ccdRequest) {
         log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
         DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
-        ccdRequest.getCaseDetails().getCaseData().setPositionType(defaultValues.getPositionType());
-        ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceAddress(getTribunalCorrespondenceAddress(defaultValues));
-        ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceTelephone(defaultValues.getTribunalCorrespondenceTelephone());
-        ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceFax(defaultValues.getTribunalCorrespondenceFax());
-        ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceDX(defaultValues.getTribunalCorrespondenceDX());
-        ccdRequest.getCaseDetails().getCaseData().setTribunalCorrespondenceEmail(defaultValues.getTribunalCorrespondenceEmail());
+        ccdRequest.getCaseDetails().setCaseData(getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues));
         log.info("Post Default values added to the case: " + defaultValues);
+
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(ccdRequest.getCaseDetails().getCaseData())
                 .build());
+    }
+
+    private CaseData getCaseData(CaseData caseData, DefaultValues defaultValues) {
+        if (caseData.getPositionType() == null) {
+            caseData.setPositionType(defaultValues.getPositionType());
+        }
+        caseData.setTribunalCorrespondenceAddress(getTribunalCorrespondenceAddress(defaultValues));
+        caseData.setTribunalCorrespondenceTelephone(defaultValues.getTribunalCorrespondenceTelephone());
+        caseData.setTribunalCorrespondenceFax(defaultValues.getTribunalCorrespondenceFax());
+        caseData.setTribunalCorrespondenceDX(defaultValues.getTribunalCorrespondenceDX());
+        caseData.setTribunalCorrespondenceEmail(defaultValues.getTribunalCorrespondenceEmail());
+        return caseData;
     }
 
     private Address getTribunalCorrespondenceAddress(DefaultValues defaultValues) {
