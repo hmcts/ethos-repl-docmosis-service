@@ -19,6 +19,7 @@ import java.net.URL;
 
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
+@WithTag("ComponentTest")
 public class DocMosisComponentTest {
 
     private TestUtil testUtil;
@@ -29,49 +30,41 @@ public class DocMosisComponentTest {
     }
 
     @Test
-    @WithTag("ComponentTest")
     public void verify_payload_eng_claimant_individual_not_represented() throws Exception {
-        testUtil.verifyDocMosisPayload("1", "1", false, Constants.TEST_DATA_CASE1);
+        testUtil.verifyDocMosisPayload("10", "1", false, Constants.TEST_DATA_CASE1);
     }
 
     @Test
-    @WithTag("ComponentTest")
     public void verify_payload_eng_claimant_company_not_represented() throws Exception {
-        testUtil.verifyDocMosisPayload("1", "1", false, Constants.TEST_DATA_CASE2);
+        testUtil.verifyDocMosisPayload("10", "1", false, Constants.TEST_DATA_CASE2);
     }
 
     @Test
-    @WithTag("ComponentTest")
     public void verify_payload_eng_claimant_individual_represented() throws Exception {
-        testUtil.verifyDocMosisPayload("1", "1", false, Constants.TEST_DATA_CASE3);
+        testUtil.verifyDocMosisPayload("10", "1", false, Constants.TEST_DATA_CASE3);
     }
 
     @Test
-    @WithTag("ComponentTest")
     public void verify_payload_eng_respondant_represented() throws Exception {
-        testUtil.verifyDocMosisPayload("1", "1", false, Constants.TEST_DATA_CASE4);
+        testUtil.verifyDocMosisPayload("10", "1", false, Constants.TEST_DATA_CASE4);
     }
 
     @Test
-    @WithTag("ComponentTest")
     public void verify_payload_sco_claimant_individual_not_represented() throws Exception {
         testUtil.verifyDocMosisPayload("1", "", true, Constants.TEST_DATA_SCOT_CASE1);
     }
 
     @Test
-    @WithTag("ComponentTest")
     public void verify_payload_sco_claimant_company_not_represented() throws Exception {
         testUtil.verifyDocMosisPayload("1", "", true, Constants.TEST_DATA_SCOT_CASE2);
     }
 
     @Test
-    @WithTag("ComponentTest")
     public void verify_payload_sco_claimant_individual_represented() throws Exception {
         testUtil.verifyDocMosisPayload("1", "", true, Constants.TEST_DATA_SCOT_CASE3);
     }
 
     @Test
-    @WithTag("ComponentTest")
     public void verify_payload_sco_respondant_represented() throws Exception {
         testUtil.verifyDocMosisPayload("1", "", true, Constants.TEST_DATA_SCOT_CASE4);
     }
@@ -79,13 +72,13 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_eng_claimant_individual_not_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "1", "Sir S Smith", false, Constants.TEST_DATA_CASE1);
+        testUtil.executeGenerateDocumentTest("10", "1", "Mr A Benderas", false, Constants.TEST_DATA_CASE1);
     }
 
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_eng_claimant_company_not_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "1", "ACME", false, Constants.TEST_DATA_CASE2);
+        testUtil.executeGenerateDocumentTest("10", "1", "Acme Logistics Ltd", false, Constants.TEST_DATA_CASE2);
     }
 
     @Test
@@ -97,7 +90,7 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_eng_respondant_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "10", "Roadshow Pictures", false, Constants.TEST_DATA_CASE4);
+        testUtil.executeGenerateDocumentTest("10", "1", "Roadshow Pictures", false, Constants.TEST_DATA_CASE4);
     }
 
     @Test
@@ -109,7 +102,7 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_sco_claimant_company_not_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "", "Acme Avionics Ltd", true, Constants.TEST_DATA_SCOT_CASE2);
+        testUtil.executeGenerateDocumentTest("1", "", "Roadshow Pictures", true, Constants.TEST_DATA_SCOT_CASE2);
     }
 
     @Test
@@ -121,9 +114,10 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_sco_respondant_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "", "Natwest Ltd", true, Constants.TEST_DATA_SCOT_CASE4);
+        testUtil.executeGenerateDocumentTest("1", "", "Roadshow Pictures", true, Constants.TEST_DATA_SCOT_CASE4);
     }
 
+    @Ignore
     @Test
     @WithTag("FunctionalTest")
     public void invoke_pre_default_endpoint_with_invalid_auth_token() throws IOException {
@@ -137,6 +131,7 @@ public class DocMosisComponentTest {
         }
     }
 
+    @Ignore
     @Test
     @WithTag("FunctionalTest")
     public void invoke_pre_default_endpoint_without_payload() throws IOException {

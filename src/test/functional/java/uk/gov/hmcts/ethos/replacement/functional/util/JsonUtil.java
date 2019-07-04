@@ -49,6 +49,10 @@ public class JsonUtil {
         } else {
             if (intTopLevel < 9) intTopLevel += 25;
             else intTopLevel += 24;
+
+            if (intTopLevel == 8) intTopLevel = 65;
+            if (intTopLevel == 18) intTopLevel = 66;
+
             json = json.replace("#TOPLEVEL#", "EM-TRB-EGW-ENG-000" + intTopLevel);
         }
 

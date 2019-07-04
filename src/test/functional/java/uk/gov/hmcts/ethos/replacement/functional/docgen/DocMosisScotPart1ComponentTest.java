@@ -72,7 +72,7 @@ public class DocMosisScotPart1ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_4() throws Exception {
-        testUtil.executeGenerateDocumentTest("4", "", "RECONSIDERATION OF DECISION TO REJECT CLAIM/PART OF CLAIM", true);
+        testUtil.executeGenerateDocumentTest("4", "", "RECONSIDERATION OF DECISION TO REJECT", true);
     }
 
     @Test
@@ -117,6 +117,6 @@ public class DocMosisScotPart1ComponentTest {
 
     @After
     public void tearDown() throws IOException {
-        testUtil.deleteTempFile();
+        //testUtil.deleteTempFile();
     }
 }

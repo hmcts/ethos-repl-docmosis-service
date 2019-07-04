@@ -132,7 +132,7 @@ public class DocMosisPart4ComponentTest {
 
     @Test
     public void generateDocument_Part4_19() throws Exception {
-        testUtil.executeGenerateDocumentTest("4", "", "Rule 21 Referral");
+        testUtil.executeGenerateDocumentTest("4", "19", "Rule 21 Referral");
     }
 
     @After

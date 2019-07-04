@@ -37,7 +37,7 @@ public class DocMosisPart9ComponentTest {
 
     @Test
     public void generateDocument_Part9_1B() throws Exception {
-        testUtil.executeGenerateDocumentTest("9", "1B", "the following parts of these proceedings namely \\.\\.\\.");
+        testUtil.executeGenerateDocumentTest("9", "1B", "HEARING IN PRIVATE");
     }
 
     @Test
@@ -62,12 +62,12 @@ public class DocMosisPart9ComponentTest {
 
     @Test
     public void generateDocument_Part9_4() throws Exception {
-        testUtil.executeGenerateDocumentTest("9", "4", "THIS ORDER PROHIBITS the publication in Great Britain, in respect of the above proceedings, of identifying matter in a written publication available to the public, or its inclusion in a relevant programme for reception in Great Britain");
+        testUtil.executeGenerateDocumentTest("9", "4", "RESTRICTED REPORTING ORDER");
     }
 
     @Test
     public void generateDocument_Part9_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("9", "5", "Pursuant to section 12 of the Employment Tribunals Act 1996 and rules 50\\(1\\) and \\(3\\)\\(d\\) of the Employment Tribunals Rules of Procedure 2013, THIS ORDER PROHIBITS");
+        testUtil.executeGenerateDocumentTest("9", "5", "RESTRICTED REPORTING ORDER");
     }
 
     @Test
@@ -82,7 +82,7 @@ public class DocMosisPart9ComponentTest {
 
     @Test
     public void generateDocument_Part9_7A() throws Exception {
-        testUtil.executeGenerateDocumentTest("9", "7A", "Pursuant to section 12 of the Employment Tribunals Act 1996 and rules 50(1) and 29 of the Employment Tribunals Rules of Procedure 2013");
+        testUtil.executeGenerateDocumentTest("9", "7A", "RESTRICTED REPORTING ORDER");
     }
 
     @Test

@@ -32,7 +32,7 @@ public class DocMosisPart3ComponentTest {
     @Test
     @WithTag("SmokeTest")
     public void generateDocument_Part3_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "1", "Article 4\\(d\\) of the Employment Tribunals Extension of Jurisdiction");
+        testUtil.executeGenerateDocumentTest("3", "1", "EMPLOYER’S CONTRACT CLAIM REJECTED");
     }
 
     @Test
@@ -102,7 +102,7 @@ public class DocMosisPart3ComponentTest {
 
     @Test
     public void generateDocument_Part3_15() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "15", "Employment Judge has refused the application for an extension of time because");
+        testUtil.executeGenerateDocumentTest("3", "15", "RESPONSE TO EMPLOYER’S CONTRACT");
     }
 
     @Test
@@ -142,7 +142,7 @@ public class DocMosisPart3ComponentTest {
 
     @Test
     public void generateDocument_Part3_23() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "", "Why has the response been rejected");
+        testUtil.executeGenerateDocumentTest("3", "23", "Why has the response been rejected");
     }
 
     @After

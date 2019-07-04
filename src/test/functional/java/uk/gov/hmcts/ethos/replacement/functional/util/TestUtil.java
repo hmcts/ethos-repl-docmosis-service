@@ -124,6 +124,7 @@ public class TestUtil {
     public void deleteTempFile() throws IOException {
         if (downloadedFilePath != null) {
             FileUtils.forceDelete(new File(downloadedFilePath));
+            downloadedFilePath = null;
         }
     }
 

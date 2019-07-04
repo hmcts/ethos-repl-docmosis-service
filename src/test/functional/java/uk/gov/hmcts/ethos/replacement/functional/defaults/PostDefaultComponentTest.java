@@ -76,6 +76,7 @@ public class PostDefaultComponentTest {
         }
     }
 
+    @Ignore
     @Test
     public void invoke_pre_default_endpoint_without_payload() throws IOException {
         testUtil.loadAuthToken();
@@ -97,7 +98,7 @@ public class PostDefaultComponentTest {
     }
 
     private void executeTest(String testData, boolean isScotland) throws IOException {
-        testUtil.executePostDefaultValuesTest("positionType", "Awaiting ET3", false, testData);
+        testUtil.executePostDefaultValuesTest("positionType", "Manually Created", false, testData);
         if (isScotland) {
             testUtil.executePostDefaultValuesTest("tribunalCorrespondenceAddress", "Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS", false, testData);
             testUtil.executePostDefaultValuesTest("tribunalCorrespondenceTelephone", "0141 204 0730", false, testData);

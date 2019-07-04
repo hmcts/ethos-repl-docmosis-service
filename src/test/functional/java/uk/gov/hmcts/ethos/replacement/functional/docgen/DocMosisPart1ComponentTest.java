@@ -87,7 +87,7 @@ public class DocMosisPart1ComponentTest {
 
     @Test
     public void generateDocument_Part1_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "7", "Your claim form has been referred to Employment Judge  who has decided to reject it");
+        testUtil.executeGenerateDocumentTest("1", "7", "Your claim form has been referred to Employment Judge");
     }
 
     @Test
@@ -177,7 +177,7 @@ public class DocMosisPart1ComponentTest {
 
     @Test
     public void generateDocument_Part1_19() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "", "has ordered that it be treated as an amendment to the claim");
+        testUtil.executeGenerateDocumentTest("1", "19", "has ordered that it be treated as an amendment to the claim");
     }
 
     @After
