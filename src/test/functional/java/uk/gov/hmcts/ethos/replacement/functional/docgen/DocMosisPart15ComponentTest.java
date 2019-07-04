@@ -30,8 +30,8 @@ public class DocMosisPart15ComponentTest {
     }
 
 
-    @Test
-    @WithTag("SmokeTest")
+//    @Test
+//    @WithTag("SmokeTest")
     public void generateDocument_Part15_1() throws Exception {
         testUtil.executeGenerateDocumentTest("15", "1", "Thank you for your interest in judicial mediation");
     }

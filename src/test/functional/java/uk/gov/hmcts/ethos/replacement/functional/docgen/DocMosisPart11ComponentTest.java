@@ -29,8 +29,8 @@ public class DocMosisPart11ComponentTest {
         testUtil = new TestUtil();
     }
 
-    @Test
-    @WithTag("SmokeTest")
+//    @Test
+//    @WithTag("SmokeTest")
     public void generateDocument_Part11_1C() throws Exception {
         testUtil.executeGenerateDocumentTest("11", "1C", "RECONSIDERATION OF JUDGMENT: REFUSAL");
     }

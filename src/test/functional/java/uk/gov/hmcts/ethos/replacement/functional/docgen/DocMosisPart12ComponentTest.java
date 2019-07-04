@@ -29,8 +29,8 @@ public class DocMosisPart12ComponentTest {
         testUtil = new TestUtil();
     }
 
-    @Test
-    @WithTag("SmokeTest")
+//    @Test
+//    @WithTag("SmokeTest")
     public void generateDocument_Part12_1C() throws Exception {
         testUtil.executeGenerateDocumentTest("12", "1C", "Please see the enclosed letter which contains an application for a costs order to be made against you");
     }

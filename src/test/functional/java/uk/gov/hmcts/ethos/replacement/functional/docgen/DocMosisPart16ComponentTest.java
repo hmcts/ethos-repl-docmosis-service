@@ -29,8 +29,8 @@ public class DocMosisPart16ComponentTest {
         testUtil = new TestUtil();
     }
 
-    @Test
-    @WithTag("SmokeTest")
+//    @Test
+//    @WithTag("SmokeTest")
     public void generateDocument_Part16_1() throws Exception {
         testUtil.executeGenerateDocumentTest("16", "1", "INCORPORATING NOTICE OF STAGE 1 EQUAL VALUE HEARING");
     }
