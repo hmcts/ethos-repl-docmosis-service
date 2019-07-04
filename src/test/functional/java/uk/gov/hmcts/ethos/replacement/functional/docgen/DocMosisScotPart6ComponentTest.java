@@ -127,7 +127,7 @@ public class DocMosisScotPart6ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_48() throws Exception {
-        testUtil.executeGenerateDocumentTest("48", "", "I refer to your application for an Order/a preliminary hearing", true);
+        testUtil.executeGenerateDocumentTest("48", "", "CASE MANAGEMENT APPLICATION", true);
     }
 
     @Test
@@ -142,7 +142,7 @@ public class DocMosisScotPart6ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_50_A() throws Exception {
-        testUtil.executeGenerateDocumentTest("50", "A", "ORDER GIVING LEAVE TO AMEND A CLAIM", true);
+        testUtil.executeGenerateDocumentTest("50", "A", "ORDER GIVING LEAVE TO AMEND A", true);
     }
 
     @Test
@@ -182,12 +182,12 @@ public class DocMosisScotPart6ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_57_A() throws Exception {
-        testUtil.executeGenerateDocumentTest("57", "A", "following non-compliance with an “unless order” and has refused it", true);
+        testUtil.executeGenerateDocumentTest("57", "A", "APPLICATION TO SET ASIDE DISMISSAL OF", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_57_B() throws Exception {
-        testUtil.executeGenerateDocumentTest("57", "B", "DISMISSAL OF CLAIM/RESPONSE", true);
+        testUtil.executeGenerateDocumentTest("57", "B", "DISMISSAL OF", true);
     }
 
     @Test

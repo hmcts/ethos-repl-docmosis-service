@@ -51,7 +51,7 @@ public class PreDefaultComponentTest {
 
     @Test
     public void claimant_type_company_with_scotland_template() throws IOException {
-        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", "Individual", true, Constants.TEST_DATA_SCOT_PRE_DEFAULT1);
+        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", "Individual", true, Constants.TEST_DATA_SCOT_PRE_DEFAULT2);
     }
 
     @Ignore
@@ -67,6 +67,7 @@ public class PreDefaultComponentTest {
         }
     }
 
+    @Ignore
     @Test
     public void invoke_pre_default_endpoint_without_payload() throws IOException {
         testUtil.loadAuthToken();

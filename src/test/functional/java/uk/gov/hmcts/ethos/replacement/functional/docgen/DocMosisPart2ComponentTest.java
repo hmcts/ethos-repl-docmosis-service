@@ -186,7 +186,7 @@ public class DocMosisPart2ComponentTest {
 
     @Test
     public void generateDocument_Part2_27() throws Exception {
-        testUtil.executeGenerateDocumentTest("2", "", "Response – Amendment Granted");
+        testUtil.executeGenerateDocumentTest("2", "27", "Response – Amendment Granted");
     }
 
     @After
