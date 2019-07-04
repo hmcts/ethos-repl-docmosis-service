@@ -2,45 +2,43 @@
   "token": "Bearer authToken",
   "event_id": "123456789",
   "case_details": {
-    "id": 1560766535838938,
+    "id": 1561740081556219,
     "jurisdiction": "EMPLOYMENT",
-    "state": "1_Submitted",
+    "state": "2_Accepted",
     "case_type_id": "EmpTrib_MVP_1.0_Glas",
     "security_classification": "PUBLIC",
     "case_data": {
-      "feeGroupReference": "728545743587",
       "claimantWorkAddress": {
         "claimant_work_address": {
-          "AddressLine1": "54 Princes St",
-          "PostTown": "Edinburgh",
-          "PostCode": "EH2 2DQ",
+          "AddressLine1": "Library & Community Centre",
+          "AddressLine2": "1 Artizan Street",
+          "PostTown": "London",
+          "PostCode": "E1 7AF",
           "Country": "United Kingdom"
         }
       },
-      "ethosCaseReference": "20 7254687 6434",
-      "claimant_Company": "Acme Avionics Ltd",
-      "claimantType": {
-        "claimant_addressUK": {
-          "AddressLine1": "20 George St",
-          "PostTown": "Edinburgh",
-          "PostCode": "EH2 2PF",
-          "Country": "United Kingdom"
-        }
-      },
+      "positionType": "Manually Created",
+      "claimant_Company": "Acme Logictics Ltd",
       "claimantRepresentedQuestion": "No",
       "receiptDate": "2019-05-20",
-      "claimant_TypeOfClaimant": "Company",
+      "tribunalCorrespondenceDX": "DX 580003",
+      "preAcceptCase": {
+        "caseAccepted": "Yes",
+        "dateAccepted": "2019-05-20"
+      },
       "respondentSumType": {
-        "respondent_name": "Marks & Spender Ltd",
+        "respondent_name": "Roadshow Pictures",
         "respondent_ACAS_question": "Yes",
         "respondent_ACAS": "83473985749",
         "respondent_address": {
-          "AddressLine1": "54 Princes St",
-          "PostTown": "Edinburgh",
-          "PostCode": "EH2 2DQ",
+          "AddressLine1": "Library & Community Centre",
+          "AddressLine2": "1 Artizan Street",
+          "PostTown": "London",
+          "PostCode": "E1 7AF",
           "Country": "United Kingdom"
         }
       },
+      "tribunalCorrespondenceFax": "01264 785 177",
       "claimantOtherType": {
         "claimant_employed_currently": "No",
         "claimant_disabled": "No"
@@ -49,10 +47,27 @@
         "topLevel_Scot_Documents": "#TOPLEVEL#",
         "part_1_Scot_Documents": "#VERSION#"
       },
-      "caseType": "Single"
+      "tribunalCorrespondenceTelephone": "0141 204 0730",
+      "caseType": "Single",
+      "feeGroupReference": "345645645655",
+      "ethosCaseReference": "20 7254687 1322",
+      "claimantType": {
+        "claimant_addressUK": {
+          "AddressLine1": "20 Castle St,",
+          "PostTown": "Edinburgh",
+          "PostCode": "EH2 3AT"
+        }
+      },
+      "claimant_TypeOfClaimant": "Company",
+      "tribunalCorrespondenceAddress": {
+        "AddressLine1": "Eagle Building,",
+        "AddressLine2": "215 Bothwell Street,",
+        "PostTown": "Glasgow,",
+        "PostCode": "G2 7TS"
+      },
+      "tribunalCorrespondenceEmail": "glasgowet@justice.gov.uk"
     },
     "data_classification": {
-      "feeGroupReference": "PUBLIC",
       "claimantWorkAddress": {
         "classification": "PUBLIC",
         "value": {
@@ -60,6 +75,7 @@
             "classification": "PUBLIC",
             "value": {
               "AddressLine1": "PUBLIC",
+              "AddressLine2": "PUBLIC",
               "PostTown": "PUBLIC",
               "PostCode": "PUBLIC",
               "Country": "PUBLIC"
@@ -67,25 +83,18 @@
           }
         }
       },
-      "ethosCaseReference": "PUBLIC",
+      "positionType": "PUBLIC",
       "claimant_Company": "PUBLIC",
-      "claimantType": {
-        "classification": "PUBLIC",
-        "value": {
-          "claimant_addressUK": {
-            "classification": "PUBLIC",
-            "value": {
-              "AddressLine1": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "Country": "PUBLIC"
-            }
-          }
-        }
-      },
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
-      "claimant_TypeOfClaimant": "PUBLIC",
+      "tribunalCorrespondenceDX": "PUBLIC",
+      "preAcceptCase": {
+        "classification": "PUBLIC",
+        "value": {
+          "caseAccepted": "PUBLIC",
+          "dateAccepted": "PUBLIC"
+        }
+      },
       "respondentSumType": {
         "classification": "PUBLIC",
         "value": {
@@ -96,6 +105,7 @@
             "classification": "PUBLIC",
             "value": {
               "AddressLine1": "PUBLIC",
+              "AddressLine2": "PUBLIC",
               "PostTown": "PUBLIC",
               "PostCode": "PUBLIC",
               "Country": "PUBLIC"
@@ -103,6 +113,7 @@
           }
         }
       },
+      "tribunalCorrespondenceFax": "PUBLIC",
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {
@@ -117,10 +128,37 @@
           "part_1_Scot_Documents": "PUBLIC"
         }
       },
-      "caseType": "PUBLIC"
+      "tribunalCorrespondenceTelephone": "PUBLIC",
+      "caseType": "PUBLIC",
+      "feeGroupReference": "PUBLIC",
+      "ethosCaseReference": "PUBLIC",
+      "claimantType": {
+        "classification": "PUBLIC",
+        "value": {
+          "claimant_addressUK": {
+            "classification": "PUBLIC",
+            "value": {
+              "AddressLine1": "PUBLIC",
+              "PostTown": "PUBLIC",
+              "PostCode": "PUBLIC"
+            }
+          }
+        }
+      },
+      "claimant_TypeOfClaimant": "PUBLIC",
+      "tribunalCorrespondenceAddress": {
+        "classification": "PUBLIC",
+        "value": {
+          "AddressLine1": "PUBLIC",
+          "AddressLine2": "PUBLIC",
+          "PostTown": "PUBLIC",
+          "PostCode": "PUBLIC"
+        }
+      },
+      "tribunalCorrespondenceEmail": "PUBLIC"
     },
     "after_submit_callback_response": {
-      "confirmation_header": "Please download the document from : <a target=\"_blank\" href=\"http://127.0.0.1:3453/documents/20d8a494-4232-480a-aac3-23ad0746c07b/binary\">Document</a>",
+      "confirmation_header": "Please download the document from : <a target=\"_blank\" href=\"http://127.0.0.1:3453/documents/95d2d398-8da4-428a-bc68-41771631cc00/binary\">Document</a>",
       "confirmation_body": null
     },
     "callback_response_status_code": 200,
@@ -128,7 +166,6 @@
     "delete_draft_response_status_code": null,
     "delete_draft_response_status": null,
     "security_classifications": {
-      "feeGroupReference": "PUBLIC",
       "claimantWorkAddress": {
         "classification": "PUBLIC",
         "value": {
@@ -136,6 +173,7 @@
             "classification": "PUBLIC",
             "value": {
               "AddressLine1": "PUBLIC",
+              "AddressLine2": "PUBLIC",
               "PostTown": "PUBLIC",
               "PostCode": "PUBLIC",
               "Country": "PUBLIC"
@@ -143,25 +181,18 @@
           }
         }
       },
-      "ethosCaseReference": "PUBLIC",
+      "positionType": "PUBLIC",
       "claimant_Company": "PUBLIC",
-      "claimantType": {
-        "classification": "PUBLIC",
-        "value": {
-          "claimant_addressUK": {
-            "classification": "PUBLIC",
-            "value": {
-              "AddressLine1": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "Country": "PUBLIC"
-            }
-          }
-        }
-      },
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
-      "claimant_TypeOfClaimant": "PUBLIC",
+      "tribunalCorrespondenceDX": "PUBLIC",
+      "preAcceptCase": {
+        "classification": "PUBLIC",
+        "value": {
+          "caseAccepted": "PUBLIC",
+          "dateAccepted": "PUBLIC"
+        }
+      },
       "respondentSumType": {
         "classification": "PUBLIC",
         "value": {
@@ -172,6 +203,7 @@
             "classification": "PUBLIC",
             "value": {
               "AddressLine1": "PUBLIC",
+              "AddressLine2": "PUBLIC",
               "PostTown": "PUBLIC",
               "PostCode": "PUBLIC",
               "Country": "PUBLIC"
@@ -179,6 +211,7 @@
           }
         }
       },
+      "tribunalCorrespondenceFax": "PUBLIC",
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {
@@ -193,7 +226,34 @@
           "part_1_Scot_Documents": "PUBLIC"
         }
       },
-      "caseType": "PUBLIC"
+      "tribunalCorrespondenceTelephone": "PUBLIC",
+      "caseType": "PUBLIC",
+      "feeGroupReference": "PUBLIC",
+      "ethosCaseReference": "PUBLIC",
+      "claimantType": {
+        "classification": "PUBLIC",
+        "value": {
+          "claimant_addressUK": {
+            "classification": "PUBLIC",
+            "value": {
+              "AddressLine1": "PUBLIC",
+              "PostTown": "PUBLIC",
+              "PostCode": "PUBLIC"
+            }
+          }
+        }
+      },
+      "claimant_TypeOfClaimant": "PUBLIC",
+      "tribunalCorrespondenceAddress": {
+        "classification": "PUBLIC",
+        "value": {
+          "AddressLine1": "PUBLIC",
+          "AddressLine2": "PUBLIC",
+          "PostTown": "PUBLIC",
+          "PostCode": "PUBLIC"
+        }
+      },
+      "tribunalCorrespondenceEmail": "PUBLIC"
     }
   }
 }

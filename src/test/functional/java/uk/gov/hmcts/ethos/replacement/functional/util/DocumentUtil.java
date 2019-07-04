@@ -39,7 +39,7 @@ public class DocumentUtil {
         sb.append(getHearingData(caseData));
         sb.append(getCorrespondenceData(caseData));
         sb.append(getCorrespondenceScotData(caseData));
-        sb.append(getCourtData());
+        sb.append(getCourtData(caseData));
 
         sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts\":\"")
                 .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
@@ -47,7 +47,7 @@ public class DocumentUtil {
                 .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
 
         sb.append("\"Clerk\":\"").append(nullCheck(caseData.getClerkResponsible())).append(NEW_LINE);
-        sb.append("\"TODAY_DATE\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
+        sb.append("\"Today_date\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
         sb.append("\"TodayPlus28Days\":\"").append(formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
         sb.append("\"Case_No\":\"").append(nullCheck(caseDetails.getCaseData().getEthosCaseReference())).append(NEW_LINE);
 
@@ -73,26 +73,33 @@ public class DocumentUtil {
         StringBuilder sb = new StringBuilder();
         RepresentedTypeC representedTypeC = caseData.getRepresentativeClaimantType();
         if (representedTypeC != null) {
-            sb.append("\"claimant_addressUK\": \"" + representedTypeC.getRepresentativeAddress()).append(NEW_LINE);
-            sb.append("\"claimant_rep_addressUK\": \"" + representedTypeC.getRepresentativeAddress()).append(NEW_LINE);
-            sb.append("\"Claimant_name\": \"" + representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"claimant_addressLine1\": \"" + representedTypeC.getRepresentativeAddress().getAddressLine1()).append(NEW_LINE);
+            sb.append("\"claimant_addressLine2\": \"" + nullCheck(representedTypeC.getRepresentativeAddress().getAddressLine2())).append(NEW_LINE);
+            sb.append("\"claimant_addressLine3\": \"" + nullCheck(representedTypeC.getRepresentativeAddress().getAddressLine3())).append(NEW_LINE);
+            sb.append("\"claimant_town\": \"" + nullCheck(representedTypeC.getRepresentativeAddress().getPostTown())).append(NEW_LINE);
+            sb.append("\"claimant_county\": \"" + nullCheck(representedTypeC.getRepresentativeAddress().getCounty())).append(NEW_LINE);
+            sb.append("\"claimant_postCode\": \"" + nullCheck(representedTypeC.getRepresentativeAddress().getPostCode())).append(NEW_LINE);
+            //sb.append("\"Claimant_name\": \"" + representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
+            //sb.append("\"claimant_name\": \"" + representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"claimant_full_name\": \"" + representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"claimant_rep_full_name\": \"" + representedTypeC.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"Claimant\": \"" + caseData.getClaimantIndType().claimantFullName()).append(NEW_LINE);
             //sb.append("\"claimant_email_address\": \"").append(NEW_LINE);
         } else {
             ClaimantType claimantType = caseData.getClaimantType();
             ClaimantIndType claimantIndType = caseData.getClaimantIndType();
 
-            sb.append("\"claimant_addressUK\": \"" + claimantType.getClaimantAddressUK()).append(NEW_LINE);
+            sb.append("\"claimant_addressLine1\": \"" + claimantType.getClaimantAddressUK().getAddressLine1()).append(NEW_LINE);
+            sb.append("\"claimant_addressLine2\": \"" + nullCheck(claimantType.getClaimantAddressUK().getAddressLine2())).append(NEW_LINE);
+            sb.append("\"claimant_addressLine3\": \"" + nullCheck(claimantType.getClaimantAddressUK().getAddressLine3())).append(NEW_LINE);
+            sb.append("\"claimant_town\": \"" + nullCheck(claimantType.getClaimantAddressUK().getPostTown())).append(NEW_LINE);
+            sb.append("\"claimant_county\": \"" + nullCheck(claimantType.getClaimantAddressUK().getCounty())).append(NEW_LINE);
+            sb.append("\"claimant_postCode\": \"" + nullCheck(claimantType.getClaimantAddressUK().getPostCode())).append(NEW_LINE);
             String typeOfClaimant = caseData.getClaimantTypeOfClaimant();
             if (typeOfClaimant.equalsIgnoreCase("individual")) {
-                sb.append("\"Claimant_name\": \"" + claimantIndType.claimantFullName()).append(NEW_LINE);
                 sb.append("\"claimant_full_name\": \"" + claimantIndType.claimantFullName()).append(NEW_LINE);
                 sb.append("\"Claimant\": \"" + claimantIndType.claimantFullName()).append(NEW_LINE);
                 //sb.append("\"claimant_email_address\": \"").append(NEW_LINE);
             } else if (typeOfClaimant.equalsIgnoreCase("company")) {
-                sb.append("\"Claimant_name\": \"" + caseData.getClaimantCompany()).append(NEW_LINE);
                 sb.append("\"claimant_full_name\": \"" + caseData.getClaimantCompany()).append(NEW_LINE);
                 sb.append("\"Claimant\": \"" + caseData.getClaimantCompany()).append(NEW_LINE);
                 //sb.append("\"claimant_email_address\": \"").append(NEW_LINE);
@@ -110,20 +117,26 @@ public class DocumentUtil {
         if (representedTypeRList != null && !representedTypeRList.isEmpty()) {
             RepresentedTypeR representedTypeR = representedTypeRList.get(0).getValue();
             //sb.append("\"respondent_email_address\": \"\",");
-            sb.append("\"Respondent_name\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
             sb.append("\"respondent_full_name\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"respondent_representative\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"respondent_rep_full_name\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"respondent_addressUK\": \"" + representedTypeR.getRepresentativeAddress()).append(NEW_LINE);
+            //sb.append("\"respondent_representative\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
+            //sb.append("\"respondent_rep_full_name\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
+            sb.append("\"respondent_addressLine1\": \"" + representedTypeR.getRepresentativeAddress().getAddressLine1()).append(NEW_LINE);
+            sb.append("\"respondent_addressLine2\": \"" + nullCheck(representedTypeR.getRepresentativeAddress().getAddressLine2())).append(NEW_LINE);
+            sb.append("\"respondent_addressLine3\": \"" + nullCheck(representedTypeR.getRepresentativeAddress().getAddressLine3())).append(NEW_LINE);
+            sb.append("\"respondent_town\": \"" + nullCheck(representedTypeR.getRepresentativeAddress().getPostTown())).append(NEW_LINE);
+            sb.append("\"respondent_county\": \"" + nullCheck(representedTypeR.getRepresentativeAddress().getCounty())).append(NEW_LINE);
+            sb.append("\"respondent_postCode\": \"" + nullCheck(representedTypeR.getRepresentativeAddress().getPostCode())).append(NEW_LINE);
             sb.append("\"respondent_reference\": \"" + nullCheck(representedTypeR.getRepresentativeReference())).append(NEW_LINE);
-            sb.append("\"respondent_rep_reference\": \"" + nullCheck(representedTypeR.getRepresentativeReference())).append(NEW_LINE);
+            //sb.append("\"respondent_rep_reference\": \"" + nullCheck(representedTypeR.getRepresentativeReference())).append(NEW_LINE);
         } else {
 
-            sb.append("\"Respondent_name\": \"" + respondentType.getRespondentName()).append(NEW_LINE);
             sb.append("\"respondent_full_name\": \"" + respondentType.getRespondentName()).append(NEW_LINE);
-            sb.append("\"respondent_rep_full_name\": \"" + respondentType.getRespondentName()).append(NEW_LINE);
-            sb.append("\"respondent_addressUK\": \"" + respondentType.getRespondentAddress()).append(NEW_LINE);
-            sb.append("\"respondent_rep_addressUK\": \"" + respondentType.getRespondentAddress()).append(NEW_LINE);
+            sb.append("\"respondent_addressLine1\": \"" + nullCheck(respondentType.getRespondentAddress().getAddressLine1())).append(NEW_LINE);
+            sb.append("\"respondent_addressLine2\": \"" + nullCheck(respondentType.getRespondentAddress().getAddressLine2())).append(NEW_LINE);
+            sb.append("\"respondent_addressLine3\": \"" + nullCheck(respondentType.getRespondentAddress().getAddressLine3())).append(NEW_LINE);
+            sb.append("\"respondent_town\": \"" + nullCheck(respondentType.getRespondentAddress().getPostTown())).append(NEW_LINE);
+            sb.append("\"respondent_county\": \"" + nullCheck(respondentType.getRespondentAddress().getCounty())).append(NEW_LINE);
+            sb.append("\"respondent_postCode\": \"" + nullCheck(respondentType.getRespondentAddress().getPostCode())).append(NEW_LINE);
             //sb.append("\"claimant_email_address\": \"").append(NEW_LINE);
         }
         //Currently not checking caseData.getRepCollection(). Should create a list with names and check if represented or not
@@ -146,26 +159,16 @@ public class DocumentUtil {
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             HearingType hearingType = caseData.getHearingCollection().get(0).getValue();
             if (hearingType.getHearingDateStart() != null) {
-                sb.append("\"hearing_date\": \"" + hearingType.getHearingDateStart()).append(NEW_LINE);
-                sb.append("\"Hearing_Date\": \"" + hearingType.getHearingDateStart()).append(NEW_LINE);
+                sb.append("\"Hearing_date\": \"" + hearingType.getHearingDateStart()).append(NEW_LINE);
                 sb.append("\"Hearing_date_time\": \"" + hearingType.getHearingDateStart()).append(NEW_LINE);
-                sb.append("\"Hearing_Date_Time\": \"" + hearingType.getHearingDateStart()).append(NEW_LINE);
-                sb.append("\"hearing_date_time\": \"" + hearingType.getHearingDateStart()).append(NEW_LINE);
             } else {
-                sb.append("\"hearing_date\": \"").append(NEW_LINE);
-                sb.append("\"Hearing_Date\": \"").append(NEW_LINE);
+                sb.append("\"Hearing_date\": \"").append(NEW_LINE);
                 sb.append("\"Hearing_date_time\": \"").append(NEW_LINE);
-                sb.append("\"Hearing_Date_Time\": \"").append(NEW_LINE);
-                sb.append("\"hearing_date_time\": \"").append(NEW_LINE);
             }
             sb.append("\"Hearing_venue\": \"" + hearingType.getHearingVenue()).append(NEW_LINE);
-            sb.append("\"hearing_address\": \"" + hearingType.getHearingVenue()).append(NEW_LINE);
-            sb.append("\"Hearing_Address\": \"" + hearingType.getHearingVenue()).append(NEW_LINE);
+            //sb.append("\"hearing_address\": \"" + hearingType.getHearingVenue()).append(NEW_LINE);
             if (hearingType.getEstHearing() != null) {
-                sb.append("\"EstLengthOfHearing\": \"" + hearingType.getEstHearing()).append(NEW_LINE);
-                sb.append("\"Hearing_Duration\": \"" + hearingType.getEstHearing()).append(NEW_LINE);
-                sb.append("\"hearing_duration\": \"" + hearingType.getEstHearing()).append(NEW_LINE);
-                sb.append("\"hearing_length\": \"" + hearingType.getEstHearing()).append(NEW_LINE);
+                sb.append("\"Hearing_duration\": \"" + hearingType.getEstHearing()).append(NEW_LINE);
             }
         }
         return sb;
@@ -250,13 +253,20 @@ public class DocumentUtil {
         return sb;
     }
 
-    private static StringBuilder getCourtData() {
+    private static StringBuilder getCourtData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\"Court_Address\":\"").append(NEW_LINE);
-        sb.append("\"Court_Telephone\":\"").append(NEW_LINE);
-        sb.append("\"Court_Fax\":\"").append(NEW_LINE);
-        sb.append("\"Court_DX\":\"").append(NEW_LINE);
-        sb.append("\"Court_Email\":\"").append(NEW_LINE);
+        if (caseData.getTribunalCorrespondenceAddress() != null) {
+            sb.append("\"Court_addressLine1\": \"" + nullCheck(caseData.getTribunalCorrespondenceAddress().getAddressLine1())).append(NEW_LINE);
+            sb.append("\"Court_addressLine2\": \"" + nullCheck(caseData.getTribunalCorrespondenceAddress().getAddressLine2())).append(NEW_LINE);
+            sb.append("\"Court_addressLine3\": \"" + nullCheck(caseData.getTribunalCorrespondenceAddress().getAddressLine3())).append(NEW_LINE);
+            sb.append("\"Court_town\": \"" + nullCheck(caseData.getTribunalCorrespondenceAddress().getPostTown())).append(NEW_LINE);
+            sb.append("\"Court_county\": \"" + nullCheck(caseData.getTribunalCorrespondenceAddress().getCounty())).append(NEW_LINE);
+            sb.append("\"Court_postCode\": \"" + nullCheck(caseData.getTribunalCorrespondenceAddress().getPostCode())).append(NEW_LINE);
+        }
+        sb.append("\"Court_telephone\":\"" + nullCheck(caseData.getTribunalCorrespondenceTelephone())).append(NEW_LINE);
+        sb.append("\"Court_fax\":\"" + nullCheck(caseData.getTribunalCorrespondenceFax())).append(NEW_LINE);
+        sb.append("\"Court_DX\":\"" + nullCheck(caseData.getTribunalCorrespondenceDX())).append(NEW_LINE);
+        sb.append("\"Court_Email\":\"" + nullCheck(caseData.getTribunalCorrespondenceEmail())).append(NEW_LINE);
         return sb;
     }
 

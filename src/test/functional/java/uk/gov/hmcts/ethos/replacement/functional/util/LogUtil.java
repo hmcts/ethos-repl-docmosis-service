@@ -17,7 +17,10 @@ public class LogUtil {
 
         List<String> logs = getLogs("ethos-repl-docmosis-service");
 
-        for (String log : logs) {
+        if (logs.size() == 0) return null;
+
+        for (int i = logs.size() - 1; i > 0; i--) {
+            String log = logs.get(i);
             Matcher matcher = pattern.matcher(log);
             if (matcher.matches()) {
                 return matcher.group(1);
@@ -30,7 +33,7 @@ public class LogUtil {
     public static List<String> getLogs(String containerName) throws IOException {
         // run the Unix "ps -ef" command
         // using the Runtime exec method:
-        Process p = Runtime.getRuntime().exec("docker logs --since=30s " + containerName);
+        Process p = Runtime.getRuntime().exec("docker logs --since=60s " + containerName);
 
         BufferedReader stdInput = new BufferedReader(new
                 InputStreamReader(p.getInputStream()));
