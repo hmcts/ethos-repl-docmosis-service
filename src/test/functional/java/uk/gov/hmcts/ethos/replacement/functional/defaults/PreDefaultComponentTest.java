@@ -32,8 +32,8 @@ public class PreDefaultComponentTest {
         testUtil = new TestUtil();
     }
 
-    @Test
-    @WithTag("SmokeTest")
+//    @Test
+//    @WithTag("SmokeTest")
     public void claimant_type_individual_with_england_template() throws IOException {
         testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", "Individual", false, Constants.TEST_DATA_PRE_DEFAULT1);
     }
@@ -43,8 +43,8 @@ public class PreDefaultComponentTest {
         testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", "Individual", false, Constants.TEST_DATA_PRE_DEFAULT2);
     }
 
-    @Test
-    @WithTag("SmokeTest")
+//    @Test
+//    @WithTag("SmokeTest")
     public void claimant_type_individual_with_scotland_template() throws IOException {
         testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", "Individual", true, Constants.TEST_DATA_SCOT_PRE_DEFAULT1);
     }
