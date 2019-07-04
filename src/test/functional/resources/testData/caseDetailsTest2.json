@@ -1,133 +1,71 @@
 {
   "token": "Bearer authToken",
   "event_id": "123456789",
-  "case_details" : {
-    "id":1558615555217651,
-    "jurisdiction":"EMPLOYMENT",
-    "state":"1_Submitted",
-    "case_type_id":"EmpTrib_MVP_1.0_Manc",
-    "security_classification":"PUBLIC",
-    "case_data":{
-      "claimantWorkAddress":{
-        "claimant_work_address":{
-          "AddressLine1":"84 Petty France",
-          "PostTown":"London",
-          "PostCode":"SW1H 9EA",
-          "Country":"United Kingdom"
+  "case_details": {
+    "id": 1561739196758603,
+    "jurisdiction": "EMPLOYMENT",
+    "state": "1_Submitted",
+    "case_type_id": "EmpTrib_MVP_1.0_Manc",
+    "security_classification": "PUBLIC",
+    "case_data": {
+      "claimantWorkAddress": {
+        "claimant_work_address": {
+          "AddressLine1": "Library & Community Centre",
+          "AddressLine2": "1 Artizan Street",
+          "PostTown": "London",
+          "PostCode": "E1 7AF",
+          "Country": "United Kingdom"
         }
       },
-      "positionType":"ET3 referred to Judge",
-      "claimant_Company":"ACME",
-      "claimantRepresentedQuestion":"No",
-      "receiptDate":"2019-05-23",
-      "fileLocation":"with Mr Vincent Ryan",
-      "respondentSumType":{
-        "respondent_name":"Joe",
-        "respondent_ACAS_question":"No",
-        "respondent_ACAS_no":"Unfair Dismissal",
-        "respondent_address":{
-          "AddressLine1":"84 Petty France",
-          "PostTown":"London",
-          "PostCode":"SW1H 9EA",
-          "Country":"United Kingdom"
+      "positionType": "Manually Created",
+      "claimant_Company": "Acme Logistics Ltd",
+      "claimantRepresentedQuestion": "No",
+      "receiptDate": "2019-05-20",
+      "tribunalCorrespondenceDX": "DX 743570",
+      "respondentSumType": {
+        "respondent_name": "Roadshow Pictures",
+        "respondent_ACAS_question": "Yes",
+        "respondent_ACAS": "93836586590684",
+        "respondent_address": {
+          "AddressLine1": "Library & Community Centre",
+          "AddressLine2": "1 Artizan Street",
+          "PostTown": "London",
+          "PostCode": "E1 7AF",
+          "Country": "United Kingdom"
         }
       },
-      "claimantOtherType":{
-        "claimant_employed_currently":"Yes"
+      "tribunalCorrespondenceFax": "0870 739 4433",
+      "claimantOtherType": {
+        "claimant_employed_currently": "No",
+        "claimant_disabled": "No"
       },
-      "caseType":"Single",
-      "feeGroupReference":"333333333333",
-      "ethosCaseReference":"145267324",
-      "claimantType":{
-        "claimant_addressUK":{
-          "AddressLine1":"102 Petty France",
-          "PostTown":"London",
-          "PostCode":"SW1H 9EA",
-          "Country":"United Kingdom"
-        },
-        "claimant_contact_preference":"Email"
+      "tribunalCorrespondenceTelephone": "0161 833 6100",
+      "caseType": "Single",
+      "feeGroupReference": "845965849586",
+      "ethosCaseReference": "20 7254687 4322",
+      "claimantType": {
+        "claimant_addressUK": {
+          "AddressLine1": "232 Petticoat Square",
+          "PostTown": "London",
+          "PostCode": "W10 4AG",
+          "Country": "United Kingdom"
+        }
       },
-      "claimant_TypeOfClaimant":"Company",
-      "correspondenceType":{
+      "claimant_TypeOfClaimant": "Company",
+      "correspondenceType": {
         "topLevel_Documents": "#TOPLEVEL#",
         "part_1_Documents": "#VERSION#"
-      }
+      },
+      "tribunalCorrespondenceAddress": {
+        "AddressLine1": "Manchester Employment Tribunal,",
+        "AddressLine2": "Alexandra House,",
+        "AddressLine3": "14-22 The Parsonage,",
+        "PostTown": "Manchester,",
+        "PostCode": "M3 2JA"
+      },
+      "tribunalCorrespondenceEmail": "Manchesteret@justice.gov.uk"
     },
-    "data_classification":{
-      "claimantWorkAddress":{
-        "classification":"PUBLIC",
-        "value":{
-          "claimant_work_address":{
-            "classification":"PUBLIC",
-            "value":{
-              "AddressLine1":"PUBLIC",
-              "PostTown":"PUBLIC",
-              "PostCode":"PUBLIC",
-              "Country":"PUBLIC"
-            }
-          }
-        }
-      },
-      "positionType":"PUBLIC",
-      "claimant_Company":"PUBLIC",
-      "claimantRepresentedQuestion":"PUBLIC",
-      "receiptDate":"PUBLIC",
-      "fileLocation":"PUBLIC",
-      "respondentSumType":{
-        "classification":"PUBLIC",
-        "value":{
-          "respondent_name":"PUBLIC",
-          "respondent_ACAS_question":"PUBLIC",
-          "respondent_ACAS_no":"PUBLIC",
-          "respondent_address":{
-            "classification":"PUBLIC",
-            "value":{
-              "AddressLine1":"PUBLIC",
-              "PostTown":"PUBLIC",
-              "PostCode":"PUBLIC",
-              "Country":"PUBLIC"
-            }
-          }
-        }
-      },
-      "claimantOtherType":{
-        "classification":"PUBLIC",
-        "value":{
-          "claimant_employed_currently":"PUBLIC"
-        }
-      },
-      "caseType":"PUBLIC",
-      "feeGroupReference":"PUBLIC",
-      "ethosCaseReference":"PUBLIC",
-      "claimantType":{
-        "classification":"PUBLIC",
-        "value":{
-          "claimant_addressUK":{
-            "classification":"PUBLIC",
-            "value":{
-              "AddressLine1":"PUBLIC",
-              "PostTown":"PUBLIC",
-              "PostCode":"PUBLIC",
-              "Country":"PUBLIC"
-            }
-          },
-          "claimant_contact_preference":"PUBLIC"
-        }
-      },
-      "claimant_TypeOfClaimant":"PUBLIC",
-      "correspondenceType":{
-        "classification":"PUBLIC",
-        "value":{
-          "topLevel_Documents":"PUBLIC"
-        }
-      }
-    },
-    "after_submit_callback_response":{},
-    "callback_response_status_code":200,
-    "callback_response_status":"CALLBACK_COMPLETED",
-    "delete_draft_response_status_code":null,
-    "delete_draft_response_status":null,
-    "security_classifications": {
+    "data_classification": {
       "claimantWorkAddress": {
         "classification": "PUBLIC",
         "value": {
@@ -135,6 +73,7 @@
             "classification": "PUBLIC",
             "value": {
               "AddressLine1": "PUBLIC",
+              "AddressLine2": "PUBLIC",
               "PostTown": "PUBLIC",
               "PostCode": "PUBLIC",
               "Country": "PUBLIC"
@@ -146,17 +85,18 @@
       "claimant_Company": "PUBLIC",
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
-      "fileLocation": "PUBLIC",
+      "tribunalCorrespondenceDX": "PUBLIC",
       "respondentSumType": {
         "classification": "PUBLIC",
         "value": {
           "respondent_name": "PUBLIC",
           "respondent_ACAS_question": "PUBLIC",
-          "respondent_ACAS_no": "PUBLIC",
+          "respondent_ACAS": "PUBLIC",
           "respondent_address": {
             "classification": "PUBLIC",
             "value": {
               "AddressLine1": "PUBLIC",
+              "AddressLine2": "PUBLIC",
               "PostTown": "PUBLIC",
               "PostCode": "PUBLIC",
               "Country": "PUBLIC"
@@ -164,12 +104,15 @@
           }
         }
       },
+      "tribunalCorrespondenceFax": "PUBLIC",
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {
-          "claimant_employed_currently": "PUBLIC"
+          "claimant_employed_currently": "PUBLIC",
+          "claimant_disabled": "PUBLIC"
         }
       },
+      "tribunalCorrespondenceTelephone": "PUBLIC",
       "caseType": "PUBLIC",
       "feeGroupReference": "PUBLIC",
       "ethosCaseReference": "PUBLIC",
@@ -184,17 +127,104 @@
               "PostCode": "PUBLIC",
               "Country": "PUBLIC"
             }
-          },
-          "claimant_contact_preference": "PUBLIC"
+          }
         }
       },
       "claimant_TypeOfClaimant": "PUBLIC",
-      "correspondenceType": {
+      "tribunalCorrespondenceAddress": {
         "classification": "PUBLIC",
         "value": {
-          "topLevel_Documents": "PUBLIC"
+          "AddressLine1": "PUBLIC",
+          "AddressLine2": "PUBLIC",
+          "AddressLine3": "PUBLIC",
+          "PostTown": "PUBLIC",
+          "PostCode": "PUBLIC"
         }
-      }
+      },
+      "tribunalCorrespondenceEmail": "PUBLIC"
+    },
+    "after_submit_callback_response": null,
+    "callback_response_status_code": null,
+    "callback_response_status": null,
+    "delete_draft_response_status_code": null,
+    "delete_draft_response_status": null,
+    "security_classifications": {
+      "claimantWorkAddress": {
+        "classification": "PUBLIC",
+        "value": {
+          "claimant_work_address": {
+            "classification": "PUBLIC",
+            "value": {
+              "AddressLine1": "PUBLIC",
+              "AddressLine2": "PUBLIC",
+              "PostTown": "PUBLIC",
+              "PostCode": "PUBLIC",
+              "Country": "PUBLIC"
+            }
+          }
+        }
+      },
+      "positionType": "PUBLIC",
+      "claimant_Company": "PUBLIC",
+      "claimantRepresentedQuestion": "PUBLIC",
+      "receiptDate": "PUBLIC",
+      "tribunalCorrespondenceDX": "PUBLIC",
+      "respondentSumType": {
+        "classification": "PUBLIC",
+        "value": {
+          "respondent_name": "PUBLIC",
+          "respondent_ACAS_question": "PUBLIC",
+          "respondent_ACAS": "PUBLIC",
+          "respondent_address": {
+            "classification": "PUBLIC",
+            "value": {
+              "AddressLine1": "PUBLIC",
+              "AddressLine2": "PUBLIC",
+              "PostTown": "PUBLIC",
+              "PostCode": "PUBLIC",
+              "Country": "PUBLIC"
+            }
+          }
+        }
+      },
+      "tribunalCorrespondenceFax": "PUBLIC",
+      "claimantOtherType": {
+        "classification": "PUBLIC",
+        "value": {
+          "claimant_employed_currently": "PUBLIC",
+          "claimant_disabled": "PUBLIC"
+        }
+      },
+      "tribunalCorrespondenceTelephone": "PUBLIC",
+      "caseType": "PUBLIC",
+      "feeGroupReference": "PUBLIC",
+      "ethosCaseReference": "PUBLIC",
+      "claimantType": {
+        "classification": "PUBLIC",
+        "value": {
+          "claimant_addressUK": {
+            "classification": "PUBLIC",
+            "value": {
+              "AddressLine1": "PUBLIC",
+              "PostTown": "PUBLIC",
+              "PostCode": "PUBLIC",
+              "Country": "PUBLIC"
+            }
+          }
+        }
+      },
+      "claimant_TypeOfClaimant": "PUBLIC",
+      "tribunalCorrespondenceAddress": {
+        "classification": "PUBLIC",
+        "value": {
+          "AddressLine1": "PUBLIC",
+          "AddressLine2": "PUBLIC",
+          "AddressLine3": "PUBLIC",
+          "PostTown": "PUBLIC",
+          "PostCode": "PUBLIC"
+        }
+      },
+      "tribunalCorrespondenceEmail": "PUBLIC"
     }
   }
 }

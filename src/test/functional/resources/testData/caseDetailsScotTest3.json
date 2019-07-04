@@ -2,9 +2,9 @@
   "token": "Bearer authToken",
   "event_id": "123456789",
   "case_details": {
-    "id": 1560425118224822,
+    "id": 1561740320736721,
     "jurisdiction": "EMPLOYMENT",
-    "state": "1_Submitted",
+    "state": "2_Accepted",
     "case_type_id": "EmpTrib_MVP_1.0_Glas",
     "security_classification": "PUBLIC",
     "case_data": {
@@ -17,8 +17,14 @@
           "Country": "United Kingdom"
         }
       },
+      "positionType": "Manually Created",
       "claimantRepresentedQuestion": "Yes",
-      "receiptDate": "2019-05-25",
+      "receiptDate": "2019-05-20",
+      "tribunalCorrespondenceDX": "DX 580003",
+      "preAcceptCase": {
+        "caseAccepted": "Yes",
+        "dateAccepted": "2019-05-20"
+      },
       "respondentSumType": {
         "respondent_name": "Roadshow Pictures",
         "respondent_ACAS_question": "Yes",
@@ -31,6 +37,7 @@
           "Country": "United Kingdom"
         }
       },
+      "tribunalCorrespondenceFax": "01264 785 177",
       "claimantOtherType": {
         "claimant_employed_currently": "No",
         "claimant_disabled": "No"
@@ -39,14 +46,15 @@
         "topLevel_Scot_Documents": "#TOPLEVEL#",
         "part_1_Scot_Documents": "#VERSION#"
       },
+      "tribunalCorrespondenceTelephone": "0141 204 0730",
       "caseType": "Single",
-      "feeGroupReference": "395873459878",
-      "ethosCaseReference": "20 7254687 6433",
+      "feeGroupReference": "839443859475",
+      "ethosCaseReference": "20 7254687 1323",
       "claimantType": {
         "claimant_addressUK": {
-          "AddressLine1": "232 Petticoat Square",
-          "PostTown": "London",
-          "PostCode": "W10 4AG",
+          "AddressLine1": "54 Princes St",
+          "PostTown": "Edinburgh",
+          "PostCode": "EH2 2DQ",
           "Country": "United Kingdom"
         }
       },
@@ -57,14 +65,21 @@
         "claimant_gender": "Male"
       },
       "claimant_TypeOfClaimant": "Individual",
+      "tribunalCorrespondenceAddress": {
+        "AddressLine1": "Eagle Building,",
+        "AddressLine2": "215 Bothwell Street,",
+        "PostTown": "Glasgow,",
+        "PostCode": "G2 7TS"
+      },
+      "tribunalCorrespondenceEmail": "glasgowet@justice.gov.uk",
       "representativeClaimantType": {
-        "name_of_representative": "Danny Devito",
-        "name_of_organisation": "Devito Practice Ltd",
+        "name_of_representative": "Al Pacino",
+        "name_of_organisation": "Pacino Practice",
         "representative_occupation": "Solicitor",
         "representative_address": {
-          "AddressLine1": "5 BuntingBridge Road",
-          "PostTown": "Ilford",
-          "PostCode": "IG2 7LW",
+          "AddressLine1": "20 Castle St,",
+          "PostTown": "Edinburgh",
+          "PostCode": "EH2 3AT",
           "Country": "United Kingdom"
         }
       }
@@ -85,8 +100,17 @@
           }
         }
       },
+      "positionType": "PUBLIC",
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
+      "tribunalCorrespondenceDX": "PUBLIC",
+      "preAcceptCase": {
+        "classification": "PUBLIC",
+        "value": {
+          "caseAccepted": "PUBLIC",
+          "dateAccepted": "PUBLIC"
+        }
+      },
       "respondentSumType": {
         "classification": "PUBLIC",
         "value": {
@@ -105,6 +129,7 @@
           }
         }
       },
+      "tribunalCorrespondenceFax": "PUBLIC",
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {
@@ -119,6 +144,7 @@
           "part_1_Scot_Documents": "PUBLIC"
         }
       },
+      "tribunalCorrespondenceTelephone": "PUBLIC",
       "caseType": "PUBLIC",
       "feeGroupReference": "PUBLIC",
       "ethosCaseReference": "PUBLIC",
@@ -146,6 +172,16 @@
         }
       },
       "claimant_TypeOfClaimant": "PUBLIC",
+      "tribunalCorrespondenceAddress": {
+        "classification": "PUBLIC",
+        "value": {
+          "AddressLine1": "PUBLIC",
+          "AddressLine2": "PUBLIC",
+          "PostTown": "PUBLIC",
+          "PostCode": "PUBLIC"
+        }
+      },
+      "tribunalCorrespondenceEmail": "PUBLIC",
       "representativeClaimantType": {
         "classification": "PUBLIC",
         "value": {
@@ -165,7 +201,7 @@
       }
     },
     "after_submit_callback_response": {
-      "confirmation_header": "Please download the document from : <a target=\"_blank\" href=\"http://127.0.0.1:3453/documents/e8c67761-a783-4d97-aeb7-929878faa03b/binary\">Document</a>",
+      "confirmation_header": "Please download the document from : <a target=\"_blank\" href=\"http://127.0.0.1:3453/documents/4137f5d9-ff77-44fb-942c-c9afbaf0f173/binary\">Document</a>",
       "confirmation_body": null
     },
     "callback_response_status_code": 200,
@@ -188,8 +224,17 @@
           }
         }
       },
+      "positionType": "PUBLIC",
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
+      "tribunalCorrespondenceDX": "PUBLIC",
+      "preAcceptCase": {
+        "classification": "PUBLIC",
+        "value": {
+          "caseAccepted": "PUBLIC",
+          "dateAccepted": "PUBLIC"
+        }
+      },
       "respondentSumType": {
         "classification": "PUBLIC",
         "value": {
@@ -208,6 +253,7 @@
           }
         }
       },
+      "tribunalCorrespondenceFax": "PUBLIC",
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {
@@ -222,6 +268,7 @@
           "part_1_Scot_Documents": "PUBLIC"
         }
       },
+      "tribunalCorrespondenceTelephone": "PUBLIC",
       "caseType": "PUBLIC",
       "feeGroupReference": "PUBLIC",
       "ethosCaseReference": "PUBLIC",
@@ -249,6 +296,16 @@
         }
       },
       "claimant_TypeOfClaimant": "PUBLIC",
+      "tribunalCorrespondenceAddress": {
+        "classification": "PUBLIC",
+        "value": {
+          "AddressLine1": "PUBLIC",
+          "AddressLine2": "PUBLIC",
+          "PostTown": "PUBLIC",
+          "PostCode": "PUBLIC"
+        }
+      },
+      "tribunalCorrespondenceEmail": "PUBLIC",
       "representativeClaimantType": {
         "classification": "PUBLIC",
         "value": {
