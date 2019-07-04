@@ -31,11 +31,11 @@ public class PostDefaultComponentTest {
         testUtil = new TestUtil();
     }
 
-    @Test
-    @WithTag("SmokeTest")
-    public void claimant_individual_with_england_template() throws IOException {
-        executeTest(Constants.TEST_DATA_POST_DEFAULT1, false);
-    }
+//    @Test
+//    @WithTag("SmokeTest")
+//    public void claimant_individual_with_england_template() throws IOException {
+//        executeTest(Constants.TEST_DATA_POST_DEFAULT1, false);
+//    }
 
     @Test
     public void claimant_company_with_england_template() throws IOException {
@@ -52,11 +52,11 @@ public class PostDefaultComponentTest {
         executeTest(Constants.TEST_DATA_POST_DEFAULT4, false);
     }
 
-    @Test
-    @WithTag("SmokeTest")
-    public void claimant_individual_with_scotland_template() throws IOException {
-        executeTest(Constants.TEST_DATA_SCOT_POST_DEFAULT1, true);
-    }
+//    @Test
+//    @WithTag("SmokeTest")
+//    public void claimant_individual_with_scotland_template() throws IOException {
+//        executeTest(Constants.TEST_DATA_SCOT_POST_DEFAULT1, true);
+//    }
 
     @Test
     public void claimant_company_with_scotland_template() throws IOException {
