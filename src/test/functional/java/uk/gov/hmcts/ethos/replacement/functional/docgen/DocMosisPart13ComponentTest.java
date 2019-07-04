@@ -29,8 +29,8 @@ public class DocMosisPart13ComponentTest {
         testUtil = new TestUtil();
     }
 
-    @Test
-    @WithTag("SmokeTest")
+//    @Test
+//    @WithTag("SmokeTest")
     public void generateDocument_Part13_1C() throws Exception {
         testUtil.executeGenerateDocumentTest("13", "1C", "This case will be listed for a hearing in");
     }

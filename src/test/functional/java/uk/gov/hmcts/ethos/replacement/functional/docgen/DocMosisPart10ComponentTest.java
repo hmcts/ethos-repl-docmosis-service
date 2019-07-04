@@ -29,8 +29,8 @@ public class DocMosisPart10ComponentTest {
         testUtil = new TestUtil();
     }
 
-    @Test
-    @WithTag("SmokeTest")
+//    @Test
+//    @WithTag("SmokeTest")
     public void generateDocument_Part10_1() throws Exception {
         testUtil.executeGenerateDocumentTest("10", "1", "Written reasons will not be provided unless a written request is presented by either party within 14 days of the sending of this written record of the decision");
     }
