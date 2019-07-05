@@ -21,7 +21,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -175,7 +177,15 @@ public class TestUtil {
         JsonNode rootNode = objectMapper.readTree(json);
         JsonNode childNode = rootNode.findValue(paramName);
 
-        Assert.assertEquals(paramValue, childNode.asText());
+        if (childNode.isObject()) {
+            Iterator<Map.Entry<String, JsonNode>> elements = childNode.fields();
+            for (;elements.hasNext(); ) {
+                Map.Entry<String, JsonNode> element = elements.next();
+                Assert.assertTrue(paramValue.contains(element.getValue().textValue()));
+            }
+        } else {
+            Assert.assertEquals(paramValue, childNode.textValue());
+        }
     }
 
     private void verifyDocument(String topLevel, String expectedValue, boolean isScotland, CCDRequest ccdRequest, Response response) throws IOException, JAXBException, Docx4JException {
