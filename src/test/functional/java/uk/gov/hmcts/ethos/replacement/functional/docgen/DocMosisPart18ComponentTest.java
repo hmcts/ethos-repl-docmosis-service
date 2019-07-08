@@ -15,10 +15,10 @@ import java.io.IOException;
 
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
-//@WithTags({
-//        @WithTag("ComponentTest"),
-//        @WithTag("FunctionalTest")
-//})
+@WithTags({
+        @WithTag("ComponentTest"),
+        @WithTag("FunctionalTest")
+})
 public class DocMosisPart18ComponentTest {
 
     private TestUtil testUtil;
@@ -29,7 +29,7 @@ public class DocMosisPart18ComponentTest {
     }
 
     @Test
-    //@WithTag("SmokeTest")
+    @WithTag("SmokeTest")
     public void generateDocument_Part18_1() throws Exception {
         testUtil.executeGenerateDocumentTest("18", "1", "ANNEX TO THE JUDGMENT");
     }
