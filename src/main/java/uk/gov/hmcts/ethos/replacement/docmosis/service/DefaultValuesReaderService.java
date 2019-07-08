@@ -59,7 +59,7 @@ public class DefaultValuesReaderService {
     }
 
     private DefaultValues populatePostDefaultValues(List<String> values, String caseTypeId) {
-        if (caseTypeId.equals(MANCHESTER_CASE_TYPE_ID)) {
+        if (caseTypeId.equals(MANCHESTER_CASE_TYPE_ID) || caseTypeId.equals("Manchester_Users_Demo")) {
             return DefaultValues.builder()
                     .positionType(values.get(0))
                     .tribunalCorrespondenceAddressLine1(values.get(1))
