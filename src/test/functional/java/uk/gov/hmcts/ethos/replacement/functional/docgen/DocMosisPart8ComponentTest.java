@@ -72,6 +72,6 @@ public class DocMosisPart8ComponentTest {
     
     @After
     public void tearDown() throws IOException {
-        //testUtil.deleteTempFile();
+        testUtil.deleteTempFile();
     }
 }
