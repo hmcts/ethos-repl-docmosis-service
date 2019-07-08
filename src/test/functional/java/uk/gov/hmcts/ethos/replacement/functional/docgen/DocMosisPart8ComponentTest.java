@@ -15,10 +15,10 @@ import java.io.IOException;
 
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
-//@WithTags({
-//        @WithTag("ComponentTest"),
-//        @WithTag("FunctionalTest")
-//})
+@WithTags({
+        @WithTag("ComponentTest"),
+        @WithTag("FunctionalTest")
+})
 public class DocMosisPart8ComponentTest {
 
 
@@ -30,7 +30,7 @@ public class DocMosisPart8ComponentTest {
     }
 
     @Test
-    //@WithTag("SmokeTest")
+    @WithTag("SmokeTest")
     public void generateDocument_Part8_1() throws Exception {
         testUtil.executeGenerateDocumentTest("8", "1", "NOTICE OF HEARING");
     }
