@@ -96,14 +96,14 @@ public class BulkUpdateServiceTest {
     public void caseUpdateMultipleReferenceRequestException() throws IOException {
         when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenThrow(feignError());
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
-        bulkUpdateService.caseUpdateMultipleReferenceRequest(bulkRequest.getCaseDetails(), submitEvent, "authToken", "11111", "Multiple", "111");
+        bulkUpdateService.caseUpdateMultipleReferenceRequest(bulkRequest.getCaseDetails(), submitEvent, "authToken", "11111", "Multiple");
     }
 
     @Test
     public void caseUpdateMultipleReferenceRequest() throws IOException {
         when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenReturn(ccdRequest);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
-        bulkUpdateService.caseUpdateMultipleReferenceRequest(bulkRequest.getCaseDetails(), submitEvent, "authToken", "11111", "Multiple", "111");
+        bulkUpdateService.caseUpdateMultipleReferenceRequest(bulkRequest.getCaseDetails(), submitEvent, "authToken", "11111", "Multiple");
     }
 
     @Test
@@ -111,7 +111,7 @@ public class BulkUpdateServiceTest {
         when(ccdClient.startEventForCaseBulkSingle(anyString(), anyString(), anyString(), anyString())).thenReturn(ccdRequest);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
         submitEvent.setState(PENDING_STATE);
-        bulkUpdateService.caseUpdateMultipleReferenceRequest(bulkRequest.getCaseDetails(), submitEvent, "authToken", "11111", "Multiple", "111");
+        bulkUpdateService.caseUpdateMultipleReferenceRequest(bulkRequest.getCaseDetails(), submitEvent, "authToken", "11111", "Multiple");
     }
 
     @Test(expected = Exception.class)

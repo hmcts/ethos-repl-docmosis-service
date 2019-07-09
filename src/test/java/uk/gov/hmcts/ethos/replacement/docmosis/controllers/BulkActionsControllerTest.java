@@ -101,7 +101,7 @@ public class BulkActionsControllerTest {
         when(bulkSearchService.bulkCasesRetrievalRequest(isA(BulkDetails.class), eq(AUTH_TOKEN))).thenReturn(bulkCasesPayload);
         when(bulkCreationService.bulkCreationLogic(isA(BulkDetails.class), isA(BulkCasesPayload.class), eq(AUTH_TOKEN))).
                 thenReturn(bulkRequestPayload);
-
+        when(bulkCreationService.updateLeadCase(isA(BulkRequestPayload.class), eq(AUTH_TOKEN))).thenReturn(bulkRequestPayload);
         mvc.perform(post(CREATION_BULK_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -166,6 +166,7 @@ public class BulkActionsControllerTest {
     @Test
     public void updateBulk() throws Exception {
         when(bulkUpdateService.bulkUpdateLogic(isA(BulkDetails.class), eq(AUTH_TOKEN))).thenReturn(bulkRequestPayload);
+        when(bulkCreationService.updateLeadCase(isA(BulkRequestPayload.class), eq(AUTH_TOKEN))).thenReturn(bulkRequestPayload);
         mvc.perform(post(UPDATE_BULK_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -198,6 +199,7 @@ public class BulkActionsControllerTest {
     @Test
     public void updateBulkCase() throws Exception {
         when(bulkCreationService.bulkUpdateCaseIdsLogic(isA(BulkRequest.class), eq(AUTH_TOKEN))).thenReturn(bulkRequestPayload);
+        when(bulkCreationService.updateLeadCase(isA(BulkRequestPayload.class), eq(AUTH_TOKEN))).thenReturn(bulkRequestPayload);
         mvc.perform(post(UPDATE_BULK_CASE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
