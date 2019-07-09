@@ -10,14 +10,19 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.MultipleType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.PENDING_STATE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SUBMITTED_STATE;
 
 @Slf4j
 @Service("bulkCreationService")
@@ -46,18 +51,17 @@ public class BulkCreationService {
                 submitEvents.forEach(submitEvent -> log.info("CASE RECEIVED FOR CREATION: " + submitEvent));
 
                 // 2) Add list of cases to the multiple bulk case collection
-                String leadId = BulkHelper.getLeadId(bulkDetails);
                 if (!submitEvents.isEmpty()) {
                     String multipleReference = bulkDetails.getCaseData().getMultipleReference();
                     List<MultipleTypeItem> multipleTypeItemList = BulkHelper.getMultipleTypeListBySubmitEventList(submitEvents,
-                            multipleReference, leadId);
+                            multipleReference);
                     bulkRequestPayload.setBulkDetails(BulkHelper.setMultipleCollection(bulkDetails, multipleTypeItemList));
                 }
 
                 // 3) Create an event to update multiple reference field to all cases
                 for (SubmitEvent submitEvent : submitEvents) {
                     bulkUpdateService.caseUpdateMultipleReferenceRequest(bulkDetails, submitEvent, userToken,
-                            bulkDetails.getCaseData().getMultipleReference(), "Multiple", leadId);
+                            bulkDetails.getCaseData().getMultipleReference(), "Multiple");
                 }
             } else {
                 errors.add("These cases are already assigned to a multiple bulk: " + bulkCasesPayload.getDuplicateIds().toString());
@@ -76,7 +80,6 @@ public class BulkCreationService {
         List<String> errors = new ArrayList<>();
         if (bulkCasesPayload.getDuplicateIds() != null) {
             if (bulkCasesPayload.getDuplicateIds().isEmpty()) {
-                //Check lead here
                 bulkRequest.setCaseDetails(BulkHelper.setMultipleCollection(bulkRequest.getCaseDetails(), bulkCasesPayload.getMultipleTypeItems()));
                 bulkRequest.setCaseDetails(BulkHelper.clearSearchCollection(bulkRequest.getCaseDetails()));
             } else {
@@ -134,19 +137,15 @@ public class BulkCreationService {
 
     private List<MultipleTypeItem> getMultipleTypeListAfterAdditions(List<MultipleTypeItem> multipleTypeItemListFinal, List<SubmitEvent> casesToAdd,
                                                                      BulkDetails bulkDetails, String authToken) {
-        String leadId = BulkHelper.getLeadId(bulkDetails);
         for (SubmitEvent submitEvent : casesToAdd) {
             MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
             multipleTypeItem.setId(String.valueOf(submitEvent.getCaseId()));
-            MultipleType multipleType = BulkHelper.getMultipleTypeFromSubmitEvent(submitEvent, leadId);
+            MultipleType multipleType = BulkHelper.getMultipleTypeFromSubmitEvent(submitEvent);
             multipleType.setMultipleReferenceM(bulkDetails.getCaseData().getMultipleReference());
             multipleTypeItem.setValue(multipleType);
-            if (submitEvent.getCaseData().getEthosCaseReference().equals(leadId) && !multipleTypeItem.getValue().getLeadClaimantM().trim().isEmpty()) {
-                multipleTypeItemListFinal.add(0, multipleTypeItem);
-            } else {
-                multipleTypeItemListFinal.add(multipleTypeItem);
-            }
-            bulkUpdateService.caseUpdateMultipleReferenceRequest(bulkDetails, submitEvent, authToken, bulkDetails.getCaseData().getMultipleReference(), "Multiple", leadId);
+            multipleTypeItemListFinal.add(multipleTypeItem);
+            bulkUpdateService.caseUpdateMultipleReferenceRequest(bulkDetails, submitEvent, authToken,
+                    bulkDetails.getCaseData().getMultipleReference(), "Multiple");
         }
         return multipleTypeItemListFinal;
     }
@@ -165,16 +164,58 @@ public class BulkCreationService {
                 }
             }
             if (!found) {
-                if (multipleTypeItem.getValue().getLeadClaimantM() != null && !multipleTypeItem.getValue().getLeadClaimantM().trim().isEmpty()) {
-                    multipleTypeItemListAux.add(0, multipleTypeItem);
-                } else {
-                    multipleTypeItemListAux.add(multipleTypeItem);
-                }
+                multipleTypeItemListAux.add(multipleTypeItem);
             } else {
-                bulkUpdateService.caseUpdateMultipleReferenceRequest(bulkDetails, eventToDelete, authToken, " ", "Single", "No Lead");
+                bulkUpdateService.caseUpdateMultipleReferenceRequest(bulkDetails, eventToDelete, authToken, " ", "Single");
             }
         }
         return multipleTypeItemListAux;
+    }
+
+    public BulkRequestPayload updateLeadCase(BulkRequestPayload bulkRequestPayload, String authToken) {
+        List<MultipleTypeItem> multipleTypeItemList = bulkRequestPayload.getBulkDetails().getCaseData().getMultipleCollection();
+        List<MultipleTypeItem> multipleTypeItemListAux = new ArrayList<>();
+        String leadId = BulkHelper.getLeadId(bulkRequestPayload.getBulkDetails());
+        if (multipleTypeItemList != null && !multipleTypeItemList.isEmpty() && !leadId.equals("")) {
+            for (MultipleTypeItem multipleTypeItem : multipleTypeItemList) {
+                if (multipleTypeItem.getValue().getEthosCaseReferenceM().equals(leadId)) {
+                    multipleTypeItem.getValue().setLeadClaimantM("Yes");
+                    multipleTypeItemListAux.add(0, multipleTypeItem);
+                    BulkDetails bulkDetails = bulkRequestPayload.getBulkDetails();
+                    try {
+                        String caseId = multipleTypeItem.getValue().getCaseIDM();
+                        log.info("Assigning lead: " + caseId);
+                        SubmitEvent submitEvent = ccdClient.retrieveCase(authToken,
+                                BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(),
+                                multipleTypeItem.getValue().getCaseIDM());
+                        submitEvent.getCaseData().setLeadClaimant("Yes");
+                        CCDRequest returnedRequest = getReturnedRequestCheckingState(bulkDetails, submitEvent, authToken, caseId);
+                        if (submitEvent.getState().equals(PENDING_STATE)) {
+                            submitEvent.getCaseData().setState(SUBMITTED_STATE);
+                        }
+                        ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(),
+                                BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
+                    } catch (IOException ex) {
+                        throw new CaseCreationException(MESSAGE + bulkDetails.getCaseId() + ex.getMessage());
+                    }
+
+                } else {
+                    multipleTypeItem.getValue().setLeadClaimantM("No");
+                    multipleTypeItemListAux.add(multipleTypeItem);
+                }
+            }
+            bulkRequestPayload.getBulkDetails().getCaseData().setMultipleCollection(multipleTypeItemListAux);
+        }
+        return bulkRequestPayload;
+    }
+
+    private CCDRequest getReturnedRequestCheckingState(BulkDetails bulkDetails, SubmitEvent submitEvent, String authToken, String caseId) throws IOException {
+        if (submitEvent.getState().equals(PENDING_STATE)) {
+            return ccdClient.startEventForCaseBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                    bulkDetails.getJurisdiction(), caseId);
+        } else {
+            return ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
+        }
     }
 
 }

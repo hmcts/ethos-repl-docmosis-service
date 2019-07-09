@@ -2,17 +2,17 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import org.junit.Before;
 import org.junit.Test;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.MultipleType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.SearchType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 public class BulkHelperTest {
@@ -33,6 +33,11 @@ public class BulkHelperTest {
         respondentSumType.setRespondentName("Andrew Smith");
         caseData.setRespondentSumType(respondentSumType);
         caseData.setFileLocation("Manchester");
+        JurCodesType jurCodesType = new JurCodesType();
+        jurCodesType.setJuridictionCodesList("AA");
+        JurCodesTypeItem jurCodesTypeItem = new JurCodesTypeItem();
+        jurCodesTypeItem.setValue(jurCodesType);
+        caseData.setJurCodesCollection(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
         SubmitEvent submitEvent1 = new SubmitEvent();
         submitEvent1.setCaseData(caseData);
         SubmitEvent submitEvent2 = new SubmitEvent();
@@ -46,33 +51,20 @@ public class BulkHelperTest {
 
     @Test
     public void getMultipleTypeListBySubmitEventList() {
-        String result = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM= , multipleReferenceM=1234, " +
+        String result = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, multipleReferenceM=1234, " +
                 "clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , respondentRepM= , " +
-                "fileLocM=Manchester, receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM= , jurCodesCollectionM= , " +
-                "stateM= )), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM= , " +
+                "fileLocM=Manchester, receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM= , jurCodesCollectionM=AA, " +
+                "stateM= )), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, " +
                 "multipleReferenceM=1234, clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , " +
                 "respondentRepM= , fileLocM=Manchester, receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM= , " +
-                "jurCodesCollectionM= , stateM= ))]";
-        assertEquals(result, BulkHelper.getMultipleTypeListBySubmitEventList(submitEvents, "1234", "No Lead").toString());
-    }
-
-    @Test
-    public void getMultipleTypeListBySubmitEventListWithLead() {
-        String result = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=Yes, " +
-                "multipleReferenceM=1234, clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , " +
-                "respondentRepM= , fileLocM=Manchester, receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM= , " +
-                "jurCodesCollectionM= , stateM= )), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, " +
-                "leadClaimantM=Yes, multipleReferenceM=1234, clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, " +
-                "claimantRepM= , respondentRepM= , fileLocM=Manchester, receiptDateM= , acasOfficeM= , positionTypeM= , " +
-                "feeGroupReferenceM= , jurCodesCollectionM= , stateM= ))]";
-        String leadId = "222";
-        assertEquals(result, BulkHelper.getMultipleTypeListBySubmitEventList(submitEvents, "1234", leadId).toString());
+                "jurCodesCollectionM=AA, stateM= ))]";
+        assertEquals(result, BulkHelper.getMultipleTypeListBySubmitEventList(submitEvents, "1234").toString());
     }
 
     @Test
     public void getMultipleTypeListEmptyBySubmitEventList() {
         String result = "[]";
-        assertEquals(result, BulkHelper.getMultipleTypeListBySubmitEventList(new ArrayList<>(), "1234", "No Lead").toString());
+        assertEquals(result, BulkHelper.getMultipleTypeListBySubmitEventList(new ArrayList<>(), "1234").toString());
     }
 
     @Test
@@ -96,60 +88,6 @@ public class BulkHelperTest {
         return multipleType;
     }
 
-//    @Test
-//    public void updateIncurCaseRemoval1() {
-//        assertTrue(BulkHelper.updateIncurCaseRemoval(getBulkData1()));
-//    }
-//
-//    @Test
-//    public void updateIncurCaseRemoval2() {
-//        assertTrue(BulkHelper.updateIncurCaseRemoval(getBulkData2()));
-//    }
-//
-//    @Test
-//    public void updateIncurCaseRemoval3() {
-//        assertTrue(BulkHelper.updateIncurCaseRemoval(getBulkData3()));
-//    }
-
-//    private BulkData getBulkData1() {
-//        BulkData bulkData = new BulkData();
-//        bulkData.setClaimantSurname("Mikey");
-//        bulkData.setRespondentSurname("Jordan");
-//        bulkData.setFeeGroupReference("");
-//        bulkData.setFileLocation("Manchester");
-//        bulkData.setClaimantSurnameV2("Mikey");
-//        bulkData.setRespondentSurnameV2("Jordan");
-//        bulkData.setFeeGroupReferenceV2("1222");
-//        bulkData.setFileLocationV2("");
-//        return bulkData;
-//    }
-//
-//    private BulkData getBulkData2() {
-//        BulkData bulkData = new BulkData();
-//        bulkData.setClaimantSurname("");
-//        bulkData.setRespondentSurname("Jordan");
-//        bulkData.setFeeGroupReference("");
-//        bulkData.setFileLocation("Manchester");
-//        bulkData.setClaimantSurnameV2("Mikey");
-//        bulkData.setRespondentSurnameV2("Jordan");
-//        bulkData.setFeeGroupReferenceV2("1222");
-//        bulkData.setFileLocationV2("");
-//        return bulkData;
-//    }
-//
-//    private BulkData getBulkData3() {
-//        BulkData bulkData = new BulkData();
-//        bulkData.setClaimantSurname("");
-//        bulkData.setRespondentSurname("");
-//        bulkData.setFeeGroupReference("");
-//        bulkData.setFileLocation("Manchester");
-//        bulkData.setClaimantSurnameV2("Mikey");
-//        bulkData.setRespondentSurnameV2("Jordan");
-//        bulkData.setFeeGroupReferenceV2("1222");
-//        bulkData.setFileLocationV2("Manchester");
-//        return bulkData;
-//    }
-
     @Test
     public void getCaseTypeId() {
         String caseId = MANCHESTER_CASE_TYPE_ID;
@@ -160,10 +98,10 @@ public class BulkHelperTest {
 
     @Test
     public void getMultipleTypeFromSubmitEvent() {
-        String result = "MultipleType(caseIDM=0, ethosCaseReferenceM= , leadClaimantM= , multipleReferenceM=null, clerkRespM= , " +
+        String result = "MultipleType(caseIDM=0, ethosCaseReferenceM= , leadClaimantM=null, multipleReferenceM=null, clerkRespM= , " +
                 "claimantSurnameM=Mike, respondentSurnameM=Juan Pedro, claimantRepM= , respondentRepM= , fileLocM=Manchester, " +
                 "receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM=11111, jurCodesCollectionM= , stateM= )";
-        assertEquals(result, BulkHelper.getMultipleTypeFromSubmitEvent(submitEventComplete, "No Lead").toString());
+        assertEquals(result, BulkHelper.getMultipleTypeFromSubmitEvent(submitEventComplete).toString());
     }
 
     private SubmitEvent getSubmitEvent() {
