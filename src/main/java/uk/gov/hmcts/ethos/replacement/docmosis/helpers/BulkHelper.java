@@ -9,10 +9,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -40,18 +37,13 @@ public class BulkHelper {
         return bulkDetails;
     }
 
-    public static List<MultipleTypeItem> getMultipleTypeListBySubmitEventList(List<SubmitEvent> submitEvents, String multipleReference, String leadId) {
+    public static List<MultipleTypeItem> getMultipleTypeListBySubmitEventList(List<SubmitEvent> submitEvents, String multipleReference) {
         List<MultipleTypeItem> multipleTypeItemList = new ArrayList<>();
         for (SubmitEvent submitEvent : submitEvents) {
             CaseData caseData = submitEvent.getCaseData();
             MultipleType multipleType = new MultipleType();
             multipleType.setCaseIDM(String.valueOf(submitEvent.getCaseId()));
             multipleType.setEthosCaseReferenceM(Optional.ofNullable(caseData.getEthosCaseReference()).orElse(""));
-            if (caseData.getEthosCaseReference() != null && caseData.getEthosCaseReference().equals(leadId)) {
-                multipleType.setLeadClaimantM("Yes");
-            } else {
-                multipleType.setLeadClaimantM(" ");
-            }
             multipleType.setMultipleReferenceM(Optional.ofNullable(multipleReference).orElse(" "));
             multipleType.setClerkRespM(Optional.ofNullable(caseData.getClerkResponsible()).orElse(" "));
             if (caseData.getClaimantIndType() != null && caseData.getClaimantIndType().getClaimantLastName() != null) {
@@ -116,7 +108,7 @@ public class BulkHelper {
         return GLASGOW_CASE_TYPE_ID;
     }
 
-    public static MultipleType getMultipleTypeFromSubmitEvent(SubmitEvent submitEvent, String leadId) {
+    public static MultipleType getMultipleTypeFromSubmitEvent(SubmitEvent submitEvent) {
         CaseData caseData = submitEvent.getCaseData();
         MultipleType multipleType = new MultipleType();
         multipleType.setCaseIDM(String.valueOf(submitEvent.getCaseId()));
@@ -131,7 +123,6 @@ public class BulkHelper {
                 caseData.getRepCollection().get(0).getValue()!=null ?
                 caseData.getRepCollection().get(0).getValue().getNameOfRepresentative() : " ");
         multipleType.setEthosCaseReferenceM(caseData.getEthosCaseReference()!=null ? caseData.getEthosCaseReference() : " ");
-        multipleType.setLeadClaimantM(caseData.getEthosCaseReference()!=null && caseData.getEthosCaseReference().equals(leadId) ? "Yes" : " ");
         multipleType.setFileLocM(caseData.getFileLocation()!=null ? caseData.getFileLocation() : " ");
         multipleType.setReceiptDateM(caseData.getReceiptDate()!=null ? caseData.getReceiptDate() : " ");
         multipleType.setAcasOfficeM(caseData.getAcasOffice()!=null ? caseData.getAcasOffice() : " ");
@@ -199,8 +190,10 @@ public class BulkHelper {
     }
 
     public static String getLeadId(BulkDetails bulkDetails) {
-        return !bulkDetails.getCaseData().getCaseIdCollection().isEmpty() ?
-                bulkDetails.getCaseData().getCaseIdCollection().get(0).getValue().getEthosCaseReference() :
-                "";
+        List<CaseIdTypeItem> list = bulkDetails.getCaseData().getCaseIdCollection().stream()
+                .filter(key -> !key.getValue().getEthosCaseReference().equals(""))
+                .collect(Collectors.toList());
+        return !list.isEmpty() ? list.get(0).getValue().getEthosCaseReference() : "";
     }
+
 }

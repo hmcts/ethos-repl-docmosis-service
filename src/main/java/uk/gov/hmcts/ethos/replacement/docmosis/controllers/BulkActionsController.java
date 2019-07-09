@@ -54,6 +54,8 @@ public class BulkActionsController {
 
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken);
 
+        bulkRequestPayload = bulkCreationService.updateLeadCase(bulkRequestPayload, userToken);
+
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
                 .data(bulkRequestPayload.getBulkDetails().getCaseData())
@@ -94,6 +96,8 @@ public class BulkActionsController {
 
         BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkUpdateLogic(bulkRequest.getCaseDetails(), userToken);
 
+        bulkRequestPayload = bulkCreationService.updateLeadCase(bulkRequestPayload, userToken);
+
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
                 .data(bulkRequestPayload.getBulkDetails().getCaseData())
@@ -114,6 +118,8 @@ public class BulkActionsController {
         log.info("UPDATE BULK CASE IDS ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, userToken);
+
+        bulkRequestPayload = bulkCreationService.updateLeadCase(bulkRequestPayload, userToken);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
