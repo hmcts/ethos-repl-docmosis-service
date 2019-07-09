@@ -150,34 +150,21 @@ task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verificatio
     testClassesDirs = sourceSets.functional.output.classesDirs
     classpath = sourceSets.functional.runtimeClasspath
 
+    useJUnit {
+        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
+    }
     environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
-
-    systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
-    systemProperty('tags', 'SmokeTest')
-
-//    useJUnit {
-//        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.ComponentTest'
-//    }
-
-    maxHeapSize = '1G'
-    finalizedBy aggregate
 }
 
 task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
     testClassesDirs = sourceSets.functional.output.classesDirs
     classpath = sourceSets.functional.runtimeClasspath
 
+    useJUnit {
+        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
+    }
+
     environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
-
-    systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
-    systemProperty('tags', 'FunctionalTest')
-
-//    useJUnit {
-//        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.ComponentTest'
-//    }
-
-    maxHeapSize = '1G'
-    finalizedBy aggregate
 }
 
 jacocoTestReport {
