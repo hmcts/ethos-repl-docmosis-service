@@ -22,6 +22,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.PENDING_STATE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -54,6 +56,7 @@ public class BulkCreationServiceTest {
     private SubmitEvent submitEvent3;
     private BulkCasesPayload bulkCasesPayload;
     private BulkCasesPayload bulkCasesPayloadWithErrors;
+    private BulkRequestPayload bulkRequestPayload;
 
     private BulkDetails getBulkDetails(String lead, String caseIdSize) {
         BulkData bulkData = new BulkData();
@@ -92,6 +95,8 @@ public class BulkCreationServiceTest {
         multipleType.setEthosCaseReferenceM("281231");
         if (lead.equals("Yes")) {
             multipleType.setLeadClaimantM("Yes");
+        } else {
+            multipleType.setLeadClaimantM("No");
         }
         MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
         multipleTypeItem.setValue(multipleType);
@@ -141,6 +146,10 @@ public class BulkCreationServiceTest {
         bulkCasesPayloadWithErrors.setDuplicateIds(new ArrayList<>(Arrays.asList("1", "2")));
         bulkCasesPayload.setDuplicateIds(new ArrayList<>());
         bulkCasesPayload.setSubmitEvents(new ArrayList<>(Arrays.asList(submitEvent, submitEvent2, submitEvent3)));
+
+        bulkRequestPayload = new BulkRequestPayload();
+        bulkRequestPayload.setErrors(new ArrayList<>());
+        bulkRequestPayload.setBulkDetails(getBulkDetailsForLead());
     }
 
     @Test(expected = Exception.class)
@@ -160,16 +169,16 @@ public class BulkCreationServiceTest {
     @Test
     public void caseCreationRequestComplexCase() throws IOException {
         List<SubmitEvent> submitEventList = new ArrayList<>(Arrays.asList(submitEvent, submitEvent2, submitEvent3));
-        String expectedResult = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=Yes, " +
-                "multipleReferenceM=null, clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , " +
-                "respondentRepM= , fileLocM= , receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM=111122211, " +
-                "jurCodesCollectionM= , stateM=1_Submitted)), MultipleTypeItem(id=22222, value=MultipleType(caseIDM=null, " +
-                "ethosCaseReferenceM=281231, leadClaimantM=null, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, " +
-                "respondentSurnameM=null, claimantRepM=null, respondentRepM=null, fileLocM=null, receiptDateM=null, acasOfficeM=null, " +
-                "positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null)), MultipleTypeItem(id=0, " +
-                "value=MultipleType(caseIDM=0, ethosCaseReferenceM=1122, leadClaimantM= , multipleReferenceM=null, clerkRespM= , " +
-                "claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , " +
-                "acasOfficeM= , positionTypeM= , feeGroupReferenceM=111122211, jurCodesCollectionM= , stateM=1_Submitted))]";
+        String expectedResult = "[MultipleTypeItem(id=22222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=281231, leadClaimantM=No, " +
+                "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, " +
+                "respondentRepM=null, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, " +
+                "jurCodesCollectionM=null, stateM=null)), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, " +
+                "leadClaimantM=null, multipleReferenceM=null, clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, " +
+                "claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM=111122211, " +
+                "jurCodesCollectionM= , stateM=1_Submitted)), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1122, " +
+                "leadClaimantM=null, multipleReferenceM=null, clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, " +
+                "claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM=111122211, " +
+                "jurCodesCollectionM= , stateM=1_Submitted))]";
         when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
         BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest2, "authToken");
         assertEquals(expectedResult, bulkCasesPayload.getMultipleTypeItems().toString());
@@ -178,25 +187,13 @@ public class BulkCreationServiceTest {
     @Test
     public void updateBulkRequest() throws IOException {
         List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
-        String expectedResult = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=Yes, " +
-                "multipleReferenceM=null, clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , " +
-                "respondentRepM= , fileLocM= , receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM=111122211, jurCodesCollectionM= , " +
-                "stateM=1_Submitted)), MultipleTypeItem(id=22222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=281231, " +
-                "leadClaimantM=Yes, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, " +
-                "respondentRepM=null, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, " +
-                "jurCodesCollectionM=null, stateM=null))]";
-        when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
-        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
-        assertEquals(expectedResult, bulkCasesPayload.getMultipleTypeItems().toString());
-    }
-
-    @Test
-    public void updateBulkRequestDeletionsFoundLead() throws IOException {
-        List<SubmitEvent> submitEventList = new ArrayList<>(Arrays.asList(submitEvent, submitEvent1));
-        String expectedResult = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, " +
-                "leadClaimantM=Yes, multipleReferenceM=null, clerkRespM= , claimantSurnameM=Fernandez, " +
-                "respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , " +
-                "acasOfficeM= , positionTypeM= , feeGroupReferenceM=111122211, jurCodesCollectionM= , " +
+        String expectedResult = "[MultipleTypeItem(id=22222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=281231, " +
+                "leadClaimantM=Yes, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, " +
+                "claimantRepM=null, respondentRepM=null, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, " +
+                "feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null)), MultipleTypeItem(id=0, " +
+                "value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=null, multipleReferenceM=null, " +
+                "clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , " +
+                "fileLocM= , receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM=111122211, jurCodesCollectionM= , " +
                 "stateM=1_Submitted))]";
         when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
         BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
@@ -204,18 +201,16 @@ public class BulkCreationServiceTest {
     }
 
     @Test
-    public void updateBulkRequestDeletionsFoundNoLead() throws IOException {
-        List<SubmitEvent> submitEventList = new ArrayList<>(Arrays.asList(submitEvent, submitEvent2));
-        String expectedResult = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=Yes, " +
-                "multipleReferenceM=null, clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , " +
-                "respondentRepM= , fileLocM= , receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM=111122211, " +
-                "jurCodesCollectionM= , stateM=1_Submitted)), MultipleTypeItem(id=22222, value=MultipleType(caseIDM=null, " +
-                "ethosCaseReferenceM=281231, leadClaimantM=null, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, " +
-                "respondentSurnameM=null, claimantRepM=null, respondentRepM=null, fileLocM=null, receiptDateM=null, acasOfficeM=null, " +
-                "positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null))]";
+    public void updateBulkRequestDeletions() throws IOException {
+        List<SubmitEvent> submitEventList = new ArrayList<>(Arrays.asList(submitEvent, submitEvent1));
+        String expectedResult = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, " +
+                "leadClaimantM=null, multipleReferenceM=null, clerkRespM= , claimantSurnameM=Fernandez, " +
+                "respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , " +
+                "acasOfficeM= , positionTypeM= , feeGroupReferenceM=111122211, jurCodesCollectionM= , " +
+                "stateM=1_Submitted))]";
         when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
-        List<MultipleTypeItem> multipleTypeItemList = bulkCreationService.updateBulkRequest(bulkRequest1, "authToken").getMultipleTypeItems();
-        assertEquals(expectedResult, multipleTypeItemList.toString());
+        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        assertEquals(expectedResult, bulkCasesPayload.getMultipleTypeItems().toString());
     }
 
     @Test(expected = Exception.class)
@@ -241,13 +236,13 @@ public class BulkCreationServiceTest {
                 "fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, " +
                 "clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, " +
                 "caseIdCollection=[CaseIdTypeItem(id=1111, value=CaseType(ethosCaseReference=1111))], searchCollection=null, " +
-                "multipleCollection=[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=Yes, " +
+                "multipleCollection=[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=null, " +
                 "multipleReferenceM= , clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , " +
                 "respondentRepM= , fileLocM= , receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM=111122211, " +
                 "jurCodesCollectionM= , stateM=1_Submitted)), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=111111, " +
-                "leadClaimantM= , multipleReferenceM= , clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , " +
+                "leadClaimantM=null, multipleReferenceM= , clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , " +
                 "respondentRepM= , fileLocM= , receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM=111122211, jurCodesCollectionM= , " +
-                "stateM=1_Submitted)), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1122, leadClaimantM= , " +
+                "stateM=1_Submitted)), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1122, leadClaimantM=null, " +
                 "multipleReferenceM= , clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , " +
                 "respondentRepM= , fileLocM= , receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM=111122211, jurCodesCollectionM= , " +
                 "stateM=1_Submitted))], searchCollectionCount=null, multipleCollectionCount=3), caseTypeId=Manchester_V3, createdDate=null, " +
@@ -273,6 +268,64 @@ public class BulkCreationServiceTest {
                 "caseTypeId=Manchester_V3, createdDate=null, lastModified=null, dataClassification=null))";
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, "authToken");
         assertEquals(result, bulkRequestPayload.toString());
+    }
+
+    @Test
+    public void updateLeadCase() throws IOException {
+        when(ccdClient.retrieveCase(anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvent);
+        String result = "[MultipleTypeItem(id=22222, value=MultipleType(caseIDM=121212, ethosCaseReferenceM=111, " +
+                "leadClaimantM=Yes, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, " +
+                "claimantRepM=null, respondentRepM=null, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, " +
+                "feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null))]";
+        BulkRequestPayload bulkRequestPayloadResult = bulkCreationService.updateLeadCase(bulkRequestPayload, "authToken");
+        assertEquals(result, bulkRequestPayloadResult.getBulkDetails().getCaseData().getMultipleCollection().toString());
+    }
+
+    @Test
+    public void updateLeadCaseNoLead() throws IOException {
+        when(ccdClient.retrieveCase(anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvent);
+        bulkRequestPayload.getBulkDetails().getCaseData().getCaseIdCollection().get(0).getValue().setEthosCaseReference("2222");
+        String result = "[MultipleTypeItem(id=22222, value=MultipleType(caseIDM=121212, ethosCaseReferenceM=111, " +
+                "leadClaimantM=No, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, " +
+                "claimantRepM=null, respondentRepM=null, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, " +
+                "feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null))]";
+        BulkRequestPayload bulkRequestPayloadResult = bulkCreationService.updateLeadCase(bulkRequestPayload, "authToken");
+        assertEquals(result, bulkRequestPayloadResult.getBulkDetails().getCaseData().getMultipleCollection().toString());
+    }
+
+    @Test
+    public void updateLeadCasePendingState() throws IOException {
+        submitEvent.setState(PENDING_STATE);
+        when(ccdClient.retrieveCase(anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvent);
+        String result = "[MultipleTypeItem(id=22222, value=MultipleType(caseIDM=121212, ethosCaseReferenceM=111, " +
+                "leadClaimantM=Yes, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, " +
+                "claimantRepM=null, respondentRepM=null, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, " +
+                "feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null))]";
+        BulkRequestPayload bulkRequestPayloadResult = bulkCreationService.updateLeadCase(bulkRequestPayload, "authToken");
+        assertEquals(result, bulkRequestPayloadResult.getBulkDetails().getCaseData().getMultipleCollection().toString());
+    }
+
+    private BulkDetails getBulkDetailsForLead() {
+        BulkDetails bulkDetails = new BulkDetails();
+        BulkData bulkData = new BulkData();
+        MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
+        MultipleType multipleType = new MultipleType();
+        multipleType.setEthosCaseReferenceM("111");
+        multipleType.setLeadClaimantM("Yes");
+        multipleType.setCaseIDM("121212");
+        multipleTypeItem.setId("22222");
+        multipleTypeItem.setValue(multipleType);
+        CaseType caseType = new CaseType();
+        caseType.setEthosCaseReference("111");
+        CaseIdTypeItem caseIdTypeItem = new CaseIdTypeItem();
+        caseIdTypeItem.setId("11111");
+        caseIdTypeItem.setValue(caseType);
+        bulkData.setCaseIdCollection(new ArrayList<>(Collections.singletonList(caseIdTypeItem)));
+        bulkData.setMultipleCollection(new ArrayList<>(Collections.singletonList(multipleTypeItem)));
+        bulkDetails.setCaseData(bulkData);
+        bulkDetails.setJurisdiction("TRIBUNALS");
+        bulkDetails.setCaseTypeId(Constants.ETHOS_BULK_CASE_TYPE_ID);
+        return bulkDetails;
     }
 
 }
