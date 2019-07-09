@@ -19,7 +19,8 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CaseUpdateForCaseWorkerServiceTest {
@@ -45,6 +46,7 @@ public class CaseUpdateForCaseWorkerServiceTest {
         manchesterCaseDetails.setCaseData(new CaseData());
         manchesterCaseDetails.setCaseId("123456");
         manchesterCaseDetails.setCaseTypeId(MANCHESTER_CASE_TYPE_ID);
+        manchesterCaseDetails.setJurisdiction("TRIBUNALS");
         manchesterCcdRequest.setCaseDetails(manchesterCaseDetails);
 
         glasgowCcdRequest = new CCDRequest();
@@ -52,6 +54,7 @@ public class CaseUpdateForCaseWorkerServiceTest {
         glasgowCaseDetails.setCaseData(new CaseData());
         glasgowCaseDetails.setCaseId("123456");
         glasgowCaseDetails.setCaseTypeId(GLASGOW_CASE_TYPE_ID);
+        glasgowCaseDetails.setJurisdiction("TRIBUNALS");
         glasgowCcdRequest.setCaseDetails(glasgowCaseDetails);
 
         caseUpdateForCaseWorkerService = new CaseUpdateForCaseWorkerService(ccdClient, defaultValuesReaderService);
@@ -82,21 +85,29 @@ public class CaseUpdateForCaseWorkerServiceTest {
                 .build();
     }
 
+    @Test(expected = Exception.class)
+    public void caseCreationManchesterRequestException() throws IOException {
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenThrow(feignError());
+        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
+        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenReturn(manchesterDefaultValues);
+        caseUpdateForCaseWorkerService.caseUpdateRequest(manchesterCcdRequest, "authToken");
+    }
+
     @Test
     public void caseCreationManchesterRequest() throws IOException {
-        when(ccdClient.startEventForCase(anyString(), any(), anyString())).thenReturn(manchesterCcdRequest);
-        when(ccdClient.submitEventForCase(anyString(), any(), any(), anyString())).thenReturn(submitEvent);
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenReturn(manchesterCcdRequest);
+        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
         when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenReturn(manchesterDefaultValues);
         SubmitEvent submitEvent1 = caseUpdateForCaseWorkerService.caseUpdateRequest(manchesterCcdRequest, "authToken");
-        assertEquals(submitEvent1, submitEvent);
+        assertEquals(submitEvent, submitEvent1);
     }
 
     @Test
     public void caseCreationGlasgowRequest() throws IOException {
-        when(ccdClient.startEventForCase(anyString(), any(), anyString())).thenReturn(glasgowCcdRequest);
-        when(ccdClient.submitEventForCase(anyString(), any(), any(), anyString())).thenReturn(submitEvent);
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenReturn(glasgowCcdRequest);
+        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
         when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, GLASGOW_CASE_TYPE_ID)).thenReturn(glasgowDefaultValues);
         SubmitEvent submitEvent1 = caseUpdateForCaseWorkerService.caseUpdateRequest(glasgowCcdRequest, "authToken");
-        assertEquals(submitEvent1, submitEvent);
+        assertEquals(submitEvent, submitEvent1);
     }
 }

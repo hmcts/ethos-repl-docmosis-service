@@ -32,7 +32,7 @@ public class CaseData {
     private String multipleOthers;
     @JsonProperty("multipleReference")
     private String multipleReference;
-    @JsonProperty("leadClaimant")
+    @JsonProperty("leadClaimant1")
     private String leadClaimant;
     @JsonProperty("claimant_TypeOfClaimant")
     private String claimantTypeOfClaimant;
@@ -126,5 +126,7 @@ public class CaseData {
     private ClaimantWorkAddressType claimantWorkAddress;
     @JsonProperty("claimantRepresentedQuestion")
     private String claimantRepresentedQuestion;
+    @JsonProperty("state")
+    private String state;
 
 }
