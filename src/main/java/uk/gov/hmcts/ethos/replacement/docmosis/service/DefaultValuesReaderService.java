@@ -13,15 +13,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+
 @Slf4j
 @Service("defaultValuesReaderService")
 public class DefaultValuesReaderService {
 
-    public static final String PRE_DEFAULT_XLSX_FILE_PATH = "preDefaultValues.xlsx";
-    public static final String POST_DEFAULT_XLSX_FILE_PATH = "postDefaultValues.xlsx";
     private static final String MESSAGE = "Failed to add default values: ";
-    public static final String MANCHESTER_CASE_TYPE_ID = "EmpTrib_MVP_1.0_Manc";
-    static final String GLASGOW_CASE_TYPE_ID = "EmpTrib_MVP_1.0_Glas";
 
     public DefaultValues getDefaultValues(String filePath, String caseTypeId) {
         List<String> values = new ArrayList<>();
@@ -59,7 +57,7 @@ public class DefaultValuesReaderService {
     }
 
     private DefaultValues populatePostDefaultValues(List<String> values, String caseTypeId) {
-        if (caseTypeId.equals(MANCHESTER_CASE_TYPE_ID)) {
+        if (caseTypeId.equals(MANCHESTER_CASE_TYPE_ID) || caseTypeId.equals(MANCHESTER_USERS_CASE_TYPE_ID)) {
             return DefaultValues.builder()
                     .positionType(values.get(0))
                     .tribunalCorrespondenceAddressLine1(values.get(1))
