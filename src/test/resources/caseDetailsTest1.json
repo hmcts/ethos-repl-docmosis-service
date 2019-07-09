@@ -13,7 +13,7 @@
     "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
     "multipleOthers" : "no",
-    "leadClaimant" : "RepresentativeLead",
+    "leadClaimant" : "Yes",
     "claimantRepresentedQuestion" : "no",
     "claimant_TypeOfClaimant" : "Individual",
     "NH_JudgementType": {

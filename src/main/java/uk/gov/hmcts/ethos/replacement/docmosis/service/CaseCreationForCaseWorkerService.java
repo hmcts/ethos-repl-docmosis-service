@@ -12,7 +12,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 public class CaseCreationForCaseWorkerService {
 
     private static final String MESSAGE = "Failed to create new case for case id : ";
-    private CcdClient ccdClient;
+    private final CcdClient ccdClient;
 
     @Autowired
     public CaseCreationForCaseWorkerService(CcdClient ccdClient) {
