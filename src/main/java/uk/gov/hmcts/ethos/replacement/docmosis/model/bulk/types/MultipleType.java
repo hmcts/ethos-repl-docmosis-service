@@ -3,9 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
-
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
@@ -39,7 +36,7 @@ public class MultipleType {
     private String positionTypeM;
     @JsonProperty("feeGroupReferenceM")
     private String feeGroupReferenceM;
-    @JsonProperty("jurCodesCollectionM")
+    @JsonProperty("jurCodesCollectionTextM")
     private String jurCodesCollectionM;
     @JsonProperty("stateM")
     private String stateM;

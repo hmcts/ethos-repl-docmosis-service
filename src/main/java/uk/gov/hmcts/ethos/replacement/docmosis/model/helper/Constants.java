@@ -5,8 +5,8 @@ import java.time.format.DateTimeFormatter;
 public class Constants {
 
     public static final DateTimeFormatter OLD_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-    public static final DateTimeFormatter NEW_DATE_PATTERN = DateTimeFormatter.ofPattern("E, d MMM yyyy");
-    public static final DateTimeFormatter NEW_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("E, d MMM yyyy HH:mm:ss");
+    public static final DateTimeFormatter NEW_DATE_PATTERN = DateTimeFormatter.ofPattern("d MMMM yyyy");
+    public static final DateTimeFormatter NEW_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("d MMMM yyyy HH:mm");
     public static final String NEW_LINE = "\",\n";
     public static final String OUTPUT_FILE_NAME = "document.docx";
 
@@ -15,7 +15,7 @@ public class Constants {
     public static final String MANCHESTER_CASE_TYPE_ID = "EmpTrib_MVP_1.0_Manc";
     public static final String MANCHESTER_USERS_CASE_TYPE_ID = "Manchester_Users_Demo";
     public static final String GLASGOW_CASE_TYPE_ID = "EmpTrib_MVP_1.0_Glas";
-    public static final String ETHOS_BULK_CASE_TYPE_ID = "ETHOS_BULK_ACTION_v3";
+    public static final String MANCHESTER_BULK_CASE_TYPE_ID = "CCD_Bulk_Action_Manc_v3";
 
     public static final String PENDING_STATE = "Pending";
 

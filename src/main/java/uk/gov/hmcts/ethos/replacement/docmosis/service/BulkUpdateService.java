@@ -112,6 +112,21 @@ public class BulkUpdateService {
         return bulkRequestPayload;
     }
 
+    public BulkRequestPayload clearUpFields(BulkRequestPayload bulkRequestPayload) {
+        BulkData bulkData = bulkRequestPayload.getBulkDetails().getCaseData();
+        bulkData.setClaimantRepV2(null);
+        bulkData.setRespondentRepV2(null);
+        bulkData.setMultipleReferenceV2(null);
+        bulkData.setPositionTypeV2(null);
+        bulkData.setClerkResponsibleV2(null);
+        bulkData.setFileLocationV2(null);
+        bulkData.setFeeGroupReferenceV2(null);
+        bulkData.setClaimantSurnameV2(null);
+        bulkData.setRespondentSurnameV2(null);
+        bulkRequestPayload.getBulkDetails().setCaseData(bulkData);
+        return bulkRequestPayload;
+    }
+
     private MultRefComplexType checkMultipleReferenceExists(BulkDetails bulkDetails, String authToken, String multipleReference) {
         try {
             MultRefComplexType multRefComplexType = new MultRefComplexType();
@@ -294,9 +309,6 @@ public class BulkUpdateService {
                 } else {
                     submitEvent.getCaseData().setLeadClaimant("No");
                 }
-                submitEvent.getCaseData().setState("Pending");
-                submitEvent.setState("Pending");
-                log.info("SUBMIT EVENT UPDATED TO PENDING ---------------------- " + submitEvent);
                 CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
                 ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
             }
