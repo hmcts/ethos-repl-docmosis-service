@@ -59,7 +59,7 @@ public class BulkUpdateServiceTest {
         bulkData.setMultipleReference("1111");
         bulkDetails.setJurisdiction("TRIBUNALS");
         bulkDetails.setCaseData(bulkData);
-        bulkDetails.setCaseTypeId(ETHOS_BULK_CASE_TYPE_ID);
+        bulkDetails.setCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID);
         bulkRequest.setCaseDetails(bulkDetails);
 
         CaseData caseData = new CaseData();
@@ -145,7 +145,7 @@ public class BulkUpdateServiceTest {
         bulkData.setMultipleReference("1111");
         submitBulkEvent.setCaseData(bulkData);
         List<SubmitBulkEvent> submitBulkEventList = new ArrayList<>(Collections.singletonList(submitBulkEvent));
-        when(ccdClient.retrieveBulkCases("authToken", ETHOS_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
+        when(ccdClient.retrieveBulkCases("authToken", MANCHESTER_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
         assert(bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()),
                 "authToken").getBulkDetails() != null);
@@ -164,7 +164,7 @@ public class BulkUpdateServiceTest {
         bulkData.setMultipleReference("1111");
         submitBulkEvent.setCaseData(bulkData);
         List<SubmitBulkEvent> submitBulkEventList = new ArrayList<>(Collections.singletonList(submitBulkEvent));
-        when(ccdClient.retrieveBulkCases("authToken", ETHOS_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
+        when(ccdClient.retrieveBulkCases("authToken", MANCHESTER_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
         assert(!bulkUpdateService.bulkUpdateLogic(getBulkDetailsWithValues(), "authToken").getErrors().isEmpty());
     }
@@ -182,7 +182,7 @@ public class BulkUpdateServiceTest {
         bulkData.setRespondentRepV2("RespondentRep");
         bulkDetails.setCaseData(bulkData);
         bulkDetails.setJurisdiction("TRIBUNALS");
-        bulkDetails.setCaseTypeId(ETHOS_BULK_CASE_TYPE_ID);
+        bulkDetails.setCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID);
         return bulkDetails;
     }
 
