@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class BulkCasesPayload {
 
-    private List<String> duplicateIds;
+    private List<String> alreadyTakenIds;
     private List<SubmitEvent> submitEvents;
     private List<MultipleTypeItem> multipleTypeItems;
 }
