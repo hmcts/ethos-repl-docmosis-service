@@ -10,6 +10,8 @@ import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
 import java.io.IOException;
 
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+
 @Slf4j
 @Component
 public class CcdClientConfig {
@@ -29,10 +31,6 @@ public class CcdClientConfig {
 
     @Value("${ccd.data.store.api.url}")
     private String CCD_DATA_STORE_API_BASE_URL;
-
-    private static final String CREATION_EVENT_TRIGGER_ID = "initiateCase";
-
-    private static final String UPDATE_EVENT_TRIGGER_ID = "amendCaseDetails";
 
     private AuthTokenGenerator authTokenGenerator;
     private static final String SERVICE_AUTHORIZATION = "ServiceAuthorization";
@@ -57,7 +55,9 @@ public class CcdClientConfig {
     String buildRetrieveCasesUrl(String uid, String jid, String ctid) {
 //        Map<String, String> params = new HashMap<>();
 //        params.put("state", "1_Initiation");
-        String param = "state=1_Initiation";
+        //String param = "state=1_Initiation";
+        String param = "";
+        log.info("Looking cases by: uid: " + uid + " jid: " + jid + " ctid: " + ctid + " param: " + param);
         return String.format(RETRIEVE_CASES_URL_CASEWORKER_FORMAT, CCD_DATA_STORE_API_BASE_URL, uid, jid, ctid, param);
     }
     //    JURISDICTION("jurisdiction"),
@@ -70,6 +70,14 @@ public class CcdClientConfig {
 
     String buildStartEventForCaseUrl(String uid, String jid, String ctid, String cid) {
         return String.format(START_EVENT_FOR_CASE_URL_CASEWORKER_FORMAT, CCD_DATA_STORE_API_BASE_URL, uid, jid, ctid, cid, UPDATE_EVENT_TRIGGER_ID);
+    }
+
+    String buildStartEventForCaseUrlBulkSingle(String uid, String jid, String ctid, String cid) {
+        return String.format(START_EVENT_FOR_CASE_URL_CASEWORKER_FORMAT, CCD_DATA_STORE_API_BASE_URL, uid, jid, ctid, cid, UPDATE_EVENT_TRIGGER_ID_BULK);
+    }
+
+    String buildStartEventForBulkCaseUrl(String uid, String jid, String ctid, String cid) {
+        return String.format(START_EVENT_FOR_CASE_URL_CASEWORKER_FORMAT, CCD_DATA_STORE_API_BASE_URL, uid, jid, ctid, cid, UPDATE_BULK_EVENT_TRIGGER_ID);
     }
 
     String buildSubmitEventForCaseUrl(String uid, String jid, String ctid, String cid) {
