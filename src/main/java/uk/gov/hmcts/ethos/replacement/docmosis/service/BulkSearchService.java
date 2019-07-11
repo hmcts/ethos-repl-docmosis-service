@@ -65,20 +65,20 @@ public class BulkSearchService {
         log.info("Cases found: " + submitEvents.size());
         BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
         multipleReference = multipleReference != null ? multipleReference : "";
-        List<String> duplicateIds = new ArrayList<>();
+        List<String> alreadyTakenIds = new ArrayList<>();
         List<SubmitEvent> submitEventFiltered = new ArrayList<>();
         for (SubmitEvent submitEvent : submitEvents) {
             CaseData caseData = submitEvent.getCaseData();
             if (caseIds.contains(caseData.getEthosCaseReference())) {
                 if (caseData.getMultipleReference() != null && !caseData.getMultipleReference().trim().isEmpty()
                         && !caseData.getMultipleReference().equals(multipleReference)) {
-                    duplicateIds.add(caseData.getEthosCaseReference());
+                    alreadyTakenIds.add(caseData.getEthosCaseReference());
                 }
                 submitEventFiltered.add(submitEvent);
             }
         }
         bulkCasesPayload.setSubmitEvents(submitEventFiltered);
-        bulkCasesPayload.setDuplicateIds(duplicateIds);
+        bulkCasesPayload.setAlreadyTakenIds(alreadyTakenIds);
         return bulkCasesPayload;
     }
 
