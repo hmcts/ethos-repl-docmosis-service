@@ -91,14 +91,14 @@ public class BulkHelperTest {
     @Test
     public void getCaseTypeId() {
         String caseId = MANCHESTER_CASE_TYPE_ID;
-        assertEquals(caseId, BulkHelper.getCaseTypeId(ETHOS_BULK_CASE_TYPE_ID));
+        assertEquals(caseId, BulkHelper.getCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID));
         caseId = GLASGOW_CASE_TYPE_ID;
         assertEquals(caseId, BulkHelper.getCaseTypeId("GLASGOW_BULK_CASE_ID"));
     }
 
     @Test
     public void getMultipleTypeFromSubmitEvent() {
-        String result = "MultipleType(caseIDM=0, ethosCaseReferenceM= , leadClaimantM=null, multipleReferenceM=null, clerkRespM= , " +
+        String result = "MultipleType(caseIDM=0, ethosCaseReferenceM= , leadClaimantM=null, multipleReferenceM= , clerkRespM= , " +
                 "claimantSurnameM=Mike, respondentSurnameM=Juan Pedro, claimantRepM= , respondentRepM= , fileLocM=Manchester, " +
                 "receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM=11111, jurCodesCollectionM= , stateM= )";
         assertEquals(result, BulkHelper.getMultipleTypeFromSubmitEvent(submitEventComplete).toString());

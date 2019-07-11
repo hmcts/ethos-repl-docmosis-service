@@ -39,7 +39,15 @@ public class BulkSearchService {
         bulkDetails.getCaseData().setSearchCollectionCount(String.valueOf(searchTypeItemList.size()));
         bulkDetails.getCaseData().setSearchCollection(searchTypeItemList);
         bulkDetails.getCaseData().getSearchCollection().forEach(searchTypeItem -> log.info("Searched collection: " + searchTypeItem.toString()));
+        bulkDetails.setCaseData(clearUpFields(bulkDetails.getCaseData()));
         return bulkDetails;
+    }
+
+    private BulkData clearUpFields(BulkData bulkData) {
+        bulkData.setEthosCaseReference(null);
+        bulkData.setClaimantSurname(null);
+        bulkData.setRespondentSurname(null);
+        return bulkData;
     }
 
     public BulkCasesPayload bulkCasesRetrievalRequest(BulkDetails bulkDetails, String authToken) {
