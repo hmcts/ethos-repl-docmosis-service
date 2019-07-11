@@ -60,10 +60,10 @@ public class BulkUpdateService {
         } else {
             String multipleReferenceV2 = bulkDetails.getCaseData().getMultipleReferenceV2();
             MultRefComplexType multRefComplexType = checkMultipleReferenceExists(bulkDetails, userToken, multipleReferenceV2);
-            // 2) Check if new multiple reference exists
+            // 2) Check if new multiple reference exists or it has the same as the current bulk
             if (!isNullOrEmpty(multipleReferenceV2)) {
-                if (!multRefComplexType.isExist()) {
-                    errors.add("Multiple reference does not exist");
+                if (!multRefComplexType.isExist() || multipleReferenceV2.equals(bulkDetails.getCaseData().getMultipleReference())) {
+                    errors.add("Multiple reference does not exist or it is the same as the current bulk");
                 }
             }
             log.info("multipleReferenceV2: " + multipleReferenceV2);
@@ -87,7 +87,6 @@ public class BulkUpdateService {
                         String bulkCaseId = String.valueOf(submitBulkEvent.getCaseId());
                         CCDRequest returnedRequest = ccdClient.startBulkEventForCase(userToken, bulkDetails.getCaseTypeId(), bulkDetails.getJurisdiction(), bulkCaseId);
                         ccdClient.submitBulkEventForCase(userToken, submitBulkEvent.getCaseData(), bulkDetails.getCaseTypeId(), bulkDetails.getJurisdiction(), returnedRequest, bulkCaseId);
-                        log.info("GOING out here");
                     }
                 } catch (IOException ex) {
                     throw new CaseCreationException(MESSAGE + bulkDetails.getCaseId() + ex.getMessage());

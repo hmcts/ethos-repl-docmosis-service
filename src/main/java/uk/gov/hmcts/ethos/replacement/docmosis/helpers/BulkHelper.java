@@ -28,7 +28,7 @@ public class BulkHelper {
             bulkDetails.getCaseData().setMultipleCollection(new ArrayList<>());
             bulkDetails.getCaseData().setMultipleCollectionCount(null);
         }
-        bulkDetails.getCaseData().setCaseIdCollection(BulkHelper.getCaseIdTypeItems(bulkDetails));
+        bulkDetails.getCaseData().setCaseIdCollection(BulkHelper.getCaseIdTypeItems(bulkDetails, BulkHelper.getMultipleCaseIds(bulkDetails)));
         return bulkDetails;
     }
 
@@ -154,12 +154,13 @@ public class BulkHelper {
                 .collect(Collectors.toList());
     }
 
-    static List<CaseIdTypeItem> getCaseIdTypeItems(BulkDetails bulkDetails) {
+    private static List<CaseIdTypeItem> getCaseIdTypeItems(BulkDetails bulkDetails, List<String> multipleTypeItems) {
         System.out.println("Cases: " + bulkDetails.getCaseData().getCaseIdCollection());
         return bulkDetails.getCaseData().getCaseIdCollection() != null ?
                 bulkDetails.getCaseData().getCaseIdCollection().stream()
                         .filter(p -> p.getValue().getEthosCaseReference() != null)
                         .filter(distinctByKey(p -> p.getValue().getEthosCaseReference()))
+                        .filter(p -> multipleTypeItems.contains(p.getValue().getEthosCaseReference()))
                         .collect(Collectors.toList()) :
                 new ArrayList<>();
     }
