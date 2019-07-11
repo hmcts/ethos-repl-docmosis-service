@@ -82,8 +82,8 @@ public class HelperTest {
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
                 "\"resp_others\":\"Antonio Vazquez, Juan Garcia\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
-                "\"Hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_date_time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
+                "\"Hearing_date\":\"25 November 2019\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 10:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t1_2\":\"true\",\n" +
@@ -182,6 +182,10 @@ public class HelperTest {
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t3_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -229,6 +233,10 @@ public class HelperTest {
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t4_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -277,6 +285,10 @@ public class HelperTest {
                 "\"respondent_reference\":\"3333333333\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t5_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -325,6 +337,10 @@ public class HelperTest {
                 "\"respondent_reference\":\"3333333333\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"RespondentName\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t6_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -508,6 +524,10 @@ public class HelperTest {
                 "\"templateName\":\".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"Court_telephone\":\"\",\n" +
                 "\"Court_fax\":\"\",\n" +
                 "\"Court_DX\":\"\",\n" +
@@ -548,8 +568,8 @@ public class HelperTest {
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
                 "\"resp_others\":\"Antonio Vazquez, Juan Garcia\",\n" +
                 "\"Respondent\":\"string\",\n" +
-                "\"Hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_date_time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
+                "\"Hearing_date\":\"25 November 2019\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 10:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t_Scot_7_1\":\"true\",\n" +
@@ -598,8 +618,8 @@ public class HelperTest {
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"1111111\",\n" +
                 "\"Respondent\":\"string\",\n" +
-                "\"Hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
+                "\"Hearing_date\":\"25 November 2019\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 hours\",\n" +
                 "\"t_Scot_24\":\"true\",\n" +
@@ -648,6 +668,10 @@ public class HelperTest {
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
                 "\"resp_others\":\"Antonio Vazquez\",\n" +
                 "\"Respondent\":\"string\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t_Scot_34\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Eagle Building,\",\n" +
                 "\"Court_addressLine2\":\"215 Bothwell Street,\",\n" +
@@ -748,6 +772,10 @@ public class HelperTest {
                 "\"templateName\":\"Part_18.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t18A\":\"true\",\n" +
                 "\"Court_telephone\":\"\",\n" +
                 "\"Court_fax\":\"\",\n" +
@@ -770,6 +798,10 @@ public class HelperTest {
                 "\"templateName\":\"" + topLevel + ".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t_Scot_" + part + "\":\"true\",\n" +
                 "\"Court_telephone\":\"\",\n" +
                 "\"Court_fax\":\"\",\n" +
