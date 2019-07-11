@@ -24,6 +24,10 @@ public class BulkData {
     private String claimantSurname;
     @JsonProperty("respondentSurname")
     private String respondentSurname;
+    @JsonProperty("claimantRep")
+    private String claimantRep;
+    @JsonProperty("respondentRep")
+    private String respondentRep;
     @JsonProperty("ethosCaseReference")
     private String ethosCaseReference;
     @JsonProperty("clerkResponsible")

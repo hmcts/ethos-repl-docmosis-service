@@ -12,7 +12,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
 
 import java.util.ArrayList;
@@ -47,6 +46,8 @@ public class BulkSearchService {
         bulkData.setEthosCaseReference(null);
         bulkData.setClaimantSurname(null);
         bulkData.setRespondentSurname(null);
+        bulkData.setClaimantRep(null);
+        bulkData.setRespondentRep(null);
         return bulkData;
     }
 
@@ -89,6 +90,8 @@ public class BulkSearchService {
             String claimantFilter = bulkData.getClaimantSurname();
             String ethosCaseRefFilter = bulkData.getEthosCaseReference();
             String respondentFilter = bulkData.getRespondentSurname();
+            String claimantRepFilter = bulkData.getClaimantRep();
+            String respondentRepFilter = bulkData.getRespondentRep();
             //List<JurCodesTypeItem> jurCodesTypeItemsFilter = bulkData.getJurCodesCollection();
             List<SearchTypeItem> searchTypeItemList = new ArrayList<>();
             List<MultipleTypeItem> multipleTypeItemList = bulkDetails.getCaseData().getMultipleCollection();
@@ -96,6 +99,8 @@ public class BulkSearchService {
                 Predicate<MultipleTypeItem> claimantPredicate = d-> d.getValue() != null && claimantFilter.equals(d.getValue().getClaimantSurnameM());
                 Predicate<MultipleTypeItem> ethosCaseRefPredicate = d-> d.getValue() != null && ethosCaseRefFilter.equals(d.getValue().getEthosCaseReferenceM());
                 Predicate<MultipleTypeItem> respondentPredicate = d-> d.getValue() != null && respondentFilter.equals(d.getValue().getRespondentSurnameM());
+                Predicate<MultipleTypeItem> claimantRepPredicate = d-> d.getValue() != null && claimantRepFilter.equals(d.getValue().getClaimantRepM());
+                Predicate<MultipleTypeItem> respondentRepPredicate = d-> d.getValue() != null && respondentRepFilter.equals(d.getValue().getRespondentRepM());
                 //Predicate<MultipleTypeItem> jurCodesTypeItemsPredicate = d-> d.getValue() != null && BulkHelper.containsAllJurCodes(jurCodesTypeItemsFilter, d.getValue().getJurCodesCollectionM());
                 List<MultipleTypeItem> searchedList = new ArrayList<>();
                 boolean filtered = false;
@@ -111,7 +116,15 @@ public class BulkSearchService {
                     searchedList = filterByField(filtered ? searchedList : multipleTypeItemList, respondentPredicate);
                     filtered = true;
                 }
-//                if (!isNullOrEmpty(respondentFilter)) {
+                if (!isNullOrEmpty(claimantRepFilter)) {
+                    searchedList = filterByField(filtered ? searchedList : multipleTypeItemList, claimantRepPredicate);
+                    filtered = true;
+                }
+                if (!isNullOrEmpty(respondentRepFilter)) {
+                    searchedList = filterByField(filtered ? searchedList : multipleTypeItemList, respondentRepPredicate);
+                    //filtered = true;
+                }
+//                if (!isNullOrEmpty(jurCodesTypeItemsFilter)) {
 //                    searchedList = filterByField(filtered ? searchedList : multipleTypeItemList, jurCodesTypeItemsPredicate);
 //                }
                 for (MultipleTypeItem multipleTypeItem : searchedList) {
