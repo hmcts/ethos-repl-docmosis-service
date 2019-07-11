@@ -16,6 +16,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 public class BulkHelper {
 
@@ -102,7 +103,7 @@ public class BulkHelper {
     }
 
     public static String getCaseTypeId(String caseTypeId) {
-        if (caseTypeId.equals(ETHOS_BULK_CASE_TYPE_ID)) {
+        if (caseTypeId.equals(MANCHESTER_BULK_CASE_TYPE_ID)) {
             return MANCHESTER_CASE_TYPE_ID;
         }
         return GLASGOW_CASE_TYPE_ID;
@@ -112,7 +113,7 @@ public class BulkHelper {
         CaseData caseData = submitEvent.getCaseData();
         MultipleType multipleType = new MultipleType();
         multipleType.setCaseIDM(String.valueOf(submitEvent.getCaseId()));
-        multipleType.setClerkRespM(caseData.getClerkResponsible()!=null ? caseData.getClerkResponsible() : " ");
+        multipleType.setClerkRespM(!isNullOrEmpty(caseData.getClerkResponsible()) ? caseData.getClerkResponsible() : " ");
         multipleType.setClaimantSurnameM(caseData.getClaimantIndType()!=null && caseData.getClaimantIndType().getClaimantLastName()!=null ?
                 caseData.getClaimantIndType().getClaimantLastName() : " ");
         multipleType.setRespondentSurnameM(caseData.getRespondentSumType()!=null && caseData.getRespondentSumType().getRespondentName()!=null ?
@@ -123,13 +124,14 @@ public class BulkHelper {
                 caseData.getRepCollection().get(0).getValue()!=null ?
                 caseData.getRepCollection().get(0).getValue().getNameOfRepresentative() : " ");
         multipleType.setEthosCaseReferenceM(caseData.getEthosCaseReference()!=null ? caseData.getEthosCaseReference() : " ");
-        multipleType.setFileLocM(caseData.getFileLocation()!=null ? caseData.getFileLocation() : " ");
-        multipleType.setReceiptDateM(caseData.getReceiptDate()!=null ? caseData.getReceiptDate() : " ");
-        multipleType.setAcasOfficeM(caseData.getAcasOffice()!=null ? caseData.getAcasOffice() : " ");
-        multipleType.setPositionTypeM(caseData.getPositionType()!=null ? caseData.getPositionType() : " ");
-        multipleType.setFeeGroupReferenceM(caseData.getFeeGroupReference()!=null ? caseData.getFeeGroupReference() : " ");
+        multipleType.setFileLocM(!isNullOrEmpty(caseData.getFileLocation()) ? caseData.getFileLocation() : " ");
+        multipleType.setReceiptDateM(!isNullOrEmpty(caseData.getReceiptDate()) ? caseData.getReceiptDate() : " ");
+        multipleType.setAcasOfficeM(!isNullOrEmpty(caseData.getAcasOffice()) ? caseData.getAcasOffice() : " ");
+        multipleType.setPositionTypeM(!isNullOrEmpty(caseData.getPositionType()) ? caseData.getPositionType() : " ");
+        multipleType.setFeeGroupReferenceM(!isNullOrEmpty(caseData.getFeeGroupReference()) ? caseData.getFeeGroupReference() : " ");
         multipleType.setJurCodesCollectionM(getJurCodesCollection(caseData.getJurCodesCollection()));
-        multipleType.setStateM(submitEvent.getState()!=null ? submitEvent.getState() : " ");
+        multipleType.setStateM(!isNullOrEmpty(submitEvent.getState()) ? submitEvent.getState() : " ");
+        multipleType.setMultipleReferenceM(!isNullOrEmpty(caseData.getMultipleReference()) ? caseData.getMultipleReference() : " ");
         return multipleType;
     }
 

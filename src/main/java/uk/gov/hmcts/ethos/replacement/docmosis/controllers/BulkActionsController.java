@@ -98,6 +98,8 @@ public class BulkActionsController {
 
         bulkRequestPayload = bulkCreationService.updateLeadCase(bulkRequestPayload, userToken);
 
+        bulkRequestPayload = bulkUpdateService.clearUpFields(bulkRequestPayload);
+
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
                 .data(bulkRequestPayload.getBulkDetails().getCaseData())

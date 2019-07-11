@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.SubmitBulkEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
@@ -61,14 +62,6 @@ public class CcdClient {
         return restTemplate.exchange(uri, HttpMethod.GET, request, SubmitEvent.class).getBody();
     }
 
-//    public SubmitBulkEvent retrieveBulkCase(String authToken, String caseTypeId, String jurisdiction, String cid) throws IOException {
-//        HttpEntity<CCDRequest> request =
-//                new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
-//        String uri = ccdClientConfig.buildRetrieveCaseUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
-//                caseTypeId, cid);
-//        return restTemplate.exchange(uri, HttpMethod.GET, request, SubmitBulkEvent.class).getBody();
-//    }
-
     private String getURI(String authToken, String caseTypeId, String jurisdiction) {
         return ccdClientConfig.buildRetrieveCasesUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
                 caseTypeId);
@@ -81,7 +74,7 @@ public class CcdClient {
     }
 
     public List<SubmitBulkEvent> retrieveBulkCases(String authToken, String caseTypeId, String jurisdiction) throws IOException {
-        HttpEntity<CCDRequest> request =
+        HttpEntity<BulkRequest> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
         return restTemplate.exchange(getURI(authToken, caseTypeId, jurisdiction), HttpMethod.GET, request,
                 new ParameterizedTypeReference<List<SubmitBulkEvent>>(){}).getBody();

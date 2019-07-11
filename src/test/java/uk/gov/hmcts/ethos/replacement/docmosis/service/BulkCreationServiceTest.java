@@ -324,7 +324,7 @@ public class BulkCreationServiceTest {
         bulkData.setMultipleCollection(new ArrayList<>(Collections.singletonList(multipleTypeItem)));
         bulkDetails.setCaseData(bulkData);
         bulkDetails.setJurisdiction("TRIBUNALS");
-        bulkDetails.setCaseTypeId(Constants.ETHOS_BULK_CASE_TYPE_ID);
+        bulkDetails.setCaseTypeId(Constants.MANCHESTER_BULK_CASE_TYPE_ID);
         return bulkDetails;
     }
 

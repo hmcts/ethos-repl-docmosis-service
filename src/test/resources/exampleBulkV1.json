@@ -60,7 +60,7 @@
             "feeGroupReferenceM": "123456789123",
             "multipleReferenceM": "123123123",
             "respondentSurnameM": "Emma Watson",
-            "jurCodesCollectionM": "AX, AB",
+            "jurCodesCollectionTextM": "AX, AB",
             "stateM": "1_Submitted"
           }
         },
@@ -105,7 +105,7 @@
             "feeGroupReferenceS": "123456789123",
             "multipleReferenceS": "123123123",
             "respondentSurnameS": "Emma Watson",
-            "jurCodesCollectionS": "AX, AB",
+            "jurCodesCollectionTextS": "AX, AB",
             "stateS": "1_Submitted"
           }
         },

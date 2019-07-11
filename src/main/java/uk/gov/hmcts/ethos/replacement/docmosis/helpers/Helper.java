@@ -154,7 +154,15 @@ public class Helper {
             sb.append("\"Hearing_venue\":\"").append(nullCheck(hearingType.getHearingVenue())).append(NEW_LINE);
             if (hearingType.getEstHearing() != null) {
                 sb.append("\"Hearing_duration\":\"").append(nullCheck(hearingType.getEstHearing().toString())).append(NEW_LINE);
+            } else {
+                sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
             }
+        } else {
+            sb.append("\"Hearing_date\":\"").append(NEW_LINE);
+            sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
+            sb.append("\"Hearing_venue\":\"").append(NEW_LINE);
+            sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
+
         }
         return sb;
     }
