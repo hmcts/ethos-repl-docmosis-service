@@ -43,7 +43,7 @@ public class CcdClientConfigTest {
     @Test
     public void buildRetrieveCasesUrl() {
         String uri = ccdClientConfig.buildRetrieveCasesUrl("1123", "TRIBUNALS", "TRIB_03");
-        assertEquals("null/caseworkers/1123/jurisdictions/TRIBUNALS/case-types/TRIB_03/cases?", uri);
+        assertEquals("null/caseworkers/1123/jurisdictions/TRIBUNALS/case-types/TRIB_03/cases", uri);
     }
 
     @Test
