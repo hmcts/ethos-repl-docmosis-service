@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import static io.restassured.RestAssured.get;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 public class HealthCheckTest {
@@ -31,6 +32,13 @@ public class HealthCheckTest {
     @Category(SmokeTest.class)
     public void healthcheck_returns_200() {
         assertThat("smokeTest", is("smokeTest"));
-        get("/health").then().statusCode(200);
+
+        String environment = System.getProperty("VAULTNAME").replace("ethos-", "");
+        if (environment != null) {
+            get("http://ethos-repl-docmosis-backend-" + environment + ".service.core-compute-" + environment + ".internal/health").
+                    then().
+                    statusCode(200).
+                    body("status", equalTo("UP"));
+        }
     }
 }
