@@ -10,7 +10,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.POST_DEFAULT_XLSX_FILE_PATH;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.POST_DEFAULT_XLSX_FILE_PATH;
 
 @Slf4j
 @Service("CaseUpdateForCaseWorkerService")
@@ -34,12 +34,12 @@ public class CaseUpdateForCaseWorkerService {
         log.info("Case Details: " + caseDetails);
         try {
             String caseId = ccdRequest.getCaseDetails().getCaseId();
-            CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseDetails, caseId);
+            CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), caseId);
             log.info("------------ RETURNED REQUEST: " + returnedRequest);
             DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, caseDetails.getCaseTypeId());
             ccdRequest.getCaseDetails().getCaseData().setPositionType(defaultValues.getPositionType());
             log.info("Post Default values added to the case: " + defaultValues);
-            return ccdClient.submitEventForCase(authToken, caseDetails, returnedRequest, caseId);
+            return ccdClient.submitEventForCase(authToken, caseDetails.getCaseData(), caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), returnedRequest, caseId);
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }

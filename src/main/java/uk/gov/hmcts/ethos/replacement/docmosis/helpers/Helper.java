@@ -8,20 +8,14 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 public class Helper {
-
-    private static DateTimeFormatter OLD_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-    private static DateTimeFormatter NEW_DATE_PATTERN = DateTimeFormatter.ofPattern("E, d MMM yyyy");
-    private static DateTimeFormatter NEW_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("E, d MMM yyyy HH:mm:ss");
-    private static String NEW_LINE = "\",\n";
-    public static final String OUTPUT_FILE_NAME = "document.docx";
 
     private static String formatLocalDate(String date) {
         return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_DATE_TIME_PATTERN).format(NEW_DATE_PATTERN) : "";
@@ -160,7 +154,15 @@ public class Helper {
             sb.append("\"Hearing_venue\":\"").append(nullCheck(hearingType.getHearingVenue())).append(NEW_LINE);
             if (hearingType.getEstHearing() != null) {
                 sb.append("\"Hearing_duration\":\"").append(nullCheck(hearingType.getEstHearing().toString())).append(NEW_LINE);
+            } else {
+                sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
             }
+        } else {
+            sb.append("\"Hearing_date\":\"").append(NEW_LINE);
+            sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
+            sb.append("\"Hearing_venue\":\"").append(NEW_LINE);
+            sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
+
         }
         return sb;
     }
