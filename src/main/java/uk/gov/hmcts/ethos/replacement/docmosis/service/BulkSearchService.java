@@ -56,8 +56,16 @@ public class BulkSearchService {
         try {
             List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
             log.info("BEFORE RETRIEVE CASES CALLBACK");
-            return filterSubmitEvents(ccdClient.retrieveCases(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                    bulkDetails.getJurisdiction()), caseIds, bulkDetails.getCaseData().getMultipleReference());
+            if (caseIds != null && !caseIds.isEmpty()) {
+                return filterSubmitEvents(ccdClient.retrieveCases(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                        bulkDetails.getJurisdiction()), caseIds, bulkDetails.getCaseData().getMultipleReference());
+            } else {
+                BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
+                bulkCasesPayload.setAlreadyTakenIds(new ArrayList<>());
+                bulkCasesPayload.setSubmitEvents(new ArrayList<>());
+                bulkCasesPayload.setMultipleTypeItems(new ArrayList<>());
+                return bulkCasesPayload;
+            }
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + bulkDetails.getCaseId() + ex.getMessage());
         }
