@@ -31,6 +31,6 @@ public class HealthCheckTest {
     @Category(SmokeTest.class)
     public void healthcheck_returns_200() {
         assertThat("smokeTest", is("smokeTest"));
-        //get("/health").then().statusCode(200);
+        get("/health").then().statusCode(200);
     }
 }
