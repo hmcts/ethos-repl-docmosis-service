@@ -18,7 +18,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static java.net.HttpURLConnection.HTTP_OK;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.OUTPUT_FILE_NAME;
 
 @Slf4j
 @Service("tornadoService")
