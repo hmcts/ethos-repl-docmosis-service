@@ -55,6 +55,7 @@ public class BulkSearchService {
         log.info("Bulk Details to retrieve request: " + bulkDetails);
         try {
             List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
+            log.info("BEFORE RETRIEVE CASES CALLBACK");
             return filterSubmitEvents(ccdClient.retrieveCases(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                     bulkDetails.getJurisdiction()), caseIds, bulkDetails.getCaseData().getMultipleReference());
         } catch (Exception ex) {
@@ -78,6 +79,7 @@ public class BulkSearchService {
                 submitEventFiltered.add(submitEvent);
             }
         }
+        log.info("COMING AFTER FILTER SUBMIT EVENTS");
         bulkCasesPayload.setSubmitEvents(submitEventFiltered);
         bulkCasesPayload.setAlreadyTakenIds(alreadyTakenIds);
         return bulkCasesPayload;

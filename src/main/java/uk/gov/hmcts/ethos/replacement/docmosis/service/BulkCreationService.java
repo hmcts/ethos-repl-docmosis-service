@@ -210,6 +210,7 @@ public class BulkCreationService {
                 bulkRequestPayload.getBulkDetails().getCaseData().setMultipleCollection(multipleTypeItemListAux);
             }
         }
+        log.info("END OF THE LEAD CASE");
         return bulkRequestPayload;
     }
 
