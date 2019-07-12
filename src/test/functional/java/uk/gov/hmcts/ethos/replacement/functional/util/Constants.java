@@ -12,6 +12,10 @@ public class Constants {
     public static final String DOCGEN_URI = "/generateDocument";
     public static final String PRE_DEFAULT_URI = "/preDefaultValues";
     public static final String POST_DEFAULT_URI = "/postDefaultValues";
+    public static final String CREATE_BULK_URI = "/createBulk";
+    public static final String SEARCH_BULK_URI = "/searchBulk";
+    public static final String UPDATE_BULK_URI = "/updateBulk";
+    public static final String UPDATE_BULK_CASE_URI = "/updateBulkCase";
 
 
 

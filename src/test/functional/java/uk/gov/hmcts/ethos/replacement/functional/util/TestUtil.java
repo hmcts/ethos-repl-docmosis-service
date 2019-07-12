@@ -41,10 +41,7 @@ public class TestUtil {
         environment = System.getProperty("VAULTNAME").replace("ethos-", "");
     }
 
-    public String getEnvironment() {
-        return this.environment;
-    }
-
+    //End-point /generateDocument
     public void executeGenerateDocumentTest(String topLevel, String childLevel, String expectedValue) throws IOException, JAXBException, Docx4JException {
         executeGenerateDocumentTest(topLevel, childLevel, expectedValue, false);
     }
@@ -72,36 +69,6 @@ public class TestUtil {
 
     }
 
-    public void executePreDefaultValuesTest(String paramName, String paramValue, boolean isScotland, String testData) throws IOException {
-        CCDRequest ccdRequest;
-
-        loadAuthToken();
-
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
-        else ccdRequest = getCcdRequest("1", "", false, testData);
-
-        Response response = getResponse(ccdRequest, Constants.PRE_DEFAULT_URI);
-
-        String json = response.body().prettyPrint();
-
-        verifyElementValue(json, paramName, paramValue);
-    }
-
-    public void executePostDefaultValuesTest(String paramName, String paramValue, boolean isScotland, String testData) throws IOException {
-        CCDRequest ccdRequest;
-
-        loadAuthToken();
-
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
-        else ccdRequest = getCcdRequest("1", "", false, testData);
-
-        Response response = getResponse(ccdRequest, Constants.POST_DEFAULT_URI);
-
-        String json = response.body().prettyPrint();
-
-        verifyElementValue(json, paramName, paramValue);
-    }
-
     public void verifyDocMosisPayload(String topLevel, String childLevel, boolean isScotland, String testDataFile) throws IOException, JSONException {
         this.topLevel = topLevel;
         this.childLevel = childLevel;
@@ -121,6 +88,100 @@ public class TestUtil {
         String expectedPayload = DocumentUtil.buildDocumentContent(ccdRequest.getCaseDetails(), "");
 
         JSONAssert.assertEquals(expectedPayload, actualPayload, JSONCompareMode.LENIENT);
+    }
+
+    //End-point /preDefaultValues
+    public void executePreDefaultValuesTest(String paramName, String paramValue, boolean isScotland, String testData) throws IOException {
+        CCDRequest ccdRequest;
+
+        loadAuthToken();
+
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
+        else ccdRequest = getCcdRequest("1", "", false, testData);
+
+        Response response = getResponse(ccdRequest, Constants.PRE_DEFAULT_URI);
+
+        String json = response.body().prettyPrint();
+
+        verifyElementValue(json, paramName, paramValue);
+    }
+
+    //End-point /postDefaultValues
+    public void executePostDefaultValuesTest(String paramName, String paramValue, boolean isScotland, String testData) throws IOException {
+        CCDRequest ccdRequest;
+
+        loadAuthToken();
+
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
+        else ccdRequest = getCcdRequest("1", "", false, testData);
+
+        Response response = getResponse(ccdRequest, Constants.POST_DEFAULT_URI);
+
+        String json = response.body().prettyPrint();
+
+        verifyElementValue(json, paramName, paramValue);
+    }
+
+    //End-point /createBulk
+    public void executeCreateBulkTest(boolean isScotland, String testData) throws IOException {
+        CCDRequest ccdRequest;
+
+        loadAuthToken();
+
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
+        else ccdRequest = getCcdRequest("1", "", false, testData);
+
+        Response response = getResponse(ccdRequest, Constants.CREATE_BULK_URI);
+
+        verifyCreateBulkResponse(testData, response);
+
+    }
+
+    //End-point /searchBulk
+    public void executeSearchBulkTest(boolean isScotland, String testData) throws IOException {
+        CCDRequest ccdRequest;
+
+        loadAuthToken();
+
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
+        else ccdRequest = getCcdRequest("1", "", false, testData);
+
+        Response response = getResponse(ccdRequest, Constants.SEARCH_BULK_URI);
+
+        verifySearchBulkResponse(testData, response);
+    }
+
+    //End-point /updateBulk
+    public void executeUpdateBulkTest(boolean isScotland, String testData) throws IOException {
+        CCDRequest ccdRequest;
+
+        loadAuthToken();
+
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
+        else ccdRequest = getCcdRequest("1", "", false, testData);
+
+        Response response = getResponse(ccdRequest, Constants.UPDATE_BULK_URI);
+
+        verifyUpdateBulkResponse(testData, response);
+    }
+
+    //End-point //updateBulkCase
+    public void executeUpdateBulkCaseTest(boolean isScotland, String testData) throws IOException {
+        CCDRequest ccdRequest;
+
+        loadAuthToken();
+
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
+        else ccdRequest = getCcdRequest("1", "", false, testData);
+
+        Response response = getResponse(ccdRequest, Constants.UPDATE_BULK_CASE_URI);
+
+        verifyUpdateBulkCaseResponse(testData, response);
+    }
+
+    //General methods
+    public String getEnvironment() {
+        return this.environment;
     }
 
     public void deleteTempFile() throws IOException {
@@ -158,7 +219,6 @@ public class TestUtil {
         return JsonUtil.getCaseDetails(payLoad, topLevel, childLevel, isScotland);
     }
 
-
     public void setAuthToken(String authToken) {
         TestUtil.authToken = authToken;
     }
@@ -170,6 +230,7 @@ public class TestUtil {
         return authToken;
     }
 
+    //Private methods
     private void verifyElementValue(String json, String paramName, String paramValue) throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -232,5 +293,21 @@ public class TestUtil {
         }
 
         Assert.assertTrue("Expected value \""+ expectedValue + "\" doesn't exist in Document with version: "+  docVersion +" \n", hasMatched);
+    }
+
+    private void verifyCreateBulkResponse(String testData, Response response) {
+
+    }
+
+    private void verifySearchBulkResponse(String testData, Response response) {
+
+    }
+
+    private void verifyUpdateBulkResponse(String testData, Response response) {
+
+    }
+
+    private void verifyUpdateBulkCaseResponse(String testData, Response response) {
+
     }
 }
