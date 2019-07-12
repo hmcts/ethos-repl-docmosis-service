@@ -23,7 +23,7 @@ public class CcdClientConfig {
     private static final String RETRIEVE_CASE_URL_CASEWORKER_FORMAT =
             "%s/caseworkers/%s/jurisdictions/%s/case-types/%s/cases/%s";
     private static final String RETRIEVE_CASES_URL_CASEWORKER_FORMAT =
-            "%s/caseworkers/%s/jurisdictions/%s/case-types/%s/cases?%s";
+            "%s/caseworkers/%s/jurisdictions/%s/case-types/%s/cases";
     private static final String START_EVENT_FOR_CASE_URL_CASEWORKER_FORMAT =
             "%s/caseworkers/%s/jurisdictions/%s/case-types/%s/cases/%s/event-triggers/%s/token";
     private static final String SUBMIT_EVENT_FOR_URL_CASEWORKER_FORMAT =
@@ -58,7 +58,8 @@ public class CcdClientConfig {
         //String param = "state=1_Initiation";
         String param = "";
         log.info("Looking cases by: uid: " + uid + " jid: " + jid + " ctid: " + ctid + " param: " + param);
-        return String.format(RETRIEVE_CASES_URL_CASEWORKER_FORMAT, CCD_DATA_STORE_API_BASE_URL, uid, jid, ctid, param);
+        log.info("Format: " + String.format(RETRIEVE_CASES_URL_CASEWORKER_FORMAT, CCD_DATA_STORE_API_BASE_URL, uid, jid, ctid));
+        return String.format(RETRIEVE_CASES_URL_CASEWORKER_FORMAT, CCD_DATA_STORE_API_BASE_URL, uid, jid, ctid);
     }
     //    JURISDICTION("jurisdiction"),
     //    CASE_TYPE("case_type"),
