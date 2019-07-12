@@ -63,12 +63,14 @@ public class CcdClient {
     }
 
     private String getURI(String authToken, String caseTypeId, String jurisdiction) {
+        log.info("USER DETAILS ROLES: " + userService.getUserDetails(authToken).getRoles());
         return ccdClientConfig.buildRetrieveCasesUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
                 caseTypeId);
     }
     public List<SubmitEvent> retrieveCases(String authToken, String caseTypeId, String jurisdiction) throws IOException {
         HttpEntity<CCDRequest> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
+        log.info("CALLING EXCHANGE AFTER THIS");
         return restTemplate.exchange(getURI(authToken, caseTypeId, jurisdiction), HttpMethod.GET, request,
                 new ParameterizedTypeReference<List<SubmitEvent>>(){}).getBody();
     }
