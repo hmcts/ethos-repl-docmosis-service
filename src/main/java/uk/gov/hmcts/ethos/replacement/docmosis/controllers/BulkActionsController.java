@@ -50,12 +50,13 @@ public class BulkActionsController {
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("CREATE BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
+        log.info("BEFORE RETRIEVAL");
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken);
-
+        log.info("AFTER RETRIEVAL");
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken);
-
+        log.info("AFTER BULK CREATION LOGIC");
         bulkRequestPayload = bulkCreationService.updateLeadCase(bulkRequestPayload, userToken);
-
+        log.info("ISSUE ON THE LEAD CASE");
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
                 .data(bulkRequestPayload.getBulkDetails().getCaseData())
