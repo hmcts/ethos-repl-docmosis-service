@@ -31,8 +31,14 @@ public class CreateBulkComponentTest {
 
     @Test
     @WithTag("SmokeTest")
-    public void create_bulk_test1() throws IOException {
-        testUtil.executeCreateBulkTest(false, Constants.TEST_DATA_CASE1);
+    public void create_bulk_eng_test1() throws IOException {
+        testUtil.executeCreateBulkTest(false, Constants.TEST_DATA_BULK1);
+    }
+
+    @Test
+    @WithTag("SmokeTest")
+    public void create_bulk_scot_test1() throws IOException {
+        testUtil.executeCreateBulkTest(true, Constants.TEST_DATA_BULK1);
     }
 
 

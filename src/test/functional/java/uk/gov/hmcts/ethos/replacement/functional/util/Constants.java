@@ -41,5 +41,7 @@ public class Constants {
     public static final String TEST_DATA_SCOT_POST_DEFAULT1 = "src/test/functional/resources/testData/defaults/postDefaultScotTest1.json";
     public static final String TEST_DATA_SCOT_POST_DEFAULT2 = "src/test/functional/resources/testData/defaults/postDefaultScotTest2.json";
 
+    public static final String TEST_DATA_BULK1 = "src/test/functional/resources/testData/exampleBulkV1.json";
+
 
 }
