@@ -98,46 +98,43 @@ public class BulkCreationService {
         log.info("Bulk EventId: " + bulkRequest.getEventId());
         log.info("Bulk Details: " + bulkDetails);
 
-        BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
         List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
         List<String> multipleCaseIds = BulkHelper.getMultipleCaseIds(bulkDetails);
-        if (caseIds != null && !caseIds.isEmpty()) {
-            try {
-                List<String> unionLists = Stream.concat(caseIds.stream(), multipleCaseIds.stream()).distinct().collect(Collectors.toList());
-                List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken,
-                        BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction());
-                bulkCasesPayload = bulkSearchService.filterSubmitEvents(submitEvents, unionLists,
-                        bulkDetails.getCaseData().getMultipleReference());
-                if (bulkCasesPayload.getAlreadyTakenIds() != null && bulkCasesPayload.getAlreadyTakenIds().isEmpty()) {
-                    List<SubmitEvent> allSubmitEventsToUpdate = bulkCasesPayload.getSubmitEvents();
-                    if (!allSubmitEventsToUpdate.isEmpty()) {
-                        List<SubmitEvent> casesToAdd = new ArrayList<>();
-                        List<SubmitEvent> casesToRemove = new ArrayList<>();
-                        for (SubmitEvent submitEvent : allSubmitEventsToUpdate) {
-                            String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
-                            if (caseIds.contains(ethosCaseRef) && !multipleCaseIds.contains(ethosCaseRef)) {
-                                casesToAdd.add(submitEvent);
-                            } else if (!caseIds.contains(ethosCaseRef) && multipleCaseIds.contains(ethosCaseRef)) {
-                                casesToRemove.add(submitEvent);
-                            }
+        try {
+            List<String> unionLists = Stream.concat(caseIds.stream(), multipleCaseIds.stream()).distinct().collect(Collectors.toList());
+            List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken,
+                    BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction());
+            BulkCasesPayload bulkCasesPayload = bulkSearchService.filterSubmitEvents(submitEvents, unionLists,
+                    bulkDetails.getCaseData().getMultipleReference());
+            if (bulkCasesPayload.getAlreadyTakenIds() != null && bulkCasesPayload.getAlreadyTakenIds().isEmpty()) {
+                List<SubmitEvent> allSubmitEventsToUpdate = bulkCasesPayload.getSubmitEvents();
+                if (!allSubmitEventsToUpdate.isEmpty()) {
+                    List<SubmitEvent> casesToAdd = new ArrayList<>();
+                    List<SubmitEvent> casesToRemove = new ArrayList<>();
+                    for (SubmitEvent submitEvent : allSubmitEventsToUpdate) {
+                        String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
+                        if (caseIds.contains(ethosCaseRef) && !multipleCaseIds.contains(ethosCaseRef)) {
+                            casesToAdd.add(submitEvent);
+                        } else if (!caseIds.contains(ethosCaseRef) && multipleCaseIds.contains(ethosCaseRef)) {
+                            casesToRemove.add(submitEvent);
                         }
-                        List<MultipleTypeItem> multipleTypeItemListFinal = new ArrayList<>();
-                        // Delete old cases
-                        if (bulkDetails.getCaseData().getMultipleCollection() != null) {
-                            multipleTypeItemListFinal = getMultipleTypeListAfterDeletions(bulkDetails.getCaseData().getMultipleCollection(),
-                                    casesToRemove, bulkRequest.getCaseDetails(), authToken);
-                        }
-                        // Add new cases
-                        bulkCasesPayload.setMultipleTypeItems(getMultipleTypeListAfterAdditions(multipleTypeItemListFinal, casesToAdd, bulkRequest.getCaseDetails(), authToken));
-                    } else {
-                        bulkCasesPayload.setMultipleTypeItems(bulkDetails.getCaseData().getMultipleCollection());
                     }
+                    List<MultipleTypeItem> multipleTypeItemListFinal = new ArrayList<>();
+                    // Delete old cases
+                    if (bulkDetails.getCaseData().getMultipleCollection() != null) {
+                        multipleTypeItemListFinal = getMultipleTypeListAfterDeletions(bulkDetails.getCaseData().getMultipleCollection(),
+                                casesToRemove, bulkRequest.getCaseDetails(), authToken);
+                    }
+                    // Add new cases
+                    bulkCasesPayload.setMultipleTypeItems(getMultipleTypeListAfterAdditions(multipleTypeItemListFinal, casesToAdd, bulkRequest.getCaseDetails(), authToken));
+                } else {
+                    bulkCasesPayload.setMultipleTypeItems(bulkDetails.getCaseData().getMultipleCollection());
                 }
-            } catch (Exception ex) {
-                throw new CaseCreationException(MESSAGE + bulkDetails.getCaseId() + ex.getMessage());
             }
+            return bulkCasesPayload;
+        } catch (Exception ex) {
+            throw new CaseCreationException(MESSAGE + bulkDetails.getCaseId() + ex.getMessage());
         }
-        return bulkCasesPayload;
     }
 
     private List<MultipleTypeItem> getMultipleTypeListAfterAdditions(List<MultipleTypeItem> multipleTypeItemListFinal, List<SubmitEvent> casesToAdd,
