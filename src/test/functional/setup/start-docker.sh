@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #Start CCD and Docmosis services
-../../../../../ccd-docker/ccd compose up -d
+../../../../../ccd-docker/ccd compose start
 
 #Wait until all services are up
 echo ""
