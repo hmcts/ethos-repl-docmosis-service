@@ -12,7 +12,7 @@ services:
     environment:
       TORNADO_URL: "http://tornado:8083/rs/render"
       TORNADO_ACCESS_KEY: ""
-      IDAM_API_URL: "http://idam-api:8080"
+      IDAM_API_URL: http://sidam-api:5000
       DOCUMENT_MANAGEMENT_URL: "http://dm-store:8080"
       DOCUMENT_MANAGEMENT_CASEWORKERROLE: "caseworker-test"
       SERVICE_AUTH_PROVIDER_URL: "http://service-auth-provider-api:8080"
@@ -121,7 +121,7 @@ services:
       - service-auth-provider-api
 
   sidam-api:
-    image: hmcts.azurecr.io/hmcts/sidam/idam-api:1.0.0
+    image: hmcts.azurecr.io/hmcts/sidam/idam-api:latest
     environment:
       JAVA_OPTS: -Xms128m -Xms512m -Dlogging.level.uk.gov.hmcts=DEBUG
       SPRING_DATASOURCE_URL: jdbc:postgresql://shared-db:5432/openidm?currentSchema=fridam
@@ -156,7 +156,7 @@ services:
       TESTING_SUPPORT_ENABLED: "true"
 
   fr-am:
-    image: hmcts.azurecr.io/hmcts/sidam/sidam-fr-am:1.0.0
+    image: hmcts.azurecr.io/hmcts/sidam/sidam-fr-am:latest
     ports:
       - 8080:8080
       - 1389:1389
@@ -164,7 +164,7 @@ services:
       - shared-db
 
   fr-idm:
-    image: hmcts.azurecr.io/hmcts/sidam/sidam-fr-idm:1.0.0
+    image: hmcts.azurecr.io/hmcts/sidam/sidam-fr-idm:latest
     ports:
       - 18080:18080
       - 9010:9010
@@ -192,7 +192,7 @@ services:
       - ccd-docker-ccd-shared-database-data:/var/lib/postgresql/data
 
   shared-db:
-    image: hmcts.azurecr.io/hmcts/sidam/sidam-idm-pg:1.0.0
+    image: hmcts.azurecr.io/hmcts/sidam/sidam-idm-pg:latest
     ports:
       - 5051:5432
 

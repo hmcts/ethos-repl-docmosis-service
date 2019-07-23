@@ -60,8 +60,8 @@ public class TestUtil {
 
         CCDRequest ccdRequest;
 
-        if (isScotland) ccdRequest = getCcdRequest(topLevel, childLevel, true, testData);
-        else ccdRequest = getCcdRequest(topLevel, childLevel, false, testData);
+        if (isScotland) ccdRequest = getCcdRequest(topLevel, childLevel, true, new File(testData));
+        else ccdRequest = getCcdRequest(topLevel, childLevel, false, new File(testData));
 
         Response response = getResponse(ccdRequest);
 
@@ -76,7 +76,7 @@ public class TestUtil {
         if (authToken == null) authToken = ResponseUtil.getAuthToken(environment);
         if (!authToken.startsWith("Bearer")) authToken = "Bearer " + authToken;
 
-        CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel, isScotland, testDataFile);
+        CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel, isScotland, new File(testDataFile));
 
         Response response = getResponse(ccdRequest);
         String url = ResponseUtil.getUrlFromResponse(response);
@@ -96,8 +96,8 @@ public class TestUtil {
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
-        else ccdRequest = getCcdRequest("1", "", false, testData);
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
+        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
 
         Response response = getResponse(ccdRequest, Constants.PRE_DEFAULT_URI);
 
@@ -128,8 +128,8 @@ public class TestUtil {
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
-        else ccdRequest = getCcdRequest("1", "", false, testData);
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
+        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
 
         Response response = getResponse(ccdRequest, Constants.CREATE_BULK_URI);
 
@@ -143,8 +143,8 @@ public class TestUtil {
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
-        else ccdRequest = getCcdRequest("1", "", false, testData);
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
+        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
 
         Response response = getResponse(ccdRequest, Constants.SEARCH_BULK_URI);
 
@@ -157,10 +157,17 @@ public class TestUtil {
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
-        else ccdRequest = getCcdRequest("1", "", false, testData);
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
+        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
 
-        Response response = getResponse(ccdRequest, Constants.UPDATE_BULK_URI);
+        Response response = getResponse(ccdRequest, Constants.SEARCH_BULK_URI);
+
+        String json = response.body().prettyPrint();
+
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, json);
+        else ccdRequest = getCcdRequest("1", "", false, json);
+
+        response = getResponse(ccdRequest, Constants.UPDATE_BULK_URI);
 
         verifyUpdateBulkResponse(testData, response);
     }
@@ -171,10 +178,17 @@ public class TestUtil {
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
-        else ccdRequest = getCcdRequest("1", "", false, testData);
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
+        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
 
-        Response response = getResponse(ccdRequest, Constants.UPDATE_BULK_CASE_URI);
+        Response response = getResponse(ccdRequest, Constants.CREATE_BULK_URI);
+
+        String json = response.body().prettyPrint();
+
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, json);
+        else ccdRequest = getCcdRequest("1", "", false, json);
+
+        response = getResponse(ccdRequest, Constants.UPDATE_BULK_CASE_URI);
 
         verifyUpdateBulkCaseResponse(testData, response);
     }
@@ -213,10 +227,14 @@ public class TestUtil {
         return response;
     }
 
-    public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, String testDataFile) throws IOException {
-        String payLoad = FileUtils.readFileToString(new File(testDataFile), "UTF-8");
+    public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, File testDataFile) throws IOException {
+        String payLoad = FileUtils.readFileToString(testDataFile, "UTF-8");
 
         return JsonUtil.getCaseDetails(payLoad, topLevel, childLevel, isScotland);
+    }
+
+    public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, String testData) throws IOException {
+        return JsonUtil.getCaseDetails(testData, topLevel, childLevel, isScotland);
     }
 
     public void setAuthToken(String authToken) {
