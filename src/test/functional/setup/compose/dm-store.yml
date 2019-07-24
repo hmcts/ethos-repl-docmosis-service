@@ -24,10 +24,7 @@ services:
       MICROSERVICE_KEYS_EM_GW: "${IDAM_KEY_DM_STORE}"
 
   dm-store:
-    image: "hmcts/dm-store:${DM_STORE_TAG:-latest}"
-    mem_limit: 1G
-    mem_reservation: 800M
-    command: --wait-for-database 30
+    image: "${DM_STORE_USE_LOCAL-hmcts.azurecr.io/}hmcts/dm-store:${DM_STORE_TAG:-latest}"
     healthcheck:
       disable: true
     environment:
@@ -38,8 +35,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ccd-shared-database:5432/evidence
       SPRING_DATASOURCE_USERNAME: "${DB_USERNAME}"
       SPRING_DATASOURCE_PASSWORD: "${DB_PASSWORD}"
-      #ENABLE_AZURE_STORAGE_CONTAINER: "false"
-      #ENABLE_POSTGRES_BLOB_STORAGE: "true"
+      ENABLE_AZURE_STORAGE_CONTAINER: "true"
+      ENABLE_POSTGRES_BLOB_STORAGE: "false"
       STORAGEACCOUNT_PRIMARY_CONNECTION_STRING: "${STORAGEACCOUNT_PRIMARY_CONNECTION_STRING:-DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azure-storage-emulator-azurite:10000/devstoreaccount1}"
       STORAGE_CONTAINER_DOCUMENT_CONTAINER_NAME: "${STORAGE_CONTAINER_DOCUMENT_CONTAINER_NAME:-hmctstestcontainer}"
       BLOBSTORE_MIGRATE_CCD_PUBLIC_KEY_REQUIRED: "${BLOBSTORE_MIGRATE_CCD_PUBLIC_KEY_REQUIRED:-false}"
@@ -47,9 +44,9 @@ services:
       SPRING_PROFILES_ACTIVE: dev
       IDAM_TESTING_SUPPORT_ENABLED: "true"
       LOGGING_LEVEL_UK_GOV_HMCTS_IDAM: DEBUG
-      IDAM_USER_BASE_URI: http://idam-api:8080
+      IDAM_USER_BASE_URI: http://sidam-api:5000
       IDAM_S2S_BASE_URI: http://service-auth-provider-api:8080
-      S2S_NAMES_WHITELIST: sscs,divorce,ccd,em_gw,document-management-store,ccd_gw,idam-api,fpl_case_service
+      S2S_NAMES_WHITELIST: sscs,divorce,ccd,em_gw,document-management-store,ccd_gw,sidam-api,fpl_case_service
       http_proxy:
       https_proxy:
       no_proxy:
@@ -69,11 +66,11 @@ services:
     #    JAVA_OPTS: -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
     links:
       - ccd-shared-database
-      - idam-api
+      - sidam-api
       - service-auth-provider-api
     depends_on:
       - ccd-shared-database
-      - idam-api
+      - sidam-api
       - service-auth-provider-api
       - azure-storage-emulator-azurite
     ports:
@@ -83,8 +80,6 @@ services:
 
   azure-storage-emulator-azurite:
     image: arafato/azurite
-    mem_limit: 50M
-    mem_reservation: 30M
     ports:
       - 10000:10000
     environment:

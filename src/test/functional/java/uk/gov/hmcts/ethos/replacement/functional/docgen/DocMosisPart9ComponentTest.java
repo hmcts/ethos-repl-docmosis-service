@@ -32,7 +32,7 @@ public class DocMosisPart9ComponentTest {
     @Test
     @WithTag("SmokeTest")
     public void generateDocument_Part9_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("9", "1", "the following parts of these proceedings namely");
+        testUtil.executeGenerateDocumentTest("9", "1", "HEARING IN PRIVATE");
     }
 
     @Test
