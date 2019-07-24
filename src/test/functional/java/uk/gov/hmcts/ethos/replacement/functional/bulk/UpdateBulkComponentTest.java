@@ -31,7 +31,7 @@ public class UpdateBulkComponentTest {
     }
 
     @Test
-    @WithTag("SmokeTest")
+    //@WithTag("SmokeTest")
     public void update_bulk_eng_individual_claimant_not_represented() throws IOException {
         testUtil.executeUpdateBulkTest(false, Constants.TEST_DATA_ENG_BULK1);
     }
@@ -52,7 +52,7 @@ public class UpdateBulkComponentTest {
     }
 
     @Test
-    @WithTag("SmokeTest")
+    //@WithTag("SmokeTest")
     public void update_bulk_scot_individual_claimant_not_represented() throws IOException {
         testUtil.executeUpdateBulkTest(false, Constants.TEST_DATA_SCOT_BULK1);
     }
