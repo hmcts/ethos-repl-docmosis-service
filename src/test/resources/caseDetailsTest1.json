@@ -23,7 +23,7 @@
     "preAcceptCase": {
       "caseAccepted": "Yes",
       "dateAccepted": "25/02/2020",
-      "rejectReason": "",
+      "rejectReason": [],
       "caseReferred": "No",
       "caseEJReferredDate": "",
       "caseJudge": "Judge",
