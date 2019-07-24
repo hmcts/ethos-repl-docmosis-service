@@ -20,4 +20,5 @@ public class DefaultValues {
     private String tribunalCorrespondenceFax;
     private String tribunalCorrespondenceDX;
     private String tribunalCorrespondenceEmail;
+    private String managingOffice;
 }

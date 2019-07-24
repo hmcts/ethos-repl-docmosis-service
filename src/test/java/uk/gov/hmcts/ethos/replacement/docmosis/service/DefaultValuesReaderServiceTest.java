@@ -45,6 +45,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceFax("01264 785 177")
                 .tribunalCorrespondenceDX("DX 580003")
                 .tribunalCorrespondenceEmail("glasgowet@justice.gov.uk")
+                .managingOffice("Glasgow")
                 .build();
     }
 

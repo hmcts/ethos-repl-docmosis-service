@@ -90,6 +90,7 @@ public class CaseActionsForCaseWorkerControllerTest {
         defaultValues = DefaultValues.builder()
                 .positionType("Awaiting ET3")
                 .claimantTypeOfClaimant("Individual")
+                .managingOffice("Glasgow")
                 .tribunalCorrespondenceAddressLine1("")
                 .tribunalCorrespondenceAddressLine2("")
                 .tribunalCorrespondenceAddressLine3("")
