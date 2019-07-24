@@ -81,6 +81,7 @@ public class DefaultValuesReaderService {
                 .tribunalCorrespondenceFax(values.get(15))
                 .tribunalCorrespondenceDX(values.get(16))
                 .tribunalCorrespondenceEmail(values.get(17))
+                .managingOffice(values.get(18))
                 .build();
     }
 

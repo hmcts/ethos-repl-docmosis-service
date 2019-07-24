@@ -128,5 +128,7 @@ public class CaseData {
     private String claimantRepresentedQuestion;
     @JsonProperty("state")
     private String state;
+    @JsonProperty("managingOffice")
+    private String managingOffice;
 
 }
