@@ -113,5 +113,33 @@
         <notes><![CDATA[ tomcat-embed-websocket-9.0.16.jar: CVE-2019-0221  ]]></notes>
         <cve>CVE-2019-0221</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-12814  ]]></notes>
+        <cve>CVE-2019-12814</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-12086  ]]></notes>
+        <cve>CVE-2019-12086</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-12384  ]]></notes>
+        <cve>CVE-2019-12384</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-10072  ]]></notes>
+        <cve>CVE-2019-10072</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2018-1000613  ]]></notes>
+        <cve>CVE-2018-1000613</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2017-13098  ]]></notes>
+        <cve>CVE-2017-13098</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2018-1000180  ]]></notes>
+        <cve>CVE-2018-1000180</cve>
+    </suppress>
 
 </suppressions>
