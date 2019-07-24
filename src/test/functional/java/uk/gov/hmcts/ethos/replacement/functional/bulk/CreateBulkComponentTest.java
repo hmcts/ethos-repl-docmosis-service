@@ -32,7 +32,7 @@ public class CreateBulkComponentTest {
     }
 
     @Test
-    @WithTag("SmokeTest")
+    //@WithTag("SmokeTest")
     public void create_bulk_eng_individual_claimant_not_represented() throws IOException {
         testUtil.executeCreateBulkTest(false, Constants.TEST_DATA_ENG_BULK1);
     }
