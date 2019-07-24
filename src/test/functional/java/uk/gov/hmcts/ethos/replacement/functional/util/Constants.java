@@ -12,6 +12,10 @@ public class Constants {
     public static final String DOCGEN_URI = "/generateDocument";
     public static final String PRE_DEFAULT_URI = "/preDefaultValues";
     public static final String POST_DEFAULT_URI = "/postDefaultValues";
+    public static final String CREATE_BULK_URI = "/createBulk";
+    public static final String SEARCH_BULK_URI = "/searchBulk";
+    public static final String UPDATE_BULK_URI = "/updateBulk";
+    public static final String UPDATE_BULK_CASE_URI = "/updateBulkCase";
 
 
 
@@ -37,5 +41,18 @@ public class Constants {
     public static final String TEST_DATA_SCOT_POST_DEFAULT1 = "src/test/functional/resources/testData/defaults/postDefaultScotTest1.json";
     public static final String TEST_DATA_SCOT_POST_DEFAULT2 = "src/test/functional/resources/testData/defaults/postDefaultScotTest2.json";
 
+    public static final String TEST_DATA_ENG_BULK1 = "src/test/functional/resources/testData/exampleBulkV1.json";
+    public static final String TEST_DATA_ENG_BULK2 = "src/test/functional/resources/testData/exampleBulkV1.json";
+    public static final String TEST_DATA_ENG_BULK3 = "src/test/functional/resources/testData/exampleBulkV1.json";
+    public static final String TEST_DATA_ENG_BULK4 = "src/test/functional/resources/testData/exampleBulkV1.json";
+    public static final String TEST_DATA_ENG_BULK5 = "src/test/functional/resources/testData/exampleBulkV1.json";
+    public static final String TEST_DATA_ENG_BULK6 = "src/test/functional/resources/testData/exampleBulkV1.json";
+    public static final String TEST_DATA_ENG_BULK7 = "src/test/functional/resources/testData/exampleBulkV1.json";
+
+    public static final String TEST_DATA_SCOT_BULK1 = "src/test/functional/resources/testData/exampleBulkV1.json";
+    public static final String TEST_DATA_SCOT_BULK2 = "src/test/functional/resources/testData/exampleBulkV1.json";
+    public static final String TEST_DATA_SCOT_BULK3 = "src/test/functional/resources/testData/exampleBulkV1.json";
+    public static final String TEST_DATA_SCOT_BULK4 = "src/test/functional/resources/testData/exampleBulkV1.json";
+    public static final String TEST_DATA_SCOT_BULK5 = "src/test/functional/resources/testData/exampleBulkV1.json";
 
 }
