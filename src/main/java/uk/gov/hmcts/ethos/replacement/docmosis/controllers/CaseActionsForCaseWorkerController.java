@@ -166,6 +166,9 @@ public class CaseActionsForCaseWorkerController {
         if (caseData.getPositionType() == null) {
             caseData.setPositionType(defaultValues.getPositionType());
         }
+        if (defaultValues.getManagingOffice() != null) {
+            caseData.setManagingOffice(defaultValues.getManagingOffice());
+        }
         caseData.setTribunalCorrespondenceAddress(getTribunalCorrespondenceAddress(defaultValues));
         caseData.setTribunalCorrespondenceTelephone(defaultValues.getTribunalCorrespondenceTelephone());
         caseData.setTribunalCorrespondenceFax(defaultValues.getTribunalCorrespondenceFax());

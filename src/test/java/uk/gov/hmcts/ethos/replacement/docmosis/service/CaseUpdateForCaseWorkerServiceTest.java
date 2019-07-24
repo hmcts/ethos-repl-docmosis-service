@@ -74,6 +74,7 @@ public class CaseUpdateForCaseWorkerServiceTest {
         glasgowDefaultValues = DefaultValues.builder()
                 .positionType("Awaiting ET3")
                 .claimantTypeOfClaimant("Individual")
+                .managingOffice("Glasgow")
                 .tribunalCorrespondenceAddressLine1("Eagle Building,")
                 .tribunalCorrespondenceAddressLine2("215 Bothwell Street,")
                 .tribunalCorrespondenceTown("Glasgow,")
