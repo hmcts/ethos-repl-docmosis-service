@@ -257,12 +257,12 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_32() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "32", "to set aside the dismissal of your claim following");
+        testUtil.executeGenerateDocumentTest("5", "32", "APPLICATION TO SET ASIDE DISMISSAL OF CLAIM");
     }
 
     @Test
     public void generateDocument_Part5_33() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "33", "to set aside the dismissal of your response");
+        testUtil.executeGenerateDocumentTest("5", "33", "APPLICATION TO SET ASIDE DISMISSAL OF RESPONSE");
     }
 
     @Test
