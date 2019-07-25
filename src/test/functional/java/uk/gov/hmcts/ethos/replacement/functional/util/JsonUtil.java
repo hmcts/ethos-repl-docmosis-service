@@ -59,7 +59,11 @@ public class JsonUtil {
         String templateVersion;
 
         if (StringUtils.isEmpty(childLevel)) templateVersion = topLevel;
-        else templateVersion = topLevel + "." + childLevel;
+        else {
+            if (topLevel.equalsIgnoreCase("14") && childLevel.equalsIgnoreCase("A")) templateVersion = "14A";
+            else if (topLevel.equalsIgnoreCase("16") && childLevel.equalsIgnoreCase("A")) templateVersion = "16A";
+            else templateVersion = topLevel + "." + childLevel;
+        }
 
         json = json.replace("#VERSION#", templateVersion);
 
