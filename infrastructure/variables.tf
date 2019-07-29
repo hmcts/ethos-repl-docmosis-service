@@ -13,7 +13,7 @@ variable "env" {
 }
 
 variable "tornado_url" {
-  default = "http://tornado:8082/rs/render"
+  default = "http://tornado:8090/rs/render"
 }
 
 variable "subscription" {
