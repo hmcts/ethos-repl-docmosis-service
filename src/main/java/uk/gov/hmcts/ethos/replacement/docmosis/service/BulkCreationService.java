@@ -62,8 +62,14 @@ public class BulkCreationService {
 
                 // 3) Create an event to update multiple reference field to all cases
                 for (SubmitEvent submitEvent : submitEvents) {
-                    bulkUpdateService.caseUpdateMultipleReferenceRequest(bulkDetails, submitEvent, userToken,
-                            bulkDetails.getCaseData().getMultipleReference(), "Multiple");
+                    if (!submitEvent.getState().equals(SUBMITTED_STATE)) {
+                        bulkUpdateService.caseUpdateMultipleReferenceRequest(bulkDetails, submitEvent, userToken,
+                                bulkDetails.getCaseData().getMultipleReference(), "Multiple");
+                    } else {
+                        errors.add("The state of case id: " + submitEvent.getCaseData().getEthosCaseReference() + " has not been accepted");
+                        bulkRequestPayload.setBulkDetails(bulkDetails);
+                        break;
+                    }
                 }
             } else {
                 errors.add("These cases are already assigned to a multiple bulk: " + bulkCasesPayload.getAlreadyTakenIds().toString());
@@ -126,7 +132,8 @@ public class BulkCreationService {
                                 casesToRemove, bulkRequest.getCaseDetails(), authToken);
                     }
                     // Add new cases
-                    bulkCasesPayload.setMultipleTypeItems(getMultipleTypeListAfterAdditions(multipleTypeItemListFinal, casesToAdd, bulkRequest.getCaseDetails(), authToken));
+                    bulkCasesPayload.setMultipleTypeItems(getMultipleTypeListAfterAdditions(multipleTypeItemListFinal, casesToAdd,
+                            bulkRequest.getCaseDetails(), authToken));
                 } else {
                     bulkCasesPayload.setMultipleTypeItems(bulkDetails.getCaseData().getMultipleCollection());
                 }

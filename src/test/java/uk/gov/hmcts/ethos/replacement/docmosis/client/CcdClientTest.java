@@ -20,6 +20,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
@@ -107,25 +108,35 @@ public class CcdClientTest {
     @Test
     public void retrieveCases() throws IOException {
         HttpEntity<Object> httpEntity = new HttpEntity<>(null);
-        ResponseEntity<List<SubmitEvent>> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        List<SubmitEvent> submitEvents = new ArrayList<>(Arrays.asList(new SubmitEvent(), new SubmitEvent()));
+        ResponseEntity<List<SubmitEvent>> responseEntity = new ResponseEntity<>(submitEvents, HttpStatus.OK);
+        PaginatedSearchMetadata metadata = new PaginatedSearchMetadata();
+        metadata.setTotalPagesCount(1);
+        ResponseEntity<PaginatedSearchMetadata> paginatedSearchMetadata = new ResponseEntity<>(metadata, HttpStatus.OK);
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
-        when(ccdClientConfig.buildRetrieveCasesUrl(any(), any(), any())).thenReturn(uri);
+        when(ccdClientConfig.buildRetrieveCasesUrl(any(), any(), any(), any())).thenReturn(uri);
+        when(ccdClientConfig.buildPaginationMetadataCaseUrl(any(), any(), any())).thenReturn(uri);
         when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(new ParameterizedTypeReference<List<SubmitEvent>>(){}))).thenReturn(responseEntity);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(PaginatedSearchMetadata.class))).thenReturn(paginatedSearchMetadata);
         ccdClient.retrieveCases("authToken", caseDetails.getCaseTypeId(), caseDetails.getJurisdiction());
         verify(restTemplate).exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(new ParameterizedTypeReference<List<SubmitEvent>>(){}));
-        verifyNoMoreInteractions(restTemplate);
     }
 
     @Test
     public void retrieveBulkCases() throws IOException {
         HttpEntity<Object> httpEntity = new HttpEntity<>(null);
-        ResponseEntity<List<SubmitBulkEvent>> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        List<SubmitBulkEvent> submitBulkEvents = new ArrayList<>(Arrays.asList(new SubmitBulkEvent(), new SubmitBulkEvent()));
+        ResponseEntity<List<SubmitBulkEvent>> responseEntity = new ResponseEntity<>(submitBulkEvents, HttpStatus.OK);
+        PaginatedSearchMetadata metadata = new PaginatedSearchMetadata();
+        metadata.setTotalPagesCount(1);
+        ResponseEntity<PaginatedSearchMetadata> paginatedSearchMetadata = new ResponseEntity<>(metadata, HttpStatus.OK);
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
-        when(ccdClientConfig.buildRetrieveCasesUrl(any(), any(), any())).thenReturn(uri);
+        when(ccdClientConfig.buildRetrieveCasesUrl(any(), any(), any(), any())).thenReturn(uri);
+        when(ccdClientConfig.buildPaginationMetadataCaseUrl(any(), any(), any())).thenReturn(uri);
         when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(new ParameterizedTypeReference<List<SubmitBulkEvent>>(){}))).thenReturn(responseEntity);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(PaginatedSearchMetadata.class))).thenReturn(paginatedSearchMetadata);
         ccdClient.retrieveBulkCases("authToken", bulkDetails.getCaseTypeId(), bulkDetails.getJurisdiction());
         verify(restTemplate).exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(new ParameterizedTypeReference<List<SubmitBulkEvent>>(){}));
-        verifyNoMoreInteractions(restTemplate);
     }
 
     @Test

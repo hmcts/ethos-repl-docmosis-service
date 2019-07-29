@@ -80,7 +80,7 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez, Juan Garcia\",\n" +
+                "\"resp_others\":\"1. Antonio Vazquez\\n2. Juan Garcia\\n3. Mike Jordan\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 10:11\",\n" +
@@ -105,7 +105,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails1, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails1.getCaseData(), "").toString());
     }
 
     @Test
@@ -135,7 +135,7 @@ public class HelperTest {
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"Hearing_duration\":\"2 hours\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t2_2A\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -155,7 +155,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails2, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails2.getCaseData(), "").toString());
     }
 
     @Test
@@ -180,7 +180,7 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
+                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
@@ -205,7 +205,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails3, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails3.getCaseData(), "").toString());
     }
 
     @Test
@@ -231,7 +231,7 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
+                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
@@ -256,7 +256,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails4, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails4.getCaseData(), "").toString());
     }
 
     @Test
@@ -283,7 +283,7 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
+                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Francisco\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
@@ -308,7 +308,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails5, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails5.getCaseData(), "").toString());
     }
 
     @Test
@@ -335,7 +335,7 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
+                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
                 "\"Respondent\":\"RespondentName\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
@@ -360,7 +360,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails6, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails6.getCaseData(), "").toString());
     }
 
     @Test
@@ -387,7 +387,7 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
+                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Antonio Rodriguez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
@@ -412,7 +412,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails7, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails7.getCaseData(), "").toString());
     }
 
     @Test
@@ -438,7 +438,7 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez, Mikey McCollier\",\n" +
+                "\"resp_others\":\"1. Antonio Vazquez\\n2. Mikey McCollier\",\n" +
                 "\"Respondent\":\"Joan Zamorano\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
@@ -463,7 +463,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails8, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails8.getCaseData(), "").toString());
     }
 
     @Test
@@ -489,7 +489,7 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
+                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
                 "\"Respondent\":\"Raul Gonzalez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
@@ -514,7 +514,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails9, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails9.getCaseData(), "").toString());
     }
 
     @Test
@@ -540,7 +540,7 @@ public class HelperTest {
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsEmpty, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsEmpty.getCaseData(), "").toString());
     }
 
     @Test
@@ -566,7 +566,7 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez, Juan Garcia\",\n" +
+                "\"resp_others\":\"1. Antonio Vazquez\\n2. Juan Garcia\",\n" +
                 "\"Respondent\":\"string\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 10:11\",\n" +
@@ -591,7 +591,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot1, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot1.getCaseData(), "").toString());
     }
 
     @Test
@@ -641,7 +641,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot2, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot2.getCaseData(), "").toString());
     }
 
     @Test
@@ -666,7 +666,7 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
+                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
                 "\"Respondent\":\"string\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
@@ -691,7 +691,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot3, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot3.getCaseData(), "").toString());
     }
 
     @Test
@@ -705,7 +705,7 @@ public class HelperTest {
         correspondenceScotType.setPart3ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
         topLevel = "Part_4_Scot";
         part = "42";
         correspondenceScotType = new CorrespondenceScotType();
@@ -713,7 +713,7 @@ public class HelperTest {
         correspondenceScotType.setPart4ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
         topLevel = "Part_5_Scot";
         part = "52";
         correspondenceScotType = new CorrespondenceScotType();
@@ -721,7 +721,7 @@ public class HelperTest {
         correspondenceScotType.setPart5ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
         topLevel = "Part_6_Scot";
         part = "62";
         correspondenceScotType = new CorrespondenceScotType();
@@ -729,7 +729,7 @@ public class HelperTest {
         correspondenceScotType.setPart6ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
         topLevel = "Part_7_Scot";
         part = "72";
         correspondenceScotType = new CorrespondenceScotType();
@@ -737,7 +737,7 @@ public class HelperTest {
         correspondenceScotType.setPart7ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
         topLevel = "Part_15_Scot";
         part = "152";
         correspondenceScotType = new CorrespondenceScotType();
@@ -745,7 +745,7 @@ public class HelperTest {
         correspondenceScotType.setPart15ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
         topLevel = "Part_16_Scot";
         part = "162";
         correspondenceScotType = new CorrespondenceScotType();
@@ -753,7 +753,7 @@ public class HelperTest {
         correspondenceScotType.setPart16ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
     }
 
     @Test
@@ -789,7 +789,7 @@ public class HelperTest {
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(result, Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(result, Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
     }
 
     private String getJson(String topLevel, String part) {
@@ -815,5 +815,11 @@ public class HelperTest {
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
+    }
+
+    @Test
+    public void getDocumentName() {
+        String expected = "EM-TRB-EGW-ENG-00029_4.2";
+        assertEquals(expected, Helper.getDocumentName(caseDetails4.getCaseData()));
     }
 }
