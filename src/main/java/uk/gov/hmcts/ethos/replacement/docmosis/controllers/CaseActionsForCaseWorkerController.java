@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.POST_DEFAULT_XLSX_FILE_PATH;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.PRE_DEFAULT_XLSX_FILE_PATH;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.POST_DEFAULT_XLSX_FILE_PATH;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.PRE_DEFAULT_XLSX_FILE_PATH;
 
 @Slf4j
 @RestController
@@ -157,7 +157,6 @@ public class CaseActionsForCaseWorkerController {
         DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
         ccdRequest.getCaseDetails().setCaseData(getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues));
         log.info("Post Default values added to the case: " + defaultValues);
-
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(ccdRequest.getCaseDetails().getCaseData())
                 .build());
@@ -166,6 +165,9 @@ public class CaseActionsForCaseWorkerController {
     private CaseData getCaseData(CaseData caseData, DefaultValues defaultValues) {
         if (caseData.getPositionType() == null) {
             caseData.setPositionType(defaultValues.getPositionType());
+        }
+        if (defaultValues.getManagingOffice() != null) {
+            caseData.setManagingOffice(defaultValues.getManagingOffice());
         }
         caseData.setTribunalCorrespondenceAddress(getTribunalCorrespondenceAddress(defaultValues));
         caseData.setTribunalCorrespondenceTelephone(defaultValues.getTribunalCorrespondenceTelephone());

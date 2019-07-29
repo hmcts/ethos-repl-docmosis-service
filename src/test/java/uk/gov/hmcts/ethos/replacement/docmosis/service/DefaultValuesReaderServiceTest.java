@@ -8,8 +8,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.GLASGOW_CASE_TYPE_ID;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DefaultValuesReaderServiceTest {
@@ -46,24 +45,25 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceFax("01264 785 177")
                 .tribunalCorrespondenceDX("DX 580003")
                 .tribunalCorrespondenceEmail("glasgowet@justice.gov.uk")
+                .managingOffice("Glasgow")
                 .build();
     }
 
     @Test
     public void getPreDefaultValues() {
-        DefaultValues preDefaultValues1 = defaultValuesReaderService.getDefaultValues(DefaultValuesReaderService.PRE_DEFAULT_XLSX_FILE_PATH, GLASGOW_CASE_TYPE_ID);
+        DefaultValues preDefaultValues1 = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, GLASGOW_CASE_TYPE_ID);
         assertEquals(preDefaultValues, preDefaultValues1);
     }
 
     @Test
     public void getManchesterPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(DefaultValuesReaderService.POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID);
         assertEquals(postDefaultValuesManchester, postDefaultValues1);
     }
 
     @Test
     public void getGlasgowPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(DefaultValuesReaderService.POST_DEFAULT_XLSX_FILE_PATH, GLASGOW_CASE_TYPE_ID);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, GLASGOW_CASE_TYPE_ID);
         assertEquals(postDefaultValuesGlasgow, postDefaultValues1);
     }
 }
