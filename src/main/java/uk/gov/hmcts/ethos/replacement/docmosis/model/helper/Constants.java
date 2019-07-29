@@ -12,21 +12,19 @@ public class Constants {
 
     public static final String PRE_DEFAULT_XLSX_FILE_PATH = "preDefaultValues.xlsx";
     public static final String POST_DEFAULT_XLSX_FILE_PATH = "postDefaultValues.xlsx";
-    public static final String MANCHESTER_CASE_TYPE_ID = "EmpTrib_MVP_1.0_Manc";
-    public static final String MANCHESTER_USERS_CASE_TYPE_ID = "Manchester_Users_Demo";
-    public static final String GLASGOW_CASE_TYPE_ID = "EmpTrib_MVP_1.0_Glas";
-    public static final String MANCHESTER_BULK_CASE_TYPE_ID = "CCD_Bulk_Action_Manc_v3";
+
+    public static final String MANCHESTER_CASE_TYPE_ID = "Manchester_Dev";
+    public static final String MANCHESTER_USERS_CASE_TYPE_ID = "Manchester";
+    public static final String GLASGOW_CASE_TYPE_ID = "Glasgow_Dev";
+    public static final String MANCHESTER_BULK_CASE_TYPE_ID = "Manchester_Multiple_Dev";
+    public static final String MANCHESTER_USERS_BULK_CASE_TYPE_ID = "Manchester_Multiple";
 
     public static final String PENDING_STATE = "Pending";
-
-    public static final String SUBMITTED_STATE = "1_Submitted";
+    public static final String SUBMITTED_STATE = "Submitted";
 
     public static final String CREATION_EVENT_TRIGGER_ID = "initiateCase";
-
     public static final String UPDATE_EVENT_TRIGGER_ID = "amendCaseDetails";
-
     public static final String UPDATE_EVENT_TRIGGER_ID_BULK = "amendCaseDetailsBulk";
-
     public static final String UPDATE_BULK_EVENT_TRIGGER_ID = "updateBulkAction";
 
 }

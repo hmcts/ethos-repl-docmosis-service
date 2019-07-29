@@ -103,7 +103,7 @@ public class BulkHelper {
     }
 
     public static String getCaseTypeId(String caseTypeId) {
-        if (caseTypeId.equals(MANCHESTER_BULK_CASE_TYPE_ID)) {
+        if (caseTypeId.equals(MANCHESTER_BULK_CASE_TYPE_ID) || caseTypeId.equals(MANCHESTER_USERS_BULK_CASE_TYPE_ID)) {
             return MANCHESTER_CASE_TYPE_ID;
         }
         return GLASGOW_CASE_TYPE_ID;

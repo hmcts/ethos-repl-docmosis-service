@@ -73,7 +73,7 @@ public class BulkHelperTest {
         searchType.setClaimantSurnameS("Mike");
         searchType.setFileLocS("Manchester");
         searchType.setFeeGroupReferenceS("11111");
-        searchType.setStateS("1_Submitted");
+        searchType.setStateS("Submitted");
         searchType.setJurCodesCollectionS("");
         assertEquals(searchType, BulkHelper.getSearchTypeFromMultipleType(multipleType));
     }
@@ -83,7 +83,7 @@ public class BulkHelperTest {
         multipleType.setClaimantSurnameM("Mike");
         multipleType.setFileLocM("Manchester");
         multipleType.setFeeGroupReferenceM("11111");
-        multipleType.setStateM("1_Submitted");
+        multipleType.setStateM("Submitted");
         multipleType.setJurCodesCollectionM("");
         return multipleType;
     }

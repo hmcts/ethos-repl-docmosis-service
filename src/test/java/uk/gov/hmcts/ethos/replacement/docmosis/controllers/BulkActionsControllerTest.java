@@ -19,6 +19,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
@@ -54,6 +55,7 @@ public class BulkActionsControllerTest {
     private static final String SEARCH_BULK_URL = "/searchBulk";
     private static final String UPDATE_BULK_URL = "/updateBulk";
     private static final String UPDATE_BULK_CASE_URL = "/updateBulkCase";
+    private static final String GENERATE_BULK_LETTER_URL = "/generateBulkLetter";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -67,11 +69,15 @@ public class BulkActionsControllerTest {
     @MockBean
     private BulkSearchService bulkSearchService;
 
+    @MockBean
+    private DocumentGenerationService documentGenerationService;
+
     private MockMvc mvc;
     private JsonNode requestContent;
     private BulkCasesPayload bulkCasesPayload;
     private BulkRequestPayload bulkRequestPayload;
     private BulkDetails bulkDetails;
+    private List<DocumentInfo> documentInfoList;
 
     private void doRequestSetUp() throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -94,6 +100,11 @@ public class BulkActionsControllerTest {
         bulkDetails.setCaseData(bulkData);
         bulkRequestPayload = new BulkRequestPayload();
         bulkRequestPayload.setBulkDetails(bulkDetails);
+        DocumentInfo documentInfo1 = new DocumentInfo();
+        documentInfo1.setMarkUp("markup1");
+        DocumentInfo documentInfo2 = new DocumentInfo();
+        documentInfo2.setMarkUp("markup2");
+        documentInfoList = new ArrayList<>(Arrays.asList(documentInfo1, documentInfo2));
     }
 
     @Test
@@ -245,6 +256,51 @@ public class BulkActionsControllerTest {
         SubmitEvent submitEvent2 = new SubmitEvent();
         submitEvent2.setCaseData(caseData);
         return new ArrayList<>(Arrays.asList(submitEvent1, submitEvent2));
+    }
+
+    @Test
+    public void generateBulkLetter() throws Exception {
+        when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), eq(AUTH_TOKEN))).thenReturn(documentInfoList);
+        mvc.perform(post(GENERATE_BULK_LETTER_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateBulkLetterWithErrors() throws Exception {
+        when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), eq(AUTH_TOKEN))).thenReturn(new ArrayList<>());
+        mvc.perform(post(GENERATE_BULK_LETTER_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateBulkLetterError400() throws Exception {
+        mvc.perform(post(GENERATE_BULK_LETTER_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void generateBulkLetterError500() throws Exception {
+        when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), eq(AUTH_TOKEN))).thenThrow(feignError());
+        mvc.perform(post(GENERATE_BULK_LETTER_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
     }
 
 }
