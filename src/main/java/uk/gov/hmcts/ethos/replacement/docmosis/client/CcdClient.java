@@ -14,6 +14,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -62,24 +63,52 @@ public class CcdClient {
         return restTemplate.exchange(uri, HttpMethod.GET, request, SubmitEvent.class).getBody();
     }
 
-    private String getURI(String authToken, String caseTypeId, String jurisdiction) {
-        log.info("USER DETAILS ROLES: " + userService.getUserDetails(authToken).getRoles());
-        return ccdClientConfig.buildRetrieveCasesUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
+    private PaginatedSearchMetadata searchMetadata(String authToken, String caseTypeId, String jurisdiction) throws IOException {
+        HttpEntity<CCDRequest> request =
+                new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
+        String uri = ccdClientConfig.buildPaginationMetadataCaseUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
                 caseTypeId);
+        return restTemplate.exchange(uri, HttpMethod.GET, request, PaginatedSearchMetadata.class).getBody();
     }
+
+    private String getURI(String authToken, String caseTypeId, String jurisdiction, String page) {
+        return ccdClientConfig.buildRetrieveCasesUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
+                caseTypeId, page);
+    }
+
+    private int getTotalPagesCount(String authToken, String caseTypeId, String jurisdiction) throws IOException {
+        PaginatedSearchMetadata paginatedSearchMetadata = searchMetadata(authToken, caseTypeId, jurisdiction);
+        log.info("Pages: " + paginatedSearchMetadata.getTotalPagesCount());
+        return paginatedSearchMetadata.getTotalPagesCount();
+    }
+
     public List<SubmitEvent> retrieveCases(String authToken, String caseTypeId, String jurisdiction) throws IOException {
         HttpEntity<CCDRequest> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
-        log.info("CALLING EXCHANGE AFTER THIS");
-        return restTemplate.exchange(getURI(authToken, caseTypeId, jurisdiction), HttpMethod.GET, request,
-                new ParameterizedTypeReference<List<SubmitEvent>>(){}).getBody();
+        List<SubmitEvent> submitEvents = new ArrayList<>();
+        for (int page = 1; page <= getTotalPagesCount(authToken, caseTypeId, jurisdiction); page++) {
+            List<SubmitEvent> submitEventAux = restTemplate.exchange(ccdClientConfig.buildRetrieveCasesUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
+                caseTypeId, String.valueOf(page)), HttpMethod.GET, request, new ParameterizedTypeReference<List<SubmitEvent>>(){}).getBody();
+            if (submitEventAux != null) {
+                submitEvents.addAll(submitEventAux);
+            }
+        }
+        return submitEvents;
     }
 
     public List<SubmitBulkEvent> retrieveBulkCases(String authToken, String caseTypeId, String jurisdiction) throws IOException {
         HttpEntity<BulkRequest> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
-        return restTemplate.exchange(getURI(authToken, caseTypeId, jurisdiction), HttpMethod.GET, request,
-                new ParameterizedTypeReference<List<SubmitBulkEvent>>(){}).getBody();
+        List<SubmitBulkEvent> submitBulkEvents = new ArrayList<>();
+        int totalNumberPages = getTotalPagesCount(authToken, caseTypeId, jurisdiction);
+        for (int page = 1; page <= totalNumberPages; page++) {
+            List<SubmitBulkEvent> submitBulkEventAux = restTemplate.exchange(getURI(authToken, caseTypeId, jurisdiction, String.valueOf(page)), HttpMethod.GET, request,
+                    new ParameterizedTypeReference<List<SubmitBulkEvent>>(){}).getBody();
+            if (submitBulkEventAux != null) {
+                submitBulkEvents.addAll(submitBulkEventAux);
+            }
+        }
+        return submitBulkEvents;
     }
 
     public CCDRequest startEventForCase(String authToken, String caseTypeId, String jurisdiction, String cid) throws IOException {

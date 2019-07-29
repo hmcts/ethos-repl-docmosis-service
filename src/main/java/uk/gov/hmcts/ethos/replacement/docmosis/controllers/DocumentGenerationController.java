@@ -11,6 +11,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
@@ -39,11 +42,20 @@ public class DocumentGenerationController {
     public ResponseEntity<CCDCallbackResponse> generateDocument(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        DocumentInfo documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
 
+        DocumentInfo documentInfo = new DocumentInfo();
+        List<String> errors = new ArrayList<>();
+        CaseData caseData = new CaseData();
+        if (ccdRequest != null && ccdRequest.getCaseDetails() != null && ccdRequest.getCaseDetails().getCaseId() != null) {
+            log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+            documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
+            caseData = ccdRequest.getCaseDetails().getCaseData();
+        } else {
+            errors.add("The payload is empty. Please make sure you have some data on your case");
+        }
         return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(ccdRequest.getCaseDetails().getCaseData())
+                .errors(errors)
+                .data(caseData)
                 .confirmation_header(GENERATED_DOCUMENT_URL + documentInfo.getMarkUp())
                 .significant_item(generateSignificantItem(documentInfo))
                 .build());

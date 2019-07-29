@@ -64,10 +64,6 @@
       {
         "id" : "123345",
         "value" : {
-          "Est_Hearing": {
-            "est_Hearing_length_number": "2",
-            "est_Hearing_length_num": "hours"
-          },
           "Hearing_type": "Single",
           "Hearing_venue": "Manchester",
           "Hearing_judge_name": "JudgeName"

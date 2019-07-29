@@ -22,12 +22,14 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRI
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
@@ -49,6 +51,7 @@ public class BulkUpdateServiceTest {
     private SearchTypeItem searchTypeItem;
     private BulkDetails bulkDetails;
     private SubmitBulkEvent submitBulkEvent;
+    private BulkRequestPayload bulkRequestPayload;
 
     @Before
     public void setUp() {
@@ -80,7 +83,7 @@ public class BulkUpdateServiceTest {
         submitEvent = new SubmitEvent();
         submitEvent.setCaseId(1111);
         submitEvent.setCaseData(caseData);
-        submitEvent.setState("1_Submitted");
+        submitEvent.setState("Submitted");
         searchTypeItem = new SearchTypeItem();
         searchTypeItem.setId("11111");
 
@@ -90,6 +93,9 @@ public class BulkUpdateServiceTest {
 
         bulkSearchService = new BulkSearchService(ccdClient);
         bulkUpdateService = new BulkUpdateService(ccdClient, bulkSearchService);
+
+        bulkRequestPayload = new BulkRequestPayload();
+        bulkRequestPayload.setBulkDetails(bulkDetails);
     }
 
     @Test(expected = Exception.class)
@@ -167,6 +173,16 @@ public class BulkUpdateServiceTest {
         when(ccdClient.retrieveBulkCases("authToken", MANCHESTER_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
         assert(!bulkUpdateService.bulkUpdateLogic(getBulkDetailsWithValues(), "authToken").getErrors().isEmpty());
+    }
+
+    @Test
+    public void clearUpFields() {
+        BulkData bulkData = bulkUpdateService.clearUpFields(bulkRequestPayload).getBulkDetails().getCaseData();
+        assertNull(bulkData.getClaimantRepV2());
+        assertNull(bulkData.getClerkResponsibleV2());
+        assertNull(bulkData.getMultipleReferenceV2());
+        assertNull(bulkData.getFileLocationV2());
+        assertNull(bulkData.getFeeGroupReferenceV2());
     }
 
     private BulkDetails getBulkDetailsWithValues() {
