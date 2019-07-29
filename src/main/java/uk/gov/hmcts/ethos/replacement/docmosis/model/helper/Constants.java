@@ -16,8 +16,8 @@ public class Constants {
     public static final String MANCHESTER_CASE_TYPE_ID = "Manchester_Dev";
     public static final String MANCHESTER_USERS_CASE_TYPE_ID = "Manchester";
     public static final String GLASGOW_CASE_TYPE_ID = "Glasgow_Dev";
-    public static final String MANCHESTER_BULK_CASE_TYPE_ID = "Manchester_Multiple_Dev";
-    public static final String MANCHESTER_USERS_BULK_CASE_TYPE_ID = "Manchester_Multiple";
+    public static final String MANCHESTER_BULK_CASE_TYPE_ID = "Manchester_Multiples_Dev";
+    public static final String MANCHESTER_USERS_BULK_CASE_TYPE_ID = "Manchester_Multiples";
 
     public static final String PENDING_STATE = "Pending";
     public static final String SUBMITTED_STATE = "Submitted";
