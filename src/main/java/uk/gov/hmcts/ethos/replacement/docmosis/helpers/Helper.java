@@ -2,7 +2,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
@@ -10,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -33,10 +33,9 @@ public class Helper {
         return !isNullOrEmpty(date.toString()) ? date.format(NEW_DATE_PATTERN) : "";
     }
 
-    public static StringBuilder buildDocumentContent(CaseDetails caseDetails, String accessKey) {
+    public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey) {
         String FILE_EXTENSION = ".docx";
         StringBuilder sb = new StringBuilder();
-        CaseData caseData = caseDetails.getCaseData();
         String templateName = getTemplateName(caseData);
 
         // Start building the instruction
@@ -62,7 +61,7 @@ public class Helper {
         sb.append("\"Clerk\":\"").append(nullCheck(caseData.getClerkResponsible())).append(NEW_LINE);
         sb.append("\"Today_date\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
         sb.append("\"TodayPlus28Days\":\"").append(formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
-        sb.append("\"Case_No\":\"").append(nullCheck(caseDetails.getCaseData().getEthosCaseReference())).append(NEW_LINE);
+        sb.append("\"Case_No\":\"").append(nullCheck(caseData.getEthosCaseReference())).append(NEW_LINE);
 
         sb.append("}\n");
         sb.append("}\n");
@@ -134,11 +133,12 @@ public class Helper {
             }
         }
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+            AtomicInteger atomicInteger = new AtomicInteger(1);
             List<String> respOthers = caseData.getRespondentCollection()
                     .stream()
-                    .map(respondentSumTypeItem -> respondentSumTypeItem.getValue().getRespondentName())
+                    .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". " + respondentSumTypeItem.getValue().getRespondentName())
                     .collect(Collectors.toList());
-            sb.append("\"resp_others\":\"").append(String.join(", ", respOthers)).append(NEW_LINE);
+            sb.append("\"resp_others\":\"").append(String.join("\\n", respOthers)).append(NEW_LINE);
         }
         respondentType.ifPresent(respondentSumType -> sb.append("\"Respondent\":\"").append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE));
         return sb;

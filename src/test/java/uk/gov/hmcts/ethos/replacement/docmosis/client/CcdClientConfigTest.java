@@ -42,8 +42,8 @@ public class CcdClientConfigTest {
 
     @Test
     public void buildRetrieveCasesUrl() {
-        String uri = ccdClientConfig.buildRetrieveCasesUrl("1123", "TRIBUNALS", "TRIB_03");
-        assertEquals("null/caseworkers/1123/jurisdictions/TRIBUNALS/case-types/TRIB_03/cases", uri);
+        String uri = ccdClientConfig.buildRetrieveCasesUrl("1123", "TRIBUNALS", "TRIB_03", "2");
+        assertEquals("null/caseworkers/1123/jurisdictions/TRIBUNALS/case-types/TRIB_03/cases?page=2", uri);
     }
 
     @Test
@@ -68,6 +68,12 @@ public class CcdClientConfigTest {
     public void buildSubmitEventForCaseUrl() {
         String uri = ccdClientConfig.buildSubmitEventForCaseUrl("1123", "TRIBUNALS", "TRIB_03", "1222222");
         assertEquals("null/caseworkers/1123/jurisdictions/TRIBUNALS/case-types/TRIB_03/cases/1222222/events", uri);
+    }
+
+    @Test
+    public void buildPaginationMetadataCaseUrl() {
+        String uri = ccdClientConfig.buildPaginationMetadataCaseUrl("1123", "TRIBUNALS", "TRIB_03");
+        assertEquals("null/caseworkers/1123/jurisdictions/TRIBUNALS/case-types/TRIB_03/cases/pagination_metadata", uri);
     }
 
     @Test

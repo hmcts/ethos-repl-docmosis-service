@@ -63,7 +63,7 @@
             "multipleReferenceM": "123123123",
             "respondentSurnameM": "Emma Watson",
             "jurCodesCollectionTextM": "AX, AB",
-            "stateM": "1_Submitted"
+            "stateM": "Submitted"
           }
         },
         {
@@ -108,7 +108,7 @@
             "multipleReferenceS": "123123123",
             "respondentSurnameS": "Emma Watson",
             "jurCodesCollectionTextS": "AX, AB",
-            "stateS": "1_Submitted"
+            "stateS": "Submitted"
           }
         },
         {
@@ -142,7 +142,7 @@
     },
     "id": "232323232",
     "jurisdiction": "Nothing",
-    "case_type_id" : "EmpTrib_MVP_1.0_Manc",
+    "case_type_id" : "Manchester_Dev",
     "state": "UK"
   },
   "event_id": "1212121",
