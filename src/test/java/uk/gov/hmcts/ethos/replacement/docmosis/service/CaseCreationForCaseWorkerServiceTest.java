@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CaseCreationForCaseWorkerServiceTest {
@@ -32,6 +33,13 @@ public class CaseCreationForCaseWorkerServiceTest {
         ccdRequest = new CCDRequest();
         submitEvent = new SubmitEvent();
         caseCreationForCaseWorkerService = new CaseCreationForCaseWorkerService(ccdClient);
+    }
+
+    @Test(expected = Exception.class)
+    public void caseCreationRequestException() throws IOException {
+        when(ccdClient.startCaseCreation(anyString(), any())).thenThrow(feignError());
+        when(ccdClient.submitCaseCreation(anyString(), any(), any())).thenReturn(submitEvent);
+        caseCreationForCaseWorkerService.caseCreationRequest(ccdRequest, "authToken");
     }
 
     @Test
