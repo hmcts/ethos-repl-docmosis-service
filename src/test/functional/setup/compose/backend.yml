@@ -10,7 +10,7 @@ services:
     ports:
       - 8081:8081
     environment:
-      TORNADO_URL: "http://tornado:8083/rs/render"
+      TORNADO_URL: "http://tornado:8090/rs/render"
       TORNADO_ACCESS_KEY: ""
       IDAM_API_URL: http://sidam-api:5000
       DOCUMENT_MANAGEMENT_URL: "http://dm-store:8080"
@@ -24,11 +24,21 @@ services:
     mem_limit: 300M
     mem_reservation: 200M
     ports:
-      - 8083:8083
+      - 8090:8090
     environment:
       DOCMOSIS_KEY: "FNAD-KLTH-JAMO-DKIA-JAEE-7ILH-YKFQ-FR42-A8FA-A-268E"
       DOCMOSIS_SITE: "Licensed To: Ministry Of Justice.  For use with single project: Reform Document Generation"
       DOCMOSIS_TEMPLATESDIR: "/tmp/templates"
+#      DOCMOSIS_KEY: "0OAD-KLTH-JALO-MLIA-DBBH-1ELH-XBKQ-GS91-23ED-8-2358"
+#      DOCMOSIS_SITE: "Free Trial License"
+
+#  tornado:
+#    image: docmosis/tornado
+#    ports:
+#      - 8080:8080
+#    volumes:
+#      - /tmp/templates
+#    environment:
 #      DOCMOSIS_KEY: "0OAD-KLTH-JALO-MLIA-DBBH-1ELH-XBKQ-GS91-23ED-8-2358"
 #      DOCMOSIS_SITE: "Free Trial License"
 
