@@ -134,21 +134,12 @@ public class CaseActionsForCaseWorkerController {
     })
     public ResponseEntity<CCDCallbackResponse> preDefaultValues(
             @RequestBody CCDRequest ccdRequest) {
-
-        List<String> errors = new ArrayList<>();
-        CaseData caseData = new CaseData();
-        if (ccdRequest != null && ccdRequest.getCaseDetails() != null && ccdRequest.getCaseDetails().getCaseId() != null) {
-            log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-            DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
-            ccdRequest.getCaseDetails().getCaseData().setClaimantTypeOfClaimant(defaultValues.getClaimantTypeOfClaimant());
-            log.info("Pre Default values added to the case: " + defaultValues);
-            caseData = ccdRequest.getCaseDetails().getCaseData();
-        } else {
-            errors.add("The payload is empty. Please make sure you have some data on your case");
-        }
+        log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
+        ccdRequest.getCaseDetails().getCaseData().setClaimantTypeOfClaimant(defaultValues.getClaimantTypeOfClaimant());
+        log.info("Pre Default values added to the case: " + defaultValues);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .errors(errors)
-                .data(caseData)
+                .data(ccdRequest.getCaseDetails().getCaseData())
                 .build());
     }
 
