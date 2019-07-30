@@ -48,7 +48,7 @@ variable "autoheal" {
 }
 
 variable "idam_api_url" {
-  default = "http://idam-api:8080"
+  default = "http://sidam-api:5000"
 }
 
 variable "ccd_data_store_api_url" {
