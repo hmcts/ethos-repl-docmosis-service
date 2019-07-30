@@ -167,20 +167,7 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", hasSize(0)))
-                .andExpect(jsonPath("$.warnings", nullValue()));
-    }
-
-    @Test
-    public void preDefaultValuesWithErrors() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenReturn(defaultValues);
-        mvc.perform(post(PRE_DEFAULT_VALUES_URL)
-                .content(requestContent3.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors", nullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 

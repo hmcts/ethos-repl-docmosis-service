@@ -12,7 +12,7 @@ services:
     depends_on:
       - tornado
     environment:
-      TORNADO_URL: "http://tornado:8082/rs/render"
+      TORNADO_URL: "http://tornado:8090/rs/render"
       TORNADO_ACCESS_KEY: ""
       IDAM_API_URL: "http://idam-api:8080"
       CCD_DATA_STORE_API_URL: "http://ccd-data-store-api:4452"
@@ -29,7 +29,7 @@ services:
     mem_limit: 300M
     mem_reservation: 200M
     ports:
-      - 8082:8082
+      - 8090:8090
     environment:
       DOCMOSIS_KEY: "FNAD-KLTH-JAMO-DKIA-JAEE-7ILH-YKFQ-FR42-A8FA-A-268E"
       DOCMOSIS_SITE: "Licensed To: Ministry Of Justice.  For use with single project: Reform Document Generation"
