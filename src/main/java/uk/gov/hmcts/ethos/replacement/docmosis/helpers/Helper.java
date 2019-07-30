@@ -55,7 +55,15 @@ public class Helper {
 
         sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts\":\"")
                 .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
+        sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts1\":\"")
+                .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
+        sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts2\":\"")
+                .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
         sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts\":\"")
+                .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
+        sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts1\":\"")
+                .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
+        sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts2\":\"")
                 .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
 
         sb.append("\"Clerk\":\"").append(nullCheck(caseData.getClerkResponsible())).append(NEW_LINE);

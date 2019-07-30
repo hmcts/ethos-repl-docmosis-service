@@ -98,7 +98,11 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i1_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i1_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i1_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -148,7 +152,11 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i2_2A_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i2_2A_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i2_2A_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -198,7 +206,11 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i3_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i3_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i3_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -249,7 +261,11 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i4_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i4_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i4_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -301,7 +317,11 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i5_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i5_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i5_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -353,7 +373,11 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i6_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i6_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i6_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -405,7 +429,11 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i7_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i7_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i7_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -456,7 +484,11 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i10_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i10_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i10_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -507,7 +539,11 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i9_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i9_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i9_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -533,7 +569,11 @@ public class HelperTest {
                 "\"Court_DX\":\"\",\n" +
                 "\"Court_Email\":\"\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -584,7 +624,11 @@ public class HelperTest {
                 "\"Court_DX\":\"1234567\",\n" +
                 "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot7_1_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot7_1_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot7_1_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -634,7 +678,11 @@ public class HelperTest {
                 "\"Court_DX\":\"1234567\",\n" +
                 "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot24_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot24_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot24_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -684,7 +732,11 @@ public class HelperTest {
                 "\"Court_DX\":\"1234567\",\n" +
                 "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot34_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot34_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot34_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -782,7 +834,11 @@ public class HelperTest {
                 "\"Court_DX\":\"\",\n" +
                 "\"Court_Email\":\"\",\n" +
                 "\"i18A_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i18A_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i18A_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
@@ -808,7 +864,11 @@ public class HelperTest {
                 "\"Court_DX\":\"\",\n" +
                 "\"Court_Email\":\"\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot"+ part +"_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot"+ part +"_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot"+ part +"_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
