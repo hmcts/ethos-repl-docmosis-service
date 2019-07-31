@@ -58,13 +58,11 @@ public class BulkActionsController {
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("CREATE BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
-        log.info("BEFORE RETRIEVAL");
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken);
-        log.info("AFTER RETRIEVAL");
+
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken);
-        log.info("AFTER BULK CREATION LOGIC");
+
         bulkRequestPayload = bulkCreationService.updateLeadCase(bulkRequestPayload, userToken);
-        log.info("ISSUE ON THE LEAD CASE");
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -84,10 +82,11 @@ public class BulkActionsController {
             @RequestBody BulkRequest bulkRequest) {
         log.info("SEARCH BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
-        bulkRequest.setCaseDetails(bulkSearchService.bulkSearchLogic(bulkRequest.getCaseDetails()));
+        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkSearchLogic(bulkRequest.getCaseDetails());
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
-                .data(bulkRequest.getCaseDetails().getCaseData())
+                .errors(bulkRequestPayload.getErrors())
+                .data(bulkRequestPayload.getBulkDetails().getCaseData())
                 .build());
     }
 
