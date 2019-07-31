@@ -144,7 +144,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void createSearchBulkCase() throws Exception {
-        when(bulkSearchService.bulkSearchLogic(isA(BulkDetails.class))).thenReturn(bulkDetails);
+        when(bulkSearchService.bulkSearchLogic(isA(BulkDetails.class))).thenReturn(bulkRequestPayload);
         mvc.perform(post(SEARCH_BULK_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)

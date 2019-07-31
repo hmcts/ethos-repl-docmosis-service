@@ -14,4 +14,5 @@ public class BulkCasesPayload {
     private List<String> alreadyTakenIds;
     private List<SubmitEvent> submitEvents;
     private List<MultipleTypeItem> multipleTypeItems;
+    private List<String> errors;
 }

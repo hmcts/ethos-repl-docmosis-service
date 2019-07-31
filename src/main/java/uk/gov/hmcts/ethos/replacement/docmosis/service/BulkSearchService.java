@@ -13,6 +13,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +34,21 @@ public class BulkSearchService {
         this.ccdClient = ccdClient;
     }
 
-    public BulkDetails bulkSearchLogic(BulkDetails bulkDetails) {
-        List<SearchTypeItem> searchTypeItemList = searchCasesByFieldsRequest(bulkDetails);
-        bulkDetails.getCaseData().setSearchCollectionCount(String.valueOf(searchTypeItemList.size()));
-        bulkDetails.getCaseData().setSearchCollection(searchTypeItemList);
-        bulkDetails.getCaseData().getSearchCollection().forEach(searchTypeItem -> log.info("Searched collection: " + searchTypeItem.toString()));
-        bulkDetails.setCaseData(clearUpFields(bulkDetails.getCaseData()));
-        return bulkDetails;
+    public BulkRequestPayload bulkSearchLogic(BulkDetails bulkDetails) {
+        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        List<String> errors = new ArrayList<>();
+        if (bulkDetails.getCaseData().getMultipleCollection() != null) {
+            List<SearchTypeItem> searchTypeItemList = searchCasesByFieldsRequest(bulkDetails);
+            bulkDetails.getCaseData().setSearchCollectionCount(String.valueOf(searchTypeItemList.size()));
+            bulkDetails.getCaseData().setSearchCollection(searchTypeItemList);
+            bulkDetails.getCaseData().getSearchCollection().forEach(searchTypeItem -> log.info("Searched collection: " + searchTypeItem.toString()));
+            bulkDetails.setCaseData(clearUpFields(bulkDetails.getCaseData()));
+        } else {
+            errors.add("There are not cases on this multiples to search");
+            bulkRequestPayload.setErrors(errors);
+        }
+        bulkRequestPayload.setBulkDetails(bulkDetails);
+        return bulkRequestPayload;
     }
 
     private BulkData clearUpFields(BulkData bulkData) {
@@ -52,10 +61,8 @@ public class BulkSearchService {
     }
 
     public BulkCasesPayload bulkCasesRetrievalRequest(BulkDetails bulkDetails, String authToken) {
-        log.info("Bulk Details to retrieve request: " + bulkDetails);
         try {
             List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
-            log.info("BEFORE RETRIEVE CASES CALLBACK");
             if (caseIds != null && !caseIds.isEmpty()) {
                 return filterSubmitEvents(ccdClient.retrieveCases(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                         bulkDetails.getJurisdiction()), caseIds, bulkDetails.getCaseData().getMultipleReference());
@@ -87,7 +94,6 @@ public class BulkSearchService {
                 submitEventFiltered.add(submitEvent);
             }
         }
-        log.info("COMING AFTER FILTER SUBMIT EVENTS");
         bulkCasesPayload.setSubmitEvents(submitEventFiltered);
         bulkCasesPayload.setAlreadyTakenIds(alreadyTakenIds);
         return bulkCasesPayload;
