@@ -80,8 +80,8 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"1. Antonio Vazquez\\n2. Juan Garcia\\n3. Mike Jordan\",\n" +
-                "\"Respondent\":\"Francisco\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\\n3. Juan Garcia\\n4. Mike Jordan\",\n" +
+                "\"Respondent\":\"1. Francisco\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 10:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -188,8 +188,8 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"Francisco\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. Francisco\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -243,8 +243,8 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"Francisco\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. Francisco\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -299,8 +299,8 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"Francisco\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. Francisco\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -355,8 +355,8 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"RespondentName\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. RespondentName\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -411,8 +411,8 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"Antonio Rodriguez\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. Antonio Rodriguez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -466,8 +466,8 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"1. Antonio Vazquez\\n2. Mikey McCollier\",\n" +
-                "\"Respondent\":\"Joan Zamorano\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\\n3. Mikey McCollier\",\n" +
+                "\"Respondent\":\"1. Joan Zamorano\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -521,8 +521,8 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"Raul Gonzalez\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. Raul Gonzalez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -606,8 +606,8 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"1. Antonio Vazquez\\n2. Juan Garcia\",\n" +
-                "\"Respondent\":\"string\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\\n3. Juan Garcia\",\n" +
+                "\"Respondent\":\"1. string\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 10:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -714,8 +714,8 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"1. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"string\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. string\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
