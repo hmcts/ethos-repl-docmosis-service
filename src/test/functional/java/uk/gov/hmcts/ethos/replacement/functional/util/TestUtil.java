@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.junit.Assert;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 
 import javax.xml.bind.JAXBException;
@@ -150,8 +151,8 @@ public class TestUtil {
             count++;
         }
 
-        ccdRequest = getCcdRequest("1", "", isScotland, testData);
-        response = getResponse(ccdRequest, Constants.CREATE_BULK_URI);
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
 
         verifyCreateBulkResponse(testDataFilePath, response);
 
@@ -247,14 +248,36 @@ public class TestUtil {
         return response;
     }
 
+    public Response getBulkResponse(BulkRequest bulkRequest, String URI) throws IOException {
+        return getBulkResponse(bulkRequest, URI, 200);
+    }
+
+    public Response getBulkResponse(BulkRequest bulkRequest, String URI, int expectedStatusCode) throws IOException {
+        String docmosisUrl = ResponseUtil.getProperty(environment.toLowerCase() + ".docmosis.api.url");
+
+        RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
+        RequestSpecification httpRequest = SerenityRest.given().relaxedHTTPSValidation().config(RestAssured.config);
+        httpRequest.header("Authorization", authToken);
+        httpRequest.header("Content-Type", ContentType.JSON);
+        httpRequest.body(bulkRequest);
+        Response response = httpRequest.post(docmosisUrl + URI);
+
+        Assert.assertEquals(expectedStatusCode, response.getStatusCode());
+        return response;
+    }
+
     public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, File testDataFile) throws IOException {
         String payLoad = FileUtils.readFileToString(testDataFile, "UTF-8");
 
-        return JsonUtil.getCaseDetails(payLoad, topLevel, childLevel, isScotland);
+        return getCcdRequest(topLevel, childLevel, isScotland, payLoad);
     }
 
     public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, String testData) throws IOException {
         return JsonUtil.getCaseDetails(testData, topLevel, childLevel, isScotland);
+    }
+
+    public BulkRequest getBulkRequest(boolean isScotland, String testData) throws IOException {
+        return JsonUtil.getBulkDetails(isScotland, testData);
     }
 
     public void setAuthToken(String authToken) {
