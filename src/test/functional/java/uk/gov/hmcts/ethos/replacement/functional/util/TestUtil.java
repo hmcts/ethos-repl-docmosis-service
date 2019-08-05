@@ -141,7 +141,7 @@ public class TestUtil {
             String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
             caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
 
-            ccdRequest = getCcdRequest("", "", isScotland, caseDetails);
+            ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
             response = getResponse(ccdRequest, Constants.CREATE_CASE_URI);
 
             Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
@@ -150,7 +150,7 @@ public class TestUtil {
             count++;
         }
 
-        ccdRequest = getCcdRequest("", "", isScotland, testData);
+        ccdRequest = getCcdRequest("1", "", isScotland, testData);
         response = getResponse(ccdRequest, Constants.CREATE_BULK_URI);
 
         verifyCreateBulkResponse(testDataFilePath, response);

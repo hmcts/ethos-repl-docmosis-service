@@ -2,6 +2,7 @@
   "token": "Bearer authToken",
   "event_id": "123456789",
   "case_details": {
+    "id": "232323232",
     "jurisdiction": "EMPLOYMENT",
     "state": "BulkCaseStarted",
     "case_type_id": "Manchester_Multiples_Dev",
@@ -49,7 +50,7 @@
             "jurCodesCollectionTextM": " ",
             "stateM": "Accepted"
           },
-          "id": "#ID1#"
+          "id": "1559817606275162"
         },
         {
           "value": {
