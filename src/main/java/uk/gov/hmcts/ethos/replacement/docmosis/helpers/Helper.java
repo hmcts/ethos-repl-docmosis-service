@@ -141,14 +141,18 @@ public class Helper {
             }
         }
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
-            AtomicInteger atomicInteger = new AtomicInteger(1);
+            AtomicInteger atomicInteger = new AtomicInteger(2);
             List<String> respOthers = caseData.getRespondentCollection()
                     .stream()
                     .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". " + respondentSumTypeItem.getValue().getRespondentName())
                     .collect(Collectors.toList());
             sb.append("\"resp_others\":\"").append(String.join("\\n", respOthers)).append(NEW_LINE);
+            respondentType.ifPresent(respondentSumType -> sb.append("\"Respondent\":\"")
+                    .append(!isNullOrEmpty(respondentSumType.getRespondentName()) ? "1. " + respondentSumType.getRespondentName() : "").append(NEW_LINE));
+        } else {
+            respondentType.ifPresent(respondentSumType -> sb.append("\"Respondent\":\"")
+                    .append(Optional.ofNullable(respondentSumType.getRespondentName()).orElse("")).append(NEW_LINE));
         }
-        respondentType.ifPresent(respondentSumType -> sb.append("\"Respondent\":\"").append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE));
         return sb;
     }
 
