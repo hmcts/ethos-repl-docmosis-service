@@ -67,8 +67,9 @@ public class BulkCreationService {
                                 bulkDetails.getCaseData().getMultipleReference(), "Multiple");
                     } else {
                         errors.add("The state of case id: " + submitEvent.getCaseData().getEthosCaseReference() + " has not been accepted");
+                        bulkRequestPayload.setErrors(errors);
                         bulkRequestPayload.setBulkDetails(bulkDetails);
-                        break;
+                        return bulkRequestPayload;
                     }
                 }
             } else {
@@ -85,8 +86,8 @@ public class BulkCreationService {
     public BulkRequestPayload bulkUpdateCaseIdsLogic(BulkRequest bulkRequest, String authToken) {
         BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
         BulkCasesPayload bulkCasesPayload = updateBulkRequest(bulkRequest, authToken);
-        List<String> errors = new ArrayList<>();
-        if (bulkCasesPayload.getAlreadyTakenIds() != null) {
+        List<String> errors = bulkCasesPayload.getErrors() != null ? bulkCasesPayload.getErrors() : new ArrayList<>();
+        if (bulkCasesPayload.getAlreadyTakenIds() != null && errors.isEmpty()) {
             if (bulkCasesPayload.getAlreadyTakenIds().isEmpty()) {
                 bulkRequest.setCaseDetails(BulkHelper.setMultipleCollection(bulkRequest.getCaseDetails(), bulkCasesPayload.getMultipleTypeItems()));
                 bulkRequest.setCaseDetails(BulkHelper.clearSearchCollection(bulkRequest.getCaseDetails()));
@@ -118,11 +119,18 @@ public class BulkCreationService {
                     List<SubmitEvent> casesToAdd = new ArrayList<>();
                     List<SubmitEvent> casesToRemove = new ArrayList<>();
                     for (SubmitEvent submitEvent : allSubmitEventsToUpdate) {
-                        String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
-                        if (caseIds.contains(ethosCaseRef) && !multipleCaseIds.contains(ethosCaseRef)) {
-                            casesToAdd.add(submitEvent);
-                        } else if (!caseIds.contains(ethosCaseRef) && multipleCaseIds.contains(ethosCaseRef)) {
-                            casesToRemove.add(submitEvent);
+                        if (!submitEvent.getState().equals(SUBMITTED_STATE)) {
+                            String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
+                            if (caseIds.contains(ethosCaseRef) && !multipleCaseIds.contains(ethosCaseRef)) {
+                                casesToAdd.add(submitEvent);
+                            } else if (!caseIds.contains(ethosCaseRef) && multipleCaseIds.contains(ethosCaseRef)) {
+                                casesToRemove.add(submitEvent);
+                            }
+                        } else {
+                            List<String> errors = new ArrayList<>();
+                            errors.add("The state of case id: " + submitEvent.getCaseData().getEthosCaseReference() + " has not been accepted");
+                            bulkCasesPayload.setErrors(errors);
+                            return bulkCasesPayload;
                         }
                     }
                     List<MultipleTypeItem> multipleTypeItemListFinal = new ArrayList<>();
