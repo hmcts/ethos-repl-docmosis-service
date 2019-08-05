@@ -1,0 +1,142 @@
+{
+  "id":"1564675334641599",
+  "jurisdiction":"EMPLOYMENT",
+  "case_type":"Manchester_Dev",
+  "state":"Accepted",
+  "security_classification":"PUBLIC",
+  "data":{
+    "positionType":"Manually Created",
+    "claimantRepresentedQuestion":"No",
+    "receiptDate":"2019-07-20",
+    "tribunalCorrespondenceDX":"DX 743570",
+    "preAcceptCase":{
+      "caseAccepted":"Yes",
+      "dateAccepted":"2019-07-20"
+    },
+    "respondentSumType":{
+      "respondent_ACAS":"83473985749",
+      "respondent_name":"Newline Cinema",
+      "respondent_address":{
+        "Country":"United Kingdom",
+        "PostCode":"E1 7AF",
+        "PostTown":"London",
+        "AddressLine1":"Library & Community Centre",
+        "AddressLine2":"1 Artizan Street"
+      },
+      "respondent_ACAS_question":"Yes"
+    },
+    "claimantOtherType":{
+      "claimant_disabled":"No",
+      "claimant_employed_currently":"No"
+    },
+    "tribunalCorrespondenceFax":"0870 739 4433",
+    "caseType":"Single",
+    "tribunalCorrespondenceTelephone":"0161 833 6100",
+    "feeGroupReference":"839458739854",
+    "claimantType":{
+      "claimant_addressUK":{
+        "Country":"United Kingdom",
+        "PostCode":"W10 4AG",
+        "PostTown":"London",
+        "AddressLine1":"232 Petticoat Square"
+      }
+    },
+    "ethosCaseReference":"1",
+    "claimantIndType":{
+      "claimant_title1":"Mr",
+      "claimant_last_name":"Benderas",
+      "claimant_first_names":"Antonio"
+    },
+    "claimant_TypeOfClaimant":"Individual",
+    "tribunalCorrespondenceEmail":"Manchesteret@justice.gov.uk",
+    "tribunalCorrespondenceAddress":{
+      "PostCode":"M3 2JA",
+      "PostTown":"Manchester,",
+      "AddressLine1":"Manchester Employment Tribunal,",
+      "AddressLine2":"Alexandra House,",
+      "AddressLine3":"14-22 The Parsonage,"
+    }
+  },
+  "data_classification":{
+    "positionType":"PUBLIC",
+    "claimantRepresentedQuestion":"PUBLIC",
+    "receiptDate":"PUBLIC",
+    "tribunalCorrespondenceDX":"PUBLIC",
+    "preAcceptCase":{
+      "classification":"PUBLIC",
+      "value":{
+        "caseAccepted":"PUBLIC",
+        "dateAccepted":"PUBLIC"
+      }
+    },
+    "respondentSumType":{
+      "classification":"PUBLIC",
+      "value":{
+        "respondent_ACAS":"PUBLIC",
+        "respondent_name":"PUBLIC",
+        "respondent_address":{
+          "classification":"PUBLIC",
+          "value":{
+            "Country":"PUBLIC",
+            "PostCode":"PUBLIC",
+            "PostTown":"PUBLIC",
+            "AddressLine1":"PUBLIC",
+            "AddressLine2":"PUBLIC"
+          }
+        },
+        "respondent_ACAS_question":"PUBLIC"
+      }
+    },
+    "claimantOtherType":{
+      "classification":"PUBLIC",
+      "value":{
+        "claimant_disabled":"PUBLIC",
+        "claimant_employed_currently":"PUBLIC"
+      }
+    },
+    "tribunalCorrespondenceFax":"PUBLIC",
+    "caseType":"PUBLIC",
+    "tribunalCorrespondenceTelephone":"PUBLIC",
+    "feeGroupReference":"PUBLIC",
+    "claimantType":{
+      "classification":"PUBLIC",
+      "value":{
+        "claimant_addressUK":{
+          "classification":"PUBLIC",
+          "value":{
+            "Country":"PUBLIC",
+            "PostCode":"PUBLIC",
+            "PostTown":"PUBLIC",
+            "AddressLine1":"PUBLIC"
+          }
+        }
+      }
+    },
+    "ethosCaseReference":"PUBLIC",
+    "claimantIndType":{
+      "classification":"PUBLIC",
+      "value":{
+        "claimant_title1":"PUBLIC",
+        "claimant_last_name":"PUBLIC",
+        "claimant_first_names":"PUBLIC"
+      }
+    },
+    "claimant_TypeOfClaimant":"PUBLIC",
+    "tribunalCorrespondenceEmail":"PUBLIC",
+    "tribunalCorrespondenceAddress":{
+      "classification":"PUBLIC",
+      "value":{
+        "PostCode":"PUBLIC",
+        "PostTown":"PUBLIC",
+        "AddressLine1":"PUBLIC",
+        "AddressLine2":"PUBLIC",
+        "AddressLine3":"PUBLIC"
+      }
+    }
+  },
+  "after_submit_callback_response":null,
+  "callback_response_status_code":null,
+  "callback_response_status":null,
+  "delete_draft_response_status_code":null,
+  "delete_draft_response_status":null
+}

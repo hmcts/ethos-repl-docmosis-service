@@ -22,21 +22,21 @@ fi
 #Pull necessary images from docker registry
 ../../../../../ccd-docker/ccd compose pull
 
-#Start CCD and Docmosis services
-../../../../../ccd-docker/ccd compose up -d
-
-#Wait until all services are up
-echo ""
-echo "Waiting for the services to come up.. "
-echo ""
-output=`docker ps | grep -i 'starting'`
-while [[ ${output}  != '' ]]
-do
-    sleep 10
-    output=`docker ps | grep -i 'starting'`
-done
-echo "All Services started successfully"
-echo ""
+##Start CCD and Docmosis services
+#../../../../../ccd-docker/ccd compose up -d
+#
+##Wait until all services are up
+#echo ""
+#echo "Waiting for the services to come up.. "
+#echo ""
+#output=`docker ps | grep -i 'starting'`
+#while [[ ${output}  != '' ]]
+#do
+#    sleep 10
+#    output=`docker ps | grep -i 'starting'`
+#done
+#echo "All Services started successfully"
+#echo ""
 
 ##Add roles to Idam
 #psql -h localhost -p 5050 -U ccd -d idam -c "insert into role values ('caseworker-employment-tribunal-manchester','Caseworker Employment Tribunal Manchester'),('caseworker-employment','Caseworker Employment'),('caseworker-employment-tribunal-manchester-caseofficer','Caseworker Employment Tribunal Manchester Caseofficer')"

@@ -10,7 +10,10 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.rest.SerenityRest;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.json.JSONException;
 import org.junit.Assert;
@@ -21,6 +24,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -123,17 +127,33 @@ public class TestUtil {
     }
 
     //End-point /createBulk
-    public void executeCreateBulkTest(boolean isScotland, String testData) throws IOException {
+    public void executeCreateBulkTest(boolean isScotland, String testDataFilePath, List<String> caseList) throws IOException {
         CCDRequest ccdRequest;
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
-        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
+        int count = 1;
+        for (String caseDataFilePath : caseList) {
+            String ethosCaseReference = getUniqueCaseReference();
 
-        Response response = getResponse(ccdRequest, Constants.CREATE_BULK_URI);
+            String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
+            caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
 
-        verifyCreateBulkResponse(testData, response);
+            ccdRequest = getCcdRequest("", "", isScotland, caseDetails);
+            response = getResponse(ccdRequest, Constants.CREATE_CASE_URI);
+
+            Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+            testData = testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseReference);
+            count++;
+        }
+
+        ccdRequest = getCcdRequest("", "", isScotland, testData);
+        response = getResponse(ccdRequest, Constants.CREATE_BULK_URI);
+
+        verifyCreateBulkResponse(testDataFilePath, response);
 
     }
 
@@ -327,5 +347,9 @@ public class TestUtil {
 
     private void verifyUpdateBulkCaseResponse(String testData, Response response) {
 
+    }
+
+    private String getUniqueCaseReference() {
+        return RandomStringUtils.randomNumeric(10);
     }
 }
