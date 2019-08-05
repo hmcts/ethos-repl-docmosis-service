@@ -2,11 +2,21 @@
    "token": "Bearer authToken",
    "event_id": "123456789",
    "case_details": {
+      "id": "1559817606275162",
       "jurisdiction": "EMPLOYMENT",
       "state": "Accepted",
       "case_type_id": "Manchester_Dev",
       "security_classification": "PUBLIC",
       "case_data": {
+         "claimantWorkAddress": {
+            "claimant_work_address": {
+               "AddressLine1": "Library & Community Centre",
+               "AddressLine2": "1 Artizan Street",
+               "PostTown": "London",
+               "PostCode": "E1 7AF",
+               "Country": "United Kingdom"
+            }
+         },
          "positionType": "Manually Created",
          "claimantRepresentedQuestion": "No",
          "receiptDate": "2019-07-20",
@@ -43,9 +53,14 @@
          "claimantIndType": {
             "claimant_title1": "Mr",
             "claimant_first_names": "Antonio",
-            "claimant_last_name": "Benderas"
+            "claimant_last_name": "Benderas",
+            "claimant_gender": "Male"
          },
          "claimant_TypeOfClaimant": "Individual",
+         "correspondenceType": {
+            "topLevel_Documents": "1",
+            "part_1_Documents": ""
+         },
          "tribunalCorrespondenceAddress": {
             "AddressLine1": "Manchester Employment Tribunal,",
             "AddressLine2": "Alexandra House,",
@@ -61,6 +76,21 @@
          "state": "Accepted"
       },
       "data_classification": {
+         "claimantWorkAddress": {
+            "classification": "PUBLIC",
+            "value": {
+               "claimant_work_address": {
+                  "classification": "PUBLIC",
+                  "value": {
+                     "AddressLine1": "PUBLIC",
+                     "AddressLine2": "PUBLIC",
+                     "PostTown": "PUBLIC",
+                     "PostCode": "PUBLIC",
+                     "Country": "PUBLIC"
+                  }
+               }
+            }
+         },
          "positionType": "PUBLIC",
          "claimantRepresentedQuestion": "PUBLIC",
          "receiptDate": "PUBLIC",
@@ -115,7 +145,7 @@
                "claimant_title1": "PUBLIC",
                "claimant_first_names": "PUBLIC",
                "claimant_last_name": "PUBLIC",
-               "claimant_date_of_birth": "PUBLIC"
+               "claimant_gender": "PUBLIC"
             }
          },
          "claimant_TypeOfClaimant": "PUBLIC",
@@ -137,6 +167,21 @@
       "delete_draft_response_status_code": null,
       "delete_draft_response_status": null,
       "security_classifications": {
+         "claimantWorkAddress": {
+            "classification": "PUBLIC",
+            "value": {
+               "claimant_work_address": {
+                  "classification": "PUBLIC",
+                  "value": {
+                     "AddressLine1": "PUBLIC",
+                     "AddressLine2": "PUBLIC",
+                     "PostTown": "PUBLIC",
+                     "PostCode": "PUBLIC",
+                     "Country": "PUBLIC"
+                  }
+               }
+            }
+         },
          "positionType": "PUBLIC",
          "claimantRepresentedQuestion": "PUBLIC",
          "receiptDate": "PUBLIC",
@@ -191,7 +236,7 @@
                "claimant_title1": "PUBLIC",
                "claimant_first_names": "PUBLIC",
                "claimant_last_name": "PUBLIC",
-               "claimant_date_of_birth": "PUBLIC"
+               "claimant_gender": "PUBLIC"
             }
          },
          "claimant_TypeOfClaimant": "PUBLIC",

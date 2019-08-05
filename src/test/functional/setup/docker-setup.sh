@@ -44,15 +44,15 @@ fi
 #
 #
 ##Steps to add users and roles
-#../../../../../ccd-docker/bin/idam-create-caseworker.sh caseworker,caseworker-test,caseworker-employment-tribunal-manchester,caseworker-employment,caseworker-employment-tribunal-manchester-caseofficer eric.ccdcooper@gmail.com Pa55word11 Cooper Eric
-#../../../../../ccd-docker/bin/idam-create-caseworker.sh caseworker,caseworker-test,caseworker-employment-tribunal-glasgow,caseworker-employment,caseworker-employment-tribunal-glasgow-caseofficer eric.ccdcooper@gmail.com Pa55word11 Cooper Eric
-#../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-manchester
-#../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment
-#../../../../../ccd-docker/bin/ccd-add-role.sh ccd-import
-#../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-manchester-caseofficer
-#../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-manchester-casesupervisor
-#../../../../../ccd-docker/bin/ccd-import-definition.sh ../resources/config/CCD_EmpTrib_Glas_v1.1.28_Local_User_Branch.xlsx
-#../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-glasgow
-#../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-glasgow-caseofficer
-#../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-glasgow-casesupervisor
-#../../../../../ccd-docker/bin/ccd-import-definition.sh ../resources/config/CCD_EmpTrib_Manc_v1.1.28_Local_User_Branch.xlsx
+../../../../../ccd-docker/bin/idam-create-caseworker.sh caseworker,caseworker-test,caseworker-employment-tribunal-manchester,caseworker-employment,caseworker-employment-tribunal-manchester-caseofficer eric.ccdcooper@gmail.com Pa55word11 Cooper Eric
+../../../../../ccd-docker/bin/idam-create-caseworker.sh caseworker,caseworker-test,caseworker-employment-tribunal-glasgow,caseworker-employment,caseworker-employment-tribunal-glasgow-caseofficer eric.ccdcooper@gmail.com Pa55word11 Cooper Eric
+../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-manchester
+../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment
+../../../../../ccd-docker/bin/ccd-add-role.sh ccd-import
+../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-manchester-caseofficer
+../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-manchester-casesupervisor
+../../../../../ccd-docker/bin/ccd-import-definition.sh ../resources/config/CCD_EmpTrib_Glas_v1.1.28_Local_User_Branch.xlsx
+../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-glasgow
+../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-glasgow-caseofficer
+../../../../../ccd-docker/bin/ccd-add-role.sh caseworker-employment-tribunal-glasgow-casesupervisor
+../../../../../ccd-docker/bin/ccd-import-definition.sh ../resources/config/CCD_EmpTrib_Manc_v1.1.28_Local_User_Branch.xlsx

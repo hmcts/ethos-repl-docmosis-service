@@ -2,6 +2,7 @@
    "token": "Bearer authToken",
    "event_id": "123456789",
    "case_details": {
+      "id": "1560334065531223",
       "jurisdiction": "EMPLOYMENT",
       "state": "Accepted",
       "case_type_id": "Manchester_Dev",
@@ -31,7 +32,7 @@
          "tribunalCorrespondenceTelephone": "0161 833 6100",
          "caseType": "Single",
          "feeGroupReference": "839458739854",
-         "ethosCaseReference": "20 7254687 6433",
+         "ethosCaseReference": "#ETHOS-CASE-REFERENCE#",
          "claimantType": {
             "claimant_addressUK": {
                "AddressLine1": "232 Petticoat Square",
