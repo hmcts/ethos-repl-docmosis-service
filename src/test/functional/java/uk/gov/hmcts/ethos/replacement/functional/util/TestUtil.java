@@ -161,57 +161,110 @@ public class TestUtil {
     }
 
     //End-point /searchBulk
-    public void executeSearchBulkTest(boolean isScotland, String testData) throws IOException {
+    public void executeSearchBulkTest(boolean isScotland, String testDataFilePath, List<String> caseList) throws IOException {
         CCDRequest ccdRequest;
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
-        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
+        int count = 1;
+        for (String caseDataFilePath : caseList) {
+            String ethosCaseReference = getUniqueCaseReference();
 
-        Response response = getResponse(ccdRequest, Constants.SEARCH_BULK_URI);
+            String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
+            caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
+
+            ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
+            response = getResponse(ccdRequest, Constants.CREATE_CASE_URI);
+
+            Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+            testData = testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseReference);
+            count++;
+        }
+
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        response = getBulkResponse(bulkRequest, Constants.SEARCH_BULK_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
 
         verifySearchBulkResponse(testData, response);
     }
 
     //End-point /updateBulk
-    public void executeUpdateBulkTest(boolean isScotland, String testData) throws IOException {
+    public void executeUpdateBulkTest(boolean isScotland, String testDataFilePath, List<String> caseList) throws IOException {
         CCDRequest ccdRequest;
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
-        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
+        int count = 1;
+        for (String caseDataFilePath : caseList) {
+            String ethosCaseReference = getUniqueCaseReference();
 
-        Response response = getResponse(ccdRequest, Constants.SEARCH_BULK_URI);
+            String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
+            caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
 
-        String json = response.body().prettyPrint();
+            ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
+            response = getResponse(ccdRequest, Constants.CREATE_CASE_URI);
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, json);
-        else ccdRequest = getCcdRequest("1", "", false, json);
+            Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
 
-        response = getResponse(ccdRequest, Constants.UPDATE_BULK_URI);
+            testData = testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseReference);
+            count++;
+        }
+
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        response = getBulkResponse(bulkRequest, Constants.SEARCH_BULK_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        response = getBulkResponse(bulkRequest, Constants.UPDATE_BULK_URI);
 
         verifyUpdateBulkResponse(testData, response);
     }
 
     //End-point //updateBulkCase
-    public void executeUpdateBulkCaseTest(boolean isScotland, String testData) throws IOException {
+    public void executeUpdateBulkCaseTest(boolean isScotland, String testDataFilePath, List<String> caseList) throws IOException {
         CCDRequest ccdRequest;
+
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
-        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
+        int count = 1;
+        for (String caseDataFilePath : caseList) {
+            String ethosCaseReference = getUniqueCaseReference();
 
-        Response response = getResponse(ccdRequest, Constants.CREATE_BULK_URI);
+            String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
+            caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
 
-        String json = response.body().prettyPrint();
+            ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
+            response = getResponse(ccdRequest, Constants.CREATE_CASE_URI);
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, json);
-        else ccdRequest = getCcdRequest("1", "", false, json);
+            Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
 
-        response = getResponse(ccdRequest, Constants.UPDATE_BULK_CASE_URI);
+            testData = testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseReference);
+            count++;
+        }
+
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        response = getBulkResponse(bulkRequest, Constants.UPDATE_BULK_CASE_URI);
 
         verifyUpdateBulkCaseResponse(testData, response);
     }
@@ -368,7 +421,7 @@ public class TestUtil {
 
     }
 
-    private void verifySearchBulkResponse(String testData, Response response) {
+    public void verifySearchBulkResponse(String testData, Response response) {
 
     }
 
