@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.functional.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.config.SSLConfig;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -154,7 +156,7 @@ public class TestUtil {
         BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
         response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
 
-        verifyCreateBulkResponse(testDataFilePath, response);
+        verifyCreateBulkResponse(testData, response);
 
     }
 
@@ -358,6 +360,12 @@ public class TestUtil {
 
     private void verifyCreateBulkResponse(String testData, Response response) {
 
+        String caseTitle = JsonPath.read(testData, "$.case_details.case_data.bulkCaseTitle");
+        String caseReference = JsonPath.read(testData, "$.case_details.case_data.multipleReference");
+
+        Assert.assertEquals(caseTitle, response.body().jsonPath().getString("data.bulkCaseTitle"));
+        Assert.assertEquals(caseReference, response.body().jsonPath().getString("data.multipleReference"));
+
     }
 
     private void verifySearchBulkResponse(String testData, Response response) {
@@ -372,7 +380,7 @@ public class TestUtil {
 
     }
 
-    private String getUniqueCaseReference() {
+    public String getUniqueCaseReference() {
         return RandomStringUtils.randomNumeric(10);
     }
 }

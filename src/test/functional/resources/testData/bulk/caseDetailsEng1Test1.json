@@ -57,10 +57,6 @@
             "claimant_gender": "Male"
          },
          "claimant_TypeOfClaimant": "Individual",
-         "correspondenceType": {
-            "topLevel_Documents": "1",
-            "part_1_Documents": ""
-         },
          "tribunalCorrespondenceAddress": {
             "AddressLine1": "Manchester Employment Tribunal,",
             "AddressLine2": "Alexandra House,",
