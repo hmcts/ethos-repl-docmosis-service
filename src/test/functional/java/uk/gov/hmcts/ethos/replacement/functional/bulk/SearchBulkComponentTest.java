@@ -39,7 +39,7 @@ public class SearchBulkComponentTest {
     }
 
     @Test
-    //@WithTag("SmokeTest")
+    @WithTag("SmokeTest")
     public void search_bulk_eng_individual_claimant_not_represented() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
@@ -103,7 +103,7 @@ public class SearchBulkComponentTest {
     }
 
     @Test
-    //@WithTag("SmokeTest")
+    @WithTag("SmokeTest")
     public void search_bulk_scot_individual_claimant_not_represented() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_SCOT_BULK1_CASE1);

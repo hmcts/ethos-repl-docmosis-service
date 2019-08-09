@@ -2,7 +2,7 @@
   "token": "Bearer authToken",
   "event_id": "123456789",
   "case_details": {
-    "id": 1565177549719673,
+    "id": "1565177549719673",
     "jurisdiction": "EMPLOYMENT",
     "state": "Accepted",
     "case_type_id": "Glasgow_Dev",
