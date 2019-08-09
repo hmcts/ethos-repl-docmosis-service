@@ -155,10 +155,12 @@ public class BulkUpdateService {
             log.info("Current state ---> " + submitEvent.getState());
             if (submitEvent.getState().equals(PENDING_STATE)) {
                 // Moving to submitted_state
+                log.info("MOVING FROM PENDING TO SUBMITTED");
                 returnedRequest = ccdClient.startEventForCaseBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
                 submitEvent.getCaseData().setState(SUBMITTED_STATE);
             } else {
                 // Moving to accepted_state
+                log.info("MOVING TO ACCEPTED STATE");
                 returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             }
             submitEvent.getCaseData().setLeadClaimant("No");
