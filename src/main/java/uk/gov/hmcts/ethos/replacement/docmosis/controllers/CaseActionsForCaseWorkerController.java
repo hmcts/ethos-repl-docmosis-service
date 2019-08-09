@@ -135,9 +135,11 @@ public class CaseActionsForCaseWorkerController {
     public ResponseEntity<CCDCallbackResponse> preDefaultValues(
             @RequestBody CCDRequest ccdRequest) {
         log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        log.info("Coming to preDefaultValues");
         DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
         ccdRequest.getCaseDetails().getCaseData().setClaimantTypeOfClaimant(defaultValues.getClaimantTypeOfClaimant());
         log.info("Pre Default values added to the case: " + defaultValues);
+        log.info("Pre Default caseDetails: " + ccdRequest.getCaseDetails());
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(ccdRequest.getCaseDetails().getCaseData())
                 .build());
@@ -155,6 +157,7 @@ public class CaseActionsForCaseWorkerController {
             @RequestBody CCDRequest ccdRequest) {
 
         List<String> errors = new ArrayList<>();
+        log.info("Coming to postDefaultValues");
         CaseData caseData = new CaseData();
         if (ccdRequest != null && ccdRequest.getCaseDetails() != null && ccdRequest.getCaseDetails().getCaseId() != null) {
             log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
@@ -162,9 +165,11 @@ public class CaseActionsForCaseWorkerController {
             ccdRequest.getCaseDetails().setCaseData(getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues));
             log.info("Post Default values added to the case: " + defaultValues);
             caseData = ccdRequest.getCaseDetails().getCaseData();
+            log.info("Post Default caeData: " + caseData);
             //caseData.setState("Pending");
         } else {
-                errors.add("The payload is empty. Please make sure you have some data on your case");
+            log.info("Error in PostDefaultValues");
+            errors.add("The payload is empty. Please make sure you have some data on your case");
         }
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .errors(errors)

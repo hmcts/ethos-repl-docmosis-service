@@ -7,6 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.SubmitBulkEvent;
@@ -40,6 +41,10 @@ public class CcdClient {
     }
 
     public CCDRequest startCaseCreation(String authToken, CaseDetails caseDetails) throws IOException {
+        UserDetails userDetails = userService.getUserDetails(authToken);
+        log.info("UserDetails and roles: " + userDetails.getRoles());
+        log.info("UserDetails and id: " + userDetails.getId());
+        log.info("UserDetails and forname: " + userDetails.getForename());
         HttpEntity<String> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
         String uri = ccdClientConfig.buildStartCaseCreationUrl(userService.getUserDetails(authToken).getId(), caseDetails.getJurisdiction(),
