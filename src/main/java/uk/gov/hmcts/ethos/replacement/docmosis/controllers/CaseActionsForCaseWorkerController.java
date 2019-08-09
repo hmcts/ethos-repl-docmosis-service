@@ -162,6 +162,7 @@ public class CaseActionsForCaseWorkerController {
             ccdRequest.getCaseDetails().setCaseData(getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues));
             log.info("Post Default values added to the case: " + defaultValues);
             caseData = ccdRequest.getCaseDetails().getCaseData();
+            //caseData.setState("Pending");
         } else {
                 errors.add("The payload is empty. Please make sure you have some data on your case");
         }

@@ -85,7 +85,9 @@ public class BulkCreationService {
 
     public BulkRequestPayload bulkUpdateCaseIdsLogic(BulkRequest bulkRequest, String authToken) {
         BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        log.info("COMING TO UPDATE BULK REQUEST");
         BulkCasesPayload bulkCasesPayload = updateBulkRequest(bulkRequest, authToken);
+        log.info("COMING OUTSIDE UPDATE BULK REQUEST");
         List<String> errors = bulkCasesPayload.getErrors() != null ? bulkCasesPayload.getErrors() : new ArrayList<>();
         if (bulkCasesPayload.getAlreadyTakenIds() != null && errors.isEmpty()) {
             if (bulkCasesPayload.getAlreadyTakenIds().isEmpty()) {
@@ -119,7 +121,10 @@ public class BulkCreationService {
                     List<SubmitEvent> casesToAdd = new ArrayList<>();
                     List<SubmitEvent> casesToRemove = new ArrayList<>();
                     for (SubmitEvent submitEvent : allSubmitEventsToUpdate) {
+                        log.info("STATEEEEEEEEEEE: " + submitEvent.getState());
+                        log.info("SUBMITEVENT ----> " + submitEvent.getCaseData());
                         if (!submitEvent.getState().equals(SUBMITTED_STATE)) {
+                            log.info("IT IS SUBMITTED");
                             String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
                             if (caseIds.contains(ethosCaseRef) && !multipleCaseIds.contains(ethosCaseRef)) {
                                 casesToAdd.add(submitEvent);
@@ -127,12 +132,14 @@ public class BulkCreationService {
                                 casesToRemove.add(submitEvent);
                             }
                         } else {
+                            log.info("IT SHOULD COME HERE");
                             List<String> errors = new ArrayList<>();
                             errors.add("The state of case id: " + submitEvent.getCaseData().getEthosCaseReference() + " has not been accepted");
                             bulkCasesPayload.setErrors(errors);
                             return bulkCasesPayload;
                         }
                     }
+                    log.info("IT SHOULD NOT BE DISPLAYED");
                     List<MultipleTypeItem> multipleTypeItemListFinal = new ArrayList<>();
                     // Delete old cases
                     if (bulkDetails.getCaseData().getMultipleCollection() != null) {
@@ -140,6 +147,7 @@ public class BulkCreationService {
                                 casesToRemove, bulkRequest.getCaseDetails(), authToken);
                     }
                     // Add new cases
+                    log.info("ADDING??????? WHYYYYYYYY?????????????? ");
                     bulkCasesPayload.setMultipleTypeItems(getMultipleTypeListAfterAdditions(multipleTypeItemListFinal, casesToAdd,
                             bulkRequest.getCaseDetails(), authToken));
                 } else {
