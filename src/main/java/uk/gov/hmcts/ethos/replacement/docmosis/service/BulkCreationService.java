@@ -238,7 +238,8 @@ public class BulkCreationService {
     }
 
     private CCDRequest getReturnedRequestCheckingState(BulkDetails bulkDetails, SubmitEvent submitEvent, String authToken, String caseId) throws IOException {
-        if (submitEvent.getState().equals(PENDING_STATE)) {
+        if (submitEvent.getState().equals(PENDING_STATE) ||
+                (submitEvent.getCaseData().getStateAPI() != null && submitEvent.getCaseData().getStateAPI().equals(PENDING_STATE)) ) {
             return ccdClient.startEventForCaseBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                     bulkDetails.getJurisdiction(), caseId);
         } else {
