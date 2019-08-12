@@ -128,9 +128,9 @@ public class CreateBulkComponentTest {
     @WithTag("SmokeTest")
     public void create_bulk_scot_individual_claimant_not_represented() throws IOException {
         caseList.clear();
-//        caseList.add(Constants.TEST_DATA_SCOT_BULK1_CASE1);
-//        caseList.add(Constants.TEST_DATA_SCOT_BULK1_CASE2);
-//        caseList.add(Constants.TEST_DATA_SCOT_BULK1_CASE3);
+        caseList.add(Constants.TEST_DATA_SCOT_BULK1_CASE1);
+        caseList.add(Constants.TEST_DATA_SCOT_BULK1_CASE2);
+        caseList.add(Constants.TEST_DATA_SCOT_BULK1_CASE3);
 
         testUtil.executeCreateBulkTest(true, Constants.TEST_DATA_SCOT_BULK1, caseList);
     }
