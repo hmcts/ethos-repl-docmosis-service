@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.functional.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.config.SSLConfig;
@@ -10,12 +11,15 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.rest.SerenityRest;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.json.JSONException;
 import org.junit.Assert;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 
 import javax.xml.bind.JAXBException;
@@ -123,74 +127,85 @@ public class TestUtil {
     }
 
     //End-point /createBulk
-    public void executeCreateBulkTest(boolean isScotland, String testData) throws IOException {
+    public void executeCreateBulkTest(boolean isScotland, String testDataFilePath, List<String> caseList) throws IOException {
         CCDRequest ccdRequest;
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
-        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
+        testData = createIndividualCases(isScotland, caseList, testData);
 
-        Response response = getResponse(ccdRequest, Constants.CREATE_BULK_URI);
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
 
-        verifyCreateBulkResponse(testData, response);
+        verifyBulkResponse(testData, response);
 
     }
 
     //End-point /searchBulk
-    public void executeSearchBulkTest(boolean isScotland, String testData) throws IOException {
+    public void executeSearchBulkTest(boolean isScotland, String testDataFilePath, List<String> caseList) throws IOException {
         CCDRequest ccdRequest;
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
-        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
+        testData = createIndividualCases(isScotland, caseList, testData);
 
-        Response response = getResponse(ccdRequest, Constants.SEARCH_BULK_URI);
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
 
-        verifySearchBulkResponse(testData, response);
+        response = getBulkResponse(bulkRequest, Constants.SEARCH_BULK_URI);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        verifyBulkResponse(testData, response);
     }
 
     //End-point /updateBulk
-    public void executeUpdateBulkTest(boolean isScotland, String testData) throws IOException {
+    public void executeUpdateBulkTest(boolean isScotland, String testDataFilePath, List<String> caseList) throws IOException {
         CCDRequest ccdRequest;
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
-        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
+        testData = createIndividualCases(isScotland, caseList, testData);
 
-        Response response = getResponse(ccdRequest, Constants.SEARCH_BULK_URI);
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
 
-        String json = response.body().prettyPrint();
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, json);
-        else ccdRequest = getCcdRequest("1", "", false, json);
+        response = getBulkResponse(bulkRequest, Constants.SEARCH_BULK_URI);
 
-        response = getResponse(ccdRequest, Constants.UPDATE_BULK_URI);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
 
-        verifyUpdateBulkResponse(testData, response);
+        response = getBulkResponse(bulkRequest, Constants.UPDATE_BULK_URI);
+
+        verifyBulkResponse(testData, response);
     }
 
     //End-point //updateBulkCase
-    public void executeUpdateBulkCaseTest(boolean isScotland, String testData) throws IOException {
+    public void executeUpdateBulkCaseTest(boolean isScotland, String testDataFilePath, List<String> caseList) throws IOException {
         CCDRequest ccdRequest;
+
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
-        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
+        testData = createIndividualCases(isScotland, caseList, testData);
 
-        Response response = getResponse(ccdRequest, Constants.CREATE_BULK_URI);
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
 
-        String json = response.body().prettyPrint();
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, json);
-        else ccdRequest = getCcdRequest("1", "", false, json);
+        response = getBulkResponse(bulkRequest, Constants.UPDATE_BULK_CASE_URI);
 
-        response = getResponse(ccdRequest, Constants.UPDATE_BULK_CASE_URI);
-
-        verifyUpdateBulkCaseResponse(testData, response);
+        verifyBulkResponse(testData, response);
     }
 
     //General methods
@@ -227,14 +242,36 @@ public class TestUtil {
         return response;
     }
 
+    public Response getBulkResponse(BulkRequest bulkRequest, String URI) throws IOException {
+        return getBulkResponse(bulkRequest, URI, 200);
+    }
+
+    public Response getBulkResponse(BulkRequest bulkRequest, String URI, int expectedStatusCode) throws IOException {
+        String docmosisUrl = ResponseUtil.getProperty(environment.toLowerCase() + ".docmosis.api.url");
+
+        RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
+        RequestSpecification httpRequest = SerenityRest.given().relaxedHTTPSValidation().config(RestAssured.config);
+        httpRequest.header("Authorization", authToken);
+        httpRequest.header("Content-Type", ContentType.JSON);
+        httpRequest.body(bulkRequest);
+        Response response = httpRequest.post(docmosisUrl + URI);
+
+        Assert.assertEquals(expectedStatusCode, response.getStatusCode());
+        return response;
+    }
+
     public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, File testDataFile) throws IOException {
         String payLoad = FileUtils.readFileToString(testDataFile, "UTF-8");
 
-        return JsonUtil.getCaseDetails(payLoad, topLevel, childLevel, isScotland);
+        return getCcdRequest(topLevel, childLevel, isScotland, payLoad);
     }
 
     public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, String testData) throws IOException {
         return JsonUtil.getCaseDetails(testData, topLevel, childLevel, isScotland);
+    }
+
+    public BulkRequest getBulkRequest(boolean isScotland, String testData) throws IOException {
+        return JsonUtil.getBulkDetails(isScotland, testData);
     }
 
     public void setAuthToken(String authToken) {
@@ -248,7 +285,39 @@ public class TestUtil {
         return authToken;
     }
 
+    public void verifyBulkResponse(String testData, Response response) {
+
+        String caseTitle = JsonPath.read(testData, "$.case_details.case_data.bulkCaseTitle");
+        String caseReference = JsonPath.read(testData, "$.case_details.case_data.multipleReference");
+
+        Assert.assertEquals(caseTitle, response.body().jsonPath().getString("data.bulkCaseTitle"));
+        Assert.assertEquals(caseReference, response.body().jsonPath().getString("data.multipleReference"));
+
+    }
+
     //Private methods
+    private String createIndividualCases(boolean isScotland, List<String> caseList, String testData) throws IOException {
+        CCDRequest ccdRequest;
+        Response response;
+        int count = 1;
+
+        for (String caseDataFilePath : caseList) {
+            String ethosCaseReference = getUniqueCaseReference();
+
+            String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
+            caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
+
+            ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
+            response = getResponse(ccdRequest, Constants.CREATE_CASE_URI);
+
+            Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+            testData = testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseReference);
+            count++;
+        }
+        return testData;
+    }
+
     private void verifyElementValue(String json, String paramName, String paramValue) throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -313,19 +382,7 @@ public class TestUtil {
         Assert.assertTrue("Expected value \""+ expectedValue + "\" doesn't exist in Document with version: "+  docVersion +" \n", hasMatched);
     }
 
-    private void verifyCreateBulkResponse(String testData, Response response) {
-
-    }
-
-    private void verifySearchBulkResponse(String testData, Response response) {
-
-    }
-
-    private void verifyUpdateBulkResponse(String testData, Response response) {
-
-    }
-
-    private void verifyUpdateBulkCaseResponse(String testData, Response response) {
-
+    public String getUniqueCaseReference() {
+        return RandomStringUtils.randomNumeric(10);
     }
 }

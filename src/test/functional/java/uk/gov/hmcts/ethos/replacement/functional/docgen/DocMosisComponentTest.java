@@ -72,7 +72,7 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("SmokeTest")
     public void verify_document_eng_claimant_individual_not_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "1", "Mr A Benderas", false, Constants.TEST_DATA_CASE1);
+        testUtil.executeGenerateDocumentTest("10", "1", "Mr A Banderas", false, Constants.TEST_DATA_CASE1);
     }
 
     @Test
@@ -84,7 +84,7 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_eng_claimant_individual_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "1", "Mr A Benderas", false, Constants.TEST_DATA_CASE3);
+        testUtil.executeGenerateDocumentTest("10", "1", "Mr A Banderas", false, Constants.TEST_DATA_CASE3);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("SmokeTest")
     public void verify_document_sco_claimant_individual_not_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "", "Mr A Benderas", true, Constants.TEST_DATA_SCOT_CASE1);
+        testUtil.executeGenerateDocumentTest("1", "", "Mr A Banderas", true, Constants.TEST_DATA_SCOT_CASE1);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_sco_claimant_individual_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "", "Mr A Benderas", true, Constants.TEST_DATA_SCOT_CASE3);
+        testUtil.executeGenerateDocumentTest("1", "", "Mr A Banderas", true, Constants.TEST_DATA_SCOT_CASE3);
     }
 
     @Test

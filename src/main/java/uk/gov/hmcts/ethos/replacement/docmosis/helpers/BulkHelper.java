@@ -73,13 +73,19 @@ public class BulkHelper {
             multipleType.setPositionTypeM(Optional.ofNullable(caseData.getPositionType()).orElse(" "));
             multipleType.setFeeGroupReferenceM(Optional.ofNullable(caseData.getFeeGroupReference()).orElse(" "));
             multipleType.setJurCodesCollectionM(getJurCodesCollection(caseData.getJurCodesCollection()));
-            multipleType.setStateM(Optional.ofNullable(submitEvent.getState()).orElse(" "));
+            multipleType.setStateM(getSubmitEventState(submitEvent));
             MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
             multipleTypeItem.setId(String.valueOf(submitEvent.getCaseId()));
             multipleTypeItem.setValue(multipleType);
             multipleTypeItemList.add(multipleTypeItem);
         }
         return multipleTypeItemList;
+    }
+
+    private static String getSubmitEventState(SubmitEvent submitEvent) {
+        return submitEvent.getState() != null ?
+                (submitEvent.getState().equals(PENDING_STATE) ? SUBMITTED_STATE : submitEvent.getState()) :
+                " ";
     }
 
     public static SearchType getSearchTypeFromMultipleType(MultipleType multipleType) {

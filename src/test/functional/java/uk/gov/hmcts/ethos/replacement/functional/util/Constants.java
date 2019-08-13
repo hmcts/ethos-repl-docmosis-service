@@ -12,6 +12,9 @@ public class Constants {
     public static final String DOCGEN_URI = "/generateDocument";
     public static final String PRE_DEFAULT_URI = "/preDefaultValues";
     public static final String POST_DEFAULT_URI = "/postDefaultValues";
+    public static final String CREATE_CASE_URI = "/createCase";
+    public static final String UPDATE_CASE_URI = "/updateCase";
+    public static final String RETRIEVE_CASE_URI = "/retrieveCase";
     public static final String CREATE_BULK_URI = "/createBulk";
     public static final String SEARCH_BULK_URI = "/searchBulk";
     public static final String UPDATE_BULK_URI = "/updateBulk";
@@ -41,18 +44,42 @@ public class Constants {
     public static final String TEST_DATA_SCOT_POST_DEFAULT1 = "src/test/functional/resources/testData/defaults/postDefaultScotTest1.json";
     public static final String TEST_DATA_SCOT_POST_DEFAULT2 = "src/test/functional/resources/testData/defaults/postDefaultScotTest2.json";
 
-    public static final String TEST_DATA_ENG_BULK1 = "src/test/functional/resources/testData/exampleBulkV1.json";
-    public static final String TEST_DATA_ENG_BULK2 = "src/test/functional/resources/testData/exampleBulkV1.json";
-    public static final String TEST_DATA_ENG_BULK3 = "src/test/functional/resources/testData/exampleBulkV1.json";
-    public static final String TEST_DATA_ENG_BULK4 = "src/test/functional/resources/testData/exampleBulkV1.json";
-    public static final String TEST_DATA_ENG_BULK5 = "src/test/functional/resources/testData/exampleBulkV1.json";
-    public static final String TEST_DATA_ENG_BULK6 = "src/test/functional/resources/testData/exampleBulkV1.json";
-    public static final String TEST_DATA_ENG_BULK7 = "src/test/functional/resources/testData/exampleBulkV1.json";
+    public static final String TEST_DATA_ENG_BULK1 = "src/test/functional/resources/testData/bulk/caseDetailsEng1.json";
+    public static final String TEST_DATA_ENG_BULK2 = "src/test/functional/resources/testData/bulk/caseDetailsEng1.json";
+    public static final String TEST_DATA_ENG_BULK3 = "src/test/functional/resources/testData/bulk/caseDetailsEng1.json";
+    public static final String TEST_DATA_ENG_BULK4 = "src/test/functional/resources/testData/bulk/caseDetailsEng1.json";
+    public static final String TEST_DATA_ENG_BULK5 = "src/test/functional/resources/testData/bulk/caseDetailsEng1.json";
+    public static final String TEST_DATA_ENG_BULK6 = "src/test/functional/resources/testData/bulk/caseDetailsEng6.json";
 
-    public static final String TEST_DATA_SCOT_BULK1 = "src/test/functional/resources/testData/exampleBulkV1.json";
-    public static final String TEST_DATA_SCOT_BULK2 = "src/test/functional/resources/testData/exampleBulkV1.json";
-    public static final String TEST_DATA_SCOT_BULK3 = "src/test/functional/resources/testData/exampleBulkV1.json";
-    public static final String TEST_DATA_SCOT_BULK4 = "src/test/functional/resources/testData/exampleBulkV1.json";
-    public static final String TEST_DATA_SCOT_BULK5 = "src/test/functional/resources/testData/exampleBulkV1.json";
+    public static final String TEST_DATA_SCOT_BULK1 = "src/test/functional/resources/testData/bulk/caseDetailsScot1.json";
+    public static final String TEST_DATA_SCOT_BULK2 = "src/test/functional/resources/testData/bulk/caseDetailsScot1.json";
+    public static final String TEST_DATA_SCOT_BULK3 = "src/test/functional/resources/testData/bulk/caseDetailsScot1.json";
+    public static final String TEST_DATA_SCOT_BULK4 = "src/test/functional/resources/testData/bulk/caseDetailsScot1.json";
+
+    public static final String TEST_DATA_ENG_BULK1_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsEng1Test1.json";
+    public static final String TEST_DATA_ENG_BULK1_CASE2 = "src/test/functional/resources/testData/bulk/caseDetailsEng1Test2.json";
+    public static final String TEST_DATA_ENG_BULK1_CASE3 = "src/test/functional/resources/testData/bulk/caseDetailsEng1Test3.json";
+    public static final String TEST_DATA_ENG_BULK2_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsEng2Test1.json";
+    public static final String TEST_DATA_ENG_BULK2_CASE2 = "src/test/functional/resources/testData/bulk/caseDetailsEng2Test2.json";
+    public static final String TEST_DATA_ENG_BULK2_CASE3 = "src/test/functional/resources/testData/bulk/caseDetailsEng2Test3.json";
+    public static final String TEST_DATA_ENG_BULK3_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsEng3Test1.json";
+    public static final String TEST_DATA_ENG_BULK3_CASE2 = "src/test/functional/resources/testData/bulk/caseDetailsEng3Test2.json";
+    public static final String TEST_DATA_ENG_BULK3_CASE3 = "src/test/functional/resources/testData/bulk/caseDetailsEng3Test3.json";
+    public static final String TEST_DATA_ENG_BULK7_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsEng7Test1.json";
+    public static final String TEST_DATA_ENG_BULK7_CASE2 = "src/test/functional/resources/testData/bulk/caseDetailsEng7Test2.json";
+    public static final String TEST_DATA_ENG_BULK7_CASE3 = "src/test/functional/resources/testData/bulk/caseDetailsEng7Test3.json";
+
+    public static final String TEST_DATA_SCOT_BULK1_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsScot1Test1.json";
+    public static final String TEST_DATA_SCOT_BULK1_CASE2 = "src/test/functional/resources/testData/bulk/caseDetailsScot1Test2.json";
+    public static final String TEST_DATA_SCOT_BULK1_CASE3 = "src/test/functional/resources/testData/bulk/caseDetailsScot1Test3.json";
+    public static final String TEST_DATA_SCOT_BULK2_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsScot2Test1.json";
+    public static final String TEST_DATA_SCOT_BULK2_CASE2 = "src/test/functional/resources/testData/bulk/caseDetailsScot2Test2.json";
+    public static final String TEST_DATA_SCOT_BULK2_CASE3 = "src/test/functional/resources/testData/bulk/caseDetailsScot2Test3.json";
+    public static final String TEST_DATA_SCOT_BULK3_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsScot3Test1.json";
+    public static final String TEST_DATA_SCOT_BULK3_CASE2 = "src/test/functional/resources/testData/bulk/caseDetailsScot3Test2.json";
+    public static final String TEST_DATA_SCOT_BULK3_CASE3 = "src/test/functional/resources/testData/bulk/caseDetailsScot3Test3.json";
+    public static final String TEST_DATA_SCOT_BULK5_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsScot5Test1.json";
+    public static final String TEST_DATA_SCOT_BULK5_CASE2 = "src/test/functional/resources/testData/bulk/caseDetailsScot5Test2.json";
+
 
 }
