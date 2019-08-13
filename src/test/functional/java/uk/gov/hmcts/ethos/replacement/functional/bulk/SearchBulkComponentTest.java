@@ -6,10 +6,7 @@ import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
@@ -30,6 +27,7 @@ import java.util.List;
         @WithTag("FunctionalTest")
 })
 public class SearchBulkComponentTest {
+
     private TestUtil testUtil;
     private List<String> caseList = new ArrayList<>();
 
@@ -39,7 +37,6 @@ public class SearchBulkComponentTest {
     }
 
     @Test
-    @WithTag("SmokeTest")
     public void search_bulk_eng_individual_claimant_not_represented() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
@@ -98,12 +95,31 @@ public class SearchBulkComponentTest {
 
         Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
 
-        testUtil.verifySearchBulkResponse(testData, response);
+        testUtil.verifyBulkResponse(testData, response);
 
     }
 
     @Test
-    @WithTag("SmokeTest")
+    public void search_bulk_no_cases() throws IOException {
+        testUtil.loadAuthToken();
+
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK6), "UTF-8");
+
+        BulkRequest bulkRequest = testUtil.getBulkRequest(true, testData);
+        Response response = testUtil.getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        response = testUtil.getBulkResponse(bulkRequest, Constants.SEARCH_BULK_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        testUtil.verifyBulkResponse(testData, response);
+
+    }
+
+    @Test
+    @Ignore
     public void search_bulk_scot_individual_claimant_not_represented() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_SCOT_BULK1_CASE1);
@@ -123,6 +139,7 @@ public class SearchBulkComponentTest {
         testUtil.executeSearchBulkTest(true, Constants.TEST_DATA_SCOT_BULK2, caseList);
     }
 
+    @Test
     public void search_bulk_with_no_payload() throws IOException {
         testUtil.loadAuthToken();
 
@@ -132,6 +149,8 @@ public class SearchBulkComponentTest {
 
     }
 
+    @Test
+    @Ignore
     public void search_bulk_with_no_token() throws IOException {
 
         testUtil.setAuthToken("authToken");

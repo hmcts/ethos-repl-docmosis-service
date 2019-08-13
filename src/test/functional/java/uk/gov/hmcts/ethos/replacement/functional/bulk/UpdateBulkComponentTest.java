@@ -6,10 +6,7 @@ import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
@@ -39,7 +36,6 @@ public class UpdateBulkComponentTest {
     }
 
     @Test
-    //@WithTag("SmokeTest")
     public void update_bulk_eng_individual_claimant_not_represented() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
@@ -105,7 +101,7 @@ public class UpdateBulkComponentTest {
     }
 
     @Test
-    //@WithTag("SmokeTest")
+    @Ignore
     public void update_bulk_scot_individual_claimant_not_represented() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_SCOT_BULK1_CASE1);
@@ -125,6 +121,7 @@ public class UpdateBulkComponentTest {
         testUtil.executeUpdateBulkTest(false, Constants.TEST_DATA_SCOT_BULK2, caseList);
     }
 
+    @Test
     public void update_bulk_with_no_payload() throws IOException {
         testUtil.loadAuthToken();
 
@@ -134,6 +131,8 @@ public class UpdateBulkComponentTest {
 
     }
 
+    @Test
+    @Ignore
     public void update_bulk_with_no_token() throws IOException {
 
         testUtil.setAuthToken("authToken");
