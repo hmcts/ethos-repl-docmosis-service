@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.POST_DEFAULT_XLSX_FILE_PATH;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.PRE_DEFAULT_XLSX_FILE_PATH;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 @Slf4j
 @RestController
@@ -166,7 +165,6 @@ public class CaseActionsForCaseWorkerController {
             log.info("Post Default values added to the case: " + defaultValues);
             caseData = ccdRequest.getCaseDetails().getCaseData();
             log.info("Post Default caeData: " + caseData);
-            //caseData.setState("Pending");
         } else {
             log.info("Error in PostDefaultValues");
             errors.add("The payload is empty. Please make sure you have some data on your case");
