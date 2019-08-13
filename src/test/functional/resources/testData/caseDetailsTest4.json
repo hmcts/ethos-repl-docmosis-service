@@ -5,7 +5,7 @@
     "id": 1561739423761693,
     "jurisdiction": "EMPLOYMENT",
     "state": "2_Accepted",
-    "case_type_id": "EmpTrib_MVP_1.0_Manc",
+    "case_type_id": "Manchester_Dev",
     "security_classification": "PUBLIC",
     "case_data": {
       "claimantWorkAddress": {
@@ -56,7 +56,7 @@
       "ethosCaseReference": "20 7254687 6433",
       "claimantIndType": {
         "claimant_title1": "Mr",
-        "claimant_last_name": "Benderas",
+        "claimant_last_name": "Banderas",
         "claimant_first_names": "Antonio"
       },
       "claimant_TypeOfClaimant": "Individual",

@@ -30,10 +30,10 @@ public class DocumentManagementService {
 
     private static final String FILES_NAME = "files";
     private static final String APPLICATION_DOCX_VALUE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-    private DocumentUploadClientApi documentUploadClient;
-    private AuthTokenGenerator authTokenGenerator;
-    private UserService userService;
-    private AppInsights appInsights;
+    private final DocumentUploadClientApi documentUploadClient;
+    private final AuthTokenGenerator authTokenGenerator;
+    private final UserService userService;
+    private final AppInsights appInsights;
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
 

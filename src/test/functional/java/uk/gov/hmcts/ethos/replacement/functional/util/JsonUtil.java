@@ -3,6 +3,8 @@ package uk.gov.hmcts.ethos.replacement.functional.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 
 import java.io.IOException;
@@ -68,5 +70,10 @@ public class JsonUtil {
         json = json.replace("#VERSION#", templateVersion);
 
         return mapper.readValue(json, CCDRequest.class);
+    }
+
+    public static BulkRequest getBulkDetails(boolean isScotland, String testData) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(testData, BulkRequest.class);
     }
 }

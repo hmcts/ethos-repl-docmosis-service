@@ -29,27 +29,22 @@ public class ResponseUtil {
 
     public static String getAuthToken(String environment) throws IOException {
 
-        if (environment.equalsIgnoreCase("local")) {
-            String tidamUrl = getProperty("local.tidam.token.url");
-            return getAuthTokenFromLocal(tidamUrl);
-        } else {
-            String authorizationUrl = getProperty(environment.toLowerCase() + ".idam.auth.url");
-            String username = getProperty(environment.toLowerCase() + ".ccd.username");
-            String password = getProperty(environment.toLowerCase() + ".ccd.password");
+        String authorizationUrl = getProperty(environment.toLowerCase() + ".idam.auth.url");
+        String username = getProperty(environment.toLowerCase() + ".ccd.username");
+        String password = getProperty(environment.toLowerCase() + ".ccd.password");
 
-            //Generate Auth token using code
-            RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
-            RequestSpecification httpRequest = SerenityRest.given().relaxedHTTPSValidation().config(RestAssured.config);
-            httpRequest.header("Accept", "application/json");
-            httpRequest.header("Content-Type", "application/x-www-form-urlencoded");
-            httpRequest.formParam("username", username);
-            httpRequest.formParam("password", password);
-            Response response = httpRequest.post(authorizationUrl);
+        //Generate Auth token using code
+        RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
+        RequestSpecification httpRequest = SerenityRest.given().relaxedHTTPSValidation().config(RestAssured.config);
+        httpRequest.header("Accept", "application/json");
+        httpRequest.header("Content-Type", "application/x-www-form-urlencoded");
+        httpRequest.formParam("username", username);
+        httpRequest.formParam("password", password);
+        Response response = httpRequest.post(authorizationUrl);
 
-            Assert.assertEquals(200, response.getStatusCode());
+        Assert.assertEquals(200, response.getStatusCode());
 
-            return response.body().jsonPath().getString("access_token");
-        }
+        return response.body().jsonPath().getString("access_token");
     }
 
     public static String getAuthTokenFromLocal(String tidamUrl) {

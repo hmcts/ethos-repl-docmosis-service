@@ -24,9 +24,7 @@ services:
       MICROSERVICE_KEYS_EM_GW: "${IDAM_KEY_DM_STORE}"
 
   dm-store:
-    image: "${DM_STORE_USE_LOCAL-hmcts.azurecr.io/}hmcts/dm-store:${DM_STORE_TAG:-latest}"
-    mem_limit: 1G
-    mem_reservation: 800M
+    image: "hmcts/dm-store:${DM_STORE_TAG:-latest}"
     healthcheck:
       disable: true
     environment:
@@ -48,7 +46,7 @@ services:
       LOGGING_LEVEL_UK_GOV_HMCTS_IDAM: DEBUG
       IDAM_USER_BASE_URI: http://sidam-api:5000
       IDAM_S2S_BASE_URI: http://service-auth-provider-api:8080
-      S2S_NAMES_WHITELIST: sscs,divorce,ccd,em_gw,document-management-store,ccd_gw,idam-api,fpl_case_service
+      S2S_NAMES_WHITELIST: sscs,divorce,ccd,em_gw,document-management-store,ccd_gw,sidam-api,fpl_case_service
       http_proxy:
       https_proxy:
       no_proxy:
@@ -82,8 +80,6 @@ services:
 
   azure-storage-emulator-azurite:
     image: arafato/azurite
-    mem_limit: 50M
-    mem_reservation: 30M
     ports:
       - 10000:10000
     environment:

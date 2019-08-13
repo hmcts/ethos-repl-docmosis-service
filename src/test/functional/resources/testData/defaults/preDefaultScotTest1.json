@@ -4,8 +4,8 @@
   "case_details": {
     "id": 1560424917400824,
     "jurisdiction": "EMPLOYMENT",
-    "state": "1_Submitted",
-    "case_type_id": "EmpTrib_MVP_1.0_Glas",
+    "state": "Submitted",
+    "case_type_id": "Glasgow_Dev",
     "security_classification": "PUBLIC",
     "case_data": {
       "feeGroupReference": "983454357348",
@@ -30,7 +30,7 @@
       "claimantIndType": {
         "claimant_title1": "Mr",
         "claimant_first_names": "Antonio",
-        "claimant_last_name": "Benderas",
+        "claimant_last_name": "Banderas",
         "claimant_gender": "Male"
       },
       "receiptDate": "2019-05-20",

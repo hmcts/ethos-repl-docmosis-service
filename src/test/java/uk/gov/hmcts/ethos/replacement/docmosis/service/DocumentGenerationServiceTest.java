@@ -6,14 +6,25 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.SearchType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.MANCHESTER_BULK_CASE_TYPE_ID;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DocumentGenerationServiceTest {
@@ -23,20 +34,68 @@ public class DocumentGenerationServiceTest {
     @Mock
     private TornadoService tornadoService;
     private CCDRequest ccdRequest;
+    private BulkRequest bulkRequest;
     private DocumentInfo documentInfo;
+    @Mock
+    private CcdClient ccdClient;
 
     @Before
     public void setUp() {
         ccdRequest = new CCDRequest();
-        documentGenerationService = new DocumentGenerationService(tornadoService);
+        CaseDetails caseDetails = new CaseDetails();
+        CaseData caseData = new CaseData();
+        caseDetails.setCaseData(caseData);
+        ccdRequest.setCaseDetails(caseDetails);
+        bulkRequest = new BulkRequest();
+        BulkDetails bulkDetails = new BulkDetails();
+        BulkData bulkData = new BulkData();
+        SearchType searchType = new SearchType();
+        searchType.setCaseIDS("1");
+        SearchTypeItem searchTypeItem = new SearchTypeItem();
+        searchTypeItem.setValue(searchType);
+        bulkData.setSearchCollection(new ArrayList<>(Collections.singletonList(searchTypeItem)));
+        bulkDetails.setCaseData(bulkData);
+        bulkDetails.setCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID);
+        bulkRequest.setCaseDetails(bulkDetails);
+        documentGenerationService = new DocumentGenerationService(tornadoService, ccdClient);
         documentInfo = DocumentInfo.builder().description("resources/example.json").build();
+    }
+
+    @Test(expected = Exception.class)
+    public void processDocumentRequestException() throws IOException {
+        when(tornadoService.documentGeneration(anyString(), any())).thenThrow(feignError());
+        documentGenerationService.processDocumentRequest(ccdRequest, "authToken");
     }
 
     @Test
     public void processDocumentRequest() throws IOException {
         when(tornadoService.documentGeneration(anyString(), any())).thenReturn(documentInfo);
         DocumentInfo documentInfo1 = documentGenerationService.processDocumentRequest(ccdRequest, "authToken");
-        assertEquals(documentInfo1, documentInfo);
+        assertEquals(documentInfo, documentInfo1);
     }
 
+    @Test
+    public void processBulkDocumentRequest() throws IOException {
+        SubmitEvent submitEvent = new SubmitEvent();
+        submitEvent.setCaseId(1);
+        submitEvent.setCaseData(new CaseData());
+        List<SubmitEvent> submitEvents = Collections.singletonList(submitEvent);
+        when(tornadoService.documentGeneration(anyString(), any())).thenReturn(documentInfo);
+        when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
+
+        List<DocumentInfo> documentInfo1 = documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");
+        assertEquals(new ArrayList<>(Collections.singletonList(documentInfo)), documentInfo1);
+    }
+
+    @Test(expected = Exception.class)
+    public void processBulkDocumentRequestException() throws IOException {
+        SubmitEvent submitEvent = new SubmitEvent();
+        submitEvent.setCaseId(1);
+        submitEvent.setCaseData(new CaseData());
+        List<SubmitEvent> submitEvents = Collections.singletonList(submitEvent);
+        when(tornadoService.documentGeneration(anyString(), any())).thenThrow(feignError());
+        when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
+
+        documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");
+    }
 }

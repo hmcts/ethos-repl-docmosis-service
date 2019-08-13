@@ -80,10 +80,10 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez, Juan Garcia\",\n" +
-                "\"Respondent\":\"Francisco\",\n" +
-                "\"Hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_date_time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\\n3. Juan Garcia\\n4. Mike Jordan\",\n" +
+                "\"Respondent\":\"1. Francisco\",\n" +
+                "\"Hearing_date\":\"25 November 2019\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 10:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t1_2\":\"true\",\n" +
@@ -98,14 +98,18 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i1_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i1_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i1_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails1, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails1.getCaseData(), "").toString());
     }
 
     @Test
@@ -135,7 +139,7 @@ public class HelperTest {
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"Hearing_duration\":\"2 hours\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t2_2A\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -148,14 +152,18 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i2_2A_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i2_2A_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i2_2A_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails2, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails2.getCaseData(), "").toString());
     }
 
     @Test
@@ -180,8 +188,12 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
-                "\"Respondent\":\"Francisco\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. Francisco\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t3_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -194,14 +206,18 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i3_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i3_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i3_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails3, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails3.getCaseData(), "").toString());
     }
 
     @Test
@@ -227,8 +243,12 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
-                "\"Respondent\":\"Francisco\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. Francisco\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t4_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -241,14 +261,18 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i4_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i4_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i4_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails4, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails4.getCaseData(), "").toString());
     }
 
     @Test
@@ -275,8 +299,12 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
-                "\"Respondent\":\"Francisco\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. Francisco\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t5_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -289,14 +317,18 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i5_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i5_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i5_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails5, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails5.getCaseData(), "").toString());
     }
 
     @Test
@@ -323,8 +355,12 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
-                "\"Respondent\":\"RespondentName\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. RespondentName\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t6_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -337,14 +373,18 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i6_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i6_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i6_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails6, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails6.getCaseData(), "").toString());
     }
 
     @Test
@@ -371,8 +411,8 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
-                "\"Respondent\":\"Antonio Rodriguez\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. Antonio Rodriguez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -389,14 +429,18 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i7_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i7_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i7_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails7, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails7.getCaseData(), "").toString());
     }
 
     @Test
@@ -422,8 +466,8 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez, Mikey McCollier\",\n" +
-                "\"Respondent\":\"Joan Zamorano\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\\n3. Mikey McCollier\",\n" +
+                "\"Respondent\":\"1. Joan Zamorano\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -440,14 +484,18 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i10_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i10_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i10_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails8, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails8.getCaseData(), "").toString());
     }
 
     @Test
@@ -473,8 +521,8 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
-                "\"Respondent\":\"Raul Gonzalez\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. Raul Gonzalez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -491,14 +539,18 @@ public class HelperTest {
                 "\"Court_DX\":\"123456\",\n" +
                 "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"i9_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i9_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i9_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails9, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails9.getCaseData(), "").toString());
     }
 
     @Test
@@ -508,19 +560,27 @@ public class HelperTest {
                 "\"templateName\":\".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"Court_telephone\":\"\",\n" +
                 "\"Court_fax\":\"\",\n" +
                 "\"Court_DX\":\"\",\n" +
                 "\"Court_Email\":\"\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsEmpty, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsEmpty.getCaseData(), "").toString());
     }
 
     @Test
@@ -546,10 +606,10 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez, Juan Garcia\",\n" +
-                "\"Respondent\":\"string\",\n" +
-                "\"Hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_date_time\":\"Mon, 25 Nov 2019 10:11:00\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\\n3. Juan Garcia\",\n" +
+                "\"Respondent\":\"1. string\",\n" +
+                "\"Hearing_date\":\"25 November 2019\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 10:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t_Scot_7_1\":\"true\",\n" +
@@ -564,14 +624,18 @@ public class HelperTest {
                 "\"Court_DX\":\"1234567\",\n" +
                 "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot7_1_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot7_1_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot7_1_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot1, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot1.getCaseData(), "").toString());
     }
 
     @Test
@@ -598,8 +662,8 @@ public class HelperTest {
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"1111111\",\n" +
                 "\"Respondent\":\"string\",\n" +
-                "\"Hearing_date\":\"Mon, 25 Nov 2019\",\n" +
-                "\"Hearing_date_time\":\"Mon, 25 Nov 2019 12:11:00\",\n" +
+                "\"Hearing_date\":\"25 November 2019\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 hours\",\n" +
                 "\"t_Scot_24\":\"true\",\n" +
@@ -614,14 +678,18 @@ public class HelperTest {
                 "\"Court_DX\":\"1234567\",\n" +
                 "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot24_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot24_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot24_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot2, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot2.getCaseData(), "").toString());
     }
 
     @Test
@@ -646,8 +714,12 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"Antonio Vazquez\",\n" +
-                "\"Respondent\":\"string\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
+                "\"Respondent\":\"1. string\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t_Scot_34\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Eagle Building,\",\n" +
                 "\"Court_addressLine2\":\"215 Bothwell Street,\",\n" +
@@ -660,14 +732,18 @@ public class HelperTest {
                 "\"Court_DX\":\"1234567\",\n" +
                 "\"Court_Email\":\"GlasgowOfficeET@hmcts.gov.uk\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot34_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot34_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot34_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Juan Diego\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot3, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot3.getCaseData(), "").toString());
     }
 
     @Test
@@ -681,7 +757,7 @@ public class HelperTest {
         correspondenceScotType.setPart3ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
         topLevel = "Part_4_Scot";
         part = "42";
         correspondenceScotType = new CorrespondenceScotType();
@@ -689,7 +765,7 @@ public class HelperTest {
         correspondenceScotType.setPart4ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
         topLevel = "Part_5_Scot";
         part = "52";
         correspondenceScotType = new CorrespondenceScotType();
@@ -697,7 +773,7 @@ public class HelperTest {
         correspondenceScotType.setPart5ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
         topLevel = "Part_6_Scot";
         part = "62";
         correspondenceScotType = new CorrespondenceScotType();
@@ -705,7 +781,7 @@ public class HelperTest {
         correspondenceScotType.setPart6ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
         topLevel = "Part_7_Scot";
         part = "72";
         correspondenceScotType = new CorrespondenceScotType();
@@ -713,7 +789,7 @@ public class HelperTest {
         correspondenceScotType.setPart7ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
         topLevel = "Part_15_Scot";
         part = "152";
         correspondenceScotType = new CorrespondenceScotType();
@@ -721,7 +797,7 @@ public class HelperTest {
         correspondenceScotType.setPart15ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
         topLevel = "Part_16_Scot";
         part = "162";
         correspondenceScotType = new CorrespondenceScotType();
@@ -729,7 +805,7 @@ public class HelperTest {
         correspondenceScotType.setPart16ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
     }
 
     @Test
@@ -748,20 +824,28 @@ public class HelperTest {
                 "\"templateName\":\"Part_18.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t18A\":\"true\",\n" +
                 "\"Court_telephone\":\"\",\n" +
                 "\"Court_fax\":\"\",\n" +
                 "\"Court_DX\":\"\",\n" +
                 "\"Court_Email\":\"\",\n" +
                 "\"i18A_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i18A_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i18A_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(result, Helper.buildDocumentContent(caseDetailsTemplates, "").toString());
+        assertEquals(result, Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
     }
 
     private String getJson(String topLevel, String part) {
@@ -770,18 +854,32 @@ public class HelperTest {
                 "\"templateName\":\"" + topLevel + ".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_venue\":\"\",\n" +
+                "\"Hearing_duration\":\"\",\n" +
                 "\"t_Scot_" + part + "\":\"true\",\n" +
                 "\"Court_telephone\":\"\",\n" +
                 "\"Court_fax\":\"\",\n" +
                 "\"Court_DX\":\"\",\n" +
                 "\"Court_Email\":\"\",\n" +
                 "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
                 "\"iScot"+ part +"_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot"+ part +"_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot"+ part +"_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
+    }
+
+    @Test
+    public void getDocumentName() {
+        String expected = "EM-TRB-EGW-ENG-00029_4.2";
+        assertEquals(expected, Helper.getDocumentName(caseDetails4.getCaseData()));
     }
 }
