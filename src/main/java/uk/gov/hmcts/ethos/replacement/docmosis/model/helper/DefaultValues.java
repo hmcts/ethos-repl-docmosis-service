@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class DefaultValues {
@@ -21,4 +20,5 @@ public class DefaultValues {
     private String tribunalCorrespondenceFax;
     private String tribunalCorrespondenceDX;
     private String tribunalCorrespondenceEmail;
+    private String managingOffice;
 }

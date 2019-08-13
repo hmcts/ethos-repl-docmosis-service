@@ -4,8 +4,6 @@ version: '2.1'
 services:
   ccd-case-management-web:
     image: "${CCD_CASE_MANAGEMENT_WEB_USE_LOCAL-hmcts.azurecr.io/}hmcts/ccd-case-management-web:${CCD_CASE_MANAGEMENT_WEB_TAG:-latest}"
-    mem_limit: 500M
-    mem_reservation: 100M
     container_name: ccd-case-management-web
     environment:
       IDAM_LOGIN_URL: http://localhost:3501/login
@@ -20,8 +18,6 @@ services:
 
   ccd-api-gateway:
     image: "${CCD_API_GATEWAY_USE_LOCAL-hmcts.azurecr.io/}hmcts/ccd-api-gateway-web:${CCD_API_GATEWAY_TAG:-latest}"
-    mem_limit: 100M
-    mem_reservation: 80M
     container_name: ccd-api-gateway-web
     environment:
       IDAM_BASE_URL: http://sidam-api:5000
@@ -47,9 +43,7 @@ services:
       - ccd-data-store-api
 
   idam-web-admin:
-    image: hmcts.azurecr.io/hmcts/sidam/idam-web-admin:1.0.0
-    mem_limit: 500M
-    mem_reservation: 100M
+    image: hmcts.azurecr.io/hmcts/sidam/idam-web-admin:latest
     environment:
       JAVA_OPTS: -Xms128m -Xms512m
       STRATEGIC_SERVICE_URL: http://sidam-api:5000
@@ -61,9 +55,7 @@ services:
       - sidam-api
 
   idam-web-public:
-    image: "hmcts.azurecr.io/hmcts/sidam/idam-web-public:1.0.0"
-    mem_limit: 500M
-    mem_reservation: 100M
+    image: "hmcts.azurecr.io/hmcts/sidam/idam-web-public:latest"
     environment:
      STRATEGIC_SERVICE_URL: http://sidam-api:5000
      IDAM_CONTINUE_URL_VALIDATOR_ENFORCE_TLS: "false"

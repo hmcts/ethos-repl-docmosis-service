@@ -29,15 +29,14 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringRunner.class)
@@ -71,6 +70,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private MockMvc mvc;
     private JsonNode requestContent;
     private JsonNode requestContent2;
+    private JsonNode requestContent3;
     private SubmitEvent submitEvent;
     private DefaultValues defaultValues;
 
@@ -80,6 +80,8 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .getResource("/exampleV1.json").toURI()));
         requestContent2 = objectMapper.readTree(new File(getClass()
                 .getResource("/exampleV2.json").toURI()));
+        requestContent3 = objectMapper.readTree(new File(getClass()
+                .getResource("/exampleV3.json").toURI()));
     }
 
     @Before
@@ -90,6 +92,7 @@ public class CaseActionsForCaseWorkerControllerTest {
         defaultValues = DefaultValues.builder()
                 .positionType("Awaiting ET3")
                 .claimantTypeOfClaimant("Individual")
+                .managingOffice("Glasgow")
                 .tribunalCorrespondenceAddressLine1("")
                 .tribunalCorrespondenceAddressLine2("")
                 .tribunalCorrespondenceAddressLine3("")
@@ -177,7 +180,7 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
@@ -190,7 +193,20 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void postDefaultValuesWithErrors() throws Exception {
+        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenReturn(defaultValues);
+        mvc.perform(post(POST_DEFAULT_VALUES_URL)
+                .content(requestContent3.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 

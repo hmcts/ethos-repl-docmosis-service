@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.functional.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.config.SSLConfig;
@@ -10,12 +11,15 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.rest.SerenityRest;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.json.JSONException;
 import org.junit.Assert;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 
 import javax.xml.bind.JAXBException;
@@ -41,10 +45,7 @@ public class TestUtil {
         environment = System.getProperty("VAULTNAME").replace("ethos-", "");
     }
 
-    public String getEnvironment() {
-        return this.environment;
-    }
-
+    //End-point /generateDocument
     public void executeGenerateDocumentTest(String topLevel, String childLevel, String expectedValue) throws IOException, JAXBException, Docx4JException {
         executeGenerateDocumentTest(topLevel, childLevel, expectedValue, false);
     }
@@ -63,8 +64,8 @@ public class TestUtil {
 
         CCDRequest ccdRequest;
 
-        if (isScotland) ccdRequest = getCcdRequest(topLevel, childLevel, true, testData);
-        else ccdRequest = getCcdRequest(topLevel, childLevel, false, testData);
+        if (isScotland) ccdRequest = getCcdRequest(topLevel, childLevel, true, new File(testData));
+        else ccdRequest = getCcdRequest(topLevel, childLevel, false, new File(testData));
 
         Response response = getResponse(ccdRequest);
 
@@ -72,13 +73,35 @@ public class TestUtil {
 
     }
 
+    public void verifyDocMosisPayload(String topLevel, String childLevel, boolean isScotland, String testDataFile) throws IOException, JSONException {
+        this.topLevel = topLevel;
+        this.childLevel = childLevel;
+
+        if (authToken == null) authToken = ResponseUtil.getAuthToken(environment);
+        if (!authToken.startsWith("Bearer")) authToken = "Bearer " + authToken;
+
+        CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel, isScotland, new File(testDataFile));
+
+        Response response = getResponse(ccdRequest);
+        String url = ResponseUtil.getUrlFromResponse(response);
+        downloadedFilePath = FileUtil.downloadFileFromUrl(url, authToken);
+
+        String actualPayload = LogUtil.getDocMosisPayload();
+        actualPayload = actualPayload.substring(0, actualPayload.lastIndexOf(',')) + "}}";
+
+        String expectedPayload = DocumentUtil.buildDocumentContent(ccdRequest.getCaseDetails(), "");
+
+        JSONAssert.assertEquals(expectedPayload, actualPayload, JSONCompareMode.LENIENT);
+    }
+
+    //End-point /preDefaultValues
     public void executePreDefaultValuesTest(String paramName, String paramValue, boolean isScotland, String testData) throws IOException {
         CCDRequest ccdRequest;
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
-        else ccdRequest = getCcdRequest("1", "", false, testData);
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
+        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
 
         Response response = getResponse(ccdRequest, Constants.PRE_DEFAULT_URI);
 
@@ -87,6 +110,7 @@ public class TestUtil {
         verifyElementValue(json, paramName, paramValue);
     }
 
+    //End-point /postDefaultValues
     public void executePostDefaultValuesTest(String paramName, String paramValue, boolean isScotland, String testData) throws IOException {
         CCDRequest ccdRequest;
 
@@ -102,25 +126,91 @@ public class TestUtil {
         verifyElementValue(json, paramName, paramValue);
     }
 
-    public void verifyDocMosisPayload(String topLevel, String childLevel, boolean isScotland, String testDataFile) throws IOException, JSONException {
-        this.topLevel = topLevel;
-        this.childLevel = childLevel;
+    //End-point /createBulk
+    public void executeCreateBulkTest(boolean isScotland, String testDataFilePath, List<String> caseList) throws IOException {
+        CCDRequest ccdRequest;
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
 
-        if (authToken == null) authToken = ResponseUtil.getAuthToken(environment);
-        if (!authToken.startsWith("Bearer")) authToken = "Bearer " + authToken;
+        loadAuthToken();
 
-        CCDRequest ccdRequest = getCcdRequest(topLevel, childLevel, isScotland, testDataFile);
+        testData = createIndividualCases(isScotland, caseList, testData);
 
-        Response response = getResponse(ccdRequest);
-        String url = ResponseUtil.getUrlFromResponse(response);
-        downloadedFilePath = FileUtil.downloadFileFromUrl(url, authToken);
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
 
-        String actualPayload = LogUtil.getDocMosisPayload();
-        actualPayload = actualPayload.substring(0, actualPayload.lastIndexOf(',')) + "}}";
+        verifyBulkResponse(testData, response);
 
-        String expectedPayload = DocumentUtil.buildDocumentContent(ccdRequest.getCaseDetails(), "");
+    }
 
-        JSONAssert.assertEquals(expectedPayload, actualPayload, JSONCompareMode.LENIENT);
+    //End-point /searchBulk
+    public void executeSearchBulkTest(boolean isScotland, String testDataFilePath, List<String> caseList) throws IOException {
+        CCDRequest ccdRequest;
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
+
+        loadAuthToken();
+
+        testData = createIndividualCases(isScotland, caseList, testData);
+
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        response = getBulkResponse(bulkRequest, Constants.SEARCH_BULK_URI);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        verifyBulkResponse(testData, response);
+    }
+
+    //End-point /updateBulk
+    public void executeUpdateBulkTest(boolean isScotland, String testDataFilePath, List<String> caseList) throws IOException {
+        CCDRequest ccdRequest;
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
+
+        loadAuthToken();
+
+        testData = createIndividualCases(isScotland, caseList, testData);
+
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        response = getBulkResponse(bulkRequest, Constants.SEARCH_BULK_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        response = getBulkResponse(bulkRequest, Constants.UPDATE_BULK_URI);
+
+        verifyBulkResponse(testData, response);
+    }
+
+    //End-point //updateBulkCase
+    public void executeUpdateBulkCaseTest(boolean isScotland, String testDataFilePath, List<String> caseList) throws IOException {
+        CCDRequest ccdRequest;
+
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
+
+        loadAuthToken();
+
+        testData = createIndividualCases(isScotland, caseList, testData);
+
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        response = getBulkResponse(bulkRequest, Constants.UPDATE_BULK_CASE_URI);
+
+        verifyBulkResponse(testData, response);
+    }
+
+    //General methods
+    public String getEnvironment() {
+        return this.environment;
     }
 
     public void deleteTempFile() throws IOException {
@@ -152,12 +242,37 @@ public class TestUtil {
         return response;
     }
 
-    public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, String testDataFile) throws IOException {
-        String payLoad = FileUtils.readFileToString(new File(testDataFile), "UTF-8");
-
-        return JsonUtil.getCaseDetails(payLoad, topLevel, childLevel, isScotland);
+    public Response getBulkResponse(BulkRequest bulkRequest, String URI) throws IOException {
+        return getBulkResponse(bulkRequest, URI, 200);
     }
 
+    public Response getBulkResponse(BulkRequest bulkRequest, String URI, int expectedStatusCode) throws IOException {
+        String docmosisUrl = ResponseUtil.getProperty(environment.toLowerCase() + ".docmosis.api.url");
+
+        RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
+        RequestSpecification httpRequest = SerenityRest.given().relaxedHTTPSValidation().config(RestAssured.config);
+        httpRequest.header("Authorization", authToken);
+        httpRequest.header("Content-Type", ContentType.JSON);
+        httpRequest.body(bulkRequest);
+        Response response = httpRequest.post(docmosisUrl + URI);
+
+        Assert.assertEquals(expectedStatusCode, response.getStatusCode());
+        return response;
+    }
+
+    public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, File testDataFile) throws IOException {
+        String payLoad = FileUtils.readFileToString(testDataFile, "UTF-8");
+
+        return getCcdRequest(topLevel, childLevel, isScotland, payLoad);
+    }
+
+    public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, String testData) throws IOException {
+        return JsonUtil.getCaseDetails(testData, topLevel, childLevel, isScotland);
+    }
+
+    public BulkRequest getBulkRequest(boolean isScotland, String testData) throws IOException {
+        return JsonUtil.getBulkDetails(isScotland, testData);
+    }
 
     public void setAuthToken(String authToken) {
         TestUtil.authToken = authToken;
@@ -168,6 +283,39 @@ public class TestUtil {
         if (!authToken.startsWith("Bearer")) authToken = "Bearer " + authToken;
 
         return authToken;
+    }
+
+    public void verifyBulkResponse(String testData, Response response) {
+
+        String caseTitle = JsonPath.read(testData, "$.case_details.case_data.bulkCaseTitle");
+        String caseReference = JsonPath.read(testData, "$.case_details.case_data.multipleReference");
+
+        Assert.assertEquals(caseTitle, response.body().jsonPath().getString("data.bulkCaseTitle"));
+        Assert.assertEquals(caseReference, response.body().jsonPath().getString("data.multipleReference"));
+
+    }
+
+    //Private methods
+    private String createIndividualCases(boolean isScotland, List<String> caseList, String testData) throws IOException {
+        CCDRequest ccdRequest;
+        Response response;
+        int count = 1;
+
+        for (String caseDataFilePath : caseList) {
+            String ethosCaseReference = getUniqueCaseReference();
+
+            String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
+            caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
+
+            ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
+            response = getResponse(ccdRequest, Constants.CREATE_CASE_URI);
+
+            Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+            testData = testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseReference);
+            count++;
+        }
+        return testData;
     }
 
     private void verifyElementValue(String json, String paramName, String paramValue) throws IOException {
@@ -232,5 +380,9 @@ public class TestUtil {
         }
 
         Assert.assertTrue("Expected value \""+ expectedValue + "\" doesn't exist in Document with version: "+  docVersion +" \n", hasMatched);
+    }
+
+    public String getUniqueCaseReference() {
+        return RandomStringUtils.randomNumeric(10);
     }
 }

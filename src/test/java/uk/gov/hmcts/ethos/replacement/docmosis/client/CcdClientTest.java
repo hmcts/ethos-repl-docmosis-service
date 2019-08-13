@@ -13,10 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.SubmitBulkEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
@@ -40,6 +44,9 @@ public class CcdClientTest {
     private CaseDataBuilder caseDataBuilder;
     private UserDetails userDetails;
     private CaseDetails caseDetails;
+    private BulkDetails bulkDetails;
+    private CaseData caseData;
+    private BulkData bulkData;
     private CCDRequest ccdRequest;
     private String uri = "http://example.com";
 
@@ -52,7 +59,13 @@ public class CcdClientTest {
         caseDetails = new CaseDetails();
         caseDetails.setJurisdiction("TRIBUNALS");
         caseDetails.setCaseTypeId("Type1");
-        caseDetails.setCaseData(new CaseData());
+        caseData = new CaseData();
+        caseDetails.setCaseData(caseData);
+        bulkDetails = new BulkDetails();
+        bulkDetails.setJurisdiction("TRIBUNALS");
+        bulkDetails.setCaseTypeId("Type1");
+        bulkData = new BulkData();
+        bulkDetails.setCaseData(bulkData);
     }
 
     @Test
@@ -71,7 +84,7 @@ public class CcdClientTest {
     public void submitCaseCreation() throws IOException {
         HttpEntity<CaseDataContent> httpEntity = new HttpEntity<>(CaseDataContent.builder().build(), null);
         ResponseEntity<SubmitEvent> responseEntity = new ResponseEntity<>(HttpStatus.OK);
-        when(caseDataBuilder.buildCaseDataContent(eq(caseDetails), eq(ccdRequest))).thenReturn(CaseDataContent.builder().build());
+        when(caseDataBuilder.buildCaseDataContent(eq(caseData), eq(ccdRequest), anyString())).thenReturn(CaseDataContent.builder().build());
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         when(ccdClientConfig.buildSubmitCaseCreationUrl(any(), any(), any())).thenReturn(uri);
         when(restTemplate.exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(SubmitEvent.class))).thenReturn(responseEntity);
@@ -87,7 +100,7 @@ public class CcdClientTest {
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         when(ccdClientConfig.buildRetrieveCaseUrl(any(), any(), any(), any())).thenReturn(uri);
         when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(SubmitEvent.class))).thenReturn(responseEntity);
-        ccdClient.retrieveCase("authToken", caseDetails, "111111");
+        ccdClient.retrieveCase("authToken", caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), "111111");
         verify(restTemplate).exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(SubmitEvent.class));
         verifyNoMoreInteractions(restTemplate);
     }
@@ -95,13 +108,35 @@ public class CcdClientTest {
     @Test
     public void retrieveCases() throws IOException {
         HttpEntity<Object> httpEntity = new HttpEntity<>(null);
-        ResponseEntity<List<SubmitEvent>> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        List<SubmitEvent> submitEvents = new ArrayList<>(Arrays.asList(new SubmitEvent(), new SubmitEvent()));
+        ResponseEntity<List<SubmitEvent>> responseEntity = new ResponseEntity<>(submitEvents, HttpStatus.OK);
+        PaginatedSearchMetadata metadata = new PaginatedSearchMetadata();
+        metadata.setTotalPagesCount(1);
+        ResponseEntity<PaginatedSearchMetadata> paginatedSearchMetadata = new ResponseEntity<>(metadata, HttpStatus.OK);
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
-        when(ccdClientConfig.buildRetrieveCasesUrl(any(), any(), any())).thenReturn(uri);
+        when(ccdClientConfig.buildRetrieveCasesUrl(any(), any(), any(), any())).thenReturn(uri);
+        when(ccdClientConfig.buildPaginationMetadataCaseUrl(any(), any(), any())).thenReturn(uri);
         when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(new ParameterizedTypeReference<List<SubmitEvent>>(){}))).thenReturn(responseEntity);
-        ccdClient.retrieveCases("authToken", caseDetails);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(PaginatedSearchMetadata.class))).thenReturn(paginatedSearchMetadata);
+        ccdClient.retrieveCases("authToken", caseDetails.getCaseTypeId(), caseDetails.getJurisdiction());
         verify(restTemplate).exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(new ParameterizedTypeReference<List<SubmitEvent>>(){}));
-        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
+    public void retrieveBulkCases() throws IOException {
+        HttpEntity<Object> httpEntity = new HttpEntity<>(null);
+        List<SubmitBulkEvent> submitBulkEvents = new ArrayList<>(Arrays.asList(new SubmitBulkEvent(), new SubmitBulkEvent()));
+        ResponseEntity<List<SubmitBulkEvent>> responseEntity = new ResponseEntity<>(submitBulkEvents, HttpStatus.OK);
+        PaginatedSearchMetadata metadata = new PaginatedSearchMetadata();
+        metadata.setTotalPagesCount(1);
+        ResponseEntity<PaginatedSearchMetadata> paginatedSearchMetadata = new ResponseEntity<>(metadata, HttpStatus.OK);
+        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
+        when(ccdClientConfig.buildRetrieveCasesUrl(any(), any(), any(), any())).thenReturn(uri);
+        when(ccdClientConfig.buildPaginationMetadataCaseUrl(any(), any(), any())).thenReturn(uri);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(new ParameterizedTypeReference<List<SubmitBulkEvent>>(){}))).thenReturn(responseEntity);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(PaginatedSearchMetadata.class))).thenReturn(paginatedSearchMetadata);
+        ccdClient.retrieveBulkCases("authToken", bulkDetails.getCaseTypeId(), bulkDetails.getJurisdiction());
+        verify(restTemplate).exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(new ParameterizedTypeReference<List<SubmitBulkEvent>>(){}));
     }
 
     @Test
@@ -111,7 +146,31 @@ public class CcdClientTest {
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         when(ccdClientConfig.buildStartEventForCaseUrl(any(), any(), any(), any())).thenReturn(uri);
         when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(CCDRequest.class))).thenReturn(responseEntity);
-        ccdClient.startEventForCase("authToken", caseDetails, anyString());
+        ccdClient.startEventForCase("authToken", caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), anyString());
+        verify(restTemplate).exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(CCDRequest.class));
+        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
+    public void startEventForCaseBulkSingle() throws IOException {
+        HttpEntity<Object> httpEntity = new HttpEntity<>(null);
+        ResponseEntity<CCDRequest> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
+        when(ccdClientConfig.buildStartEventForCaseUrlBulkSingle(any(), any(), any(), any())).thenReturn(uri);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(CCDRequest.class))).thenReturn(responseEntity);
+        ccdClient.startEventForCaseBulkSingle("authToken", caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), anyString());
+        verify(restTemplate).exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(CCDRequest.class));
+        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
+    public void startBulkEventForCase() throws IOException {
+        HttpEntity<Object> httpEntity = new HttpEntity<>(null);
+        ResponseEntity<CCDRequest> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
+        when(ccdClientConfig.buildStartEventForBulkCaseUrl(any(), any(), any(), any())).thenReturn(uri);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(CCDRequest.class))).thenReturn(responseEntity);
+        ccdClient.startBulkEventForCase("authToken", bulkDetails.getCaseTypeId(), bulkDetails.getJurisdiction(), anyString());
         verify(restTemplate).exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(CCDRequest.class));
         verifyNoMoreInteractions(restTemplate);
     }
@@ -120,12 +179,25 @@ public class CcdClientTest {
     public void submitEventForCase() throws IOException {
         HttpEntity<CaseDataContent> httpEntity = new HttpEntity<>(CaseDataContent.builder().build(), null);
         ResponseEntity<SubmitEvent> responseEntity = new ResponseEntity<>(HttpStatus.OK);
-        when(caseDataBuilder.buildCaseDataContent(eq(caseDetails), eq(ccdRequest))).thenReturn(CaseDataContent.builder().build());
+        when(caseDataBuilder.buildCaseDataContent(eq(caseData), eq(ccdRequest), anyString())).thenReturn(CaseDataContent.builder().build());
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         when(ccdClientConfig.buildSubmitEventForCaseUrl(any(), any(), any(), any())).thenReturn(uri);
         when(restTemplate.exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(SubmitEvent.class))).thenReturn(responseEntity);
-        ccdClient.submitEventForCase("authToken", caseDetails, ccdRequest, "111111");
+        ccdClient.submitEventForCase("authToken", caseData, caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), ccdRequest, "111111");
         verify(restTemplate).exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(SubmitEvent.class));
+        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
+    public void submitBulkEventForCase() throws IOException {
+        HttpEntity<CaseDataContent> httpEntity = new HttpEntity<>(CaseDataContent.builder().build(), null);
+        ResponseEntity<SubmitBulkEvent> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        when(caseDataBuilder.buildBulkDataContent(eq(bulkData), eq(ccdRequest), anyString())).thenReturn(CaseDataContent.builder().build());
+        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
+        when(ccdClientConfig.buildSubmitEventForCaseUrl(any(), any(), any(), any())).thenReturn(uri);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(SubmitBulkEvent.class))).thenReturn(responseEntity);
+        ccdClient.submitBulkEventForCase("authToken", bulkData, bulkDetails.getCaseTypeId(), bulkDetails.getJurisdiction(), ccdRequest, "111111");
+        verify(restTemplate).exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(SubmitBulkEvent.class));
         verifyNoMoreInteractions(restTemplate);
     }
 }

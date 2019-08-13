@@ -14,12 +14,12 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorke
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseUpdateForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.POST_DEFAULT_XLSX_FILE_PATH;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService.PRE_DEFAULT_XLSX_FILE_PATH;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 @Slf4j
 @RestController
@@ -134,9 +134,11 @@ public class CaseActionsForCaseWorkerController {
     public ResponseEntity<CCDCallbackResponse> preDefaultValues(
             @RequestBody CCDRequest ccdRequest) {
         log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        log.info("Coming to preDefaultValues");
         DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
         ccdRequest.getCaseDetails().getCaseData().setClaimantTypeOfClaimant(defaultValues.getClaimantTypeOfClaimant());
         log.info("Pre Default values added to the case: " + defaultValues);
+        log.info("Pre Default caseDetails: " + ccdRequest.getCaseDetails());
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(ccdRequest.getCaseDetails().getCaseData())
                 .build());
@@ -152,20 +154,33 @@ public class CaseActionsForCaseWorkerController {
     })
     public ResponseEntity<CCDCallbackResponse> postDefaultValues(
             @RequestBody CCDRequest ccdRequest) {
-        log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
-        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
-        ccdRequest.getCaseDetails().setCaseData(getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues));
-        log.info("Post Default values added to the case: " + defaultValues);
-
+        List<String> errors = new ArrayList<>();
+        log.info("Coming to postDefaultValues");
+        CaseData caseData = new CaseData();
+        if (ccdRequest != null && ccdRequest.getCaseDetails() != null && ccdRequest.getCaseDetails().getCaseId() != null) {
+            log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+            DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
+            ccdRequest.getCaseDetails().setCaseData(getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues));
+            log.info("Post Default values added to the case: " + defaultValues);
+            caseData = ccdRequest.getCaseDetails().getCaseData();
+            log.info("Post Default caeData: " + caseData);
+        } else {
+            log.info("Error in PostDefaultValues");
+            errors.add("The payload is empty. Please make sure you have some data on your case");
+        }
         return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(ccdRequest.getCaseDetails().getCaseData())
+                .errors(errors)
+                .data(caseData)
                 .build());
     }
 
     private CaseData getCaseData(CaseData caseData, DefaultValues defaultValues) {
         if (caseData.getPositionType() == null) {
             caseData.setPositionType(defaultValues.getPositionType());
+        }
+        if (defaultValues.getManagingOffice() != null) {
+            caseData.setManagingOffice(defaultValues.getManagingOffice());
         }
         caseData.setTribunalCorrespondenceAddress(getTribunalCorrespondenceAddress(defaultValues));
         caseData.setTribunalCorrespondenceTelephone(defaultValues.getTribunalCorrespondenceTelephone());

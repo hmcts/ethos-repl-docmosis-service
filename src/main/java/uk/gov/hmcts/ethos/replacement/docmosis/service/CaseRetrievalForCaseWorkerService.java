@@ -14,7 +14,7 @@ import java.util.List;
 public class CaseRetrievalForCaseWorkerService {
 
     private static final String MESSAGE = "Failed to retrieve case for : ";
-    private CcdClient ccdClient;
+    private final CcdClient ccdClient;
 
     @Autowired
     public CaseRetrievalForCaseWorkerService(CcdClient ccdClient) {
@@ -27,7 +27,7 @@ public class CaseRetrievalForCaseWorkerService {
         log.info("Auth Token: " + authToken);
         log.info("Case Details: " + caseDetails);
         try {
-            return ccdClient.retrieveCase(authToken, caseDetails, "1550576532211563");
+            return ccdClient.retrieveCase(authToken, caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), "1550576532211563");
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }
@@ -39,7 +39,7 @@ public class CaseRetrievalForCaseWorkerService {
         log.info("Auth Token: " + authToken);
         log.info("Case Details: " + caseDetails);
         try {
-            return ccdClient.retrieveCases(authToken, caseDetails);
+            return ccdClient.retrieveCases(authToken, caseDetails.getCaseTypeId(), caseDetails.getJurisdiction());
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }

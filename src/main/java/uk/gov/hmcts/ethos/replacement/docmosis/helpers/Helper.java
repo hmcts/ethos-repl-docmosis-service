@@ -2,26 +2,20 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 public class Helper {
-
-    private static DateTimeFormatter OLD_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-    private static DateTimeFormatter NEW_DATE_PATTERN = DateTimeFormatter.ofPattern("E, d MMM yyyy");
-    private static DateTimeFormatter NEW_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("E, d MMM yyyy HH:mm:ss");
-    private static String NEW_LINE = "\",\n";
-    public static final String OUTPUT_FILE_NAME = "document.docx";
 
     private static String formatLocalDate(String date) {
         return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_DATE_TIME_PATTERN).format(NEW_DATE_PATTERN) : "";
@@ -39,10 +33,9 @@ public class Helper {
         return !isNullOrEmpty(date.toString()) ? date.format(NEW_DATE_PATTERN) : "";
     }
 
-    public static StringBuilder buildDocumentContent(CaseDetails caseDetails, String accessKey) {
+    public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey) {
         String FILE_EXTENSION = ".docx";
         StringBuilder sb = new StringBuilder();
-        CaseData caseData = caseDetails.getCaseData();
         String templateName = getTemplateName(caseData);
 
         // Start building the instruction
@@ -62,13 +55,21 @@ public class Helper {
 
         sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts\":\"")
                 .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
+        sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts1\":\"")
+                .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
+        sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts2\":\"")
+                .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
         sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts\":\"")
+                .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
+        sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts1\":\"")
+                .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
+        sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts2\":\"")
                 .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
 
         sb.append("\"Clerk\":\"").append(nullCheck(caseData.getClerkResponsible())).append(NEW_LINE);
         sb.append("\"Today_date\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
         sb.append("\"TodayPlus28Days\":\"").append(formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
-        sb.append("\"Case_No\":\"").append(nullCheck(caseDetails.getCaseData().getEthosCaseReference())).append(NEW_LINE);
+        sb.append("\"Case_No\":\"").append(nullCheck(caseData.getEthosCaseReference())).append(NEW_LINE);
 
         sb.append("}\n");
         sb.append("}\n");
@@ -140,13 +141,18 @@ public class Helper {
             }
         }
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+            AtomicInteger atomicInteger = new AtomicInteger(2);
             List<String> respOthers = caseData.getRespondentCollection()
                     .stream()
-                    .map(respondentSumTypeItem -> respondentSumTypeItem.getValue().getRespondentName())
+                    .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". " + respondentSumTypeItem.getValue().getRespondentName())
                     .collect(Collectors.toList());
-            sb.append("\"resp_others\":\"").append(String.join(", ", respOthers)).append(NEW_LINE);
+            sb.append("\"resp_others\":\"").append(String.join("\\n", respOthers)).append(NEW_LINE);
+            respondentType.ifPresent(respondentSumType -> sb.append("\"Respondent\":\"")
+                    .append(!isNullOrEmpty(respondentSumType.getRespondentName()) ? "1. " + respondentSumType.getRespondentName() : "").append(NEW_LINE));
+        } else {
+            respondentType.ifPresent(respondentSumType -> sb.append("\"Respondent\":\"")
+                    .append(Optional.ofNullable(respondentSumType.getRespondentName()).orElse("")).append(NEW_LINE));
         }
-        respondentType.ifPresent(respondentSumType -> sb.append("\"Respondent\":\"").append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE));
         return sb;
     }
 
@@ -160,7 +166,15 @@ public class Helper {
             sb.append("\"Hearing_venue\":\"").append(nullCheck(hearingType.getHearingVenue())).append(NEW_LINE);
             if (hearingType.getEstHearing() != null) {
                 sb.append("\"Hearing_duration\":\"").append(nullCheck(hearingType.getEstHearing().toString())).append(NEW_LINE);
+            } else {
+                sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
             }
+        } else {
+            sb.append("\"Hearing_date\":\"").append(NEW_LINE);
+            sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
+            sb.append("\"Hearing_venue\":\"").append(NEW_LINE);
+            sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
+
         }
         return sb;
     }
