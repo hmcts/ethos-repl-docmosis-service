@@ -63,8 +63,6 @@ public class BulkSearchService {
     public BulkCasesPayload bulkCasesRetrievalRequest(BulkDetails bulkDetails, String authToken) {
         try {
             List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
-            log.info("BulkDetails: " + bulkDetails);
-            log.info("CaseIds: " + caseIds);
             if (caseIds != null && !caseIds.isEmpty()) {
                 return filterSubmitEvents(ccdClient.retrieveCases(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                         bulkDetails.getJurisdiction()), caseIds, bulkDetails.getCaseData().getMultipleReference());
