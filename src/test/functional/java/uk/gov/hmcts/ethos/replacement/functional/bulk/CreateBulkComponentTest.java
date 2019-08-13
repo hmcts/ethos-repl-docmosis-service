@@ -7,10 +7,7 @@ import net.thucydides.core.annotations.WithTags;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
@@ -41,7 +38,6 @@ public class CreateBulkComponentTest {
     }
 
     @Test
-    @WithTag("SmokeTest")
     public void create_bulk_eng_individual_claimant_not_represented() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
@@ -83,7 +79,7 @@ public class CreateBulkComponentTest {
     }
 
     @Test
-    public void create_bulk_eng_some_cases_invalid() throws IOException {
+    public void create_bulk_eng_with_some_non_existant_cases() throws IOException {
         testUtil.loadAuthToken();
 
         String ethosCaseReference = testUtil.getUniqueCaseReference();
@@ -107,6 +103,130 @@ public class CreateBulkComponentTest {
     }
 
     @Test
+    public void create_bulk_eng_case_from_another_multiple() throws IOException {
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1), "UTF-8");
+        Response response;
+
+        testUtil.loadAuthToken();
+
+        caseList.clear();
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE2);
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE3);
+
+        int count = 1;
+        List<String> usedCaseReferences = new ArrayList<>();
+        for (String caseDataFilePath : caseList) {
+            String ethosCaseReference = testUtil.getUniqueCaseReference();
+            usedCaseReferences.add(ethosCaseReference);
+
+            String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
+            caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
+
+            CCDRequest ccdRequest = testUtil.getCcdRequest("1", "", false, caseDetails);
+            response = testUtil.getResponse(ccdRequest, Constants.CREATE_CASE_URI);
+
+            Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+            testData = testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseReference);
+            count++;
+        }
+
+        BulkRequest bulkRequest = testUtil.getBulkRequest(false, testData);
+        response = testUtil.getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        testData = testData.replace("34534543553", "84325743533");
+        bulkRequest = testUtil.getBulkRequest(false, testData);
+        response = testUtil.getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
+
+    }
+
+    @Test
+    public void create_bulk_eng_cases_with_status_submitted() throws IOException {
+        Response response;
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1), "UTF-8");
+
+        testUtil.loadAuthToken();
+
+        caseList.clear();
+        caseList.add(Constants.TEST_DATA_ENG_BULK7_CASE1);
+        caseList.add(Constants.TEST_DATA_ENG_BULK7_CASE2);
+        caseList.add(Constants.TEST_DATA_ENG_BULK7_CASE3);
+
+        int count = 1;
+        for (String caseDataFilePath : caseList) {
+            String ethosCaseReference = testUtil.getUniqueCaseReference();
+
+            String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
+            caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
+
+            CCDRequest ccdRequest = testUtil.getCcdRequest("1", "", false, caseDetails);
+            response = testUtil.getResponse(ccdRequest, Constants.CREATE_CASE_URI);
+
+            Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+            testData = testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseReference);
+            count++;
+        }
+
+        BulkRequest bulkRequest = testUtil.getBulkRequest(false, testData);
+        response = testUtil.getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
+
+    }
+
+    @Test
+    public void create_bulk_eng_add_case_from_glasgow() throws IOException {
+        Response response;
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1), "UTF-8");
+
+        testUtil.loadAuthToken();
+
+        caseList.clear();
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE2);
+
+        int count = 1;
+        for (String caseDataFilePath : caseList) {
+            String ethosCaseReference = testUtil.getUniqueCaseReference();
+
+            String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
+            caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
+
+            CCDRequest ccdRequest = testUtil.getCcdRequest("1", "", false, caseDetails);
+            response = testUtil.getResponse(ccdRequest, Constants.CREATE_CASE_URI);
+
+            Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+            testData = testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseReference);
+            count++;
+        }
+
+        caseList.clear();
+        caseList.add(Constants.TEST_DATA_SCOT_BULK2_CASE1);
+        for (String caseDataFilePath : caseList) {
+            String ethosCaseReference = testUtil.getUniqueCaseReference();
+
+            String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
+            caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
+
+            CCDRequest ccdRequest = testUtil.getCcdRequest("1", "", true, caseDetails);
+            response = testUtil.getResponse(ccdRequest, Constants.CREATE_CASE_URI);
+
+            Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+            testData = testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseReference);
+            count++;
+        }
+
+        BulkRequest bulkRequest = testUtil.getBulkRequest(false, testData);
+        response = testUtil.getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
+
+    }
+
+
+    @Test
     public void create_bulk_eng_all_cases_invalid() throws IOException {
         testUtil.loadAuthToken();
 
@@ -125,7 +245,17 @@ public class CreateBulkComponentTest {
     }
 
     @Test
-    @WithTag("SmokeTest")
+    public void create_bulk_eng_no_cases() throws IOException {
+        testUtil.loadAuthToken();
+
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK6), "UTF-8");
+
+        BulkRequest bulkRequest = testUtil.getBulkRequest(true, testData);
+        Response response = testUtil.getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI, 200);
+    }
+
+    @Test
+    @Ignore
     public void create_bulk_scot_individual_claimant_not_represented() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_SCOT_BULK1_CASE1);
@@ -156,6 +286,7 @@ public class CreateBulkComponentTest {
     }
 
     @Test
+    @Ignore
     public void create_bulk_scot_both_individual_and_company_claimants() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_SCOT_BULK1_CASE1);
