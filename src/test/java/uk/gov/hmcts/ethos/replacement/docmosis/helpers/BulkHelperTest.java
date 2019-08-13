@@ -62,6 +62,20 @@ public class BulkHelperTest {
     }
 
     @Test
+    public void getMultipleTypeListBySubmitEventListWithStates() {
+        submitEvents.get(0).setState("Submitted");
+        submitEvents.get(1).setState("Pending");
+        String result = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, multipleReferenceM=1234, " +
+                "clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , respondentRepM= , " +
+                "fileLocM=Manchester, receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM= , jurCodesCollectionM=AA, " +
+                "stateM=Submitted)), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, " +
+                "multipleReferenceM=1234, clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , " +
+                "respondentRepM= , fileLocM=Manchester, receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM= , " +
+                "jurCodesCollectionM=AA, stateM=Submitted))]";
+        assertEquals(result, BulkHelper.getMultipleTypeListBySubmitEventList(submitEvents, "1234").toString());
+    }
+
+    @Test
     public void getMultipleTypeListEmptyBySubmitEventList() {
         String result = "[]";
         assertEquals(result, BulkHelper.getMultipleTypeListBySubmitEventList(new ArrayList<>(), "1234").toString());
