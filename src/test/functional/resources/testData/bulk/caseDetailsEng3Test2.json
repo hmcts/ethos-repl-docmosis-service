@@ -2,27 +2,28 @@
   "token": "Bearer authToken",
   "event_id": "123456789",
   "case_details": {
-    "id": 1561736564850897,
+    "id": 1565175487782158,
     "jurisdiction": "EMPLOYMENT",
-    "state": "Submitted",
+    "state": "Accepted",
     "case_type_id": "Manchester_Dev",
     "security_classification": "PUBLIC",
     "case_data": {
-      "claimantWorkAddress": {
-        "claimant_work_address": {
-          "AddressLine1": "Library & Community Centre",
-          "AddressLine2": "1 Artizan Street",
-          "PostTown": "London",
-          "PostCode": "E1 7AF",
-          "Country": "United Kingdom"
-        }
-      },
+       "claimantWorkAddress": {
+          "claimant_work_address": {
+             "AddressLine1": "Library & Community Centre",
+             "AddressLine2": "1 Artizan Street",
+             "PostTown": "London",
+             "PostCode": "E1 7AF",
+             "Country": "United Kingdom"
+          }
+       },
       "positionType": "Manually Created",
+      "claimant_Company": "Sage Ltd",
       "claimantRepresentedQuestion": "No",
-      "receiptDate": "2019-05-20",
+      "receiptDate": "2019-07-20",
       "tribunalCorrespondenceDX": "DX 743570",
       "respondentSumType": {
-        "respondent_name": "Roadshow Pictures",
+        "respondent_name": "Warner Bros",
         "respondent_ACAS_question": "Yes",
         "respondent_ACAS": "83473985749",
         "respondent_address": {
@@ -40,8 +41,8 @@
       },
       "tribunalCorrespondenceTelephone": "0161 833 6100",
       "caseType": "Single",
-      "feeGroupReference": "893375993458",
-      "ethosCaseReference": "20 7254687 4321",
+      "feeGroupReference": "558756874568",
+      "ethosCaseReference": "#ETHOS-CASE-REFERENCE#",
       "claimantType": {
         "claimant_addressUK": {
           "AddressLine1": "232 Petticoat Square",
@@ -50,43 +51,39 @@
           "Country": "United Kingdom"
         }
       },
-      "claimantIndType": {
-        "claimant_title1": "Mr",
-        "claimant_first_names": "Antonio",
-        "claimant_last_name": "Banderas",
-        "claimant_gender": "Male"
-      },
-      "claimant_TypeOfClaimant": "Individual",
-      "correspondenceType": {
-        "topLevel_Documents": "#TOPLEVEL#",
-        "part_1_Documents": "#VERSION#"
-      },
+      "claimant_TypeOfClaimant": "Company",
       "tribunalCorrespondenceAddress": {
-        "AddressLine1": "Manchester Employment Tribunal,",
-        "AddressLine2": "Alexandra House,",
-        "AddressLine3": "14-22 The Parsonage,",
-        "PostTown": "Manchester,",
+        "AddressLine1": "Manchester Employment Tribunal",
+        "AddressLine2": "Alexandra House",
+        "AddressLine3": "14-22 The Parsonage",
+        "PostTown": "Manchester",
         "PostCode": "M3 2JA"
       },
-      "tribunalCorrespondenceEmail": "Manchesteret@justice.gov.uk"
+      "tribunalCorrespondenceEmail": "Manchesteret@justice.gov.uk",
+       "preAcceptCase":{
+          "caseAccepted":"Yes",
+          "dateAccepted":"2019-07-20"
+       },
+       "state": "Accepted"
     },
     "data_classification": {
-      "claimantWorkAddress": {
-        "classification": "PUBLIC",
-        "value": {
-          "claimant_work_address": {
-            "classification": "PUBLIC",
-            "value": {
-              "AddressLine1": "PUBLIC",
-              "AddressLine2": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "Country": "PUBLIC"
-            }
+       "claimantWorkAddress": {
+          "classification": "PUBLIC",
+          "value": {
+             "claimant_work_address": {
+                "classification": "PUBLIC",
+                "value": {
+                   "AddressLine1": "PUBLIC",
+                   "AddressLine2": "PUBLIC",
+                   "PostTown": "PUBLIC",
+                   "PostCode": "PUBLIC",
+                   "Country": "PUBLIC"
+                }
+             }
           }
-        }
-      },
+       },
       "positionType": "PUBLIC",
+      "claimant_Company": "PUBLIC",
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
       "tribunalCorrespondenceDX": "PUBLIC",
@@ -132,15 +129,6 @@
               "Country": "PUBLIC"
             }
           }
-        }
-      },
-      "claimantIndType": {
-        "classification": "PUBLIC",
-        "value": {
-          "claimant_title1": "PUBLIC",
-          "claimant_first_names": "PUBLIC",
-          "claimant_last_name": "PUBLIC",
-          "claimant_gender": "PUBLIC"
         }
       },
       "claimant_TypeOfClaimant": "PUBLIC",
@@ -162,22 +150,23 @@
     "delete_draft_response_status_code": null,
     "delete_draft_response_status": null,
     "security_classifications": {
-      "claimantWorkAddress": {
-        "classification": "PUBLIC",
-        "value": {
-          "claimant_work_address": {
-            "classification": "PUBLIC",
-            "value": {
-              "AddressLine1": "PUBLIC",
-              "AddressLine2": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "Country": "PUBLIC"
-            }
+       "claimantWorkAddress": {
+          "classification": "PUBLIC",
+          "value": {
+             "claimant_work_address": {
+                "classification": "PUBLIC",
+                "value": {
+                   "AddressLine1": "PUBLIC",
+                   "AddressLine2": "PUBLIC",
+                   "PostTown": "PUBLIC",
+                   "PostCode": "PUBLIC",
+                   "Country": "PUBLIC"
+                }
+             }
           }
-        }
-      },
+       },
       "positionType": "PUBLIC",
+      "claimant_Company": "PUBLIC",
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
       "tribunalCorrespondenceDX": "PUBLIC",
@@ -223,15 +212,6 @@
               "Country": "PUBLIC"
             }
           }
-        }
-      },
-      "claimantIndType": {
-        "classification": "PUBLIC",
-        "value": {
-          "claimant_title1": "PUBLIC",
-          "claimant_first_names": "PUBLIC",
-          "claimant_last_name": "PUBLIC",
-          "claimant_gender": "PUBLIC"
         }
       },
       "claimant_TypeOfClaimant": "PUBLIC",

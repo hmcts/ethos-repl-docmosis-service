@@ -165,9 +165,6 @@ public class CaseActionsForCaseWorkerController {
             log.info("Post Default values added to the case: " + defaultValues);
             caseData = ccdRequest.getCaseDetails().getCaseData();
             log.info("Post Default caeData: " + caseData);
-            if (caseData.getStateAPI() != null && caseData.getStateAPI().equals(PENDING_STATE)) {
-                caseData.setState("Pending");
-            }
         } else {
             log.info("Error in PostDefaultValues");
             errors.add("The payload is empty. Please make sure you have some data on your case");

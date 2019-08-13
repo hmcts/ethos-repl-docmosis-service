@@ -10,9 +10,9 @@ services:
     ports:
       - 8081:8081
     environment:
-      TORNADO_URL: "http://tornado:8090/rs/render"
+      TORNADO_URL: "http://tornado:8083/rs/render"
       TORNADO_ACCESS_KEY: ""
-      IDAM_API_URL: http://sidam-api:5000
+      IDAM_API_URL: "http://sidam-api:5000"
       DOCUMENT_MANAGEMENT_URL: "http://dm-store:8080"
       DOCUMENT_MANAGEMENT_CASEWORKERROLE: "caseworker-test"
       SERVICE_AUTH_PROVIDER_URL: "http://service-auth-provider-api:8080"
@@ -24,7 +24,7 @@ services:
     mem_limit: 300M
     mem_reservation: 200M
     ports:
-      - 8090:8090
+      - 8083:8083
     environment:
       DOCMOSIS_KEY: "FNAD-KLTH-JAMO-DKIA-JAEE-7ILH-YKFQ-FR42-A8FA-A-268E"
       DOCMOSIS_SITE: "Licensed To: Ministry Of Justice.  For use with single project: Reform Document Generation"
@@ -32,18 +32,10 @@ services:
 #      DOCMOSIS_KEY: "0OAD-KLTH-JALO-MLIA-DBBH-1ELH-XBKQ-GS91-23ED-8-2358"
 #      DOCMOSIS_SITE: "Free Trial License"
 
-#  tornado:
-#    image: docmosis/tornado
-#    ports:
-#      - 8080:8080
-#    volumes:
-#      - /tmp/templates
-#    environment:
-#      DOCMOSIS_KEY: "0OAD-KLTH-JALO-MLIA-DBBH-1ELH-XBKQ-GS91-23ED-8-2358"
-#      DOCMOSIS_SITE: "Free Trial License"
-
   ccd-user-profile-api:
     image: "${CCD_USER_PROFILE_API_USE_LOCAL-hmcts.azurecr.io/}hmcts/ccd-user-profile-api:${CCD_USER_PROFILE_API_TAG:-latest}"
+    mem_limit: 500M
+    mem_reservation: 400M
     environment:
       USER_PROFILE_DB_HOST: ccd-shared-database
       USER_PROFILE_DB_PORT: 5432
@@ -66,6 +58,8 @@ services:
 
   ccd-definition-store-api:
     image: "${CCD_DEFINITION_STORE_API_USE_LOCAL-hmcts.azurecr.io/}hmcts/ccd-definition-store-api:${CCD_DEFINITION_STORE_API_TAG:-latest}"
+    mem_limit: 1G
+    mem_reservation: 400M
     environment:
       DEFINITION_STORE_DB_HOST: ccd-shared-database
       DEFINITION_STORE_DB_PORT: 5432
@@ -97,6 +91,8 @@ services:
 
   ccd-data-store-api:
     image: "${CCD_DATA_STORE_API_USE_LOCAL-hmcts.azurecr.io/}hmcts/ccd-data-store-api:${CCD_DATA_STORE_API_TAG:-latest}"
+    mem_limit: 500M
+    mem_reservation: 400M
     environment:
       DATA_STORE_DB_HOST: ccd-shared-database
       DATA_STORE_DB_PORT: 5432
@@ -131,7 +127,9 @@ services:
       - service-auth-provider-api
 
   sidam-api:
-    image: hmcts.azurecr.io/hmcts/sidam/idam-api:latest
+    image: hmcts.azurecr.io/hmcts/sidam/idam-api:1.0.0
+    mem_limit: 1G
+    mem_reservation: 300M
     environment:
       JAVA_OPTS: -Xms128m -Xms512m -Dlogging.level.uk.gov.hmcts=DEBUG
       SPRING_DATASOURCE_URL: jdbc:postgresql://shared-db:5432/openidm?currentSchema=fridam
@@ -149,6 +147,8 @@ services:
 
   service-auth-provider-api:
     image: hmcts.azurecr.io/hmcts/rpe-service-auth-provider:latest
+    mem_limit: 400M
+    mem_reservation: 300M
     healthcheck:
       interval: 10s
       timeout: 10s
@@ -166,7 +166,7 @@ services:
       TESTING_SUPPORT_ENABLED: "true"
 
   fr-am:
-    image: hmcts.azurecr.io/hmcts/sidam/sidam-fr-am:latest
+    image: hmcts.azurecr.io/hmcts/sidam/sidam-fr-am:1.0.0
     ports:
       - 8080:8080
       - 1389:1389
@@ -174,7 +174,7 @@ services:
       - shared-db
 
   fr-idm:
-    image: hmcts.azurecr.io/hmcts/sidam/sidam-fr-idm:latest
+    image: hmcts.azurecr.io/hmcts/sidam/sidam-fr-idm:1.0.0
     ports:
       - 18080:18080
       - 9010:9010
@@ -186,6 +186,9 @@ services:
 
   smtp-server:
     image: mailhog/mailhog
+    mem_limit: 10M
+    mem_reservation: 5M
+
 
   ccd-shared-database:
     build: ../database
@@ -202,12 +205,16 @@ services:
       - ccd-docker-ccd-shared-database-data:/var/lib/postgresql/data
 
   shared-db:
-    image: hmcts.azurecr.io/hmcts/sidam/sidam-idm-pg:latest
+    image: hmcts.azurecr.io/hmcts/sidam/sidam-idm-pg:1.0.0
+    mem_limit: 500M
+    mem_reservation: 100M
     ports:
       - 5051:5432
 
   am-database:
     image: hmcts.azurecr.io/am-db
+    mem_limit: 500M
+    mem_reservation: 100M
     container_name: access_management_db
     environment:
       AM_DB:

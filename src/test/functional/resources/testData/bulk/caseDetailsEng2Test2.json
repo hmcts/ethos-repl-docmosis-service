@@ -2,12 +2,13 @@
   "token": "Bearer authToken",
   "event_id": "123456789",
   "case_details": {
-    "id": 1561739920240969,
+    "id": 1565174477547366,
     "jurisdiction": "EMPLOYMENT",
-    "state": "2_Accepted",
-    "case_type_id": "Glasgow_Dev",
+    "state": "Accepted",
+    "case_type_id": "Manchester_Dev",
     "security_classification": "PUBLIC",
     "case_data": {
+      "state": "Accepted",
       "claimantWorkAddress": {
         "claimant_work_address": {
           "AddressLine1": "Library & Community Centre",
@@ -18,13 +19,9 @@
         }
       },
       "positionType": "Manually Created",
-      "claimantRepresentedQuestion": "No",
-      "receiptDate": "2019-05-20",
-      "tribunalCorrespondenceDX": "DX 580003",
-      "preAcceptCase": {
-        "caseAccepted": "Yes",
-        "dateAccepted": "2019-05-20"
-      },
+      "claimantRepresentedQuestion": "Yes",
+      "receiptDate": "2019-07-20",
+      "tribunalCorrespondenceDX": "DX 743570",
       "respondentSumType": {
         "respondent_name": "Roadshow Pictures",
         "respondent_ACAS_question": "Yes",
@@ -37,57 +34,51 @@
           "Country": "United Kingdom"
         }
       },
-      "tribunalCorrespondenceFax": "01264 785 177",
+      "tribunalCorrespondenceFax": "0870 739 4433",
       "claimantOtherType": {
         "claimant_employed_currently": "No",
         "claimant_disabled": "No"
       },
-      "correspondenceScotType": {
-        "topLevel_Scot_Documents": "#TOPLEVEL#",
-        "part_1_Scot_Documents": "#VERSION#"
-      },
-      "tribunalCorrespondenceTelephone": "0141 204 0730",
+      "tribunalCorrespondenceTelephone": "0161 833 6100",
       "caseType": "Single",
-      "feeGroupReference": "839458739854",
-      "ethosCaseReference": "20 7254687 1231",
+      "feeGroupReference": "356576845758",
+      "ethosCaseReference": "#ETHOS-CASE-REFERENCE#",
       "claimantType": {
         "claimant_addressUK": {
-          "AddressLine1": "54 Princes St",
-          "PostTown": "Edinburgh",
-          "PostCode": "EH2 2DQ",
+          "AddressLine1": "232 Petticoat Square",
+          "PostTown": "London",
+          "PostCode": "W10 4AG",
           "Country": "United Kingdom"
         }
       },
       "claimantIndType": {
         "claimant_title1": "Mr",
-        "claimant_first_names": "Antonio",
-        "claimant_last_name": "Banderas",
-        "claimant_gender": "Male"
+        "claimant_first_names": "Sean",
+        "claimant_last_name": "Connery"
       },
       "claimant_TypeOfClaimant": "Individual",
       "tribunalCorrespondenceAddress": {
-        "AddressLine1": "Eagle Building,",
-        "AddressLine2": "215 Bothwell Street,",
-        "PostTown": "Glasgow,",
-        "PostCode": "G2 7TS"
+        "AddressLine1": "Manchester Employment Tribunal",
+        "AddressLine2": "Alexandra House",
+        "AddressLine3": "14-22 The Parsonage",
+        "PostTown": "Manchester",
+        "PostCode": "M3 2JA"
       },
-      "tribunalCorrespondenceEmail": "glasgowet@justice.gov.uk",
-      "repCollection": [
-        {
-          "value": {
-            "resp_rep_name": "Roadshow Pictures",
-            "name_of_representative": "Al Pacino",
-            "name_of_organisation": "Pacino Practice",
-            "representative_occupation": "Solicitor",
-            "representative_address": {
-              "AddressLine1": "20 Castle St,",
-              "PostTown": "Edinburgh",
-              "PostCode": "EH2 3AT"
-            }
-          },
-          "id": "3847827e-1cba-4525-8fe0-9c7ade99ec48"
+      "tribunalCorrespondenceEmail": "Manchesteret@justice.gov.uk",
+      "preAcceptCase": {
+        "caseAccepted": "Yes",
+        "dateAccepted": "2019-07-20"
+      },
+      "representativeClaimantType": {
+        "name_of_representative": "Danny Devito",
+        "name_of_organisation": "Thompsons Solicitors",
+        "representative_occupation": "Solicitor",
+        "representative_address": {
+          "AddressLine1": "20 Castle St,",
+          "PostTown": "Edinburgh",
+          "PostCode": "EH2 3AT"
         }
-      ]
+      }
     },
     "data_classification": {
       "claimantWorkAddress": {
@@ -109,13 +100,6 @@
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
       "tribunalCorrespondenceDX": "PUBLIC",
-      "preAcceptCase": {
-        "classification": "PUBLIC",
-        "value": {
-          "caseAccepted": "PUBLIC",
-          "dateAccepted": "PUBLIC"
-        }
-      },
       "respondentSumType": {
         "classification": "PUBLIC",
         "value": {
@@ -142,13 +126,6 @@
           "claimant_disabled": "PUBLIC"
         }
       },
-      "correspondenceScotType": {
-        "classification": "PUBLIC",
-        "value": {
-          "topLevel_Scot_Documents": "PUBLIC",
-          "part_1_Scot_Documents": "PUBLIC"
-        }
-      },
       "tribunalCorrespondenceTelephone": "PUBLIC",
       "caseType": "PUBLIC",
       "feeGroupReference": "PUBLIC",
@@ -172,8 +149,7 @@
         "value": {
           "claimant_title1": "PUBLIC",
           "claimant_first_names": "PUBLIC",
-          "claimant_last_name": "PUBLIC",
-          "claimant_gender": "PUBLIC"
+          "claimant_last_name": "PUBLIC"
         }
       },
       "claimant_TypeOfClaimant": "PUBLIC",
@@ -182,40 +158,32 @@
         "value": {
           "AddressLine1": "PUBLIC",
           "AddressLine2": "PUBLIC",
+          "AddressLine3": "PUBLIC",
           "PostTown": "PUBLIC",
           "PostCode": "PUBLIC"
         }
       },
       "tribunalCorrespondenceEmail": "PUBLIC",
-      "repCollection": {
+      "representativeClaimantType": {
         "classification": "PUBLIC",
-        "value": [
-          {
+        "value": {
+          "name_of_representative": "PUBLIC",
+          "name_of_organisation": "PUBLIC",
+          "representative_occupation": "PUBLIC",
+          "representative_address": {
+            "classification": "PUBLIC",
             "value": {
-              "resp_rep_name": "PUBLIC",
-              "name_of_representative": "PUBLIC",
-              "name_of_organisation": "PUBLIC",
-              "representative_occupation": "PUBLIC",
-              "representative_address": {
-                "classification": "PUBLIC",
-                "value": {
-                  "AddressLine1": "PUBLIC",
-                  "PostTown": "PUBLIC",
-                  "PostCode": "PUBLIC"
-                }
-              }
-            },
-            "id": "3847827e-1cba-4525-8fe0-9c7ade99ec48"
+              "AddressLine1": "PUBLIC",
+              "PostTown": "PUBLIC",
+              "PostCode": "PUBLIC"
+            }
           }
-        ]
+        }
       }
     },
-    "after_submit_callback_response": {
-      "confirmation_header": "Please download the document from : <a target=\"_blank\" href=\"http://127.0.0.1:3453/documents/58278f52-943c-4237-9a40-f74f1bd9e317/binary\">Document</a>",
-      "confirmation_body": null
-    },
-    "callback_response_status_code": 200,
-    "callback_response_status": "CALLBACK_COMPLETED",
+    "after_submit_callback_response": null,
+    "callback_response_status_code": null,
+    "callback_response_status": null,
     "delete_draft_response_status_code": null,
     "delete_draft_response_status": null,
     "security_classifications": {
@@ -238,13 +206,6 @@
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
       "tribunalCorrespondenceDX": "PUBLIC",
-      "preAcceptCase": {
-        "classification": "PUBLIC",
-        "value": {
-          "caseAccepted": "PUBLIC",
-          "dateAccepted": "PUBLIC"
-        }
-      },
       "respondentSumType": {
         "classification": "PUBLIC",
         "value": {
@@ -271,13 +232,6 @@
           "claimant_disabled": "PUBLIC"
         }
       },
-      "correspondenceScotType": {
-        "classification": "PUBLIC",
-        "value": {
-          "topLevel_Scot_Documents": "PUBLIC",
-          "part_1_Scot_Documents": "PUBLIC"
-        }
-      },
       "tribunalCorrespondenceTelephone": "PUBLIC",
       "caseType": "PUBLIC",
       "feeGroupReference": "PUBLIC",
@@ -301,8 +255,7 @@
         "value": {
           "claimant_title1": "PUBLIC",
           "claimant_first_names": "PUBLIC",
-          "claimant_last_name": "PUBLIC",
-          "claimant_gender": "PUBLIC"
+          "claimant_last_name": "PUBLIC"
         }
       },
       "claimant_TypeOfClaimant": "PUBLIC",
@@ -311,32 +264,27 @@
         "value": {
           "AddressLine1": "PUBLIC",
           "AddressLine2": "PUBLIC",
+          "AddressLine3": "PUBLIC",
           "PostTown": "PUBLIC",
           "PostCode": "PUBLIC"
         }
       },
       "tribunalCorrespondenceEmail": "PUBLIC",
-      "repCollection": {
+      "representativeClaimantType": {
         "classification": "PUBLIC",
-        "value": [
-          {
+        "value": {
+          "name_of_representative": "PUBLIC",
+          "name_of_organisation": "PUBLIC",
+          "representative_occupation": "PUBLIC",
+          "representative_address": {
+            "classification": "PUBLIC",
             "value": {
-              "resp_rep_name": "PUBLIC",
-              "name_of_representative": "PUBLIC",
-              "name_of_organisation": "PUBLIC",
-              "representative_occupation": "PUBLIC",
-              "representative_address": {
-                "classification": "PUBLIC",
-                "value": {
-                  "AddressLine1": "PUBLIC",
-                  "PostTown": "PUBLIC",
-                  "PostCode": "PUBLIC"
-                }
-              }
-            },
-            "id": "3847827e-1cba-4525-8fe0-9c7ade99ec48"
+              "AddressLine1": "PUBLIC",
+              "PostTown": "PUBLIC",
+              "PostCode": "PUBLIC"
+            }
           }
-        ]
+        }
       }
     }
   }
