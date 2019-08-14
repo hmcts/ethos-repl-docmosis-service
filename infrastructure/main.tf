@@ -4,22 +4,17 @@ provider "azurerm" {
 
 locals {
 
-  aseName = "core-compute-${var.env}"
-  local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
-  local_ase = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "core-compute-aat" : "core-compute-saat" : local.aseName}"
-  env_ase_url = "${local.local_env}.service.${local.local_ase}.internal"
-
   app = "repl-docmosis-backend"
   create_api = "${var.env != "preview" && var.env != "spreview"}"
 
   previewVaultName = "${var.product}-aat"
   nonPreviewVaultName = "${var.product}-${var.env}"
   vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
+  vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
   previewVaultGroupName = "${var.product}-${local.app}-aat"
   nonPreviewVaultGroupName = "${var.product}-${local.app}-${var.env}"
   vaultGroupName = "${var.env == "preview" ? local.previewVaultGroupName : local.nonPreviewVaultGroupName}"
 
-  s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
 }
 
 module "repl-docmosis-backend" {
@@ -49,11 +44,6 @@ module "repl-docmosis-backend" {
   }
 }
 
-data "azurerm_key_vault" "s2s_vault" {
-  name = "s2s-${local.local_env}"
-  resource_group_name = "rpe-service-auth-provider-${local.local_env}"
-}
-
 data "azurerm_key_vault" "ethos_key_vault" {
   name                = "${local.vaultName}"
   resource_group_name = "${local.vaultGroupName}"
@@ -61,12 +51,12 @@ data "azurerm_key_vault" "ethos_key_vault" {
 
 data "azurerm_key_vault_secret" "ethos-repl-service-s2s-secret" {
   name = "ethos-repl-service-s2s-secret"
-  key_vault_id = "${data.azurerm_key_vault.s2s_vault.id}"
+  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
 }
 
 data "azurerm_key_vault_secret" "tornado_access_key" {
   name = "tornado-access-key"
-  key_vault_id = "${data.azurerm_key_vault.ethos_key_vault.id}"
+  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
 }
 
 module "key-vault" {
