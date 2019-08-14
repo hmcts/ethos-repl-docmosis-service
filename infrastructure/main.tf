@@ -5,6 +5,8 @@ provider "azurerm" {
 locals {
 
   local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
+  local_ase = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "core-compute-aat" : "core-compute-saat" : local.aseName}"
+  env_ase_url = "${local.local_env}.service.${local.local_ase}.internal"
 
   app = "repl-docmosis-backend"
   create_api = "${var.env != "preview" && var.env != "spreview"}"
@@ -16,6 +18,7 @@ locals {
   nonPreviewVaultGroupName = "${var.product}-${local.app}-${var.env}"
   vaultGroupName = "${var.env == "preview" ? local.previewVaultGroupName : local.nonPreviewVaultGroupName}"
 
+  s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
 }
 
 module "repl-docmosis-backend" {
