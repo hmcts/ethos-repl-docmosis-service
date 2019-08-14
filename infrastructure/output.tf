@@ -18,3 +18,7 @@ output "idam_api_url" {
 output "ccd_data_store_api_url" {
   value = "${var.ccd_data_store_api_url}"
 }
+
+output "s2s_url" {
+  value = "${local.s2s_url}"
+}
