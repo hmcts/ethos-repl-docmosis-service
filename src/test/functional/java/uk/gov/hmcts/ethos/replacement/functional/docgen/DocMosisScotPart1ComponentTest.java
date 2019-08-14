@@ -42,7 +42,7 @@ public class DocMosisScotPart1ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "", "Your claim has been accepted at this office and the case file has been transferred to the Aberdeen office", true);
+        testUtil.executeGenerateDocumentTest("3", "", "ACKNOWLEDGEMENT OF CLAIM", true);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class DocMosisScotPart1ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_7_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "1", "You should do this by completing and returning the enclosed response form to ETS, Mezzanine Floor, Atholl House, 84-88 Guild Street, Aberdeen AB11 6LT", true);
+        testUtil.executeGenerateDocumentTest("7", "1", "NOTICE OF CLAIM", true);
     }
 
     @Test
