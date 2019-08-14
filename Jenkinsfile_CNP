@@ -6,10 +6,14 @@ def type = "java"
 def product = "ethos"
 def component = "repl-docmosis-backend"
 
-List<LinkedHashMap<String, Object>> secrets = [
-  secret('AppInsightsInstrumentationKey', 'APPINSIGHTS_INSTRUMENTATIONKEY'),
-  secret('ethos-repl-service-s2s-secret', 'ETHOS_S2S_SECRET_KEY'),
-  secret('tornado-access-key', 'TORNADO_ACCESS_KEY')
+def secrets = [
+  'ethos-${env}': [
+    secret('AppInsightsInstrumentationKey', 'APPINSIGHTS_INSTRUMENTATIONKEY'),
+    secret('tornado-access-key', 'TORNADO_ACCESS_KEY')
+  ],
+  's2s-${env}' : [
+    secret('microservicekey-ethos-repl-service', 'ETHOS_S2S_SECRET_KEY')
+  ]
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
