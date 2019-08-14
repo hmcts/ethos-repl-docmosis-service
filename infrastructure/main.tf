@@ -9,7 +9,6 @@ locals {
   previewVaultName = "${var.product}-aat"
   nonPreviewVaultName = "${var.product}-${var.env}"
   vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
-  vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
   previewVaultGroupName = "${var.product}-${local.app}-aat"
   nonPreviewVaultGroupName = "${var.product}-${local.app}-${var.env}"
   vaultGroupName = "${var.env == "preview" ? local.previewVaultGroupName : local.nonPreviewVaultGroupName}"
@@ -50,12 +49,12 @@ data "azurerm_key_vault" "ethos_key_vault" {
 
 data "azurerm_key_vault_secret" "ethos-repl-service-s2s-secret" {
   name = "ethos-repl-service-s2s-secret"
-  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.ethos_key_vault.id}"
 }
 
 data "azurerm_key_vault_secret" "tornado_access_key" {
   name = "tornado-access-key"
-  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.ethos_key_vault.id}"
 }
 
 module "key-vault" {
