@@ -3,6 +3,9 @@ provider "azurerm" {
 }
 
 locals {
+
+  local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
+
   app = "repl-docmosis-backend"
   create_api = "${var.env != "preview" && var.env != "spreview"}"
 
@@ -42,6 +45,11 @@ module "repl-docmosis-backend" {
   }
 }
 
+data "azurerm_key_vault" "s2s_vault" {
+  name = "s2s-${local.local_env}"
+  resource_group_name = "rpe-service-auth-provider-${local.local_env}"
+}
+
 data "azurerm_key_vault" "ethos_key_vault" {
   name                = "${local.vaultName}"
   resource_group_name = "${local.vaultGroupName}"
@@ -49,7 +57,7 @@ data "azurerm_key_vault" "ethos_key_vault" {
 
 data "azurerm_key_vault_secret" "ethos-repl-service-s2s-secret" {
   name = "ethos-repl-service-s2s-secret"
-  key_vault_id = "${data.azurerm_key_vault.ethos_key_vault.id}"
+  key_vault_id = "${data.azurerm_key_vault.s2s_vault.id}"
 }
 
 data "azurerm_key_vault_secret" "tornado_access_key" {
