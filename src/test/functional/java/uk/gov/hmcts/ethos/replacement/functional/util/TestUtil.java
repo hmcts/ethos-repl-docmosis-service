@@ -116,8 +116,8 @@ public class TestUtil {
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
-        else ccdRequest = getCcdRequest("1", "", false, testData);
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
+        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
 
         Response response = getResponse(ccdRequest, Constants.POST_DEFAULT_URI);
 
