@@ -3,6 +3,7 @@ provider "azurerm" {
 }
 
 locals {
+
   app = "repl-docmosis-backend"
   create_api = "${var.env != "preview" && var.env != "spreview"}"
 
