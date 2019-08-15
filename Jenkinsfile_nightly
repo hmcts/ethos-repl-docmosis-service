@@ -16,36 +16,9 @@ def type = "java"
 def product = "ethos"
 def component = "repl-docmosis-backend"
 
-List<LinkedHashMap<String, Object>> secrets = [
-  secret('AppInsightsInstrumentationKey', 'APPINSIGHTS_INSTRUMENTATIONKEY'),
-  secret('ethos-repl-service-s2s-secret', 'ETHOS_S2S_SECRET_KEY'),
-  secret('tornado-access-key', 'TORNADO_ACCESS_KEY')
-]
-
-static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
-  [ $class: 'AzureKeyVaultSecret',
-    secretType: 'Secret',
-    name: secretName,
-    version: '',
-    envVariable: envVar
-  ]
-}
-
 withNightlyPipeline(type, product, component) {
     env.TEST_URL = params.URL_TO_TEST
+
     env.Rules = params.SecurityRules
-
-    setVaultName('ethos-aat')
-    loadVaultSecrets(secrets)
-    enableDockerBuild()
-    installCharts()
-    enableSlackNotifications('#ethos-repl-service')
-
-    enableFullFunctionalTest()
-
-    after('fullFunctionalTest') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
-    }
-
     enableSecurityScan()
 }
