@@ -1,6 +1,6 @@
 #!groovy
 
-properties([
+properties[
         pipelineTriggers([cron('15 01 * * *')]),
         parameters([
                 string(name: 'URL_TO_TEST', defaultValue: 'http://ethos-repl-docmosis-backend-aat.service.core-compute-aat.internal', description: 'The URL you want to run these tests against'),
@@ -8,7 +8,7 @@ properties([
                         defaultValue: 'https://raw.githubusercontent.com/hmcts/security-test-rules/master/conf/security-rules.conf',
                         description: 'The URL you want to run these tests against'),
         ])
-    ])
+]
 
 @Library("Infrastructure")
 
@@ -26,30 +26,9 @@ def secrets = [
         ]
 ]
 
-static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
-  [ $class: 'AzureKeyVaultSecret',
-    secretType: 'Secret',
-    name: secretName,
-    version: '',
-    envVariable: envVar
-  ]
-}
-
 withNightlyPipeline(type, product, component) {
     env.TEST_URL = params.URL_TO_TEST
+
     env.Rules = params.SecurityRules
-
-    setVaultName('ethos-aat')
-    loadVaultSecrets(secrets)
-    enableDockerBuild()
-    installCharts()
-    enableSlackNotifications('#ethos-repl-service')
-
-    enableFullFunctionalTest()
-
-    after('fullFunctionalTest') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
-    }
-
     enableSecurityScan()
 }
