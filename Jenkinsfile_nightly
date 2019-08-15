@@ -16,16 +16,6 @@ def type = "java"
 def product = "ethos"
 def component = "repl-docmosis-backend"
 
-def secrets = [
-        'ethos-${env}': [
-                secret('AppInsightsInstrumentationKey', 'APPINSIGHTS_INSTRUMENTATIONKEY'),
-                secret('tornado-access-key', 'TORNADO_ACCESS_KEY')
-        ],
-        's2s-${env}' : [
-                secret('ethos-repl-service-s2s-secret', 'ETHOS_S2S_SECRET_KEY')
-        ]
-]
-
 withNightlyPipeline(type, product, component) {
     env.TEST_URL = params.URL_TO_TEST
 
