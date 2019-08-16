@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
+import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
+@Slf4j
 public class Helper {
 
     private static String formatLocalDate(String date) {
@@ -94,7 +96,9 @@ public class Helper {
         Optional<ClaimantIndType> claimantIndType = Optional.ofNullable(caseData.getClaimantIndType());
         if (representedTypeC != null) {
             sb.append("\"claimant_full_name\":\"").append(nullCheck(representedTypeC.getNameOfRepresentative())).append(NEW_LINE);
-            sb.append(getClaimantAddressUK(representedTypeC.getRepresentativeAddress()));
+            if (representedTypeC.getRepresentativeAddress()!= null) {
+                sb.append(getClaimantAddressUK(representedTypeC.getRepresentativeAddress()));
+            }
             sb.append("\"claimant_reference\":\"").append(nullCheck(representedTypeC.getRepresentativeReference())).append(NEW_LINE);
             claimantIndType.ifPresent(claimantIndType1 -> sb.append("\"Claimant\":\"").append(nullCheck(claimantIndType1.claimantFullName())).append(NEW_LINE));
         } else {
@@ -132,7 +136,9 @@ public class Helper {
         if (representedTypeRList != null && !representedTypeRList.isEmpty()) {
             RepresentedTypeR representedTypeR = representedTypeRList.get(0).getValue();
             sb.append("\"respondent_full_name\":\"").append(nullCheck(representedTypeR.getNameOfRepresentative())).append(NEW_LINE);
-            sb.append(getRespondentAddressUK(representedTypeR.getRepresentativeAddress()));
+            if (representedTypeR.getRepresentativeAddress() != null) {
+                sb.append(getRespondentAddressUK(representedTypeR.getRepresentativeAddress()));
+            }
             sb.append("\"respondent_reference\":\"").append(nullCheck(representedTypeR.getRepresentativeReference())).append(NEW_LINE);
         } else {
             if (respondentType.isPresent()) {
