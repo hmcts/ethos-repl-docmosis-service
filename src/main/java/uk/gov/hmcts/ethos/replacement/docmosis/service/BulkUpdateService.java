@@ -56,14 +56,14 @@ public class BulkUpdateService {
 
         List<String> errors = new ArrayList<>();
         if (searchTypeItemList == null) {
-            errors.add("There is not searchable list in the bulk case yet");
+            errors.add("There is not searchable list in the multiple case yet");
         } else {
             String multipleReferenceV2 = bulkDetails.getCaseData().getMultipleReferenceV2();
             MultRefComplexType multRefComplexType = checkMultipleReferenceExists(bulkDetails, userToken, multipleReferenceV2);
             // 2) Check if new multiple reference exists or it has the same as the current bulk
             if (!isNullOrEmpty(multipleReferenceV2)) {
                 if (!multRefComplexType.isExist() || multipleReferenceV2.equals(bulkDetails.getCaseData().getMultipleReference())) {
-                    errors.add("Multiple reference does not exist or it is the same as the current bulk");
+                    errors.add("Multiple reference does not exist or it is the same as the current multiple case");
                 }
             }
             log.info("multipleReferenceV2: " + multipleReferenceV2);

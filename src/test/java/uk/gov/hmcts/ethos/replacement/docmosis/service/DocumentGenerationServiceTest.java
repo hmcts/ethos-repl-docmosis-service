@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.SearchType;
@@ -36,6 +37,7 @@ public class DocumentGenerationServiceTest {
     private CCDRequest ccdRequest;
     private BulkRequest bulkRequest;
     private DocumentInfo documentInfo;
+    private BulkDocumentInfo bulkDocumentInfo;
     @Mock
     private CcdClient ccdClient;
 
@@ -59,6 +61,9 @@ public class DocumentGenerationServiceTest {
         bulkRequest.setCaseDetails(bulkDetails);
         documentGenerationService = new DocumentGenerationService(tornadoService, ccdClient);
         documentInfo = DocumentInfo.builder().description("resources/example.json").build();
+        bulkDocumentInfo = new BulkDocumentInfo();
+        bulkDocumentInfo.setMarkUps(documentInfo.getMarkUp());
+        bulkDocumentInfo.setErrors(new ArrayList<>());
     }
 
     @Test(expected = Exception.class)
@@ -83,8 +88,8 @@ public class DocumentGenerationServiceTest {
         when(tornadoService.documentGeneration(anyString(), any())).thenReturn(documentInfo);
         when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
 
-        List<DocumentInfo> documentInfo1 = documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");
-        assertEquals(new ArrayList<>(Collections.singletonList(documentInfo)), documentInfo1);
+        BulkDocumentInfo bulkDocumentInfo1 = documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");
+        assertEquals(bulkDocumentInfo.toString(), bulkDocumentInfo1.toString());
     }
 
     @Test(expected = Exception.class)
