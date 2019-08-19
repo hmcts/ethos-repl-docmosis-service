@@ -132,6 +132,14 @@ public class CcdClient {
         return restTemplate.exchange(uri, HttpMethod.GET, request, CCDRequest.class).getBody();
     }
 
+    public CCDRequest startEventForCasePreAcceptBulkSingle(String authToken, String caseTypeId, String jurisdiction, String cid) throws IOException {
+        HttpEntity<String> request =
+                new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
+        String uri = ccdClientConfig.buildStartEventForCaseUrlPreAcceptBulkSingle(userService.getUserDetails(authToken).getId(), jurisdiction,
+                caseTypeId, cid);
+        return restTemplate.exchange(uri, HttpMethod.GET, request, CCDRequest.class).getBody();
+    }
+
     public CCDRequest startBulkEventForCase(String authToken, String caseTypeId, String jurisdiction, String cid) throws IOException {
         HttpEntity<String> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));

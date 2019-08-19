@@ -7,6 +7,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
@@ -32,7 +33,6 @@ public class DocumentGenerationService {
 
     public DocumentInfo processDocumentRequest(CCDRequest ccdRequest, String authToken) {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
-        log.info("Auth Token: " + authToken);
         log.info("Case Details: " + caseDetails);
         try {
             return tornadoService.documentGeneration(authToken, caseDetails.getCaseData());
@@ -41,10 +41,12 @@ public class DocumentGenerationService {
         }
     }
 
-    public List<DocumentInfo> processBulkDocumentRequest(BulkRequest bulkRequest, String authToken) {
+    public BulkDocumentInfo processBulkDocumentRequest(BulkRequest bulkRequest, String authToken) {
+        BulkDocumentInfo bulkDocumentInfo = new BulkDocumentInfo();
         BulkDetails bulkDetails = bulkRequest.getCaseDetails();
-        log.info("Auth Token: " + authToken);
         log.info("Case Details: " + bulkDetails);
+        List<String> errors = new ArrayList<>();
+        String markUps = "";
         try {
             List<DocumentInfo> documentInfoList = new ArrayList<>();
             if (bulkDetails.getCaseData().getSearchCollection() != null && !bulkDetails.getCaseData().getSearchCollection().isEmpty()) {
@@ -52,14 +54,23 @@ public class DocumentGenerationService {
                         bulkDetails.getJurisdiction()), bulkDetails.getCaseData().getSearchCollection());
                 for (CaseData caseData : caseDataResultList) {
                     log.info("Generating document for: " + caseData.getEthosCaseReference());
-                    //TODO  aaaaaaaaaaadddddd the correspondenceType and correspondenceScotType from Bulk as well
+                    caseData.setCorrespondenceType(bulkDetails.getCaseData().getCorrespondenceType());
+                    caseData.setCorrespondenceScotType(bulkDetails.getCaseData().getCorrespondenceScotType());
                     documentInfoList.add(tornadoService.documentGeneration(authToken, caseData));
                 }
             }
-            return documentInfoList;
+            if (documentInfoList.isEmpty()) {
+                errors.add("There are not cases searched to generate letters");
+            } else {
+                markUps = documentInfoList.stream().map(DocumentInfo::getMarkUp).collect(Collectors.joining(", "));
+            }
         } catch (Exception ex) {
             throw new DocumentManagementException(MESSAGE + bulkDetails.getCaseId() + ex.getMessage());
         }
+        bulkDocumentInfo.setErrors(errors);
+        bulkDocumentInfo.setMarkUps(markUps);
+        log.info("Markups: " + markUps);
+        return bulkDocumentInfo;
     }
 
     private List<CaseData> filterCasesById(List<SubmitEvent> submitEvents, List<SearchTypeItem> searchTypeItems) {

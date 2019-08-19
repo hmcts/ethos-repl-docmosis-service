@@ -11,16 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkCallbackResponse;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDCallbackResponse;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -151,20 +147,12 @@ public class BulkActionsController {
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("GENERATE BULK LETTER ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
-        List<DocumentInfo> documentInfoList = documentGenerationService.processBulkDocumentRequest(bulkRequest, userToken);
-        List<String> errors = new ArrayList<>();
-        String markUps = "";
-        if (documentInfoList.isEmpty()) {
-            errors.add("There are not cases searched to generate letters");
-        } else {
-            markUps = documentInfoList.stream().map(DocumentInfo::getMarkUp).collect(Collectors.joining(", "));
-            log.info("Markups: " + markUps);
-        }
+        BulkDocumentInfo bulkDocumentInfo = documentGenerationService.processBulkDocumentRequest(bulkRequest, userToken);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
-                .errors(errors)
+                .errors(bulkDocumentInfo.getErrors())
                 .data(bulkRequest.getCaseDetails().getCaseData())
-                .confirmation_header(GENERATED_DOCUMENTS_URL + markUps)
+                .confirmation_header(GENERATED_DOCUMENTS_URL + bulkDocumentInfo.getMarkUps())
 //                .significant_item(SignificantItem.builder()
 //                        .url(documentInfo.getUrl())
 //                        .description(documentInfo.getDescription())
