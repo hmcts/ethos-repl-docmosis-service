@@ -25,6 +25,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -208,6 +209,38 @@ public class TestUtil {
         verifyBulkResponse(testData, response);
     }
 
+    //End-point /preAcceptCase
+    public String executePreAcceptCaseTest(String caseCreationFilePath, String caseUpdationFilePath, boolean isScotland) throws IOException {
+        CCDRequest ccdRequest;
+        Response response;
+
+        loadAuthToken();
+
+        String ethosCaseReference = getUniqueCaseReference();
+
+        String caseDetails = FileUtils.readFileToString(new File(caseCreationFilePath), "UTF-8");
+        caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
+
+        ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
+        response = getResponse(ccdRequest, Constants.CREATE_CASE_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        caseDetails = FileUtils.readFileToString(new File(caseUpdationFilePath), "UTF-8");
+        caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
+
+        ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
+        response = getResponse(ccdRequest, Constants.PRE_ACCEPT_CASE);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        verifyCaseStatus(caseDetails, response);
+
+        return ethosCaseReference;
+    }
+
+
+
     //General methods
     public String getEnvironment() {
         return this.environment;
@@ -292,6 +325,17 @@ public class TestUtil {
 
         Assert.assertEquals(caseTitle, response.body().jsonPath().getString("data.bulkCaseTitle"));
         Assert.assertEquals(caseReference, response.body().jsonPath().getString("data.multipleReference"));
+
+    }
+
+    public void verifyCaseStatus(String testData, Response response) {
+        testData = testData.replace("Submitted", "Accepted");
+
+        String caseTitle = JsonPath.read(testData, "$.case_details.case_data.ethosCaseReference");
+        String caseReference = JsonPath.read(testData, "$.case_details.case_data.state");
+
+        Assert.assertEquals(caseTitle, response.body().jsonPath().getString("data.ethosCaseReference"));
+        Assert.assertEquals(caseReference, response.body().jsonPath().getString("data.state"));
 
     }
 

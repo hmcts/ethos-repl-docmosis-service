@@ -19,6 +19,7 @@ public class Constants {
     public static final String SEARCH_BULK_URI = "/searchBulk";
     public static final String UPDATE_BULK_URI = "/updateBulk";
     public static final String UPDATE_BULK_CASE_URI = "/updateBulkCase";
+    public static final String PRE_ACCEPT_CASE = "/preAcceptCase";
 
 
 
@@ -80,6 +81,13 @@ public class Constants {
     public static final String TEST_DATA_SCOT_BULK3_CASE3 = "src/test/functional/resources/testData/bulk/caseDetailsScot3Test3.json";
     public static final String TEST_DATA_SCOT_BULK5_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsScot5Test1.json";
     public static final String TEST_DATA_SCOT_BULK5_CASE2 = "src/test/functional/resources/testData/bulk/caseDetailsScot5Test2.json";
+
+    public static final String TEST_DATA_ENG_CREATE_CASE1 = "src/test/functional/resources/testData/actions/caseDetailsEng1.json";
+    public static final String TEST_DATA_ENG_PRE_ACCEPT_CASE1_ACCEPT = "src/test/functional/resources/testData/actions/caseDetailsEng1Accept.json";
+    public static final String TEST_DATA_ENG_PRE_ACCEPT_CASE1_REJECT = "src/test/functional/resources/testData/actions/caseDetailsEng1Reject.json";
+    public static final String TEST_DATA_SCOT_CREATE_CASE1 = "src/test/functional/resources/testData/actions/caseDetailsScot1.json";
+    public static final String TEST_DATA_SCOT_PRE_ACCEPT_CASE1_ACCEPT = "src/test/functional/resources/testData/actions/caseDetailsScot1.json";
+    public static final String TEST_DATA_SCOT_PRE_ACCEPT_CASE1_REJECT = "src/test/functional/resources/testData/actions/caseDetailsScot1.json";
 
 
 }
