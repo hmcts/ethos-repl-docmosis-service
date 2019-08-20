@@ -78,7 +78,7 @@ public class PreAcceptCaseComponentTest {
      * Scotland */
     @Test
     public void create_scot_case_and_accept() throws IOException {
-        testUtil.executePreAcceptCaseTest(Constants.TEST_DATA_SCOT_CREATE_CASE1, Constants.TEST_DATA_SCOT_PRE_ACCEPT_CASE1_ACCEPT, false);
+        testUtil.executePreAcceptCaseTest(Constants.TEST_DATA_SCOT_CREATE_CASE1, Constants.TEST_DATA_SCOT_PRE_ACCEPT_CASE1_ACCEPT, true);
     }
 
     /**
@@ -86,12 +86,12 @@ public class PreAcceptCaseComponentTest {
     @Test
     public void try_and_accept_already_rejected_case_scot() throws IOException {
         String ethosCaseReference = testUtil.executePreAcceptCaseTest(Constants.TEST_DATA_SCOT_CREATE_CASE1,
-                Constants.TEST_DATA_SCOT_PRE_ACCEPT_CASE1_REJECT, false);
+                Constants.TEST_DATA_SCOT_PRE_ACCEPT_CASE1_REJECT, true);
 
         String caseDetails = FileUtils.readFileToString(new File(Constants.TEST_DATA_SCOT_PRE_ACCEPT_CASE1_ACCEPT), "UTF-8");
         caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
 
-        CCDRequest ccdRequest = testUtil.getCcdRequest("1", "", false, caseDetails);
+        CCDRequest ccdRequest = testUtil.getCcdRequest("1", "", true, caseDetails);
         Response response = testUtil.getResponse(ccdRequest, Constants.PRE_ACCEPT_CASE);
 
         Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
