@@ -73,7 +73,7 @@ public class Constants {
     public static final String TEST_DATA_SCOT_BULK1_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsScot1Test1.json";
     public static final String TEST_DATA_SCOT_BULK1_CASE2 = "src/test/functional/resources/testData/bulk/caseDetailsScot1Test2.json";
     public static final String TEST_DATA_SCOT_BULK1_CASE3 = "src/test/functional/resources/testData/bulk/caseDetailsScot1Test3.json";
-    public static final String TEST_DATA_SCOT_BULK2_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsScot2Test1.json";
+    public static final String TEST_DATA_SCOT_BULK2_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsScot1.json";
     public static final String TEST_DATA_SCOT_BULK2_CASE2 = "src/test/functional/resources/testData/bulk/caseDetailsScot2Test2.json";
     public static final String TEST_DATA_SCOT_BULK2_CASE3 = "src/test/functional/resources/testData/bulk/caseDetailsScot2Test3.json";
     public static final String TEST_DATA_SCOT_BULK3_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsScot3Test1.json";
@@ -84,10 +84,14 @@ public class Constants {
 
     public static final String TEST_DATA_ENG_CREATE_CASE1 = "src/test/functional/resources/testData/actions/caseDetailsEng1.json";
     public static final String TEST_DATA_ENG_PRE_ACCEPT_CASE1_ACCEPT = "src/test/functional/resources/testData/actions/caseDetailsEng1Accept.json";
+    public static final String TEST_DATA_ENG_PRE_ACCEPT_CASE1_ACCEPTED = "src/test/functional/resources/testData/actions/caseDetailsEng1Accepted.json";
     public static final String TEST_DATA_ENG_PRE_ACCEPT_CASE1_REJECT = "src/test/functional/resources/testData/actions/caseDetailsEng1Reject.json";
+    public static final String TEST_DATA_ENG_PRE_ACCEPT_CASE1_REJECTED = "src/test/functional/resources/testData/actions/caseDetailsEng1Rejected.json";
     public static final String TEST_DATA_SCOT_CREATE_CASE1 = "src/test/functional/resources/testData/actions/caseDetailsScot1.json";
-    public static final String TEST_DATA_SCOT_PRE_ACCEPT_CASE1_ACCEPT = "src/test/functional/resources/testData/actions/caseDetailsScot1.json";
-    public static final String TEST_DATA_SCOT_PRE_ACCEPT_CASE1_REJECT = "src/test/functional/resources/testData/actions/caseDetailsScot1.json";
+    public static final String TEST_DATA_SCOT_PRE_ACCEPT_CASE1_ACCEPT = "src/test/functional/resources/testData/actions/caseDetailsScot1Accept.json";
+    public static final String TEST_DATA_SCOT_PRE_ACCEPT_CASE1_ACCEPTED = "src/test/functional/resources/testData/actions/caseDetailsScot1Accepted.json";
+    public static final String TEST_DATA_SCOT_PRE_ACCEPT_CASE1_REJECT = "src/test/functional/resources/testData/actions/caseDetailsScot1Reject.json";
+    public static final String TEST_DATA_SCOT_PRE_ACCEPT_CASE1_REJECTED = "src/test/functional/resources/testData/actions/caseDetailsScot1Rejected.json";
 
 
 }

@@ -4,7 +4,7 @@
   "case_details": {
     "id": "1565177988452935",
     "jurisdiction": "EMPLOYMENT",
-    "state": "Submitted",
+    "state": "Rejected",
     "case_type_id": "Glasgow_Dev",
     "security_classification": "PUBLIC",
     "case_data": {
@@ -64,7 +64,10 @@
         "PostCode": "G2 7TS"
       },
       "tribunalCorrespondenceEmail": "glasgowet@justice.gov.uk",
-      "state": "Submitted",
+      "preAcceptCase": {
+        "caseAccepted": "No"
+      },
+      "state": "Rejected",
       "representativeClaimantType": {
         "name_of_representative": "Danny Devito",
         "name_of_organisation": "Thompsons Solicitors Scotland",

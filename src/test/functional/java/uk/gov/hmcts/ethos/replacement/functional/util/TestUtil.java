@@ -210,7 +210,7 @@ public class TestUtil {
     }
 
     //End-point /preAcceptCase
-    public String executePreAcceptCaseTest(String caseCreationFilePath, String caseUpdationFilePath, boolean isScotland) throws IOException {
+    public String executePreAcceptCaseTest(String caseCreationFilePath, String caseUpdationFilePath, String state, boolean isScotland) throws IOException {
         CCDRequest ccdRequest;
         Response response;
 
@@ -234,7 +234,7 @@ public class TestUtil {
 
         Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
 
-        verifyCaseStatus(caseDetails, response);
+        verifyCaseStatus(caseDetails, response, state);
 
         return ethosCaseReference;
     }
@@ -328,8 +328,8 @@ public class TestUtil {
 
     }
 
-    public void verifyCaseStatus(String testData, Response response) {
-        testData = testData.replace("Submitted", "Accepted");
+    public void verifyCaseStatus(String testData, Response response, String state) {
+        testData = testData.replace("Submitted", state);
 
         String caseTitle = JsonPath.read(testData, "$.case_details.case_data.ethosCaseReference");
         String caseReference = JsonPath.read(testData, "$.case_details.case_data.state");
