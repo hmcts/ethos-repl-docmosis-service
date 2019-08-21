@@ -134,9 +134,9 @@ public class CaseActionsForCaseWorkerController {
     public ResponseEntity<CCDCallbackResponse> preDefaultValues(
             @RequestBody CCDRequest ccdRequest) {
         log.info("PRE DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
+        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails());
+        log.info("Pre Default values loaded: " + defaultValues);
         ccdRequest.getCaseDetails().getCaseData().setClaimantTypeOfClaimant(defaultValues.getClaimantTypeOfClaimant());
-        log.info("Pre Default values added to the case: " + defaultValues);
         log.info("Pre Default caseDetails: " + ccdRequest.getCaseDetails());
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(ccdRequest.getCaseDetails().getCaseData())
@@ -157,11 +157,10 @@ public class CaseActionsForCaseWorkerController {
         CaseData caseData = new CaseData();
         if (ccdRequest != null && ccdRequest.getCaseDetails() != null && ccdRequest.getCaseDetails().getCaseId() != null) {
             log.info("POST DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-            DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails().getCaseTypeId());
-            ccdRequest.getCaseDetails().setCaseData(defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues));
-            log.info("Post Default values added to the case: " + defaultValues);
-            caseData = ccdRequest.getCaseDetails().getCaseData();
-            log.info("Post Default caeData: " + caseData);
+            DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails());
+            log.info("Post Default values loaded: " + defaultValues);
+            caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
+            log.info("Post Default caseData: " + caseData);
         } else {
             log.info("Error in PostDefaultValues");
             errors.add("The payload is empty. Please make sure you have some data on your case");
@@ -183,9 +182,26 @@ public class CaseActionsForCaseWorkerController {
     public ResponseEntity<CCDCallbackResponse> preAcceptCase(
             @RequestBody CCDRequest ccdRequest) {
         log.info("PRE ACCEPT CASE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-
         CaseData caseData = caseManagementForCaseWorkerService.preAcceptCase(ccdRequest);
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .build());
+    }
 
+    @PostMapping(value = "/amendCaseDetails", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "amend the case details for a single case.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> amendCaseDetails(
+            @RequestBody CCDRequest ccdRequest) {
+        log.info("AMEND CASE DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails());
+        log.info("Post Default values loaded: " + defaultValues);
+        CaseData caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
                 .build());
