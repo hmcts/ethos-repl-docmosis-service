@@ -6,7 +6,7 @@ ENV APPLICATION_TOTAL_MEMORY 1024M
 ENV APPLICATION_SIZE_ON_DISK_IN_MB 80
 
 COPY build/libs/$APP /opt/app/
-COPY lib/lib/AI-Agent.xml /opt/app/
+COPY lib/AI-Agent.xml /opt/app/
 COPY lib/applicationinsights-agent-2.3.1.jar /opt/app/
 
 HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" wget -q --spider http://localhost:8081/health || exit 1
