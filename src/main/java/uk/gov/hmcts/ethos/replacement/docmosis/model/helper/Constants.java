@@ -21,10 +21,18 @@ public class Constants {
 
     public static final String PENDING_STATE = "Pending";
     public static final String SUBMITTED_STATE = "Submitted";
+    public static final String ACCEPTED_STATE = "Accepted";
+    public static final String REJECTED_STATE = "Rejected";
 
     public static final String CREATION_EVENT_TRIGGER_ID = "initiateCase";
     public static final String UPDATE_EVENT_TRIGGER_ID = "amendCaseDetails";
     public static final String UPDATE_EVENT_TRIGGER_ID_BULK = "amendCaseDetailsBulk";
+    public static final String PRE_ACCEPT_CASE_TRIGGER_ID_BULK = "preAcceptanceCase";
     public static final String UPDATE_BULK_EVENT_TRIGGER_ID = "updateBulkAction";
+
+    public static final String GLASGOW_OFFICE = "Glasgow";
+    public static final String ABERDEEN_OFFICE = "Aberdeen";
+    public static final String DUNDEE_OFFICE = "Dundee";
+    public static final String EDINBURGH_OFFICE = "Edinburgh";
 
 }

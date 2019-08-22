@@ -16,6 +16,7 @@ import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
@@ -33,7 +34,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.notNullValue;
@@ -76,8 +79,7 @@ public class BulkActionsControllerTest {
     private JsonNode requestContent;
     private BulkCasesPayload bulkCasesPayload;
     private BulkRequestPayload bulkRequestPayload;
-    private BulkDetails bulkDetails;
-    private List<DocumentInfo> documentInfoList;
+    private BulkDocumentInfo bulkDocumentInfo;
 
     private void doRequestSetUp() throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -96,7 +98,7 @@ public class BulkActionsControllerTest {
         bulkCasesPayload.setSubmitEvents(submitEvents);
         bulkCasesPayload.setMultipleTypeItems(multipleTypeItems);
         BulkData bulkData = new BulkData();
-        bulkDetails = new BulkDetails();
+        BulkDetails bulkDetails = new BulkDetails();
         bulkDetails.setCaseData(bulkData);
         bulkRequestPayload = new BulkRequestPayload();
         bulkRequestPayload.setBulkDetails(bulkDetails);
@@ -104,7 +106,10 @@ public class BulkActionsControllerTest {
         documentInfo1.setMarkUp("markup1");
         DocumentInfo documentInfo2 = new DocumentInfo();
         documentInfo2.setMarkUp("markup2");
-        documentInfoList = new ArrayList<>(Arrays.asList(documentInfo1, documentInfo2));
+        List<DocumentInfo> documentInfoList = new ArrayList<>(Arrays.asList(documentInfo1, documentInfo2));
+        bulkDocumentInfo = new BulkDocumentInfo();
+        bulkDocumentInfo.setMarkUps(documentInfoList.stream().map(DocumentInfo::getMarkUp).collect(Collectors.joining(", ")));
+        bulkDocumentInfo.setErrors(new ArrayList<>());
     }
 
     @Test
@@ -260,7 +265,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void generateBulkLetter() throws Exception {
-        when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), eq(AUTH_TOKEN))).thenReturn(documentInfoList);
+        when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), eq(AUTH_TOKEN))).thenReturn(bulkDocumentInfo);
         mvc.perform(post(GENERATE_BULK_LETTER_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -273,7 +278,10 @@ public class BulkActionsControllerTest {
 
     @Test
     public void generateBulkLetterWithErrors() throws Exception {
-        when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), eq(AUTH_TOKEN))).thenReturn(new ArrayList<>());
+        BulkDocumentInfo bulkDocumentInfo1 = new BulkDocumentInfo();
+        bulkDocumentInfo1.setErrors(new ArrayList<>(Collections.singleton("There are not cases searched to generate letters")));
+        bulkDocumentInfo1.setMarkUps("");
+        when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), eq(AUTH_TOKEN))).thenReturn(bulkDocumentInfo1);
         mvc.perform(post(GENERATE_BULK_LETTER_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)

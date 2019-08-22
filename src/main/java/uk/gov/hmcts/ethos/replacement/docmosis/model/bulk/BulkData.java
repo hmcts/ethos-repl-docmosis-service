@@ -7,6 +7,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceScotType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceType;
 
 import java.util.List;
 
@@ -67,6 +69,11 @@ public class BulkData {
     private String searchCollectionCount;
     @JsonProperty("multipleCollectionCount")
     private String multipleCollectionCount;
+
+    @JsonProperty("correspondenceType")
+    private CorrespondenceType correspondenceType;
+    @JsonProperty("correspondenceScotType")
+    private CorrespondenceScotType correspondenceScotType;
 
 }
 
