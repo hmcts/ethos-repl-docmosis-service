@@ -73,15 +73,18 @@ public class HelperTest {
                 "\"claimant_postCode\":\"M3 KJR\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"respondent_full_name\":\"Francisco\",\n" +
-                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
-                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_addressLine2\":\"22 House\",\n" +
                 "\"respondent_addressLine3\":\"\",\n" +
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
-                "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"2. Antonio Vazquez\\n3. Juan Garcia\\n4. Mike Jordan\",\n" +
-                "\"Respondent\":\"1. Francisco\",\n" +
+                "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"resp_others\":\"2. Juan Garcia\\n3. Mike Jordan\",\n" +
+                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n" +
+                "2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n" +
+                "3. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
+                "\"Respondent\":\"1. Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 10:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -135,7 +138,9 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"1111111\",\n" +
-                "\"Respondent\":\"Francisco\",\n" +
+                "\"Respondent\":\"\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -181,15 +186,16 @@ public class HelperTest {
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
                 "\"claimant_postCode\":\"M3 6gw\",\n" +
-                "\"respondent_full_name\":\"Francisco\",\n" +
-                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
-                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_addressLine2\":\"22 House\",\n" +
                 "\"respondent_addressLine3\":\"\",\n" +
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
-                "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"1. Francisco\",\n" +
+                "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -236,15 +242,16 @@ public class HelperTest {
                 "\"claimant_postCode\":\"M3 KJR\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"respondent_full_name\":\"Francisco\",\n" +
-                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
-                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_addressLine2\":\"22 House\",\n" +
                 "\"respondent_addressLine3\":\"\",\n" +
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
-                "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"1. Francisco\",\n" +
+                "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -299,8 +306,9 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"1. Francisco\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -355,8 +363,9 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"1. RespondentName\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -411,8 +420,9 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"3333333333\",\n" +
-                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"1. Antonio Rodriguez\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -459,15 +469,17 @@ public class HelperTest {
                 "\"claimant_postCode\":\"M3 KJR\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"respondent_full_name\":\"Joan Zamorano\",\n" +
-                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
-                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_addressLine2\":\"22 House\",\n" +
                 "\"respondent_addressLine3\":\"\",\n" +
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
-                "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"2. Antonio Vazquez\\n3. Mikey McCollier\",\n" +
-                "\"Respondent\":\"1. Joan Zamorano\",\n" +
+                "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"resp_others\":\"2. Mikey McCollier\",\n" +
+                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n" +
+                "2. 1333 Small Street, 22222 House, Liverpool, North West, L12 42R, UK\",\n" +
+                "\"Respondent\":\"1. Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -514,15 +526,16 @@ public class HelperTest {
                 "\"claimant_postCode\":\"M3 KJR\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"respondent_full_name\":\"Raul Gonzalez\",\n" +
-                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
-                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_addressLine2\":\"22 House\",\n" +
                 "\"respondent_addressLine3\":\"\",\n" +
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
-                "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"1. Raul Gonzalez\",\n" +
+                "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -560,6 +573,10 @@ public class HelperTest {
                 "\"templateName\":\".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"respondent_full_name\":\"\",\n" +
+                "\"Respondent\":\"\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -599,15 +616,17 @@ public class HelperTest {
                 "\"claimant_postCode\":\"M3 KJR\",\n" +
                 "\"claimant_reference\":\"1111111\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"respondent_full_name\":\"string\",\n" +
-                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
-                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_addressLine2\":\"22 House\",\n" +
                 "\"respondent_addressLine3\":\"\",\n" +
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
-                "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"2. Antonio Vazquez\\n3. Juan Garcia\",\n" +
-                "\"Respondent\":\"1. string\",\n" +
+                "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"resp_others\":\"2. Juan Garcia\",\n" +
+                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n" +
+                "2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\",\n" +
+                "\"Respondent\":\"1. Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 10:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -661,7 +680,9 @@ public class HelperTest {
                 "\"respondent_county\":\"Lancashire\",\n" +
                 "\"respondent_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"1111111\",\n" +
-                "\"Respondent\":\"string\",\n" +
+                "\"Respondent\":\"\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -707,15 +728,16 @@ public class HelperTest {
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
                 "\"claimant_postCode\":\"M3 6gw\",\n" +
-                "\"respondent_full_name\":\"string\",\n" +
-                "\"respondent_addressLine1\":\"54 Ellesmere Street\",\n" +
-                "\"respondent_addressLine2\":\"62 Mere House\",\n" +
+                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_addressLine2\":\"22 House\",\n" +
                 "\"respondent_addressLine3\":\"\",\n" +
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
-                "\"respondent_postCode\":\"M15 4QR\",\n" +
-                "\"resp_others\":\"2. Antonio Vazquez\",\n" +
-                "\"Respondent\":\"1. string\",\n" +
+                "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -824,6 +846,10 @@ public class HelperTest {
                 "\"templateName\":\"Part_18.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"respondent_full_name\":\"\",\n" +
+                "\"Respondent\":\"\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -854,6 +880,10 @@ public class HelperTest {
                 "\"templateName\":\"" + topLevel + ".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"respondent_full_name\":\"\",\n" +
+                "\"Respondent\":\"\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +

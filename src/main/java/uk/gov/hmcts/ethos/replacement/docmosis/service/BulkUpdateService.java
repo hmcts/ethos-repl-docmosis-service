@@ -17,6 +17,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.CaseType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeR;
@@ -203,16 +204,19 @@ public class BulkUpdateService {
             }
             if (!isNullOrEmpty(respondentSurnameNewValue)) {
                 updated = true;
-                RespondentSumType respondentSumType;
-                if (submitEvent.getCaseData().getRespondentSumType() != null) {
-                    respondentSumType = submitEvent.getCaseData().getRespondentSumType();
-                    respondentSumType.setRespondentName(respondentSurnameNewValue);
-                    submitEvent.getCaseData().setRespondentSumType(respondentSumType);
+                if (submitEvent.getCaseData().getRespondentCollection()!=null && !submitEvent.getCaseData().getRespondentCollection().isEmpty()) {
+                    RespondentSumTypeItem respondentSumTypeItem = submitEvent.getCaseData().getRespondentCollection().get(0);
+                    respondentSumTypeItem.getValue().setRespondentName(respondentSurnameNewValue);
+                    submitEvent.getCaseData().getRespondentCollection().add(respondentSumTypeItem);
                 } else {
-                    respondentSumType = new RespondentSumType();
+                    List<RespondentSumTypeItem> respondentSumTypeItems = new ArrayList<>();
+                    RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+                    RespondentSumType respondentSumType = new RespondentSumType();
                     respondentSumType.setRespondentName(respondentSurnameNewValue);
+                    respondentSumTypeItem.setValue(respondentSumType);
+                    respondentSumTypeItems.add(respondentSumTypeItem);
+                    submitEvent.getCaseData().setRespondentCollection(respondentSumTypeItems);
                 }
-                submitEvent.getCaseData().setRespondentSumType(respondentSumType);
             }
             if (!isNullOrEmpty(fileLocationNewValue)) {
                 updated = true;
