@@ -8,6 +8,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.SearchType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,8 +53,9 @@ public class BulkHelper {
             } else {
                 multipleType.setClaimantSurnameM(" ");
             }
-            if (caseData.getRespondentSumType() != null && caseData.getRespondentSumType().getRespondentName() != null) {
-                multipleType.setRespondentSurnameM(caseData.getRespondentSumType().getRespondentName());
+            if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+                RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+                multipleType.setRespondentSurnameM(respondentSumType.getRespondentName());
             } else {
                 multipleType.setRespondentSurnameM(" ");
             }
@@ -122,8 +124,8 @@ public class BulkHelper {
         multipleType.setClerkRespM(!isNullOrEmpty(caseData.getClerkResponsible()) ? caseData.getClerkResponsible() : " ");
         multipleType.setClaimantSurnameM(caseData.getClaimantIndType()!=null && caseData.getClaimantIndType().getClaimantLastName()!=null ?
                 caseData.getClaimantIndType().getClaimantLastName() : " ");
-        multipleType.setRespondentSurnameM(caseData.getRespondentSumType()!=null && caseData.getRespondentSumType().getRespondentName()!=null ?
-                caseData.getRespondentSumType().getRespondentName() : " ");
+        multipleType.setRespondentSurnameM(caseData.getRespondentCollection()!=null && !caseData.getRespondentCollection().isEmpty() ?
+                caseData.getRespondentCollection().get(0).getValue().getRespondentName() : " ");
         multipleType.setClaimantRepM(caseData.getRepresentativeClaimantType()!=null && caseData.getRepresentativeClaimantType().getNameOfRepresentative()!=null ?
                 caseData.getRepresentativeClaimantType().getNameOfRepresentative() : " ");
         multipleType.setRespondentRepM(caseData.getRepCollection()!=null && !caseData.getRepCollection().isEmpty() &&

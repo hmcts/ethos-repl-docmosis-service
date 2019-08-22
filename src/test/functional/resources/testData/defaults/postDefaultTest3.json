@@ -19,18 +19,6 @@
       },
       "claimantRepresentedQuestion": "Yes",
       "receiptDate": "2019-05-20",
-      "respondentSumType": {
-        "respondent_name": "Roadshow Pictures",
-        "respondent_ACAS_question": "Yes",
-        "respondent_ACAS": "33453454984",
-        "respondent_address": {
-          "AddressLine1": "Library & Community Centre",
-          "AddressLine2": "1 Artizan Street",
-          "PostTown": "London",
-          "PostCode": "E1 7AF",
-          "Country": "United Kingdom"
-        }
-      },
       "claimantOtherType": {
         "claimant_employed_currently": "No",
         "claimant_disabled": "No"
@@ -86,24 +74,6 @@
       },
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
-      "respondentSumType": {
-        "classification": "PUBLIC",
-        "value": {
-          "respondent_name": "PUBLIC",
-          "respondent_ACAS_question": "PUBLIC",
-          "respondent_ACAS": "PUBLIC",
-          "respondent_address": {
-            "classification": "PUBLIC",
-            "value": {
-              "AddressLine1": "PUBLIC",
-              "AddressLine2": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "Country": "PUBLIC"
-            }
-          }
-        }
-      },
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {
@@ -188,24 +158,6 @@
       },
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
-      "respondentSumType": {
-        "classification": "PUBLIC",
-        "value": {
-          "respondent_name": "PUBLIC",
-          "respondent_ACAS_question": "PUBLIC",
-          "respondent_ACAS": "PUBLIC",
-          "respondent_address": {
-            "classification": "PUBLIC",
-            "value": {
-              "AddressLine1": "PUBLIC",
-              "AddressLine2": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "Country": "PUBLIC"
-            }
-          }
-        }
-      },
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {

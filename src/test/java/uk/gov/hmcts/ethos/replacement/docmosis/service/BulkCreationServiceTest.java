@@ -17,6 +17,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.MultipleType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
@@ -116,7 +117,10 @@ public class BulkCreationServiceTest {
         caseData.setClaimantIndType(claimantIndType);
         RespondentSumType respondentSumType = new RespondentSumType();
         respondentSumType.setRespondentName("Mr Respondent");
-        caseData.setRespondentSumType(respondentSumType);
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setValue(respondentSumType);
+        caseData.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
+
         return caseData;
     }
 
