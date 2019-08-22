@@ -52,7 +52,8 @@ public class BulkSearchServiceTest {
                 "fileLocation=null, jurCodesCollection=null, fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, " +
                 "respondentSurnameV2=null, multipleReferenceV2=null, clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, " +
                 "respondentRepV2=null, caseIdCollection=null, searchCollection=[], multipleCollection=[], searchCollectionCount=0, " +
-                "multipleCollectionCount=null), caseTypeId=null, createdDate=null, lastModified=null, dataClassification=null))";
+                "multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null), caseTypeId=null, createdDate=null, " +
+                "lastModified=null, dataClassification=null))";
         bulkDetails.getCaseData().setMultipleCollection(new ArrayList<>());
         BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkSearchLogic(bulkDetails);
         assertEquals(result, bulkRequestPayload.toString());
@@ -60,14 +61,15 @@ public class BulkSearchServiceTest {
 
     @Test
     public void bulkSearchLogicWithErrors() {
-        String result = "BulkRequestPayload(errors=[There are not cases on this multiples to search], bulkDetails=BulkDetails(caseId=null, " +
-                "jurisdiction=TRIBUNALS, state=null, caseData=BulkData(bulkCaseTitle=null, multipleReference=1111, feeGroupReference=null, " +
-                "claimantSurname=, respondentSurname=null, claimantRep=null, respondentRep=null, ethosCaseReference=222, " +
-                "clerkResponsible=null, fileLocation=null, jurCodesCollection=null, fileLocationV2=null, feeGroupReferenceV2=null, " +
-                "claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, clerkResponsibleV2=null, " +
-                "positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, caseIdCollection=null, searchCollection=null, " +
-                "multipleCollection=null, searchCollectionCount=null, multipleCollectionCount=null), caseTypeId=null, " +
-                "createdDate=null, lastModified=null, dataClassification=null))";
+        String result = "BulkRequestPayload(errors=[There are not cases in this multiple to search], " +
+                "bulkDetails=BulkDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseData=BulkData(bulkCaseTitle=null, " +
+                "multipleReference=1111, feeGroupReference=null, claimantSurname=, respondentSurname=null, claimantRep=null, " +
+                "respondentRep=null, ethosCaseReference=222, clerkResponsible=null, fileLocation=null, jurCodesCollection=null, " +
+                "fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, " +
+                "clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, caseIdCollection=null, " +
+                "searchCollection=null, multipleCollection=null, searchCollectionCount=null, multipleCollectionCount=null, " +
+                "correspondenceType=null, correspondenceScotType=null), caseTypeId=null, createdDate=null, lastModified=null, " +
+                "dataClassification=null))";
         BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkSearchLogic(bulkDetails);
         assertEquals(result, bulkRequestPayload.toString());
     }

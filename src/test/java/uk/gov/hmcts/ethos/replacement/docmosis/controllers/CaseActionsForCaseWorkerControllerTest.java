@@ -15,12 +15,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCreationForCaseWorkerService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorkerService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseUpdateForCaseWorkerService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 
 import javax.ws.rs.core.MediaType;
 import java.io.File;
@@ -36,7 +35,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringRunner.class)
@@ -51,6 +49,8 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String UPDATE_CASE_URL = "/updateCase";
     private static final String PRE_DEFAULT_VALUES_URL = "/preDefaultValues";
     private static final String POST_DEFAULT_VALUES_URL = "/postDefaultValues";
+    private static final String PRE_ACCEPT_CASE_URL = "/preAcceptCase";
+    private static final String AMEND_CASE_DETAILS_URL = "/amendCaseDetails";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -66,6 +66,9 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @MockBean
     private DefaultValuesReaderService defaultValuesReaderService;
+
+    @MockBean
+    private CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
 
     private MockMvc mvc;
     private JsonNode requestContent;
@@ -89,6 +92,7 @@ public class CaseActionsForCaseWorkerControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
         doRequestSetUp();
         submitEvent = new SubmitEvent();
+        submitEvent.setCaseData(new CaseData());
         defaultValues = DefaultValues.builder()
                 .positionType("Awaiting ET3")
                 .claimantTypeOfClaimant("Individual")
@@ -160,7 +164,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void preDefaultValues() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenReturn(defaultValues);
         mvc.perform(post(PRE_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -173,7 +177,8 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void postDefaultValuesFromET1WithPositionTypeDefined() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -186,7 +191,8 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void postDefaultValues() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -199,7 +205,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void postDefaultValuesWithErrors() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenReturn(defaultValues);
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent3.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -207,6 +213,33 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void preAcceptCase() throws Exception {
+        when(caseManagementForCaseWorkerService.preAcceptCase(isA(CCDRequest.class))).thenReturn(submitEvent.getCaseData());
+        mvc.perform(post(PRE_ACCEPT_CASE_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void amendCaseDetails() throws Exception {
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
+        mvc.perform(post(AMEND_CASE_DETAILS_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
@@ -222,7 +255,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void createCaseError500() throws Exception {
         when(caseCreationForCaseWorkerService.caseCreationRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenThrow(feignError());
-
         mvc.perform(post(CREATION_CASE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -242,7 +274,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void retrieveCaseError500() throws Exception {
         when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenThrow(feignError());
-
         mvc.perform(post(RETRIEVE_CASE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -262,7 +293,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void retrieveCasesError500() throws Exception {
         when(caseRetrievalForCaseWorkerService.casesRetrievalRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenThrow(feignError());
-
         mvc.perform(post(RETRIEVE_CASES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -282,7 +312,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void updateCaseError500() throws Exception {
         when(caseUpdateForCaseWorkerService.caseUpdateRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenThrow(feignError());
-
         mvc.perform(post(UPDATE_CASE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -301,8 +330,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void preDefaultValuesError500() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenThrow(feignError());
-
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenThrow(feignError());
         mvc.perform(post(PRE_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -321,9 +349,46 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void postDefaultValuesError500() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, MANCHESTER_CASE_TYPE_ID)).thenThrow(feignError());
-
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenThrow(feignError());
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void preAcceptCaseError400() throws Exception {
+        mvc.perform(post(PRE_ACCEPT_CASE_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void preAcceptCaseError500() throws Exception {
+        when(caseManagementForCaseWorkerService.preAcceptCase(isA(CCDRequest.class))).thenThrow(feignError());
+        mvc.perform(post(PRE_ACCEPT_CASE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void amendCaseDetailsError400() throws Exception {
+        mvc.perform(post(AMEND_CASE_DETAILS_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void amendCaseDetailsError500() throws Exception {
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenThrow(feignError());
+        mvc.perform(post(AMEND_CASE_DETAILS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
