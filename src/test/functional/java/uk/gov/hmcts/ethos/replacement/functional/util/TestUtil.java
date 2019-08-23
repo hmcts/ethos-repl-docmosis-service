@@ -116,8 +116,8 @@ public class TestUtil {
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, testData);
-        else ccdRequest = getCcdRequest("1", "", false, testData);
+        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
+        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
 
         Response response = getResponse(ccdRequest, Constants.POST_DEFAULT_URI);
 
@@ -207,6 +207,28 @@ public class TestUtil {
 
         verifyBulkResponse(testData, response);
     }
+
+    //End-point /generateBulkLetter
+    public void executeGenerateBulkLetterTest(String topLevel, String childLevel, String expectedValue, boolean isScotland, String testDataFilePath, List<String> caseList) throws Exception {
+        CCDRequest ccdRequest;
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
+
+        loadAuthToken();
+
+        testData = createIndividualCases(isScotland, caseList, testData);
+
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        response = getBulkResponse(bulkRequest, Constants.GENERATE_BULK_LETTER_URI);
+
+        verifyDocument(topLevel, expectedValue, isScotland, null, response);
+
+    }
+
 
     //General methods
     public String getEnvironment() {

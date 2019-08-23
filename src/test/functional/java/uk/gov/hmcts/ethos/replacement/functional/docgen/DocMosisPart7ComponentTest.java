@@ -52,7 +52,7 @@ public class DocMosisPart7ComponentTest {
 
     @Test
     public void generateDocument_Part7_4R() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "4R", "considers that the respondent’s allegations or arguments");
+        testUtil.executeGenerateDocumentTest("7", "4R", "DEPOSIT ORDER");
     }
 
     @Test

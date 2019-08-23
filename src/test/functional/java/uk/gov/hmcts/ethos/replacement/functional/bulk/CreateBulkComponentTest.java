@@ -79,7 +79,7 @@ public class CreateBulkComponentTest {
     }
 
     @Test
-    public void create_bulk_eng_with_some_non_existant_cases() throws IOException {
+    public void create_bulk_eng_with_some_non_existent_cases() throws IOException {
         testUtil.loadAuthToken();
 
         String ethosCaseReference = testUtil.getUniqueCaseReference();

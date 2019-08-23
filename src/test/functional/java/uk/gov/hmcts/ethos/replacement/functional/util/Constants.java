@@ -19,6 +19,7 @@ public class Constants {
     public static final String SEARCH_BULK_URI = "/searchBulk";
     public static final String UPDATE_BULK_URI = "/updateBulk";
     public static final String UPDATE_BULK_CASE_URI = "/updateBulkCase";
+    public static final String GENERATE_BULK_LETTER_URI = "/generateBulkLetter";
 
 
 

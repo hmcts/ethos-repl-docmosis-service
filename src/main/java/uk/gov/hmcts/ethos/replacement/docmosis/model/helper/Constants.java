@@ -30,4 +30,9 @@ public class Constants {
     public static final String PRE_ACCEPT_CASE_TRIGGER_ID_BULK = "preAcceptanceCase";
     public static final String UPDATE_BULK_EVENT_TRIGGER_ID = "updateBulkAction";
 
+    public static final String GLASGOW_OFFICE = "Glasgow";
+    public static final String ABERDEEN_OFFICE = "Aberdeen";
+    public static final String DUNDEE_OFFICE = "Dundee";
+    public static final String EDINBURGH_OFFICE = "Edinburgh";
+
 }

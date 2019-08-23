@@ -30,17 +30,6 @@
       "claimantRepresentedQuestion": "No",
       "receiptDate": "2019-05-20",
       "claimant_TypeOfClaimant": "Company",
-      "respondentSumType": {
-        "respondent_name": "Marks & Spender Ltd",
-        "respondent_ACAS_question": "Yes",
-        "respondent_ACAS": "83473985749",
-        "respondent_address": {
-          "AddressLine1": "54 Princes St",
-          "PostTown": "Edinburgh",
-          "PostCode": "EH2 2DQ",
-          "Country": "United Kingdom"
-        }
-      },
       "claimantOtherType": {
         "claimant_employed_currently": "No",
         "claimant_disabled": "No"
@@ -86,23 +75,6 @@
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
       "claimant_TypeOfClaimant": "PUBLIC",
-      "respondentSumType": {
-        "classification": "PUBLIC",
-        "value": {
-          "respondent_name": "PUBLIC",
-          "respondent_ACAS_question": "PUBLIC",
-          "respondent_ACAS": "PUBLIC",
-          "respondent_address": {
-            "classification": "PUBLIC",
-            "value": {
-              "AddressLine1": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "Country": "PUBLIC"
-            }
-          }
-        }
-      },
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {
@@ -162,23 +134,6 @@
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
       "claimant_TypeOfClaimant": "PUBLIC",
-      "respondentSumType": {
-        "classification": "PUBLIC",
-        "value": {
-          "respondent_name": "PUBLIC",
-          "respondent_ACAS_question": "PUBLIC",
-          "respondent_ACAS": "PUBLIC",
-          "respondent_address": {
-            "classification": "PUBLIC",
-            "value": {
-              "AddressLine1": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "Country": "PUBLIC"
-            }
-          }
-        }
-      },
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {
