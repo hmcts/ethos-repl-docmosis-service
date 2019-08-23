@@ -19,6 +19,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
@@ -74,7 +75,9 @@ public class BulkUpdateServiceTest {
         caseData.setClaimantIndType(claimantIndType);
         RespondentSumType respondentSumType = new RespondentSumType();
         respondentSumType.setRespondentName("Mike");
-        caseData.setRespondentSumType(respondentSumType);
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setValue(respondentSumType);
+        caseData.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
         RepresentedTypeR representedTypeR = new RepresentedTypeR();
         representedTypeR.setNameOfRepresentative("Juan");
         RepresentedTypeRItem representedTypeRItem = new RepresentedTypeRItem();
@@ -157,7 +160,7 @@ public class BulkUpdateServiceTest {
                 "authToken").getBulkDetails() != null);
         submitEvent.getCaseData().setRepCollection(null);
         submitEvent.getCaseData().setClaimantIndType(null);
-        submitEvent.getCaseData().setRespondentSumType(null);
+        submitEvent.getCaseData().setRespondentCollection(null);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
         assert(bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()),
                 "authToken").getBulkDetails() != null);
