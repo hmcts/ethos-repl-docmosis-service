@@ -164,6 +164,18 @@ public class CcdClientTest {
     }
 
     @Test
+    public void startEventForCasePreAcceptBulkSingle() throws IOException {
+        HttpEntity<Object> httpEntity = new HttpEntity<>(null);
+        ResponseEntity<CCDRequest> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
+        when(ccdClientConfig.buildStartEventForCaseUrlPreAcceptBulkSingle(any(), any(), any(), any())).thenReturn(uri);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(CCDRequest.class))).thenReturn(responseEntity);
+        ccdClient.startEventForCasePreAcceptBulkSingle("authToken", caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), anyString());
+        verify(restTemplate).exchange(eq(uri), eq(HttpMethod.GET), eq(httpEntity), eq(CCDRequest.class));
+        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
     public void startBulkEventForCase() throws IOException {
         HttpEntity<Object> httpEntity = new HttpEntity<>(null);
         ResponseEntity<CCDRequest> responseEntity = new ResponseEntity<>(HttpStatus.OK);

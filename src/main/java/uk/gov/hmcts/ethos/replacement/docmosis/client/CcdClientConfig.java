@@ -79,6 +79,10 @@ public class CcdClientConfig {
         return String.format(START_EVENT_FOR_CASE_URL_CASEWORKER_FORMAT, CCD_DATA_STORE_API_BASE_URL, uid, jid, ctid, cid, UPDATE_EVENT_TRIGGER_ID_BULK);
     }
 
+    String buildStartEventForCaseUrlPreAcceptBulkSingle(String uid, String jid, String ctid, String cid) {
+        return String.format(START_EVENT_FOR_CASE_URL_CASEWORKER_FORMAT, CCD_DATA_STORE_API_BASE_URL, uid, jid, ctid, cid, PRE_ACCEPT_CASE_TRIGGER_ID_BULK);
+    }
+
     String buildStartEventForBulkCaseUrl(String uid, String jid, String ctid, String cid) {
         return String.format(START_EVENT_FOR_CASE_URL_CASEWORKER_FORMAT, CCD_DATA_STORE_API_BASE_URL, uid, jid, ctid, cid, UPDATE_BULK_EVENT_TRIGGER_ID);
     }

@@ -44,7 +44,7 @@ public class BulkSearchService {
             bulkDetails.getCaseData().getSearchCollection().forEach(searchTypeItem -> log.info("Searched collection: " + searchTypeItem.toString()));
             bulkDetails.setCaseData(clearUpFields(bulkDetails.getCaseData()));
         } else {
-            errors.add("There are not cases on this multiples to search");
+            errors.add("There are not cases in this multiple to search");
             bulkRequestPayload.setErrors(errors);
         }
         bulkRequestPayload.setBulkDetails(bulkDetails);
@@ -63,6 +63,8 @@ public class BulkSearchService {
     public BulkCasesPayload bulkCasesRetrievalRequest(BulkDetails bulkDetails, String authToken) {
         try {
             List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
+            log.info("BulkDetails: " + bulkDetails);
+            log.info("CaseIds: " + caseIds);
             if (caseIds != null && !caseIds.isEmpty()) {
                 return filterSubmitEvents(ccdClient.retrieveCases(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                         bulkDetails.getJurisdiction()), caseIds, bulkDetails.getCaseData().getMultipleReference());

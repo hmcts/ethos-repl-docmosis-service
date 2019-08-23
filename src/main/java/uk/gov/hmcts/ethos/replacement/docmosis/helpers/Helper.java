@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
+import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
+@Slf4j
 public class Helper {
 
     private static String formatLocalDate(String date) {
@@ -94,7 +96,9 @@ public class Helper {
         Optional<ClaimantIndType> claimantIndType = Optional.ofNullable(caseData.getClaimantIndType());
         if (representedTypeC != null) {
             sb.append("\"claimant_full_name\":\"").append(nullCheck(representedTypeC.getNameOfRepresentative())).append(NEW_LINE);
-            sb.append(getClaimantAddressUK(representedTypeC.getRepresentativeAddress()));
+            if (representedTypeC.getRepresentativeAddress()!= null) {
+                sb.append(getClaimantAddressUK(representedTypeC.getRepresentativeAddress()));
+            }
             sb.append("\"claimant_reference\":\"").append(nullCheck(representedTypeC.getRepresentativeReference())).append(NEW_LINE);
             claimantIndType.ifPresent(claimantIndType1 -> sb.append("\"Claimant\":\"").append(nullCheck(claimantIndType1.claimantFullName())).append(NEW_LINE));
         } else {
@@ -128,31 +132,59 @@ public class Helper {
     private static StringBuilder getRespondentData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
         List<RepresentedTypeRItem> representedTypeRList = caseData.getRepCollection();
-        Optional<RespondentSumType> respondentType = Optional.ofNullable(caseData.getRespondentSumType());
         if (representedTypeRList != null && !representedTypeRList.isEmpty()) {
             RepresentedTypeR representedTypeR = representedTypeRList.get(0).getValue();
             sb.append("\"respondent_full_name\":\"").append(nullCheck(representedTypeR.getNameOfRepresentative())).append(NEW_LINE);
-            sb.append(getRespondentAddressUK(representedTypeR.getRepresentativeAddress()));
+            if (representedTypeR.getRepresentativeAddress() != null) {
+                sb.append(getRespondentAddressUK(representedTypeR.getRepresentativeAddress()));
+            }
             sb.append("\"respondent_reference\":\"").append(nullCheck(representedTypeR.getRepresentativeReference())).append(NEW_LINE);
         } else {
-            if (respondentType.isPresent()) {
-                sb.append("\"respondent_full_name\":\"").append(nullCheck(respondentType.get().getRespondentName())).append(NEW_LINE);
-                sb.append(getRespondentAddressUK(respondentType.get().getRespondentAddress()));
+            if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+                RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+                sb.append("\"respondent_full_name\":\"").append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE);
+                sb.append(getRespondentAddressUK(respondentSumType.getRespondentAddress()));
+            } else {
+                sb.append("\"respondent_full_name\":\"").append(NEW_LINE);
             }
         }
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
-            AtomicInteger atomicInteger = new AtomicInteger(2);
-            List<String> respOthers = caseData.getRespondentCollection()
-                    .stream()
-                    .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". " + respondentSumTypeItem.getValue().getRespondentName())
-                    .collect(Collectors.toList());
-            sb.append("\"resp_others\":\"").append(String.join("\\n", respOthers)).append(NEW_LINE);
-            respondentType.ifPresent(respondentSumType -> sb.append("\"Respondent\":\"")
-                    .append(!isNullOrEmpty(respondentSumType.getRespondentName()) ? "1. " + respondentSumType.getRespondentName() : "").append(NEW_LINE));
+            sb.append(getRespOthersName(caseData));
+            sb.append(getRespAddress(caseData));
+
+            RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+            sb.append("\"Respondent\":\"").append(caseData.getRespondentCollection().size() > 1 ? "1. " : "")
+                    .append(respondentSumType.getRespondentName()).append(NEW_LINE);
         } else {
-            respondentType.ifPresent(respondentSumType -> sb.append("\"Respondent\":\"")
-                    .append(Optional.ofNullable(respondentSumType.getRespondentName()).orElse("")).append(NEW_LINE));
+            sb.append("\"Respondent\":\"").append(NEW_LINE);
+            sb.append("\"resp_others\":\"").append(NEW_LINE);
+            sb.append("\"resp_address\":\"").append(NEW_LINE);
         }
+        return sb;
+    }
+
+    private static StringBuilder getRespOthersName(CaseData caseData) {
+        StringBuilder sb = new StringBuilder();
+        AtomicInteger atomicInteger = new AtomicInteger(2);
+        List<String> respOthers = caseData.getRespondentCollection()
+                .stream()
+                .skip(1)
+                .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". " + respondentSumTypeItem.getValue().getRespondentName())
+                .collect(Collectors.toList());
+        sb.append("\"resp_others\":\"").append(String.join("\\n", respOthers)).append(NEW_LINE);
+        return sb;
+    }
+
+    private static StringBuilder getRespAddress(CaseData caseData) {
+        StringBuilder sb = new StringBuilder();
+        AtomicInteger atomicInteger = new AtomicInteger(1);
+        int size = caseData.getRespondentCollection().size();
+        List<String> respAddressList = caseData.getRespondentCollection()
+                .stream()
+                .map(respondentSumTypeItem -> (size > 1 ? atomicInteger.getAndIncrement() + ". " : "")
+                        + respondentSumTypeItem.getValue().getRespondentAddress().toString())
+                .collect(Collectors.toList());
+        sb.append("\"resp_address\":\"").append(String.join("\\n", respAddressList)).append(NEW_LINE);
         return sb;
     }
 

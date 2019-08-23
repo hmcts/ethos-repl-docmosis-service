@@ -73,7 +73,7 @@ public class BulkCreationService {
                     }
                 }
             } else {
-                errors.add("These cases are already assigned to a multiple bulk: " + bulkCasesPayload.getAlreadyTakenIds().toString());
+                errors.add("These cases are already assigned to a multiple case: " + bulkCasesPayload.getAlreadyTakenIds().toString());
             }
         }
         if (bulkRequestPayload.getBulkDetails() == null) {
@@ -85,16 +85,14 @@ public class BulkCreationService {
 
     public BulkRequestPayload bulkUpdateCaseIdsLogic(BulkRequest bulkRequest, String authToken) {
         BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
-        log.info("COMING TO UPDATE BULK REQUEST");
         BulkCasesPayload bulkCasesPayload = updateBulkRequest(bulkRequest, authToken);
-        log.info("COMING OUTSIDE UPDATE BULK REQUEST");
         List<String> errors = bulkCasesPayload.getErrors() != null ? bulkCasesPayload.getErrors() : new ArrayList<>();
         if (bulkCasesPayload.getAlreadyTakenIds() != null && errors.isEmpty()) {
             if (bulkCasesPayload.getAlreadyTakenIds().isEmpty()) {
                 bulkRequest.setCaseDetails(BulkHelper.setMultipleCollection(bulkRequest.getCaseDetails(), bulkCasesPayload.getMultipleTypeItems()));
                 bulkRequest.setCaseDetails(BulkHelper.clearSearchCollection(bulkRequest.getCaseDetails()));
             } else {
-                errors.add("These cases are already assigned to a multiple bulk: " + bulkCasesPayload.getAlreadyTakenIds().toString());
+                errors.add("These cases are already assigned to a multiple case: " + bulkCasesPayload.getAlreadyTakenIds().toString());
             }
         }
         bulkRequestPayload.setErrors(errors);
@@ -121,8 +119,8 @@ public class BulkCreationService {
                     List<SubmitEvent> casesToAdd = new ArrayList<>();
                     List<SubmitEvent> casesToRemove = new ArrayList<>();
                     for (SubmitEvent submitEvent : allSubmitEventsToUpdate) {
-                        log.info("STATEEEEEEEEEEE: " + submitEvent.getState());
-                        log.info("SUBMITEVENT ----> " + submitEvent.getCaseData());
+                        log.info("State SubmitEvent: " + submitEvent.getState());
+                        log.info("SubmitEvent ----> " + submitEvent.getCaseData());
                         if (!submitEvent.getState().equals(SUBMITTED_STATE)) {
                             log.info("IT IS SUBMITTED");
                             String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
@@ -132,14 +130,12 @@ public class BulkCreationService {
                                 casesToRemove.add(submitEvent);
                             }
                         } else {
-                            log.info("IT SHOULD COME HERE");
                             List<String> errors = new ArrayList<>();
                             errors.add("The state of case id: " + submitEvent.getCaseData().getEthosCaseReference() + " has not been accepted");
                             bulkCasesPayload.setErrors(errors);
                             return bulkCasesPayload;
                         }
                     }
-                    log.info("IT SHOULD NOT BE DISPLAYED");
                     List<MultipleTypeItem> multipleTypeItemListFinal = new ArrayList<>();
                     // Delete old cases
                     if (bulkDetails.getCaseData().getMultipleCollection() != null) {
@@ -147,7 +143,6 @@ public class BulkCreationService {
                                 casesToRemove, bulkRequest.getCaseDetails(), authToken);
                     }
                     // Add new cases
-                    log.info("ADDING??????? WHYYYYYYYY?????????????? ");
                     bulkCasesPayload.setMultipleTypeItems(getMultipleTypeListAfterAdditions(multipleTypeItemListFinal, casesToAdd,
                             bulkRequest.getCaseDetails(), authToken));
                 } else {
@@ -215,10 +210,7 @@ public class BulkCreationService {
                                     BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(),
                                     multipleTypeItem.getValue().getCaseIDM());
                             submitEvent.getCaseData().setLeadClaimant("Yes");
-                            CCDRequest returnedRequest = getReturnedRequestCheckingState(bulkDetails, submitEvent, authToken, caseId);
-                            if (submitEvent.getState().equals(PENDING_STATE)) {
-                                submitEvent.getCaseData().setState(SUBMITTED_STATE);
-                            }
+                            CCDRequest returnedRequest = getReturnedRequestCheckingStateForLead(bulkDetails, submitEvent, authToken, caseId);
                             ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(),
                                     BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
                         } catch (IOException ex) {
@@ -237,10 +229,10 @@ public class BulkCreationService {
         return bulkRequestPayload;
     }
 
-    private CCDRequest getReturnedRequestCheckingState(BulkDetails bulkDetails, SubmitEvent submitEvent, String authToken, String caseId) throws IOException {
+    private CCDRequest getReturnedRequestCheckingStateForLead(BulkDetails bulkDetails, SubmitEvent submitEvent, String authToken, String caseId) throws IOException {
         if (submitEvent.getState().equals(PENDING_STATE) ||
                 (submitEvent.getCaseData().getStateAPI() != null && submitEvent.getCaseData().getStateAPI().equals(PENDING_STATE)) ) {
-            return ccdClient.startEventForCaseBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+            return ccdClient.startEventForCasePreAcceptBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                     bulkDetails.getJurisdiction(), caseId);
         } else {
             return ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
