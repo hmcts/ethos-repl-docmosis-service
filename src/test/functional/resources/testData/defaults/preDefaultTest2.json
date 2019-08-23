@@ -21,17 +21,6 @@
       "claimantRepresentedQuestion":"No",
       "receiptDate":"2019-05-23",
       "fileLocation":"with Mr Vincent Ryan",
-      "respondentSumType":{
-        "respondent_name":"Joe",
-        "respondent_ACAS_question":"No",
-        "respondent_ACAS_no":"Unfair Dismissal",
-        "respondent_address":{
-          "AddressLine1":"84 Petty France",
-          "PostTown":"London",
-          "PostCode":"SW1H 9EA",
-          "Country":"United Kingdom"
-        }
-      },
       "claimantOtherType":{
         "claimant_employed_currently":"Yes"
       },
@@ -73,23 +62,6 @@
       "claimantRepresentedQuestion":"PUBLIC",
       "receiptDate":"PUBLIC",
       "fileLocation":"PUBLIC",
-      "respondentSumType":{
-        "classification":"PUBLIC",
-        "value":{
-          "respondent_name":"PUBLIC",
-          "respondent_ACAS_question":"PUBLIC",
-          "respondent_ACAS_no":"PUBLIC",
-          "respondent_address":{
-            "classification":"PUBLIC",
-            "value":{
-              "AddressLine1":"PUBLIC",
-              "PostTown":"PUBLIC",
-              "PostCode":"PUBLIC",
-              "Country":"PUBLIC"
-            }
-          }
-        }
-      },
       "claimantOtherType":{
         "classification":"PUBLIC",
         "value":{
@@ -147,23 +119,6 @@
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
       "fileLocation": "PUBLIC",
-      "respondentSumType": {
-        "classification": "PUBLIC",
-        "value": {
-          "respondent_name": "PUBLIC",
-          "respondent_ACAS_question": "PUBLIC",
-          "respondent_ACAS_no": "PUBLIC",
-          "respondent_address": {
-            "classification": "PUBLIC",
-            "value": {
-              "AddressLine1": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "Country": "PUBLIC"
-            }
-          }
-        }
-      },
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {

@@ -7,6 +7,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.SearchType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
@@ -31,7 +32,10 @@ public class BulkHelperTest {
         caseData.setClaimantIndType(claimantIndType);
         RespondentSumType respondentSumType = new RespondentSumType();
         respondentSumType.setRespondentName("Andrew Smith");
-        caseData.setRespondentSumType(respondentSumType);
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setValue(respondentSumType);
+        caseData.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
+
         caseData.setFileLocation("Manchester");
         JurCodesType jurCodesType = new JurCodesType();
         jurCodesType.setJuridictionCodesList("AA");
@@ -124,9 +128,11 @@ public class BulkHelperTest {
         claimantIndType.setClaimantLastName("Mike");
         RespondentSumType respondentSumType = new RespondentSumType();
         respondentSumType.setRespondentName("Juan Pedro");
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setValue(respondentSumType);
         CaseData caseData = new CaseData();
         caseData.setClaimantIndType(claimantIndType);
-        caseData.setRespondentSumType(respondentSumType);
+        caseData.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
         caseData.setFileLocation("Manchester");
         caseData.setFeeGroupReference("11111");
         submitEvent.setCaseData(caseData);
