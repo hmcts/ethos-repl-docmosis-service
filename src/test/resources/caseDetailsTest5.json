@@ -161,21 +161,6 @@
         }
       }
     ],
-    "respondentSumType": {
-      "respondent_address": {
-        "AddressLine1": "54 Ellesmere Street",
-        "AddressLine2": "62 Mere House",
-        "Country": "UK",
-        "County": "North West",
-        "PostCode": "M15 4QR",
-        "PostTown": "Manchester",
-        "respondent_contact_preference": "Post",
-        "respondent_email": "Antonio@gmail.com",
-        "respondent_phone1": "07577136570",
-        "respondent_phone2": "07577136570"
-      },
-      "respondent_name": "Francisco"
-    },
     "responseReceived": "none",
     "responseType": {
       "response_received": "Yes",

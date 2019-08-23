@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.functional.util;
 
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
@@ -10,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -108,48 +110,73 @@ public class DocumentUtil {
         return sb;
     }
 
+    private static StringBuilder getRespondentAddressUK(Address address) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"respondent_addressLine1\":\"").append(nullCheck(address.getAddressLine1())).append(NEW_LINE);
+        sb.append("\"respondent_addressLine2\":\"").append(nullCheck(address.getAddressLine2())).append(NEW_LINE);
+        sb.append("\"respondent_addressLine3\":\"").append(nullCheck(address.getAddressLine3())).append(NEW_LINE);
+        sb.append("\"respondent_town\":\"").append(nullCheck(address.getPostTown())).append(NEW_LINE);
+        sb.append("\"respondent_county\":\"").append(nullCheck(address.getCounty())).append(NEW_LINE);
+        sb.append("\"respondent_postCode\":\"").append(nullCheck(address.getPostCode())).append(NEW_LINE);
+        return sb;
+    }
+
     private static StringBuilder getRespondentData(CaseData caseData) {
         StringBuilder sb = new StringBuilder();
-
-        RespondentSumType respondentType = caseData.getRespondentSumType();
-
         List<RepresentedTypeRItem> representedTypeRList = caseData.getRepCollection();
         if (representedTypeRList != null && !representedTypeRList.isEmpty()) {
             RepresentedTypeR representedTypeR = representedTypeRList.get(0).getValue();
-            //sb.append("\"respondent_email_address\": \"\",");
-            sb.append("\"respondent_full_name\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
-            //sb.append("\"respondent_representative\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
-            //sb.append("\"respondent_rep_full_name\": \"" + representedTypeR.getNameOfRepresentative()).append(NEW_LINE);
-            sb.append("\"respondent_addressLine1\": \"" + representedTypeR.getRepresentativeAddress().getAddressLine1()).append(NEW_LINE);
-            sb.append("\"respondent_addressLine2\": \"" + nullCheck(representedTypeR.getRepresentativeAddress().getAddressLine2())).append(NEW_LINE);
-            sb.append("\"respondent_addressLine3\": \"" + nullCheck(representedTypeR.getRepresentativeAddress().getAddressLine3())).append(NEW_LINE);
-            sb.append("\"respondent_town\": \"" + nullCheck(representedTypeR.getRepresentativeAddress().getPostTown())).append(NEW_LINE);
-            sb.append("\"respondent_county\": \"" + nullCheck(representedTypeR.getRepresentativeAddress().getCounty())).append(NEW_LINE);
-            sb.append("\"respondent_postCode\": \"" + nullCheck(representedTypeR.getRepresentativeAddress().getPostCode())).append(NEW_LINE);
-            sb.append("\"respondent_reference\": \"" + nullCheck(representedTypeR.getRepresentativeReference())).append(NEW_LINE);
-            //sb.append("\"respondent_rep_reference\": \"" + nullCheck(representedTypeR.getRepresentativeReference())).append(NEW_LINE);
+            sb.append("\"respondent_full_name\":\"").append(nullCheck(representedTypeR.getNameOfRepresentative())).append(NEW_LINE);
+            if (representedTypeR.getRepresentativeAddress() != null) {
+                sb.append(getRespondentAddressUK(representedTypeR.getRepresentativeAddress()));
+            }
+            sb.append("\"respondent_reference\":\"").append(nullCheck(representedTypeR.getRepresentativeReference())).append(NEW_LINE);
         } else {
-
-            sb.append("\"respondent_full_name\": \"" + respondentType.getRespondentName()).append(NEW_LINE);
-            sb.append("\"respondent_addressLine1\": \"" + nullCheck(respondentType.getRespondentAddress().getAddressLine1())).append(NEW_LINE);
-            sb.append("\"respondent_addressLine2\": \"" + nullCheck(respondentType.getRespondentAddress().getAddressLine2())).append(NEW_LINE);
-            sb.append("\"respondent_addressLine3\": \"" + nullCheck(respondentType.getRespondentAddress().getAddressLine3())).append(NEW_LINE);
-            sb.append("\"respondent_town\": \"" + nullCheck(respondentType.getRespondentAddress().getPostTown())).append(NEW_LINE);
-            sb.append("\"respondent_county\": \"" + nullCheck(respondentType.getRespondentAddress().getCounty())).append(NEW_LINE);
-            sb.append("\"respondent_postCode\": \"" + nullCheck(respondentType.getRespondentAddress().getPostCode())).append(NEW_LINE);
-            //sb.append("\"claimant_email_address\": \"").append(NEW_LINE);
+            if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+                RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+                sb.append("\"respondent_full_name\":\"").append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE);
+                sb.append(getRespondentAddressUK(respondentSumType.getRespondentAddress()));
+            } else {
+                sb.append("\"respondent_full_name\":\"").append(NEW_LINE);
+            }
         }
-        //Currently not checking caseData.getRepCollection(). Should create a list with names and check if represented or not
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
-            List<String> respOthers = caseData.getRespondentCollection()
-                    .stream()
-                    .map(respondentSumTypeItem -> respondentSumTypeItem.getValue().getRespondentName())
-                    .collect(Collectors.toList());
-            sb.append("\"resp_others\":\"").append(String.join(", ", respOthers)).append(NEW_LINE);
+            sb.append(getRespOthersName(caseData));
+            sb.append(getRespAddress(caseData));
+
+            RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+            sb.append("\"Respondent\":\"").append(caseData.getRespondentCollection().size() > 1 ? "1. " : "")
+                    .append(respondentSumType.getRespondentName()).append(NEW_LINE);
+        } else {
+            sb.append("\"Respondent\":\"").append(NEW_LINE);
+            sb.append("\"resp_others\":\"").append(NEW_LINE);
+            sb.append("\"resp_address\":\"").append(NEW_LINE);
         }
+        return sb;
+    }
 
-        if (respondentType != null) sb.append("\"Respondent\": \"" + respondentType.getRespondentName()).append(NEW_LINE);
+    private static StringBuilder getRespOthersName(CaseData caseData) {
+        StringBuilder sb = new StringBuilder();
+        AtomicInteger atomicInteger = new AtomicInteger(2);
+        List<String> respOthers = caseData.getRespondentCollection()
+                .stream()
+                .skip(1)
+                .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". " + respondentSumTypeItem.getValue().getRespondentName())
+                .collect(Collectors.toList());
+        sb.append("\"resp_others\":\"").append(String.join("\\n", respOthers)).append(NEW_LINE);
+        return sb;
+    }
 
+    private static StringBuilder getRespAddress(CaseData caseData) {
+        StringBuilder sb = new StringBuilder();
+        AtomicInteger atomicInteger = new AtomicInteger(1);
+        int size = caseData.getRespondentCollection().size();
+        List<String> respAddressList = caseData.getRespondentCollection()
+                .stream()
+                .map(respondentSumTypeItem -> (size > 1 ? atomicInteger.getAndIncrement() + ". " : "")
+                        + respondentSumTypeItem.getValue().getRespondentAddress().toString())
+                .collect(Collectors.toList());
+        sb.append("\"resp_address\":\"").append(String.join("\\n", respAddressList)).append(NEW_LINE);
         return sb;
     }
 

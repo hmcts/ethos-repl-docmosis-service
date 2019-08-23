@@ -22,6 +22,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
@@ -254,7 +255,10 @@ public class BulkActionsControllerTest {
         caseData.setClaimantIndType(claimantIndType);
         RespondentSumType respondentSumType = new RespondentSumType();
         respondentSumType.setRespondentName("Andrew Smith");
-        caseData.setRespondentSumType(respondentSumType);
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setValue(respondentSumType);
+        caseData.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
+
         caseData.setFileLocation("Manchester");
         SubmitEvent submitEvent1 = new SubmitEvent();
         submitEvent1.setCaseData(caseData);

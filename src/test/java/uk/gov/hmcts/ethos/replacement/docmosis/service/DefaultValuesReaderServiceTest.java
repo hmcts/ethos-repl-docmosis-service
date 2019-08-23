@@ -127,7 +127,7 @@ public class DefaultValuesReaderServiceTest {
                 "tribunalCorrespondenceDX=DX 580003, tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, " +
                 "ethosCaseReference=null, caseType=null, multipleType=null, multipleOthers=null, multipleReference=null, " +
                 "leadClaimant=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
-                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, respondentSumType=null, " +
+                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, " +
                 "representativeClaimantType=null, respondentCollection=null, repCollection=null, positionType=Manually Created, " +
                 "fileLocation=null, hearingType=null, hearingCollection=null, depositType=null, judgementCollection=null, " +
                 "judgementDetailsCollection=null, costsCollection=null, disposeType=null, NH_JudgementType=null, jurCodesCollection=null, " +

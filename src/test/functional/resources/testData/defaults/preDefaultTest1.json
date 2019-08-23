@@ -56,18 +56,7 @@
         }
       ],
       "claimantRepresentedQuestion": "No",
-      "receiptDate": "2019-05-16",
-      "respondentSumType": {
-        "respondent_name": "Respondents Inc",
-        "respondent_ACAS_question": "No",
-        "respondent_address": {
-          "AddressLine1": "98 Petty France",
-          "PostTown": "London",
-          "PostCode": "SW1H 9EA",
-          "Country": "United Kingdom"
-        },
-        "respondent_phone1": "01234567890"
-      },
+      "receiptDate": "2019-05-16"
       "claimantOtherType": {
         "claimant_occupation": "Airline pilot",
         "claimant_employed_from": "2017-06-06",
@@ -175,23 +164,6 @@
       },
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
-      "respondentSumType": {
-        "classification": "PUBLIC",
-        "value": {
-          "respondent_name": "PUBLIC",
-          "respondent_ACAS_question": "PUBLIC",
-          "respondent_address": {
-            "classification": "PUBLIC",
-            "value": {
-              "AddressLine1": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "Country": "PUBLIC"
-            }
-          },
-          "respondent_phone1": "PUBLIC"
-        }
-      },
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {
@@ -321,23 +293,6 @@
       },
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
-      "respondentSumType": {
-        "classification": "PUBLIC",
-        "value": {
-          "respondent_name": "PUBLIC",
-          "respondent_ACAS_question": "PUBLIC",
-          "respondent_address": {
-            "classification": "PUBLIC",
-            "value": {
-              "AddressLine1": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "Country": "PUBLIC"
-            }
-          },
-          "respondent_phone1": "PUBLIC"
-        }
-      },
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {

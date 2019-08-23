@@ -50,8 +50,6 @@ public class CaseData {
     private String receiptDate;
     @JsonProperty("feeGroupReference")
     private String feeGroupReference;
-    @JsonProperty("respondentSumType")
-    private RespondentSumType respondentSumType;
     @JsonProperty("representativeClaimantType")
     private RepresentedTypeC representativeClaimantType;
     @JsonProperty("respondentCollection")
