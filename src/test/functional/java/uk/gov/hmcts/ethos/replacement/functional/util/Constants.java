@@ -33,7 +33,7 @@ public class Constants {
     public static final String TEST_DATA_SCOT_CASE3 = "src/test/functional/resources/testData/caseDetailsScotTest3.json";
     public static final String TEST_DATA_SCOT_CASE4 = "src/test/functional/resources/testData/caseDetailsScotTest4.json";
 
-    public static final String TEST_DATA_PRE_DEFAULT1 = "src/test/functional/resources/testData/defaults/preDefaultTest1.json";
+    public static final String TEST_DATA_PRE_DEFAULT1 = "src/test/functional/resources/testData/defaults/preDefaultTest2.json";
     public static final String TEST_DATA_PRE_DEFAULT2 = "src/test/functional/resources/testData/defaults/preDefaultTest2.json";
     public static final String TEST_DATA_SCOT_PRE_DEFAULT1 = "src/test/functional/resources/testData/defaults/preDefaultScotTest1.json";
     public static final String TEST_DATA_SCOT_PRE_DEFAULT2 = "src/test/functional/resources/testData/defaults/preDefaultScotTest2.json";
