@@ -1,0 +1,27 @@
+java:
+  image: 'https://hmctspublic.azurecr.io/ethos/ethos-repl-docmosis-backend:latest'
+  applicationPort: 8081
+  keyVaults:
+    ethos:
+      resourceGroup: ethos
+      secrets:
+        - AppInsightsInstrumentationKey
+        - tornado-access-key
+        - ethos-repl-service-s2s-secret
+  environment:
+    SERVER_PORT: 8081
+    REFORM_TEAM: ethos
+    REFORM_SERVICE_NAME: ethos-repl-docmosis-backend
+    REFORM_SERVICE_TYPE: java
+    REFORM_ENVIRONMENT: preview
+    ROOT_LOGGING_LEVEL: INFO
+    LOG_OUTPUT: single
+    REPL_DOCMOSIS_BACKEND_URL: "http://ethos-repl-docmosis-service-aat.service.core-compute-aat.internal"
+    TORNADO_URL: "https://docmosis-development.platform.hmcts.net/rs/render"
+    IDAM_API_URL: "https://idam-api.aat.platform.hmcts.net"
+    CCD_DATA_STORE_API_URL: "http://ccd-data-store-api-aat.service.core-compute-aat.internal"
+    DOCUMENT_MANAGEMENT_URL: "http://dm-store-aat.service.core-compute-aat.internal"
+    SERVICE_AUTH_PROVIDER_URL: "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
+    CCD_GATEWAY_BASE_URL: "https://gateway-ccd.aat.platform.hmcts.net"
+    MICRO_SERVICE: "ethos_repl_service"
+    APPINSIGHTS_INSTRUMENTATIONKEY: fake-key
