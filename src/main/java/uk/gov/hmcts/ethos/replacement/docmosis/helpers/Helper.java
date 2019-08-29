@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
@@ -35,7 +36,7 @@ public class Helper {
         return !isNullOrEmpty(date.toString()) ? date.format(NEW_DATE_PATTERN) : "";
     }
 
-    public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey) {
+    public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails) {
         String FILE_EXTENSION = ".docx";
         StringBuilder sb = new StringBuilder();
         String templateName = getTemplateName(caseData);
@@ -68,7 +69,8 @@ public class Helper {
         sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts2\":\"")
                 .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
 
-        sb.append("\"Clerk\":\"").append(nullCheck(caseData.getClerkResponsible())).append(NEW_LINE);
+        String userName = userDetails.getForename() + " " + (userDetails.getSurname().isPresent() ? userDetails.getSurname().get() : "");
+        sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
         sb.append("\"Today_date\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
         sb.append("\"TodayPlus28Days\":\"").append(formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
         sb.append("\"Case_No\":\"").append(nullCheck(caseData.getEthosCaseReference())).append(NEW_LINE);

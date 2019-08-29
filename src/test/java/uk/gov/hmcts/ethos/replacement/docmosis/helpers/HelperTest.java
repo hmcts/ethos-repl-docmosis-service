@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
+import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceScotType;
@@ -11,6 +12,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceTyp
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import static org.junit.Assert.*;
@@ -30,6 +32,7 @@ public class HelperTest {
     private CaseDetails caseDetailsScot1;
     private CaseDetails caseDetailsScot2;
     private CaseDetails caseDetailsScot3;
+    private UserDetails userDetails;
 
     @Before
     public void setUp() throws Exception {
@@ -48,6 +51,8 @@ public class HelperTest {
 
         caseDetailsEmpty = new CaseDetails();
         caseDetailsEmpty.setCaseData(new CaseData());
+        userDetails = new UserDetails("1", "example@hotmail.com", "Mike", "Jordan", new ArrayList<>());
+
     }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
@@ -106,13 +111,13 @@ public class HelperTest {
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails1.getCaseData(), "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails1.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -162,13 +167,13 @@ public class HelperTest {
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails2.getCaseData(), "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails2.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -217,13 +222,13 @@ public class HelperTest {
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails3.getCaseData(), "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails3.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -273,13 +278,13 @@ public class HelperTest {
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails4.getCaseData(), "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails4.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -330,13 +335,13 @@ public class HelperTest {
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails5.getCaseData(), "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails5.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -387,13 +392,13 @@ public class HelperTest {
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails6.getCaseData(), "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails6.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -444,13 +449,13 @@ public class HelperTest {
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails7.getCaseData(), "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails7.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -501,13 +506,13 @@ public class HelperTest {
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails8.getCaseData(), "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails8.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -557,13 +562,13 @@ public class HelperTest {
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails9.getCaseData(), "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails9.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -591,13 +596,13 @@ public class HelperTest {
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsEmpty.getCaseData(), "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsEmpty.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -648,13 +653,13 @@ public class HelperTest {
                 "\"iScot7_1_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot7_1_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot7_1_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot1.getCaseData(), "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot1.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -704,13 +709,13 @@ public class HelperTest {
                 "\"iScot24_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot24_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot24_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot2.getCaseData(), "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot2.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -759,13 +764,13 @@ public class HelperTest {
                 "\"iScot34_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot34_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot34_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Juan Diego\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot3.getCaseData(), "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot3.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -779,7 +784,7 @@ public class HelperTest {
         correspondenceScotType.setPart3ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails).toString());
         topLevel = "Part_4_Scot";
         part = "42";
         correspondenceScotType = new CorrespondenceScotType();
@@ -787,7 +792,7 @@ public class HelperTest {
         correspondenceScotType.setPart4ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails).toString());
         topLevel = "Part_5_Scot";
         part = "52";
         correspondenceScotType = new CorrespondenceScotType();
@@ -795,7 +800,7 @@ public class HelperTest {
         correspondenceScotType.setPart5ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails).toString());
         topLevel = "Part_6_Scot";
         part = "62";
         correspondenceScotType = new CorrespondenceScotType();
@@ -803,7 +808,7 @@ public class HelperTest {
         correspondenceScotType.setPart6ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails).toString());
         topLevel = "Part_7_Scot";
         part = "72";
         correspondenceScotType = new CorrespondenceScotType();
@@ -811,7 +816,7 @@ public class HelperTest {
         correspondenceScotType.setPart7ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails).toString());
         topLevel = "Part_15_Scot";
         part = "152";
         correspondenceScotType = new CorrespondenceScotType();
@@ -819,7 +824,7 @@ public class HelperTest {
         correspondenceScotType.setPart15ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails).toString());
         topLevel = "Part_16_Scot";
         part = "162";
         correspondenceScotType = new CorrespondenceScotType();
@@ -827,7 +832,7 @@ public class HelperTest {
         correspondenceScotType.setPart16ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails).toString());
     }
 
     @Test
@@ -865,13 +870,13 @@ public class HelperTest {
                 "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(result, Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "").toString());
+        assertEquals(result, Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails).toString());
     }
 
     private String getJson(String topLevel, String part) {
@@ -899,7 +904,7 @@ public class HelperTest {
                 "\"iScot"+ part +"_schmcts\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot"+ part +"_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot"+ part +"_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
                 "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"\",\n" +

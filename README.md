@@ -45,6 +45,20 @@ UI to interact with the API resources
 
 ## Docker container
 
+### Authenticating to ACR
+
+Login to Azure CLI
+
+```bash
+    az login
+```
+
+Login to ACR
+
+```bash
+    az acr login --name hmctspublic
+```
+
 ### Docker image
 
 Build the docker image
