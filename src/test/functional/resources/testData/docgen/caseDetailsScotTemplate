@@ -28,24 +28,29 @@
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
       "tribunalCorrespondenceDX": "PUBLIC",
-      "respondentSumType": {
-        "classification": "PUBLIC",
-        "value": {
-          "respondent_name": "PUBLIC",
-          "respondent_ACAS_question": "PUBLIC",
-          "respondent_ACAS": "PUBLIC",
-          "respondent_address": {
+      "respondentCollection": [
+        {
+          "id": "PUBLIC",
+          "value": {
             "classification": "PUBLIC",
             "value": {
-              "AddressLine1": "PUBLIC",
-              "AddressLine2": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "Country": "PUBLIC"
+              "respondent_name": "PUBLIC",
+              "respondent_ACAS_question": "PUBLIC",
+              "respondent_ACAS": "PUBLIC",
+              "respondent_address": {
+                "classification": "PUBLIC",
+                "value": {
+                  "AddressLine1": "PUBLIC",
+                  "AddressLine2": "PUBLIC",
+                  "PostTown": "PUBLIC",
+                  "PostCode": "PUBLIC",
+                  "Country": "PUBLIC"
+                }
+              }
             }
           }
         }
-      },
+      ],
       "tribunalCorrespondenceFax": "PUBLIC",
       "claimantOtherType": {
         "classification": "PUBLIC",
@@ -134,24 +139,29 @@
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
       "tribunalCorrespondenceDX": "PUBLIC",
-      "respondentSumType": {
-        "classification": "PUBLIC",
-        "value": {
-          "respondent_name": "PUBLIC",
-          "respondent_ACAS_question": "PUBLIC",
-          "respondent_ACAS": "PUBLIC",
-          "respondent_address": {
+      "respondentCollection": [
+        {
+          "id": "PUBLIC",
+          "value": {
             "classification": "PUBLIC",
             "value": {
-              "AddressLine1": "PUBLIC",
-              "AddressLine2": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "Country": "PUBLIC"
+              "respondent_name": "PUBLIC",
+              "respondent_ACAS_question": "PUBLIC",
+              "respondent_ACAS": "PUBLIC",
+              "respondent_address": {
+                "classification": "PUBLIC",
+                "value": {
+                  "AddressLine1": "PUBLIC",
+                  "AddressLine2": "PUBLIC",
+                  "PostTown": "PUBLIC",
+                  "PostCode": "PUBLIC",
+                  "Country": "PUBLIC"
+                }
+              }
             }
           }
         }
-      },
+      ],
       "tribunalCorrespondenceFax": "PUBLIC",
       "claimantOtherType": {
         "classification": "PUBLIC",
