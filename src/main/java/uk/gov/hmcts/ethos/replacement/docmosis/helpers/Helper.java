@@ -69,7 +69,7 @@ public class Helper {
         sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts2\":\"")
                 .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
 
-        String userName = userDetails.getForename() + " " + (userDetails.getSurname().isPresent() ? userDetails.getSurname().get() : "");
+        String userName = userDetails.getForename() + " " + userDetails.getSurname().orElse("");
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
         sb.append("\"Today_date\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
         sb.append("\"TodayPlus28Days\":\"").append(formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
