@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
+import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 
@@ -29,6 +30,7 @@ public class TornadoService {
     private final DocumentManagementService documentManagementService;
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
+    private final UserService userService;
 
     DocumentInfo documentGeneration(String authToken, CaseData caseData) throws IOException {
         HttpURLConnection conn = null;
@@ -36,7 +38,8 @@ public class TornadoService {
         try {
             conn = createConnection();
             log.info("Connected");
-            buildInstruction(conn, caseData);
+            UserDetails userDetails = userService.getUserDetails(authToken);
+            buildInstruction(conn, caseData, userDetails);
             int status = conn.getResponseCode();
             if (status == HTTP_OK) {
                 documentInfo = createDocument(authToken, conn, caseData);
@@ -75,8 +78,8 @@ public class TornadoService {
         return conn;
     }
 
-    private void buildInstruction(HttpURLConnection conn, CaseData caseData) throws IOException {
-        StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey());
+    private void buildInstruction(HttpURLConnection conn, CaseData caseData, UserDetails userDetails) throws IOException {
+        StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(), userDetails);
         log.info("Sending request: " + sb.toString());
         // send the instruction in UTF-8 encoding so that most character sets are available
         OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
