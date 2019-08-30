@@ -1,6 +1,6 @@
 name: ethos-repl-docmosis-backend
 home: https://github.com/hmcts/ethos-repl-docmosis-service
-version: 0.0.1
+version: 1.0.0
 description: HMCTS Ethos Replacement Docmosis Service
 maintainers:
   - name: HMCTS ETHOS Team
