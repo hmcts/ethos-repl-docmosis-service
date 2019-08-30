@@ -110,8 +110,8 @@ public class BulkHelperTest {
     public void getCaseTypeId() {
         String caseId = MANCHESTER_CASE_TYPE_ID;
         assertEquals(caseId, BulkHelper.getCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID));
-        caseId = GLASGOW_CASE_TYPE_ID;
-        assertEquals(caseId, BulkHelper.getCaseTypeId("GLASGOW_BULK_CASE_ID"));
+        caseId = SCOTLAND_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getCaseTypeId(SCOTLAND_BULK_CASE_TYPE_ID));
     }
 
     @Test
