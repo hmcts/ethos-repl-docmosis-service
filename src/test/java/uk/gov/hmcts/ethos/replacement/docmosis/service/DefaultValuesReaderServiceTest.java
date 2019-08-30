@@ -38,7 +38,7 @@ public class DefaultValuesReaderServiceTest {
         glasgowCaseDetails = new CaseDetails();
         glasgowCaseDetails.setCaseData(new CaseData());
         glasgowCaseDetails.setCaseId("123456");
-        glasgowCaseDetails.setCaseTypeId(GLASGOW_CASE_TYPE_ID);
+        glasgowCaseDetails.setCaseTypeId(SCOTLAND_CASE_TYPE_ID);
         glasgowCaseDetails.setJurisdiction("TRIBUNALS");
         preDefaultValues = DefaultValues.builder().claimantTypeOfClaimant("Individual").build();
         postDefaultValuesManchester = DefaultValues.builder()
