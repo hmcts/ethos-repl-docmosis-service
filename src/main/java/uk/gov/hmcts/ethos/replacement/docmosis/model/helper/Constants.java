@@ -13,11 +13,35 @@ public class Constants {
     public static final String PRE_DEFAULT_XLSX_FILE_PATH = "preDefaultValues.xlsx";
     public static final String POST_DEFAULT_XLSX_FILE_PATH = "postDefaultValues.xlsx";
 
-    public static final String MANCHESTER_CASE_TYPE_ID = "Manchester_Dev";
-    public static final String MANCHESTER_USERS_CASE_TYPE_ID = "Manchester";
-    public static final String GLASGOW_CASE_TYPE_ID = "Glasgow_Dev";
     public static final String MANCHESTER_BULK_CASE_TYPE_ID = "Manchester_Multiples_Dev";
+    public static final String MANCHESTER_CASE_TYPE_ID = "Manchester_Dev";
+    public static final String SCOTLAND_BULK_CASE_TYPE_ID = "Scotland_Multiples_Dev";
+    public static final String SCOTLAND_CASE_TYPE_ID = "Scotland_Dev";
+
     public static final String MANCHESTER_USERS_BULK_CASE_TYPE_ID = "Manchester_Multiples";
+    public static final String MANCHESTER_USERS_CASE_TYPE_ID = "Manchester";
+    public static final String SCOTLAND_USERS_BULK_CASE_TYPE_ID = "Scotland_Multiples";
+    public static final String SCOTLAND_USERS_CASE_TYPE_ID = "Scotland";
+    public static final String BRISTOL_USERS_BULK_CASE_TYPE_ID = "Bristol_Multiples";
+    public static final String BRISTOL_USERS_CASE_TYPE_ID = "Bristol";
+    public static final String LEEDS_USERS_BULK_CASE_TYPE_ID = "Leeds_Multiples";
+    public static final String LEEDS_USERS_CASE_TYPE_ID = "Leeds";
+    public static final String LONDON_CENTRAL_USERS_BULK_CASE_TYPE_ID = "LondonCentral_Multiples";
+    public static final String LONDON_CENTRAL_USERS_CASE_TYPE_ID = "LondonCentral";
+    public static final String LONDON_EAST_USERS_BULK_CASE_TYPE_ID = "LondonEast_Multiples";
+    public static final String LONDON_EAST_USERS_CASE_TYPE_ID = "LondonEast";
+    public static final String LONDON_SOUTH_USERS_BULK_CASE_TYPE_ID = "LondonSouth_Multiples";
+    public static final String LONDON_SOUTH_USERS_CASE_TYPE_ID = "LondonSouth";
+    public static final String MIDLANDS_EAST_USERS_BULK_CASE_TYPE_ID = "MidlandsEast_Multiples";
+    public static final String MIDLANDS_EAST_USERS_CASE_TYPE_ID = "MidlandsEast";
+    public static final String MIDLANDS_WEST_USERS_BULK_CASE_TYPE_ID = "MidlandsWest_Multiples";
+    public static final String MIDLANDS_WEST_USERS_CASE_TYPE_ID = "MidlandsWest";
+    public static final String NEWCASTLE_USERS_BULK_CASE_TYPE_ID = "Newcastle_Multiples";
+    public static final String NEWCASTLE_USERS_CASE_TYPE_ID = "Newcastle";
+    public static final String WALES_USERS_BULK_CASE_TYPE_ID = "Wales_Multiples";
+    public static final String WALES_USERS_CASE_TYPE_ID = "Wales";
+    public static final String WATFORD_USERS_BULK_CASE_TYPE_ID = "Watford_Multiples";
+    public static final String WATFORD_USERS_CASE_TYPE_ID = "Watford";
 
     public static final String PENDING_STATE = "Pending";
     public static final String SUBMITTED_STATE = "Submitted";
