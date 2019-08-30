@@ -96,8 +96,11 @@ public class TornadoService {
     private DocumentInfo createDocument(String authToken, HttpURLConnection conn, CaseData caseData) throws IOException {
         byte[] buff = new byte[1000];
         int bytesRead;
+        log.info("Create document");
         File file = new File(OUTPUT_FILE_NAME);
+        log.info("Document created");
         try (FileOutputStream fos = new FileOutputStream(file)) {
+            log.info("FileOutputStream");
             while ((bytesRead = conn.getInputStream().read(buff, 0, buff.length)) != -1) {
                 fos.write(buff, 0, bytesRead);
             }
