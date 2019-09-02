@@ -73,8 +73,8 @@ public class DocumentManagementService {
         }
     }
 
-    String generateDownloadableURL(String documentSelf) {
-        return documentSelf;
+    String generateDownloadableURL(URI documentSelf) {
+        return ccdGatewayBaseUrl + documentSelf.getRawPath() + "/binary";
     }
 
     String generateMarkupDocument(String documentDownloadableURL) {
