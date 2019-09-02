@@ -84,6 +84,8 @@ public class CaseData {
     private NhJudgementType NH_JudgementType;
     @JsonProperty("jurCodesCollection")
     private List<JurCodesTypeItem> jurCodesCollection;
+    @JsonProperty("broughtForwardCollection")
+    private List<BroughtForwardDatesTypeItem> broughtForwardCollection;
     @JsonProperty("acasOffice")
     private String acasOffice;
     @JsonProperty("clerkResponsible")
