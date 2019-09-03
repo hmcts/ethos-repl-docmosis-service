@@ -1,0 +1,12 @@
+java:
+  image: ${IMAGE_NAME}
+  ingressHost: ${SERVICE_FQDN}
+  environment:
+    REPL_DOCMOSIS_BACKEND_URL: "http://ethos-repl-docmosis-service-aat.service.core-compute-aat.internal"
+    TORNADO_URL: "https://docmosis-development.platform.hmcts.net/rs/render"
+    IDAM_API_URL: "https://idam-api.aat.platform.hmcts.net"
+    CCD_DATA_STORE_API_URL: "http://ccd-data-store-api-aat.service.core-compute-aat.internal"
+    DOCUMENT_MANAGEMENT_URL: "http://dm-store-aat.service.core-compute-aat.internal"
+    SERVICE_AUTH_PROVIDER_URL: "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
+    CCD_GATEWAY_BASE_URL: "https://gateway-ccd.aat.platform.hmcts.net"
+    MICRO_SERVICE: "ethos_repl_service"

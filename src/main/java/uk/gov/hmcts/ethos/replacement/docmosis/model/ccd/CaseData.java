@@ -50,8 +50,14 @@ public class CaseData {
     private String receiptDate;
     @JsonProperty("feeGroupReference")
     private String feeGroupReference;
+    @JsonProperty("claimantWorkAddressQuestion")
+    private String claimantWorkAddressQuestion;
     @JsonProperty("representativeClaimantType")
     private RepresentedTypeC representativeClaimantType;
+    @JsonProperty("responseTypeCollection")
+    private List<RespondentSumTypeItem> responseTypeCollection;
+    @JsonProperty("responseType")
+    private RespondentSumType responseType;
     @JsonProperty("respondentCollection")
     private List<RespondentSumTypeItem> respondentCollection;
     @JsonProperty("repCollection")
@@ -78,6 +84,8 @@ public class CaseData {
     private NhJudgementType NH_JudgementType;
     @JsonProperty("jurCodesCollection")
     private List<JurCodesTypeItem> jurCodesCollection;
+    @JsonProperty("broughtForwardCollection")
+    private List<BroughtForwardDatesTypeItem> broughtForwardCollection;
     @JsonProperty("acasOffice")
     private String acasOffice;
     @JsonProperty("clerkResponsible")
@@ -94,10 +102,6 @@ public class CaseData {
     private List<DocumentTypeItem> documentCollection;
     @JsonProperty("referToETJ")
     private List<ReferralTypeItem> referToETJ;
-    @JsonProperty("responseType")
-    private ResponseType responseType;
-    @JsonProperty("responseTypeCollection")
-    private List<ResponseTypeItem> responseTypeCollection;
     @JsonProperty("withdrawType")
     private WithdrawType withdrawType;
     @JsonProperty("archiveType")
@@ -130,5 +134,8 @@ public class CaseData {
     private String stateAPI;
     @JsonProperty("managingOffice")
     private String managingOffice;
+    @JsonProperty("conciliationTrack")
+    private String conciliationTrack;
+
 
 }
