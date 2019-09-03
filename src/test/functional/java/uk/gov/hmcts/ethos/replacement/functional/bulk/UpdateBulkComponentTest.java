@@ -112,6 +112,7 @@ public class UpdateBulkComponentTest {
     }
 
     @Test
+    @Ignore
     public void update_bulk_scot_company_claimant_not_represented() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_SCOT_BULK3_CASE1);

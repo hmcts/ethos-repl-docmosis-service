@@ -22,17 +22,22 @@
       "claimantRepresentedQuestion": "No",
       "receiptDate": "2019-07-20",
       "tribunalCorrespondenceDX": "DX 580003",
-      "respondentSumType": {
-        "respondent_name": "Tesco Ltd",
-        "respondent_ACAS_question": "Yes",
-        "respondent_ACAS": "83473985749",
-        "respondent_address": {
-          "AddressLine1": "Library & Community Centre",
-          "AddressLine2": "1 Artizan Street",
-          "PostTown": "London",
-          "Country": "United Kingdom"
+      "respondentCollection": [
+        {
+          "id": "12345",
+          "value": {
+            "respondent_name": "Tesco Ltd",
+            "respondent_ACAS_question": "Yes",
+            "respondent_ACAS": "83473985749",
+            "respondent_address": {
+              "AddressLine1": "Library & Community Centre",
+              "AddressLine2": "1 Artizan Street",
+              "PostTown": "London",
+              "Country": "United Kingdom"
+            }
+          }
         }
-      },
+      ],
       "tribunalCorrespondenceFax": "01264 785 177",
       "claimantOtherType": {
         "claimant_employed_currently": "No",
@@ -86,23 +91,28 @@
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
       "tribunalCorrespondenceDX": "PUBLIC",
-      "respondentSumType": {
-        "classification": "PUBLIC",
-        "value": {
-          "respondent_name": "PUBLIC",
-          "respondent_ACAS_question": "PUBLIC",
-          "respondent_ACAS": "PUBLIC",
-          "respondent_address": {
+      "respondentCollection": [
+        {
+          "id": "PUBLIC",
+          "value": {
             "classification": "PUBLIC",
             "value": {
-              "AddressLine1": "PUBLIC",
-              "AddressLine2": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "Country": "PUBLIC"
+              "respondent_name": "PUBLIC",
+              "respondent_ACAS_question": "PUBLIC",
+              "respondent_ACAS": "PUBLIC",
+              "respondent_address": {
+                "classification": "PUBLIC",
+                "value": {
+                  "AddressLine1": "PUBLIC",
+                  "AddressLine2": "PUBLIC",
+                  "PostTown": "PUBLIC",
+                  "Country": "PUBLIC"
+                }
+              }
             }
           }
         }
-      },
+      ],
       "tribunalCorrespondenceFax": "PUBLIC",
       "claimantOtherType": {
         "classification": "PUBLIC",
@@ -168,23 +178,28 @@
       "claimantRepresentedQuestion": "PUBLIC",
       "receiptDate": "PUBLIC",
       "tribunalCorrespondenceDX": "PUBLIC",
-      "respondentSumType": {
-        "classification": "PUBLIC",
-        "value": {
-          "respondent_name": "PUBLIC",
-          "respondent_ACAS_question": "PUBLIC",
-          "respondent_ACAS": "PUBLIC",
-          "respondent_address": {
+      "respondentCollection": [
+        {
+          "id": "PUBLIC",
+          "respondentSumType": {
             "classification": "PUBLIC",
             "value": {
-              "AddressLine1": "PUBLIC",
-              "AddressLine2": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "Country": "PUBLIC"
+              "respondent_name": "PUBLIC",
+              "respondent_ACAS_question": "PUBLIC",
+              "respondent_ACAS": "PUBLIC",
+              "respondent_address": {
+                "classification": "PUBLIC",
+                "value": {
+                  "AddressLine1": "PUBLIC",
+                  "AddressLine2": "PUBLIC",
+                  "PostTown": "PUBLIC",
+                  "Country": "PUBLIC"
+                }
+              }
             }
           }
         }
-      },
+      ],
       "tribunalCorrespondenceFax": "PUBLIC",
       "claimantOtherType": {
         "classification": "PUBLIC",

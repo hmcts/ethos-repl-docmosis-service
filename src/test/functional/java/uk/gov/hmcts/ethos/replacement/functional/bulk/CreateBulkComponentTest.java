@@ -177,6 +177,7 @@ public class CreateBulkComponentTest {
     }
 
     @Test
+    @Ignore
     public void create_bulk_eng_add_case_from_glasgow() throws IOException {
         Response response;
         String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1), "UTF-8");
