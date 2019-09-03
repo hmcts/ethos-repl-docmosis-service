@@ -32,7 +32,7 @@ public class DocMosisScotPart1ComponentTest {
     @Test
     @WithTag("SmokeTest")
     public void generateDocument_Part_Scot_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "", "I have received your claim form but am unable to accept it because it is defective for the following", true);
+        testUtil.executeGenerateDocumentTest("1", "", "REJECTION OF CLAIM", true);
     }
 
     @Test

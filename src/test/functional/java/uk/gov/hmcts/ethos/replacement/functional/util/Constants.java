@@ -20,6 +20,7 @@ public class Constants {
     public static final String UPDATE_BULK_URI = "/updateBulk";
     public static final String UPDATE_BULK_CASE_URI = "/updateBulkCase";
     public static final String GENERATE_BULK_LETTER_URI = "/generateBulkLetter";
+    public static final String AMEND_CASE_DETAILS_URI = "/amendCaseDetails";
 
 
 
@@ -32,6 +33,12 @@ public class Constants {
     public static final String TEST_DATA_SCOT_CASE2 = "src/test/functional/resources/testData/caseDetailsScotTest2.json";
     public static final String TEST_DATA_SCOT_CASE3 = "src/test/functional/resources/testData/caseDetailsScotTest3.json";
     public static final String TEST_DATA_SCOT_CASE4 = "src/test/functional/resources/testData/caseDetailsScotTest4.json";
+
+    public static final String TEST_DATA_SCOT_GLASGOW_CASE1 = "src/test/functional/resources/testData/docgen/caseDetailsScotGlasgowTest1.json";
+    public static final String TEST_DATA_SCOT_ABERDEEN_CASE1 = "src/test/functional/resources/testData/docgen/caseDetailsScotAberdeenTest1.json";
+    public static final String TEST_DATA_SCOT_DUNDEE_CASE1 = "src/test/functional/resources/testData/docgen/caseDetailsScotDundeeTest1.json";
+    public static final String TEST_DATA_SCOT_EDINBURGH_CASE1 = "src/test/functional/resources/testData/docgen/caseDetailsScotEdinburghTest1.json";
+    public static final String TEST_DATA_SCOT_TEMPLATE = "src/test/functional/resources/testData/docgen/caseDetailsScotTemplate";
 
     public static final String TEST_DATA_PRE_DEFAULT1 = "src/test/functional/resources/testData/defaults/preDefaultTest2.json";
     public static final String TEST_DATA_PRE_DEFAULT2 = "src/test/functional/resources/testData/defaults/preDefaultTest2.json";

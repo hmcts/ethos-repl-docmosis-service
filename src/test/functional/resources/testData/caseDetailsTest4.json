@@ -25,18 +25,23 @@
         "caseAccepted": "Yes",
         "dateAccepted": "2019-05-20"
       },
-      "respondentSumType": {
-        "respondent_ACAS": "83473985749",
-        "respondent_name": "Roadshow Pictures",
-        "respondent_address": {
-          "Country": "United Kingdom",
-          "PostCode": "E1 7AF",
-          "PostTown": "London",
-          "AddressLine1": "Library & Community Centre",
-          "AddressLine2": "1 Artizan Street"
-        },
-        "respondent_ACAS_question": "Yes"
-      },
+      "respondentCollection": [
+        {
+          "id": "12345",
+          "value": {
+            "respondent_ACAS": "83473985749",
+            "respondent_name": "Roadshow Pictures",
+            "respondent_address": {
+              "Country": "United Kingdom",
+              "PostCode": "E1 7AF",
+              "PostTown": "London",
+              "AddressLine1": "Library & Community Centre",
+              "AddressLine2": "1 Artizan Street"
+            },
+            "respondent_ACAS_question": "Yes"
+          }
+        }
+      ],
       "claimantOtherType": {
         "claimant_disabled": "No",
         "claimant_employed_currently": "No"
@@ -137,24 +142,29 @@
           "dateAccepted": "PUBLIC"
         }
       },
-      "respondentSumType": {
-        "classification": "PUBLIC",
-        "value": {
-          "respondent_ACAS": "PUBLIC",
-          "respondent_name": "PUBLIC",
-          "respondent_address": {
+      "respondentCollection": [
+        {
+          "id": "PUBLIC",
+          "value": {
             "classification": "PUBLIC",
             "value": {
-              "Country": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "AddressLine1": "PUBLIC",
-              "AddressLine2": "PUBLIC"
+              "respondent_ACAS": "PUBLIC",
+              "respondent_name": "PUBLIC",
+              "respondent_address": {
+                "classification": "PUBLIC",
+                "value": {
+                  "Country": "PUBLIC",
+                  "PostCode": "PUBLIC",
+                  "PostTown": "PUBLIC",
+                  "AddressLine1": "PUBLIC",
+                  "AddressLine2": "PUBLIC"
+                }
+              },
+              "respondent_ACAS_question": "PUBLIC"
             }
-          },
-          "respondent_ACAS_question": "PUBLIC"
+          }
         }
-      },
+      ],
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {
@@ -283,24 +293,29 @@
           "dateAccepted": "PUBLIC"
         }
       },
-      "respondentSumType": {
-        "classification": "PUBLIC",
-        "value": {
-          "respondent_ACAS": "PUBLIC",
-          "respondent_name": "PUBLIC",
-          "respondent_address": {
+      "respondentCollection": [
+        {
+          "id": "PUBLIC",
+          "value": {
             "classification": "PUBLIC",
             "value": {
-              "Country": "PUBLIC",
-              "PostCode": "PUBLIC",
-              "PostTown": "PUBLIC",
-              "AddressLine1": "PUBLIC",
-              "AddressLine2": "PUBLIC"
+              "respondent_ACAS": "PUBLIC",
+              "respondent_name": "PUBLIC",
+              "respondent_address": {
+                "classification": "PUBLIC",
+                "value": {
+                  "Country": "PUBLIC",
+                  "PostCode": "PUBLIC",
+                  "PostTown": "PUBLIC",
+                  "AddressLine1": "PUBLIC",
+                  "AddressLine2": "PUBLIC"
+                }
+              },
+              "respondent_ACAS_question": "PUBLIC"
             }
-          },
-          "respondent_ACAS_question": "PUBLIC"
+          }
         }
-      },
+      ],
       "claimantOtherType": {
         "classification": "PUBLIC",
         "value": {
