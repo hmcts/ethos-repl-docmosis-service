@@ -111,10 +111,16 @@ public class BulkHelper {
     }
 
     public static String getCaseTypeId(String caseTypeId) {
-        if (caseTypeId.equals(MANCHESTER_BULK_CASE_TYPE_ID) || caseTypeId.equals(MANCHESTER_USERS_BULK_CASE_TYPE_ID)) {
-            return MANCHESTER_CASE_TYPE_ID;
+        switch (caseTypeId) {
+            case MANCHESTER_BULK_CASE_TYPE_ID:
+                return MANCHESTER_CASE_TYPE_ID;
+            case MANCHESTER_USERS_BULK_CASE_TYPE_ID:
+                return MANCHESTER_USERS_CASE_TYPE_ID;
+            case SCOTLAND_BULK_CASE_TYPE_ID:
+                return SCOTLAND_CASE_TYPE_ID;
+            default:
+                return SCOTLAND_USERS_CASE_TYPE_ID;
         }
-        return GLASGOW_CASE_TYPE_ID;
     }
 
     public static MultipleType getMultipleTypeFromSubmitEvent(SubmitEvent submitEvent) {

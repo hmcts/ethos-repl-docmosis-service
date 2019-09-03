@@ -39,9 +39,12 @@ public class TornadoService {
             conn = createConnection();
             log.info("Connected");
             UserDetails userDetails = userService.getUserDetails(authToken);
+            log.info("Coming to build instruction");
             buildInstruction(conn, caseData, userDetails);
+            log.info("End build instruction");
             int status = conn.getResponseCode();
             if (status == HTTP_OK) {
+                log.info("HTTP_OK");
                 documentInfo = createDocument(authToken, conn, caseData);
             } else {
                 log.error("Our call failed: status = " + status);
@@ -82,16 +85,22 @@ public class TornadoService {
         StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(), userDetails);
         log.info("Sending request: " + sb.toString());
         // send the instruction in UTF-8 encoding so that most character sets are available
+        log.info("Creating outputstreamwriter");
         OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
+        log.info("Writing toString");
         os.write(sb.toString());
+        log.info("Flushing");
         os.flush();
     }
 
     private DocumentInfo createDocument(String authToken, HttpURLConnection conn, CaseData caseData) throws IOException {
         byte[] buff = new byte[1000];
         int bytesRead;
+        log.info("Create document");
         File file = new File(OUTPUT_FILE_NAME);
+        log.info("Document created");
         try (FileOutputStream fos = new FileOutputStream(file)) {
+            log.info("FileOutputStream");
             while ((bytesRead = conn.getInputStream().read(buff, 0, buff.length)) != -1) {
                 fos.write(buff, 0, bytesRead);
             }
