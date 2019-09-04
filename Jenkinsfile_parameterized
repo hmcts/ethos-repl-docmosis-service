@@ -1,23 +1,6 @@
 #!groovy
 @Library(value="Infrastructure", changelog=false) _
 
-def secrets = [
-  'ethos-${env}': [
-    secret('AppInsightsInstrumentationKey', 'APPINSIGHTS_INSTRUMENTATIONKEY'),
-    secret('tornado-access-key', 'TORNADO_ACCESS_KEY'),
-    secret('ethos-repl-service-s2s-secret', 'ETHOS_S2S_SECRET_KEY')
-  ]
-]
-
-static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
-  [ $class: 'AzureKeyVaultSecret',
-    secretType: 'Secret',
-    name: secretName,
-    version: '',
-    envVariable: envVar
-  ]
-}
-
 properties([
   parameters([
     string(name: 'PRODUCT_NAME', defaultValue: 'ethos', description: ''),
@@ -31,7 +14,6 @@ properties([
 ])
 
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
-    loadVaultSecrets(secrets)
     enableSlackNotifications('#ethos-repl-service')
 
     after('functional:preview') {
