@@ -149,5 +149,8 @@
         <notes><![CDATA[ CVE-2019-14439  ]]></notes>
         <cve>CVE-2019-14439</cve>
     </suppress>
-
+    <suppress>
+        <notes><![CDATA[ CVE-2019-12402  ]]></notes>
+        <cve>CVE-2019-12402</cve>
+    </suppress>
 </suppressions>
