@@ -64,6 +64,10 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile("org.springframework.boot:spring-boot-starter-actuator")
     compile("org.springframework.boot:spring-boot-configuration-processor")
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+
+    compile('org.postgresql:postgresql')
+
     compileOnly 'org.projectlombok:lombok:1.18.4'
     annotationProcessor 'org.projectlombok:lombok:1.18.4'
 
@@ -86,7 +90,7 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: '0.0.4'
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.0.4'
     compile group: 'org.springframework.retry', name: 'spring-retry'
-
+    
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.6'
     testCompile (group: 'org.docx4j', name: 'docx4j', version: '3.3.5') {
