@@ -20,6 +20,7 @@ public class ReferenceService {
     }
 
     public Reference createReference(@Valid @RequestBody Reference reference) {
+        log.info("SAVING...");
         return referenceRepository.save(reference);
     }
 }
