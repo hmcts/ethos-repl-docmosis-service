@@ -4,13 +4,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "reference")
 public class Reference {
+
     @Id
-    @GeneratedValue(generator = "reference_generator")
-    @SequenceGenerator(
-            name = "reference_generator",
-            sequenceName = "reference_sequence",
-            initialValue = 0
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     public Long getId() {

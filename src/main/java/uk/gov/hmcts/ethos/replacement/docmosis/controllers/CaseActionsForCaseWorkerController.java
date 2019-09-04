@@ -169,6 +169,7 @@ public class CaseActionsForCaseWorkerController {
 
             Reference reference = referenceService.createReference(new Reference());
             log.info("Reference generated: " + reference.getId());
+            caseData.setEthosCaseReference(String.valueOf(reference.getId()));
         } else {
             log.info("Error in PostDefaultValues");
             errors.add("The payload is empty. Please make sure you have some data on your case");
