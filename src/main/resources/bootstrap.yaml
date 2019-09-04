@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    propertiesvolume:
+      prefixed: false
+      paths: /mnt/secrets/ethos
+      aliases:
+        AppInsightsInstrumentationKey: APPINSIGHTS_INSTRUMENTATIONKEY
+        tornado-access-key: TORNADO_ACCESS_KEY
+        ethos-repl-service-s2s-secret: ETHOS_S2S_SECRET_KEY
