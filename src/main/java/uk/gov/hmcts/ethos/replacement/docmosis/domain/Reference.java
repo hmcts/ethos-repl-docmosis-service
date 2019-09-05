@@ -1,29 +1,16 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.domain;
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "reference")
+@Data
 public class Reference {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
     private String caseId;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setCaseId(String caseId) {
-        this.caseId = caseId;
-    }
-
-    public String getCaseId() {
-        return caseId;
-    }
 }
