@@ -19,7 +19,11 @@ public class ReferenceService {
 
     public void getReference() {
         Reference reference = referenceRepository.findFirstByOrderByIdAsc();
-        log.info("REFERENCE PREVIOUS ONE: " + reference.toString());
+        if (reference != null) {
+            log.info("REFERENCE PREVIOUS ONE: " + reference.toString());
+        } else {
+            log.info("No elements found yet");
+        }
     }
 
     public Reference createReference(String caseId) {
