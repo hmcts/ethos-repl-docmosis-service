@@ -23,11 +23,13 @@ public class ReferenceServiceTest {
 
     private Reference reference;
     private String caseId;
+    private String previousId;
 
     @Before
     public void setUp() {
         caseId = "1232132";
-        reference = new Reference(caseId);
+        previousId = "12";
+        reference = new Reference(caseId, previousId);
     }
 
     @Test
