@@ -17,9 +17,12 @@ public class ReferenceService {
         this.referenceRepository = referenceRepository;
     }
 
-    public Reference createReference(String caseId) {
+    public void getReference() {
         Reference reference = referenceRepository.findFirstByOrderByIdAsc();
         log.info("REFERENCE PREVIOUS ONE: " + reference.toString());
+    }
+
+    public Reference createReference(String caseId) {
         return referenceRepository.save(new Reference(caseId));
     }
 }
