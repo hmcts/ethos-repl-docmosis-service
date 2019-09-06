@@ -10,6 +10,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.domain.Reference;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.ReferenceRepository;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
@@ -37,6 +38,18 @@ public class ReferenceServiceTest {
         when(referenceRepository.save(isA(Reference.class))).thenReturn(reference);
         assertEquals(referenceService.createReference(caseId), reference);
         assertEquals(referenceService.createReference(caseId).getCaseId(), caseId);
+    }
+
+    @Test
+    public void getReference() {
+        when(referenceRepository.findFirstByOrderByIdAsc()).thenReturn(reference);
+        assertEquals(referenceService.getReference(), reference);
+    }
+
+    @Test
+    public void getReferenceNotFound() {
+        when(referenceRepository.findFirstByOrderByIdAsc()).thenReturn(null);
+        assertNull(referenceService.getReference());
     }
 
 }
