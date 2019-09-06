@@ -9,8 +9,7 @@ import javax.persistence.*;
 public class Reference {
 
     @Id
-    @SequenceGenerator(name="seq",sequenceName="seqOffice")
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String caseId;

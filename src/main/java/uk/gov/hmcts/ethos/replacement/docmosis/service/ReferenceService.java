@@ -18,6 +18,8 @@ public class ReferenceService {
     }
 
     public Reference createReference(String caseId) {
+        Reference reference = referenceRepository.findFirstByOrderByIdAsc();
+        log.info("REFERENCE PREVIOUS ONE: " + reference.toString());
         return referenceRepository.save(new Reference(caseId));
     }
 }
