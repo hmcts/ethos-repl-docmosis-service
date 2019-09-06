@@ -27,6 +27,6 @@ public class ReferenceService {
     }
 
     public Reference createReference(String caseId) {
-        return referenceRepository.save(new Reference(caseId));
+        return referenceRepository.save(new Reference(caseId, "23"));
     }
 }
