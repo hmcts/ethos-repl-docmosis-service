@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "reference")
+@Table(name = "singleReference")
 @Data
 @NoArgsConstructor
 public class Reference {
