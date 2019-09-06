@@ -96,7 +96,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void setUp() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
         doRequestSetUp();
-        reference = new Reference("12121212");
+        reference = new Reference("12121212", "23");
         submitEvent = new SubmitEvent();
         submitEvent.setCaseData(new CaseData());
         defaultValues = DefaultValues.builder()
