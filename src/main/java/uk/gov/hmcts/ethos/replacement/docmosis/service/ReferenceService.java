@@ -17,12 +17,14 @@ public class ReferenceService {
         this.referenceRepository = referenceRepository;
     }
 
-    public void getReference() {
+    public Reference getReference() {
         Reference reference = referenceRepository.findFirstByOrderByIdAsc();
         if (reference != null) {
             log.info("REFERENCE PREVIOUS ONE: " + reference.toString());
+            return reference;
         } else {
             log.info("No elements found yet");
+            return null;
         }
     }
 
