@@ -17,8 +17,7 @@ public class ReferenceService {
         this.referenceRepository = referenceRepository;
     }
 
-    public Reference createReference(Reference reference) {
-        log.info("SAVING...");
-        return referenceRepository.save(reference);
+    public Reference createReference(String caseId) {
+        return referenceRepository.save(new Reference(caseId));
     }
 }

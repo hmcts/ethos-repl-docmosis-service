@@ -13,4 +13,8 @@ public class Reference {
     private Integer id;
 
     private String caseId;
+
+    public Reference(String caseId) {
+        this.caseId = caseId;
+    }
 }

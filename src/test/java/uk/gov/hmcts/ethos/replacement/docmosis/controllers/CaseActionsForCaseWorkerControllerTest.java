@@ -96,7 +96,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void setUp() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
         doRequestSetUp();
-        reference = new Reference();
+        reference = new Reference("12121212");
         submitEvent = new SubmitEvent();
         submitEvent.setCaseData(new CaseData());
         defaultValues = DefaultValues.builder()
@@ -185,7 +185,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void postDefaultValuesFromET1WithPositionTypeDefined() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenReturn(defaultValues);
         when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
-        when(referenceService.createReference(isA(Reference.class))).thenReturn(reference);
+        when(referenceService.createReference(isA(String.class))).thenReturn(reference);
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -200,7 +200,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void postDefaultValues() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenReturn(defaultValues);
         when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
-        when(referenceService.createReference(isA(Reference.class))).thenReturn(reference);
+        when(referenceService.createReference(isA(String.class))).thenReturn(reference);
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
