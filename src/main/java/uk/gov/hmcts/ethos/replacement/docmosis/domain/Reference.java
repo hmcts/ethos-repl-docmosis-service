@@ -15,14 +15,14 @@ public class Reference {
     private Long id;
 
     private String caseId;
-    private String reference;
+    private String ref;
     private String year;
 
     public Reference(String caseId, String previousId) {
         this.caseId = caseId;
         this.year = "2019";
         if (previousId != null) {
-            this.reference = previousId + "/" + this.year;
+            this.ref = previousId + "/" + "2019";
         }
     }
 }
