@@ -117,6 +117,6 @@ public class DocMosisScotPart1ComponentTest {
 
     @After
     public void tearDown() throws IOException {
-        //testUtil.deleteTempFile();
+        testUtil.deleteTempFile();
     }
 }

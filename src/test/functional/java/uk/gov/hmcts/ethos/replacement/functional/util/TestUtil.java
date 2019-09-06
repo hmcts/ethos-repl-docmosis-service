@@ -25,6 +25,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -238,24 +239,45 @@ public class TestUtil {
     }
 
     //End-point /generateBulkLetter
-    public void executeGenerateBulkLetterTest(String topLevel, String childLevel, String expectedValue, boolean isScotland, String testDataFilePath, List<String> caseList) throws Exception {
+    public void executeGenerateBulkLetterTest(String topLevel, String childLevel, String expectedValue, boolean isScotland, String bulkDataFilePath, String testDataFilePath, List<String> caseList) throws Exception {
         CCDRequest ccdRequest;
         Response response;
-        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
 
         loadAuthToken();
 
-        testData = createIndividualCases(isScotland, caseList, testData);
+        String bulkData = FileUtils.readFileToString(new File(bulkDataFilePath), "UTF-8");
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
 
-        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        bulkData = createIndividualCases(isScotland, caseList, bulkData);
+
+        BulkRequest bulkRequest = getBulkRequest(isScotland, bulkData);
         response = getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI);
 
         Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+        bulkRequest.getCaseDetails().getCaseData().setClaimantSurname("Banderas");
+
+        response = getBulkResponse(bulkRequest, Constants.SEARCH_BULK_URI);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        bulkRequest = getBulkRequest(isScotland, response);
 
         response = getBulkResponse(bulkRequest, Constants.GENERATE_BULK_LETTER_URI);
 
         verifyDocument(topLevel, expectedValue, isScotland, null, response);
 
+    }
+
+    private BulkRequest getBulkRequest(boolean isScotland, Response response) throws IOException {
+        BulkRequest bulkRequest;
+        String caseData = response.body().prettyPrint();
+        caseData = caseData.substring(caseData.indexOf('{') + 1);
+        caseData = caseData.substring(0, caseData.lastIndexOf('}'));
+        caseData = caseData.replace("\"data\"", "\"case_data\"");
+
+        String caseDetails = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK_TEMPLATE), "UTF-8");
+        caseDetails = caseDetails.replace("#CASE_DATA#", caseData);
+
+        return getBulkRequest(isScotland, caseDetails);
     }
 
 

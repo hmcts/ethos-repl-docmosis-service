@@ -26,7 +26,6 @@ import java.util.List;
         @WithTag("ComponentTest"),
         @WithTag("FunctionalTest")
 })
-@Ignore
 public class GenerateBulkLetterComponentTest {
     private TestUtil testUtil;
     private List<String> caseList = new ArrayList<>();
@@ -43,7 +42,7 @@ public class GenerateBulkLetterComponentTest {
         caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE2);
         caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE3);
 
-        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM", false, Constants.TEST_DATA_ENG_BULK1, caseList);
+        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM", false, Constants.TEST_DATA_ENG_BULK1, Constants.TEST_DATA_ENG_BULK_LETTER1, caseList);
 
     }
 
@@ -54,7 +53,7 @@ public class GenerateBulkLetterComponentTest {
         caseList.add(Constants.TEST_DATA_ENG_BULK2_CASE2);
         caseList.add(Constants.TEST_DATA_ENG_BULK2_CASE3);
 
-        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",false, Constants.TEST_DATA_ENG_BULK2, caseList);
+        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",false, Constants.TEST_DATA_ENG_BULK2, Constants.TEST_DATA_ENG_BULK_LETTER1, caseList);
 
     }
 
@@ -65,7 +64,7 @@ public class GenerateBulkLetterComponentTest {
         caseList.add(Constants.TEST_DATA_ENG_BULK3_CASE2);
         caseList.add(Constants.TEST_DATA_ENG_BULK3_CASE3);
 
-        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",false, Constants.TEST_DATA_ENG_BULK3, caseList);
+        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",false, Constants.TEST_DATA_ENG_BULK3, Constants.TEST_DATA_ENG_BULK_LETTER1, caseList);
 
     }
 
@@ -77,13 +76,13 @@ public class GenerateBulkLetterComponentTest {
         caseList.add(Constants.TEST_DATA_ENG_BULK3_CASE1);
         caseList.add(Constants.TEST_DATA_ENG_BULK3_CASE2);
 
-        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",false, Constants.TEST_DATA_ENG_BULK4, caseList);
+        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",false, Constants.TEST_DATA_ENG_BULK4, Constants.TEST_DATA_ENG_BULK_LETTER1, caseList);
     }
 
     @Test
     public void generate_bulk_letter_eng_no_cases() throws Exception {
         caseList.clear();
-        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",false, Constants.TEST_DATA_ENG_BULK4, caseList);
+        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",false, Constants.TEST_DATA_ENG_BULK4, Constants.TEST_DATA_ENG_BULK_LETTER1, caseList);
     }
 
     @Test
@@ -93,7 +92,7 @@ public class GenerateBulkLetterComponentTest {
         caseList.add(Constants.TEST_DATA_SCOT_BULK1_CASE2);
         caseList.add(Constants.TEST_DATA_SCOT_BULK1_CASE3);
 
-        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",true, Constants.TEST_DATA_SCOT_BULK1, caseList);
+        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",true, Constants.TEST_DATA_SCOT_BULK1, Constants.TEST_DATA_ENG_BULK_LETTER1, caseList);
 
     }
 
@@ -104,7 +103,7 @@ public class GenerateBulkLetterComponentTest {
         caseList.add(Constants.TEST_DATA_SCOT_BULK2_CASE2);
         caseList.add(Constants.TEST_DATA_SCOT_BULK2_CASE3);
 
-        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",true, Constants.TEST_DATA_SCOT_BULK2, caseList);
+        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",true, Constants.TEST_DATA_SCOT_BULK2, Constants.TEST_DATA_ENG_BULK_LETTER1, caseList);
 
     }
 
@@ -115,7 +114,7 @@ public class GenerateBulkLetterComponentTest {
         caseList.add(Constants.TEST_DATA_SCOT_BULK3_CASE2);
         caseList.add(Constants.TEST_DATA_SCOT_BULK3_CASE3);
 
-        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",true, Constants.TEST_DATA_SCOT_BULK3, caseList);
+        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",true, Constants.TEST_DATA_SCOT_BULK3, Constants.TEST_DATA_ENG_BULK_LETTER1, caseList);
 
     }
 
@@ -127,7 +126,7 @@ public class GenerateBulkLetterComponentTest {
         caseList.add(Constants.TEST_DATA_SCOT_BULK3_CASE1);
         caseList.add(Constants.TEST_DATA_SCOT_BULK3_CASE2);
 
-        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",true, Constants.TEST_DATA_SCOT_BULK4, caseList);
+        testUtil.executeGenerateBulkLetterTest("1", "1", "ACKNOWLEDGEMENT OF CLAIM",true, Constants.TEST_DATA_SCOT_BULK4, Constants.TEST_DATA_ENG_BULK_LETTER1, caseList);
 
     }
 
@@ -156,5 +155,6 @@ public class GenerateBulkLetterComponentTest {
 
     @After
     public void tearDown() {
+        //testUtil.deleteTempFile();
     }
 }

@@ -1,0 +1,88 @@
+{
+  "token": "Bearer authToken",
+  "event_id": "123456789",
+  "case_details": {
+    "id": "1567508185598542",
+    "jurisdiction": "EMPLOYMENT",
+    "version": 0,
+    "case_type_id": "Manchester_Multiples_Dev",
+    "state": "BulkCaseStarted",
+    "security_classification": "PUBLIC",
+    #CASE_DATA#,
+    "data_classification": {
+      "multipleCollectionCount": "PUBLIC",
+      "searchCollection": {
+        "classification": "PUBLIC",
+        "value": [
+          {
+            "value": {
+              "caseIDS": "PUBLIC",
+              "ethosCaseReferenceS": "PUBLIC",
+              "leadClaimantS": "PUBLIC",
+              "clerkRespS": "PUBLIC",
+              "claimantSurnameS": "PUBLIC",
+              "respondentSurnameS": "PUBLIC",
+              "claimantRepS": "PUBLIC",
+              "respondentRepS": "PUBLIC",
+              "fileLocS": "PUBLIC",
+              "receiptDateS": "PUBLIC",
+              "acasOfficeS": "PUBLIC",
+              "positionTypeS": "PUBLIC",
+              "feeGroupReferenceS": "PUBLIC",
+              "jurCodesCollectionTextS": "PUBLIC",
+              "stateS": "PUBLIC"
+            },
+            "id": "1567507564596234"
+          }
+        ]
+      },
+      "correspondenceType": {
+        "classification": "PUBLIC",
+        "value": {
+          "topLevel_Documents": "PUBLIC",
+          "part_1_Documents": "PUBLIC"
+        }
+      },
+      "multipleReference": "PUBLIC",
+      "caseIdCollection": {
+        "classification": "PUBLIC",
+        "value": [
+          {
+            "value": {
+              "ethos_CaseReference": "PUBLIC"
+            },
+            "id": "5f39c665-68d2-40cb-842e-e74b4af15f8a"
+          }
+        ]
+      },
+      "multipleCollection": {
+        "classification": "PUBLIC",
+        "value": [
+          {
+            "value": {
+              "caseIDM": "PUBLIC",
+              "ethosCaseReferenceM": "PUBLIC",
+              "leadClaimantM": "PUBLIC",
+              "multipleReferenceM": "PUBLIC",
+              "clerkRespM": "PUBLIC",
+              "claimantSurnameM": "PUBLIC",
+              "respondentSurnameM": "PUBLIC",
+              "claimantRepM": "PUBLIC",
+              "respondentRepM": "PUBLIC",
+              "fileLocM": "PUBLIC",
+              "receiptDateM": "PUBLIC",
+              "acasOfficeM": "PUBLIC",
+              "positionTypeM": "PUBLIC",
+              "feeGroupReferenceM": "PUBLIC",
+              "jurCodesCollectionTextM": "PUBLIC",
+              "stateM": "PUBLIC"
+            },
+            "id": "1567507564596234"
+          }
+        ]
+      },
+      "searchCollectionCount": "PUBLIC",
+      "bulkCaseTitle": "PUBLIC"
+    }
+  }
+}

@@ -76,6 +76,8 @@ public class Constants {
     public static final String TEST_DATA_ENG_BULK7_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsEng7Test1.json";
     public static final String TEST_DATA_ENG_BULK7_CASE2 = "src/test/functional/resources/testData/bulk/caseDetailsEng7Test2.json";
     public static final String TEST_DATA_ENG_BULK7_CASE3 = "src/test/functional/resources/testData/bulk/caseDetailsEng7Test3.json";
+    public static final String TEST_DATA_ENG_BULK_LETTER1 = "src/test/functional/resources/testData/bulk/caseDetailsEngBulkLetter1.json";
+    public static final String TEST_DATA_ENG_BULK_TEMPLATE = "src/test/functional/resources/testData/bulk/caseDetailsEngBulkTemplate";
 
     public static final String TEST_DATA_SCOT_BULK1_CASE1 = "src/test/functional/resources/testData/bulk/caseDetailsScot1Test1.json";
     public static final String TEST_DATA_SCOT_BULK1_CASE2 = "src/test/functional/resources/testData/bulk/caseDetailsScot1Test2.json";
