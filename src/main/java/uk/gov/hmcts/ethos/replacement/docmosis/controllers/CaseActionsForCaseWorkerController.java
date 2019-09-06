@@ -166,14 +166,9 @@ public class CaseActionsForCaseWorkerController {
             log.info("Post Default values loaded: " + defaultValues);
             caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
             log.info("Post Default caseData: " + caseData);
-
-            Reference ref = new Reference();
-            ref.setCaseId(ccdRequest.getCaseDetails().getCaseId());
-            log.info("BEFORE: " + ref.toString());
-            Reference reference = referenceService.createReference(ref);
+            Reference reference = referenceService.createReference(ccdRequest.getCaseDetails().getCaseId());
             log.info("Reference generated: " + reference.getId());
-            log.info("Reference caseId: " + reference.getCaseId());
-            caseData.setEthosCaseReference(String.valueOf(reference.getId()));
+            //caseData.setEthosCaseReference(String.valueOf(reference.getId()));
         } else {
             log.info("Error in PostDefaultValues");
             errors.add("The payload is empty. Please make sure you have some data on your case");
