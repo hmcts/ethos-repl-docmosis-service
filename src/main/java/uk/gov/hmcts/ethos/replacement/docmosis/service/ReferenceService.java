@@ -23,12 +23,17 @@ public class ReferenceService {
     public SingleReference createReference(String caseTypeId, String caseId) {
         PreviousRefObject previousRefObject;
         if (caseTypeId.equals(MANCHESTER_CASE_TYPE_ID) || caseTypeId.equals(MANCHESTER_USERS_CASE_TYPE_ID)) {
+            log.info("Manchester CASE TYPE");
             previousRefObject = getPreviousReference(singleRefManchesterRepository);
+            log.info("PreviousRefObject: " + previousRefObject.toString());
             return singleRefManchesterRepository.save(new SingleReferenceManchester(caseId, previousRefObject.getPreviousId(), previousRefObject.getPreviousYear()));
         } else if (caseTypeId.equals(SCOTLAND_CASE_TYPE_ID) || caseTypeId.equals(SCOTLAND_USERS_CASE_TYPE_ID)) {
+            log.info("Scotland CASE TYPE");
             previousRefObject = getPreviousReference(singleRefScotlandRepository);
+            log.info("PreviousRefObject: " + previousRefObject.toString());
             return singleRefScotlandRepository.save(new SingleReferenceScotland(caseId, previousRefObject.getPreviousId(), previousRefObject.getPreviousYear()));
         }
+        log.info("Other CASE TYPE");
         previousRefObject = getPreviousReference(singleRefScotlandRepository);
         return singleRefScotlandRepository.save(new SingleReferenceScotland(caseId, previousRefObject.getPreviousId(), previousRefObject.getPreviousYear()));
     }
