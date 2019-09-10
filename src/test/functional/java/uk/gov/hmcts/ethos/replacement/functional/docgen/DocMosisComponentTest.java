@@ -90,7 +90,7 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_eng_respondant_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "1", "Roadshow Pictures", false, Constants.TEST_DATA_CASE4);
+        testUtil.executeGenerateDocumentTest("10", "1", "Mr A Banderas", false, Constants.TEST_DATA_CASE4);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_sco_claimant_company_not_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "", "Roadshow Pictures", true, Constants.TEST_DATA_SCOT_CASE2);
+        testUtil.executeGenerateDocumentTest("1", "", "Acme Logictics Ltd", true, Constants.TEST_DATA_SCOT_CASE2);
     }
 
     @Test
@@ -114,7 +114,7 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_sco_respondant_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "", "Roadshow Pictures", true, Constants.TEST_DATA_SCOT_CASE4);
+        testUtil.executeGenerateDocumentTest("1", "", "Mr A Banderas", true, Constants.TEST_DATA_SCOT_CASE4);
     }
 
     @Ignore

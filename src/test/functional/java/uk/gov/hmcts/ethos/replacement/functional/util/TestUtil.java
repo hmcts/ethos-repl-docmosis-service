@@ -64,10 +64,40 @@ public class TestUtil {
 
         CCDRequest ccdRequest;
 
-        if (isScotland) ccdRequest = getCcdRequest(topLevel, childLevel, true, new File(testData));
-        else ccdRequest = getCcdRequest(topLevel, childLevel, false, new File(testData));
+        ccdRequest = getCcdRequest(topLevel, childLevel, isScotland, new File(testData));
 
         Response response = getResponse(ccdRequest);
+
+        verifyDocument(topLevel, expectedValue, isScotland, ccdRequest, response);
+
+    }
+
+    public void executeOutstationDocumentTest(String topLevel, String childLevel, String expectedValue, boolean isScotland, String testData) throws IOException, JAXBException, Docx4JException {
+
+        this.topLevel = topLevel;
+        this.childLevel = childLevel;
+
+        loadAuthToken();
+
+        CCDRequest ccdRequest;
+
+        ccdRequest = getCcdRequest(topLevel, childLevel, isScotland, new File(testData));
+
+        Response response = getResponse(ccdRequest, Constants.AMEND_CASE_DETAILS_URI);
+
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+        String caseData = response.body().prettyPrint();
+        caseData = caseData.substring(caseData.indexOf('{') + 1);
+        caseData = caseData.substring(0, caseData.lastIndexOf('}'));
+        caseData = caseData.replace("\"data\"", "\"case_data\"");
+
+        String caseDetails = FileUtils.readFileToString(new File(Constants.TEST_DATA_SCOT_TEMPLATE), "UTF-8");
+        caseDetails = caseDetails.replace("#CASE_DATA#", caseData);
+
+        ccdRequest = getCcdRequest(topLevel, childLevel, isScotland, caseDetails);
+
+        response = getResponse(ccdRequest, Constants.DOCGEN_URI);
 
         verifyDocument(topLevel, expectedValue, isScotland, ccdRequest, response);
 
@@ -100,8 +130,7 @@ public class TestUtil {
 
         loadAuthToken();
 
-        if (isScotland) ccdRequest = getCcdRequest("1", "1", true, new File(testData));
-        else ccdRequest = getCcdRequest("1", "", false, new File(testData));
+        ccdRequest = getCcdRequest("1", "1", isScotland, new File(testData));
 
         Response response = getResponse(ccdRequest, Constants.PRE_DEFAULT_URI);
 
