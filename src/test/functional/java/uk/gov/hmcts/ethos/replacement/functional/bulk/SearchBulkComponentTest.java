@@ -130,6 +130,7 @@ public class SearchBulkComponentTest {
     }
 
     @Test
+    @Ignore
     public void search_bulk_scot_company_claimant_not_represented() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_SCOT_BULK3_CASE1);
