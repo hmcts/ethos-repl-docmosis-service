@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uk.gov.hmcts.ethos.replacement.docmosis.domain.Reference;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.SingleReference;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
@@ -166,9 +166,9 @@ public class CaseActionsForCaseWorkerController {
             log.info("Post Default values loaded: " + defaultValues);
             caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
             log.info("Post Default caseData: " + caseData);
-            referenceService.getReference();
-            Reference reference = referenceService.createReference(ccdRequest.getCaseDetails().getCaseId());
+            SingleReference reference = referenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getCaseId());
             log.info("Reference generated: " + reference.getId());
+            log.info("Reference generated: " + reference.toString());
             //caseData.setEthosCaseReference(String.valueOf(reference.getId()));
         } else {
             log.info("Error in PostDefaultValues");
