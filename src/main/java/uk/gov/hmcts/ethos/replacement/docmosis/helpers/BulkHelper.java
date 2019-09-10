@@ -118,6 +118,26 @@ public class BulkHelper {
                 return MANCHESTER_USERS_CASE_TYPE_ID;
             case SCOTLAND_BULK_CASE_TYPE_ID:
                 return SCOTLAND_CASE_TYPE_ID;
+            case BRISTOL_USERS_BULK_CASE_TYPE_ID:
+                return BRISTOL_USERS_CASE_TYPE_ID;
+            case LEEDS_USERS_BULK_CASE_TYPE_ID:
+                return LEEDS_USERS_CASE_TYPE_ID;
+            case LONDON_CENTRAL_USERS_BULK_CASE_TYPE_ID:
+                return LONDON_CENTRAL_USERS_CASE_TYPE_ID;
+            case LONDON_EAST_USERS_BULK_CASE_TYPE_ID:
+                return LONDON_EAST_USERS_CASE_TYPE_ID;
+            case LONDON_SOUTH_USERS_BULK_CASE_TYPE_ID:
+                return LONDON_SOUTH_USERS_CASE_TYPE_ID;
+            case MIDLANDS_EAST_USERS_BULK_CASE_TYPE_ID:
+                return MIDLANDS_EAST_USERS_CASE_TYPE_ID;
+            case MIDLANDS_WEST_USERS_BULK_CASE_TYPE_ID:
+                return MIDLANDS_WEST_USERS_CASE_TYPE_ID;
+            case NEWCASTLE_USERS_BULK_CASE_TYPE_ID:
+                return NEWCASTLE_USERS_CASE_TYPE_ID;
+            case WALES_USERS_BULK_CASE_TYPE_ID:
+                return WALES_USERS_CASE_TYPE_ID;
+            case WATFORD_USERS_BULK_CASE_TYPE_ID:
+                return WATFORD_USERS_CASE_TYPE_ID;
             default:
                 return SCOTLAND_USERS_CASE_TYPE_ID;
         }
