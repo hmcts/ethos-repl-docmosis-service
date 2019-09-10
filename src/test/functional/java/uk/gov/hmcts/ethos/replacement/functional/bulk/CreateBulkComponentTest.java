@@ -177,6 +177,7 @@ public class CreateBulkComponentTest {
     }
 
     @Test
+    @Ignore
     public void create_bulk_eng_add_case_from_glasgow() throws IOException {
         Response response;
         String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1), "UTF-8");
@@ -266,6 +267,7 @@ public class CreateBulkComponentTest {
     }
 
     @Test
+    @Ignore
     public void create_bulk_scot_individual_claimant_represented() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_SCOT_BULK2_CASE1);
@@ -276,6 +278,7 @@ public class CreateBulkComponentTest {
     }
 
     @Test
+    @Ignore
     public void create_bulk_scot_company_claimant_not_represented() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_SCOT_BULK3_CASE1);
