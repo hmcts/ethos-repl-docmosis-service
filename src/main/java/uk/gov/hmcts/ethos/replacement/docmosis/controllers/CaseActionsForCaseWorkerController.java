@@ -166,9 +166,10 @@ public class CaseActionsForCaseWorkerController {
             log.info("Post Default values loaded: " + defaultValues);
             caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
             log.info("Post Default caseData: " + caseData);
+            log.info("Starting creating a REFERENCE");
             SingleReference reference = referenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getCaseId());
-            log.info("Reference generated: " + reference.getId());
-            log.info("Reference generated: " + reference.toString());
+            log.info("Reference ID generated: " + reference.getId());
+            log.info("Reference OBJECT generated: " + reference.toString());
             //caseData.setEthosCaseReference(String.valueOf(reference.getId()));
         } else {
             log.info("Error in PostDefaultValues");
