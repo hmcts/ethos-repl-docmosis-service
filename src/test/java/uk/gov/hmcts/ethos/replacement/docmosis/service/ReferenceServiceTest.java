@@ -66,7 +66,7 @@ public class ReferenceServiceTest {
 
     @Test
     public void createManchesterReference() {
-        when(singleRefManchesterRepository.findFirstByOrderByIdAsc()).thenReturn(previousManchesterReference);
+        when(singleRefManchesterRepository.findTopByOrderByIdDesc()).thenReturn(previousManchesterReference);
         when(singleRefManchesterRepository.save(isA(SingleReferenceManchester.class))).thenReturn(manchesterReference);
         String manchesterRef = MANCHESTER_OFFICE_NUMBER + "00012/" + currentYear;
         assertEquals(referenceService.createReference(MANCHESTER_CASE_TYPE_ID, caseId), manchesterRef);
@@ -74,7 +74,7 @@ public class ReferenceServiceTest {
 
     @Test
     public void createManchesterReferenceMaxPreviousRef() {
-        when(singleRefManchesterRepository.findFirstByOrderByIdAsc()).thenReturn(previousManchesterMaxReference);
+        when(singleRefManchesterRepository.findTopByOrderByIdDesc()).thenReturn(previousManchesterMaxReference);
         when(singleRefManchesterRepository.save(isA(SingleReferenceManchester.class))).thenReturn(manchesterMaxReference);
         String manchesterRef = MANCHESTER_OFFICE_NUMBER + "00001/" + currentYear;
         assertEquals(referenceService.createReference(MANCHESTER_CASE_TYPE_ID, caseId), manchesterRef);
@@ -90,7 +90,7 @@ public class ReferenceServiceTest {
 
     @Test
     public void createScotlandReference() {
-        when(singleRefScotlandRepository.findFirstByOrderByIdAsc()).thenReturn(previousScotlandReference);
+        when(singleRefScotlandRepository.findTopByOrderByIdDesc()).thenReturn(previousScotlandReference);
         when(singleRefScotlandRepository.save(isA(SingleReferenceScotland.class))).thenReturn(scotlandReference);
         String scotlandRef = GLASGOW_OFFICE_NUMBER + "00015/" + currentYear;
         assertEquals(referenceService.createReference(SCOTLAND_CASE_TYPE_ID, caseId), scotlandRef);
@@ -98,7 +98,7 @@ public class ReferenceServiceTest {
 
     @Test
     public void createOtherReference() {
-        when(singleRefScotlandRepository.findFirstByOrderByIdAsc()).thenReturn(previousScotlandReference);
+        when(singleRefScotlandRepository.findTopByOrderByIdDesc()).thenReturn(previousScotlandReference);
         when(singleRefScotlandRepository.save(isA(SingleReferenceScotland.class))).thenReturn(scotlandReference);
         String scotlandRef = GLASGOW_OFFICE_NUMBER + "00015/" + currentYear;
         assertEquals(referenceService.createReference(LEEDS_USERS_CASE_TYPE_ID, caseId), scotlandRef);
