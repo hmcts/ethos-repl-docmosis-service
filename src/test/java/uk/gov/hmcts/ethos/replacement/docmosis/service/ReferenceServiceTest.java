@@ -82,7 +82,8 @@ public class ReferenceServiceTest {
 
     @Test
     public void createManchesterReferenceWithNotPreviousReference() {
-        when(singleRefManchesterRepository.save(isA(SingleReferenceManchester.class))).thenReturn(manchesterReference);
+        manchesterMaxReference.setRef(DEFAULT_INIT_REF);
+        when(singleRefManchesterRepository.save(isA(SingleReferenceManchester.class))).thenReturn(manchesterMaxReference);
         String manchesterRef = MANCHESTER_OFFICE_NUMBER + DEFAULT_INIT_REF + "/" + currentYear;
         assertEquals(referenceService.createReference(MANCHESTER_CASE_TYPE_ID, caseId), manchesterRef);
     }
