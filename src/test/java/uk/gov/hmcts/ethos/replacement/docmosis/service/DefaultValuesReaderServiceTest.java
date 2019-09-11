@@ -24,22 +24,53 @@ public class DefaultValuesReaderServiceTest {
     private DefaultValues postDefaultValuesAberdeen;
     private DefaultValues postDefaultValuesDundee;
     private DefaultValues postDefaultValuesEdinburgh;
+    private DefaultValues postDefaultValuesBristol;
+    private DefaultValues postDefaultValuesLeeds;
+    private DefaultValues postDefaultValuesLondonCentral;
+    private DefaultValues postDefaultValuesLondonEast;
+    private DefaultValues postDefaultValuesLondonSouth;
+    private DefaultValues postDefaultValuesMidlandsEast;
+    private DefaultValues postDefaultValuesMidlandsWest;
+    private DefaultValues postDefaultValuesNewcastle;
+    private DefaultValues postDefaultValuesWales;
+    private DefaultValues postDefaultValuesWatford;
     private CaseData caseData;
     private CaseDetails manchesterCaseDetails;
     private CaseDetails glasgowCaseDetails;
+    private CaseDetails bristolCaseDetails;
+    private CaseDetails leedsCaseDetails;
+    private CaseDetails londonCentralCaseDetails;
+    private CaseDetails londonEastCaseDetails;
+    private CaseDetails londonSouthCaseDetails;
+    private CaseDetails midlandsEastCaseDetails;
+    private CaseDetails midlandsWestCaseDetails;
+    private CaseDetails newcastleCaseDetails;
+    private CaseDetails walesCaseDetails;
+    private CaseDetails watfordCaseDetails;
+
+    private CaseDetails getCaseDetails(String caseTypeId) {
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseData(new CaseData());
+        caseDetails.setCaseId("123456");
+        caseDetails.setCaseTypeId(caseTypeId);
+        caseDetails.setJurisdiction("TRIBUNALS");
+        return caseDetails;
+    }
 
     @Before
     public void setUp() {
-        manchesterCaseDetails = new CaseDetails();
-        manchesterCaseDetails.setCaseData(new CaseData());
-        manchesterCaseDetails.setCaseId("123456");
-        manchesterCaseDetails.setCaseTypeId(MANCHESTER_CASE_TYPE_ID);
-        manchesterCaseDetails.setJurisdiction("TRIBUNALS");
-        glasgowCaseDetails = new CaseDetails();
-        glasgowCaseDetails.setCaseData(new CaseData());
-        glasgowCaseDetails.setCaseId("123456");
-        glasgowCaseDetails.setCaseTypeId(SCOTLAND_CASE_TYPE_ID);
-        glasgowCaseDetails.setJurisdiction("TRIBUNALS");
+        manchesterCaseDetails = getCaseDetails(MANCHESTER_CASE_TYPE_ID);
+        glasgowCaseDetails = getCaseDetails(SCOTLAND_CASE_TYPE_ID);
+        bristolCaseDetails = getCaseDetails(BRISTOL_USERS_CASE_TYPE_ID);
+        leedsCaseDetails = getCaseDetails(LEEDS_USERS_CASE_TYPE_ID);
+        londonCentralCaseDetails = getCaseDetails(LONDON_CENTRAL_USERS_CASE_TYPE_ID);
+        londonEastCaseDetails = getCaseDetails(LONDON_EAST_USERS_CASE_TYPE_ID);
+        londonSouthCaseDetails = getCaseDetails(LONDON_SOUTH_USERS_CASE_TYPE_ID);
+        midlandsEastCaseDetails = getCaseDetails(MIDLANDS_EAST_USERS_CASE_TYPE_ID);
+        midlandsWestCaseDetails = getCaseDetails(MIDLANDS_WEST_USERS_CASE_TYPE_ID);
+        newcastleCaseDetails = getCaseDetails(NEWCASTLE_USERS_CASE_TYPE_ID);
+        walesCaseDetails = getCaseDetails(WALES_USERS_CASE_TYPE_ID);
+        watfordCaseDetails = getCaseDetails(WATFORD_USERS_CASE_TYPE_ID);
         preDefaultValues = DefaultValues.builder().claimantTypeOfClaimant("Individual").build();
         postDefaultValuesManchester = DefaultValues.builder()
                 .positionType("Manually Created")
@@ -52,6 +83,118 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceFax("0870 739 4433")
                 .tribunalCorrespondenceDX("DX 743570")
                 .tribunalCorrespondenceEmail("Manchesteret@justice.gov.uk")
+                .build();
+        postDefaultValuesBristol = DefaultValues.builder()
+                .positionType("Manually Created")
+                .tribunalCorrespondenceAddressLine1("Bristol Civil and Family Justice Centre")
+                .tribunalCorrespondenceAddressLine2("2 Redcliff Street")
+                .tribunalCorrespondenceTown("Bristol")
+                .tribunalCorrespondencePostCode("BS1 6GR")
+                .tribunalCorrespondenceTelephone("0117 929 8261")
+                .tribunalCorrespondenceFax("0870 739 4009")
+                .tribunalCorrespondenceDX("DX 95903 Bristol 3")
+                .tribunalCorrespondenceEmail("bristolet@justice.gov.uk")
+                .build();
+        postDefaultValuesLeeds = DefaultValues.builder()
+                .positionType("Manually Created")
+                .tribunalCorrespondenceAddressLine1("4th Floor")
+                .tribunalCorrespondenceAddressLine2("City Exchange")
+                .tribunalCorrespondenceAddressLine3("11 Albion Street")
+                .tribunalCorrespondenceTown("Leeds")
+                .tribunalCorrespondencePostCode("LS1 5ES")
+                .tribunalCorrespondenceTelephone("0113 245 9741")
+                .tribunalCorrespondenceFax("0113 242 8843")
+                .tribunalCorrespondenceEmail("leedset@hmcts.gsi.gov.uk")
+                .build();
+        postDefaultValuesLondonCentral = DefaultValues.builder()
+                .positionType("Manually Created")
+                .tribunalCorrespondenceAddressLine1("Ground Floor")
+                .tribunalCorrespondenceAddressLine2("Victory House")
+                .tribunalCorrespondenceAddressLine3("30-34 Kingsway")
+                .tribunalCorrespondenceTown("London")
+                .tribunalCorrespondencePostCode("WC2B 6EX")
+                .tribunalCorrespondenceTelephone("0207 273 8603")
+                .tribunalCorrespondenceFax("01264 785 100")
+                .tribunalCorrespondenceDX("DX 141420 Bloomsbury")
+                .tribunalCorrespondenceEmail("londoncentralet@hmcts.gsi.gov.uk")
+                .build();
+        postDefaultValuesLondonEast = DefaultValues.builder()
+                .positionType("Manually Created")
+                .tribunalCorrespondenceAddressLine1("2nd Floor")
+                .tribunalCorrespondenceAddressLine2("Import Building")
+                .tribunalCorrespondenceAddressLine3("2 Clove Crescent")
+                .tribunalCorrespondenceTown("London")
+                .tribunalCorrespondencePostCode("E14 2BE")
+                .tribunalCorrespondenceTelephone("0207 538 6161")
+                .tribunalCorrespondenceFax("08703 240 200")
+                .tribunalCorrespondenceEmail("eastlondon@justice.gov.uk")
+                .build();
+        postDefaultValuesLondonSouth = DefaultValues.builder()
+                .positionType("Manually Created")
+                .tribunalCorrespondenceAddressLine1("Montague Court")
+                .tribunalCorrespondenceAddressLine2("101 London Road")
+                .tribunalCorrespondenceAddressLine3("West Croydon")
+                .tribunalCorrespondenceTown("London")
+                .tribunalCorrespondencePostCode("CR0 2RF")
+                .tribunalCorrespondenceTelephone("0208 667 9131")
+                .tribunalCorrespondenceFax("0870 324 0174")
+                .tribunalCorrespondenceDX("DX 155061 Croydon 39")
+                .tribunalCorrespondenceEmail("londonsouthet@hmcts.gsi.gov.uk")
+                .build();
+        postDefaultValuesMidlandsEast = DefaultValues.builder()
+                .positionType("Manually Created")
+                .tribunalCorrespondenceAddressLine1("Nottingham Justice Centre")
+                .tribunalCorrespondenceAddressLine2("Carrington Street")
+                .tribunalCorrespondenceTown("Nottingham")
+                .tribunalCorrespondencePostCode("NG2 1EE")
+                .tribunalCorrespondenceTelephone("0115 947 5701")
+                .tribunalCorrespondenceDX("DX 719030 Nottingham 32")
+                .tribunalCorrespondenceEmail("e.midlandseastet@justice.gov.uk")
+                .build();
+        postDefaultValuesMidlandsWest = DefaultValues.builder()
+                .positionType("Manually Created")
+                .tribunalCorrespondenceAddressLine1("13th Floor")
+                .tribunalCorrespondenceAddressLine2("Centre City Tower")
+                .tribunalCorrespondenceAddressLine3("5-7 Hill Street")
+                .tribunalCorrespondenceTown("Birmingham")
+                .tribunalCorrespondencePostCode("B5 4UU")
+                .tribunalCorrespondenceTelephone("0121 600 7780")
+                .tribunalCorrespondenceFax("01264 347 999")
+                .tribunalCorrespondenceEmail("MidlandsWestET@justice.gov.uk")
+                .build();
+        postDefaultValuesNewcastle = DefaultValues.builder()
+                .positionType("Manually Created")
+                .tribunalCorrespondenceAddressLine1("Kings Court")
+                .tribunalCorrespondenceAddressLine2("Earl Grey Way")
+                .tribunalCorrespondenceAddressLine3("Royal Quays")
+                .tribunalCorrespondenceTown("North Shields")
+                .tribunalCorrespondencePostCode("NE29 6AR")
+                .tribunalCorrespondenceTelephone("0191 260 6900")
+                .tribunalCorrespondenceFax("0870 739 4206")
+                .tribunalCorrespondenceDX("DX 65137 North Shields 2")
+                .tribunalCorrespondenceEmail("newcastleet@hmcts.gsi.gov.uk")
+                .build();
+        postDefaultValuesWales = DefaultValues.builder()
+                .positionType("Manually Created")
+                .tribunalCorrespondenceAddressLine1("Fitzalan Place")
+                .tribunalCorrespondenceTown("Cardiff")
+                .tribunalCorrespondencePostCode("CF24 0RZ")
+                .tribunalCorrespondenceTelephone("0292 067 8100")
+                .tribunalCorrespondenceFax("0870 761 7635")
+                .tribunalCorrespondenceDX("DX 743942 Caerdydd/Cardiff 38")
+                .tribunalCorrespondenceEmail("cardiffet@justice.gov.uk")
+                .build();
+        postDefaultValuesWatford = DefaultValues.builder()
+                .positionType("Manually Created")
+                .tribunalCorrespondenceAddressLine1("Watford Tribunal Hearing Centre")
+                .tribunalCorrespondenceAddressLine2("Radius House")
+                .tribunalCorrespondenceAddressLine3("51 Clarendon Road")
+                .tribunalCorrespondenceTown("Watford")
+                .tribunalCorrespondencePostCode("WD17 1HP")
+                .tribunalCorrespondenceTelephone("0192 328 1750")
+                .tribunalCorrespondenceFax("0870 324 0174")
+                .tribunalCorrespondenceDX("DX 155650 Watford 3")
+                .tribunalCorrespondenceEmail("watfordet@justice.gov.uk")
                 .build();
         postDefaultValuesGlasgow = DefaultValues.builder()
                 .positionType("Manually Created")
@@ -112,6 +255,66 @@ public class DefaultValuesReaderServiceTest {
     public void getManchesterPostDefaultValues() {
         DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, manchesterCaseDetails);
         assertEquals(postDefaultValuesManchester, postDefaultValues1);
+    }
+
+    @Test
+    public void getBristolPostDefaultValues() {
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, bristolCaseDetails);
+        assertEquals(postDefaultValuesBristol, postDefaultValues1);
+    }
+
+    @Test
+    public void getLeedsPostDefaultValues() {
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, leedsCaseDetails);
+        assertEquals(postDefaultValuesLeeds, postDefaultValues1);
+    }
+
+    @Test
+    public void getLondonCentralPostDefaultValues() {
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, londonCentralCaseDetails);
+        assertEquals(postDefaultValuesLondonCentral, postDefaultValues1);
+    }
+
+    @Test
+    public void getLondonEastPostDefaultValues() {
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, londonEastCaseDetails);
+        assertEquals(postDefaultValuesLondonEast, postDefaultValues1);
+    }
+
+    @Test
+    public void getLondonSouthPostDefaultValues() {
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, londonSouthCaseDetails);
+        assertEquals(postDefaultValuesLondonSouth, postDefaultValues1);
+    }
+
+    @Test
+    public void getMidlandsEastPostDefaultValues() {
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, midlandsEastCaseDetails);
+        assertEquals(postDefaultValuesMidlandsEast, postDefaultValues1);
+    }
+
+    @Test
+    public void getMidlandsWestPostDefaultValues() {
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, midlandsWestCaseDetails);
+        assertEquals(postDefaultValuesMidlandsWest, postDefaultValues1);
+    }
+
+    @Test
+    public void getNewcastlePostDefaultValues() {
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, newcastleCaseDetails);
+        assertEquals(postDefaultValuesNewcastle, postDefaultValues1);
+    }
+
+    @Test
+    public void getWalesPostDefaultValues() {
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, walesCaseDetails);
+        assertEquals(postDefaultValuesWales, postDefaultValues1);
+    }
+
+    @Test
+    public void getWatfordPostDefaultValues() {
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, watfordCaseDetails);
+        assertEquals(postDefaultValuesWatford, postDefaultValues1);
     }
 
     @Test
