@@ -24,6 +24,10 @@ public class ReferenceServiceTest {
     private SingleRefManchesterRepository singleRefManchesterRepository;
     @Mock
     private SingleRefScotlandRepository singleRefScotlandRepository;
+    @Mock
+    private SingleRefLeedsRepository singleRefLeedsRepository;
+    @Mock
+    private SingleRefMidlandsWestRepository singleRefMidlandsWestRepository;
 
     private SingleReferenceManchester manchesterReference;
     private SingleReferenceManchester previousManchesterReference;
@@ -31,6 +35,8 @@ public class ReferenceServiceTest {
     private SingleReferenceManchester manchesterMaxReference;
     private SingleReferenceScotland previousScotlandReference;
     private SingleReferenceScotland scotlandReference;
+    private SingleReferenceLeeds leedsReference;
+    private SingleReferenceMidlandsWest midlandsWestReference;
     private String caseId;
     private String currentYear;
 
@@ -62,6 +68,14 @@ public class ReferenceServiceTest {
         manchesterMaxReference.setRef("00001");
         manchesterMaxReference.setCaseId(caseId);
         manchesterMaxReference.setYear(currentYear);
+        leedsReference = new SingleReferenceLeeds();
+        leedsReference.setRef("00005");
+        leedsReference.setCaseId(caseId);
+        leedsReference.setYear(currentYear);
+        midlandsWestReference = new SingleReferenceMidlandsWest();
+        midlandsWestReference.setRef("00008");
+        midlandsWestReference.setCaseId(caseId);
+        midlandsWestReference.setYear(currentYear);
     }
 
     @Test
@@ -97,11 +111,19 @@ public class ReferenceServiceTest {
     }
 
     @Test
-    public void createOtherReference() {
-        when(singleRefScotlandRepository.findTopByOrderByIdDesc()).thenReturn(previousScotlandReference);
-        when(singleRefScotlandRepository.save(isA(SingleReferenceScotland.class))).thenReturn(scotlandReference);
-        String scotlandRef = GLASGOW_OFFICE_NUMBER + "00015/" + currentYear;
-        assertEquals(referenceService.createReference(LEEDS_USERS_CASE_TYPE_ID, caseId), scotlandRef);
+    public void createLeedsReference() {
+        when(singleRefLeedsRepository.findTopByOrderByIdDesc()).thenReturn(leedsReference);
+        when(singleRefLeedsRepository.save(isA(SingleReferenceLeeds.class))).thenReturn(leedsReference);
+        String leedsRef = LEEDS_OFFICE_NUMBER + "00005/" + currentYear;
+        assertEquals(referenceService.createReference(LEEDS_USERS_CASE_TYPE_ID, caseId), leedsRef);
+    }
+
+    @Test
+    public void createMidlandsWestReference() {
+        when(singleRefMidlandsWestRepository.findTopByOrderByIdDesc()).thenReturn(midlandsWestReference);
+        when(singleRefMidlandsWestRepository.save(isA(SingleReferenceMidlandsWest.class))).thenReturn(midlandsWestReference);
+        String midlandsWestRef = MIDLANDS_WEST_OFFICE_NUMBER + "00008/" + currentYear;
+        assertEquals(referenceService.createReference(MIDLANDS_WEST_USERS_CASE_TYPE_ID, caseId), midlandsWestRef);
     }
 
 }
