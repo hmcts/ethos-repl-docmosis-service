@@ -12,6 +12,10 @@ variable "env" {
   type = "string"
 }
 
+variable "component" {
+  type = "string"
+}
+
 variable "tornado_url" {
   default = "http://tornado:8090/rs/render"
 }
