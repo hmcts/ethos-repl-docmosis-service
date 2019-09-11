@@ -112,6 +112,28 @@ public class BulkHelperTest {
         assertEquals(caseId, BulkHelper.getCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID));
         caseId = SCOTLAND_CASE_TYPE_ID;
         assertEquals(caseId, BulkHelper.getCaseTypeId(SCOTLAND_BULK_CASE_TYPE_ID));
+        caseId = MANCHESTER_USERS_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getCaseTypeId(MANCHESTER_USERS_BULK_CASE_TYPE_ID));
+        caseId = BRISTOL_USERS_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getCaseTypeId(BRISTOL_USERS_BULK_CASE_TYPE_ID));
+        caseId = LEEDS_USERS_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getCaseTypeId(LEEDS_USERS_BULK_CASE_TYPE_ID));
+        caseId = LONDON_CENTRAL_USERS_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getCaseTypeId(LONDON_CENTRAL_USERS_BULK_CASE_TYPE_ID));
+        caseId = LONDON_EAST_USERS_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getCaseTypeId(LONDON_EAST_USERS_BULK_CASE_TYPE_ID));
+        caseId = LONDON_SOUTH_USERS_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getCaseTypeId(LONDON_SOUTH_USERS_BULK_CASE_TYPE_ID));
+        caseId = MIDLANDS_EAST_USERS_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getCaseTypeId(MIDLANDS_EAST_USERS_BULK_CASE_TYPE_ID));
+        caseId = MIDLANDS_WEST_USERS_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getCaseTypeId(MIDLANDS_WEST_USERS_BULK_CASE_TYPE_ID));
+        caseId = NEWCASTLE_USERS_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getCaseTypeId(NEWCASTLE_USERS_BULK_CASE_TYPE_ID));
+        caseId = WALES_USERS_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getCaseTypeId(WALES_USERS_BULK_CASE_TYPE_ID));
+        caseId = WATFORD_USERS_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getCaseTypeId(WATFORD_USERS_BULK_CASE_TYPE_ID));
     }
 
     @Test
