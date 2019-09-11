@@ -2,6 +2,13 @@ provider "azurerm" {
   version = "1.23.0"
 }
 
+resource "azurerm_resource_group" "rg" {
+  name     = "${var.product}-${var.component}-${var.env}"
+  location = "${var.location}"
+
+  tags = "${var.common_tags}"
+}
+
 locals {
 
   app = "repl-docmosis-backend"
@@ -10,7 +17,7 @@ locals {
   previewVaultName = "${var.product}-aat"
   nonPreviewVaultName = "${var.product}-${var.env}"
   vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
-  vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+//  vaultUri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
   previewVaultGroupName = "${var.product}-${local.app}-aat"
   nonPreviewVaultGroupName = "${var.product}-${local.app}-${var.env}"
   vaultGroupName = "${var.env == "preview" ? local.previewVaultGroupName : local.nonPreviewVaultGroupName}"
@@ -32,8 +39,8 @@ module "repl-docmosis-backend" {
   app_settings                         = {
     WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = "${var.autoheal}"
     TORNADO_URL                        = "${var.tornado_url}"
-    TORNADO_ACCESS_KEY                 = "${data.azurerm_key_vault_secret.tornado_access_key.value}"
-    ETHOS_S2S_SECRET_KEY               = "${data.azurerm_key_vault_secret.ethos-repl-service-s2s-secret.value}"
+//    TORNADO_ACCESS_KEY                 = "${data.azurerm_key_vault_secret.tornado_access_key.value}"
+//    ETHOS_S2S_SECRET_KEY               = "${data.azurerm_key_vault_secret.ethos-repl-service-s2s-secret.value}"
     IDAM_API_URL                       = "${var.idam_api_url}"
     CCD_DATA_STORE_API_URL             = "${var.ccd_data_store_api_url}"
     DOCUMENT_MANAGEMENT_URL            = "${var.dm_url}"
@@ -44,20 +51,20 @@ module "repl-docmosis-backend" {
   }
 }
 
-data "azurerm_key_vault" "ethos_key_vault" {
-  name                = "${local.vaultName}"
-  resource_group_name = "${local.vaultGroupName}"
-}
-
-data "azurerm_key_vault_secret" "ethos-repl-service-s2s-secret" {
-  name = "ethos-repl-service-s2s-secret"
-  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
-}
-
-data "azurerm_key_vault_secret" "tornado_access_key" {
-  name = "tornado-access-key"
-  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
-}
+//data "azurerm_key_vault" "ethos_key_vault" {
+//  name                = "${local.vaultName}"
+//  resource_group_name = "${local.vaultGroupName}"
+//}
+//
+//data "azurerm_key_vault_secret" "ethos-repl-service-s2s-secret" {
+//  name = "ethos-repl-service-s2s-secret"
+//  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+//}
+//
+//data "azurerm_key_vault_secret" "tornado_access_key" {
+//  name = "tornado-access-key"
+//  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+//}
 
 module "key-vault" {
   source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
@@ -65,7 +72,7 @@ module "key-vault" {
   env                     = "${var.env}"
   tenant_id               = "${var.tenant_id}"
   object_id               = "${var.jenkins_AAD_objectId}"
-  resource_group_name     = "${local.vaultGroupName}"
+  resource_group_name     = "${azurerm_resource_group.rg.name}"
   # dcd_group_ethos_v2 group object ID
   product_group_object_id = "414c132d-5160-42b3-bbff-43a2e1daafcf"
   common_tags             = "${var.common_tags}"
