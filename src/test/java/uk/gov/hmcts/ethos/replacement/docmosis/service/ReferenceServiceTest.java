@@ -6,13 +6,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ethos.replacement.docmosis.domain.Reference;
-import uk.gov.hmcts.ethos.replacement.docmosis.domain.ReferenceRepository;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.*;
+
+import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ReferenceServiceTest {
@@ -20,36 +21,86 @@ public class ReferenceServiceTest {
     @InjectMocks
     private ReferenceService referenceService;
     @Mock
-    private ReferenceRepository referenceRepository;
+    private SingleRefManchesterRepository singleRefManchesterRepository;
+    @Mock
+    private SingleRefScotlandRepository singleRefScotlandRepository;
 
-    private Reference reference;
+    private SingleReferenceManchester manchesterReference;
+    private SingleReferenceManchester previousManchesterReference;
+    private SingleReferenceManchester previousManchesterMaxReference;
+    private SingleReferenceManchester manchesterMaxReference;
+    private SingleReferenceScotland previousScotlandReference;
+    private SingleReferenceScotland scotlandReference;
     private String caseId;
-    private String previousId;
+    private String currentYear;
 
     @Before
     public void setUp() {
         caseId = "1232132";
-        previousId = "12";
-        reference = new Reference(caseId, previousId);
+        currentYear = String.valueOf(LocalDate.now().getYear());
+        previousManchesterReference = new SingleReferenceManchester();
+        previousManchesterReference.setRef("00011");
+        previousManchesterReference.setCaseId(caseId);
+        previousManchesterReference.setYear(currentYear);
+        manchesterReference = new SingleReferenceManchester();
+        manchesterReference.setRef("00012");
+        manchesterReference.setCaseId(caseId);
+        manchesterReference.setYear(currentYear);
+        previousScotlandReference = new SingleReferenceScotland();
+        previousScotlandReference.setRef("00014");
+        previousScotlandReference.setCaseId(caseId);
+        previousScotlandReference.setYear(currentYear);
+        scotlandReference = new SingleReferenceScotland();
+        scotlandReference.setRef("00015");
+        scotlandReference.setCaseId(caseId);
+        scotlandReference.setYear(currentYear);
+        previousManchesterMaxReference = new SingleReferenceManchester();
+        previousManchesterMaxReference.setRef(DEFAULT_MAX_REF);
+        previousManchesterMaxReference.setCaseId(caseId);
+        previousManchesterMaxReference.setYear(currentYear);
+        manchesterMaxReference = new SingleReferenceManchester();
+        manchesterMaxReference.setRef("00001");
+        manchesterMaxReference.setCaseId(caseId);
+        manchesterMaxReference.setYear(currentYear);
     }
 
     @Test
-    public void createReference() {
-        when(referenceRepository.save(isA(Reference.class))).thenReturn(reference);
-        assertEquals(referenceService.createReference(caseId), reference);
-        assertEquals(referenceService.createReference(caseId).getCaseId(), caseId);
+    public void createManchesterReference() {
+        when(singleRefManchesterRepository.findFirstByOrderByIdAsc()).thenReturn(previousManchesterReference);
+        when(singleRefManchesterRepository.save(isA(SingleReferenceManchester.class))).thenReturn(manchesterReference);
+        String manchesterRef = MANCHESTER_OFFICE_NUMBER + "00012/" + currentYear;
+        assertEquals(referenceService.createReference(MANCHESTER_CASE_TYPE_ID, caseId), manchesterRef);
     }
 
     @Test
-    public void getReference() {
-        when(referenceRepository.findFirstByOrderByIdAsc()).thenReturn(reference);
-        assertEquals(referenceService.getReference(), reference);
+    public void createManchesterReferenceMaxPreviousRef() {
+        when(singleRefManchesterRepository.findFirstByOrderByIdAsc()).thenReturn(previousManchesterMaxReference);
+        when(singleRefManchesterRepository.save(isA(SingleReferenceManchester.class))).thenReturn(manchesterMaxReference);
+        String manchesterRef = MANCHESTER_OFFICE_NUMBER + "00001/" + currentYear;
+        assertEquals(referenceService.createReference(MANCHESTER_CASE_TYPE_ID, caseId), manchesterRef);
     }
 
     @Test
-    public void getReferenceNotFound() {
-        when(referenceRepository.findFirstByOrderByIdAsc()).thenReturn(null);
-        assertNull(referenceService.getReference());
+    public void createManchesterReferenceWithNotPreviousReference() {
+        when(singleRefManchesterRepository.save(isA(SingleReferenceManchester.class))).thenReturn(manchesterReference);
+        String manchesterRef = MANCHESTER_OFFICE_NUMBER + DEFAULT_INIT_REF + "/" + currentYear;
+        assertEquals(referenceService.createReference(MANCHESTER_CASE_TYPE_ID, caseId), manchesterRef);
+    }
+
+    @Test
+    public void createScotlandReference() {
+        when(singleRefScotlandRepository.findFirstByOrderByIdAsc()).thenReturn(previousScotlandReference);
+        when(singleRefScotlandRepository.save(isA(SingleReferenceScotland.class))).thenReturn(scotlandReference);
+        String scotlandRef = GLASGOW_OFFICE_NUMBER + "00015/" + currentYear;
+        assertEquals(referenceService.createReference(SCOTLAND_CASE_TYPE_ID, caseId), scotlandRef);
+    }
+
+    @Test
+    public void createOtherReference() {
+        when(singleRefScotlandRepository.findFirstByOrderByIdAsc()).thenReturn(previousScotlandReference);
+        when(singleRefScotlandRepository.save(isA(SingleReferenceScotland.class))).thenReturn(scotlandReference);
+        String scotlandRef = GLASGOW_OFFICE_NUMBER + "00015/" + currentYear;
+        assertEquals(referenceService.createReference(LEEDS_USERS_CASE_TYPE_ID, caseId), scotlandRef);
     }
 
 }

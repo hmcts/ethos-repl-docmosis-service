@@ -59,4 +59,19 @@ public class Constants {
     public static final String DUNDEE_OFFICE = "Dundee";
     public static final String EDINBURGH_OFFICE = "Edinburgh";
 
+    public static final String MIDLANDS_WEST_OFFICE_NUMBER = "13";
+    public static final String BRISTOL_OFFICE_NUMBER = "14";
+    public static final String WALES_OFFICE_NUMBER = "16";
+    public static final String LEEDS_OFFICE_NUMBER = "18";
+    public static final String LONDON_CENTRAL_OFFICE_NUMBER = "22";
+    public static final String LONDON_SOUTH_OFFICE_NUMBER = "23";
+    public static final String MANCHESTER_OFFICE_NUMBER = "24";
+    public static final String NEWCASTLE_OFFICE_NUMBER = "25";
+    public static final String MIDLANDS_EAST_OFFICE_NUMBER = "26";
+    public static final String LONDON_EAST_OFFICE_NUMBER = "32";
+    public static final String WATFORD_OFFICE_NUMBER = "33";
+    public static final String GLASGOW_OFFICE_NUMBER = "41";
+
+    public static final String DEFAULT_INIT_REF = "50000";
+    public static final String DEFAULT_MAX_REF = "99999";
 }
