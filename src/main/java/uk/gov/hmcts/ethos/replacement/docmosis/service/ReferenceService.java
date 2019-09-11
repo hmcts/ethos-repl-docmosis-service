@@ -51,7 +51,7 @@ public class ReferenceService {
     }
 
     private PreviousRefObject getPreviousReference(SingleRefRepository referenceRepository) {
-        SingleReference reference = referenceRepository.findFirstByOrderByIdAsc();
+        SingleReference reference = referenceRepository.findTopByOrderByIdDesc();
         PreviousRefObject previousRefObject = new PreviousRefObject();
         if (reference != null) {
             log.info("Previous REF: " + reference.toString());
