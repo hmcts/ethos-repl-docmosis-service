@@ -1,19 +1,18 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.domain;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import lombok.NoArgsConstructor;
 
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.DEFAULT_SCOTLAND_INIT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SCOTLAND_OFFICE_NUMBER;
+import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "singleReferenceScotland")
 public class SingleReferenceScotland extends SingleReference {
 
-    public SingleReferenceScotland(String caseId, String previousId, String previousYear) {
+    public SingleReferenceScotland(String caseId, String previousRef, String previousYear, String currentYear) {
         this.caseId = caseId;
-        this.year = String.valueOf(LocalDate.now().getYear());
-        this.ref = SCOTLAND_OFFICE_NUMBER + generateRef(previousId, previousYear, DEFAULT_SCOTLAND_INIT) + "/" + this.year;
+        this.year = currentYear;
+        this.ref = generateRefNumber(previousRef, previousYear, currentYear);
     }
 
 }
