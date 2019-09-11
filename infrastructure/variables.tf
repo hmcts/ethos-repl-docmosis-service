@@ -24,7 +24,7 @@ variable "tornado_access_key" {
   type = "string"
 }
 
-variable "ethos-repl-service-s2s-secret" {
+variable "ethos_repl_service_s2s_secret" {
   type = "string"
 }
 
