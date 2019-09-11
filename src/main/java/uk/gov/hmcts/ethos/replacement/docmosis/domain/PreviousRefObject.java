@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class PreviousRefObject {
 
-    private String previousId;
+    private String previousRef;
     private String previousYear;
 }
