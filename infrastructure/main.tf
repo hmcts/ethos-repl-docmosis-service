@@ -51,7 +51,7 @@ module "repl-docmosis-backend" {
 }
 
 module "db" {
-  source             = "git@github.com:hmcts/moj-module-postgres?ref=master"
+  source             = "git@github.com:hmcts/cnp-module-postgres?ref=master"
   product            = "${var.product}-postgres-db"
   location           = "${var.location_api}"
   env                = "${var.env}"
