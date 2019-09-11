@@ -81,7 +81,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     private JsonNode requestContent3;
     private SubmitEvent submitEvent;
     private DefaultValues defaultValues;
-    private SingleReference reference;
 
     private void doRequestSetUp() throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -97,7 +96,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void setUp() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
         doRequestSetUp();
-        reference = new SingleReferenceManchester("12121212", "23", "2019");
         submitEvent = new SubmitEvent();
         submitEvent.setCaseData(new CaseData());
         defaultValues = DefaultValues.builder()
@@ -186,7 +184,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void postDefaultValuesFromET1WithPositionTypeDefined() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenReturn(defaultValues);
         when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
-        when(referenceService.createReference(isA(String.class), isA(String.class))).thenReturn(reference);
+        when(referenceService.createReference(isA(String.class), isA(String.class))).thenReturn("5100001/2019");
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -201,7 +199,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void postDefaultValues() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenReturn(defaultValues);
         when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
-        when(referenceService.createReference(isA(String.class), isA(String.class))).thenReturn(reference);
+        when(referenceService.createReference(isA(String.class), isA(String.class))).thenReturn("5100001/2019");
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
