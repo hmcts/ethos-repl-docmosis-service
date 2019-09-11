@@ -12,20 +12,8 @@ variable "env" {
   type = "string"
 }
 
-variable "component" {
-  type = "string"
-}
-
 variable "tornado_url" {
   default = "http://tornado:8090/rs/render"
-}
-
-variable "tornado_access_key" {
-  type = "string"
-}
-
-variable "ethos_repl_service_s2s_secret" {
-  type = "string"
 }
 
 variable "subscription" {
