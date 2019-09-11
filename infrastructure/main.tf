@@ -41,6 +41,8 @@ module "repl-docmosis-backend" {
     TORNADO_URL                        = "${var.tornado_url}"
 //    TORNADO_ACCESS_KEY                 = "${data.azurerm_key_vault_secret.tornado_access_key.value}"
 //    ETHOS_S2S_SECRET_KEY               = "${data.azurerm_key_vault_secret.ethos-repl-service-s2s-secret.value}"
+    TORNADO_ACCESS_KEY                 = "${var.tornado_access_key}"
+    ETHOS_S2S_SECRET_KEY               = "${var.ethos-repl-service-s2s-secret}"
     IDAM_API_URL                       = "${var.idam_api_url}"
     CCD_DATA_STORE_API_URL             = "${var.ccd_data_store_api_url}"
     DOCUMENT_MANAGEMENT_URL            = "${var.dm_url}"

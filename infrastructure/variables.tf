@@ -20,6 +20,14 @@ variable "tornado_url" {
   default = "http://tornado:8090/rs/render"
 }
 
+variable "tornado_access_key" {
+  type = "string"
+}
+
+variable "ethos-repl-service-s2s-secret" {
+  type = "string"
+}
+
 variable "subscription" {
   type = "string"
 }
