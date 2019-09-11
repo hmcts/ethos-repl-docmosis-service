@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.SingleReference;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.SingleReferenceManchester;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
@@ -70,12 +72,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     @MockBean
     private CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
 
+    @MockBean
+    private ReferenceService referenceService;
+
     private MockMvc mvc;
     private JsonNode requestContent;
     private JsonNode requestContent2;
     private JsonNode requestContent3;
     private SubmitEvent submitEvent;
     private DefaultValues defaultValues;
+    private SingleReference reference;
 
     private void doRequestSetUp() throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -91,6 +97,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void setUp() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
         doRequestSetUp();
+        reference = new SingleReferenceManchester("12121212", "23", "2019");
         submitEvent = new SubmitEvent();
         submitEvent.setCaseData(new CaseData());
         defaultValues = DefaultValues.builder()
@@ -179,6 +186,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void postDefaultValuesFromET1WithPositionTypeDefined() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenReturn(defaultValues);
         when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
+        when(referenceService.createReference(isA(String.class), isA(String.class))).thenReturn(reference);
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -193,6 +201,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void postDefaultValues() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenReturn(defaultValues);
         when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
+        when(referenceService.createReference(isA(String.class), isA(String.class))).thenReturn(reference);
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)

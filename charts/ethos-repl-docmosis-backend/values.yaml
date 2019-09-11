@@ -8,6 +8,11 @@ java:
         - AppInsightsInstrumentationKey
         - tornado-access-key
         - ethos-repl-service-s2s-secret
+        - service-POSTGRES-PASS
+        - service-POSTGRES-DATABASE
+        - service-POSTGRES-HOST
+        - service-POSTGRES-PORT
+        - service-POSTGRES-USER
   environment:
     SERVER_PORT: 8081
     REFORM_TEAM: ethos
@@ -25,3 +30,7 @@ java:
     CCD_GATEWAY_BASE_URL: "https://gateway-ccd.aat.platform.hmcts.net"
     MICRO_SERVICE: "ethos_repl_service"
     APPINSIGHTS_INSTRUMENTATIONKEY: fake-key
+    ETHOS_REPL_DB_HOST: "{{ .Release.Name }}-postgresql"
+    ETHOS_REPL_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
+    ETHOS_REPL_DB_USER_NAME: "{{ .Values.postgresql.postgresqlUsername}}"
+    ETHOS_REPL_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"

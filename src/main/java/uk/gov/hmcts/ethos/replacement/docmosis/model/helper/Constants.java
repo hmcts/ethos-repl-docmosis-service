@@ -59,4 +59,9 @@ public class Constants {
     public static final String DUNDEE_OFFICE = "Dundee";
     public static final String EDINBURGH_OFFICE = "Edinburgh";
 
+    public static final String MANCHESTER_OFFICE_NUMBER = "32";
+    public static final String SCOTLAND_OFFICE_NUMBER = "42";
+    public static final String DEFAULT_MANCHESTER_INIT = "0000200";
+    public static final String DEFAULT_SCOTLAND_INIT = "0000210";
+    public static final String DEFAULT_MAX_REF = "9999999";
 }
