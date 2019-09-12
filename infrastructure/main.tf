@@ -51,12 +51,12 @@ data "azurerm_key_vault" "ethos_key_vault" {
 
 data "azurerm_key_vault_secret" "ethos-repl-service-s2s-secret" {
   name = "ethos-repl-service-s2s-secret"
-  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.ethos_key_vault.id}"
 }
 
 data "azurerm_key_vault_secret" "tornado_access_key" {
   name = "tornado-access-key"
-  vault_uri = "${data.azurerm_key_vault.ethos_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.ethos_key_vault.id}"
 }
 
 module "key-vault" {
