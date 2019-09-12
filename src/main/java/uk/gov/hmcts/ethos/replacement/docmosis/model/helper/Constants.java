@@ -72,6 +72,6 @@ public class Constants {
     public static final String WATFORD_OFFICE_NUMBER = "33";
     public static final String GLASGOW_OFFICE_NUMBER = "41";
 
-    public static final String DEFAULT_INIT_REF = "50000";
+    public static final String DEFAULT_INIT_REF = "10000";
     public static final String DEFAULT_MAX_REF = "99999";
 }
