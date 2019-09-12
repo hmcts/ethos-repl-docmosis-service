@@ -39,6 +39,8 @@ public class ReferenceServiceTest {
     private SingleRefNewcastleRepository singleRefNewcastleRepository;
     @Mock
     private SingleRefWatfordRepository singleRefWatfordRepository;
+    @Mock
+    private SingleRefLondonCentralRepository singleRefLondonCentralRepository;
 
     private SingleReferenceManchester referenceManchester;
     private SingleReferenceManchester previousReferenceManchester;
@@ -53,6 +55,7 @@ public class ReferenceServiceTest {
     private SingleReferenceWales referenceWales;
     private SingleReferenceNewcastle referenceNewcastle;
     private SingleReferenceWatford referenceWatford;
+    private SingleReferenceLondonCentral referenceLondonCentral;
     private String caseId;
     private String currentYear;
 
@@ -112,6 +115,10 @@ public class ReferenceServiceTest {
         referenceWatford.setRef("00013");
         referenceWatford.setCaseId(caseId);
         referenceWatford.setYear(currentYear);
+        referenceLondonCentral = new SingleReferenceLondonCentral();
+        referenceLondonCentral.setRef("00014");
+        referenceLondonCentral.setCaseId(caseId);
+        referenceLondonCentral.setYear(currentYear);
     }
 
     @Test
@@ -200,6 +207,14 @@ public class ReferenceServiceTest {
         when(singleRefWatfordRepository.save(isA(SingleReferenceWatford.class))).thenReturn(referenceWatford);
         String watfordRef = WATFORD_OFFICE_NUMBER + "00013/" + currentYear;
         assertEquals(referenceService.createReference(WATFORD_USERS_CASE_TYPE_ID, caseId), watfordRef);
+    }
+
+    @Test
+    public void createLondonCentralReference() {
+        when(singleRefLondonCentralRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonCentral);
+        when(singleRefLondonCentralRepository.save(isA(SingleReferenceLondonCentral.class))).thenReturn(referenceLondonCentral);
+        String londonCentralRef = LONDON_CENTRAL_OFFICE_NUMBER + "00014/" + currentYear;
+        assertEquals(referenceService.createReference(LONDON_CENTRAL_USERS_CASE_TYPE_ID, caseId), londonCentralRef);
     }
 
 }
