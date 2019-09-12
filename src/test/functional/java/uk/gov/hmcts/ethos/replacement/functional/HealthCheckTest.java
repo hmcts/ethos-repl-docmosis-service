@@ -33,12 +33,12 @@ public class HealthCheckTest {
     public void healthcheck_returns_200() {
         assertThat("smokeTest", is("smokeTest"));
 
-//        String environment = System.getProperty("VAULTNAME").replace("ethos-", "");
-//        if (environment != null) {
-//            get("http://ethos-repl-docmosis-backend-" + environment + ".service.core-compute-" + environment + ".internal/health").
-//                    then().
-//                    statusCode(200).
-//                    body("status", equalTo("UP"));
-//        }
+        String environment = System.getProperty("VAULTNAME").replace("ethos-", "");
+        if (environment != null) {
+            get("http://ethos-repl-docmosis-backend-" + environment + ".service.core-compute-" + environment + ".internal/health").
+                    then().
+                    statusCode(200).
+                    body("status", equalTo("UP"));
+        }
     }
 }
