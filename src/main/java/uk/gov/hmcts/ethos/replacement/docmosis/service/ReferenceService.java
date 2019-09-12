@@ -23,13 +23,14 @@ public class ReferenceService {
     private final SingleRefWalesRepository singleRefWalesRepository;
     private final SingleRefNewcastleRepository singleRefNewcastleRepository;
     private final SingleRefWatfordRepository singleRefWatfordRepository;
+    private final SingleRefLondonCentralRepository singleRefLondonCentralRepository;
 
     @Autowired
     public ReferenceService(SingleRefManchesterRepository singleRefManchesterRepository, SingleRefScotlandRepository singleRefScotlandRepository,
                             SingleRefLeedsRepository singleRefLeedsRepository, SingleRefMidlandsWestRepository singleRefMidlandsWestRepository,
                             SingleRefMidlandsEastRepository singleRefMidlandsEastRepository, SingleRefBristolRepository singleRefBristolRepository,
                             SingleRefWalesRepository singleRefWalesRepository, SingleRefNewcastleRepository singleRefNewcastleRepository,
-                            SingleRefWatfordRepository singleRefWatfordRepository) {
+                            SingleRefWatfordRepository singleRefWatfordRepository, SingleRefLondonCentralRepository singleRefLondonCentralRepository) {
         this.singleRefManchesterRepository = singleRefManchesterRepository;
         this.singleRefScotlandRepository = singleRefScotlandRepository;
         this.singleRefLeedsRepository = singleRefLeedsRepository;
@@ -39,6 +40,7 @@ public class ReferenceService {
         this.singleRefWalesRepository = singleRefWalesRepository;
         this.singleRefNewcastleRepository = singleRefNewcastleRepository;
         this.singleRefWatfordRepository = singleRefWatfordRepository;
+        this.singleRefLondonCentralRepository = singleRefLondonCentralRepository;
     }
 
     public String createReference(String caseTypeId, String caseId) {
@@ -62,6 +64,8 @@ public class ReferenceService {
                 return getNewcastleOfficeReference(caseId, currentYear);
             case WATFORD_USERS_CASE_TYPE_ID:
                 return getWatfordOfficeReference(caseId, currentYear);
+            case LONDON_CENTRAL_USERS_CASE_TYPE_ID:
+                return getLondonCentralOfficeReference(caseId, currentYear);
         }
         return getLeedsOfficeReference(caseId, currentYear);
     }
@@ -169,5 +173,15 @@ public class ReferenceService {
                 previousRefObject.getPreviousYear(), currentYear);
         SingleReferenceWatford singleReferenceWatfordDB = singleRefWatfordRepository.save(singleReferenceWatford);
         return WATFORD_OFFICE_NUMBER + singleReferenceWatfordDB.getRef() + "/" + currentYear;
+    }
+
+    private String getLondonCentralOfficeReference(String caseId, String currentYear) {
+        log.info("London Central CASE TYPE");
+        PreviousRefObject previousRefObject = getPreviousReference(singleRefLondonCentralRepository);
+        log.info("PreviousRefObject: " + previousRefObject.toString());
+        SingleReferenceLondonCentral singleReferenceLondonCentral = new SingleReferenceLondonCentral(caseId, previousRefObject.getPreviousRef(),
+                previousRefObject.getPreviousYear(), currentYear);
+        SingleReferenceLondonCentral singleReferenceLondonCentraldDB = singleRefLondonCentralRepository.save(singleReferenceLondonCentral);
+        return LONDON_CENTRAL_OFFICE_NUMBER + singleReferenceLondonCentraldDB.getRef() + "/" + currentYear;
     }
 }
