@@ -168,14 +168,14 @@ task functional(type: Test, description: 'Runs the functional tests.', group: 'V
     testClassesDirs = sourceSets.functional.output.classesDirs
     classpath = sourceSets.functional.runtimeClasspath
 
+    useJUnit {
+        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
+    }
+
     environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
 
     systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
-    systemProperty('tags', 'FunctionalTest')
-
-//    useJUnit {
-//        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.ComponentTest'
-//    }
+    //systemProperty('tags', 'FunctionalTest')
 
     maxHeapSize = '1G'
     finalizedBy aggregate
