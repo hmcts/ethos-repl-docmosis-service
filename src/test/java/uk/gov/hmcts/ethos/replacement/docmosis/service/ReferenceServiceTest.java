@@ -41,6 +41,10 @@ public class ReferenceServiceTest {
     private SingleRefWatfordRepository singleRefWatfordRepository;
     @Mock
     private SingleRefLondonCentralRepository singleRefLondonCentralRepository;
+    @Mock
+    private SingleRefLondonSouthRepository singleRefLondonSouthRepository;
+    @Mock
+    private SingleRefLondonEastRepository singleRefLondonEastRepository;
 
     private SingleReferenceManchester referenceManchester;
     private SingleReferenceManchester previousReferenceManchester;
@@ -56,6 +60,8 @@ public class ReferenceServiceTest {
     private SingleReferenceNewcastle referenceNewcastle;
     private SingleReferenceWatford referenceWatford;
     private SingleReferenceLondonCentral referenceLondonCentral;
+    private SingleReferenceLondonSouth referenceLondonSouth;
+    private SingleReferenceLondonEast referenceLondonEast;
     private String caseId;
     private String currentYear;
 
@@ -119,6 +125,14 @@ public class ReferenceServiceTest {
         referenceLondonCentral.setRef("00014");
         referenceLondonCentral.setCaseId(caseId);
         referenceLondonCentral.setYear(currentYear);
+        referenceLondonSouth = new SingleReferenceLondonSouth();
+        referenceLondonSouth.setRef("00015");
+        referenceLondonSouth.setCaseId(caseId);
+        referenceLondonSouth.setYear(currentYear);
+        referenceLondonEast = new SingleReferenceLondonEast();
+        referenceLondonEast.setRef("00016");
+        referenceLondonEast.setCaseId(caseId);
+        referenceLondonEast.setYear(currentYear);
     }
 
     @Test
@@ -215,6 +229,22 @@ public class ReferenceServiceTest {
         when(singleRefLondonCentralRepository.save(isA(SingleReferenceLondonCentral.class))).thenReturn(referenceLondonCentral);
         String londonCentralRef = LONDON_CENTRAL_OFFICE_NUMBER + "00014/" + currentYear;
         assertEquals(referenceService.createReference(LONDON_CENTRAL_USERS_CASE_TYPE_ID, caseId), londonCentralRef);
+    }
+
+    @Test
+    public void createLondonSouthReference() {
+        when(singleRefLondonSouthRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonSouth);
+        when(singleRefLondonSouthRepository.save(isA(SingleReferenceLondonSouth.class))).thenReturn(referenceLondonSouth);
+        String londonSouthRef = LONDON_SOUTH_OFFICE_NUMBER + "00015/" + currentYear;
+        assertEquals(referenceService.createReference(LONDON_SOUTH_USERS_CASE_TYPE_ID, caseId), londonSouthRef);
+    }
+
+    @Test
+    public void createLondonEastReference() {
+        when(singleRefLondonEastRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonEast);
+        when(singleRefLondonEastRepository.save(isA(SingleReferenceLondonEast.class))).thenReturn(referenceLondonEast);
+        String londonEastRef = LONDON_EAST_OFFICE_NUMBER + "00016/" + currentYear;
+        assertEquals(referenceService.createReference(LONDON_EAST_USERS_CASE_TYPE_ID, caseId), londonEastRef);
     }
 
 }
