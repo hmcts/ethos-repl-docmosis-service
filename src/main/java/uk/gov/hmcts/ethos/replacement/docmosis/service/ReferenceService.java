@@ -24,13 +24,16 @@ public class ReferenceService {
     private final SingleRefNewcastleRepository singleRefNewcastleRepository;
     private final SingleRefWatfordRepository singleRefWatfordRepository;
     private final SingleRefLondonCentralRepository singleRefLondonCentralRepository;
+    private final SingleRefLondonSouthRepository singleRefLondonSouthRepository;
+    private final SingleRefLondonEastRepository singleRefLondonEastRepository;
 
     @Autowired
     public ReferenceService(SingleRefManchesterRepository singleRefManchesterRepository, SingleRefScotlandRepository singleRefScotlandRepository,
                             SingleRefLeedsRepository singleRefLeedsRepository, SingleRefMidlandsWestRepository singleRefMidlandsWestRepository,
                             SingleRefMidlandsEastRepository singleRefMidlandsEastRepository, SingleRefBristolRepository singleRefBristolRepository,
                             SingleRefWalesRepository singleRefWalesRepository, SingleRefNewcastleRepository singleRefNewcastleRepository,
-                            SingleRefWatfordRepository singleRefWatfordRepository, SingleRefLondonCentralRepository singleRefLondonCentralRepository) {
+                            SingleRefWatfordRepository singleRefWatfordRepository, SingleRefLondonCentralRepository singleRefLondonCentralRepository,
+                            SingleRefLondonSouthRepository singleRefLondonSouthRepository, SingleRefLondonEastRepository singleRefLondonEastRepository) {
         this.singleRefManchesterRepository = singleRefManchesterRepository;
         this.singleRefScotlandRepository = singleRefScotlandRepository;
         this.singleRefLeedsRepository = singleRefLeedsRepository;
@@ -41,6 +44,8 @@ public class ReferenceService {
         this.singleRefNewcastleRepository = singleRefNewcastleRepository;
         this.singleRefWatfordRepository = singleRefWatfordRepository;
         this.singleRefLondonCentralRepository = singleRefLondonCentralRepository;
+        this.singleRefLondonSouthRepository = singleRefLondonSouthRepository;
+        this.singleRefLondonEastRepository = singleRefLondonEastRepository;
     }
 
     public String createReference(String caseTypeId, String caseId) {
@@ -66,6 +71,10 @@ public class ReferenceService {
                 return getWatfordOfficeReference(caseId, currentYear);
             case LONDON_CENTRAL_USERS_CASE_TYPE_ID:
                 return getLondonCentralOfficeReference(caseId, currentYear);
+            case LONDON_SOUTH_USERS_CASE_TYPE_ID:
+                return getLondonSouthOfficeReference(caseId, currentYear);
+            case LONDON_EAST_USERS_CASE_TYPE_ID:
+                return getLondonEastOfficeReference(caseId, currentYear);
         }
         return getLeedsOfficeReference(caseId, currentYear);
     }
@@ -181,7 +190,27 @@ public class ReferenceService {
         log.info("PreviousRefObject: " + previousRefObject.toString());
         SingleReferenceLondonCentral singleReferenceLondonCentral = new SingleReferenceLondonCentral(caseId, previousRefObject.getPreviousRef(),
                 previousRefObject.getPreviousYear(), currentYear);
-        SingleReferenceLondonCentral singleReferenceLondonCentraldDB = singleRefLondonCentralRepository.save(singleReferenceLondonCentral);
-        return LONDON_CENTRAL_OFFICE_NUMBER + singleReferenceLondonCentraldDB.getRef() + "/" + currentYear;
+        SingleReferenceLondonCentral singleReferenceLondonCentralDB = singleRefLondonCentralRepository.save(singleReferenceLondonCentral);
+        return LONDON_CENTRAL_OFFICE_NUMBER + singleReferenceLondonCentralDB.getRef() + "/" + currentYear;
+    }
+
+    private String getLondonSouthOfficeReference(String caseId, String currentYear) {
+        log.info("London South CASE TYPE");
+        PreviousRefObject previousRefObject = getPreviousReference(singleRefLondonSouthRepository);
+        log.info("PreviousRefObject: " + previousRefObject.toString());
+        SingleReferenceLondonSouth singleReferenceLondonSouth = new SingleReferenceLondonSouth(caseId, previousRefObject.getPreviousRef(),
+                previousRefObject.getPreviousYear(), currentYear);
+        SingleReferenceLondonSouth singleReferenceLondonSouthDB = singleRefLondonSouthRepository.save(singleReferenceLondonSouth);
+        return LONDON_SOUTH_OFFICE_NUMBER + singleReferenceLondonSouthDB.getRef() + "/" + currentYear;
+    }
+
+    private String getLondonEastOfficeReference(String caseId, String currentYear) {
+        log.info("London East CASE TYPE");
+        PreviousRefObject previousRefObject = getPreviousReference(singleRefLondonEastRepository);
+        log.info("PreviousRefObject: " + previousRefObject.toString());
+        SingleReferenceLondonEast singleReferenceLondonEast = new SingleReferenceLondonEast(caseId, previousRefObject.getPreviousRef(),
+                previousRefObject.getPreviousYear(), currentYear);
+        SingleReferenceLondonEast singleReferenceLondonEastDB = singleRefLondonEastRepository.save(singleReferenceLondonEast);
+        return LONDON_EAST_OFFICE_NUMBER + singleReferenceLondonEastDB.getRef() + "/" + currentYear;
     }
 }
