@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.*;
 
 import java.time.LocalDate;
 
@@ -17,14 +18,27 @@ public class ReferenceService {
     private final SingleRefScotlandRepository singleRefScotlandRepository;
     private final SingleRefLeedsRepository singleRefLeedsRepository;
     private final SingleRefMidlandsWestRepository singleRefMidlandsWestRepository;
+    private final SingleRefMidlandsEastRepository singleRefMidlandsEastRepository;
+    private final SingleRefBristolRepository singleRefBristolRepository;
+    private final SingleRefWalesRepository singleRefWalesRepository;
+    private final SingleRefNewcastleRepository singleRefNewcastleRepository;
+    private final SingleRefWatfordRepository singleRefWatfordRepository;
 
     @Autowired
     public ReferenceService(SingleRefManchesterRepository singleRefManchesterRepository, SingleRefScotlandRepository singleRefScotlandRepository,
-                            SingleRefLeedsRepository singleRefLeedsRepository, SingleRefMidlandsWestRepository singleRefMidlandsWestRepository) {
+                            SingleRefLeedsRepository singleRefLeedsRepository, SingleRefMidlandsWestRepository singleRefMidlandsWestRepository,
+                            SingleRefMidlandsEastRepository singleRefMidlandsEastRepository, SingleRefBristolRepository singleRefBristolRepository,
+                            SingleRefWalesRepository singleRefWalesRepository, SingleRefNewcastleRepository singleRefNewcastleRepository,
+                            SingleRefWatfordRepository singleRefWatfordRepository) {
         this.singleRefManchesterRepository = singleRefManchesterRepository;
         this.singleRefScotlandRepository = singleRefScotlandRepository;
         this.singleRefLeedsRepository = singleRefLeedsRepository;
         this.singleRefMidlandsWestRepository = singleRefMidlandsWestRepository;
+        this.singleRefMidlandsEastRepository = singleRefMidlandsEastRepository;
+        this.singleRefBristolRepository = singleRefBristolRepository;
+        this.singleRefWalesRepository = singleRefWalesRepository;
+        this.singleRefNewcastleRepository = singleRefNewcastleRepository;
+        this.singleRefWatfordRepository = singleRefWatfordRepository;
     }
 
     public String createReference(String caseTypeId, String caseId) {
@@ -38,6 +52,16 @@ public class ReferenceService {
                 return getGlasgowOfficeReference(caseId, currentYear);
             case MIDLANDS_WEST_USERS_CASE_TYPE_ID:
                 return getMidlandsWestOfficeReference(caseId, currentYear);
+            case MIDLANDS_EAST_USERS_CASE_TYPE_ID:
+                return getMidlandsEastOfficeReference(caseId, currentYear);
+            case BRISTOL_USERS_CASE_TYPE_ID:
+                return getBristolOfficeReference(caseId, currentYear);
+            case WALES_USERS_CASE_TYPE_ID:
+                return getWalesOfficeReference(caseId, currentYear);
+            case NEWCASTLE_USERS_CASE_TYPE_ID:
+                return getNewcastleOfficeReference(caseId, currentYear);
+            case WATFORD_USERS_CASE_TYPE_ID:
+                return getWatfordOfficeReference(caseId, currentYear);
         }
         return getLeedsOfficeReference(caseId, currentYear);
     }
@@ -95,5 +119,55 @@ public class ReferenceService {
                 previousRefObject.getPreviousYear(), currentYear);
         SingleReferenceMidlandsWest singleReferenceMidlandsWestDB = singleRefMidlandsWestRepository.save(singleReferenceMidlandsWest);
         return MIDLANDS_WEST_OFFICE_NUMBER + singleReferenceMidlandsWestDB.getRef() + "/" + currentYear;
+    }
+
+    private String getMidlandsEastOfficeReference(String caseId, String currentYear) {
+        log.info("Midlands East CASE TYPE");
+        PreviousRefObject previousRefObject = getPreviousReference(singleRefMidlandsEastRepository);
+        log.info("PreviousRefObject: " + previousRefObject.toString());
+        SingleReferenceMidlandsEast singleReferenceMidlandsEast = new SingleReferenceMidlandsEast(caseId, previousRefObject.getPreviousRef(),
+                previousRefObject.getPreviousYear(), currentYear);
+        SingleReferenceMidlandsEast singleReferenceMidlandsEastDB = singleRefMidlandsEastRepository.save(singleReferenceMidlandsEast);
+        return MIDLANDS_EAST_OFFICE_NUMBER + singleReferenceMidlandsEastDB.getRef() + "/" + currentYear;
+    }
+
+    private String getBristolOfficeReference(String caseId, String currentYear) {
+        log.info("Bristol CASE TYPE");
+        PreviousRefObject previousRefObject = getPreviousReference(singleRefBristolRepository);
+        log.info("PreviousRefObject: " + previousRefObject.toString());
+        SingleReferenceBristol singleReferenceBristol = new SingleReferenceBristol(caseId, previousRefObject.getPreviousRef(),
+                previousRefObject.getPreviousYear(), currentYear);
+        SingleReferenceBristol singleReferenceBristolDB = singleRefBristolRepository.save(singleReferenceBristol);
+        return BRISTOL_OFFICE_NUMBER + singleReferenceBristolDB.getRef() + "/" + currentYear;
+    }
+
+    private String getWalesOfficeReference(String caseId, String currentYear) {
+        log.info("Wales CASE TYPE");
+        PreviousRefObject previousRefObject = getPreviousReference(singleRefWalesRepository);
+        log.info("PreviousRefObject: " + previousRefObject.toString());
+        SingleReferenceWales singleReferenceWales = new SingleReferenceWales(caseId, previousRefObject.getPreviousRef(),
+                previousRefObject.getPreviousYear(), currentYear);
+        SingleReferenceWales singleReferenceWalesDB = singleRefWalesRepository.save(singleReferenceWales);
+        return WALES_OFFICE_NUMBER + singleReferenceWalesDB.getRef() + "/" + currentYear;
+    }
+
+    private String getNewcastleOfficeReference(String caseId, String currentYear) {
+        log.info("Newcastle CASE TYPE");
+        PreviousRefObject previousRefObject = getPreviousReference(singleRefNewcastleRepository);
+        log.info("PreviousRefObject: " + previousRefObject.toString());
+        SingleReferenceNewcastle singleReferenceNewcastle = new SingleReferenceNewcastle(caseId, previousRefObject.getPreviousRef(),
+                previousRefObject.getPreviousYear(), currentYear);
+        SingleReferenceNewcastle singleReferenceNewcastleDB = singleRefNewcastleRepository.save(singleReferenceNewcastle);
+        return NEWCASTLE_OFFICE_NUMBER + singleReferenceNewcastleDB.getRef() + "/" + currentYear;
+    }
+
+    private String getWatfordOfficeReference(String caseId, String currentYear) {
+        log.info("Watford CASE TYPE");
+        PreviousRefObject previousRefObject = getPreviousReference(singleRefWatfordRepository);
+        log.info("PreviousRefObject: " + previousRefObject.toString());
+        SingleReferenceWatford singleReferenceWatford = new SingleReferenceWatford(caseId, previousRefObject.getPreviousRef(),
+                previousRefObject.getPreviousYear(), currentYear);
+        SingleReferenceWatford singleReferenceWatfordDB = singleRefWatfordRepository.save(singleReferenceWatford);
+        return WATFORD_OFFICE_NUMBER + singleReferenceWatfordDB.getRef() + "/" + currentYear;
     }
 }
