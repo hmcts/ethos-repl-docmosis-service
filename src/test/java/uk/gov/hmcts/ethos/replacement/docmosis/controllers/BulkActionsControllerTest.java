@@ -76,6 +76,9 @@ public class BulkActionsControllerTest {
     @MockBean
     private DocumentGenerationService documentGenerationService;
 
+    @MockBean
+    private ReferenceService referenceService;
+
     private MockMvc mvc;
     private JsonNode requestContent;
     private BulkCasesPayload bulkCasesPayload;

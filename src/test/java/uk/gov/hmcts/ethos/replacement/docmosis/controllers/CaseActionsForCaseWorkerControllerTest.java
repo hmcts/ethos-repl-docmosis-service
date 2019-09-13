@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.SingleReference;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.SingleReferenceManchester;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
@@ -69,6 +71,9 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @MockBean
     private CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
+
+    @MockBean
+    private ReferenceService referenceService;
 
     private MockMvc mvc;
     private JsonNode requestContent;
@@ -179,6 +184,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void postDefaultValuesFromET1WithPositionTypeDefined() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenReturn(defaultValues);
         when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
+        when(referenceService.createReference(isA(String.class), isA(String.class))).thenReturn("5100001/2019");
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -193,6 +199,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void postDefaultValues() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(CaseDetails.class))).thenReturn(defaultValues);
         when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
+        when(referenceService.createReference(isA(String.class), isA(String.class))).thenReturn("5100001/2019");
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)

@@ -75,3 +75,12 @@ variable "appinsights_instrumentation_key" {
   description = "Instrumentation key of the App Insights instance this webapp should use. Module will create own App Insights resource if this is not provided"
   default = ""
 }
+
+variable "component" {
+  type = "string"
+}
+
+variable "location_api" {
+  type    = "string"
+  default = "UK South"
+}
