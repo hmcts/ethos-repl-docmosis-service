@@ -19,6 +19,8 @@ services:
       APPINSIGHTS_INSTRUMENTATIONKEY: "key"
       ETHOS_REPL_SERVICE_S2S_SECRET: "AAAAAAAAAAAAAAAC"
       MICRO_SERVICE: "ethos_repl_service"
+      ETHOS_REPL_DB_HOST: "ethos-database"
+      ETHOS_REPL_DB_PASSWORD: "ethos"
 
   tornado:
     image: "hmcts/tornado:latest"
@@ -27,3 +29,17 @@ services:
     environment:
       DOCMOSIS_KEY: "FNAD-KLTH-JAMO-DKIA-JAEE-7ILH-YKFQ-FR42-A8FA-A-268E"
       DOCMOSIS_SITE: "Licensed To: Ministry Of Justice.  For use with single project: Reform Document Generation"
+
+  ethos-repl-database:
+#    build:
+#      context: docker/database
+    image: "hmcts/ethos-repl-database:latest"
+    ports:
+      - 5429:5432
+    environment:
+      ETHOS_REPL_DB_PASSWORD: "ethos"
+    volumes:
+      - ethos-repl-database-data:/var/lib/postgresql/data
+
+volumes:
+  ethos-repl-database-data:

@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 locals {
-
+  db_connection_options = "?sslmode=require"
   app = "repl-docmosis-backend"
   create_api = "${var.env != "preview" && var.env != "spreview"}"
 
@@ -41,7 +41,57 @@ module "repl-docmosis-backend" {
     SERVICE_AUTH_PROVIDER_URL          = "${var.s2s_url}"
     MICRO_SERVICE                      = "${var.micro_service}"
     CCD_GATEWAY_BASE_URL               = "${var.ccd_gateway_url}"
+    ETHOS_REPL_DB_HOST                 = "${module.db.host_name}"
+    ETHOS_REPL_DB_PORT                 = "5432"
+    ETHOS_REPL_DB_PASSWORD             = "${module.db.postgresql_password}"
+    ETHOS_REPL_DB_USER_NAME            = "${module.db.user_name}"
+    ETHOS_REPL_DB_NAME                 = "${module.db.postgresql_database}"
+    ETHOS_REPL_DB_CONN_OPTIONS         = "${local.db_connection_options}"
   }
+}
+
+module "db" {
+  source             = "git@github.com:hmcts/cnp-module-postgres?ref=master"
+  product            = "${var.product}-postgres-db"
+  location           = "${var.location_api}"
+  env                = "${var.env}"
+  database_name      = "ethos"
+  postgresql_user    = "ethos"
+  postgresql_version = "10"
+  sku_name           = "GP_Gen5_2"
+  sku_tier           = "GeneralPurpose"
+  common_tags        = "${var.common_tags}"
+  subscription       = "${var.subscription}"
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES-USER" {
+  name         = "${var.component}-POSTGRES-USER"
+  value        = "${module.db.user_name}"
+  key_vault_id = "${module.key-vault.key_vault_id}"
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
+  name         = "${var.component}-POSTGRES-PASS"
+  value        = "${module.db.postgresql_password}"
+  key_vault_id = "${module.key-vault.key_vault_id}"
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
+  name         = "${var.component}-POSTGRES-HOST"
+  value        = "${module.db.host_name}"
+  key_vault_id = "${module.key-vault.key_vault_id}"
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
+  name         = "${var.component}-POSTGRES-PORT"
+  value        = "5432"
+  key_vault_id = "${module.key-vault.key_vault_id}"
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
+  name         = "${var.component}-POSTGRES-DATABASE"
+  value        = "${module.db.postgresql_database}"
+  key_vault_id = "${module.key-vault.key_vault_id}"
 }
 
 data "azurerm_key_vault" "ethos_key_vault" {
