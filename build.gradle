@@ -173,10 +173,6 @@ task functional(type: Test, description: 'Runs the functional tests.', group: 'V
     systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
     systemProperty('tags', 'FunctionalTest')
 
-//    useJUnit {
-//        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.ComponentTest'
-//    }
-
     maxHeapSize = '1G'
     finalizedBy aggregate
 }
