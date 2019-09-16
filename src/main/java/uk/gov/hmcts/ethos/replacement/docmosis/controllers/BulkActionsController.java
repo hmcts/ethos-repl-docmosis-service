@@ -66,7 +66,7 @@ public class BulkActionsController {
         log.info("Starting creating a MULTIPLE REFERENCE");
         String reference = multipleReferenceService.createReference(bulkRequest.getCaseDetails().getCaseTypeId(), bulkRequest.getCaseDetails().getCaseId());
         log.info("Reference generated: " + reference);
-        //bulkRequestPayload.getBulkDetails().getCaseData().setMultipleReference(reference);
+        bulkRequestPayload.getBulkDetails().getCaseData().setMultipleReference(reference);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
