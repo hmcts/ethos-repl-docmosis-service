@@ -168,7 +168,7 @@ public class CaseActionsForCaseWorkerController {
             log.info("Starting creating a SINGLE REFERENCE");
             String reference = singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getCaseId());
             log.info("Reference generated: " + reference);
-            //caseData.setEthosCaseReference(reference);
+            caseData.setEthosCaseReference(reference);
         } else {
             log.info("Error in PostDefaultValues");
             errors.add("The payload is empty. Please make sure you have some data on your case");
