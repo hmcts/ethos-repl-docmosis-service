@@ -13,3 +13,5 @@ java:
       secrets:
         - tornado-access-key
         - ethos-repl-service-s2s-secret
+postgresql:
+  enabled: true
