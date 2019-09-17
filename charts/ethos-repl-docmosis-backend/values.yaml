@@ -13,6 +13,7 @@ java:
         - service-POSTGRES-HOST
         - service-POSTGRES-PORT
         - service-POSTGRES-USER
+  aadIdentityName: ethos
   environment:
     SERVER_PORT: 8081
     REFORM_TEAM: ethos
