@@ -11,3 +11,9 @@ java:
     SERVICE_AUTH_PROVIDER_URL: "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
     CCD_GATEWAY_BASE_URL: "https://gateway-ccd.aat.platform.hmcts.net"
     MICRO_SERVICE: "ethos_repl_service"
+  keyVaults:
+    ethos:
+      resourceGroup: ethos-repl-docmosis-backend
+      secrets:
+        - tornado-access-key
+        - ethos-repl-service-s2s-secret
