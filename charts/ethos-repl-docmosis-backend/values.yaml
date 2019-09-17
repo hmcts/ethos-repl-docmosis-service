@@ -3,7 +3,7 @@ java:
   applicationPort: 8081
   keyVaults:
     ethos:
-      resourceGroup: ethos
+      resourceGroup: ethos-repl-docmosis-backend
       secrets:
         - AppInsightsInstrumentationKey
         - tornado-access-key
