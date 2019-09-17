@@ -153,6 +153,10 @@ test {
     exclude '**/*ComponentTest*'
 }
 
+useJUnit {
+    includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
+}
+
 task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verification') {
     testClassesDirs = sourceSets.functional.output.classesDirs
     classpath = sourceSets.functional.runtimeClasspath
