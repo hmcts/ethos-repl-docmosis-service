@@ -1,5 +1,5 @@
 java:
-  image: 'https://hmctspublic.azurecr.io/ethos/ethos-repl-docmosis-backend:latest'
+  image: 'hmctspublic.azurecr.io/ethos/repl-docmosis-backend:prod-3fd011bf'
   applicationPort: 8081
   ingressHost: ethos-repl-docmosis-backend-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   keyVaults:
