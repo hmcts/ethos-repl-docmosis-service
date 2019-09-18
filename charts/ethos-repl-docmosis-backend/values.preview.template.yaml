@@ -12,9 +12,7 @@ java:
       ethos:
         resourceGroup: ethos-repl-docmosis-backend
         secrets:
-          - AppInsightsInstrumentationKey
           - tornado-access-key
           - ethos-repl-service-s2s-secret
-          - repl-docmosis-backend-POSTGRES-PASS
 postgresql:
   enabled: true
