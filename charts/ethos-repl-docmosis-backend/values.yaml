@@ -1,6 +1,7 @@
 java:
   image: 'https://hmctspublic.azurecr.io/ethos/ethos-repl-docmosis-backend:latest'
   applicationPort: 8081
+  ingressHost: ethos-repl-docmosis-backend-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   keyVaults:
     ethos:
       resourceGroup: ethos-repl-docmosis-backend
@@ -8,11 +9,7 @@ java:
         - AppInsightsInstrumentationKey
         - tornado-access-key
         - ethos-repl-service-s2s-secret
-        - service-POSTGRES-PASS
-        - service-POSTGRES-DATABASE
-        - service-POSTGRES-HOST
-        - service-POSTGRES-PORT
-        - service-POSTGRES-USER
+        - repl-docmosis-backend-POSTGRES-PASS
   aadIdentityName: ethos
   environment:
     SERVER_PORT: 8081
@@ -31,3 +28,8 @@ java:
     CCD_GATEWAY_BASE_URL: "https://gateway-ccd.{{ .Values.global.environment }}.platform.hmcts.net"
     MICRO_SERVICE: "ethos_repl_service"
     APPINSIGHTS_INSTRUMENTATIONKEY: fake-key
+    ETHOS_REPL_DB_CONN_OPTIONS: ?sslmode=require
+    ETHOS_REPL_DB_HOST: ethos-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
+    ETHOS_REPL_DB_NAME: ethos
+    ETHOS_REPL_DB_PORT: '5432'
+    ETHOS_REPL_DB_USER_NAME: ethos@ethos-postgres-db-{{ .Values.global.environment }}
