@@ -7,6 +7,7 @@ java:
     ETHOS_REPL_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
     ETHOS_REPL_DB_USER_NAME: "{{ .Values.postgresql.postgresqlUsername}}"
     ETHOS_REPL_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
+    ETHOS_REPL_DB_CONN_OPTIONS: ""
   keyVaults:
     ethos:
       resourceGroup: ethos-repl-docmosis-backend
