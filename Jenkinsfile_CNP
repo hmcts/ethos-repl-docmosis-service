@@ -9,6 +9,8 @@ def component = "repl-docmosis-backend"
 withPipeline(type, product, component) {
   enableDockerBuild()
   installCharts()
+  enableAksStagingDeployment()
+  disableLegacyDeployment()
   enableSlackNotifications('#ethos-repl-service')
 
   after('functional') {

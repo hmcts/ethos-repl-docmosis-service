@@ -7,8 +7,4 @@ spring:
         AppInsightsInstrumentationKey: APPINSIGHTS_INSTRUMENTATIONKEY
         tornado-access-key: TORNADO_ACCESS_KEY
         ethos-repl-service-s2s-secret: ETHOS_S2S_SECRET_KEY
-        service-POSTGRES-PASS: ETHOS_REPL_DB_PASSWORD
-        service-POSTGRES-DATABASE: ETHOS_REPL_DB_NAME
-        service-POSTGRES-HOST: ETHOS_REPL_DB_HOST
-        service-POSTGRES-PORT: ETHOS_REPL_DB_PORT
-        service-POSTGRES-USER: ETHOS_REPL_DB_USER_NAME
+        repl-docmosis-backend-POSTGRES-PASS: ETHOS_REPL_DB_PASSWORD
