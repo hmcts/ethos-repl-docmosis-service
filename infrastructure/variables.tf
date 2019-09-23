@@ -84,3 +84,7 @@ variable "location_api" {
   type    = "string"
   default = "UK South"
 }
+
+variable "managed_identity_object_id" {
+  default = ""
+}
