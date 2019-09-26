@@ -11,8 +11,8 @@ import java.time.LocalDate;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 @Slf4j
-@Service("referenceService")
-public class ReferenceService {
+@Service("singleReferenceService")
+public class SingleReferenceService {
 
     private final SingleRefManchesterRepository singleRefManchesterRepository;
     private final SingleRefScotlandRepository singleRefScotlandRepository;
@@ -28,12 +28,12 @@ public class ReferenceService {
     private final SingleRefLondonEastRepository singleRefLondonEastRepository;
 
     @Autowired
-    public ReferenceService(SingleRefManchesterRepository singleRefManchesterRepository, SingleRefScotlandRepository singleRefScotlandRepository,
-                            SingleRefLeedsRepository singleRefLeedsRepository, SingleRefMidlandsWestRepository singleRefMidlandsWestRepository,
-                            SingleRefMidlandsEastRepository singleRefMidlandsEastRepository, SingleRefBristolRepository singleRefBristolRepository,
-                            SingleRefWalesRepository singleRefWalesRepository, SingleRefNewcastleRepository singleRefNewcastleRepository,
-                            SingleRefWatfordRepository singleRefWatfordRepository, SingleRefLondonCentralRepository singleRefLondonCentralRepository,
-                            SingleRefLondonSouthRepository singleRefLondonSouthRepository, SingleRefLondonEastRepository singleRefLondonEastRepository) {
+    public SingleReferenceService(SingleRefManchesterRepository singleRefManchesterRepository, SingleRefScotlandRepository singleRefScotlandRepository,
+                                  SingleRefLeedsRepository singleRefLeedsRepository, SingleRefMidlandsWestRepository singleRefMidlandsWestRepository,
+                                  SingleRefMidlandsEastRepository singleRefMidlandsEastRepository, SingleRefBristolRepository singleRefBristolRepository,
+                                  SingleRefWalesRepository singleRefWalesRepository, SingleRefNewcastleRepository singleRefNewcastleRepository,
+                                  SingleRefWatfordRepository singleRefWatfordRepository, SingleRefLondonCentralRepository singleRefLondonCentralRepository,
+                                  SingleRefLondonSouthRepository singleRefLondonSouthRepository, SingleRefLondonEastRepository singleRefLondonEastRepository) {
         this.singleRefManchesterRepository = singleRefManchesterRepository;
         this.singleRefScotlandRepository = singleRefScotlandRepository;
         this.singleRefLeedsRepository = singleRefLeedsRepository;

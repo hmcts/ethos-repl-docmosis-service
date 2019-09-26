@@ -17,10 +17,10 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ReferenceServiceTest {
+public class SingleReferenceServiceTest {
 
     @InjectMocks
-    private ReferenceService referenceService;
+    private SingleReferenceService singleReferenceService;
     @Mock
     private SingleRefManchesterRepository singleRefManchesterRepository;
     @Mock
@@ -140,7 +140,7 @@ public class ReferenceServiceTest {
         when(singleRefManchesterRepository.findTopByOrderByIdDesc()).thenReturn(previousReferenceManchester);
         when(singleRefManchesterRepository.save(isA(SingleReferenceManchester.class))).thenReturn(referenceManchester);
         String manchesterRef = MANCHESTER_OFFICE_NUMBER + "00012/" + currentYear;
-        assertEquals(referenceService.createReference(MANCHESTER_CASE_TYPE_ID, caseId), manchesterRef);
+        assertEquals(singleReferenceService.createReference(MANCHESTER_CASE_TYPE_ID, caseId), manchesterRef);
     }
 
     @Test
@@ -148,7 +148,7 @@ public class ReferenceServiceTest {
         when(singleRefManchesterRepository.findTopByOrderByIdDesc()).thenReturn(previousMaxReferenceManchester);
         when(singleRefManchesterRepository.save(isA(SingleReferenceManchester.class))).thenReturn(maxReferenceManchester);
         String manchesterRef = MANCHESTER_OFFICE_NUMBER + "00001/" + currentYear;
-        assertEquals(referenceService.createReference(MANCHESTER_CASE_TYPE_ID, caseId), manchesterRef);
+        assertEquals(singleReferenceService.createReference(MANCHESTER_CASE_TYPE_ID, caseId), manchesterRef);
     }
 
     @Test
@@ -156,7 +156,7 @@ public class ReferenceServiceTest {
         maxReferenceManchester.setRef(DEFAULT_INIT_REF);
         when(singleRefManchesterRepository.save(isA(SingleReferenceManchester.class))).thenReturn(maxReferenceManchester);
         String manchesterRef = MANCHESTER_OFFICE_NUMBER + DEFAULT_INIT_REF + "/" + currentYear;
-        assertEquals(referenceService.createReference(MANCHESTER_CASE_TYPE_ID, caseId), manchesterRef);
+        assertEquals(singleReferenceService.createReference(MANCHESTER_CASE_TYPE_ID, caseId), manchesterRef);
     }
 
     @Test
@@ -164,7 +164,7 @@ public class ReferenceServiceTest {
         when(singleRefScotlandRepository.findTopByOrderByIdDesc()).thenReturn(previousReferenceScotland);
         when(singleRefScotlandRepository.save(isA(SingleReferenceScotland.class))).thenReturn(referenceScotland);
         String scotlandRef = GLASGOW_OFFICE_NUMBER + "00015/" + currentYear;
-        assertEquals(referenceService.createReference(SCOTLAND_CASE_TYPE_ID, caseId), scotlandRef);
+        assertEquals(singleReferenceService.createReference(SCOTLAND_CASE_TYPE_ID, caseId), scotlandRef);
     }
 
     @Test
@@ -172,7 +172,7 @@ public class ReferenceServiceTest {
         when(singleRefLeedsRepository.findTopByOrderByIdDesc()).thenReturn(referenceLeeds);
         when(singleRefLeedsRepository.save(isA(SingleReferenceLeeds.class))).thenReturn(referenceLeeds);
         String leedsRef = LEEDS_OFFICE_NUMBER + "00005/" + currentYear;
-        assertEquals(referenceService.createReference(LEEDS_USERS_CASE_TYPE_ID, caseId), leedsRef);
+        assertEquals(singleReferenceService.createReference(LEEDS_USERS_CASE_TYPE_ID, caseId), leedsRef);
     }
 
     @Test
@@ -180,7 +180,7 @@ public class ReferenceServiceTest {
         when(singleRefMidlandsWestRepository.findTopByOrderByIdDesc()).thenReturn(referenceMidlandsWest);
         when(singleRefMidlandsWestRepository.save(isA(SingleReferenceMidlandsWest.class))).thenReturn(referenceMidlandsWest);
         String midlandsWestRef = MIDLANDS_WEST_OFFICE_NUMBER + "00008/" + currentYear;
-        assertEquals(referenceService.createReference(MIDLANDS_WEST_USERS_CASE_TYPE_ID, caseId), midlandsWestRef);
+        assertEquals(singleReferenceService.createReference(MIDLANDS_WEST_USERS_CASE_TYPE_ID, caseId), midlandsWestRef);
     }
 
     @Test
@@ -188,7 +188,7 @@ public class ReferenceServiceTest {
         when(singleRefMidlandsEastRepository.findTopByOrderByIdDesc()).thenReturn(referenceMidlandsEast);
         when(singleRefMidlandsEastRepository.save(isA(SingleReferenceMidlandsEast.class))).thenReturn(referenceMidlandsEast);
         String midlandsEastRef = MIDLANDS_EAST_OFFICE_NUMBER + "00009/" + currentYear;
-        assertEquals(referenceService.createReference(MIDLANDS_EAST_USERS_CASE_TYPE_ID, caseId), midlandsEastRef);
+        assertEquals(singleReferenceService.createReference(MIDLANDS_EAST_USERS_CASE_TYPE_ID, caseId), midlandsEastRef);
     }
 
     @Test
@@ -196,7 +196,7 @@ public class ReferenceServiceTest {
         when(singleRefBristolRepository.findTopByOrderByIdDesc()).thenReturn(referenceBristol);
         when(singleRefBristolRepository.save(isA(SingleReferenceBristol.class))).thenReturn(referenceBristol);
         String bristolRef = BRISTOL_OFFICE_NUMBER + "00010/" + currentYear;
-        assertEquals(referenceService.createReference(BRISTOL_USERS_CASE_TYPE_ID, caseId), bristolRef);
+        assertEquals(singleReferenceService.createReference(BRISTOL_USERS_CASE_TYPE_ID, caseId), bristolRef);
     }
 
     @Test
@@ -204,7 +204,7 @@ public class ReferenceServiceTest {
         when(singleRefWalesRepository.findTopByOrderByIdDesc()).thenReturn(referenceWales);
         when(singleRefWalesRepository.save(isA(SingleReferenceWales.class))).thenReturn(referenceWales);
         String walesRef = WALES_OFFICE_NUMBER + "00011/" + currentYear;
-        assertEquals(referenceService.createReference(WALES_USERS_CASE_TYPE_ID, caseId), walesRef);
+        assertEquals(singleReferenceService.createReference(WALES_USERS_CASE_TYPE_ID, caseId), walesRef);
     }
 
     @Test
@@ -212,7 +212,7 @@ public class ReferenceServiceTest {
         when(singleRefNewcastleRepository.findTopByOrderByIdDesc()).thenReturn(referenceNewcastle);
         when(singleRefNewcastleRepository.save(isA(SingleReferenceNewcastle.class))).thenReturn(referenceNewcastle);
         String newcastleRef = NEWCASTLE_OFFICE_NUMBER + "00012/" + currentYear;
-        assertEquals(referenceService.createReference(NEWCASTLE_USERS_CASE_TYPE_ID, caseId), newcastleRef);
+        assertEquals(singleReferenceService.createReference(NEWCASTLE_USERS_CASE_TYPE_ID, caseId), newcastleRef);
     }
 
     @Test
@@ -220,7 +220,7 @@ public class ReferenceServiceTest {
         when(singleRefWatfordRepository.findTopByOrderByIdDesc()).thenReturn(referenceWatford);
         when(singleRefWatfordRepository.save(isA(SingleReferenceWatford.class))).thenReturn(referenceWatford);
         String watfordRef = WATFORD_OFFICE_NUMBER + "00013/" + currentYear;
-        assertEquals(referenceService.createReference(WATFORD_USERS_CASE_TYPE_ID, caseId), watfordRef);
+        assertEquals(singleReferenceService.createReference(WATFORD_USERS_CASE_TYPE_ID, caseId), watfordRef);
     }
 
     @Test
@@ -228,7 +228,7 @@ public class ReferenceServiceTest {
         when(singleRefLondonCentralRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonCentral);
         when(singleRefLondonCentralRepository.save(isA(SingleReferenceLondonCentral.class))).thenReturn(referenceLondonCentral);
         String londonCentralRef = LONDON_CENTRAL_OFFICE_NUMBER + "00014/" + currentYear;
-        assertEquals(referenceService.createReference(LONDON_CENTRAL_USERS_CASE_TYPE_ID, caseId), londonCentralRef);
+        assertEquals(singleReferenceService.createReference(LONDON_CENTRAL_USERS_CASE_TYPE_ID, caseId), londonCentralRef);
     }
 
     @Test
@@ -236,7 +236,7 @@ public class ReferenceServiceTest {
         when(singleRefLondonSouthRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonSouth);
         when(singleRefLondonSouthRepository.save(isA(SingleReferenceLondonSouth.class))).thenReturn(referenceLondonSouth);
         String londonSouthRef = LONDON_SOUTH_OFFICE_NUMBER + "00015/" + currentYear;
-        assertEquals(referenceService.createReference(LONDON_SOUTH_USERS_CASE_TYPE_ID, caseId), londonSouthRef);
+        assertEquals(singleReferenceService.createReference(LONDON_SOUTH_USERS_CASE_TYPE_ID, caseId), londonSouthRef);
     }
 
     @Test
@@ -244,7 +244,7 @@ public class ReferenceServiceTest {
         when(singleRefLondonEastRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonEast);
         when(singleRefLondonEastRepository.save(isA(SingleReferenceLondonEast.class))).thenReturn(referenceLondonEast);
         String londonEastRef = LONDON_EAST_OFFICE_NUMBER + "00016/" + currentYear;
-        assertEquals(referenceService.createReference(LONDON_EAST_USERS_CASE_TYPE_ID, caseId), londonEastRef);
+        assertEquals(singleReferenceService.createReference(LONDON_EAST_USERS_CASE_TYPE_ID, caseId), londonEastRef);
     }
 
 }
