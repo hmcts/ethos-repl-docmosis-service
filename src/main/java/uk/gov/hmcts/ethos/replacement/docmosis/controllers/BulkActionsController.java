@@ -31,14 +31,17 @@ public class BulkActionsController {
     private final BulkUpdateService bulkUpdateService;
     private final BulkSearchService bulkSearchService;
     private final DocumentGenerationService documentGenerationService;
+    private final MultipleReferenceService multipleReferenceService;
 
     @Autowired
     public BulkActionsController(BulkCreationService bulkCreationService, BulkUpdateService bulkUpdateService,
-                                 BulkSearchService bulkSearchService, DocumentGenerationService documentGenerationService) {
+                                 BulkSearchService bulkSearchService, DocumentGenerationService documentGenerationService,
+                                 MultipleReferenceService multipleReferenceService) {
         this.bulkCreationService = bulkCreationService;
         this.bulkUpdateService = bulkUpdateService;
         this.bulkSearchService = bulkSearchService;
         this.documentGenerationService = documentGenerationService;
+        this.multipleReferenceService = multipleReferenceService;
     }
 
     @PostMapping(value = "/createBulk", consumes = APPLICATION_JSON_VALUE)
@@ -53,6 +56,11 @@ public class BulkActionsController {
             @RequestBody BulkRequest bulkRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("CREATE BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
+
+        log.info("Starting creating a MULTIPLE REFERENCE");
+        String reference = multipleReferenceService.createReference(bulkRequest.getCaseDetails().getCaseTypeId(), bulkRequest.getCaseDetails().getCaseId());
+        log.info("Reference generated: " + reference);
+        bulkRequest.getCaseDetails().getCaseData().setMultipleReference(reference);
 
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken);
 

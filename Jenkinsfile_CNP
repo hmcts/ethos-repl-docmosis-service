@@ -10,7 +10,15 @@ withPipeline(type, product, component) {
   enableDockerBuild()
   installCharts()
   enableAksStagingDeployment()
-  disableLegacyDeployment()
+  onMaster {
+    disableLegacyDeployment()
+  }
+  onIthc {
+    disableLegacyDeployment()
+  }
+  onPerftest {
+    disableLegacyDeployment()
+  }
   enableSlackNotifications('#ethos-repl-service')
 
   after('functional') {
