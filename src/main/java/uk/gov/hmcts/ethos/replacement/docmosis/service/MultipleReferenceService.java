@@ -46,7 +46,7 @@ public class MultipleReferenceService {
         this.multipleRefLondonEastRepository = multipleRefLondonEastRepository;
     }
 
-    public String createReference(String caseTypeId, String caseId) {
+    public synchronized String createReference(String caseTypeId, String caseId) {
         switch (caseTypeId) {
             case MANCHESTER_BULK_CASE_TYPE_ID:
             case MANCHESTER_USERS_BULK_CASE_TYPE_ID:
