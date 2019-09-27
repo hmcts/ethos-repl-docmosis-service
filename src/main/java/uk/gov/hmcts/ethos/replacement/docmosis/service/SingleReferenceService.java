@@ -48,7 +48,7 @@ public class SingleReferenceService {
         this.singleRefLondonEastRepository = singleRefLondonEastRepository;
     }
 
-    public String createReference(String caseTypeId, String caseId) {
+    public synchronized String createReference(String caseTypeId, String caseId) {
         String currentYear = String.valueOf(LocalDate.now().getYear());
         switch (caseTypeId) {
             case MANCHESTER_CASE_TYPE_ID:
