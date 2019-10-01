@@ -76,6 +76,7 @@ public class BulkHelper {
             multipleType.setFeeGroupReferenceM(Optional.ofNullable(caseData.getFeeGroupReference()).orElse(" "));
             multipleType.setJurCodesCollectionM(getJurCodesCollection(caseData.getJurCodesCollection()));
             multipleType.setStateM(getSubmitEventState(submitEvent));
+            multipleType.setSubMultipleM(" ");
             MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
             multipleTypeItem.setId(String.valueOf(submitEvent.getCaseId()));
             multipleTypeItem.setValue(multipleType);
@@ -166,6 +167,7 @@ public class BulkHelper {
         multipleType.setJurCodesCollectionM(getJurCodesCollection(caseData.getJurCodesCollection()));
         multipleType.setStateM(!isNullOrEmpty(submitEvent.getState()) ? submitEvent.getState() : " ");
         multipleType.setMultipleReferenceM(!isNullOrEmpty(caseData.getMultipleReference()) ? caseData.getMultipleReference() : " ");
+        multipleType.setSubMultipleM(" ");
         return multipleType;
     }
 

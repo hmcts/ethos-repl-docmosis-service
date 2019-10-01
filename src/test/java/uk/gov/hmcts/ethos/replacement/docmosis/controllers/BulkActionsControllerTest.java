@@ -57,9 +57,17 @@ public class BulkActionsControllerTest {
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private static final String CREATION_BULK_URL = "/createBulk";
     private static final String SEARCH_BULK_URL = "/searchBulk";
+    private static final String MID_SEARCH_BULK_URL = "/midSearchBulk";
     private static final String UPDATE_BULK_URL = "/updateBulk";
     private static final String UPDATE_BULK_CASE_URL = "/updateBulkCase";
     private static final String GENERATE_BULK_LETTER_URL = "/generateBulkLetter";
+
+    private static final String SUB_MULTIPLE_DYNAMIC_LIST_URL = "/subMultipleDynamicList";
+    private static final String MID_CREATE_SUB_MULTIPLE_URL = "/midCreateSubMultiple";
+    private static final String CREATE_SUB_MULTIPLE_URL = "/createSubMultiple";
+    private static final String MID_UPDATE_SUB_MULTIPLE_URL = "/midUpdateSubMultiple";
+    private static final String UPDATE_SUB_MULTIPLE_URL = "/updateSubMultiple";
+    private static final String DELETE_SUB_MULTIPLE_URL = "/deleteSubMultiple";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -78,6 +86,9 @@ public class BulkActionsControllerTest {
 
     @MockBean
     private MultipleReferenceService multipleReferenceService;
+
+    @MockBean
+    private SubMultipleService subMultipleService;
 
     private MockMvc mvc;
     private JsonNode requestContent;
@@ -177,6 +188,38 @@ public class BulkActionsControllerTest {
     public void createSearchBulkCaseError500() throws Exception {
         when(bulkSearchService.bulkSearchLogic(isA(BulkDetails.class))).thenThrow(feignError());
         mvc.perform(post(SEARCH_BULK_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void midSearchBulkCase() throws Exception {
+        when(bulkSearchService.bulkMidSearchLogic(isA(BulkDetails.class), isA(Boolean.class))).thenReturn(bulkRequestPayload);
+        mvc.perform(post(MID_SEARCH_BULK_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void midSearchBulkCaseError400() throws Exception {
+        mvc.perform(post(MID_SEARCH_BULK_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void midSearchBulkCaseError500() throws Exception {
+        when(bulkSearchService.bulkMidSearchLogic(isA(BulkDetails.class), isA(Boolean.class))).thenThrow(feignError());
+        mvc.perform(post(MID_SEARCH_BULK_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -312,6 +355,198 @@ public class BulkActionsControllerTest {
     public void generateBulkLetterError500() throws Exception {
         when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), eq(AUTH_TOKEN))).thenThrow(feignError());
         mvc.perform(post(GENERATE_BULK_LETTER_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void midCreateSubMultiple() throws Exception {
+        when(bulkSearchService.bulkMidSearchLogic(isA(BulkDetails.class), isA(Boolean.class))).thenReturn(bulkRequestPayload);
+        mvc.perform(post(MID_CREATE_SUB_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void midCreateSubMultipleError400() throws Exception {
+        mvc.perform(post(MID_CREATE_SUB_MULTIPLE_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void midCreateSubMultipleError500() throws Exception {
+        when(bulkSearchService.bulkMidSearchLogic(isA(BulkDetails.class), isA(Boolean.class))).thenThrow(feignError());
+        mvc.perform(post(MID_CREATE_SUB_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void createSubMultiple() throws Exception {
+        when(subMultipleService.createSubMultipleLogic(isA(BulkDetails.class))).thenReturn(bulkRequestPayload);
+        mvc.perform(post(CREATE_SUB_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void createSubMultipleError400() throws Exception {
+        mvc.perform(post(CREATE_SUB_MULTIPLE_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void createSubMultipleError500() throws Exception {
+        when(subMultipleService.createSubMultipleLogic(isA(BulkDetails.class))).thenThrow(feignError());
+        mvc.perform(post(CREATE_SUB_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void subMultipleDynamicList() throws Exception {
+        when(subMultipleService.populateSubMultipleDynamicListLogic(isA(BulkDetails.class))).thenReturn(bulkRequestPayload);
+        mvc.perform(post(SUB_MULTIPLE_DYNAMIC_LIST_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void subMultipleDynamicListError400() throws Exception {
+        mvc.perform(post(SUB_MULTIPLE_DYNAMIC_LIST_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void subMultipleDynamicListError500() throws Exception {
+        when(subMultipleService.populateSubMultipleDynamicListLogic(isA(BulkDetails.class))).thenThrow(feignError());
+        mvc.perform(post(SUB_MULTIPLE_DYNAMIC_LIST_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void midUpdateSubMultiple() throws Exception {
+        when(subMultipleService.bulkMidUpdateLogic(isA(BulkDetails.class))).thenReturn(bulkRequestPayload);
+        mvc.perform(post(MID_UPDATE_SUB_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void midUpdateSubMultipleError400() throws Exception {
+        mvc.perform(post(MID_UPDATE_SUB_MULTIPLE_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void midUpdateSubMultipleError500() throws Exception {
+        when(subMultipleService.bulkMidUpdateLogic(isA(BulkDetails.class))).thenThrow(feignError());
+        mvc.perform(post(MID_UPDATE_SUB_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void updateSubMultiple() throws Exception {
+        when(subMultipleService.updateSubMultipleLogic(isA(BulkDetails.class))).thenReturn(bulkRequestPayload);
+        mvc.perform(post(UPDATE_SUB_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void updateSubMultipleError400() throws Exception {
+        mvc.perform(post(UPDATE_SUB_MULTIPLE_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateSubMultipleError500() throws Exception {
+        when(subMultipleService.updateSubMultipleLogic(isA(BulkDetails.class))).thenThrow(feignError());
+        mvc.perform(post(UPDATE_SUB_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void deleteSubMultiple() throws Exception {
+        when(subMultipleService.deleteSubMultipleLogic(isA(BulkDetails.class))).thenReturn(bulkRequestPayload);
+        mvc.perform(post(DELETE_SUB_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void deleteSubMultipleError400() throws Exception {
+        mvc.perform(post(DELETE_SUB_MULTIPLE_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deleteSubMultipleError500() throws Exception {
+        when(subMultipleService.deleteSubMultipleLogic(isA(BulkDetails.class))).thenThrow(feignError());
+        mvc.perform(post(DELETE_SUB_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
