@@ -19,6 +19,7 @@ plugins {
     id "org.owasp.dependencycheck" version "5.1.0"
     id 'io.spring.dependency-management' version '1.0.7.RELEASE'
     id 'java'
+    id 'au.com.dius.pact' version '3.5.24'
 }
 
 apply plugin: 'java'
@@ -57,7 +58,8 @@ repositories {
 
 def versions = [
         springfoxSwagger: '2.9.2',
-        reformLogging: '5.0.1'
+        reformLogging: '5.0.1',
+        serentity: '2.0.17'
 ]
 
 dependencies {
@@ -65,7 +67,6 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
     compile("org.springframework.boot:spring-boot-configuration-processor")
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
-
     compile('org.postgresql:postgresql')
 
     compileOnly 'org.projectlombok:lombok:1.18.4'
@@ -105,10 +106,24 @@ dependencies {
     testCompile group: 'io.github.openfeign', name: 'feign-jackson', version: '10.0.1'
     testCompile group: 'com.warrenstrange', name: 'googleauth', version: '1.2.0'
 
-    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '2.0.52'
-    testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.0.52'
-    testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.0.52'
-    testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.0.52'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
+    testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
+    testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serentity
+    testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
+
+    testPactCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
+    testPactCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
+    testPactCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serentity
+    testPactCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
+    testPactCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+    testPactCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+    testCompile  group: 'au.com.dius', name: 'pact-jvm-provider-spring_2.12', version: '3.5.24'
+    testPactCompile  group: 'au.com.dius', name: 'pact-jvm-provider-spring_2.12', version: '3.5.24'
+    testPactCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
+    testPactRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+    testPactImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
+    testPactCompile sourceSets.main.runtimeClasspath
+    testPactCompile sourceSets.test.runtimeClasspath
 }
 
 jar {
@@ -142,6 +157,21 @@ sourceSets {
         compileClasspath += main.output + test.output
         runtimeClasspath += main.output + test.output
     }
+
+    testPact {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/pactTest/java')
+        }
+        resources.srcDir file('src/pactTest/resources')
+    }
+}
+
+task pactTask(type: Test) {
+    description = "Runs pact Tests"
+    testClassesDirs = sourceSets.testPact.output.classesDirs
+    classpath = sourceSets.testPact.runtimeClasspath
 }
 
 configurations {

@@ -1,0 +1,24 @@
+{
+  "caseData": {
+    "type": "GrantOfRepresentation",
+    "caseType": "intestacy",
+    "applicationType": "Personal",
+    "primaryApplicantEmailAddress": "jsnow@bbc.co.uk",
+    "primaryApplicantForenames": "Jon",
+    "primaryApplicantSurname": "Snow",
+    "primaryApplicantAddress": {
+      "AddressLine1": "Pret a Manger St. Georges Hospital Blackshaw Road London SW17 0QT"
+    },
+    "primaryApplicantFreeTextAddress": "Pret a Manger St. Georges Hospital Blackshaw Road",
+    "primaryApplicantAddressFound": "Yes",
+    "primaryApplicantAdoptionInEnglandOrWales": "Yes",
+    "deceasedForenames": "Ned",
+    "deceasedSurname": "Stark",
+    "deceasedDateOfBirth": "1930-01-01",
+    "deceasedDateOfDeath": "2018-01-01"
+  },
+  "caseInfo": {
+    "caseId": "12323213323",
+    "state": "Draft"
+  }
+}

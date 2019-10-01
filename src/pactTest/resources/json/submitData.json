@@ -1,0 +1,88 @@
+{
+  "submitdata":{
+    "applicantFirstName":"Lead",
+    "applicantLastName":"Applicant",
+    "applicantSameWillName":"No",
+    "applicantAlias":"Lead_Applicant_Alias",
+    "applicantAliasReason":"other",
+    "applicantOtherReason":"nickname",
+    "applicantAddress":"fsdfdfdfd",
+    "applicantPhone":"07123456789",
+    "applicantEmail":"tom@email.com",
+    "deceasedFirstname":"Dee",
+    "deceasedSurname":"Ceased",
+    "deceasedAliasAssets":"No",
+    "deceasedAddress":"fdfsdfsdfd",
+    "deceasedDod":"1 January 2018",
+    "deceasedDob":"1 January 1930",
+    "noOfExecutors":1,
+    "willWithDate":"No",
+    "willWithCodicils":"No",
+    "documentUploads": {
+      "uploads": [{
+        "filename": "document_1",
+        "url": "url_link1"
+      },
+        {
+          "filename": "document_2",
+          "url": "url_link2"
+        },
+        {
+          "filename": "document_3",
+          "url": "url_link3"
+        }
+
+      ]
+    },
+    "deceasedMarriedAfterWillOrCodicilDate": "Yes",
+    "ihtCompleted":"Yes",
+    "ihtForm":"online",
+    "ihtIdentifier":"1",
+    "ihtGrossValue":123,
+    "ihtNetValue":123,
+    "copiesUK":1,
+    "copiesOverseas":0,
+    "totalFee":"0.50",
+    "paymentReference":"CODE4$$$Ceased3136$$$CODE5$$$CODE2/1",
+    "legalStatement":{
+      "intro":"This statement is based on the information you&rsquo;ve given in your application. It will be stored as a public record.",
+      "applicant":"I, Lead Applicant of fsdfdfdfd, make the following statement:",
+      "deceased":"Dee Ceased was born on 1 January 1930 and died on 1 January 2018, domiciled in England and Wales.",
+      "deceasedOtherNames":"",
+      "executorsApplying":[
+        {
+          "name":"I am an executor named in the will as Lead Applicant, and I am applying for probate.",
+          "sign":"I will sign and send to the probate registry what I believe to be the true and original last will and testament of Dee Ceased."
+        }
+      ],
+      "deceasedEstateValue":"The gross value for the estate amounts to &pound;123 and the net value for the estate amounts to &pound;123.",
+      "deceasedEstateLand":"To the best of my knowledge, information and belief, there was no land vested in Dee Ceased which was settled previously to the death (and not by the will) of Dee Ceased and which remained settled land notwithstanding such death.",
+      "executorsNotApplying":[
+
+      ]
+    },
+    "declaration":{
+      "confirm":"I confirm that we will administer the estate of Dee Ceased, according to law. I will:",
+      "confirmItem1":"collect the whole estate",
+      "confirmItem2":"keep full details (an inventory) of the estate",
+      "confirmItem3":"keep a full account of how the estate has been administered",
+      "requests":"If the probate registry (court) asks me to do so, I will:",
+      "requestsItem1":"provide the full details of the estate and how it has been administered",
+      "requestsItem2":"return the grant of probate to the court",
+      "understand":"I understand that:",
+      "understandItem1":"my application will be rejected if I do not answer any questions about the information I have given",
+      "understandItem2":"criminal proceedings for fraud may be brought against me if I am found to have been deliberately untruthful or dishonest",
+      "accept":"I confirm that I will administer the estate of the person who died according to law, and that my application is truthful.",
+      "submitWarning":"Once you click &lsquo;Save and continue&rsquo;, you cannot change your answers."
+    },
+    "payloadVersion":"3.0.0",
+    "noOfApplicants":1,
+    "executorsApplying":[
+
+    ],
+    "executorsNotApplying":[
+
+    ],
+    "softStop":"softStop"
+  }
+}

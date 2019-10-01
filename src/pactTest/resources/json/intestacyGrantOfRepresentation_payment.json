@@ -1,0 +1,12 @@
+{
+  "caseType": "GrantOfRepresentation",
+  "payment": {
+    "status": "Success",
+    "date": "2018-12-03",
+    "reference": "RC-1537-1988-5489-1985",
+    "amount": "22050",
+    "method": "online",
+    "transactionId": "r23k178busa0rp2mh27m0vchja",
+    "siteId": "P223"
+  }
+}
