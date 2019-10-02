@@ -67,10 +67,8 @@ public class BulkSearchService {
                     searchTypeItemList.add(searchTypeItem);
                 }
             }
-            if (!searchTypeItemList.isEmpty()) {
-                bulkDetails.getCaseData().setSearchCollectionCount(String.valueOf(searchTypeItemList.size()));
-                bulkDetails.getCaseData().setSearchCollection(searchTypeItemList);
-            }
+            bulkDetails.getCaseData().setSearchCollectionCount(String.valueOf(searchTypeItemList.size()));
+            bulkDetails.getCaseData().setSearchCollection(searchTypeItemList);
             bulkDetails.setCaseData(clearUpFields(bulkDetails.getCaseData()));
         } else {
             errors.add("There are not cases found");
