@@ -79,7 +79,7 @@ public class SingleReferenceService {
         return getLeedsOfficeReference(caseId, currentYear);
     }
 
-    private PreviousRefObject getPreviousReference(SingleRefRepository referenceRepository) {
+    private synchronized PreviousRefObject getPreviousReference(SingleRefRepository referenceRepository) {
         SingleReference reference = referenceRepository.findTopByOrderByIdDesc();
         PreviousRefObject previousRefObject = new PreviousRefObject();
         if (reference != null) {
@@ -94,7 +94,7 @@ public class SingleReferenceService {
         return previousRefObject;
     }
 
-    private String getManchesterOfficeReference(String caseId, String currentYear) {
+    private synchronized String getManchesterOfficeReference(String caseId, String currentYear) {
         log.info("Manchester CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(singleRefManchesterRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
@@ -104,7 +104,7 @@ public class SingleReferenceService {
         return MANCHESTER_OFFICE_NUMBER + singleReferenceManchesterDB.getRef() + "/" + currentYear;
     }
 
-    private String getGlasgowOfficeReference(String caseId, String currentYear) {
+    private synchronized String getGlasgowOfficeReference(String caseId, String currentYear) {
         log.info("Scotland CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(singleRefScotlandRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
@@ -114,7 +114,7 @@ public class SingleReferenceService {
         return GLASGOW_OFFICE_NUMBER + singleReferenceScotlandDB.getRef() + "/" + currentYear;
     }
 
-    private String getLeedsOfficeReference(String caseId, String currentYear) {
+    private synchronized String getLeedsOfficeReference(String caseId, String currentYear) {
         log.info("Leeds CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(singleRefLeedsRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
@@ -124,7 +124,7 @@ public class SingleReferenceService {
         return LEEDS_OFFICE_NUMBER + singleReferenceLeedsDB.getRef() + "/" + currentYear;
     }
 
-    private String getMidlandsWestOfficeReference(String caseId, String currentYear) {
+    private synchronized String getMidlandsWestOfficeReference(String caseId, String currentYear) {
         log.info("Midlands West CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(singleRefMidlandsWestRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
@@ -134,7 +134,7 @@ public class SingleReferenceService {
         return MIDLANDS_WEST_OFFICE_NUMBER + singleReferenceMidlandsWestDB.getRef() + "/" + currentYear;
     }
 
-    private String getMidlandsEastOfficeReference(String caseId, String currentYear) {
+    private synchronized String getMidlandsEastOfficeReference(String caseId, String currentYear) {
         log.info("Midlands East CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(singleRefMidlandsEastRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
@@ -144,7 +144,7 @@ public class SingleReferenceService {
         return MIDLANDS_EAST_OFFICE_NUMBER + singleReferenceMidlandsEastDB.getRef() + "/" + currentYear;
     }
 
-    private String getBristolOfficeReference(String caseId, String currentYear) {
+    private synchronized String getBristolOfficeReference(String caseId, String currentYear) {
         log.info("Bristol CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(singleRefBristolRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
@@ -154,7 +154,7 @@ public class SingleReferenceService {
         return BRISTOL_OFFICE_NUMBER + singleReferenceBristolDB.getRef() + "/" + currentYear;
     }
 
-    private String getWalesOfficeReference(String caseId, String currentYear) {
+    private synchronized String getWalesOfficeReference(String caseId, String currentYear) {
         log.info("Wales CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(singleRefWalesRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
@@ -164,7 +164,7 @@ public class SingleReferenceService {
         return WALES_OFFICE_NUMBER + singleReferenceWalesDB.getRef() + "/" + currentYear;
     }
 
-    private String getNewcastleOfficeReference(String caseId, String currentYear) {
+    private synchronized String getNewcastleOfficeReference(String caseId, String currentYear) {
         log.info("Newcastle CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(singleRefNewcastleRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
@@ -174,7 +174,7 @@ public class SingleReferenceService {
         return NEWCASTLE_OFFICE_NUMBER + singleReferenceNewcastleDB.getRef() + "/" + currentYear;
     }
 
-    private String getWatfordOfficeReference(String caseId, String currentYear) {
+    private synchronized String getWatfordOfficeReference(String caseId, String currentYear) {
         log.info("Watford CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(singleRefWatfordRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
@@ -184,7 +184,7 @@ public class SingleReferenceService {
         return WATFORD_OFFICE_NUMBER + singleReferenceWatfordDB.getRef() + "/" + currentYear;
     }
 
-    private String getLondonCentralOfficeReference(String caseId, String currentYear) {
+    private synchronized String getLondonCentralOfficeReference(String caseId, String currentYear) {
         log.info("London Central CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(singleRefLondonCentralRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
@@ -194,7 +194,7 @@ public class SingleReferenceService {
         return LONDON_CENTRAL_OFFICE_NUMBER + singleReferenceLondonCentralDB.getRef() + "/" + currentYear;
     }
 
-    private String getLondonSouthOfficeReference(String caseId, String currentYear) {
+    private synchronized String getLondonSouthOfficeReference(String caseId, String currentYear) {
         log.info("London South CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(singleRefLondonSouthRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
@@ -204,7 +204,7 @@ public class SingleReferenceService {
         return LONDON_SOUTH_OFFICE_NUMBER + singleReferenceLondonSouthDB.getRef() + "/" + currentYear;
     }
 
-    private String getLondonEastOfficeReference(String caseId, String currentYear) {
+    private synchronized String getLondonEastOfficeReference(String caseId, String currentYear) {
         log.info("London East CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(singleRefLondonEastRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
