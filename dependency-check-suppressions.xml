@@ -153,4 +153,16 @@
         <notes><![CDATA[ CVE-2019-12402  ]]></notes>
         <cve>CVE-2019-12402</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-16869  ]]></notes>
+        <cve>CVE-2019-16869</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2015-2156  ]]></notes>
+        <cve>CVE-2015-2156</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-3488  ]]></notes>
+        <cve>CVE-2014-3488</cve>
+    </suppress>
 </suppressions>
