@@ -8,6 +8,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.CaseCreationException;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MidSearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
@@ -17,6 +18,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -34,17 +36,44 @@ public class BulkSearchService {
         this.ccdClient = ccdClient;
     }
 
-    public BulkRequestPayload bulkSearchLogic(BulkDetails bulkDetails) {
+    public BulkRequestPayload bulkMidSearchLogic(BulkDetails bulkDetails, boolean subMultiple) {
         BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
         List<String> errors = new ArrayList<>();
         if (bulkDetails.getCaseData().getMultipleCollection() != null) {
-            List<SearchTypeItem> searchTypeItemList = searchCasesByFieldsRequest(bulkDetails);
-            bulkDetails.getCaseData().setSearchCollectionCount(String.valueOf(searchTypeItemList.size()));
-            bulkDetails.getCaseData().setSearchCollection(searchTypeItemList);
-            bulkDetails.getCaseData().getSearchCollection().forEach(searchTypeItem -> log.info("Searched collection: " + searchTypeItem.toString()));
-            bulkDetails.setCaseData(clearUpFields(bulkDetails.getCaseData()));
+            List<MidSearchTypeItem> midSearchedList = midSearchCasesByFieldsRequest(bulkDetails, subMultiple);
+            bulkDetails.getCaseData().setMidSearchCollection(midSearchedList);
         } else {
             errors.add("There are not cases in this multiple to search");
+            bulkRequestPayload.setErrors(errors);
+        }
+        bulkRequestPayload.setBulkDetails(bulkDetails);
+        return bulkRequestPayload;
+    }
+
+    public BulkRequestPayload bulkSearchLogic(BulkDetails bulkDetails) {
+        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        List<String> errors = new ArrayList<>();
+        if (bulkDetails.getCaseData().getMidSearchCollection() != null) {
+            List<SearchTypeItem> searchTypeItemList = new ArrayList<>();
+            for (MidSearchTypeItem refNumbersFiltered : bulkDetails.getCaseData().getMidSearchCollection()) {
+                Optional<MultipleTypeItem> multipleTypeItem = bulkDetails.getCaseData().getMultipleCollection()
+                        .stream()
+                        .filter(multipleValue -> multipleValue.getValue().getEthosCaseReferenceM().equals(refNumbersFiltered.getValue()))
+                        .findFirst();
+                if (multipleTypeItem.isPresent()) {
+                    SearchTypeItem searchTypeItem = new SearchTypeItem();
+                    searchTypeItem.setId(multipleTypeItem.get().getId());
+                    searchTypeItem.setValue(BulkHelper.getSearchTypeFromMultipleType(multipleTypeItem.get().getValue()));
+                    searchTypeItemList.add(searchTypeItem);
+                }
+            }
+            if (!searchTypeItemList.isEmpty()) {
+                bulkDetails.getCaseData().setSearchCollectionCount(String.valueOf(searchTypeItemList.size()));
+                bulkDetails.getCaseData().setSearchCollection(searchTypeItemList);
+            }
+            bulkDetails.setCaseData(clearUpFields(bulkDetails.getCaseData()));
+        } else {
+            errors.add("There are not cases found");
             bulkRequestPayload.setErrors(errors);
         }
         bulkRequestPayload.setBulkDetails(bulkDetails);
@@ -57,6 +86,7 @@ public class BulkSearchService {
         bulkData.setRespondentSurname(null);
         bulkData.setClaimantRep(null);
         bulkData.setRespondentRep(null);
+        bulkData.setMidSearchCollection(null);
         return bulkData;
     }
 
@@ -101,33 +131,33 @@ public class BulkSearchService {
         return bulkCasesPayload;
     }
 
-    List<SearchTypeItem> searchCasesByFieldsRequest(BulkDetails bulkDetails) {
+    List<MidSearchTypeItem> midSearchCasesByFieldsRequest(BulkDetails bulkDetails, boolean subMultiple) {
         log.info("Bulk Details: " + bulkDetails);
         try {
             BulkData bulkData = bulkDetails.getCaseData();
             String claimantFilter = bulkData.getClaimantSurname();
-            String ethosCaseRefFilter = bulkData.getEthosCaseReference();
             String respondentFilter = bulkData.getRespondentSurname();
             String claimantRepFilter = bulkData.getClaimantRep();
             String respondentRepFilter = bulkData.getRespondentRep();
             //List<JurCodesTypeItem> jurCodesTypeItemsFilter = bulkData.getJurCodesCollection();
-            List<SearchTypeItem> searchTypeItemList = new ArrayList<>();
+            List<MidSearchTypeItem> midSearchedList = new ArrayList<>();
             List<MultipleTypeItem> multipleTypeItemList = bulkDetails.getCaseData().getMultipleCollection();
             if (multipleTypeItemList != null && !multipleTypeItemList.isEmpty()) {
+                Predicate<MultipleTypeItem> subMultipleDuplicatePredicate = d-> d.getValue() != null && (d.getValue().getSubMultipleM() == null
+                        || d.getValue().getSubMultipleM().equals(" "));
                 Predicate<MultipleTypeItem> claimantPredicate = d-> d.getValue() != null && claimantFilter.equals(d.getValue().getClaimantSurnameM());
-                Predicate<MultipleTypeItem> ethosCaseRefPredicate = d-> d.getValue() != null && ethosCaseRefFilter.equals(d.getValue().getEthosCaseReferenceM());
                 Predicate<MultipleTypeItem> respondentPredicate = d-> d.getValue() != null && respondentFilter.equals(d.getValue().getRespondentSurnameM());
                 Predicate<MultipleTypeItem> claimantRepPredicate = d-> d.getValue() != null && claimantRepFilter.equals(d.getValue().getClaimantRepM());
                 Predicate<MultipleTypeItem> respondentRepPredicate = d-> d.getValue() != null && respondentRepFilter.equals(d.getValue().getRespondentRepM());
                 //Predicate<MultipleTypeItem> jurCodesTypeItemsPredicate = d-> d.getValue() != null && BulkHelper.containsAllJurCodes(jurCodesTypeItemsFilter, d.getValue().getJurCodesCollectionM());
                 List<MultipleTypeItem> searchedList = new ArrayList<>();
                 boolean filtered = false;
-                if (!isNullOrEmpty(claimantFilter)) {
-                    searchedList = filterByField(multipleTypeItemList, claimantPredicate);
+                if (subMultiple) {
+                    searchedList = filterByField(multipleTypeItemList, subMultipleDuplicatePredicate);
                     filtered = true;
                 }
-                if (!isNullOrEmpty(ethosCaseRefFilter)) {
-                    searchedList = filterByField(filtered ? searchedList : multipleTypeItemList, ethosCaseRefPredicate);
+                if (!isNullOrEmpty(claimantFilter)) {
+                    searchedList = filterByField(filtered ? searchedList : multipleTypeItemList, claimantPredicate);
                     filtered = true;
                 }
                 if (!isNullOrEmpty(respondentFilter)) {
@@ -146,13 +176,14 @@ public class BulkSearchService {
 //                    searchedList = filterByField(filtered ? searchedList : multipleTypeItemList, jurCodesTypeItemsPredicate);
 //                }
                 for (MultipleTypeItem multipleTypeItem : searchedList) {
-                    SearchTypeItem searchTypeItem = new SearchTypeItem();
-                    searchTypeItem.setId(multipleTypeItem.getId());
-                    searchTypeItem.setValue(BulkHelper.getSearchTypeFromMultipleType(multipleTypeItem.getValue()));
-                    searchTypeItemList.add(searchTypeItem);
+                    log.info("Case found searching: " + multipleTypeItem.getValue().getEthosCaseReferenceM());
+                    MidSearchTypeItem midSearchTypeItem = new MidSearchTypeItem();
+                    midSearchTypeItem.setId(multipleTypeItem.getValue().getEthosCaseReferenceM());
+                    midSearchTypeItem.setValue(multipleTypeItem.getValue().getEthosCaseReferenceM());
+                    midSearchedList.add(midSearchTypeItem);
                 }
             }
-            return searchTypeItemList;
+            return midSearchedList;
 
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + bulkDetails.getCaseId() + ex.getMessage());
