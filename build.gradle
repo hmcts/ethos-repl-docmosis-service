@@ -9,6 +9,7 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.6.2'
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.11")
+        // classpath 'au.com.dius:pact-jvm-provider-gradle_2.12:3.6.10'
     }
 }
 
@@ -30,6 +31,7 @@ apply plugin: 'org.sonarqube'
 apply plugin: 'org.owasp.dependencycheck'
 apply plugin: 'jacoco'
 apply plugin: 'net.serenity-bdd.aggregator'
+//apply plugin: 'au.com.dius.pact'
 
 // https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
 dependencyCheck {
@@ -61,6 +63,33 @@ def versions = [
         reformLogging: '5.0.1',
         serentity: '2.0.17'
 ]
+
+sourceSets {
+    test {
+        java.srcDir 'src/test/java'
+    }
+    functional {
+        java.srcDir 'src/test/functional/java'
+        resources.srcDir 'src/test/functional/resources'
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+
+    testPact {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/pactTest/java')
+        }
+        resources.srcDir file('src/pactTest/resources')
+    }
+}
+
+task pactTask(type: Test) {
+    description = "Runs pact Tests"
+    testClassesDirs = sourceSets.testPact.output.classesDirs
+    classpath = sourceSets.testPact.runtimeClasspath
+}
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
@@ -106,9 +135,10 @@ dependencies {
     testCompile group: 'io.github.openfeign', name: 'feign-jackson', version: '10.0.1'
     testCompile group: 'com.warrenstrange', name: 'googleauth', version: '1.2.0'
 
-    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
-    testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
-    testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serentity
+    // testCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
+    // testRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+    // testImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
+
     testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
 
     testPactCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
@@ -147,32 +177,9 @@ sonarqube {
     }
 }
 
-sourceSets {
-    test {
-        java.srcDir 'src/test/java'
-    }
-    functional {
-        java.srcDir 'src/test/functional/java'
-        resources.srcDir 'src/test/functional/resources'
-        compileClasspath += main.output + test.output
-        runtimeClasspath += main.output + test.output
-    }
 
-    testPact {
-        java {
-            compileClasspath += main.output
-            runtimeClasspath += main.output
-            srcDir file('src/pactTest/java')
-        }
-        resources.srcDir file('src/pactTest/resources')
-    }
-}
 
-task pactTask(type: Test) {
-    description = "Runs pact Tests"
-    testClassesDirs = sourceSets.testPact.output.classesDirs
-    classpath = sourceSets.testPact.runtimeClasspath
-}
+
 
 configurations {
     functionalCompile.extendsFrom testCompile

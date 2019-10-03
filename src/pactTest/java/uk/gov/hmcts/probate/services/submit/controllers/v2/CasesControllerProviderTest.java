@@ -36,8 +36,7 @@
 //    @MockBean
 //    private CasesService casesService;
 //
-//    @State({"provider returns casedata with success",
-//            "provider returns casedata with success"})
+//    @State({"provider returns casedata with success","provider returns casedata with success"})
 //    public void toReturnCaseDetailsWithSuccess() throws IOException, JSONException {
 //
 //        when(casesService.getCase("jsnow@bbc.co.uk", CaseType.GRANT_OF_REPRESENTATION))
