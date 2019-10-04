@@ -59,10 +59,12 @@ public class BulkActionsController {
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("CREATE BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
-        log.info("Starting creating a MULTIPLE REFERENCE");
-        String reference = multipleReferenceService.createReference(bulkRequest.getCaseDetails().getCaseTypeId(), bulkRequest.getCaseDetails().getCaseId());
-        log.info("Reference generated: " + reference);
-        bulkRequest.getCaseDetails().getCaseData().setMultipleReference(reference);
+        if (bulkRequest.getCaseDetails().getCaseData().getMultipleReference() == null || bulkRequest.getCaseDetails().getCaseData().getMultipleReference().trim().equals("")) {
+            log.info("Starting creating a MULTIPLE REFERENCE");
+            String reference = multipleReferenceService.createReference(bulkRequest.getCaseDetails().getCaseTypeId(), bulkRequest.getCaseDetails().getCaseId());
+            log.info("Reference generated: " + reference);
+            bulkRequest.getCaseDetails().getCaseData().setMultipleReference(reference);
+        }
 
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken);
 
