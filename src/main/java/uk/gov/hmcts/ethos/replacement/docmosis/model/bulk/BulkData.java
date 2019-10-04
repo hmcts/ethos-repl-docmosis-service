@@ -71,8 +71,6 @@ public class BulkData {
     private List<MultipleTypeItem> multipleCollection;
     @JsonProperty("subMultipleCollection")
     private List<SubMultipleTypeItem> subMultipleCollection;
-//    @JsonProperty("midSearchCollectionSubM")
-//    private List<MidSearchTypeItem> midSearchCollectionSubM;
 
     @JsonProperty("subMultipleDynamicList")
     private DynamicFixedListType subMultipleDynamicList;
