@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
@@ -28,6 +29,8 @@ public class SubMultipleServiceTest {
 
     @InjectMocks
     private SubMultipleService subMultipleService;
+    @Mock
+    private SubMultipleReferenceService subMultipleReferenceService;
 
     private BulkDetails bulkDetails;
 
@@ -35,7 +38,6 @@ public class SubMultipleServiceTest {
     public void setUp() {
         BulkData bulkData = new BulkData();
         bulkDetails = new BulkDetails();
-        subMultipleService = new SubMultipleService();
         bulkData.setSubMultipleName("SubMultipleNew");
 
         MidSearchTypeItem midSearchTypeItem = new MidSearchTypeItem();
@@ -67,8 +69,8 @@ public class SubMultipleServiceTest {
                 "multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, leadClaimantM=null, " +
                 "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, " +
                 "fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, " +
-                "stateM=null, subMultipleM=123456789))], " +
-                "subMultipleCollection=[SubMultipleTypeItem(id=123456789, value=SubMultipleType(subMultipleNameT=SubMultipleNew, subMultipleRefT=123456789))], " +
+                "stateM=null, subMultipleM=null))], " +
+                "subMultipleCollection=[SubMultipleTypeItem(id=null, value=SubMultipleType(subMultipleNameT=SubMultipleNew, subMultipleRefT=null))], " +
                 "subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null)";
         BulkRequestPayload bulkRequestPayload = subMultipleService.createSubMultipleLogic(bulkDetails);
         assertEquals(result, bulkRequestPayload.getBulkDetails().getCaseData().toString());
