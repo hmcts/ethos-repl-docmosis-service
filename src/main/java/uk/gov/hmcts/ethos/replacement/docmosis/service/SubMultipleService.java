@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
@@ -15,6 +16,13 @@ import java.util.stream.Collectors;
 @Service("subMultipleService")
 public class SubMultipleService {
 
+    private final SubMultipleReferenceService subMultipleReferenceService;
+
+    @Autowired
+    public SubMultipleService(SubMultipleReferenceService subMultipleReferenceService) {
+        this.subMultipleReferenceService = subMultipleReferenceService;
+    }
+
     public BulkRequestPayload createSubMultipleLogic(BulkDetails bulkDetails) {
         BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
         List<String> errors = new ArrayList<>();
@@ -28,7 +36,7 @@ public class SubMultipleService {
                         .findFirst();
                 multipleTypeItem.ifPresent(typeItem -> subMultiplesList.add(typeItem.getValue().getEthosCaseReferenceM()));
             }
-            String subMultipleRefNumber = "123456789";
+            String subMultipleRefNumber = subMultipleReferenceService.createReference(bulkDetails.getCaseTypeId(), bulkDetails.getCaseData().getMultipleReference());
             if (!subMultiplesList.isEmpty()) {
                 List<MultipleTypeItem> multipleTypeItems = new ArrayList<>();
                 for (MultipleTypeItem multipleTypeItem : bulkDetails.getCaseData().getMultipleCollection()) {
@@ -65,8 +73,6 @@ public class SubMultipleService {
         bulkData.setSubMultipleCollection(subMultipleTypeItems);
         return bulkData;
     }
-
-    // LAST STEP IS CREATE A NEW SUB MULTIPLE REF NUMBER
 
     public BulkRequestPayload populateSubMultipleDynamicListLogic(BulkDetails bulkDetails) {
         BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
