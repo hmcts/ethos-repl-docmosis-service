@@ -115,7 +115,7 @@ public class SubMultipleReferenceServiceTest {
 
     @Test
     public void createManchesterReference() {
-        when(subMultipleRefManchesterRepository.findTopByOrderByIdDesc()).thenReturn(previousReferenceManchester);
+        when(subMultipleRefManchesterRepository.findTopByOrderByMultipleRefDesc()).thenReturn(previousReferenceManchester);
         when(subMultipleRefManchesterRepository.save(isA(SubMultipleReferenceManchester.class))).thenReturn(referenceManchester);
         String manchesterRef = MANCHESTER_OFFICE_NUMBER + multipleRef + "/12";
         assertEquals(subMultipleReferenceService.createReference(MANCHESTER_BULK_CASE_TYPE_ID, multipleReference), manchesterRef);
@@ -131,7 +131,7 @@ public class SubMultipleReferenceServiceTest {
 
     @Test
     public void createScotlandReference() {
-        when(subMultipleRefScotlandRepository.findTopByOrderByIdDesc()).thenReturn(previousReferenceScotland);
+        when(subMultipleRefScotlandRepository.findTopByOrderByMultipleRefDesc()).thenReturn(previousReferenceScotland);
         when(subMultipleRefScotlandRepository.save(isA(SubMultipleReferenceScotland.class))).thenReturn(referenceScotland);
         String scotlandRef = GLASGOW_OFFICE_NUMBER + multipleRef + "/15";
         assertEquals(subMultipleReferenceService.createReference(SCOTLAND_BULK_CASE_TYPE_ID, multipleReference), scotlandRef);
@@ -139,7 +139,7 @@ public class SubMultipleReferenceServiceTest {
 
     @Test
     public void createLeedsReference() {
-        when(subMultipleRefLeedsRepository.findTopByOrderByIdDesc()).thenReturn(referenceLeeds);
+        when(subMultipleRefLeedsRepository.findTopByOrderByMultipleRefDesc()).thenReturn(referenceLeeds);
         when(subMultipleRefLeedsRepository.save(isA(SubMultipleReferenceLeeds.class))).thenReturn(referenceLeeds);
         String leedsRef = LEEDS_OFFICE_NUMBER + multipleRef + "/5";
         assertEquals(subMultipleReferenceService.createReference(LEEDS_USERS_BULK_CASE_TYPE_ID, multipleReference), leedsRef);
@@ -147,7 +147,7 @@ public class SubMultipleReferenceServiceTest {
 
     @Test
     public void createMidlandsWestReference() {
-        when(subMultipleRefMidlandsWestRepository.findTopByOrderByIdDesc()).thenReturn(referenceMidlandsWest);
+        when(subMultipleRefMidlandsWestRepository.findTopByOrderByMultipleRefDesc()).thenReturn(referenceMidlandsWest);
         when(subMultipleRefMidlandsWestRepository.save(isA(SubMultipleReferenceMidlandsWest.class))).thenReturn(referenceMidlandsWest);
         String midlandsWestRef = MIDLANDS_WEST_OFFICE_NUMBER + multipleRef + "/8";
         assertEquals(subMultipleReferenceService.createReference(MIDLANDS_WEST_USERS_BULK_CASE_TYPE_ID, multipleReference), midlandsWestRef);
@@ -155,7 +155,7 @@ public class SubMultipleReferenceServiceTest {
 
     @Test
     public void createMidlandsEastReference() {
-        when(subMultipleRefMidlandsEastRepository.findTopByOrderByIdDesc()).thenReturn(referenceMidlandsEast);
+        when(subMultipleRefMidlandsEastRepository.findTopByOrderByMultipleRefDesc()).thenReturn(referenceMidlandsEast);
         when(subMultipleRefMidlandsEastRepository.save(isA(SubMultipleReferenceMidlandsEast.class))).thenReturn(referenceMidlandsEast);
         String midlandsEastRef = MIDLANDS_EAST_OFFICE_NUMBER + multipleRef + "/9";
         assertEquals(subMultipleReferenceService.createReference(MIDLANDS_EAST_USERS_BULK_CASE_TYPE_ID, multipleReference), midlandsEastRef);
@@ -163,7 +163,7 @@ public class SubMultipleReferenceServiceTest {
 
     @Test
     public void createBristolReference() {
-        when(subMultipleRefBristolRepository.findTopByOrderByIdDesc()).thenReturn(referenceBristol);
+        when(subMultipleRefBristolRepository.findTopByOrderByMultipleRefDesc()).thenReturn(referenceBristol);
         when(subMultipleRefBristolRepository.save(isA(SubMultipleReferenceBristol.class))).thenReturn(referenceBristol);
         String bristolRef = BRISTOL_OFFICE_NUMBER + multipleRef + "/10";
         assertEquals(subMultipleReferenceService.createReference(BRISTOL_USERS_BULK_CASE_TYPE_ID, multipleReference), bristolRef);
@@ -171,7 +171,7 @@ public class SubMultipleReferenceServiceTest {
 
     @Test
     public void createWalesReference() {
-        when(subMultipleRefWalesRepository.findTopByOrderByIdDesc()).thenReturn(referenceWales);
+        when(subMultipleRefWalesRepository.findTopByOrderByMultipleRefDesc()).thenReturn(referenceWales);
         when(subMultipleRefWalesRepository.save(isA(SubMultipleReferenceWales.class))).thenReturn(referenceWales);
         String walesRef = WALES_OFFICE_NUMBER + multipleRef + "/11";
         assertEquals(subMultipleReferenceService.createReference(WALES_USERS_BULK_CASE_TYPE_ID, multipleReference), walesRef);
@@ -179,7 +179,7 @@ public class SubMultipleReferenceServiceTest {
 
     @Test
     public void createNewcastleReference() {
-        when(subMultipleRefNewcastleRepository.findTopByOrderByIdDesc()).thenReturn(referenceNewcastle);
+        when(subMultipleRefNewcastleRepository.findTopByOrderByMultipleRefDesc()).thenReturn(referenceNewcastle);
         when(subMultipleRefNewcastleRepository.save(isA(SubMultipleReferenceNewcastle.class))).thenReturn(referenceNewcastle);
         String newcastleRef = NEWCASTLE_OFFICE_NUMBER + multipleRef + "/12";
         assertEquals(subMultipleReferenceService.createReference(NEWCASTLE_USERS_BULK_CASE_TYPE_ID, multipleReference), newcastleRef);
@@ -187,7 +187,7 @@ public class SubMultipleReferenceServiceTest {
 
     @Test
     public void createWatfordReference() {
-        when(subMultipleRefWatfordRepository.findTopByOrderByIdDesc()).thenReturn(referenceWatford);
+        when(subMultipleRefWatfordRepository.findTopByOrderByMultipleRefDesc()).thenReturn(referenceWatford);
         when(subMultipleRefWatfordRepository.save(isA(SubMultipleReferenceWatford.class))).thenReturn(referenceWatford);
         String watfordRef = WATFORD_OFFICE_NUMBER + multipleRef + "/13";
         assertEquals(subMultipleReferenceService.createReference(WATFORD_USERS_BULK_CASE_TYPE_ID, multipleReference), watfordRef);
@@ -195,7 +195,7 @@ public class SubMultipleReferenceServiceTest {
 
     @Test
     public void createLondonCentralReference() {
-        when(subMultipleRefLondonCentralRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonCentral);
+        when(subMultipleRefLondonCentralRepository.findTopByOrderByMultipleRefDesc()).thenReturn(referenceLondonCentral);
         when(subMultipleRefLondonCentralRepository.save(isA(SubMultipleReferenceLondonCentral.class))).thenReturn(referenceLondonCentral);
         String londonCentralRef = LONDON_CENTRAL_OFFICE_NUMBER + multipleRef + "/14";
         assertEquals(subMultipleReferenceService.createReference(LONDON_CENTRAL_USERS_BULK_CASE_TYPE_ID, multipleReference), londonCentralRef);
@@ -203,7 +203,7 @@ public class SubMultipleReferenceServiceTest {
 
     @Test
     public void createLondonSouthReference() {
-        when(subMultipleRefLondonSouthRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonSouth);
+        when(subMultipleRefLondonSouthRepository.findTopByOrderByMultipleRefDesc()).thenReturn(referenceLondonSouth);
         when(subMultipleRefLondonSouthRepository.save(isA(SubMultipleReferenceLondonSouth.class))).thenReturn(referenceLondonSouth);
         String londonSouthRef = LONDON_SOUTH_OFFICE_NUMBER + multipleRef + "/15";
         assertEquals(subMultipleReferenceService.createReference(LONDON_SOUTH_USERS_BULK_CASE_TYPE_ID, multipleReference), londonSouthRef);
@@ -211,7 +211,7 @@ public class SubMultipleReferenceServiceTest {
 
     @Test
     public void createLondonEastReference() {
-        when(subMultipleRefLondonEastRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonEast);
+        when(subMultipleRefLondonEastRepository.findTopByOrderByMultipleRefDesc()).thenReturn(referenceLondonEast);
         when(subMultipleRefLondonEastRepository.save(isA(SubMultipleReferenceLondonEast.class))).thenReturn(referenceLondonEast);
         String londonEastRef = LONDON_EAST_OFFICE_NUMBER + multipleRef + "/16";
         assertEquals(subMultipleReferenceService.createReference(LONDON_EAST_USERS_BULK_CASE_TYPE_ID, multipleReference), londonEastRef);
