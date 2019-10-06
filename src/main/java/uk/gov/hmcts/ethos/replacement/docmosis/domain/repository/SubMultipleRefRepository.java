@@ -6,5 +6,5 @@ import uk.gov.hmcts.ethos.replacement.docmosis.domain.SubMultipleReference;
 
 @NoRepositoryBean
 public interface SubMultipleRefRepository<T extends SubMultipleReference> extends JpaRepository<T, Integer> {
-    T findTopByOrderByMultipleRefDesc();
+    T findTopByOrderByMultipleRefAndRefDesc();
 }
