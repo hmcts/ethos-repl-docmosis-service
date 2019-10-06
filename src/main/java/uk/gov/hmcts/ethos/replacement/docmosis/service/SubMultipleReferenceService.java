@@ -78,7 +78,7 @@ public class SubMultipleReferenceService {
     }
 
     private synchronized PreviousRefObject getPreviousReference(SubMultipleRefRepository referenceRepository) {
-        SubMultipleReference reference = referenceRepository.findTopByOrderByMultipleRefDesc();
+        SubMultipleReference reference = referenceRepository.findTopByOrderByMultipleRefAndRefDesc();
         PreviousRefObject previousRefObject = new PreviousRefObject();
         if (reference != null) {
             log.info("Previous REF: " + reference.toString());
