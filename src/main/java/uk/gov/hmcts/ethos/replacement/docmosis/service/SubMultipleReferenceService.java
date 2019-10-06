@@ -77,8 +77,8 @@ public class SubMultipleReferenceService {
         return getLeedsOfficeReference(multipleRef);
     }
 
-    private synchronized PreviousRefObject getPreviousReference(SubMultipleRefRepository referenceRepository) {
-        SubMultipleReference reference = referenceRepository.findTopByRefContainsOrderByMultipleRefDesc();
+    private synchronized PreviousRefObject getPreviousReference(SubMultipleRefRepository referenceRepository, String multipleRef) {
+        SubMultipleReference reference = referenceRepository.findTopByMultipleRefOrderByRefDesc(multipleRef);
         PreviousRefObject previousRefObject = new PreviousRefObject();
         if (reference != null) {
             log.info("Previous REF: " + reference.toString());
@@ -96,7 +96,7 @@ public class SubMultipleReferenceService {
 
     private synchronized String getManchesterOfficeReference(String multipleRef) {
         log.info("Manchester Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefManchesterRepository);
+        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefManchesterRepository, multipleRef);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         SubMultipleReferenceManchester subMultipleReferenceManchester = new SubMultipleReferenceManchester(multipleRef, previousRefObject.getPreviousRef());
         SubMultipleReferenceManchester subMultipleReferenceManchesterDB = subMultipleRefManchesterRepository.save(subMultipleReferenceManchester);
@@ -105,7 +105,7 @@ public class SubMultipleReferenceService {
 
     private synchronized String getGlasgowOfficeReference(String multipleRef) {
         log.info("Scotland Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefScotlandRepository);
+        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefScotlandRepository, multipleRef);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         SubMultipleReferenceScotland subMultipleReferenceScotland = new SubMultipleReferenceScotland(multipleRef, previousRefObject.getPreviousRef());
         SubMultipleReferenceScotland subMultipleReferenceScotlandDB = subMultipleRefScotlandRepository.save(subMultipleReferenceScotland);
@@ -114,7 +114,7 @@ public class SubMultipleReferenceService {
 
     private synchronized String getLeedsOfficeReference(String multipleRef) {
         log.info("Leeds Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefLeedsRepository);
+        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefLeedsRepository, multipleRef);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         SubMultipleReferenceLeeds subMultipleReferenceLeeds = new SubMultipleReferenceLeeds(multipleRef, previousRefObject.getPreviousRef());
         SubMultipleReferenceLeeds subMultipleReferenceLeedsDB = subMultipleRefLeedsRepository.save(subMultipleReferenceLeeds);
@@ -123,7 +123,7 @@ public class SubMultipleReferenceService {
 
     private synchronized String getMidlandsWestOfficeReference(String multipleRef) {
         log.info("Midlands West Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefMidlandsWestRepository);
+        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefMidlandsWestRepository, multipleRef);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         SubMultipleReferenceMidlandsWest subMultipleReferenceMidlandsWest = new SubMultipleReferenceMidlandsWest(multipleRef, previousRefObject.getPreviousRef());
         SubMultipleReferenceMidlandsWest subMultipleReferenceMidlandsWestDB = subMultipleRefMidlandsWestRepository.save(subMultipleReferenceMidlandsWest);
@@ -132,7 +132,7 @@ public class SubMultipleReferenceService {
 
     private synchronized String getMidlandsEastOfficeReference(String multipleRef) {
         log.info("Midlands East Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefMidlandsEastRepository);
+        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefMidlandsEastRepository, multipleRef);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         SubMultipleReferenceMidlandsEast subMultipleReferenceMidlandsEast = new SubMultipleReferenceMidlandsEast(multipleRef, previousRefObject.getPreviousRef());
         SubMultipleReferenceMidlandsEast subMultipleReferenceMidlandsEastDB = subMultipleRefMidlandsEastRepository.save(subMultipleReferenceMidlandsEast);
@@ -141,7 +141,7 @@ public class SubMultipleReferenceService {
 
     private synchronized String getBristolOfficeReference(String multipleRef) {
         log.info("Bristol Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefBristolRepository);
+        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefBristolRepository, multipleRef);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         SubMultipleReferenceBristol subMultipleReferenceBristol = new SubMultipleReferenceBristol(multipleRef, previousRefObject.getPreviousRef());
         SubMultipleReferenceBristol subMultipleReferenceBristolDB = subMultipleRefBristolRepository.save(subMultipleReferenceBristol);
@@ -150,7 +150,7 @@ public class SubMultipleReferenceService {
 
     private synchronized String getWalesOfficeReference(String multipleRef) {
         log.info("Wales Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefWalesRepository);
+        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefWalesRepository, multipleRef);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         SubMultipleReferenceWales subMultipleReferenceWales = new SubMultipleReferenceWales(multipleRef, previousRefObject.getPreviousRef());
         SubMultipleReferenceWales subMultipleReferenceWalesDB = subMultipleRefWalesRepository.save(subMultipleReferenceWales);
@@ -159,7 +159,7 @@ public class SubMultipleReferenceService {
 
     private synchronized String getNewcastleOfficeReference(String multipleRef) {
         log.info("Newcastle Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefNewcastleRepository);
+        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefNewcastleRepository, multipleRef);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         SubMultipleReferenceNewcastle subMultipleReferenceNewcastle = new SubMultipleReferenceNewcastle(multipleRef, previousRefObject.getPreviousRef());
         SubMultipleReferenceNewcastle subMultipleReferenceNewcastleDB = subMultipleRefNewcastleRepository.save(subMultipleReferenceNewcastle);
@@ -168,7 +168,7 @@ public class SubMultipleReferenceService {
 
     private synchronized String getWatfordOfficeReference(String multipleRef) {
         log.info("Watford Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefWatfordRepository);
+        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefWatfordRepository, multipleRef);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         SubMultipleReferenceWatford subMultipleReferenceWatford = new SubMultipleReferenceWatford(multipleRef, previousRefObject.getPreviousRef());
         SubMultipleReferenceWatford subMultipleReferenceWatfordDB = subMultipleRefWatfordRepository.save(subMultipleReferenceWatford);
@@ -177,7 +177,7 @@ public class SubMultipleReferenceService {
 
     private synchronized String getLondonCentralOfficeReference(String multipleRef) {
         log.info("London Central Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefLondonCentralRepository);
+        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefLondonCentralRepository, multipleRef);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         SubMultipleReferenceLondonCentral subMultipleReferenceLondonCentral = new SubMultipleReferenceLondonCentral(multipleRef, previousRefObject.getPreviousRef());
         SubMultipleReferenceLondonCentral subMultipleReferenceLondonCentralDB = subMultipleRefLondonCentralRepository.save(subMultipleReferenceLondonCentral);
@@ -186,7 +186,7 @@ public class SubMultipleReferenceService {
 
     private synchronized String getLondonSouthOfficeReference(String multipleRef) {
         log.info("London South Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefLondonSouthRepository);
+        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefLondonSouthRepository, multipleRef);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         SubMultipleReferenceLondonSouth subMultipleReferenceLondonSouth = new SubMultipleReferenceLondonSouth(multipleRef, previousRefObject.getPreviousRef());
         SubMultipleReferenceLondonSouth subMultipleReferenceLondonSouthDB = subMultipleRefLondonSouthRepository.save(subMultipleReferenceLondonSouth);
@@ -195,7 +195,7 @@ public class SubMultipleReferenceService {
 
     private synchronized String getLondonEastOfficeReference(String multipleRef) {
         log.info("London East Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefLondonEastRepository);
+        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefLondonEastRepository, multipleRef);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         SubMultipleReferenceLondonEast subMultipleReferenceLondonEast = new SubMultipleReferenceLondonEast(multipleRef, previousRefObject.getPreviousRef());
         SubMultipleReferenceLondonEast subMultipleReferenceLondonEastDB = subMultipleRefLondonEastRepository.save(subMultipleReferenceLondonEast);
