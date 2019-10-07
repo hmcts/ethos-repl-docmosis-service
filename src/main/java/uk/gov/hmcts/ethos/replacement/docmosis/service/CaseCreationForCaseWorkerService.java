@@ -22,8 +22,6 @@ public class CaseCreationForCaseWorkerService {
     public SubmitEvent caseCreationRequest(CCDRequest ccdRequest, String authToken) {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
         log.info("EventId: " + ccdRequest.getEventId());
-        log.info("Auth Token: " + authToken);
-        log.info("Case Details: " + caseDetails);
         try {
             return ccdClient.submitCaseCreation(authToken, caseDetails,
                     ccdClient.startCaseCreation(authToken, caseDetails));

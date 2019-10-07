@@ -33,7 +33,6 @@ public class DocumentGenerationService {
 
     public DocumentInfo processDocumentRequest(CCDRequest ccdRequest, String authToken) {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
-        log.info("Case Details: " + caseDetails);
         try {
             return tornadoService.documentGeneration(authToken, caseDetails.getCaseData());
         } catch (Exception ex) {
@@ -44,7 +43,6 @@ public class DocumentGenerationService {
     public BulkDocumentInfo processBulkDocumentRequest(BulkRequest bulkRequest, String authToken) {
         BulkDocumentInfo bulkDocumentInfo = new BulkDocumentInfo();
         BulkDetails bulkDetails = bulkRequest.getCaseDetails();
-        log.info("Case Details: " + bulkDetails);
         List<String> errors = new ArrayList<>();
         String markUps = "";
         try {

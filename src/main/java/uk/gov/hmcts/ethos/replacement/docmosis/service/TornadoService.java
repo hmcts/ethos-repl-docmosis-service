@@ -83,7 +83,7 @@ public class TornadoService {
 
     private void buildInstruction(HttpURLConnection conn, CaseData caseData, UserDetails userDetails) throws IOException {
         StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(), userDetails);
-        log.info("Sending request: " + sb.toString());
+        //log.info("Sending request: " + sb.toString());
         // send the instruction in UTF-8 encoding so that most character sets are available
         log.info("Creating outputstreamwriter");
         OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
