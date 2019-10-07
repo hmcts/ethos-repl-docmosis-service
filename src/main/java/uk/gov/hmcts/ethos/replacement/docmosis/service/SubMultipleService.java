@@ -80,7 +80,6 @@ public class SubMultipleService {
         if (bulkDetails.getCaseData().getSubMultipleCollection() != null) {
             List<DynamicValueType> listItems = new ArrayList<>();
             for (SubMultipleTypeItem subMultipleTypeItem : bulkDetails.getCaseData().getSubMultipleCollection()) {
-                log.info("SubMultipleTypeItem: " + subMultipleTypeItem);
                 DynamicValueType dynamicValueType = new DynamicValueType();
                 dynamicValueType.setCode(subMultipleTypeItem.getValue().getSubMultipleRefT());
                 dynamicValueType.setLabel(subMultipleTypeItem.getValue().getSubMultipleNameT());
