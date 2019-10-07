@@ -57,7 +57,7 @@ repositories {
 
 def versions = [
         springfoxSwagger: '2.9.2',
-        reformLogging: '5.0.1'
+        logging: '5.1.0'
 ]
 
 dependencies {
@@ -84,9 +84,11 @@ dependencies {
     compile group: 'io.github.openfeign', name: 'feign-httpclient', version: '10.0.1'
     compile group: 'io.github.openfeign', name: 'feign-core', version: '9.5.1'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
-    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.reformLogging
-    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-httpcomponents', version: versions.reformLogging
-    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.reformLogging
+
+    compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.logging
+    compile group: 'uk.gov.hmcts.reform', name: 'logging-spring', version: versions.logging
+    compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging
+
     compile group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: '0.0.4'
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.0.4'
     compile group: 'org.springframework.retry', name: 'spring-retry'
@@ -160,7 +162,6 @@ task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verificatio
     useJUnit {
         includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
     }
-    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
     systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
 }
 
@@ -171,8 +172,6 @@ task functional(type: Test, description: 'Runs the functional tests.', group: 'V
     useJUnit {
         includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
     }
-
-    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
 
     systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
     //systemProperty('tags', 'FunctionalTest')
