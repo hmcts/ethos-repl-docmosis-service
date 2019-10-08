@@ -27,7 +27,6 @@ public class CaseManagementForCaseWorkerService {
     private CaseData getCaseData(CCDRequest ccdRequest) {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
         log.info("EventId: " + ccdRequest.getEventId());
-        log.info("Case Details: " + caseDetails);
         return caseDetails.getCaseData();
     }
 

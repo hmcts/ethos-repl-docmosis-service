@@ -73,7 +73,6 @@ public class BulkUpdateService {
                 // 3) Create an event to update fields to the searched cases
                 for (SearchTypeItem searchTypeItem : searchTypeItemList) {
                     submitBulkEvent = caseUpdateFieldsRequest(bulkDetails, searchTypeItem, userToken, submitBulkEvent);
-                    log.info("SUBMITBULKEVENT -----------" + submitBulkEvent);
                     if (!isNullOrEmpty(multipleReferenceV2)) {
                         // If multipleReference changed then from this bulk remove all cases
                         log.info("Removing case id collection");
@@ -84,7 +83,7 @@ public class BulkUpdateService {
                 try {
                     if (!searchTypeItemList.isEmpty() && !isNullOrEmpty(multipleReferenceV2)) {
                         // And add them to the new bulk case
-                        log.info("Adding TO THE NEW BULK");
+                        log.info("Adding to the new bulk");
                         String bulkCaseId = String.valueOf(submitBulkEvent.getCaseId());
                         CCDRequest returnedRequest = ccdClient.startBulkEventForCase(userToken, bulkDetails.getCaseTypeId(), bulkDetails.getJurisdiction(), bulkCaseId);
                         ccdClient.submitBulkEventForCase(userToken, submitBulkEvent.getCaseData(), bulkDetails.getCaseTypeId(), bulkDetails.getJurisdiction(), returnedRequest, bulkCaseId);
@@ -149,19 +148,18 @@ public class BulkUpdateService {
     }
 
     void caseUpdateMultipleReferenceRequest(BulkDetails bulkDetails, SubmitEvent submitEvent, String authToken, String multipleRef, String caseType) {
-        log.info("Bulk Details: " + bulkDetails);
         try {
             String caseId = String.valueOf(submitEvent.getCaseId());
             CCDRequest returnedRequest;
             log.info("Current state ---> " + submitEvent.getState());
             if (submitEvent.getState().equals(PENDING_STATE)) {
                 // Moving to submitted_state
-                log.info("MOVING FROM PENDING TO SUBMITTED");
+                log.info("Moving from pending to submitted");
                 returnedRequest = ccdClient.startEventForCaseBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
                 submitEvent.getCaseData().setState(SUBMITTED_STATE);
             } else {
                 // Moving to accepted_state
-                log.info("MOVING TO ACCEPTED STATE");
+                log.info("Moving to accepted state");
                 returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             }
             submitEvent.getCaseData().setLeadClaimant("No");
@@ -169,7 +167,6 @@ public class BulkUpdateService {
             submitEvent.getCaseData().setCaseType(caseType);
 
             ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
-            log.info("------------ UPDATED REQUEST: " + submitEvent.getCaseData());
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + submitEvent.getCaseId() + ex.getMessage());
         }
@@ -282,12 +279,10 @@ public class BulkUpdateService {
                     MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
                     multipleTypeItem.setId(String.valueOf(submitEvent.getCaseId()));
                     multipleTypeItem.setValue(BulkHelper.getMultipleTypeFromSubmitEvent(submitEvent));
-                    log.info("MULTIPLE COLLECTION: " + bulkData1.getMultipleCollection());
                     if (bulkData1.getMultipleCollection() != null) {
                         multipleTypeItem.getValue().setLeadClaimantM("No");
                         bulkData1.getMultipleCollection().add(multipleTypeItem);
                     } else {
-                        log.info("REALLY???");
                         isThisCaseLead = true;
                         multipleTypeItem.getValue().setLeadClaimantM("Yes");
                         bulkData1.setMultipleCollection(new ArrayList<>(Collections.singletonList(multipleTypeItem)));
@@ -308,7 +303,6 @@ public class BulkUpdateService {
                     bulkData1.setSearchCollectionCount(null);
                     submitBulkEvent.setCaseData(bulkData1);
                 }
-                log.info("Update the case with the new event details");
                 if (isThisCaseLead) {
                     submitEvent.getCaseData().setLeadClaimant("Yes");
                 } else {
