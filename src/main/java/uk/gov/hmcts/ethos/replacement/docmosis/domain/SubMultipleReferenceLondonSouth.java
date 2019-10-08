@@ -12,6 +12,6 @@ public class SubMultipleReferenceLondonSouth extends SubMultipleReference {
 
     public SubMultipleReferenceLondonSouth(String multipleRef, String previousRef) {
         this.multipleRef = multipleRef;
-        this.ref = generateRefNumber(previousRef);
+        this.ref = generateRefNumber(Integer.parseInt(previousRef));
     }
 }
