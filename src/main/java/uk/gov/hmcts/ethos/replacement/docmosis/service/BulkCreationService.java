@@ -48,7 +48,7 @@ public class BulkCreationService {
             if (bulkCasesPayload.getAlreadyTakenIds().isEmpty()) {
                 // 1) Retrieve cases by ethos reference
                 List<SubmitEvent> submitEvents = bulkCasesPayload.getSubmitEvents();
-                submitEvents.forEach(submitEvent -> log.info("CASE RECEIVED FOR CREATION: " + submitEvent));
+                //submitEvents.forEach(submitEvent -> log.info("CASE RECEIVED FOR CREATION: " + submitEvent));
 
                 // 2) Add list of cases to the multiple bulk case collection
                 if (!submitEvents.isEmpty()) {
@@ -102,8 +102,6 @@ public class BulkCreationService {
 
     BulkCasesPayload updateBulkRequest(BulkRequest bulkRequest, String authToken) {
         BulkDetails bulkDetails = bulkRequest.getCaseDetails();
-        log.info("Bulk EventId: " + bulkRequest.getEventId());
-        log.info("Bulk Details: " + bulkDetails);
 
         List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
         List<String> multipleCaseIds = BulkHelper.getMultipleCaseIds(bulkDetails);
@@ -120,9 +118,8 @@ public class BulkCreationService {
                     List<SubmitEvent> casesToRemove = new ArrayList<>();
                     for (SubmitEvent submitEvent : allSubmitEventsToUpdate) {
                         log.info("State SubmitEvent: " + submitEvent.getState());
-                        log.info("SubmitEvent ----> " + submitEvent.getCaseData());
                         if (!submitEvent.getState().equals(SUBMITTED_STATE)) {
-                            log.info("IT IS SUBMITTED");
+                            log.info("Case submitted");
                             String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
                             if (caseIds.contains(ethosCaseRef) && !multipleCaseIds.contains(ethosCaseRef)) {
                                 casesToAdd.add(submitEvent);
@@ -225,7 +222,6 @@ public class BulkCreationService {
                 bulkRequestPayload.getBulkDetails().getCaseData().setMultipleCollection(multipleTypeItemListAux);
             }
         }
-        log.info("END OF THE LEAD CASE");
         return bulkRequestPayload;
     }
 

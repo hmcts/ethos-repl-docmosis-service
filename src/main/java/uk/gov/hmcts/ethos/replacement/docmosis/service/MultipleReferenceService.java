@@ -99,7 +99,7 @@ public class MultipleReferenceService {
     }
 
     private synchronized String getGlasgowOfficeReference(String caseId) {
-        log.info("Scotland Multiple Multiple CASE TYPE");
+        log.info("Scotland Multiple CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(multipleRefScotlandRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         MultipleReferenceScotland multipleReferenceScotland = new MultipleReferenceScotland(caseId, previousRefObject.getPreviousRef());
@@ -108,7 +108,7 @@ public class MultipleReferenceService {
     }
 
     private synchronized String getLeedsOfficeReference(String caseId) {
-        log.info("Leeds Multiple Multiple CASE TYPE");
+        log.info("Leeds Multiple CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(multipleRefLeedsRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         MultipleReferenceLeeds multipleReferenceLeeds = new MultipleReferenceLeeds(caseId, previousRefObject.getPreviousRef());
@@ -117,7 +117,7 @@ public class MultipleReferenceService {
     }
 
     private synchronized String getMidlandsWestOfficeReference(String caseId) {
-        log.info("Midlands West Multiple Multiple CASE TYPE");
+        log.info("Midlands West Multiple CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(multipleRefMidlandsWestRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         MultipleReferenceMidlandsWest multipleReferenceMidlandsWest = new MultipleReferenceMidlandsWest(caseId, previousRefObject.getPreviousRef());
@@ -126,7 +126,7 @@ public class MultipleReferenceService {
     }
 
     private synchronized String getMidlandsEastOfficeReference(String caseId) {
-        log.info("Midlands East Multiple Multiple CASE TYPE");
+        log.info("Midlands East Multiple CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(multipleRefMidlandsEastRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         MultipleReferenceMidlandsEast multipleReferenceMidlandsEast = new MultipleReferenceMidlandsEast(caseId, previousRefObject.getPreviousRef());
@@ -135,7 +135,7 @@ public class MultipleReferenceService {
     }
 
     private synchronized String getBristolOfficeReference(String caseId) {
-        log.info("Bristol Multiple Multiple CASE TYPE");
+        log.info("Bristol Multiple CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(multipleRefBristolRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         MultipleReferenceBristol multipleReferenceBristol = new MultipleReferenceBristol(caseId, previousRefObject.getPreviousRef());
@@ -144,7 +144,7 @@ public class MultipleReferenceService {
     }
 
     private synchronized String getWalesOfficeReference(String caseId) {
-        log.info("Wales Multiple Multiple CASE TYPE");
+        log.info("Wales Multiple CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(multipleRefWalesRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         MultipleReferenceWales multipleReferenceWales = new MultipleReferenceWales(caseId, previousRefObject.getPreviousRef());
@@ -153,7 +153,7 @@ public class MultipleReferenceService {
     }
 
     private synchronized String getNewcastleOfficeReference(String caseId) {
-        log.info("Newcastle Multiple Multiple CASE TYPE");
+        log.info("Newcastle Multiple CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(multipleRefNewcastleRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         MultipleReferenceNewcastle multipleReferenceNewcastle = new MultipleReferenceNewcastle(caseId, previousRefObject.getPreviousRef());
@@ -162,7 +162,7 @@ public class MultipleReferenceService {
     }
 
     private synchronized String getWatfordOfficeReference(String caseId) {
-        log.info("Watford Multiple Multiple CASE TYPE");
+        log.info("Watford Multiple CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(multipleRefWatfordRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         MultipleReferenceWatford multipleReferenceWatford = new MultipleReferenceWatford(caseId, previousRefObject.getPreviousRef());
@@ -171,7 +171,7 @@ public class MultipleReferenceService {
     }
 
     private synchronized String getLondonCentralOfficeReference(String caseId) {
-        log.info("London Central Multiple Multiple CASE TYPE");
+        log.info("London Central Multiple CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(multipleRefLondonCentralRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         MultipleReferenceLondonCentral multipleReferenceLondonCentral = new MultipleReferenceLondonCentral(caseId, previousRefObject.getPreviousRef());
@@ -180,7 +180,7 @@ public class MultipleReferenceService {
     }
 
     private synchronized String getLondonSouthOfficeReference(String caseId) {
-        log.info("London South Multiple Multiple CASE TYPE");
+        log.info("London South Multiple CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(multipleRefLondonSouthRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         MultipleReferenceLondonSouth multipleReferenceLondonSouth = new MultipleReferenceLondonSouth(caseId, previousRefObject.getPreviousRef());
@@ -189,7 +189,7 @@ public class MultipleReferenceService {
     }
 
     private synchronized String getLondonEastOfficeReference(String caseId) {
-        log.info("London East Multiple Multiple CASE TYPE");
+        log.info("London East Multiple CASE TYPE");
         PreviousRefObject previousRefObject = getPreviousReference(multipleRefLondonEastRepository);
         log.info("PreviousRefObject: " + previousRefObject.toString());
         MultipleReferenceLondonEast multipleReferenceLondonEast = new MultipleReferenceLondonEast(caseId, previousRefObject.getPreviousRef());

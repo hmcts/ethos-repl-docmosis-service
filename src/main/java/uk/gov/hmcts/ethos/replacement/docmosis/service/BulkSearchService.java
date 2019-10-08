@@ -63,8 +63,6 @@ public class BulkSearchService {
     public BulkCasesPayload bulkCasesRetrievalRequest(BulkDetails bulkDetails, String authToken) {
         try {
             List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
-            log.info("BulkDetails: " + bulkDetails);
-            log.info("CaseIds: " + caseIds);
             if (caseIds != null && !caseIds.isEmpty()) {
                 return filterSubmitEvents(ccdClient.retrieveCases(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                         bulkDetails.getJurisdiction()), caseIds, bulkDetails.getCaseData().getMultipleReference());
@@ -102,7 +100,7 @@ public class BulkSearchService {
     }
 
     List<SearchTypeItem> searchCasesByFieldsRequest(BulkDetails bulkDetails) {
-        log.info("Bulk Details: " + bulkDetails);
+        //log.info("Bulk Details: " + bulkDetails);
         try {
             BulkData bulkData = bulkDetails.getCaseData();
             String claimantFilter = bulkData.getClaimantSurname();

@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
-import uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsights;
 import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.DocumentManagementException;
 import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
 import uk.gov.hmcts.reform.document.domain.Document;
@@ -20,8 +19,6 @@ import java.io.File;
 import java.net.URI;
 
 import static java.util.Collections.singletonList;
-import static uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsights.DOCUMENT_NAME;
-import static uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsightsEvent.DOCUMENT_MANAGEMENT_UPLOAD_FAILURE;
 
 @Service
 @Slf4j
@@ -33,17 +30,15 @@ public class DocumentManagementService {
     private final DocumentUploadClientApi documentUploadClient;
     private final AuthTokenGenerator authTokenGenerator;
     private final UserService userService;
-    private final AppInsights appInsights;
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
 
     @Autowired
     public DocumentManagementService(DocumentUploadClientApi documentUploadClient, AuthTokenGenerator authTokenGenerator,
-                                     UserService userService, AppInsights appInsights) {
+                                     UserService userService) {
         this.documentUploadClient = documentUploadClient;
         this.authTokenGenerator = authTokenGenerator;
         this.userService = userService;
-        this.appInsights = appInsights;
     }
 
     @Retryable(value = {DocumentManagementException.class}, backoff = @Backoff(delay = 200))
@@ -57,7 +52,7 @@ public class DocumentManagementService {
                     userService.getUserDetails(authToken).getId(),
                     singletonList(file)
             );
-            log.info("Response: " + response.toString());
+            //log.info("Response: " + response.toString());
             Document document = response.getEmbedded().getDocuments().stream()
                     .findFirst()
                     .orElseThrow(() ->
@@ -66,7 +61,6 @@ public class DocumentManagementService {
             log.info("Uploaded document successful");
             return URI.create(document.links.self.href);
         } catch (Exception ex) {
-            appInsights.trackEvent(DOCUMENT_MANAGEMENT_UPLOAD_FAILURE, DOCUMENT_NAME, doc.getName());
             log.info("Exception: " + ex.getMessage());
             throw new DocumentManagementException(String.format("Unable to upload document %s to document management",
                     doc.getName()), ex);
