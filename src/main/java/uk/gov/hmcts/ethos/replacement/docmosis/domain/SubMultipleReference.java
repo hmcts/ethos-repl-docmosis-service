@@ -20,13 +20,13 @@ public class SubMultipleReference {
     private Long id;
 
     protected String multipleRef;
-    protected String ref;
+    protected int ref;
 
-    String generateRefNumber(String previousRef) {
-        if (previousRef.equals("")) {
+    int generateRefNumber(int previousRef) {
+        if (previousRef == 0) {
             return DEFAULT_INIT_SUB_REF;
         } else {
-            return String.valueOf(Integer.parseInt(previousRef) + 1);
+            return previousRef + 1;
         }
     }
 }
