@@ -82,15 +82,15 @@ public class SubMultipleReferenceService {
         PreviousRefObject previousRefObject = new PreviousRefObject();
         if (reference != null) {
             log.info("Previous REF: " + reference.toString());
-            previousRefObject.setPreviousRef(reference.getRef());
+            previousRefObject.setPreviousRef(String.valueOf(reference.getRef()));
         } else {
             log.info("No elements in DB yet");
-            previousRefObject.setPreviousRef("");
+            previousRefObject.setPreviousRef("0");
         }
         return previousRefObject;
     }
 
-    private String generateSubMultipleReference(String officeNumber, String multipleRef, String subMultipleRef) {
+    private String generateSubMultipleReference(String officeNumber, String multipleRef, int subMultipleRef) {
         return officeNumber + multipleRef + "/" + subMultipleRef;
     }
 
