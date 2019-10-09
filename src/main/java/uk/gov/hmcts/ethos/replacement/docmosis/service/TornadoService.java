@@ -98,7 +98,7 @@ public class TornadoService {
         int bytesRead;
         log.info("Create document");
         File file = new File(OUTPUT_FILE_NAME);
-        log.info("Document created");
+        log.info("Document created: " + file.getAbsolutePath());
         try (FileOutputStream fos = new FileOutputStream(file)) {
             log.info("FileOutputStream");
             while ((bytesRead = conn.getInputStream().read(buff, 0, buff.length)) != -1) {
