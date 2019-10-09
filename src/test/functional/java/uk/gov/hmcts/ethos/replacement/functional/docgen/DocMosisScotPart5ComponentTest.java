@@ -67,7 +67,7 @@ public class DocMosisScotPart5ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_33() throws Exception {
-        testUtil.executeGenerateDocumentTest("33", "", "INITIAL CONSIDERATION OF CLAIM AND RESPONSE completed", true);
+        testUtil.executeGenerateDocumentTest("33", "Claimant", "INITIAL CONSIDERATION OF CLAIM AND RESPONSE", true);
     }
 
     @After

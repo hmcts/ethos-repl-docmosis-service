@@ -87,7 +87,7 @@ public class DocMosisScotPart11ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_96() throws Exception {
-        testUtil.executeGenerateDocumentTest("96", "", "I enclose a corrected copy of the Judgment / Case Management Order and a certificate of correction", true);
+        testUtil.executeGenerateDocumentTest("96", "", "EMPLOYMENT TRIBUNALS RULES OF PROCEDURE", true);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.functional.bulk;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.WithTag;
@@ -35,6 +36,7 @@ public class CreateBulkComponentTest {
     @Before
     public void setUp() {
         testUtil = new TestUtil();
+        RestAssured.useRelaxedHTTPSValidation();
     }
 
     @Test

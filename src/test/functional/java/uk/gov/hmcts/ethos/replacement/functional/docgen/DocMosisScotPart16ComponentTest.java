@@ -42,7 +42,7 @@ public class DocMosisScotPart16ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_182() throws Exception {
-        testUtil.executeGenerateDocumentTest("182", "", "NOTICE OF HEARING – INTERIM RELIEF", true);
+        testUtil.executeGenerateDocumentTest("182", "", "NOTICE OF HEARING - INTERIM RELIEF", true);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class DocMosisScotPart16ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_189() throws Exception {
-        testUtil.executeGenerateDocumentTest("189", "", "Notice of Stage 1 Equal Value Hearing", true);
+        testUtil.executeGenerateDocumentTest("189", "", "NOTICE OF STAGE 1 EQUAL VALUE HEARING", true);
     }
 
     @Test
@@ -77,12 +77,12 @@ public class DocMosisScotPart16ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_191() throws Exception {
-        testUtil.executeGenerateDocumentTest("191", "", "Requirement for Expert to Prepare a Report", true);
+        testUtil.executeGenerateDocumentTest("191", "", "REQUIREMENT FOR EXPERT TO PREPARE A REPORT", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_192() throws Exception {
-        testUtil.executeGenerateDocumentTest("192", "", "The final hearing of this claim shall take place at", true);
+        testUtil.executeGenerateDocumentTest("192", "", "Employment Tribunals Rules of Procedure 2013", true);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class DocMosisScotPart16ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_194() throws Exception {
-        testUtil.executeGenerateDocumentTest("194", "", "Notice of Stage 2 Equal Value Hearing", true);
+        testUtil.executeGenerateDocumentTest("194", "", "NOTICE OF STAGE 2 EQUAL VALUE HEARING", true);
     }
 
     @After

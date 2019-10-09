@@ -32,12 +32,12 @@ public class DocMosisScotPart4ComponentTest {
     @Test
     @WithTag("SmokeTest")
     public void generateDocument_Part_Scot_18() throws Exception {
-        testUtil.executeGenerateDocumentTest("18", "", "ACKNOWLEDGMENT OF EMPLOYER’S CONTRACT CLAIM", true);
+        testUtil.executeGenerateDocumentTest("18", "", "CONTRACT CLAIM ACCEPTED", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_19() throws Exception {
-        testUtil.executeGenerateDocumentTest("19", "", "Rejection of EMPLOYER’S CONTRACT CLAIM", true);
+        testUtil.executeGenerateDocumentTest("19", "", "REJECTION OF EMPLOYER’S CONTRACT CLAIM", true);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class DocMosisScotPart4ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_22() throws Exception {
-        testUtil.executeGenerateDocumentTest("22", "", "NOTICE OF RESPONSE TO EMPLOYER’S CONTRACT CLAIM", true);
+        testUtil.executeGenerateDocumentTest("22", "", "CONTRACT CLAIM", true);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class DocMosisScotPart4ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_24() throws Exception {
-        testUtil.executeGenerateDocumentTest("24", "", "EXTENSION OF TIME FOR RESPONSE TO EMPLOYER’S CONTRACT CLAIM", true);
+        testUtil.executeGenerateDocumentTest("24", "", "EXTENSION OF TIME FOR RESPONSE TO EMPLOYER’S CONTRACT CLAIM GRANTED", true);
     }
 
     @Test

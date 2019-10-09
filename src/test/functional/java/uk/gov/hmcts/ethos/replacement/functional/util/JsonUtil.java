@@ -31,27 +31,26 @@ public class JsonUtil {
             int templateNo = 0;
             if (intTopLevel >= 1 && intTopLevel <= 7) templateNo = 1;
             else if (intTopLevel >= 8 && intTopLevel <= 14) templateNo = 2;
-            else if (intTopLevel >= 15 && intTopLevel <= 16) templateNo = 3;
-            else if (intTopLevel >= 18 && intTopLevel <= 25) templateNo = 4;
+            else if (intTopLevel >= 15 && intTopLevel <= 16) templateNo = 4;
+            else if (intTopLevel >= 18 && intTopLevel <= 25) templateNo = 3;
             else if (intTopLevel >= 26 && intTopLevel <= 33) templateNo = 5;
             else if (intTopLevel >= 34 && intTopLevel <= 57) templateNo = 6;
             else if (intTopLevel >= 58 && intTopLevel <= 63) templateNo = 7;
             else if (intTopLevel >= 64 && intTopLevel <= 69) templateNo = 8;
-            else if (intTopLevel >= 71 && intTopLevel <= 91) templateNo = 10;
-            else if (intTopLevel >= 92 && intTopLevel <= 98) templateNo = 11;
-            else if (intTopLevel >= 99 && intTopLevel <= 103) templateNo = 12;
-            else if (intTopLevel >= 104 && intTopLevel <= 106) templateNo = 13;
-            else if (intTopLevel >= 110 && intTopLevel <= 152) templateNo = 14;
-            else if (intTopLevel >= 159 && intTopLevel <= 172) templateNo = 15;
-            else if (intTopLevel >= 180 && intTopLevel <= 194) templateNo = 16;
+            else if (intTopLevel >= 71 && intTopLevel <= 91 || intTopLevel >= 195 && intTopLevel <= 196 || intTopLevel >= 198 && intTopLevel <= 202 || intTopLevel >= 222 && intTopLevel <= 223 ) templateNo = 9;
+            else if (intTopLevel >= 92 && intTopLevel <= 98 || intTopLevel == 224 ) templateNo = 10;
+            else if (intTopLevel >= 99 && intTopLevel <= 103) templateNo = 11;
+            else if (intTopLevel >= 104 && intTopLevel <= 106) templateNo = 12;
+            else if (intTopLevel >= 110 && intTopLevel <= 152 && intTopLevel ==208 || intTopLevel>=219 && intTopLevel<=221 || intTopLevel>=226 && intTopLevel<=229) templateNo = 13;
+            else if (intTopLevel >= 159 && intTopLevel <= 172) templateNo = 14;
+            else if (intTopLevel >= 180 && intTopLevel <= 194) templateNo = 15;
 
-            if (templateNo < 10) templateNo += 41;
-            else templateNo += 40;
+            templateNo += 41;
+            //else templateNo += 40;
             json = json.replace("#TOPLEVEL#", "EM-TRB-SCO-ENG-000" + templateNo);
         } else {
             if (intTopLevel < 9) intTopLevel += 25;
             else intTopLevel += 24;
-
             if (topLevel == "8") intTopLevel = 65;
             if (topLevel == "18") intTopLevel = 66;
 
