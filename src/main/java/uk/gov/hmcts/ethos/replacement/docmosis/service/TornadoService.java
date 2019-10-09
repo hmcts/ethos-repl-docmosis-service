@@ -19,7 +19,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static java.net.HttpURLConnection.HTTP_OK;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.OUTPUT_FILE_NAME;
 
 @Slf4j
 @Service("tornadoService")
@@ -93,21 +92,18 @@ public class TornadoService {
         os.flush();
     }
 
-    private DocumentInfo createDocument(String authToken, HttpURLConnection conn, CaseData caseData) throws IOException {
-        byte[] buff = new byte[1000];
-        int bytesRead;
-        log.info("Create document");
-        File file = new File(OUTPUT_FILE_NAME);
-        log.info("Document created: " + file.getAbsolutePath());
-        try (FileOutputStream fos = new FileOutputStream(file)) {
-            log.info("FileOutputStream");
-            while ((bytesRead = conn.getInputStream().read(buff, 0, buff.length)) != -1) {
-                fos.write(buff, 0, bytesRead);
-            }
+    private byte[] getBytesFromInputStream(InputStream is) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        byte[] buffer = new byte[0xFFFF];
+        for (int len = is.read(buffer); len != -1; len = is.read(buffer)) {
+            os.write(buffer, 0, len);
         }
-        log.info("File created: " + file.getAbsolutePath());
+        return os.toByteArray();
+    }
 
-        URI documentSelfPath = documentManagementService.uploadDocument(authToken, file);
+    private DocumentInfo createDocument(String authToken, HttpURLConnection conn, CaseData caseData) throws IOException {
+        log.info("Create document");
+        URI documentSelfPath = documentManagementService.uploadDocument(authToken, getBytesFromInputStream(conn.getInputStream()));
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
         return generateDocumentInfo(caseData,
                 documentSelfPath,
