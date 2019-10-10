@@ -26,8 +26,8 @@ import java.util.Collections;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.OUTPUT_FILE_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.ResourceLoader.successfulDocumentManagementUploadResponse;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.ResourceLoader.unsuccessfulDocumentManagementUploadResponse;
 
@@ -63,7 +63,7 @@ public class DocumentManagementServiceTest {
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
                 .thenReturn(successfulDocumentManagementUploadResponse());
-        URI documentSelfPath = documentManagementService.uploadDocument("authString", file);
+        URI documentSelfPath = documentManagementService.uploadDocument("authString", Files.readAllBytes(file.toPath()));
         String documentDownloadableURL = documentManagementService.generateDownloadableURL(documentSelfPath);
         assertEquals(documentManagementService.generateMarkupDocument(documentDownloadableURL), markup);
         assertNotNull(documentSelfPath);
@@ -73,17 +73,17 @@ public class DocumentManagementServiceTest {
     @Test
     public void uploadDocumentToDocumentManagementThrowsException() throws IOException, URISyntaxException {
         expectedException.expect(DocumentManagementException.class);
-        expectedException.expectMessage("Unable to upload document example.docx to document management");
+        expectedException.expectMessage("Unable to upload document document.docx to document management");
         UserDetails userDetails = new UserDetails("id", "mail@mail.com",
                 "userFirstName", "userLastName", Collections.singletonList("role"));
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
                 .thenReturn(unsuccessfulDocumentManagementUploadResponse());
-        documentManagementService.uploadDocument("authString", file);
+        documentManagementService.uploadDocument("authString", Files.readAllBytes(file.toPath()));
     }
 
     private File createTestFile() {
-        Path path = Paths.get("example.docx");
+        Path path = Paths.get(OUTPUT_FILE_NAME);
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write("Hello World !!");
         } catch (IOException e) {
