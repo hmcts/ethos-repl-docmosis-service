@@ -3,9 +3,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.model.bulk;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.CaseIdTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceType;
@@ -57,13 +56,24 @@ public class BulkData {
     private String claimantRepV2;
     @JsonProperty("respondentRep_v2")
     private String respondentRepV2;
+    @JsonProperty("subMultipleName")
+    private String subMultipleName;
+    @JsonProperty("subMultipleRef")
+    private String subMultipleRef;
 
     @JsonProperty("caseIdCollection")
     private List<CaseIdTypeItem> caseIdCollection;
     @JsonProperty("searchCollection")
     private List<SearchTypeItem> searchCollection;
+    @JsonProperty("midSearchCollection")
+    private List<MidSearchTypeItem> midSearchCollection;
     @JsonProperty("multipleCollection")
     private List<MultipleTypeItem> multipleCollection;
+    @JsonProperty("subMultipleCollection")
+    private List<SubMultipleTypeItem> subMultipleCollection;
+
+    @JsonProperty("subMultipleDynamicList")
+    private DynamicFixedListType subMultipleDynamicList;
 
     @JsonProperty("searchCollectionCount")
     private String searchCollectionCount;

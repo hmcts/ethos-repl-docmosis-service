@@ -40,5 +40,7 @@ public class MultipleType {
     private String jurCodesCollectionM;
     @JsonProperty("stateM")
     private String stateM;
+    @JsonProperty("subMultipleM")
+    private String subMultipleM;
 
 }
