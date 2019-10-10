@@ -195,20 +195,20 @@ public class Helper {
         //Currently checking collection not the HearingType
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             HearingType hearingType = caseData.getHearingCollection().get(0).getValue();
-            sb.append("\"Hearing_date\":\"").append(nullCheck(formatLocalDate(hearingType.getHearingDateStart()))).append(NEW_LINE);
-            sb.append("\"Hearing_date_time\":\"").append(nullCheck(formatLocalDateTime(hearingType.getHearingDateStart()))).append(NEW_LINE);
-            sb.append("\"Hearing_venue\":\"").append(nullCheck(hearingType.getHearingVenue())).append(NEW_LINE);
-            if (hearingType.getEstHearing() != null) {
-                sb.append("\"Hearing_duration\":\"").append(nullCheck(hearingType.getEstHearing().toString())).append(NEW_LINE);
+            if (hearingType.getHearingDateCollection() != null && !hearingType.getHearingDateCollection().isEmpty()) {
+                sb.append("\"Hearing_date\":\"").append(nullCheck(formatLocalDate(hearingType.getHearingDateCollection().get(0).getValue().getListedDate()))).append(NEW_LINE);
+                sb.append("\"Hearing_date_time\":\"").append(nullCheck(formatLocalDateTime(hearingType.getHearingDateCollection().get(0).getValue().getListedDate()))).append(NEW_LINE);
             } else {
-                sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
+                sb.append("\"Hearing_date\":\"").append(NEW_LINE);
+                sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
             }
+            sb.append("\"Hearing_venue\":\"").append(nullCheck(hearingType.getHearingVenue())).append(NEW_LINE);
+            sb.append("\"Hearing_duration\":\"").append(nullCheck(hearingType.getHearingDuration())).append(NEW_LINE);
         } else {
             sb.append("\"Hearing_date\":\"").append(NEW_LINE);
             sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
             sb.append("\"Hearing_venue\":\"").append(NEW_LINE);
             sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
-
         }
         return sb;
     }
