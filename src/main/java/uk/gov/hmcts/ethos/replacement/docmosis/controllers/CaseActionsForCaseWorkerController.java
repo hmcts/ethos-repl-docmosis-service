@@ -163,13 +163,12 @@ public class CaseActionsForCaseWorkerController {
             DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
             caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
-            //log.info("Post Default caseData: " + caseData);
-            log.info("Starting creating a SINGLE REFERENCE");
-            String reference = singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getCaseId());
-            log.info("Reference generated: " + reference);
-            caseData.setEthosCaseReference(reference);
+            if (caseData.getEthosCaseReference() == null || caseData.getEthosCaseReference().trim().equals("")) {
+                String reference = singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getCaseId());
+                log.info("Reference generated: " + reference);
+                caseData.setEthosCaseReference(reference);
+            }
         } else {
-            log.info("Error in PostDefaultValues");
             errors.add("The payload is empty. Please make sure you have some data on your case");
         }
         return ResponseEntity.ok(CCDCallbackResponse.builder()

@@ -10,12 +10,14 @@ import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MidSearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.MultipleType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 
@@ -37,6 +39,20 @@ public class BulkSearchServiceTest {
         bulkData.setMultipleReference("1111");
         bulkData.setClaimantSurname("");
         bulkData.setEthosCaseReference("222");
+        MultipleType multipleType = new MultipleType();
+        multipleType.setEthosCaseReferenceM("2222");
+        multipleType.setRespondentRepM("JuanPedro");
+        MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
+        multipleTypeItem.setValue(multipleType);
+        multipleTypeItem.setId("2222");
+        bulkData.setMultipleCollection(new ArrayList<>(Collections.singletonList(multipleTypeItem)));
+        MidSearchTypeItem midSearchTypeItem = new MidSearchTypeItem();
+        midSearchTypeItem.setId("1111");
+        midSearchTypeItem.setValue("1111");
+        MidSearchTypeItem midSearchTypeItem1 = new MidSearchTypeItem();
+        midSearchTypeItem1.setId("2222");
+        midSearchTypeItem1.setValue("2222");
+        bulkData.setMidSearchCollection(new ArrayList<>(Arrays.asList(midSearchTypeItem, midSearchTypeItem1)));
         bulkDetails.setJurisdiction("TRIBUNALS");
         bulkDetails.setCaseData(bulkData);
         bulkRequest.setCaseDetails(bulkDetails);
@@ -46,56 +62,110 @@ public class BulkSearchServiceTest {
 
     @Test
     public void bulkSearchLogic() {
-        String result = "BulkRequestPayload(errors=null, bulkDetails=BulkDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, " +
-                "caseData=BulkData(bulkCaseTitle=null, multipleReference=1111, feeGroupReference=null, claimantSurname=null, " +
-                "respondentSurname=null, claimantRep=null, respondentRep=null, ethosCaseReference=null, clerkResponsible=null, " +
-                "fileLocation=null, jurCodesCollection=null, fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, " +
-                "respondentSurnameV2=null, multipleReferenceV2=null, clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, " +
-                "respondentRepV2=null, caseIdCollection=null, searchCollection=[], multipleCollection=[], searchCollectionCount=0, " +
-                "multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null), caseTypeId=null, createdDate=null, " +
-                "lastModified=null, dataClassification=null))";
-        bulkDetails.getCaseData().setMultipleCollection(new ArrayList<>());
+        String result = "[SearchTypeItem(id=2222, value=SearchType(caseIDS=null, ethosCaseReferenceS=2222, leadClaimantS=null, clerkRespS=null, " +
+                "claimantSurnameS=null, respondentSurnameS=null, claimantRepS=null, respondentRepS=JuanPedro, fileLocS=null, receiptDateS=null, " +
+                "acasOfficeS=null, positionTypeS=null, feeGroupReferenceS=null, jurCodesCollectionS=null, stateS=null))]";
+        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkSearchLogic(bulkDetails);
+        assertEquals(result, bulkRequestPayload.getBulkDetails().getCaseData().getSearchCollection().toString());
+    }
+
+    @Test
+    public void bulkSearchLogicWithErrors() {
+        String result = "BulkRequestPayload(errors=[There are not cases found], bulkDetails=BulkDetails(caseId=null, jurisdiction=TRIBUNALS, " +
+                "state=null, caseData=BulkData(bulkCaseTitle=null, multipleReference=1111, feeGroupReference=null, claimantSurname=, " +
+                "respondentSurname=null, claimantRep=null, respondentRep=null, ethosCaseReference=222, clerkResponsible=null, fileLocation=null, " +
+                "jurCodesCollection=null, fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, " +
+                "multipleReferenceV2=null, clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, subMultipleName=null, " +
+                "subMultipleRef=null, caseIdCollection=null, searchCollection=null, midSearchCollection=null, " +
+                "multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, " +
+                "leadClaimantM=null, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, " +
+                "claimantRepM=null, respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, " +
+                "feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, subMultipleM=null))], subMultipleCollection=null, " +
+                "subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=null, correspondenceType=null, " +
+                "correspondenceScotType=null), caseTypeId=null, createdDate=null, lastModified=null, dataClassification=null))";
+        bulkDetails.getCaseData().setMidSearchCollection(null);
         BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkSearchLogic(bulkDetails);
         assertEquals(result, bulkRequestPayload.toString());
     }
 
     @Test
-    public void bulkSearchLogicWithErrors() {
-        String result = "BulkRequestPayload(errors=[There are not cases in this multiple to search], " +
-                "bulkDetails=BulkDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseData=BulkData(bulkCaseTitle=null, " +
-                "multipleReference=1111, feeGroupReference=null, claimantSurname=, respondentSurname=null, claimantRep=null, " +
-                "respondentRep=null, ethosCaseReference=222, clerkResponsible=null, fileLocation=null, jurCodesCollection=null, " +
-                "fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, " +
-                "clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, caseIdCollection=null, " +
-                "searchCollection=null, multipleCollection=null, searchCollectionCount=null, multipleCollectionCount=null, " +
-                "correspondenceType=null, correspondenceScotType=null), caseTypeId=null, createdDate=null, lastModified=null, " +
-                "dataClassification=null))";
-        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkSearchLogic(bulkDetails);
+    public void bulkMidSearchLogic() {
+        String result = "BulkRequestPayload(errors=null, bulkDetails=BulkDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, " +
+                "caseData=BulkData(bulkCaseTitle=null, multipleReference=1111, feeGroupReference=null, claimantSurname=, respondentSurname=null, " +
+                "claimantRep=null, respondentRep=JuanPedro, ethosCaseReference=222, clerkResponsible=null, fileLocation=null, jurCodesCollection=null, " +
+                "fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, clerkResponsibleV2=null, " +
+                "positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, subMultipleName=null, subMultipleRef=null, caseIdCollection=null, " +
+                "searchCollection=null, midSearchCollection=[MidSearchTypeItem(id=2222, value=2222)], " +
+                "multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, " +
+                "leadClaimantM=null, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, " +
+                "respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, " +
+                "jurCodesCollectionM=null, stateM=null, subMultipleM=null))], subMultipleCollection=null, subMultipleDynamicList=null, searchCollectionCount=null, " +
+                "multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null), caseTypeId=null, createdDate=null, " +
+                "lastModified=null, dataClassification=null))";
+        bulkDetails.getCaseData().setRespondentRep("JuanPedro");
+        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(bulkDetails, false);
+        assertEquals(result, bulkRequestPayload.toString());
+    }
+
+    @Test
+    public void bulkMidSearchLogicWithErrors() {
+        String result = "BulkRequestPayload(errors=[There are not cases in this multiple to search], bulkDetails=BulkDetails(caseId=null, jurisdiction=TRIBUNALS, " +
+                "state=null, caseData=BulkData(bulkCaseTitle=null, multipleReference=1111, feeGroupReference=null, claimantSurname=, " +
+                "respondentSurname=null, claimantRep=null, respondentRep=null, ethosCaseReference=222, clerkResponsible=null, fileLocation=null, " +
+                "jurCodesCollection=null, fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, " +
+                "multipleReferenceV2=null, clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, subMultipleName=null, " +
+                "subMultipleRef=null, caseIdCollection=null, searchCollection=null, midSearchCollection=[MidSearchTypeItem(id=1111, value=1111), " +
+                "MidSearchTypeItem(id=2222, value=2222)], multipleCollection=null, subMultipleCollection=null, subMultipleDynamicList=null, " +
+                "searchCollectionCount=null, multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null), " +
+                "caseTypeId=null, createdDate=null, lastModified=null, dataClassification=null))";
+        bulkDetails.getCaseData().setMultipleCollection(null);
+        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(bulkDetails, false);
+        assertEquals(result, bulkRequestPayload.toString());
+    }
+
+   @Test
+    public void midCreateSubMultiple() {
+        String result = "BulkRequestPayload(errors=null, bulkDetails=BulkDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, " +
+                "caseData=BulkData(bulkCaseTitle=null, multipleReference=1111, feeGroupReference=null, claimantSurname=, respondentSurname=null, " +
+                "claimantRep=null, respondentRep=JuanPedro, ethosCaseReference=222, clerkResponsible=null, fileLocation=null, jurCodesCollection=null, " +
+                "fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, clerkResponsibleV2=null, " +
+                "positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, subMultipleName=null, subMultipleRef=null, caseIdCollection=null, " +
+                "searchCollection=null, midSearchCollection=[MidSearchTypeItem(id=2222, value=2222)], " +
+                "multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, leadClaimantM=null, " +
+                "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, " +
+                "respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, " +
+                "jurCodesCollectionM=null, stateM=null, subMultipleM=null))], subMultipleCollection=null, subMultipleDynamicList=null, searchCollectionCount=null, " +
+                "multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null), caseTypeId=null, createdDate=null, " +
+                "lastModified=null, dataClassification=null))";
+        bulkDetails.getCaseData().setRespondentRep("JuanPedro");
+        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(bulkDetails, true);
+        assertEquals(result, bulkRequestPayload.toString());
+    }
+
+   @Test
+    public void midCreateSubMultipleCaseBelongsToOtherSubMultiple() {
+        String result = "BulkRequestPayload(errors=null, bulkDetails=BulkDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, " +
+                "caseData=BulkData(bulkCaseTitle=null, multipleReference=1111, feeGroupReference=null, claimantSurname=, respondentSurname=null, " +
+                "claimantRep=null, respondentRep=JuanPedro, ethosCaseReference=222, clerkResponsible=null, fileLocation=null, jurCodesCollection=null, " +
+                "fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, clerkResponsibleV2=null, " +
+                "positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, subMultipleName=null, subMultipleRef=null, caseIdCollection=null, " +
+                "searchCollection=null, midSearchCollection=[], multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, " +
+                "ethosCaseReferenceM=2222, leadClaimantM=null, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, " +
+                "claimantRepM=null, respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, " +
+                "jurCodesCollectionM=null, stateM=null, subMultipleM=4200001/1))], subMultipleCollection=null, subMultipleDynamicList=null, " +
+                "searchCollectionCount=null, multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null), caseTypeId=null, " +
+                "createdDate=null, lastModified=null, dataClassification=null))";
+        bulkDetails.getCaseData().setRespondentRep("JuanPedro");
+        bulkDetails.getCaseData().getMultipleCollection().get(0).getValue().setSubMultipleM("4200001/1");
+        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(bulkDetails, true);
         assertEquals(result, bulkRequestPayload.toString());
     }
 
     @Test(expected = Exception.class)
     public void searchCasesByFieldsRequestException() {
-        List<SearchTypeItem> searchTypeItemListExpected = new ArrayList<>();
-        List<SearchTypeItem> searchTypeItemList = bulkSearchService.searchCasesByFieldsRequest(new BulkDetails());
-        assertEquals(searchTypeItemListExpected, searchTypeItemList);
-    }
-
-    @Test
-    public void searchCasesByFieldsRequest() {
-        List<SearchTypeItem> searchTypeItemListExpected = new ArrayList<>();
-        List<SearchTypeItem> searchTypeItemList = bulkSearchService.searchCasesByFieldsRequest(bulkDetails);
-        assertEquals(searchTypeItemListExpected, searchTypeItemList);
-    }
-
-    @Test
-    public void searchCasesByFieldsCompleteRequest() {
-        bulkRequest.getCaseDetails().getCaseData().setMultipleCollection(getMultipleTypeItemList());
-        List<SearchTypeItem> searchTypeItemList = bulkSearchService.searchCasesByFieldsRequest(bulkDetails);
-        assertEquals("[SearchTypeItem(id=2222, value=SearchType(caseIDS=null, ethosCaseReferenceS=222, " +
-                "leadClaimantS=null, clerkRespS=null, claimantSurnameS=Pedro, respondentSurnameS=Pedro, claimantRepS=null, " +
-                "respondentRepS=null, fileLocS=null, receiptDateS=null, acasOfficeS=null, positionTypeS=null, " +
-                "feeGroupReferenceS=null, jurCodesCollectionS=null, stateS=null))]", searchTypeItemList.toString());
+        List<MidSearchTypeItem> midSearchedListExpected = new ArrayList<>();
+        List<MidSearchTypeItem> midSearchedList = bulkSearchService.midSearchCasesByFieldsRequest(new BulkDetails(), false);
+        assertEquals(midSearchedListExpected, midSearchedList);
     }
 
     @Test
@@ -107,8 +177,8 @@ public class BulkSearchServiceTest {
         bulkData.setClaimantRep("Johnson");
         bulkData.setClaimantSurname("Juan");
         bulkDetails.setCaseData(bulkData);
-        List<SearchTypeItem> searchTypeItemList = bulkSearchService.searchCasesByFieldsRequest(bulkDetails);
-        assertEquals("[]", searchTypeItemList.toString());
+        List<MidSearchTypeItem> midSearchedList = bulkSearchService.midSearchCasesByFieldsRequest(bulkDetails, false);
+        assertEquals("[]", midSearchedList.toString());
     }
 
     private List<MultipleTypeItem> getMultipleTypeItemList() {
