@@ -67,27 +67,13 @@
       {
         "id" : "123345",
         "value" : {
-          "Est_Hearing": {
-            "est_Hearing_length_number": "2",
-            "est_Hearing_length_num": "hours"
-          },
+          "hearingEstLengthNum": "2",
+          "hearingEstLengthNumType": "days",
           "Hearing_type": "Single",
-          "Hearing_venue": "Manchester",
-          "Hearing_date_start": "",
-          "Hearing_judge_name": "JudgeName"
+          "Hearing_venue": "Manchester"
         }
       }
     ],
-    "HearingType": {
-      "Est_Hearing": {
-        "est_Hearing_length_number": "2",
-        "est_Hearing_length_num": "hours"
-      },
-      "Hearing_type": "Single",
-      "Hearing_venue": "Manchester",
-      "Hearing_date_start": "",
-      "Hearing_judge_name": "JudgeName"
-    },
     "respondentCollection": [
       {
         "id" : "123345",
