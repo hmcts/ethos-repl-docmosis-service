@@ -20,11 +20,11 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 @Slf4j
 public class Helper {
 
-    private static String formatLocalDate(String date) {
+    public static String formatLocalDate(String date) {
         return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_DATE_TIME_PATTERN).format(NEW_DATE_PATTERN) : "";
     }
 
-    private static String formatLocalDateTime(String date) {
+    public static String formatLocalDateTime(String date) {
         return !isNullOrEmpty(date) ? LocalDateTime.parse(date, OLD_DATE_TIME_PATTERN).format(NEW_DATE_TIME_PATTERN) : "";
     }
 
