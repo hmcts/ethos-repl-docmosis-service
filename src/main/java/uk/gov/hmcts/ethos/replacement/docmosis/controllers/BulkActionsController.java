@@ -19,6 +19,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SELECT_ALL_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SELECT_NONE_VALUE;
 
 @Slf4j
 @RestController
@@ -240,6 +242,46 @@ public class BulkActionsController {
         log.info("SUB MULTIPLE DYNAMIC LIST ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         BulkRequestPayload bulkRequestPayload = subMultipleService.populateSubMultipleDynamicListLogic(bulkRequest.getCaseDetails());
+
+        return ResponseEntity.ok(BulkCallbackResponse.builder()
+                .errors(bulkRequestPayload.getErrors())
+                .data(bulkRequestPayload.getBulkDetails().getCaseData())
+                .build());
+    }
+
+    @PostMapping(value = "/filterDefaultedAllDynamicList", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populate a dynamic list with all sub multiple names and Select All as default.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<BulkCallbackResponse> filterDefaultedAllDynamicList(
+            @RequestBody BulkRequest bulkRequest) {
+        log.info("FILTER DEFAULTED DYNAMIC LIST ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
+
+        BulkRequestPayload bulkRequestPayload = subMultipleService.populateFilterDefaultedDynamicListLogic(bulkRequest.getCaseDetails(), SELECT_ALL_VALUE);
+
+        return ResponseEntity.ok(BulkCallbackResponse.builder()
+                .errors(bulkRequestPayload.getErrors())
+                .data(bulkRequestPayload.getBulkDetails().getCaseData())
+                .build());
+    }
+
+    @PostMapping(value = "/filterDefaultedNoneDynamicList", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populate a dynamic list with all sub multiple names and None as default.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<BulkCallbackResponse> filterDefaultedNoneDynamicList(
+            @RequestBody BulkRequest bulkRequest) {
+        log.info("FILTER DEFAULTED DYNAMIC LIST ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
+
+        BulkRequestPayload bulkRequestPayload = subMultipleService.populateFilterDefaultedDynamicListLogic(bulkRequest.getCaseDetails(), SELECT_NONE_VALUE);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
