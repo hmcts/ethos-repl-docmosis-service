@@ -195,7 +195,7 @@ public class DocumentUtil {
                 sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
             }
             sb.append("\"Hearing_venue\":\"").append(nullCheck(hearingType.getHearingVenue())).append(NEW_LINE);
-            sb.append("\"Hearing_duration\":\"").append(nullCheck(hearingType.getHearingDuration())).append(NEW_LINE);
+            sb.append("\"Hearing_duration\":\"").append(nullCheck(getHearingDuration(hearingType))).append(NEW_LINE);
         } else {
             sb.append("\"Hearing_date\":\"").append(NEW_LINE);
             sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
@@ -203,6 +203,10 @@ public class DocumentUtil {
             sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
         }
         return sb;
+    }
+
+    private static String getHearingDuration(HearingType hearingType) {
+        return String.join(" ", hearingType.getHearingEstLengthNum(), hearingType.getHearingEstLengthNumType());
     }
 
     private static String getTemplateName(CaseData caseData) {

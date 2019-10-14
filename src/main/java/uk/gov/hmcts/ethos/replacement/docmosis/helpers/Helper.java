@@ -24,8 +24,16 @@ public class Helper {
         return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_DATE_TIME_PATTERN).format(NEW_DATE_PATTERN) : "";
     }
 
+    public static String listTingFormatLocalDate(String date) {
+        return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_DATE_TIME_PATTERN2).format(NEW_DATE_PATTERN) : "";
+    }
+
     public static String formatLocalDateTime(String date) {
         return !isNullOrEmpty(date) ? LocalDateTime.parse(date, OLD_DATE_TIME_PATTERN).format(NEW_DATE_TIME_PATTERN) : "";
+    }
+
+    static String formatLocalTime(String date) {
+        return !isNullOrEmpty(date) ? LocalDateTime.parse(date, OLD_DATE_TIME_PATTERN).format(NEW_TIME_PATTERN) : "";
     }
 
     static String formatCurrentDatePlusDays(LocalDate date, long days) {
@@ -203,7 +211,7 @@ public class Helper {
                 sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
             }
             sb.append("\"Hearing_venue\":\"").append(nullCheck(hearingType.getHearingVenue())).append(NEW_LINE);
-            sb.append("\"Hearing_duration\":\"").append(nullCheck(hearingType.getHearingDuration())).append(NEW_LINE);
+            sb.append("\"Hearing_duration\":\"").append(nullCheck(getHearingDuration(hearingType))).append(NEW_LINE);
         } else {
             sb.append("\"Hearing_date\":\"").append(NEW_LINE);
             sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
@@ -211,6 +219,10 @@ public class Helper {
             sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
         }
         return sb;
+    }
+
+    static String getHearingDuration(HearingType hearingType) {
+        return String.join(" ", hearingType.getHearingEstLengthNum(), hearingType.getHearingEstLengthNumType());
     }
 
     public static String getDocumentName(CaseData caseData) {
