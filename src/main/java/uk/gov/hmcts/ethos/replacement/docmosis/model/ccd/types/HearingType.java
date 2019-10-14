@@ -34,8 +34,4 @@ public class HearingType {
     @JsonProperty("hearingDateCollection")
     private List<DateListedTypeItem> hearingDateCollection;
 
-    public String getHearingDuration() {
-        return String.join(" ", hearingEstLengthNum, hearingEstLengthNumType);
-    }
-
 }
