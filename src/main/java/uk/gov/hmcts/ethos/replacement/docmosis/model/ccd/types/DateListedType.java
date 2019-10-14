@@ -24,6 +24,50 @@ public class DateListedType {
     private String hearingRoomCM;
     @JsonProperty("Hearing_room_CC")
     private String hearingRoomCC;
+    @JsonProperty("Hearing_Glasgow")
+    private String hearingGlasgow;
+    @JsonProperty("Hearing_Aberdeen")
+    private String hearingAberdeen;
+    @JsonProperty("Hearing_Dundee")
+    private String hearingDundee;
+    @JsonProperty("Hearing_Edinburgh")
+    private String hearingEdinburgh;
+    @JsonProperty("Hearing_room_Glasgow")
+    private String hearingRoomGlasgow;
+    @JsonProperty("Hearing_room_Cambeltown")
+    private String hearingRoomCambeltown;
+    @JsonProperty("Hearing_room_Dumfries")
+    private String hearingRoomDumfries;
+    @JsonProperty("Hearing_room_Oban")
+    private String hearingRoomOban;
+    @JsonProperty("Hearing_room_FortWilliam")
+    private String hearingRoomFortWilliam;
+    @JsonProperty("Hearing_room_Kirkcudbright")
+    private String hearingRoomKirkcubright;
+    @JsonProperty("Hearing_room_Lochmaddy")
+    private String hearingRoomLockmaddy;
+    @JsonProperty("Hearing_room_Portree")
+    private String hearingRoomPortree;
+    @JsonProperty("Hearing_room_Stirling")
+    private String hearingRoomStirling;
+    @JsonProperty("Hearing_room_StornowaySC")
+    private String hearingRoomSotrnowaySC;
+    @JsonProperty("Hearing_room_Stranraer")
+    private String hearingRoomStranraer;
+    @JsonProperty("Hearing_room_Aberdeen")
+    private String hearingRoomAberdeen;
+    @JsonProperty("Hearing_room_Lerwick")
+    private String hearingRoomLerwick;
+    @JsonProperty("Hearing_room_RRShetland")
+    private String hearingRoomRRShetland;
+    @JsonProperty("Hearing_room_Stornoway")
+    private String hearingRoomStornoway;
+    @JsonProperty("Hearing_room_Wick")
+    private String hearingRoomWick;
+    @JsonProperty("Hearing_room_Inverness")
+    private String hearingRoomInverness;
+    @JsonProperty("Hearing_room_Kirkwall")
+    private String hearingRoomKirkawall;
     @JsonProperty("Hearing_judge_name")
     private String hearingJudgeName;
     @JsonProperty("Hearing_clerk")

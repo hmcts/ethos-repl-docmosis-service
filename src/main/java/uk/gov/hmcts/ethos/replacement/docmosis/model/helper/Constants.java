@@ -75,4 +75,8 @@ public class Constants {
     public static final String DEFAULT_INIT_REF = "20000";
     public static final int DEFAULT_INIT_SUB_REF = 1;
     public static final String DEFAULT_MAX_REF = "99999";
+
+    public static final String DEFAULT_SELECT_ALL_VALUE = "999999";
+    public static final String SELECT_ALL_VALUE = "Select All";
+    public static final String SELECT_NONE_VALUE = "None";
 }

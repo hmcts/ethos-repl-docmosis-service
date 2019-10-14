@@ -12,6 +12,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.DEFAULT_SELECT_ALL_VALUE;
+
 @Slf4j
 @Service("subMultipleService")
 public class SubMultipleService {
@@ -50,7 +52,7 @@ public class SubMultipleService {
             bulkDetails.setCaseData(addSubMultipleTypeToCase(bulkDetails.getCaseData(), subMultipleRefNumber));
             bulkDetails.setCaseData(clearUpFields(bulkDetails.getCaseData()));
         } else {
-            errors.add("There are not cases found");
+            errors.add("No cases have been found");
             bulkRequestPayload.setErrors(errors);
         }
         bulkRequestPayload.setBulkDetails(bulkDetails);
@@ -79,19 +81,37 @@ public class SubMultipleService {
         List<String> errors = new ArrayList<>();
         if (bulkDetails.getCaseData().getSubMultipleCollection() != null) {
             List<DynamicValueType> listItems = new ArrayList<>();
+            bulkDetails.setCaseData(createSubMultipleDynamicList(bulkDetails.getCaseData(), getSubMultipleListItems(bulkDetails, listItems)));
+        } else {
+            errors.add("No sub multiples have been found");
+            bulkRequestPayload.setErrors(errors);
+        }
+        bulkRequestPayload.setBulkDetails(bulkDetails);
+        return bulkRequestPayload;
+    }
+
+    public BulkRequestPayload populateFilterDefaultedDynamicListLogic(BulkDetails bulkDetails, String defaultValue) {
+        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        List<DynamicValueType> listItems = new ArrayList<>();
+        DynamicValueType defaultDynamicValueType = new DynamicValueType();
+        defaultDynamicValueType.setCode(DEFAULT_SELECT_ALL_VALUE);
+        defaultDynamicValueType.setLabel(defaultValue);
+        listItems.add(defaultDynamicValueType);
+        bulkDetails.setCaseData(createSubMultipleDynamicList(bulkDetails.getCaseData(), getSubMultipleListItems(bulkDetails, listItems)));
+        bulkRequestPayload.setBulkDetails(bulkDetails);
+        return bulkRequestPayload;
+    }
+
+    private List<DynamicValueType> getSubMultipleListItems(BulkDetails bulkDetails, List<DynamicValueType> listItems) {
+        if (bulkDetails.getCaseData().getSubMultipleCollection() != null) {
             for (SubMultipleTypeItem subMultipleTypeItem : bulkDetails.getCaseData().getSubMultipleCollection()) {
                 DynamicValueType dynamicValueType = new DynamicValueType();
                 dynamicValueType.setCode(subMultipleTypeItem.getValue().getSubMultipleRefT());
                 dynamicValueType.setLabel(subMultipleTypeItem.getValue().getSubMultipleNameT());
                 listItems.add(dynamicValueType);
             }
-            bulkDetails.setCaseData(createSubMultipleDynamicList(bulkDetails.getCaseData(), listItems));
-        } else {
-            errors.add("There are not sub multiples found");
-            bulkRequestPayload.setErrors(errors);
         }
-        bulkRequestPayload.setBulkDetails(bulkDetails);
-        return bulkRequestPayload;
+        return listItems;
     }
 
     private BulkData createSubMultipleDynamicList(BulkData bulkData, List<DynamicValueType> listItems) {
@@ -116,9 +136,10 @@ public class SubMultipleService {
                     .removeIf(subMultipleTypeItem -> subMultipleTypeItem.getValue().getSubMultipleRefT().equals(refSelected));
             bulkDetails.setCaseData(removeSubMultipleRefFromMultiplesCollection(bulkDetails.getCaseData(), refSelected));
         } else {
-            errors.add("There are not sub multiples found");
+            errors.add("No sub multiples have been found");
             bulkRequestPayload.setErrors(errors);
         }
+        bulkDetails.getCaseData().setSubMultipleDynamicList(null);
         bulkRequestPayload.setBulkDetails(bulkDetails);
         return bulkRequestPayload;
     }
@@ -148,7 +169,7 @@ public class SubMultipleService {
             bulkDetails.getCaseData().setMidSearchCollection(
                     retrieveMidSearchCollectionBySubMultipleRef(bulkDetails.getCaseData(), refSelected));
         } else {
-            errors.add("There are not sub multiples found");
+            errors.add("No sub multiples have been found");
             bulkRequestPayload.setErrors(errors);
         }
         bulkDetails.getCaseData().setSubMultipleDynamicList(null);
@@ -174,7 +195,6 @@ public class SubMultipleService {
         BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
         String subMultipleRefNumber = bulkData.getSubMultipleRef();
         bulkData.setSubMultipleCollection(amendSubMultipleDetails(bulkData, subMultipleRefNumber));
-        log.info("SubMultiple name updated");
         if (bulkData.getMidSearchCollection() != null) {
             List<String> midSearchCollection = bulkData.getMidSearchCollection().stream()
                     .map(MidSearchTypeItem::getValue)
