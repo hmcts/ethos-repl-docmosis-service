@@ -70,7 +70,7 @@ public class UpdateBulkComponentTest {
     public void update_bulk_eng_some_cases_invalid() throws IOException {
         testUtil.loadAuthToken();
 
-        String ethosCaseReference = testUtil.getUniqueCaseReference();
+        String ethosCaseReference = testUtil.getUniqueCaseReference(10);
         String caseDetails = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1_CASE1), "UTF-8");
         caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
 
@@ -80,9 +80,9 @@ public class UpdateBulkComponentTest {
         Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
         String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK5), "UTF-8");
         testData = testData.replace("#ETHOS-CASE-REFERENCE1#", ethosCaseReference);
-        ethosCaseReference = testUtil.getUniqueCaseReference();
+        ethosCaseReference = testUtil.getUniqueCaseReference(10);
         testData = testData.replace("#ETHOS-CASE-REFERENCE2#", ethosCaseReference);
-        ethosCaseReference = testUtil.getUniqueCaseReference();
+        ethosCaseReference = testUtil.getUniqueCaseReference(10);
         testData = testData.replace("#ETHOS-CASE-REFERENCE3#", ethosCaseReference);
 
         BulkRequest bulkRequest = testUtil.getBulkRequest(true, testData);
