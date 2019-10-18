@@ -189,12 +189,34 @@ public class TestUtil {
         testData = testData.replace("#ETHOS_CASE_REFERENCE_M2#", ethosCaseReference2);
         BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
         response = getBulkResponse(bulkRequest, Constants.CREATE_SUB_MULTIPLE_URI);
-        String multipleCollectionValue = response.body().jsonPath().getString("data.multipleCollection[0].value.subMultipleM");
-        String subMultipleValue = response.body().jsonPath().getString("data.subMultipleCollection[0].value.subMultipleRefT");
-        String actualValue = multipleCollectionValue.split("/")[0].toString();
+        String MultipleValue = response.body().jsonPath().getString("data.multipleCollection[0].value.subMultipleM");
+        String expectedSubMultipleValue = response.body().jsonPath().getString("data.subMultipleCollection[0].value.subMultipleRefT");
+        String expectedMultipleValue = MultipleValue.split("/")[0].toString();
+        String expectedMultipleValue1 = expectedSubMultipleValue.split("/")[0].toString();
+        Assert.assertEquals(expectedMultipleValue, multipleReference);
+        Assert.assertEquals(expectedMultipleValue1, multipleReference);
+    }
+    public void executeUpdateSubMultiples(boolean isScotland, String testDataFilePath, int locationRefNo, String case_type) throws IOException {
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
+        loadAuthToken();
+        testData = testData.replace("#CASE_TYPE_ID#", case_type);
+        String ethosCaseReference1 = getUniqueCaseReference(5);
+        String multipleReference = locationRefNo+ethosCaseReference1;
+        testData = testData.replace("#MULTIPLEREFERENCE#",multipleReference);
+        ethosCaseReference1 = locationRefNo+ethosCaseReference1 +"/19";
+        testData = testData.replace("#ETHOS_CASE_REFERENCE_M1#", ethosCaseReference1);
+        String ethosCaseReference2 = getUniqueCaseReference(5);
+        ethosCaseReference2 = locationRefNo+ethosCaseReference2+"/19";
+        testData = testData.replace("#ETHOS_CASE_REFERENCE_M2#", ethosCaseReference2);
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.UPDATE_SUB_MULTIPLE_URI);
 
-        Assert.assertEquals(multipleReference, actualValue);
-        Assert.assertEquals(multipleReference, subMultipleValue.split("/")[0].toString());
+        String actualValue = JsonPath.read(testData, "$.case_details.case_data.subMultipleRef");
+        String expectedMultipleValue = response.body().jsonPath().getString("data.multipleCollection[1].value.subMultipleM");
+        String expectedSubMultipleValue = response.body().jsonPath().getString("data.subMultipleCollection[0].value.subMultipleRefT");
+        Assert.assertEquals(expectedMultipleValue, actualValue);
+        Assert.assertEquals(expectedSubMultipleValue, actualValue);
     }
 
     //End-point /searchBulk
