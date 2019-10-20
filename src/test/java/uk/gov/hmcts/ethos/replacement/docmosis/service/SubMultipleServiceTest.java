@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SELECT_ALL_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SELECT_NONE_VALUE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SubMultipleServiceTest {
@@ -64,7 +66,8 @@ public class SubMultipleServiceTest {
         String result = "BulkData(bulkCaseTitle=null, multipleReference=null, feeGroupReference=null, claimantSurname=null, respondentSurname=null, " +
                 "claimantRep=null, respondentRep=null, ethosCaseReference=null, clerkResponsible=null, fileLocation=null, jurCodesCollection=null, " +
                 "fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, " +
-                "clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, subMultipleName=null, subMultipleRef=null, " +
+                "clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, fileLocationGlasgow=null, fileLocationAberdeen=null, " +
+                "fileLocationDundee=null, fileLocationEdinburgh=null, managingOffice=null, subMultipleName=null, subMultipleRef=null, " +
                 "caseIdCollection=null, searchCollection=null, midSearchCollection=null, " +
                 "multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, leadClaimantM=null, " +
                 "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, " +
@@ -79,7 +82,7 @@ public class SubMultipleServiceTest {
 
     @Test
     public void createSubMultipleLogicWithErrors() {
-        String result = "[There are not cases found]";
+        String result = "[No cases have been found]";
         bulkDetails.getCaseData().setMidSearchCollection(null);
         BulkRequestPayload bulkRequestPayload = subMultipleService.createSubMultipleLogic(bulkDetails);
         assertEquals(result, bulkRequestPayload.getErrors().toString());
@@ -113,9 +116,27 @@ public class SubMultipleServiceTest {
 
     @Test
     public void populateSubMultipleDynamicListLogicWithErrors() {
-        String result = "[There are not sub multiples found]";
+        String result = "[No sub multiples have been found]";
         BulkRequestPayload bulkRequestPayload = subMultipleService.populateSubMultipleDynamicListLogic(bulkDetails);
         assertEquals(result, bulkRequestPayload.getErrors().toString());
+    }
+
+    @Test
+    public void populateFilterDefaultedAllDynamicListLogic() {
+        String result = "DynamicFixedListType(value=DynamicValueType(code=999999, label=Select All), " +
+                "listItems=[DynamicValueType(code=999999, label=Select All), DynamicValueType(code=1234567, label=SubMultiple1)])";
+        bulkDetails.getCaseData().setSubMultipleCollection(createSubMultiples());
+        BulkRequestPayload bulkRequestPayload = subMultipleService.populateFilterDefaultedDynamicListLogic(bulkDetails, SELECT_ALL_VALUE);
+        assertEquals(result, bulkRequestPayload.getBulkDetails().getCaseData().getSubMultipleDynamicList().toString());
+    }
+
+    @Test
+    public void populateFilterDefaultedNoneDynamicListLogic() {
+        String result = "DynamicFixedListType(value=DynamicValueType(code=999999, label=None), " +
+                "listItems=[DynamicValueType(code=999999, label=None), DynamicValueType(code=1234567, label=SubMultiple1)])";
+        bulkDetails.getCaseData().setSubMultipleCollection(createSubMultiples());
+        BulkRequestPayload bulkRequestPayload = subMultipleService.populateFilterDefaultedDynamicListLogic(bulkDetails, SELECT_NONE_VALUE);
+        assertEquals(result, bulkRequestPayload.getBulkDetails().getCaseData().getSubMultipleDynamicList().toString());
     }
 
     @Test
@@ -124,6 +145,7 @@ public class SubMultipleServiceTest {
                 "claimantRep=null, respondentRep=null, ethosCaseReference=null, clerkResponsible=null, fileLocation=null, " +
                 "jurCodesCollection=null, fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, " +
                 "multipleReferenceV2=null, clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, " +
+                "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, managingOffice=null, " +
                 "subMultipleName=SubMultipleNew, subMultipleRef=null, caseIdCollection=null, searchCollection=null, " +
                 "midSearchCollection=[MidSearchTypeItem(id=1111, value=1111), MidSearchTypeItem(id=2222, value=2222)], " +
                 "multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, " +
@@ -134,8 +156,7 @@ public class SubMultipleServiceTest {
                 "claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, fileLocM=null, receiptDateM=null, " +
                 "acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, subMultipleM= ))], " +
                 "subMultipleCollection=[SubMultipleTypeItem(id=1234567, value=SubMultipleType(subMultipleNameT=SubMultiple1, subMultipleRefT=1234567))], " +
-                "subMultipleDynamicList=DynamicFixedListType(value=DynamicValueType(code=1111, label=Label1), " +
-                "listItems=[DynamicValueType(code=1111, label=Label1)]), searchCollectionCount=null, multipleCollectionCount=null, " +
+                "subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=null, " +
                 "correspondenceType=null, correspondenceScotType=null)";
         MultipleType multipleType = new MultipleType();
         multipleType.setEthosCaseReferenceM("3333");
@@ -152,7 +173,7 @@ public class SubMultipleServiceTest {
 
     @Test
     public void deleteSubMultipleLogicWithErrors() {
-        String result = "[There are not sub multiples found]";
+        String result = "[No sub multiples have been found]";
         BulkRequestPayload bulkRequestPayload = subMultipleService.deleteSubMultipleLogic(bulkDetails);
         assertEquals(result, bulkRequestPayload.getErrors().toString());
     }
@@ -177,7 +198,7 @@ public class SubMultipleServiceTest {
 
     @Test
     public void bulkMidUpdateLogicWithErrors() {
-        String result = "[There are not sub multiples found]";
+        String result = "[No sub multiples have been found]";
         BulkRequestPayload bulkRequestPayload = subMultipleService.bulkMidUpdateLogic(bulkDetails);
         assertEquals(result, bulkRequestPayload.getErrors().toString());
     }
@@ -187,7 +208,8 @@ public class SubMultipleServiceTest {
         String result = "BulkData(bulkCaseTitle=null, multipleReference=null, feeGroupReference=null, claimantSurname=null, respondentSurname=null, " +
                 "claimantRep=null, respondentRep=null, ethosCaseReference=null, clerkResponsible=null, fileLocation=null, jurCodesCollection=null, " +
                 "fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, " +
-                "clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, subMultipleName=null, subMultipleRef=null, " +
+                "clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, fileLocationGlasgow=null, fileLocationAberdeen=null, " +
+                "fileLocationDundee=null, fileLocationEdinburgh=null, managingOffice=null, subMultipleName=null, subMultipleRef=null, " +
                 "caseIdCollection=null, searchCollection=null, midSearchCollection=null, " +
                 "multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, leadClaimantM=null, " +
                 "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, " +

@@ -56,6 +56,16 @@ public class BulkData {
     private String claimantRepV2;
     @JsonProperty("respondentRep_v2")
     private String respondentRepV2;
+    @JsonProperty("fileLocationGlasgow")
+    private String fileLocationGlasgow;
+    @JsonProperty("fileLocationAberdeen")
+    private String fileLocationAberdeen;
+    @JsonProperty("fileLocationDundee")
+    private String fileLocationDundee;
+    @JsonProperty("fileLocationEdinburgh")
+    private String fileLocationEdinburgh;
+    @JsonProperty("managingOffice")
+    private String managingOffice;
     @JsonProperty("subMultipleName")
     private String subMultipleName;
     @JsonProperty("subMultipleRef")

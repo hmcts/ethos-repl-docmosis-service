@@ -5,8 +5,10 @@ import java.time.format.DateTimeFormatter;
 public class Constants {
 
     public static final DateTimeFormatter OLD_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    public static final DateTimeFormatter OLD_DATE_TIME_PATTERN2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final DateTimeFormatter NEW_DATE_PATTERN = DateTimeFormatter.ofPattern("d MMMM yyyy");
     public static final DateTimeFormatter NEW_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("d MMMM yyyy HH:mm");
+    public static final DateTimeFormatter NEW_TIME_PATTERN = DateTimeFormatter.ofPattern("HH:mm");
     public static final String NEW_LINE = "\",\n";
     public static final String OUTPUT_FILE_NAME = "document.docx";
 
@@ -75,4 +77,12 @@ public class Constants {
     public static final String DEFAULT_INIT_REF = "20000";
     public static final int DEFAULT_INIT_SUB_REF = 1;
     public static final String DEFAULT_MAX_REF = "99999";
+
+    public static final String DEFAULT_SELECT_ALL_VALUE = "999999";
+    public static final String SELECT_ALL_VALUE = "Select All";
+    public static final String SELECT_NONE_VALUE = "None";
+
+    public static final String MANCHESTER_LISTING_CASE_TYPE_ID = "Manchester_Listings";
+    public static final String SCOTLAND_LISTING_CASE_TYPE_ID = "Scotland_Listings";
+    public static final String LEEDS_LISTING_CASE_TYPE_ID = "Leeds_Listings";
 }
