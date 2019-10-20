@@ -63,6 +63,8 @@ public class BulkActionsControllerTest {
     private static final String GENERATE_BULK_LETTER_URL = "/generateBulkLetter";
 
     private static final String SUB_MULTIPLE_DYNAMIC_LIST_URL = "/subMultipleDynamicList";
+    private static final String FILTER_DEFAULTED_ALL_DYNAMIC_LIST_URL = "/filterDefaultedAllDynamicList";
+    private static final String FILTER_DEFAULTED_NONE_DYNAMIC_LIST_URL = "/filterDefaultedNoneDynamicList";
     private static final String MID_CREATE_SUB_MULTIPLE_URL = "/midCreateSubMultiple";
     private static final String CREATE_SUB_MULTIPLE_URL = "/createSubMultiple";
     private static final String MID_UPDATE_SUB_MULTIPLE_URL = "/midUpdateSubMultiple";
@@ -451,6 +453,70 @@ public class BulkActionsControllerTest {
     public void subMultipleDynamicListError500() throws Exception {
         when(subMultipleService.populateSubMultipleDynamicListLogic(isA(BulkDetails.class))).thenThrow(feignError());
         mvc.perform(post(SUB_MULTIPLE_DYNAMIC_LIST_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void filterDefaultedAllDynamicList() throws Exception {
+        when(subMultipleService.populateFilterDefaultedDynamicListLogic(isA(BulkDetails.class), isA(String.class))).thenReturn(bulkRequestPayload);
+        mvc.perform(post(FILTER_DEFAULTED_ALL_DYNAMIC_LIST_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void filterDefaultedAllDynamicListError400() throws Exception {
+        mvc.perform(post(FILTER_DEFAULTED_ALL_DYNAMIC_LIST_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void filterDefaultedAllDynamicListError500() throws Exception {
+        when(subMultipleService.populateFilterDefaultedDynamicListLogic(isA(BulkDetails.class), isA(String.class))).thenThrow(feignError());
+        mvc.perform(post(FILTER_DEFAULTED_ALL_DYNAMIC_LIST_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void filterDefaultedNoneDynamicList() throws Exception {
+        when(subMultipleService.populateFilterDefaultedDynamicListLogic(isA(BulkDetails.class), isA(String.class))).thenReturn(bulkRequestPayload);
+        mvc.perform(post(FILTER_DEFAULTED_NONE_DYNAMIC_LIST_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void filterDefaultedNoneDynamicListError400() throws Exception {
+        mvc.perform(post(FILTER_DEFAULTED_NONE_DYNAMIC_LIST_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void filterDefaultedNoneDynamicListError500() throws Exception {
+        when(subMultipleService.populateFilterDefaultedDynamicListLogic(isA(BulkDetails.class), isA(String.class))).thenThrow(feignError());
+        mvc.perform(post(FILTER_DEFAULTED_NONE_DYNAMIC_LIST_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

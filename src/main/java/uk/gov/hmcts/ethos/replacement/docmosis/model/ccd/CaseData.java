@@ -66,6 +66,14 @@ public class CaseData {
     private String positionType;
     @JsonProperty("fileLocation")
     private String fileLocation;
+    @JsonProperty("fileLocationGlasgow")
+    private String fileLocationGlasgow;
+    @JsonProperty("fileLocationAberdeen")
+    private String fileLocationAberdeen;
+    @JsonProperty("fileLocationDundee")
+    private String fileLocationDundee;
+    @JsonProperty("fileLocationEdinburgh")
+    private String fileLocationEdinburgh;
     @JsonProperty("hearingType")
     private HearingType hearingType;
     @JsonProperty("hearingCollection")
@@ -134,6 +142,8 @@ public class CaseData {
     private String stateAPI;
     @JsonProperty("managingOffice")
     private String managingOffice;
+    @JsonProperty("allocatedOffice")
+    private String allocatedOffice;
     @JsonProperty("conciliationTrack")
     private String conciliationTrack;
 
