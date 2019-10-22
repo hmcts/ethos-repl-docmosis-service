@@ -196,6 +196,7 @@ public class TestUtil {
         Assert.assertEquals(expectedMultipleValue, multipleReference);
         Assert.assertEquals(expectedMultipleValue1, multipleReference);
     }
+    //End-point //updateSubMultiple
     public void executeUpdateSubMultiples(boolean isScotland, String testDataFilePath, int locationRefNo, String case_type) throws IOException {
         Response response;
         String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
@@ -217,6 +218,14 @@ public class TestUtil {
         String expectedSubMultipleValue = response.body().jsonPath().getString("data.subMultipleCollection[0].value.subMultipleRefT");
         Assert.assertEquals(expectedMultipleValue, actualValue);
         Assert.assertEquals(expectedSubMultipleValue, actualValue);
+    }
+    //deleteSubMultiple
+    public void executeDeleteSubMultiples(boolean isScotland, String testDataFilePath, String case_type) throws IOException{
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.DELETE_SUB_MULTIPLE_URI);
+
     }
 
     //End-point /searchBulk
@@ -483,4 +492,6 @@ public class TestUtil {
     }
 
 
+    public void executeDeleteSubMultiples(boolean b, String testDataEngUpdateSubMultiple, int i, String manchester_multiples_dev) {
+    }
 }

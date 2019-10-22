@@ -46,7 +46,7 @@ public class UpdateSubMultipleComponentTest {
     }
 
     @Test
-    public void update_bulk_case_with_no_payload() throws IOException {
+    public void update_sub_multiples_with_no_payload() throws IOException {
         testUtil.loadAuthToken();
         BulkRequest bulkRequest = new BulkRequest();
         Response response = testUtil.getBulkResponse(bulkRequest, Constants.UPDATE_BULK_CASE_URI, 500);
@@ -54,7 +54,7 @@ public class UpdateSubMultipleComponentTest {
 
     @Test
     @Ignore
-    public void update_bulk_case_with_no_token() throws IOException {
+    public void update_sub_multiples_with_no_token() throws IOException {
         testUtil.setAuthToken("authToken");
         String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1), "UTF-8");
         BulkRequest bulkRequest = testUtil.getBulkRequest(false, testData);
