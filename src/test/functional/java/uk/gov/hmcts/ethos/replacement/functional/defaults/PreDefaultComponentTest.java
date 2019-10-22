@@ -17,6 +17,8 @@ import uk.gov.hmcts.ethos.replacement.functional.util.TestUtil;
 import java.io.IOException;
 import java.net.URL;
 
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
+
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
 @WithTags({
@@ -35,23 +37,23 @@ public class PreDefaultComponentTest {
     @Test
     @WithTag("SmokeTest")
     public void claimant_type_individual_with_england_template() throws IOException {
-        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", "Individual", false, Constants.TEST_DATA_PRE_DEFAULT1);
+        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", INDIVIDUAL_TYPE_CLAIMANT, false, Constants.TEST_DATA_PRE_DEFAULT1);
     }
 
     @Test
     public void claimant_type_company_with_england_template() throws IOException {
-        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", "Individual", false, Constants.TEST_DATA_PRE_DEFAULT2);
+        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", INDIVIDUAL_TYPE_CLAIMANT, false, Constants.TEST_DATA_PRE_DEFAULT2);
     }
 
     @Test
     @WithTag("SmokeTest")
     public void claimant_type_individual_with_scotland_template() throws IOException {
-        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", "Individual", true, Constants.TEST_DATA_SCOT_PRE_DEFAULT1);
+        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", INDIVIDUAL_TYPE_CLAIMANT, true, Constants.TEST_DATA_SCOT_PRE_DEFAULT1);
     }
 
     @Test
     public void claimant_type_company_with_scotland_template() throws IOException {
-        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", "Individual", true, Constants.TEST_DATA_SCOT_PRE_DEFAULT2);
+        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", INDIVIDUAL_TYPE_CLAIMANT, true, Constants.TEST_DATA_SCOT_PRE_DEFAULT2);
     }
 
     @Ignore

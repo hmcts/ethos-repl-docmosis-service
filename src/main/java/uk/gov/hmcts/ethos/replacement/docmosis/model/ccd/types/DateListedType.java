@@ -51,7 +51,7 @@ public class DateListedType {
     @JsonProperty("Hearing_room_Stirling")
     private String hearingRoomStirling;
     @JsonProperty("Hearing_room_StornowaySC")
-    private String hearingRoomSotrnowaySC;
+    private String hearingRoomStornowaySC;
     @JsonProperty("Hearing_room_Stranraer")
     private String hearingRoomStranraer;
     @JsonProperty("Hearing_room_Aberdeen")
