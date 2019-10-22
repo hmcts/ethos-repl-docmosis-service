@@ -27,6 +27,7 @@ module "repl-docmosis-backend" {
   capacity                        = "${var.capacity}"
   common_tags                     = "${var.common_tags}"
   is_frontend                     = false
+  enable_ase                      = "${var.enable_ase}"
 
   app_settings                         = {
     WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = "${var.autoheal}"
