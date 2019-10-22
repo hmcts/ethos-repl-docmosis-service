@@ -18,7 +18,7 @@ public class Constants {
     public static final String CREATE_BULK_URI = "/createBulk";
     public static final String CREATE_SUB_MULTIPLE_URI = "/createSubMultiple";
     public static final String UPDATE_SUB_MULTIPLE_URI = "/updateSubMultiple";
-    public static final String DELETE_SUB_MULTIPLE_URI = "/updateSubMultiple";
+    public static final String DELETE_SUB_MULTIPLE_URI = "/deleteSubMultiple";
 
     public static final String SEARCH_BULK_URI = "/searchBulk";
     public static final String UPDATE_BULK_URI = "/updateBulk";
