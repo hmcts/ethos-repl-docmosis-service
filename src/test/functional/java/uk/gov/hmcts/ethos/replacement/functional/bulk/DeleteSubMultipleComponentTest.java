@@ -53,7 +53,6 @@ public class DeleteSubMultipleComponentTest {
         Response response = testUtil.getBulkResponse(bulkRequest, Constants.UPDATE_BULK_CASE_URI, 500);
     }
     @Test
-    @Ignore
     public void delete_sub_multiples_with_no_token() throws IOException {
         testUtil.setAuthToken("authToken");
         String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1), "UTF-8");

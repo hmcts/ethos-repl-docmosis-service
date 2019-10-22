@@ -225,7 +225,8 @@ public class TestUtil {
         String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
         BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
         response = getBulkResponse(bulkRequest, Constants.DELETE_SUB_MULTIPLE_URI);
-
+        String expectedMultipleValue = response.body().jsonPath().getString("data.multipleCollection[1].value.subMultipleM");
+        Assert.assertNotNull(expectedMultipleValue);
     }
 
     //End-point /searchBulk
