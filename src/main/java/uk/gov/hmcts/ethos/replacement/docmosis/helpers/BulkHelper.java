@@ -171,7 +171,7 @@ public class BulkHelper {
         return multipleType;
     }
 
-    private static String getJurCodesCollection(List<JurCodesTypeItem> jurCodesTypeItems) {
+    static String getJurCodesCollection(List<JurCodesTypeItem> jurCodesTypeItems) {
         if (jurCodesTypeItems != null) {
             return jurCodesTypeItems.stream()
                     .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())

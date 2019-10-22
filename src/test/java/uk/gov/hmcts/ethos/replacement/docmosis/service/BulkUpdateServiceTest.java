@@ -208,7 +208,7 @@ public class BulkUpdateServiceTest {
         bulkData.setFileLocationDundee("Dundee");
         bulkData.setFileLocationEdinburgh("Edinburgh");
         bulkData.setFileLocationGlasgow("Glasgow");
-        bulkData.setManagingOffice("Glasgow");
+        bulkData.setManagingOffice(GLASGOW_OFFICE);
         bulkDetails.setCaseData(bulkData);
         bulkDetails.setJurisdiction("TRIBUNALS");
         bulkDetails.setCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID);
