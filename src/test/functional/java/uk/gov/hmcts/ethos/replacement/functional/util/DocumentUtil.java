@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatLocalDate;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatLocalDateTime;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 
 public class DocumentUtil {
 
@@ -99,11 +100,11 @@ public class DocumentUtil {
             sb.append("\"claimant_county\": \"" + nullCheck(claimantType.getClaimantAddressUK().getCounty())).append(NEW_LINE);
             sb.append("\"claimant_postCode\": \"" + nullCheck(claimantType.getClaimantAddressUK().getPostCode())).append(NEW_LINE);
             String typeOfClaimant = caseData.getClaimantTypeOfClaimant();
-            if (typeOfClaimant.equalsIgnoreCase("individual")) {
+            if (typeOfClaimant.equalsIgnoreCase(INDIVIDUAL_TYPE_CLAIMANT)) {
                 sb.append("\"claimant_full_name\": \"" + claimantIndType.claimantFullName()).append(NEW_LINE);
                 sb.append("\"Claimant\": \"" + claimantIndType.claimantFullName()).append(NEW_LINE);
                 //sb.append("\"claimant_email_address\": \"").append(NEW_LINE);
-            } else if (typeOfClaimant.equalsIgnoreCase("company")) {
+            } else if (typeOfClaimant.equalsIgnoreCase("Company")) {
                 sb.append("\"claimant_full_name\": \"" + caseData.getClaimantCompany()).append(NEW_LINE);
                 sb.append("\"Claimant\": \"" + caseData.getClaimantCompany()).append(NEW_LINE);
                 //sb.append("\"claimant_email_address\": \"").append(NEW_LINE);

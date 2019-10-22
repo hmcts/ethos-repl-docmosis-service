@@ -33,7 +33,8 @@ public class CaseUpdateForCaseWorkerService {
         try {
             String caseId = ccdRequest.getCaseDetails().getCaseId();
             CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), caseId);
-            DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, caseDetails);
+            String managingOffice = caseDetails.getCaseData().getManagingOffice() != null ? caseDetails.getCaseData().getManagingOffice() : "";
+            DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, managingOffice, caseDetails.getCaseTypeId());
             ccdRequest.getCaseDetails().getCaseData().setPositionType(defaultValues.getPositionType());
             log.info("Post Default values added to the case: " + defaultValues);
             return ccdClient.submitEventForCase(authToken, caseDetails.getCaseData(), caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), returnedRequest, caseId);
