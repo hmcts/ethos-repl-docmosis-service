@@ -17,6 +17,8 @@ import uk.gov.hmcts.ethos.replacement.functional.util.TestUtil;
 import java.io.IOException;
 import java.net.URL;
 
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.MANUALLY_CREATED_POSITION;
+
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
 @WithTags({
@@ -98,7 +100,7 @@ public class PostDefaultComponentTest {
     }
 
     private void executeTest(String testData, boolean isScotland) throws IOException {
-        testUtil.executePostDefaultValuesTest("positionType", "Manually Created", false, testData);
+        testUtil.executePostDefaultValuesTest("positionType", MANUALLY_CREATED_POSITION, false, testData);
         if (isScotland) {
             testUtil.executePostDefaultValuesTest("tribunalCorrespondenceAddress", "Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS", false, testData);
             testUtil.executePostDefaultValuesTest("tribunalCorrespondenceTelephone", "0141 204 0730", false, testData);

@@ -24,7 +24,7 @@ public class Helper {
         return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_DATE_TIME_PATTERN).format(NEW_DATE_PATTERN) : "";
     }
 
-    public static String listTingFormatLocalDate(String date) {
+    public static String listingFormatLocalDate(String date) {
         return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_DATE_TIME_PATTERN2).format(NEW_DATE_PATTERN) : "";
     }
 

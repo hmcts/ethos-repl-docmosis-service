@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.CaseCreationException;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class DefaultValuesReaderService {
 
     private static final String MESSAGE = "Failed to add default values: ";
 
-    public DefaultValues getDefaultValues(String filePath, CaseDetails caseDetails) {
+    public DefaultValues getDefaultValues(String filePath, String managingOffice, String caseTypeId) {
         List<String> values = new ArrayList<>();
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
              Workbook workbook = WorkbookFactory.create(inputStream)) {
@@ -50,7 +50,7 @@ public class DefaultValuesReaderService {
         if (filePath.equals(PRE_DEFAULT_XLSX_FILE_PATH))
             return populatePreDefaultValues(values);
         else {
-            return populatePostDefaultValues(values, caseDetails);
+            return populatePostDefaultValues(values, managingOffice, caseTypeId);
         }
     }
 
@@ -60,8 +60,7 @@ public class DefaultValuesReaderService {
                 .build();
     }
 
-    private DefaultValues populatePostDefaultValues(List<String> values, CaseDetails caseDetails) {
-        String caseTypeId = caseDetails.getCaseTypeId();
+    private DefaultValues populatePostDefaultValues(List<String> values, String managingOffice, String caseTypeId) {
         switch (caseTypeId) {
             case MANCHESTER_CASE_TYPE_ID:
             case MANCHESTER_USERS_CASE_TYPE_ID:
@@ -87,8 +86,7 @@ public class DefaultValuesReaderService {
             case WATFORD_USERS_CASE_TYPE_ID:
                 return getWatfordPostDefaultValues(values);
             default:
-                if (caseDetails.getCaseData().getManagingOffice() != null) {
-                    String managingOffice = caseDetails.getCaseData().getManagingOffice();
+                if (managingOffice != null && !managingOffice.equals("")) {
                     switch (managingOffice) {
                         case GLASGOW_OFFICE:
                             return getGlasgowPostDefaultValues(values);
@@ -133,6 +131,15 @@ public class DefaultValuesReaderService {
         caseData.setTribunalCorrespondenceDX(defaultValues.getTribunalCorrespondenceDX());
         caseData.setTribunalCorrespondenceEmail(defaultValues.getTribunalCorrespondenceEmail());
         return caseData;
+    }
+
+    public ListingData getListingData(ListingData listingData, DefaultValues defaultValues) {
+        listingData.setTribunalCorrespondenceAddress(getTribunalCorrespondenceAddress(defaultValues));
+        listingData.setTribunalCorrespondenceTelephone(defaultValues.getTribunalCorrespondenceTelephone());
+        listingData.setTribunalCorrespondenceFax(defaultValues.getTribunalCorrespondenceFax());
+        listingData.setTribunalCorrespondenceDX(defaultValues.getTribunalCorrespondenceDX());
+        listingData.setTribunalCorrespondenceEmail(defaultValues.getTribunalCorrespondenceEmail());
+        return listingData;
     }
 
     private Address getTribunalCorrespondenceAddress(DefaultValues defaultValues) {

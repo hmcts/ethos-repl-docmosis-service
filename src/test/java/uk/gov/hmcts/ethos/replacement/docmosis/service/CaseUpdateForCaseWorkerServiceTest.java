@@ -62,7 +62,7 @@ public class CaseUpdateForCaseWorkerServiceTest {
         caseUpdateForCaseWorkerService = new CaseUpdateForCaseWorkerService(ccdClient, defaultValuesReaderService);
         manchesterDefaultValues = DefaultValues.builder()
                 .positionType("Awaiting ET3")
-                .claimantTypeOfClaimant("Individual")
+                .claimantTypeOfClaimant(INDIVIDUAL_TYPE_CLAIMANT)
                 .tribunalCorrespondenceAddressLine1("Manchester Employment Tribunal,")
                 .tribunalCorrespondenceAddressLine2("Alexandra House,")
                 .tribunalCorrespondenceAddressLine3("14-22 The Parsonage,")
@@ -75,8 +75,8 @@ public class CaseUpdateForCaseWorkerServiceTest {
                 .build();
         glasgowDefaultValues = DefaultValues.builder()
                 .positionType("Awaiting ET3")
-                .claimantTypeOfClaimant("Individual")
-                .managingOffice("Glasgow")
+                .claimantTypeOfClaimant(INDIVIDUAL_TYPE_CLAIMANT)
+                .managingOffice(GLASGOW_OFFICE)
                 .tribunalCorrespondenceAddressLine1("Eagle Building,")
                 .tribunalCorrespondenceAddressLine2("215 Bothwell Street,")
                 .tribunalCorrespondenceTown("Glasgow,")
@@ -92,7 +92,7 @@ public class CaseUpdateForCaseWorkerServiceTest {
     public void caseCreationManchesterRequestException() throws IOException {
         when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenThrow(feignError());
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
-        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, manchesterCaseDetails)).thenReturn(manchesterDefaultValues);
+        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", manchesterCaseDetails.getCaseTypeId())).thenReturn(manchesterDefaultValues);
         caseUpdateForCaseWorkerService.caseUpdateRequest(manchesterCcdRequest, "authToken");
     }
 
@@ -100,7 +100,7 @@ public class CaseUpdateForCaseWorkerServiceTest {
     public void caseCreationManchesterRequest() throws IOException {
         when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenReturn(manchesterCcdRequest);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
-        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, manchesterCaseDetails)).thenReturn(manchesterDefaultValues);
+        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", manchesterCaseDetails.getCaseTypeId())).thenReturn(manchesterDefaultValues);
         SubmitEvent submitEvent1 = caseUpdateForCaseWorkerService.caseUpdateRequest(manchesterCcdRequest, "authToken");
         assertEquals(submitEvent, submitEvent1);
     }
@@ -109,7 +109,7 @@ public class CaseUpdateForCaseWorkerServiceTest {
     public void caseCreationGlasgowRequest() throws IOException {
         when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenReturn(glasgowCcdRequest);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
-        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, glasgowCaseDetails)).thenReturn(glasgowDefaultValues);
+        when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", glasgowCaseDetails.getCaseTypeId())).thenReturn(glasgowDefaultValues);
         SubmitEvent submitEvent1 = caseUpdateForCaseWorkerService.caseUpdateRequest(glasgowCcdRequest, "authToken");
         assertEquals(submitEvent, submitEvent1);
     }
