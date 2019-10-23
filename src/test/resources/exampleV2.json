@@ -12,10 +12,6 @@
       "tribunalCorrespondenceFax" : "07577126570",
       "tribunalCorrespondenceDX" : "123456",
       "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
-      "NH_JudgementType": {
-        "NH_JudgementDecision": "guilty",
-        "NH_JudgementTextArea": "guilty"
-      },
       "caseNotes": "Example note",
       "caseType": "Single",
       "claimant_TypeOfClaimant" : "Individual",
@@ -65,10 +61,6 @@
         "claimant_last_name": "Rodriguez",
         "claimant_title1": "Mr"
       },
-      "disposeType": {
-        "disposeReason": "Disposed",
-        "disposeTextArea": "Disposed"
-      },
       "feeGroupReference": "123321",
       "judgementType": {
         "judgementFinal": "FinalJ",
@@ -76,16 +68,6 @@
       },
       "locationType": "Manchester",
       "receiptDate": "2019-03-12",
-      "referToETJ": [
-        {
-          "id": "23432343",
-          "value": {
-            "referralExplanation": "Explanation",
-            "referralJudge": "Judge",
-            "referralOutcome": "Outcome"
-          }
-        }
-      ],
       "representedType": {
         "if_represented": "Yes",
         "name_of_organisation": "JL",

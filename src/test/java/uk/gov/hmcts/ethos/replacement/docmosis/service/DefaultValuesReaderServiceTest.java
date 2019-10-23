@@ -348,18 +348,19 @@ public class DefaultValuesReaderServiceTest {
     public void getCaseData() {
         String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, " +
                 "tribunalCorrespondenceTelephone=0141 204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, " +
-                "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=null, multipleType=null, multipleOthers=null, " +
+                "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=null, " +
                 "multipleReference=null, leadClaimant=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "representativeClaimantType=null, responseTypeCollection=null, responseType=null, respondentCollection=null, repCollection=null, " +
                 "positionType=Manually Created, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, " +
                 "fileLocationEdinburgh=null, hearingType=null, hearingCollection=null, depositType=null, judgementCollection=null, " +
-                "judgementDetailsCollection=null, costsCollection=null, disposeType=null, NH_JudgementType=null, jurCodesCollection=null, " +
-                "broughtForwardCollection=null, acasOffice=null, clerkResponsible=null, userLocation=null, subMultipleReference=null, " +
-                "addSubMultipleComment=null, panelCollection=null, documentCollection=null, referToETJ=null, withdrawType=null, archiveType=null, " +
-                "referredToJudge=null, backFromJudge=null, additionalType=null, reconsiderationType=null, reconsiderationCollection=null, correspondenceType=null, " +
-                "correspondenceScotType=null, caseNotes=null, caseDocument=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, " +
-                "state=null, stateAPI=null, managingOffice=Glasgow, allocatedOffice=null, conciliationTrack=null)";
+                "judgementDetailsCollection=null, costsCollection=null, jurCodesCollection=null, " +
+                "broughtForwardCollection=null, clerkResponsible=null, userLocation=null, subMultipleReference=null, " +
+                "addSubMultipleComment=null, documentCollection=null, referredToJudge=null, backFromJudge=null, additionalCaseInfoType=null, " +
+                "correspondenceScotType=null, correspondenceType=null, caseNotes=null, claimantWorkAddress=null, " +
+                "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=null, " +
+                "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearing=null, " +
+                "printHearingResults=null, targetHearingDate=null)";
         assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow).toString());
     }
 

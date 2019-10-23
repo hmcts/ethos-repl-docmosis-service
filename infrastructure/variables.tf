@@ -89,3 +89,7 @@ variable "appinsights_location" {
   default     = "West Europe"
   description = "Location for Application Insights"
 }
+
+variable "enable_ase" {
+  default = false
+}
