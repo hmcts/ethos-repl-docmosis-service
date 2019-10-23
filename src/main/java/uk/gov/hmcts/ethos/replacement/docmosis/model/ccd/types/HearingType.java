@@ -15,6 +15,8 @@ public class HearingType {
     private String hearingType;
     @JsonProperty("hearingPublicPrivate")
     private String hearingPublicPrivate;
+    @JsonProperty("hearingNumber")
+    private String hearingNumber;
     @JsonProperty("Hearing_venue")
     private String hearingVenue;
     @JsonProperty("hearingEstLengthNum")

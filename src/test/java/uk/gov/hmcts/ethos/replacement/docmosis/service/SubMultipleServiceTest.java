@@ -71,7 +71,7 @@ public class SubMultipleServiceTest {
                 "caseIdCollection=null, searchCollection=null, midSearchCollection=null, " +
                 "multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, leadClaimantM=null, " +
                 "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, " +
-                "fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, " +
+                "fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, " +
                 "stateM=null, subMultipleM=null))], " +
                 "subMultipleCollection=[SubMultipleTypeItem(id=null, value=SubMultipleType(subMultipleNameT=SubMultipleNew, subMultipleRefT=null))], " +
                 "subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null)";
@@ -150,11 +150,11 @@ public class SubMultipleServiceTest {
                 "midSearchCollection=[MidSearchTypeItem(id=1111, value=1111), MidSearchTypeItem(id=2222, value=2222)], " +
                 "multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, " +
                 "leadClaimantM=null, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, " +
-                "claimantRepM=null, respondentRepM=null, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, " +
+                "claimantRepM=null, respondentRepM=null, fileLocM=null, receiptDateM=null, positionTypeM=null, " +
                 "feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, subMultipleM= )), MultipleTypeItem(id=3333, " +
                 "value=MultipleType(caseIDM=null, ethosCaseReferenceM=3333, leadClaimantM=null, multipleReferenceM=null, clerkRespM=null, " +
                 "claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, fileLocM=null, receiptDateM=null, " +
-                "acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, subMultipleM= ))], " +
+                "positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, subMultipleM= ))], " +
                 "subMultipleCollection=[SubMultipleTypeItem(id=1234567, value=SubMultipleType(subMultipleNameT=SubMultiple1, subMultipleRefT=1234567))], " +
                 "subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=null, " +
                 "correspondenceType=null, correspondenceScotType=null)";
@@ -213,11 +213,11 @@ public class SubMultipleServiceTest {
                 "caseIdCollection=null, searchCollection=null, midSearchCollection=null, " +
                 "multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, leadClaimantM=null, " +
                 "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, " +
-                "fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, " +
+                "fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, " +
                 "subMultipleM=1111)), " +
                 "MultipleTypeItem(id=123456, value=MultipleType(caseIDM=null, ethosCaseReferenceM=3333, leadClaimantM=null, multipleReferenceM=null, " +
                 "clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, fileLocM=null, " +
-                "receiptDateM=null, acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, subMultipleM= ))], " +
+                "receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, subMultipleM= ))], " +
                 "subMultipleCollection=[SubMultipleTypeItem(id=1234567, value=SubMultipleType(subMultipleNameT=SubMultiple1, subMultipleRefT=1234567)), " +
                 "SubMultipleTypeItem(id=1111, value=SubMultipleType(subMultipleNameT=NewSubMultipleName, subMultipleRefT=1111))], " +
                 "subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null)";

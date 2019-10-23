@@ -12,10 +12,6 @@
       "tribunalCorrespondenceFax" : "07577126570",
       "tribunalCorrespondenceDX" : "123456",
       "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
-      "NH_JudgementType": {
-        "NH_JudgementDecision": "guilty",
-        "NH_JudgementTextArea": "guilty"
-      },
       "caseNotes": "Example note",
       "caseType": "Single",
       "claimant_TypeOfClaimant" : "Individual",
@@ -65,10 +61,6 @@
         "claimant_last_name": "Rodriguez",
         "claimant_title1": "Mr"
       },
-      "disposeType": {
-        "disposeReason": "Disposed",
-        "disposeTextArea": "Disposed"
-      },
       "feeGroupReference": "123321",
       "judgementType": {
         "judgementFinal": "FinalJ",
@@ -77,16 +69,6 @@
       "locationType": "Manchester",
       "positionType": "Position",
       "receiptDate": "2019-03-12",
-      "referToETJ": [
-        {
-          "id": "23432343",
-          "value": {
-            "referralExplanation": "Explanation",
-            "referralJudge": "Judge",
-            "referralOutcome": "Outcome"
-          }
-        }
-      ],
       "representedType": {
         "if_represented": "Yes",
         "name_of_organisation": "JL",
@@ -127,6 +109,30 @@
           }
         }
       ],
+      "repCollection": [
+        {
+          "id" : "123345",
+          "value" : {
+            "resp_rep_name" : "RepresentativeNameRespondent",
+            "name_of_organisation": "RepresentativeOrganisation",
+            "name_of_representative": "RepresentativeNameRespondent",
+            "representative_address": {
+              "AddressLine1": "56 Block C",
+              "AddressLine2": "Ellesmere Street",
+              "Country": "UK",
+              "County": "Lancashire",
+              "PostCode": "M3 KJR",
+              "PostTown": "Manchester"
+            },
+            "representative_dx": "222222222",
+            "representative_email_address": "example@gmail.com",
+            "representative_mobile_number": "07577136570",
+            "representative_phone_number": "07577136570",
+            "representative_preference": "Post",
+            "representative_reference": "1111111"
+          }
+        }
+      ],
       "respondentType": {
         "respondent_address": {
           "AddressLine1": "32",
@@ -143,6 +149,91 @@
         "respondent_phone1": "07577136570",
         "respondent_phone2": "07577136570"
       },
+      "depositType": {
+        "Deposit_amount": "32",
+        "deposit_due": "123"
+      },
+      "claimantWorkAddress": {
+        "claimant_work_phone_number": "077777777"
+      },
+      "preAcceptCase": {
+        "caseReferred": "No",
+        "preAcceptOutcome": "Guilty"
+      },
+      "restrictedReporting": {
+        "requestedBy": "Tom Cruise",
+        "rule503b": "Yes"
+      },
+      "printHearing": {
+        "hearingDocType": "Press List",
+        "hearingDocETCL": "No"
+      },
+      "additionalCaseInfo": {
+        "additional_live_appeal": "More info",
+        "additional_sensitive": "No"
+      },
+      "claimantOtherType": {
+        "claimant_occupation": "DB Admin",
+        "claimant_employed_currently": "Yes",
+        "claimant_disabled": "No",
+        "claimant_disabled_details": "No"
+      },
+      "hearingCollection": [
+        {
+          "id": "12121",
+          "value": {
+            "Hearing_type": "Scheduled",
+            "hearingNumber": "6"
+          }
+        }
+      ],
+      "documentCollection": [
+        {
+          "id": "12121",
+          "value": {
+            "typeOfDocument": "Doc",
+            "ownerDocument": "Juan Francisco",
+            "uploadedDocument": {
+              "document_binary_url": "http:google.com",
+              "document_filename": "Filename"
+            }
+          }
+        }
+      ],
+      "broughtForwardCollection": [
+        {
+          "id": "12121",
+          "value": {
+            "broughtForwardDateReason": "1990-02-25",
+            "broughtForwardDateComplete": "1990-02-25"
+          }
+        }
+      ],
+      "judgementDetailsCollection": [
+        {
+          "id": "12121",
+          "value": {
+            "folio_number": "32"
+          }
+        }
+      ],
+      "costsCollection": [
+        {
+          "id": "12121",
+          "value": {
+            "costs_question": "Yes",
+            "costs_expenses_awarded_to" : "Mike"
+          }
+        }
+      ],
+      "judgementCollection": [
+        {
+          "id": "12121",
+          "value": {
+            "non_hearing_judgment": "No Hearing Judgment"
+          }
+        }
+      ],
       "scheduleType": {
         "scheduleAttendance": [
           {
