@@ -86,13 +86,6 @@
       "multipleType": "No",
       "positionType": "First",
       "receiptDate": "2019-03-12",
-      "reconsiderationType": {
-        "application_date": "2019-03-12",
-        "judge's_decision": "done",
-        "judge's_direction": "No given",
-        "reconsideration_hearing_date": "2019-03-12",
-        "who_applied?": "nobody"
-      },
       "respondentType": {
         "respondent_contact_preference": "Post",
         "respondent_email": "Antonio@gmail.com",
@@ -109,10 +102,7 @@
         "responseToClaim": "No"
       },
       "tribunalOffice": "Manchester",
-      "userLocation": "Liverpool",
-      "withdrawType": {
-        "withdrawTextArea": "Nothing"
-      }
+      "userLocation": "Liverpool"
     },
     "id": "123456789",
     "jurisdiction": "English",

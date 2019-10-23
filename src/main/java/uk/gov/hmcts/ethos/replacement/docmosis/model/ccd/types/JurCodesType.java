@@ -10,6 +10,8 @@ public class JurCodesType {
 
     @JsonProperty("juridictionCodesList")
     private String juridictionCodesList;
+    @JsonProperty("judgmentOutcome")
+    private String judgmentOutcome;
     @JsonProperty("juridictionCodesSubList1")
     private String juridictionCodesSubList1;
 }

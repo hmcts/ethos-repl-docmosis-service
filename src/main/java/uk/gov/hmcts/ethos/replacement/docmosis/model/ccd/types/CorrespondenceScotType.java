@@ -26,6 +26,8 @@ public class CorrespondenceScotType {
     private String part7ScotDocuments;
     @JsonProperty("Part_8_Scot_Documents")
     private String part8ScotDocuments;
+    @JsonProperty("Part_9_Scot_Documents")
+    private String part9ScotDocuments;
     @JsonProperty("Part_10_Scot_Documents")
     private String part10ScotDocuments;
     @JsonProperty("Part_11_Scot_Documents")
@@ -38,6 +40,8 @@ public class CorrespondenceScotType {
     private String part14ScotDocuments;
     @JsonProperty("Part_15_Scot_Documents")
     private String part15ScotDocuments;
-    @JsonProperty("Part_16_Scot_Documents")
-    private String part16ScotDocuments;
+    @JsonProperty("claimantORrespondent")
+    private String claimantOrRespondent;
+    @JsonProperty("hearingNumber")
+    private String hearingNumber;
 }

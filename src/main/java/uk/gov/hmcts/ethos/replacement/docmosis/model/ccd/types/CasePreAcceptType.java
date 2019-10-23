@@ -9,12 +9,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Document;
 @Data
 public class CasePreAcceptType {
 
-    @JsonProperty("caseAccepted")
-    private String caseAccepted;
-    @JsonProperty("dateAccepted")
-    private String dateAccepted;
-    @JsonProperty("rejectReason")
-    private String[] rejectReason;
     @JsonProperty("caseReferred")
     private String caseReferred;
     @JsonProperty("caseJudge")
@@ -27,4 +21,13 @@ public class CasePreAcceptType {
     private Document preAcceptOutcomeDoc;
     @JsonProperty("caseEJReferredDateReturn")
     private String caseEJReferredDateReturn;
+    @JsonProperty("caseAccepted")
+    private String caseAccepted;
+    @JsonProperty("dateAccepted")
+    private String dateAccepted;
+    @JsonProperty("partRejected")
+    private String partRejected;
+    @JsonProperty("rejectReason")
+    private String[] rejectReason;
+
 }
