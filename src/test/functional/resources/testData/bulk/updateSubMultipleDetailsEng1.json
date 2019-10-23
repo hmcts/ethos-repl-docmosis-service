@@ -1,0 +1,190 @@
+{
+  "token": "Bearer authToken",
+  "event_id": "123456339",
+  "id": "1570543209267449",
+  "case_type": "Manchester_Multiples_Dev",
+  "case_details": {
+
+    "id": "1570543209267449",
+    "jurisdiction": "EMPLOYMENT",
+    "case_type_id": "#CASE_TYPE_ID#",
+    "created_on": "2019-10-08T14:00:09.219",
+    "last_modified_on": "2019-10-16T14:50:25.398",
+    "state": "BulkCaseStarted",
+    "security_classification": "PUBLIC",
+
+    "case_data": {
+
+      "subMultipleName": "Update Sub multiples",
+      "subMultipleRef": "2412002/19",
+      "subMultipleCollection": [
+        {
+          "id": "2412002/19",
+          "value": {
+            "subMultipleNameT": "Update Sub multiples",
+            "subMultipleRefT": "2412002/19"
+          }
+        }
+      ],
+
+      "midSearchCollection": [
+        {
+          "id": "#ETHOS_CASE_REFERENCE_M2#",
+          "value": "#ETHOS_CASE_REFERENCE_M2#"
+        }
+      ],
+
+      "multipleCollectionCount": "2",
+      "multipleReference": "#MULTIPLEREFERENCE#",
+      "caseIdCollection": [
+        {
+          "value": {
+            "ethos_CaseReference": "#ETHOS_CASE_REFERENCE_M1#"
+          },
+          "id": "9f39a2bf-bf62-45d9-9314-64b098b4d9b7"
+        },
+        {
+          "value": {
+            "ethos_CaseReference": "#ETHOS_CASE_REFERENCE_M2#"
+          },
+          "id": "acd8c079-7034-4de2-bf63-b4f2ef46ba3d"
+        }
+      ],
+      "multipleCollection": [
+        {
+          "value": {
+            "caseIDM": "1570542281159870",
+            "ethosCaseReferenceM": "#ETHOS_CASE_REFERENCE_M1#",
+            "leadClaimantM": "Yes",
+            "multipleReferenceM": "#MULTIPLEREFERENCE#",
+            "clerkRespM": " ",
+            "claimantSurnameM": "Claimant_Last_Name",
+            "respondentSurnameM": "Name of respondent6053880",
+            "claimantRepM": "Name of representative",
+            "respondentRepM": " ",
+            "fileLocM": " ",
+            "receiptDateM": "2019-05-01",
+            "acasOfficeM": " ",
+            "positionTypeM": "Manually Created",
+            "feeGroupReferenceM": "000831111463",
+            "jurCodesCollectionTextM": " ",
+            "stateM": "Accepted",
+            "subMultipleM": " "
+          },
+          "id": "1570542281159870"
+        },
+        {
+          "value": {
+            "caseIDM": "1570541987400786",
+            "ethosCaseReferenceM": "#ETHOS_CASE_REFERENCE_M2#",
+            "leadClaimantM": "No",
+            "multipleReferenceM": "#MULTIPLEREFERENCE#",
+            "clerkRespM": " ",
+            "claimantSurnameM": "Claimant_Last_Name",
+            "respondentSurnameM": "Name of respondent5385290",
+            "claimantRepM": "Name of representative",
+            "respondentRepM": " ",
+            "fileLocM": " ",
+            "receiptDateM": "2019-05-01",
+            "acasOfficeM": " ",
+            "positionTypeM": "Manually Created",
+            "feeGroupReferenceM": "000190860108",
+            "jurCodesCollectionTextM": " ",
+            "stateM": "Accepted",
+            "subMultipleM": " "
+          },
+          "id": "1570541987400786"
+        }
+      ],
+      "bulkCaseTitle": "Test Multiple case 8oct 1459"
+    },
+    "data_classification": {
+      "subMultipleCollection": {
+        "classification": "PUBLIC",
+        "value": [
+          {
+            "value": {
+              "subMultipleNameT": "PUBLIC",
+              "subMultipleRefT": "PUBLIC"
+            },
+            "id": "2412001/20"
+          }
+        ]
+      },
+      "multipleCollectionCount": "PUBLIC",
+      "multipleReference": "PUBLIC",
+      "caseIdCollection": {
+        "classification": "PUBLIC",
+        "value": [
+          {
+            "value": {
+              "ethos_CaseReference": "PUBLIC"
+            },
+            "id": "9f39a2bf-bf62-45d9-9314-64b098b4d9b7"
+          },
+          {
+            "value": {
+              "ethos_CaseReference": "PUBLIC"
+            },
+            "id": "acd8c079-7034-4de2-bf63-b4f2ef46ba3d"
+          }
+        ]
+      },
+      "multipleCollection": {
+        "classification": "PUBLIC",
+        "value": [
+          {
+            "value": {
+              "caseIDM": "PUBLIC",
+              "ethosCaseReferenceM": "PUBLIC",
+              "leadClaimantM": "PUBLIC",
+              "multipleReferenceM": "PUBLIC",
+              "clerkRespM": "PUBLIC",
+              "claimantSurnameM": "PUBLIC",
+              "respondentSurnameM": "PUBLIC",
+              "claimantRepM": "PUBLIC",
+              "respondentRepM": "PUBLIC",
+              "fileLocM": "PUBLIC",
+              "receiptDateM": "PUBLIC",
+              "acasOfficeM": "PUBLIC",
+              "positionTypeM": "PUBLIC",
+              "feeGroupReferenceM": "PUBLIC",
+              "jurCodesCollectionTextM": "PUBLIC",
+              "stateM": "PUBLIC",
+              "subMultipleM": "PUBLIC"
+            },
+            "id": "1570542281159870"
+          },
+          {
+            "value": {
+              "caseIDM": "PUBLIC",
+              "ethosCaseReferenceM": "PUBLIC",
+              "leadClaimantM": "PUBLIC",
+              "multipleReferenceM": "PUBLIC",
+              "clerkRespM": "PUBLIC",
+              "claimantSurnameM": "PUBLIC",
+              "respondentSurnameM": "PUBLIC",
+              "claimantRepM": "PUBLIC",
+              "respondentRepM": "PUBLIC",
+              "fileLocM": "PUBLIC",
+              "receiptDateM": "PUBLIC",
+              "acasOfficeM": "PUBLIC",
+              "positionTypeM": "PUBLIC",
+              "feeGroupReferenceM": "PUBLIC",
+              "jurCodesCollectionTextM": "PUBLIC",
+              "stateM": "PUBLIC",
+              "subMultipleM": "PUBLIC"
+            },
+            "id": "1570541987400786"
+          }
+        ]
+      },
+      "bulkCaseTitle": "PUBLIC"
+    },
+    "after_submit_callback_response": null,
+    "callback_response_status_code": null,
+    "callback_response_status": null,
+    "delete_draft_response_status_code": null,
+    "delete_draft_response_status": null
+  }
+}

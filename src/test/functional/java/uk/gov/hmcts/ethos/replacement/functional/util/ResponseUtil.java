@@ -34,7 +34,8 @@ public class ResponseUtil {
         String password = getProperty(environment.toLowerCase() + ".ccd.password");
 
         //Generate Auth token using code
-        RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
+        RestAssured.useRelaxedHTTPSValidation();
+       // RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
         RequestSpecification httpRequest = SerenityRest.given().relaxedHTTPSValidation().config(RestAssured.config);
         httpRequest.header("Accept", "application/json");
         httpRequest.header("Content-Type", "application/x-www-form-urlencoded");
