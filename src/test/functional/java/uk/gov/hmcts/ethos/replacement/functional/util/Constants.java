@@ -16,6 +16,10 @@ public class Constants {
     public static final String UPDATE_CASE_URI = "/updateCase";
     public static final String RETRIEVE_CASE_URI = "/retrieveCase";
     public static final String CREATE_BULK_URI = "/createBulk";
+    public static final String CREATE_SUB_MULTIPLE_URI = "/createSubMultiple";
+    public static final String UPDATE_SUB_MULTIPLE_URI = "/updateSubMultiple";
+    public static final String DELETE_SUB_MULTIPLE_URI = "/deleteSubMultiple";
+
     public static final String SEARCH_BULK_URI = "/searchBulk";
     public static final String UPDATE_BULK_URI = "/updateBulk";
     public static final String UPDATE_BULK_CASE_URI = "/updateBulkCase";
@@ -51,6 +55,11 @@ public class Constants {
     public static final String TEST_DATA_POST_DEFAULT4 = "src/test/functional/resources/testData/defaults/postDefaultTest2.json";
     public static final String TEST_DATA_SCOT_POST_DEFAULT1 = "src/test/functional/resources/testData/defaults/postDefaultScotTest1.json";
     public static final String TEST_DATA_SCOT_POST_DEFAULT2 = "src/test/functional/resources/testData/defaults/postDefaultScotTest2.json";
+
+
+    public static final String TEST_DATA_ENG_CREATE_SUB_MULTIPLE = "src/test/functional/resources/testData/bulk/createSubMultipleDetailsEng1.json";
+    public static final String TEST_DATA_ENG_UPDATE_SUB_MULTIPLE = "src/test/functional/resources/testData/bulk/updateSubMultipleDetailsEng1.json";
+    public static final String TEST_DATA_ENG_DELETE_SUB_MULTIPLE = "src/test/functional/resources/testData/bulk/deleteSubMultipleDetailsEng1.json";
 
     public static final String TEST_DATA_ENG_BULK1 = "src/test/functional/resources/testData/bulk/caseDetailsEng1.json";
     public static final String TEST_DATA_ENG_BULK2 = "src/test/functional/resources/testData/bulk/caseDetailsEng1.json";
