@@ -1,4 +1,4 @@
-package uk.gov.hmcts;
+package uk.gov.hmcts.ethos.replacement.docmosis.contract;
 
 import au.com.dius.pact.consumer.Pact;
 import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
@@ -12,8 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 
@@ -21,13 +23,14 @@ import java.io.File;
 import java.io.IOException;
 
 @ExtendWith(PactConsumerTestExt.class)
+@EnableFeignClients
 @ExtendWith(SpringExtension.class)
 @PactTestFor(providerName = "CCDService", port = "8888")
 @SpringBootTest({
         // overriding provider address
         "CCDService.ribbon.listOfServers: localhost:8888"
 })
-@ContextConfiguration(classes = ConsumerApplication.class)
+@ContextConfiguration(classes = DocmosisApplication.class)
 public class CCDApiTest {
 
     @Autowired
@@ -42,8 +45,7 @@ public class CCDApiTest {
                 .given("provider creates a new Case")
                 .uponReceiving("a request to create Case")
                 .path(Uri)
-                .method("POS" +
-                        "T")
+                .method("POST")
                 .body(json)
                 .willRespondWith()
                 .status(201)

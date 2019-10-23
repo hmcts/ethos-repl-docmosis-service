@@ -24,3 +24,7 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+node_modules/cucumber-expressions/
+src/test/functional/resources/documents/*
+target/

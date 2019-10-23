@@ -1,4 +1,4 @@
-package uk.gov.hmcts;
+package uk.gov.hmcts.ethos.replacement.docmosis.contract;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cloud.openfeign.EnableFeignClients;

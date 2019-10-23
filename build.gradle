@@ -148,6 +148,7 @@ dependencies {
     testPactCompile (group: 'org.springframework.boot', name: 'spring-boot-starter-test',version: '2.1.3.RELEASE') {
             exclude group: "com.vaadin.external.google", module:"android-json"
     }
+    testPactCompile group: 'com.h2database', name: 'h2', version: '1.4.195'
     testCompile  group: 'au.com.dius', name: 'pact-jvm-provider-spring_2.12', version: '3.5.24'
     testPactCompile  group: 'au.com.dius', name: 'pact-jvm-provider-spring_2.12', version: '3.5.24'
 
