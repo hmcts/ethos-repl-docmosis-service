@@ -14,6 +14,8 @@ public class DateListedType {
     private String hearingStatus;
     @JsonProperty("Postponed_by")
     private String postponedBy;
+    @JsonProperty("Hearing_typeReadingDeliberation")
+    private String hearingTypeReadingDeliberation;
     @JsonProperty("hearingVenueDay")
     private String hearingVenueDay;
     @JsonProperty("Hearing_room_M")
@@ -98,5 +100,7 @@ public class DateListedType {
     private String hearingTimingFinish;
     @JsonProperty("hearingTimingDuration")
     private String hearingTimingDuration;
+    @JsonProperty("HearingNotes2")
+    private String hearingNotes2;
 
 }
