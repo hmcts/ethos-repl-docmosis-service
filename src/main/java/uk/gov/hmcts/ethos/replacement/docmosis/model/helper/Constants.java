@@ -108,4 +108,6 @@ public class Constants {
     public static final String RANGE_HEARING_DATE_TYPE = "Range";
     public static final String SINGLE_HEARING_DATE_TYPE = "Single";
 
+    public static final String ALL_VENUES = "All";
+
 }

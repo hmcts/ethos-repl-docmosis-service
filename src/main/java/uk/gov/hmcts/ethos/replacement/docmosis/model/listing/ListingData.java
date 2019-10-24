@@ -42,5 +42,7 @@ public class ListingData {
     private String hearingDocType;
     @JsonProperty("hearingDocETCL")
     private String hearingDocETCL;
+    @JsonProperty("roomOrNoRoom")
+    private String roomOrNoRoom;
 }
 

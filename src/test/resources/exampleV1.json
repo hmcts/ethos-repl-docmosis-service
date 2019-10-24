@@ -158,7 +158,11 @@
       },
       "preAcceptCase": {
         "caseReferred": "No",
-        "preAcceptOutcome": "Guilty"
+        "preAcceptOutcome": "Guilty",
+        "preAcceptOutcomeDoc": {
+          "document_url": "http://google.com",
+          "document_filename": "Filename"
+        }
       },
       "restrictedReporting": {
         "requestedBy": "Tom Cruise",
