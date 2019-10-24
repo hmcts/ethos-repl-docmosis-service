@@ -16,6 +16,10 @@ public class JudgementDetailsType {
     private String reasonsGiven;
     @JsonProperty("date_reasons_issued")
     private String dateReasonsIssued;
+    @JsonProperty("awardMade")
+    private String awardMade;
+    @JsonProperty("financialAwardMade")
+    private String financialAwardMade;
     @JsonProperty("remedy_left_to_parties")
     private String remedyLeftToParties;
     @JsonProperty("reinstate_reengage_order")
@@ -26,8 +30,6 @@ public class JudgementDetailsType {
     private String certOfCorrectionDate;
     @JsonProperty("cert_of_correction_sent")
     private String certOfCorrectionSent;
-    @JsonProperty("no_award_made")
-    private String noAwardMade;
     @JsonProperty("non-financial_award")
     private String nonFinancialAward;
     @JsonProperty("total_award_£")
@@ -36,8 +38,4 @@ public class JudgementDetailsType {
     private String adjustment;
     @JsonProperty("adjustment_%")
     private String adjustmentPercentage;
-    @JsonProperty("panelMember1")
-    private PanelType panelMember1;
-    @JsonProperty("panelMember2")
-    private PanelType panelMember2;
 }

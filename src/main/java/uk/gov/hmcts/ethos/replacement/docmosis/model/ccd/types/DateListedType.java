@@ -14,6 +14,8 @@ public class DateListedType {
     private String hearingStatus;
     @JsonProperty("Postponed_by")
     private String postponedBy;
+    @JsonProperty("Hearing_typeReadingDeliberation")
+    private String hearingTypeReadingDeliberation;
     @JsonProperty("hearingVenueDay")
     private String hearingVenueDay;
     @JsonProperty("Hearing_room_M")
@@ -51,7 +53,7 @@ public class DateListedType {
     @JsonProperty("Hearing_room_Stirling")
     private String hearingRoomStirling;
     @JsonProperty("Hearing_room_StornowaySC")
-    private String hearingRoomSotrnowaySC;
+    private String hearingRoomStornowaySC;
     @JsonProperty("Hearing_room_Stranraer")
     private String hearingRoomStranraer;
     @JsonProperty("Hearing_room_Aberdeen")
@@ -98,5 +100,7 @@ public class DateListedType {
     private String hearingTimingFinish;
     @JsonProperty("hearingTimingDuration")
     private String hearingTimingDuration;
+    @JsonProperty("HearingNotes2")
+    private String hearingNotes2;
 
 }

@@ -11,12 +11,8 @@ public class JudgementType {
 
     @JsonProperty("non_hearing_judgment")
     private String nonHearingJudgment;
-    @JsonProperty("hearing_number")
-    private String hearingNumber;
-    @JsonProperty("judgement_type_q")
-    private String judgementTypeQ;
-    @JsonProperty("liability_default")
-    private String liabilityDefault;
+    @JsonProperty("judgmentHearingDate")
+    private String judgmentHearingDate;
     @JsonProperty("judgement_type")
     private String judgementType;
     @JsonProperty("liability_optional")
@@ -25,8 +21,8 @@ public class JudgementType {
     private String dateJudgmentMade;
     @JsonProperty("date_judgment_sent")
     private String dateJudgmentSent;
-    @JsonProperty("judgement_notes")
-    private String judgementNotes;
+    @JsonProperty("judgment_notes")
+    private String judgmentNotes;
     @JsonProperty("judgement_outcome_doc")
     private Document judgementOutcomeDoc;
     @JsonProperty("judgement_details")

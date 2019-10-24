@@ -30,8 +30,6 @@ public class MultipleType {
     private String fileLocM;
     @JsonProperty("receiptDateM")
     private String receiptDateM;
-    @JsonProperty("acasOfficeM")
-    private String acasOfficeM;
     @JsonProperty("positionTypeM")
     private String positionTypeM;
     @JsonProperty("feeGroupReferenceM")

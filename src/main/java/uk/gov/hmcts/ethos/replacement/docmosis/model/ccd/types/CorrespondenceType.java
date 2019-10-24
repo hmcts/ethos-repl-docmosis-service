@@ -46,4 +46,6 @@ public class CorrespondenceType {
     private String part17Documents;
     @JsonProperty("Part_18_Documents")
     private String part18Documents;
+    @JsonProperty("hearingNumber")
+    private String hearingNumber;
 }

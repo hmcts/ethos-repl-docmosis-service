@@ -12,16 +12,10 @@
     "tribunalCorrespondenceDX" : "123456",
     "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
-    "multipleOthers" : "no",
     "claimantRepresentedQuestion" : "no",
     "claimant_TypeOfClaimant" : "Individual",
-    "NH_JudgementType": {
-      "NH_JudgementDecision": "guilty",
-      "NH_JudgementTextArea": "guilty"
-    },
-    "acasOffice": "Manchester",
     "addSubMultipleComment": "Comment",
-    "additionalType": {
+    "additionalCaseInfo": {
       "additional_accepted1": "additional_accepted1",
       "additional_accepted2": "additional_accepted2",
       "additional_conciliation_track": "additional_conciliation_track",
@@ -29,9 +23,6 @@
       "additional_ind_expert": "additional_ind_expert",
       "additional_live_appeal": "additional_live_appeal",
       "additional_sensitive": "string"
-    },
-    "archiveType": {
-      "archiveTextArea": "archiveTextArea"
     },
     "backFromJudge": "backFromJudge",
     "caseNotes": "Example of Case Note",
@@ -108,16 +99,8 @@
     },
     "locationType": "Manchester",
     "multipleReference": "No",
-    "multipleType": "No",
     "positionType": "First",
     "receiptDate": "2019-03-12",
-    "reconsiderationType": {
-      "application_date": "2019-03-12",
-      "judge's_decision": "done",
-      "judge's_direction": "No given",
-      "reconsideration_hearing_date": "2019-03-12",
-      "who_applied?": "nobody"
-    },
     "responseReceived": "none",
     "responseType": {
       "response_received": "Yes",
@@ -127,10 +110,7 @@
       "response_status": "Status",
       "responseToClaim": "No"
     },
-    "userLocation": "Liverpool",
-    "withdrawType": {
-      "withdrawTextArea": "Nothing"
-    }
+    "userLocation": "Liverpool"
   },
   "id": "123456789",
   "jurisdiction": "English",
