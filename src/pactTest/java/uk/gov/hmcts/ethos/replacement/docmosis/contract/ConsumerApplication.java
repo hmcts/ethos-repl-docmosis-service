@@ -10,17 +10,17 @@ import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
+import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
 import java.util.ArrayList;
 
 @ComponentScan(basePackages = "uk.gov.hmcts.reform.bulkscanprocessor.ocrvalidation.client")
 @ComponentScan(basePackages = "uk.gov.hmcts.ethos.replacement.docmosis.client")
-@ComponentScan(basePackages = "uk.gov.hmcts.ethos.replacement.docmosis.service")
-@ComponentScan(basePackages = "uk.gov.hmcts.ethos.replacement.docmosis.idam")
 
-@EnableFeignClients(basePackages =
-        {"uk.gov.hmcts.ethos.replacement.docmosis.idam"
-        })
+
+//@EnableFeignClients(basePackages =
+//        {"uk.gov.hmcts.ethos.replacement.docmosis.idam"
+//        })
 public class ConsumerApplication {
     @Bean
     public RestTemplate restTemplate() {
@@ -48,6 +48,14 @@ public class ConsumerApplication {
         IdamApi idamApi = authorisation -> userDetails;
         return idamApi;
     }
+    @Bean
+    UserService userService() {
+        return new UserService(idamApi());
+    }
 
+    @Bean
+    AuthTokenGenerator authTokenGenerator() {
+        return new AuthTokenGeneratorStub();
+    }
 
 }
