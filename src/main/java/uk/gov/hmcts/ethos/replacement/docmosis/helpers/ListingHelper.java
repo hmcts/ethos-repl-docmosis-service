@@ -49,7 +49,7 @@ public class ListingHelper {
         listingType.setClerkResponsible(!isNullOrEmpty(caseData.getClerkResponsible()) ? caseData.getClerkResponsible() : " ");
         listingType.setHearingPanel(!isNullOrEmpty(hearingType.getHearingSitAlone()) ? hearingType.getHearingSitAlone() : " ");
 
-        listingType.setCauseListVenue(getVenue(dateListedType));
+        listingType.setCauseListVenue(getVenueFromDateListedType(dateListedType));
         listingType.setHearingRoom(getHearingRoom(dateListedType));
 
         listingType.setHearingNotes(!isNullOrEmpty(hearingType.getHearingNotes()) ? hearingType.getHearingNotes() : " ");
@@ -100,7 +100,8 @@ public class ListingHelper {
         sb.append(getLogo(caseType));
         if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
             sb.append("\"Listed_date\":\"").append(listingData.getListingCollection().get(0).getValue().getCauseListDate()).append(NEW_LINE);
-            sb.append("\"Hearing_location\":\"").append(listingData.getListingCollection().get(0).getValue().getCauseListVenue()).append(NEW_LINE);
+            sb.append("\"Hearing_location\":\"").append(!listingData.getListingVenue().equals(ALL_VENUES) ?
+                    listingData.getListingCollection().get(0).getValue().getCauseListVenue() : ALL_VENUES).append(NEW_LINE);
         }
         sb.append(getListingRangeDates(listingData));
 
@@ -239,34 +240,31 @@ public class ListingHelper {
     }
 
     public static String getListingDocName(ListingData listingData) {
-        if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)) {
+        String roomOrNoRoom = !isNullOrEmpty(listingData.getRoomOrNoRoom()) ? listingData.getRoomOrNoRoom() : "";
+        if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF) &&
+                roomOrNoRoom.equals("No")) {
             return STAFF_CASE_CAUSE_LIST_TEMPLATE;
-        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC)) {
+        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF) &&
+                roomOrNoRoom.equals("Yes")) {
+            return STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE;
+        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC) &&
+                roomOrNoRoom.equals("No")) {
             return PUBLIC_CASE_CAUSE_LIST_TEMPLATE;
+        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC) &&
+                roomOrNoRoom.equals("Yes")) {
+            return PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE;
         } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && listingData.getHearingDocETCL().equals(HEARING_ETCL_PRESS_LIST) &&
                 listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
-            return PRESS_LIST_CAUSE_LIST_SINGLE_TEMPLATE;
+            return PRESS_LIST_CAUSE_LIST_RANGE_TEMPLATE;
         } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && listingData.getHearingDocETCL().equals(HEARING_ETCL_PRESS_LIST) &&
                 !listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
             return PRESS_LIST_CAUSE_LIST_SINGLE_TEMPLATE;
         } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT56)) {
-            return STAFF_CASE_CAUSE_LIST_TEMPLATE;
+            return IT56_TEMPLATE;
         } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT57)) {
-            return STAFF_CASE_CAUSE_LIST_TEMPLATE;
+            return IT57_TEMPLATE;
         }
-        return STAFF_CASE_CAUSE_LIST_TEMPLATE;
-    }
-
-    private static String getVenue(DateListedType dateListedType) {
-        if (!isNullOrEmpty(dateListedType.getHearingGlasgow())) {
-            return dateListedType.getHearingGlasgow();
-        } else if (!isNullOrEmpty(dateListedType.getHearingAberdeen())) {
-            return dateListedType.getHearingAberdeen();
-        } else if (!isNullOrEmpty(dateListedType.getHearingDundee())) {
-            return dateListedType.getHearingDundee();
-        } else if (!isNullOrEmpty(dateListedType.getHearingEdinburgh())) {
-            return dateListedType.getHearingEdinburgh();
-        } return " ";
+        return "No document found";
     }
 
     private static String getHearingRoom(DateListedType dateListedType) {
@@ -306,6 +304,14 @@ public class ListingHelper {
             return dateListedType.getHearingRoomInverness();
         } else if (!isNullOrEmpty(dateListedType.getHearingRoomKirkawall())) {
             return dateListedType.getHearingRoomKirkawall();
+        } else if (!isNullOrEmpty(dateListedType.getHearingRoomM())) {
+            return dateListedType.getHearingRoomM();
+        } else if (!isNullOrEmpty(dateListedType.getHearingRoomL())) {
+            return dateListedType.getHearingRoomL();
+        } else if (!isNullOrEmpty(dateListedType.getHearingRoomCM())) {
+            return dateListedType.getHearingRoomCM();
+        } else if (!isNullOrEmpty(dateListedType.getHearingRoomCC())) {
+            return dateListedType.getHearingRoomCC();
         } return " ";
     }
 
@@ -314,7 +320,7 @@ public class ListingHelper {
             return listingData.getListingVenueOfficeGlas();
         } else if (!isNullOrEmpty(listingData.getListingVenueOfficeAber())) {
             return listingData.getListingVenueOfficeAber();
-        } return " ";
+        } return !isNullOrEmpty(listingData.getListingVenue()) ? listingData.getListingVenue() : " ";
     }
 
     public static String getVenueFromDateListedType(DateListedType dateListedType) {
@@ -326,7 +332,7 @@ public class ListingHelper {
             return dateListedType.getHearingEdinburgh();
         } else if (!isNullOrEmpty(dateListedType.getHearingAberdeen())) {
             return dateListedType.getHearingAberdeen();
-        } return " ";
+        } return !isNullOrEmpty(dateListedType.getHearingVenueDay()) ? dateListedType.getHearingVenueDay() : " ";
     }
 
     private static String getRespOthersName(CaseData caseData) {
