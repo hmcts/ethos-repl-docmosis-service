@@ -55,37 +55,31 @@ public class ListingService {
                 log.info("listingTypeItems: " + listingDetails.toString());
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
             }
-            return listingDetails;
+            return clearListingFields(listingDetails);
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
         }
     }
 
+    private ListingDetails clearListingFields(ListingDetails listingDetails) {
+        listingDetails.getCaseData().setListingVenueOfficeAber(null);
+        listingDetails.getCaseData().setListingVenueOfficeGlas(null);
+        boolean dateRange = listingDetails.getCaseData().getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
+        if (dateRange) {
+            listingDetails.getCaseData().setListingDate(null);
+        } else {
+            listingDetails.getCaseData().setListingDateFrom(null);
+            listingDetails.getCaseData().setListingDateTo(null);
+        }
+        return listingDetails;
+    }
+
     private List<ListingTypeItem> getListingTypeItems(HearingTypeItem hearingTypeItem, ListingData listingData, SubmitEvent submitEvent, int i, int hearingCollectionSize) {
         List<ListingTypeItem> listingTypeItems = new ArrayList<>();
-        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
-        String venueToSearch = ListingHelper.getVenueToSearch(listingData);
         for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
-            log.info("VenueToSearch: " + venueToSearch + "   VenueSearched: " + ListingHelper.getVenueFromDateListedType(dateListedTypeItem.getValue()));
-            String dateListed = !isNullOrEmpty(dateListedTypeItem.getValue().getListedDate()) ? dateListedTypeItem.getValue().getListedDate() : "";
-            String dateToSearch = listingData.getListingDate();
-            boolean listingToBeAdded = false;
-            if (dateRange) {
-                String dateToSearchFrom = listingData.getListingDateFrom();
-                String dateToSearchTo = listingData.getListingDateTo();
-                log.info("RANGE: -> dateToSearchFrom: " + dateToSearchFrom + "   dateToSearchTo: " + dateToSearchTo + "   DateListed: " + dateListed);
-                if (ListingHelper.getListingDateBetween(dateToSearchFrom, dateToSearchTo, dateListed) &&
-                        ListingHelper.getVenueFromDateListedType(dateListedTypeItem.getValue()).equals(venueToSearch)) {
-                    listingToBeAdded = true;
-                }
-            } else {
-                log.info("SINGLE: -> dateToSearch: " + dateToSearch + "   DateListed: " + dateListed);
-                if (ListingHelper.getListingDateBetween(dateToSearch, "", dateListed) &&
-                        ListingHelper.getVenueFromDateListedType(dateListedTypeItem.getValue()).equals(venueToSearch)) {
-                    listingToBeAdded = true;
-                }
-            }
-            if (listingToBeAdded) {
+            boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
+            boolean isListingDateValid = isListingDateValid(listingData, dateListedTypeItem);
+            if (isListingDateValid && isListingVenueValid) {
                 ListingTypeItem listingTypeItem = new ListingTypeItem();
                 ListingType listingType = ListingHelper.getListingTypeFromSubmitData(submitEvent, hearingTypeItem.getValue(), dateListedTypeItem.getValue(), i, hearingCollectionSize);
                 listingTypeItem.setId(String.valueOf(dateListedTypeItem.getId()));
@@ -94,6 +88,42 @@ public class ListingService {
             }
         }
         return listingTypeItems;
+    }
+
+    private boolean isListingVenueValid(ListingData listingData, DateListedTypeItem dateListedTypeItem) {
+        boolean allLocations = listingData.getListingVenue().equals(ALL_VENUES);
+        if (allLocations) {
+            log.info("Searching by all venues");
+            return true;
+        } else {
+            boolean allVenuesGlasgow = !isNullOrEmpty(listingData.getListingVenueOfficeGlas()) && listingData.getListingVenueOfficeGlas().equals(ALL_VENUES);
+            boolean allVenuesAberdeen = !isNullOrEmpty(listingData.getListingVenueOfficeAber()) && listingData.getListingVenueOfficeAber().equals(ALL_VENUES);
+            String venueToSearch, venueSearched;
+            if (!allVenuesGlasgow && !allVenuesAberdeen) {
+                venueToSearch = ListingHelper.getVenueToSearch(listingData);
+                venueSearched = ListingHelper.getVenueFromDateListedType(dateListedTypeItem.getValue());
+            } else {
+                venueToSearch = !isNullOrEmpty(listingData.getListingVenue()) ? listingData.getListingVenue() : " ";;
+                venueSearched = !isNullOrEmpty(dateListedTypeItem.getValue().getHearingVenueDay()) ? dateListedTypeItem.getValue().getHearingVenueDay() : " ";
+            }
+            log.info("VenueToSearch: " + venueToSearch + "   VenueSearched: " + venueSearched);
+            return venueSearched.equals(venueToSearch);
+        }
+    }
+
+    private boolean isListingDateValid(ListingData listingData, DateListedTypeItem dateListedTypeItem) {
+        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
+        String dateListed = !isNullOrEmpty(dateListedTypeItem.getValue().getListedDate()) ? dateListedTypeItem.getValue().getListedDate() : "";
+        String dateToSearch = listingData.getListingDate();
+        if (dateRange) {
+            String dateToSearchFrom = listingData.getListingDateFrom();
+            String dateToSearchTo = listingData.getListingDateTo();
+            log.info("RANGE: -> dateToSearchFrom: " + dateToSearchFrom + "   dateToSearchTo: " + dateToSearchTo + "   DateListed: " + dateListed);
+            return ListingHelper.getListingDateBetween(dateToSearchFrom, dateToSearchTo, dateListed);
+        } else {
+            log.info("SINGLE: -> dateToSearch: " + dateToSearch + "   DateListed: " + dateListed);
+            return ListingHelper.getListingDateBetween(dateToSearch, "", dateListed);
+        }
     }
 
     public DocumentInfo processHearingDocument(ListingDetails listingDetails, String authToken) {

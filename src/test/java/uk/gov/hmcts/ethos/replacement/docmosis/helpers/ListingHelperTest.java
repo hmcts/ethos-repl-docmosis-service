@@ -375,7 +375,7 @@ public class ListingHelperTest {
         dateListedType.setHearingClerk("Clerk");
         dateListedType.setHearingRoomKirkawall("Tribunal 4");
         dateListedType.setHearingEdinburgh("Edinburgh");
-        dateListedType.setHearingVenueDay("Edinburgh");
+        dateListedType.setHearingVenueDay("Other");
         dateListedType.setListedDate("2019-12-12T12:11:00.000");
         dateListedTypeItem.setId("123");
         dateListedTypeItem.setValue(dateListedType);
@@ -409,7 +409,7 @@ public class ListingHelperTest {
 
         dateListedType.setHearingRoomCambeltown("Tribunal 7");
         dateListedType.setHearingGlasgow(null);
-        expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue= , elmoCaseReference=null, " +
+        expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Other, elmoCaseReference=null, " +
                 "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
                 "hearingDay=2 of 3, claimantName= , claimantTown= , claimantRepresentative= , respondent= , respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 7, respondentOthers= , hearingNotes= )";
@@ -437,14 +437,20 @@ public class ListingHelperTest {
         assertFalse(isEqual);
     }
 
-    //@Test
+    @Test
     public void getListingDocName() {
         ListingData listingData = new ListingData();
         listingData.setHearingDocType(HEARING_DOC_ETCL);
         listingData.setHearingDocETCL(HEARING_ETCL_STAFF);
+        listingData.setRoomOrNoRoom("No");
         assertEquals(STAFF_CASE_CAUSE_LIST_TEMPLATE, ListingHelper.getListingDocName(listingData));
+        listingData.setRoomOrNoRoom("Yes");
+        assertEquals(STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE, ListingHelper.getListingDocName(listingData));
         listingData.setHearingDocETCL(HEARING_ETCL_PUBLIC);
+        listingData.setRoomOrNoRoom("No");
         assertEquals(PUBLIC_CASE_CAUSE_LIST_TEMPLATE, ListingHelper.getListingDocName(listingData));
+        listingData.setRoomOrNoRoom("Yes");
+        assertEquals(PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE, ListingHelper.getListingDocName(listingData));
         listingData.setHearingDocETCL(HEARING_ETCL_PRESS_LIST);
         listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
         assertEquals(PRESS_LIST_CAUSE_LIST_RANGE_TEMPLATE, ListingHelper.getListingDocName(listingData));
@@ -455,6 +461,6 @@ public class ListingHelperTest {
         listingData.setHearingDocType(HEARING_DOC_IT57);
         assertEquals(IT57_TEMPLATE, ListingHelper.getListingDocName(listingData));
         listingData.setHearingDocType("");
-        assertEquals(PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE, ListingHelper.getListingDocName(listingData));
+        assertEquals("No document found", ListingHelper.getListingDocName(listingData));
     }
 }

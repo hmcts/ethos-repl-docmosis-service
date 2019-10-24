@@ -50,6 +50,7 @@ public class TornadoServiceTest {
         listingData.setHearingDocType(HEARING_DOC_ETCL);
         listingData.setHearingDocETCL(HEARING_ETCL_STAFF);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
+        listingData.setListingVenue("Glasgow");
         listingData.setListingCollection(new ArrayList<>(Collections.singleton(listingTypeItem)));
         userDetails = new UserDetails("1", "example@hotmail.com", "Mike", "Jordan", new ArrayList<>());
         IdamApi idamApi = authorisation -> userDetails;
