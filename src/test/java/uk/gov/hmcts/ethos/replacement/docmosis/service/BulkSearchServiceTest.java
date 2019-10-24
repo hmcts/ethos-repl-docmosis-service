@@ -67,7 +67,7 @@ public class BulkSearchServiceTest {
     public void bulkSearchLogic() {
         String result = "[SearchTypeItem(id=2222, value=SearchType(caseIDS=null, ethosCaseReferenceS=2222, leadClaimantS=null, clerkRespS=null, " +
                 "claimantSurnameS=null, respondentSurnameS=null, claimantRepS=null, respondentRepS=JuanPedro, fileLocS=null, receiptDateS=null, " +
-                "acasOfficeS=null, positionTypeS=null, feeGroupReferenceS=null, jurCodesCollectionS=null, stateS=null))]";
+                "positionTypeS=null, feeGroupReferenceS=null, jurCodesCollectionS=null, stateS=null))]";
         BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkSearchLogic(bulkDetails);
         assertEquals(result, bulkRequestPayload.getBulkDetails().getCaseData().getSearchCollection().toString());
     }
@@ -83,7 +83,7 @@ public class BulkSearchServiceTest {
                 "subMultipleRef=null, caseIdCollection=null, searchCollection=null, midSearchCollection=null, " +
                 "multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, " +
                 "leadClaimantM=null, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, " +
-                "claimantRepM=null, respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, " +
+                "claimantRepM=null, respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, positionTypeM=null, " +
                 "feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, subMultipleM= ))], subMultipleCollection=null, " +
                 "subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=null, correspondenceType=null, " +
                 "correspondenceScotType=null), caseTypeId=null, createdDate=null, lastModified=null, dataClassification=null))";
@@ -103,7 +103,7 @@ public class BulkSearchServiceTest {
                 "searchCollection=null, midSearchCollection=[MidSearchTypeItem(id=2222, value=2222)], " +
                 "multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, " +
                 "leadClaimantM=null, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, " +
-                "respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, " +
+                "respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, " +
                 "jurCodesCollectionM=null, stateM=null, subMultipleM= ))], subMultipleCollection=null, subMultipleDynamicList=null, searchCollectionCount=null, " +
                 "multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null), caseTypeId=null, createdDate=null, " +
                 "lastModified=null, dataClassification=null))";
@@ -139,7 +139,7 @@ public class BulkSearchServiceTest {
                 "fileLocationEdinburgh=null, managingOffice=null, subMultipleName=null, subMultipleRef=null, caseIdCollection=null, " +
                 "searchCollection=null, midSearchCollection=[], multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, " +
                 "leadClaimantM=null, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, " +
-                "respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, " +
+                "respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, " +
                 "jurCodesCollectionM=null, stateM=null, subMultipleM= ))], subMultipleCollection=null, subMultipleDynamicList=null, searchCollectionCount=null, " +
                 "multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null), caseTypeId=null, createdDate=null, " +
                 "lastModified=null, dataClassification=null))";
@@ -167,7 +167,7 @@ public class BulkSearchServiceTest {
                 "searchCollection=null, midSearchCollection=[MidSearchTypeItem(id=2222, value=2222)], " +
                 "multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=2222, leadClaimantM=null, " +
                 "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, " +
-                "respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, " +
+                "respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, " +
                 "jurCodesCollectionM=null, stateM=null, subMultipleM= ))], subMultipleCollection=null, subMultipleDynamicList=null, searchCollectionCount=null, " +
                 "multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null), caseTypeId=null, createdDate=null, " +
                 "lastModified=null, dataClassification=null))";
@@ -186,7 +186,7 @@ public class BulkSearchServiceTest {
                 "fileLocationEdinburgh=null, managingOffice=null, subMultipleName=null, subMultipleRef=null, caseIdCollection=null, " +
                 "searchCollection=null, midSearchCollection=[], multipleCollection=[MultipleTypeItem(id=2222, value=MultipleType(caseIDM=null, " +
                 "ethosCaseReferenceM=2222, leadClaimantM=null, multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, " +
-                "claimantRepM=null, respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, acasOfficeM=null, positionTypeM=null, feeGroupReferenceM=null, " +
+                "claimantRepM=null, respondentRepM=JuanPedro, fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, " +
                 "jurCodesCollectionM=null, stateM=null, subMultipleM=4200001/1))], subMultipleCollection=null, subMultipleDynamicList=null, " +
                 "searchCollectionCount=null, multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null), caseTypeId=null, " +
                 "createdDate=null, lastModified=null, dataClassification=null))";

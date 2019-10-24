@@ -138,7 +138,7 @@ public class CaseActionsForCaseWorkerController {
     public ResponseEntity<CCDCallbackResponse> preDefaultValues(
             @RequestBody CCDRequest ccdRequest) {
         log.info("PRE DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails());
+        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, "", "");
         log.info("Pre Default values loaded: " + defaultValues);
         ccdRequest.getCaseDetails().getCaseData().setClaimantTypeOfClaimant(defaultValues.getClaimantTypeOfClaimant());
         return ResponseEntity.ok(CCDCallbackResponse.builder()
@@ -160,7 +160,7 @@ public class CaseActionsForCaseWorkerController {
         CaseData caseData = new CaseData();
         if (ccdRequest != null && ccdRequest.getCaseDetails() != null && ccdRequest.getCaseDetails().getCaseId() != null) {
             log.info("POST DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-            DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails());
+            DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
             caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
             if (caseData.getEthosCaseReference() == null || caseData.getEthosCaseReference().trim().equals("")) {
@@ -205,12 +205,18 @@ public class CaseActionsForCaseWorkerController {
     public ResponseEntity<CCDCallbackResponse> amendCaseDetails(
             @RequestBody CCDRequest ccdRequest) {
         log.info("AMEND CASE DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ccdRequest.getCaseDetails());
+        DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
         log.info("Post Default values loaded: " + defaultValues);
         CaseData caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
                 .build());
+    }
+
+    private DefaultValues getPostDefaultValues(CaseDetails caseDetails) {
+        String caseTypeId = caseDetails.getCaseTypeId();
+        String managingOffice = caseDetails.getCaseData().getManagingOffice() != null ? caseDetails.getCaseData().getManagingOffice() : "";
+        return defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, managingOffice, caseTypeId);
     }
 
 }
