@@ -42,12 +42,10 @@ public class ListingService {
                 List<ListingTypeItem> listingTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null && !submitEvent.getCaseData().getHearingCollection().isEmpty()) {
-                        int hearingCollectionSize = submitEvent.getCaseData().getHearingCollection().size();
-                        for (int i = 0 ; i < hearingCollectionSize ; i ++) {
-                            HearingTypeItem hearingTypeItem = submitEvent.getCaseData().getHearingCollection().get(i);
+                        for (HearingTypeItem hearingTypeItem : submitEvent.getCaseData().getHearingCollection()) {
                             log.info("HEARING: " + hearingTypeItem.getValue());
                             if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
-                                listingTypeItems.addAll(getListingTypeItems(hearingTypeItem, listingDetails.getCaseData(), submitEvent, i, hearingCollectionSize));
+                                listingTypeItems.addAll(getListingTypeItems(hearingTypeItem, listingDetails.getCaseData(), submitEvent));
                             }
                         }
                     }
@@ -74,14 +72,16 @@ public class ListingService {
         return listingDetails;
     }
 
-    private List<ListingTypeItem> getListingTypeItems(HearingTypeItem hearingTypeItem, ListingData listingData, SubmitEvent submitEvent, int i, int hearingCollectionSize) {
+    private List<ListingTypeItem> getListingTypeItems(HearingTypeItem hearingTypeItem, ListingData listingData, SubmitEvent submitEvent) {
         List<ListingTypeItem> listingTypeItems = new ArrayList<>();
-        for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+        int hearingDateCollectionSize = hearingTypeItem.getValue().getHearingDateCollection().size();
+        for (int i = 0; i < hearingDateCollectionSize; i++) {
+            DateListedTypeItem dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
             boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
             boolean isListingDateValid = isListingDateValid(listingData, dateListedTypeItem);
             if (isListingDateValid && isListingVenueValid) {
                 ListingTypeItem listingTypeItem = new ListingTypeItem();
-                ListingType listingType = ListingHelper.getListingTypeFromSubmitData(submitEvent, hearingTypeItem.getValue(), dateListedTypeItem.getValue(), i, hearingCollectionSize);
+                ListingType listingType = ListingHelper.getListingTypeFromSubmitData(submitEvent, hearingTypeItem.getValue(), dateListedTypeItem.getValue(), i, hearingDateCollectionSize);
                 listingTypeItem.setId(String.valueOf(dateListedTypeItem.getId()));
                 listingTypeItem.setValue(listingType);
                 listingTypeItems.add(listingTypeItem);
