@@ -66,6 +66,17 @@ public class ListingHelperTest {
                 "{\"Hearing_room\":\"Tribunal 2\",\n" +
                 "\"listing\":[\n" +
                 "{\"Judge\":\"Ms AM Aspden\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -90,6 +101,17 @@ public class ListingHelperTest {
                 "\"Hearing_notes\":\"Notes1\",\n" +
                 "\"respondent_representative\":\"Org\"},\n" +
                 "{\"Judge\":\"Ms AM Judge\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -117,6 +139,17 @@ public class ListingHelperTest {
                 "{\"Hearing_room\":\"Tribunal 4\",\n" +
                 "\"listing\":[\n" +
                 "{\"Judge\":\"Judge For Tribunal4\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -141,6 +174,17 @@ public class ListingHelperTest {
                 "\"Hearing_notes\":\"Notes3\",\n" +
                 "\"respondent_representative\":\"Org\"},\n" +
                 "{\"Judge\":\"Another Judge\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -259,6 +303,17 @@ public class ListingHelperTest {
                 "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"listing\":[\n" +
                 "{\"Judge\":\"Ms AM Aspden\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -283,6 +338,17 @@ public class ListingHelperTest {
                 "\"Hearing_notes\":\"Notes1\",\n" +
                 "\"respondent_representative\":\"Org\"},\n" +
                 "{\"Judge\":\"Ms AM Judge\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -307,6 +373,17 @@ public class ListingHelperTest {
                 "\"Hearing_notes\":\"Notes2\",\n" +
                 "\"respondent_representative\":\"Org2\"},\n" +
                 "{\"Judge\":\"Judge For Tribunal4\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -331,6 +408,17 @@ public class ListingHelperTest {
                 "\"Hearing_notes\":\"Notes3\",\n" +
                 "\"respondent_representative\":\"Org\"},\n" +
                 "{\"Judge\":\"Another Judge\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
