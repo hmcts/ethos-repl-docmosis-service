@@ -88,14 +88,14 @@ public class DefaultValuesReaderService {
             default:
                 if (managingOffice != null && !managingOffice.equals("")) {
                     switch (managingOffice) {
-                        case GLASGOW_OFFICE:
-                            return getGlasgowPostDefaultValues(values);
+                        case EDINBURGH_OFFICE:
+                            return getEdinburghPostDefaultValues(values);
                         case ABERDEEN_OFFICE:
                             return getAberdeenPostDefaultValues(values);
                         case DUNDEE_OFFICE:
                             return getDundeePostDefaultValues(values);
                         default:
-                            return getEdinburghPostDefaultValues(values);
+                            return getGlasgowPostDefaultValues(values);
                     }
                 } else {
                     return getGlasgowPostDefaultValues(values);

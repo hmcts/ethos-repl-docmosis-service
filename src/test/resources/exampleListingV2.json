@@ -2,11 +2,11 @@
   "case_details": {
     "case_data": {
       "tribunalCorrespondenceAddress": {
-        "AddressLine1": "Manchester Employment Tribunal,",
-        "AddressLine2": "Alexandra House,",
-        "AddressLine3": "14-22 The Parsonage,",
+        "AddressLine1": "Manchester Employment Tribunal",
+        "AddressLine2": "Alexandra House",
+        "AddressLine3": "14-22 The Parsonage",
         "PostCode": "M3 2JA",
-        "PostTown": "Manchester,"
+        "PostTown": "Manchester"
       },
       "tribunalCorrespondenceTelephone" : "03577131270",
       "tribunalCorrespondenceFax" : "07577126570",
