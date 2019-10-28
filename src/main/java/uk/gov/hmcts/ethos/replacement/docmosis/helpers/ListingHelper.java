@@ -160,7 +160,7 @@ public class ListingHelper {
             //sb.append("\"Floor\":\"").append("6th Floor").append(NEW_LINE);
             sb.append("\"listing\":[\n");
             for (int i = 0; i < listingEntry.getValue().size(); i++) {
-                sb.append(getListingTypeRow(listingEntry.getValue().get(i).getValue(), caseType));
+                sb.append(getListingTypeRow(listingEntry.getValue().get(i).getValue(), caseType, listingData));
                 if (i != listingEntry.getValue().size() - 1) {
                     sb.append(",\n");
                 }
@@ -180,7 +180,7 @@ public class ListingHelper {
         StringBuilder sb = new StringBuilder();
         sb.append("\"listing\":[\n");
         for (int i = 0; i < listingTypeItems.size(); i++) {
-            sb.append(getListingTypeRow(listingTypeItems.get(i).getValue(), caseType));
+            sb.append(getListingTypeRow(listingTypeItems.get(i).getValue(), caseType, listingData));
             if (i != listingTypeItems.size() - 1) {
                 sb.append(",\n");
             }
@@ -189,9 +189,10 @@ public class ListingHelper {
         return sb;
     }
 
-    private static StringBuilder getListingTypeRow(ListingType listingType, String caseType) {
+    private static StringBuilder getListingTypeRow(ListingType listingType, String caseType, ListingData listingData) {
         StringBuilder sb = new StringBuilder();
         sb.append("{\"Judge\":\"").append(listingType.getHearingJudgeName()).append(NEW_LINE);
+        sb.append(getCourtListingData(listingData));
         sb.append(getLogo(caseType));
         sb.append("\"ERMember\":\"").append(listingType.getHearingERMember()).append(NEW_LINE);
         sb.append("\"EEMember\":\"").append(listingType.getHearingEEMember()).append(NEW_LINE);
