@@ -92,7 +92,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown\",\n" +
                 "\"claimant_representative\":\"Rep\",\n" +
                 "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"null\",\n" +
+                "\"resp_others\":\"\",\n" +
                 "\"respondent_town\":\"respondentTown\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 2\",\n" +
@@ -127,12 +127,12 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown1\",\n" +
                 "\"claimant_representative\":\"Rep2\",\n" +
                 "\"Respondent\":\"sdf2\",\n" +
-                "\"resp_others\":\"null\",\n" +
+                "\"resp_others\":\"\",\n" +
                 "\"respondent_town\":\"respondentTown1\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 2\",\n" +
                 "\"Hearing_dayofdays\":\"2 of 3\",\n" +
-                "\"Hearing_panel\":\"null\",\n" +
+                "\"Hearing_panel\":\"\",\n" +
                 "\"Hearing_notes\":\"Notes2\",\n" +
                 "\"respondent_representative\":\"Org2\"}]\n" +
                 "},\n" +
@@ -165,12 +165,12 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown2\",\n" +
                 "\"claimant_representative\":\"Rep\",\n" +
                 "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"null\",\n" +
+                "\"resp_others\":\"\",\n" +
                 "\"respondent_town\":\"respondentTown2\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 4\",\n" +
                 "\"Hearing_dayofdays\":\"2 of 3\",\n" +
-                "\"Hearing_panel\":\"null\",\n" +
+                "\"Hearing_panel\":\"\",\n" +
                 "\"Hearing_notes\":\"Notes3\",\n" +
                 "\"respondent_representative\":\"Org\"},\n" +
                 "{\"Judge\":\"Another Judge\",\n" +
@@ -197,11 +197,11 @@ public class ListingHelperTest {
                 "\"Hearing_duration\":\"3 Minutes\",\n" +
                 "\"Hearing_clerk\":\"Juan Fox\",\n" +
                 "\"Claimant\":\"Mr s Dominguez\",\n" +
-                "\"claimant_town\":\"null\",\n" +
+                "\"claimant_town\":\"\",\n" +
                 "\"claimant_representative\":\"Representative\",\n" +
                 "\"Respondent\":\"Respondent\",\n" +
-                "\"resp_others\":\"null\",\n" +
-                "\"respondent_town\":\"null\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"respondent_town\":\"\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 4\",\n" +
                 "\"Hearing_dayofdays\":\"2 of 3\",\n" +
@@ -329,7 +329,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown\",\n" +
                 "\"claimant_representative\":\"Rep\",\n" +
                 "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"null\",\n" +
+                "\"resp_others\":\"\",\n" +
                 "\"respondent_town\":\"respondentTown\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 2\",\n" +
@@ -364,12 +364,12 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown1\",\n" +
                 "\"claimant_representative\":\"Rep2\",\n" +
                 "\"Respondent\":\"sdf2\",\n" +
-                "\"resp_others\":\"null\",\n" +
+                "\"resp_others\":\"\",\n" +
                 "\"respondent_town\":\"respondentTown1\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 2\",\n" +
                 "\"Hearing_dayofdays\":\"2 of 3\",\n" +
-                "\"Hearing_panel\":\"null\",\n" +
+                "\"Hearing_panel\":\"\",\n" +
                 "\"Hearing_notes\":\"Notes2\",\n" +
                 "\"respondent_representative\":\"Org2\"},\n" +
                 "{\"Judge\":\"Judge For Tribunal4\",\n" +
@@ -399,12 +399,12 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown2\",\n" +
                 "\"claimant_representative\":\"Rep\",\n" +
                 "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"null\",\n" +
+                "\"resp_others\":\"\",\n" +
                 "\"respondent_town\":\"respondentTown2\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 4\",\n" +
                 "\"Hearing_dayofdays\":\"2 of 3\",\n" +
-                "\"Hearing_panel\":\"null\",\n" +
+                "\"Hearing_panel\":\"\",\n" +
                 "\"Hearing_notes\":\"Notes3\",\n" +
                 "\"respondent_representative\":\"Org\"},\n" +
                 "{\"Judge\":\"Another Judge\",\n" +
@@ -431,11 +431,11 @@ public class ListingHelperTest {
                 "\"Hearing_duration\":\"3 Minutes\",\n" +
                 "\"Hearing_clerk\":\"Juan Fox\",\n" +
                 "\"Claimant\":\"Mr s Dominguez\",\n" +
-                "\"claimant_town\":\"null\",\n" +
+                "\"claimant_town\":\"\",\n" +
                 "\"claimant_representative\":\"Representative\",\n" +
                 "\"Respondent\":\"Respondent\",\n" +
-                "\"resp_others\":\"null\",\n" +
-                "\"respondent_town\":\"null\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"respondent_town\":\"\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 4\",\n" +
                 "\"Hearing_dayofdays\":\"2 of 3\",\n" +
