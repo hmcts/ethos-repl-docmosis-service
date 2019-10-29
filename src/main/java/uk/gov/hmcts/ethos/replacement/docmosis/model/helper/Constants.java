@@ -109,5 +109,6 @@ public class Constants {
     public static final String SINGLE_HEARING_DATE_TYPE = "Single";
 
     public static final String ALL_VENUES = "All";
+    public static final String RULE_50_APPLIES = "Order made pursuant to Rule 50";
 
 }
