@@ -35,7 +35,32 @@ public class ListingService {
         this.ccdClient = ccdClient;
     }
 
-    public ListingDetails processListingHearingsRequest(ListingDetails listingDetails, String authToken) {
+    public CaseData processListingSingleCasesRequest(CaseDetails caseDetails) {
+        CaseData caseData = caseDetails.getCaseData();
+        List<ListingTypeItem> listingTypeItems = new ArrayList<>();
+        if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
+            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+                if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
+                    listingTypeItems.addAll(getListingTypeItems(hearingTypeItem, caseData.getPrintHearingDetails(), caseData));
+                }
+            }
+        }
+        caseData.getPrintHearingDetails().setListingCollection(listingTypeItems);
+        caseData.setPrintHearingDetails(clearListingFields(caseData.getPrintHearingDetails()));
+        return caseData;
+    }
+
+    public ListingData setCourtAddressFromCaseData(CaseData caseData) {
+        ListingData listingData = caseData.getPrintHearingCollection();
+        listingData.setTribunalCorrespondenceAddress(caseData.getTribunalCorrespondenceAddress());
+        listingData.setTribunalCorrespondenceTelephone(caseData.getTribunalCorrespondenceTelephone());
+        listingData.setTribunalCorrespondenceFax(caseData.getTribunalCorrespondenceFax());
+        listingData.setTribunalCorrespondenceEmail(caseData.getTribunalCorrespondenceEmail());
+        listingData.setTribunalCorrespondenceDX(caseData.getTribunalCorrespondenceDX());
+        return listingData;
+    }
+
+    public ListingData processListingHearingsRequest(ListingDetails listingDetails, String authToken) {
         try {
             List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
             if (submitEvents != null) {
@@ -43,36 +68,34 @@ public class ListingService {
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null && !submitEvent.getCaseData().getHearingCollection().isEmpty()) {
                         for (HearingTypeItem hearingTypeItem : submitEvent.getCaseData().getHearingCollection()) {
-                            log.info("HEARING: " + hearingTypeItem.getValue());
                             if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
-                                listingTypeItems.addAll(getListingTypeItems(hearingTypeItem, listingDetails.getCaseData(), submitEvent));
+                                listingTypeItems.addAll(getListingTypeItems(hearingTypeItem, listingDetails.getCaseData(), submitEvent.getCaseData()));
                             }
                         }
                     }
                 }
-                log.info("listingTypeItems: " + listingDetails.toString());
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
             }
-            return clearListingFields(listingDetails);
+            return clearListingFields(listingDetails.getCaseData());
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
         }
     }
 
-    private ListingDetails clearListingFields(ListingDetails listingDetails) {
-        listingDetails.getCaseData().setListingVenueOfficeAber(null);
-        listingDetails.getCaseData().setListingVenueOfficeGlas(null);
-        boolean dateRange = listingDetails.getCaseData().getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
+    private ListingData clearListingFields(ListingData listingData) {
+        listingData.setListingVenueOfficeAber(null);
+        listingData.setListingVenueOfficeGlas(null);
+        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
         if (dateRange) {
-            listingDetails.getCaseData().setListingDate(null);
+            listingData.setListingDate(null);
         } else {
-            listingDetails.getCaseData().setListingDateFrom(null);
-            listingDetails.getCaseData().setListingDateTo(null);
+            listingData.setListingDateFrom(null);
+            listingData.setListingDateTo(null);
         }
-        return listingDetails;
+        return listingData;
     }
 
-    private List<ListingTypeItem> getListingTypeItems(HearingTypeItem hearingTypeItem, ListingData listingData, SubmitEvent submitEvent) {
+    private List<ListingTypeItem> getListingTypeItems(HearingTypeItem hearingTypeItem, ListingData listingData, CaseData caseData) {
         List<ListingTypeItem> listingTypeItems = new ArrayList<>();
         int hearingDateCollectionSize = hearingTypeItem.getValue().getHearingDateCollection().size();
         for (int i = 0; i < hearingDateCollectionSize; i++) {
@@ -81,7 +104,7 @@ public class ListingService {
             boolean isListingDateValid = isListingDateValid(listingData, dateListedTypeItem);
             if (isListingDateValid && isListingVenueValid) {
                 ListingTypeItem listingTypeItem = new ListingTypeItem();
-                ListingType listingType = ListingHelper.getListingTypeFromSubmitData(submitEvent, hearingTypeItem.getValue(), dateListedTypeItem.getValue(), i, hearingDateCollectionSize);
+                ListingType listingType = ListingHelper.getListingTypeFromCaseData(listingData, caseData, hearingTypeItem.getValue(), dateListedTypeItem.getValue(), i, hearingDateCollectionSize);
                 listingTypeItem.setId(String.valueOf(dateListedTypeItem.getId()));
                 listingTypeItem.setValue(listingType);
                 listingTypeItems.add(listingTypeItem);
@@ -126,11 +149,11 @@ public class ListingService {
         }
     }
 
-    public DocumentInfo processHearingDocument(ListingDetails listingDetails, String authToken) {
+    public DocumentInfo processHearingDocument(ListingData listingData, String caseTypeId, String authToken) {
         try {
-            return tornadoService.listingGeneration(authToken, listingDetails.getCaseData(), listingDetails.getCaseTypeId());
+            return tornadoService.listingGeneration(authToken, listingData, caseTypeId);
         } catch (Exception ex) {
-            throw new DocumentManagementException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
+            throw new DocumentManagementException(MESSAGE + ex.getMessage());
         }
     }
 }
