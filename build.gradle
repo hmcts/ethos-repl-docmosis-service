@@ -144,9 +144,9 @@ dependencies {
     testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
     testPactCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
     testPactCompile group: 'au.com.dius', name: 'pact-jvm-consumer-junit5_2.12', version: '3.5.24'
-    
-    
-    testPactCompile group: 'org.yaml', name: 'snakeyaml', version: '1.23'
+
+
+    testPactCompile group: 'org.yaml', name: 'snakeyaml', version: '1.9'
     testPactCompile group: 'au.com.dius', name: 'pact-jvm-consumer-java8_2.12', version: '3.5.24'
     testPactCompile (group: 'org.springframework.boot', name: 'spring-boot-starter-test',version: '2.1.3.RELEASE') {
             exclude group: "com.vaadin.external.google", module:"android-json"

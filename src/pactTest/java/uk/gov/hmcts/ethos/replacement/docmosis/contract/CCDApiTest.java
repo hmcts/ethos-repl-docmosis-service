@@ -51,6 +51,8 @@ public class CCDApiTest {
         String Uri = String.format("/caseworkers/%s/jurisdictions/%s/case-types/%s/cases", "18", "EMPLOYMENT", "Manchester_Dev");
         String json = FileUtils.readFileToString(new File("src/test/resources/caseDetailsTest1.json"), "UTF-8");
         // @formatter:off
+        ObjectMapper mapper = new ObjectMapper();
+        CCDRequest ccdObject = mapper.readValue(json, CCDRequest.class);
         return builder
                 .given("provider creates a new Case")
                 .uponReceiving("a request to create Case")
@@ -66,26 +68,6 @@ public class CCDApiTest {
         // @formatter:on
     }
 
-    @Pact(state = "Create case in CCD", provider = "ccd-data-store-api", consumer = "ethos-repl-docmosis-service")
-    RequestResponsePact submitCaseCreationPact(PactDslWithProvider builder) throws IOException {
-        String Uri = String.format("/caseworkers/%s/jurisdictions/%s/case-types/%s/event-triggers/%s/token?ignore-warning=true", "userId", "JID", "CASETYPEID","initiateCase");
-
-
-        return builder
-                .given("provider creates a new Case")
-                .uponReceiving("a request to create Case")
-                .path(Uri)
-                .method("GET")
-                .headers("Authorization","userId")
-                .willRespondWith()
-                .status(201)
-                .matchHeader("Content-Type", "application/json")
-                .body(new PactDslJsonBody()
-                        .includesStr("case_type_id", "Manchester_Dev"))
-                .toPact();
-        // @formatter:on
-    }
-
     @Test
     @PactTestFor(pactMethod = "createCasePact")
     void verifyCreateCase() throws IOException {
@@ -94,6 +76,37 @@ public class CCDApiTest {
         CCDRequest ccdObject = mapper.readValue(json, CCDRequest.class);
         SubmitEvent submitEvent = ccdApi.submitEventForCase("d323432dsafasfs",new CaseData(),"Manchester_Dev","EMPLOYMENT",ccdObject,"1559817606275162");
         Assert.assertEquals("value", submitEvent.getState());
+    }
+
+
+
+
+
+    @Pact(state = "Create case in CCD", provider = "ccd-data-store-api", consumer = "ethos-repl-docmosis-service")
+    RequestResponsePact submitCaseCreationPact(PactDslWithProvider builder) throws IOException {
+        String Uri = String.format("/caseworkers/%s/jurisdictions/%s/case-types/%s/event-triggers/%s/token", "userId", "JID", "CASETYPEID","initiateCase");
+
+
+        String json = FileUtils.readFileToString(new File("src/test/resources/caseDetailsTest1.json"), "UTF-8");
+        ObjectMapper mapper = new ObjectMapper();
+        CCDRequest ccdObject = mapper.readValue(json, CCDRequest.class);
+
+        return builder
+                .given("provider creates a new Case")
+                .uponReceiving("a request to create Case")
+                .path(Uri)
+                .method("GET")
+                .headers("Authorization","authToken","Serviceauthorization","authToken")
+                .matchQuery("ignore-warning", "true")
+                .willRespondWith()
+                .status(200)
+                .matchHeader("Content-Type", "application/json")
+                .body(new PactDslJsonBody()
+                        .includesStr("event_id", "value")
+                        .includesStr("token", "tokenValue"))
+
+                .toPact();
+        // @formatter:on
     }
 
 
@@ -118,7 +131,9 @@ public class CCDApiTest {
 
 
         CCDRequest submitEvent = ccdApi.startCaseCreation("authToken",caseDetails);
-        Assert.assertEquals("value", submitEvent.getToken());
+
+        Assert.assertEquals("value", submitEvent.getEventId());
+        Assert.assertEquals("tokenValue", submitEvent.getToken());
     }
 
 }
