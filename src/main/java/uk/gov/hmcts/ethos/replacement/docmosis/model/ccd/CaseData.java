@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
 
 import java.util.List;
 
@@ -132,10 +133,10 @@ public class CaseData {
     private String counterClaim;
     @JsonProperty("restrictedReporting")
     private RestrictedReportingType restrictedReporting;
-    @JsonProperty("printHearing")
-    private PrintHearingType printHearing;
-    @JsonProperty("printHearingResults")
-    private PrintHearingType printHearingResults;
+    @JsonProperty("printHearingDetails")
+    private ListingData printHearingDetails;
+    @JsonProperty("printHearingCollection")
+    private ListingData printHearingCollection;
     @JsonProperty("targetHearingDate")
     private String targetHearingDate;
 
