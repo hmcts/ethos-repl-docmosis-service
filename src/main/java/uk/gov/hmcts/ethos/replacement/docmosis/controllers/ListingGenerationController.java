@@ -57,7 +57,6 @@ public class ListingGenerationController {
 
         log.info("LISTING SINGLE CASES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
         CaseData caseData = listingService.processListingSingleCasesRequest(ccdRequest.getCaseDetails());
-        caseData.setPrintHearingCollection(caseData.getPrintHearingDetails());
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)

@@ -45,8 +45,9 @@ public class ListingService {
                 }
             }
         }
-        caseData.getPrintHearingDetails().setListingCollection(listingTypeItems);
-        caseData.setPrintHearingDetails(clearListingFields(caseData.getPrintHearingDetails()));
+        caseData.setPrintHearingCollection(caseData.getPrintHearingDetails());
+        caseData.getPrintHearingCollection().setListingCollection(listingTypeItems);
+        caseData.setPrintHearingCollection(clearListingFields(caseData.getPrintHearingCollection()));
         return caseData;
     }
 
