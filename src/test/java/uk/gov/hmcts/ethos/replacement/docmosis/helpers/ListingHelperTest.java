@@ -7,8 +7,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.DateListedType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.HearingType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingDetails;
 
@@ -47,12 +47,13 @@ public class ListingHelperTest {
                 "\"templateName\":\"EM-TRB-SCO-ENG-00214.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
-                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
                 "\"Court_county\":\"\",\n" +
                 "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
                 "\"Court_telephone\":\"03577131270\",\n" +
                 "\"Court_fax\":\"07577126570\",\n" +
                 "\"Court_DX\":\"123456\",\n" +
@@ -65,6 +66,17 @@ public class ListingHelperTest {
                 "{\"Hearing_room\":\"Tribunal 2\",\n" +
                 "\"listing\":[\n" +
                 "{\"Judge\":\"Ms AM Aspden\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -89,6 +101,17 @@ public class ListingHelperTest {
                 "\"Hearing_notes\":\"Notes1\",\n" +
                 "\"respondent_representative\":\"Org\"},\n" +
                 "{\"Judge\":\"Ms AM Judge\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -116,6 +139,17 @@ public class ListingHelperTest {
                 "{\"Hearing_room\":\"Tribunal 4\",\n" +
                 "\"listing\":[\n" +
                 "{\"Judge\":\"Judge For Tribunal4\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -140,6 +174,17 @@ public class ListingHelperTest {
                 "\"Hearing_notes\":\"Notes3\",\n" +
                 "\"respondent_representative\":\"Org\"},\n" +
                 "{\"Judge\":\"Another Judge\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -178,12 +223,13 @@ public class ListingHelperTest {
                 "\"templateName\":\".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
-                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
                 "\"Court_county\":\"\",\n" +
                 "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
                 "\"Court_telephone\":\"03577131270\",\n" +
                 "\"Court_fax\":\"07577126570\",\n" +
                 "\"Court_DX\":\"123456\",\n" +
@@ -206,12 +252,13 @@ public class ListingHelperTest {
                 "\"templateName\":\".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
-                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
                 "\"Court_county\":\"\",\n" +
                 "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
                 "\"Court_telephone\":\"03577131270\",\n" +
                 "\"Court_fax\":\"07577126570\",\n" +
                 "\"Court_DX\":\"123456\",\n" +
@@ -239,12 +286,13 @@ public class ListingHelperTest {
                 "\"templateName\":\"EM-TRB-SCO-ENG-00212.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
-                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
                 "\"Court_county\":\"\",\n" +
                 "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
                 "\"Court_telephone\":\"03577131270\",\n" +
                 "\"Court_fax\":\"07577126570\",\n" +
                 "\"Court_DX\":\"123456\",\n" +
@@ -255,6 +303,17 @@ public class ListingHelperTest {
                 "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"listing\":[\n" +
                 "{\"Judge\":\"Ms AM Aspden\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -279,6 +338,17 @@ public class ListingHelperTest {
                 "\"Hearing_notes\":\"Notes1\",\n" +
                 "\"respondent_representative\":\"Org\"},\n" +
                 "{\"Judge\":\"Ms AM Judge\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -303,6 +373,17 @@ public class ListingHelperTest {
                 "\"Hearing_notes\":\"Notes2\",\n" +
                 "\"respondent_representative\":\"Org2\"},\n" +
                 "{\"Judge\":\"Judge For Tribunal4\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -327,6 +408,17 @@ public class ListingHelperTest {
                 "\"Hearing_notes\":\"Notes3\",\n" +
                 "\"respondent_representative\":\"Org\"},\n" +
                 "{\"Judge\":\"Another Judge\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
                 "\"ERMember\":\" \",\n" +
                 "\"EEMember\":\" \",\n" +
@@ -366,9 +458,15 @@ public class ListingHelperTest {
 
     @Test
     public void getListingTypeFromSubmitData() {
-        SubmitEvent submitEvent = new SubmitEvent();
-        submitEvent.setCaseData(new CaseData());
-        submitEvent.setCaseId(1);
+        CaseData caseData = new CaseData();
+        ClaimantIndType claimantIndType = new ClaimantIndType();
+        claimantIndType.setClaimantLastName("Rodriguez");
+        caseData.setClaimantIndType(claimantIndType);
+        RespondentSumType respondentSumType = new RespondentSumType();
+        respondentSumType.setRespondentName("Juan Pedro");
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setValue(respondentSumType);
+        caseData.setRespondentCollection(new ArrayList<>(Collections.singleton(respondentSumTypeItem)));
         HearingType hearingType = new HearingType();
         DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
         DateListedType dateListedType = new DateListedType();
@@ -385,35 +483,55 @@ public class ListingHelperTest {
         hearingType.setHearingEstLengthNumType("hours");
         String expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Edinburgh, elmoCaseReference=null, " +
                 "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
-                "hearingDay=2 of 3, claimantName= , claimantTown= , claimantRepresentative= , respondent= , respondentTown= , " +
+                "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= )";
-        assertEquals(expected, ListingHelper.getListingTypeFromSubmitData(submitEvent, hearingType, dateListedType, 1, 3).toString());
+        assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
 
         dateListedType.setHearingRoomStranraer("Tribunal 5");
         dateListedType.setHearingEdinburgh(null);
         dateListedType.setHearingDundee("Dundee");
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Dundee, elmoCaseReference=null, " +
                 "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
-                "hearingDay=2 of 3, claimantName= , claimantTown= , claimantRepresentative= , respondent= , respondentTown= , " +
+                "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 5, respondentOthers= , hearingNotes= )";
-        assertEquals(expected, ListingHelper.getListingTypeFromSubmitData(submitEvent, hearingType, dateListedType, 1, 3).toString());
+        assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
 
         dateListedType.setHearingRoomCambeltown("Tribunal 6");
         dateListedType.setHearingDundee(null);
         dateListedType.setHearingGlasgow("Glasgow");
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Glasgow, elmoCaseReference=null, " +
                 "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
-                "hearingDay=2 of 3, claimantName= , claimantTown= , claimantRepresentative= , respondent= , respondentTown= , " +
+                "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 6, respondentOthers= , hearingNotes= )";
-        assertEquals(expected, ListingHelper.getListingTypeFromSubmitData(submitEvent, hearingType, dateListedType, 1, 3).toString());
+        assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
 
         dateListedType.setHearingRoomCambeltown("Tribunal 7");
         dateListedType.setHearingGlasgow(null);
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Other, elmoCaseReference=null, " +
                 "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
+                "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 7, respondentOthers= , hearingNotes= )";
+        assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
+
+        CaseData caseDataRule50 = new CaseData();
+        RestrictedReportingType restrictedReportingType = new RestrictedReportingType();
+        restrictedReportingType.setRule503b("Yes");
+        caseDataRule50.setRestrictedReporting(restrictedReportingType);
+        ListingData listingDataPublic = listingDetails.getCaseData();
+        listingDataPublic.setHearingDocETCL(HEARING_ETCL_PUBLIC);
+        expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Other, elmoCaseReference=null, " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
                 "hearingDay=2 of 3, claimantName= , claimantTown= , claimantRepresentative= , respondent= , respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 7, respondentOthers= , hearingNotes= )";
-        assertEquals(expected, ListingHelper.getListingTypeFromSubmitData(submitEvent, hearingType, dateListedType, 1, 3).toString());
+        assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDataPublic, caseDataRule50, hearingType, dateListedType, 1, 3).toString());
+        ListingData listingDataPressList = listingDetails.getCaseData();
+        listingDataPressList.setHearingDocETCL(HEARING_ETCL_PRESS_LIST);
+        expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Other, elmoCaseReference=null, " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "hearingDay=2 of 3, claimantName=Order made pursuant to Rule 50, claimantTown= , claimantRepresentative= , " +
+                "respondent=Order made pursuant to Rule 50, respondentTown= , respondentRepresentative= , estHearingLength=2 hours, " +
+                "hearingPanel= , hearingRoom=Tribunal 7, respondentOthers= , hearingNotes= )";
+        assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDataPressList, caseDataRule50, hearingType, dateListedType, 1, 3).toString());
     }
 
     @Test

@@ -38,6 +38,7 @@ public class ListingServiceTest {
     private TornadoService tornadoService;
     @Mock
     private CcdClient ccdClient;
+    private CaseDetails caseDetails;
     private ListingDetails listingDetails;
     private ListingDetails listingDetailsRange;
     private DocumentInfo documentInfo;
@@ -46,6 +47,7 @@ public class ListingServiceTest {
     @Before
     public void setUp() {
         documentInfo = new DocumentInfo();
+        caseDetails = new CaseDetails();
         listingDetails = new ListingDetails();
         ListingData listingData = new ListingData();
         listingData.setListingDate("2019-12-12");
@@ -115,6 +117,16 @@ public class ListingServiceTest {
         caseData.setHearingCollection(new ArrayList<>(Collections.singleton(hearingTypeItem)));
         submitEvent1.setCaseData(caseData);
         submitEvents = new ArrayList<>(Collections.singleton(submitEvent1));
+
+        caseData.setPrintHearingDetails(listingData);
+        caseData.setPrintHearingCollection(listingData);
+        Address address = new Address();
+        address.setAddressLine1("Manchester Avenue");
+        address.setPostTown("Manchester");
+        caseData.setTribunalCorrespondenceAddress(address);
+        caseDetails.setCaseData(caseData);
+        caseDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
+        caseDetails.setJurisdiction("EMPLOYMENT");
     }
 
     @Test
@@ -123,14 +135,14 @@ public class ListingServiceTest {
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
                 "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , " +
-                "hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , hearingDay=1 of 1, claimantName=RYAN AIR LTD, claimantTown= , " +
+                "hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , " +
                 "claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , " +
                 "hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= ))], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
-        ListingDetails listingDetailsResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
-        assertEquals(result, listingDetailsResult.getCaseData().toString());
+        ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
+        assertEquals(result, listingDataResult.toString());
     }
 
     @Test
@@ -140,20 +152,20 @@ public class ListingServiceTest {
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[" +
                 "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=1 of 1, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
                 "respondentOthers= , hearingNotes= )), " +
                 "ListingTypeItem(id=124, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue2, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=1 of 1, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , clerkResponsible= , hearingDay=3 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 5, " +
                 "respondentOthers= , hearingNotes= ))], " +
                 "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         listingDetails.getCaseData().setListingVenueOfficeAber(ALL_VENUES);
         when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
-        ListingDetails listingDetailsResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
-        assertEquals(result, listingDetailsResult.getCaseData().toString());
+        ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
+        assertEquals(result, listingDataResult.toString());
     }
 
     @Test
@@ -163,19 +175,19 @@ public class ListingServiceTest {
                 "listingDateTo=2019-12-12, listingVenue=Aberdeen, listingCollection=" +
                 "[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=1 of 1, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
                 "respondentOthers= , hearingNotes= )), " +
                 "ListingTypeItem(id=124, value=ListingType(causeListDate=10 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=1 of 1, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , clerkResponsible= , hearingDay=2 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
                 "respondentOthers= , hearingNotes= ))], " +
                 "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
-        ListingDetails listingDetailsResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
-        assertEquals(result, listingDetailsResult.getCaseData().toString());
+        ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
+        assertEquals(result, listingDataResult.toString());
     }
 
     @Test
@@ -185,25 +197,25 @@ public class ListingServiceTest {
                 "listingDateTo=2019-12-12, listingVenue=All, listingCollection=" +
                 "[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=1 of 1, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
                 "respondentOthers= , hearingNotes= )), " +
                 "ListingTypeItem(id=124, value=ListingType(causeListDate=10 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=1 of 1, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , clerkResponsible= , hearingDay=2 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
                 "respondentOthers= , hearingNotes= )), " +
                 "ListingTypeItem(id=124, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue2, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=1 of 1, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , clerkResponsible= , hearingDay=3 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 5, " +
                 "respondentOthers= , hearingNotes= ))], " +
                 "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
         when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
-        ListingDetails listingDetailsResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
-        assertEquals(result, listingDetailsResult.getCaseData().toString());
+        ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
+        assertEquals(result, listingDataResult.toString());
     }
 
     @Test(expected = Exception.class)
@@ -215,14 +227,14 @@ public class ListingServiceTest {
     @Test
     public void processHearingDocument() throws IOException {
         when(tornadoService.listingGeneration(anyString(), any(), anyString())).thenReturn(documentInfo);
-        DocumentInfo documentInfo1 = listingService.processHearingDocument(listingDetails, "authToken");
+        DocumentInfo documentInfo1 = listingService.processHearingDocument(listingDetails.getCaseData(), listingDetails.getCaseTypeId(), "authToken");
         assertEquals(documentInfo, documentInfo1);
     }
 
     @Test(expected = Exception.class)
     public void processHearingDocumentWithException() throws IOException {
         when(tornadoService.listingGeneration(anyString(), any(), anyString())).thenThrow(feignError());
-        listingService.processHearingDocument(listingDetails, "authToken");
+        listingService.processHearingDocument(listingDetails.getCaseData(), listingDetails.getCaseTypeId(), "authToken");
     }
 
     @Test
@@ -231,7 +243,7 @@ public class ListingServiceTest {
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
                 "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , " +
-                "hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , hearingDay=1 of 1, claimantName=Juan Pedro, " +
+                "hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName=Juan Pedro, " +
                 "claimantTown=Aberdeen, claimantRepresentative=ONG, respondent=Royal McDonal, respondentTown=Aberdeen, respondentRepresentative=ITV, " +
                 "estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, respondentOthers=Royal McDonal, hearingNotes= ))], listingVenueOfficeGlas=null, " +
                 "listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
@@ -266,7 +278,31 @@ public class ListingServiceTest {
         representedTypeRItem.setValue(representedTypeR);
         submitEvents.get(0).getCaseData().setRepCollection(new ArrayList<>(Collections.singleton(representedTypeRItem)));
         when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
-        ListingDetails listingDetailsResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
-        assertEquals(result, listingDetailsResult.getCaseData().toString());
+        ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
+        assertEquals(result, listingDataResult.toString());
+    }
+
+    @Test
+    public void processListingSingleCasesRequest() {
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
+                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
+                "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , " +
+                "positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName= , " +
+                "claimantTown= , claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, " +
+                "hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= ))], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
+                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
+        CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
+        assertEquals(result, caseData.getPrintHearingDetails().toString());
+    }
+
+    @Test
+    public void setCourtAddressFromCaseData() {
+        String result = "ListingData(tribunalCorrespondenceAddress=Manchester Avenue, Manchester, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
+                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=AberdeenVenue, " +
+                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
+        ListingData listingData = listingService.setCourtAddressFromCaseData(caseDetails.getCaseData());
+        assertEquals(result, listingData.toString());
     }
 }

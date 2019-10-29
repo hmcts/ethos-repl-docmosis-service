@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.HearingType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
@@ -32,8 +31,7 @@ public class ListingHelper {
         }
     }
 
-    public static ListingType getListingTypeFromSubmitData(SubmitEvent submitEvent, HearingType hearingType, DateListedType dateListedType, int index, int hearingCollectionSize) {
-        CaseData caseData = submitEvent.getCaseData();
+    public static ListingType getListingTypeFromCaseData(ListingData listingData, CaseData caseData, HearingType hearingType, DateListedType dateListedType, int index, int hearingCollectionSize) {
         ListingType listingType = new ListingType();
 
         listingType.setElmoCaseReference(caseData.getEthosCaseReference());
@@ -56,31 +54,51 @@ public class ListingHelper {
         listingType.setHearingDay(index+1 + " of " + hearingCollectionSize);
         listingType.setEstHearingLength(!isNullOrEmpty(Helper.getHearingDuration(hearingType)) ? Helper.getHearingDuration(hearingType) : " ");
 
-        if (!isNullOrEmpty(caseData.getClaimantCompany())) {
-            listingType.setClaimantName(caseData.getClaimantCompany());
+        return getClaimantRespondentDetails(listingType, listingData, caseData);
+    }
+
+    private static ListingType getClaimantRespondentDetails(ListingType listingType, ListingData listingData, CaseData caseData) {
+        boolean rule50 = caseData.getRestrictedReporting() != null && caseData.getRestrictedReporting().getRule503b().equals("Yes");
+        boolean isPublicType = listingData.getHearingDocType() != null && listingData.getHearingDocType().equals(HEARING_DOC_ETCL) &&
+                listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC);
+        boolean isPressListType = listingData.getHearingDocType() != null && listingData.getHearingDocType().equals(HEARING_DOC_ETCL) &&
+                listingData.getHearingDocETCL().equals(HEARING_ETCL_PRESS_LIST);
+        listingType.setClaimantTown(" ");
+        listingType.setRespondentTown(" ");
+        listingType.setRespondentOthers(" ");
+        listingType.setClaimantRepresentative(" ");
+        listingType.setRespondentRepresentative(" ");
+        if (rule50 && isPublicType) {
+            listingType.setClaimantName(" ");
+            listingType.setRespondent(" ");
+        } else if (rule50 && isPressListType) {
+            listingType.setClaimantName(RULE_50_APPLIES);
+            listingType.setRespondent(RULE_50_APPLIES);
         } else {
-            listingType.setClaimantName(caseData.getClaimantIndType() != null && caseData.getClaimantIndType().getClaimantLastName() != null ?
-                    caseData.getClaimantIndType().claimantFullName() : " ");
+            if (!isNullOrEmpty(caseData.getClaimantCompany())) {
+                listingType.setClaimantName(caseData.getClaimantCompany());
+            } else {
+                listingType.setClaimantName(caseData.getClaimantIndType() != null && caseData.getClaimantIndType().getClaimantLastName() != null?
+                        caseData.getClaimantIndType().claimantFullName() : " ");
+            }
+            listingType.setClaimantTown(caseData.getClaimantType() != null && caseData.getClaimantType().getClaimantAddressUK() != null &&
+                    caseData.getClaimantType().getClaimantAddressUK().getPostTown() != null ?
+                    caseData.getClaimantType().getClaimantAddressUK().getPostTown() : " ");
+            listingType.setRespondent(caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty() &&
+                    caseData.getRespondentCollection().get(0).getValue() != null ?
+                    caseData.getRespondentCollection().get(0).getValue().getRespondentName() : " ");
+            listingType.setRespondentTown(caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty() &&
+                    caseData.getRespondentCollection().get(0).getValue() != null &&
+                    caseData.getRespondentCollection().get(0).getValue().getRespondentAddress() != null &&
+                    caseData.getRespondentCollection().get(0).getValue().getRespondentAddress().getPostTown() != null ?
+                    caseData.getRespondentCollection().get(0).getValue().getRespondentAddress().getPostTown() : " ");
+            listingType.setRespondentOthers(!isNullOrEmpty(getRespOthersName(caseData)) ? getRespOthersName(caseData) : " ");
+            listingType.setClaimantRepresentative(caseData.getRepresentativeClaimantType() != null && caseData.getRepresentativeClaimantType().getNameOfOrganisation() != null ?
+                    caseData.getRepresentativeClaimantType().getNameOfOrganisation() : " ");
+            listingType.setRespondentRepresentative(caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty() &&
+                    caseData.getRepCollection().get(0).getValue() != null && caseData.getRepCollection().get(0).getValue().getNameOfOrganisation() != null ?
+                    caseData.getRepCollection().get(0).getValue().getNameOfOrganisation() : " ");
         }
-        listingType.setClaimantTown(caseData.getClaimantType() != null && caseData.getClaimantType().getClaimantAddressUK() != null &&
-                caseData.getClaimantType().getClaimantAddressUK().getPostTown() != null ?
-                caseData.getClaimantType().getClaimantAddressUK().getPostTown() : " ");
-        listingType.setClaimantRepresentative(caseData.getRepresentativeClaimantType() != null && caseData.getRepresentativeClaimantType().getNameOfOrganisation() != null ?
-                caseData.getRepresentativeClaimantType().getNameOfOrganisation() : " ");
-
-        listingType.setRespondentTown(caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty() &&
-                caseData.getRespondentCollection().get(0).getValue() != null  && caseData.getRespondentCollection().get(0).getValue().getRespondentAddress().getPostTown() != null ?
-                caseData.getRespondentCollection().get(0).getValue().getRespondentAddress().getPostTown() : " ");
-
-        listingType.setRespondent(caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty() &&
-                caseData.getRespondentCollection().get(0).getValue() != null ?
-                caseData.getRespondentCollection().get(0).getValue().getRespondentName() : " ");
-        listingType.setRespondentOthers(!isNullOrEmpty(getRespOthersName(caseData)) ? getRespOthersName(caseData) : " ");
-
-        listingType.setRespondentRepresentative(caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty() &&
-                caseData.getRepCollection().get(0).getValue() != null && caseData.getRepCollection().get(0).getValue().getNameOfOrganisation() != null ?
-                caseData.getRepCollection().get(0).getValue().getNameOfOrganisation() : " ");
-
         return listingType;
     }
 
@@ -160,7 +178,7 @@ public class ListingHelper {
             //sb.append("\"Floor\":\"").append("6th Floor").append(NEW_LINE);
             sb.append("\"listing\":[\n");
             for (int i = 0; i < listingEntry.getValue().size(); i++) {
-                sb.append(getListingTypeRow(listingEntry.getValue().get(i).getValue(), caseType));
+                sb.append(getListingTypeRow(listingEntry.getValue().get(i).getValue(), caseType, listingData));
                 if (i != listingEntry.getValue().size() - 1) {
                     sb.append(",\n");
                 }
@@ -180,7 +198,7 @@ public class ListingHelper {
         StringBuilder sb = new StringBuilder();
         sb.append("\"listing\":[\n");
         for (int i = 0; i < listingTypeItems.size(); i++) {
-            sb.append(getListingTypeRow(listingTypeItems.get(i).getValue(), caseType));
+            sb.append(getListingTypeRow(listingTypeItems.get(i).getValue(), caseType, listingData));
             if (i != listingTypeItems.size() - 1) {
                 sb.append(",\n");
             }
@@ -189,9 +207,10 @@ public class ListingHelper {
         return sb;
     }
 
-    private static StringBuilder getListingTypeRow(ListingType listingType, String caseType) {
+    private static StringBuilder getListingTypeRow(ListingType listingType, String caseType, ListingData listingData) {
         StringBuilder sb = new StringBuilder();
         sb.append("{\"Judge\":\"").append(listingType.getHearingJudgeName()).append(NEW_LINE);
+        sb.append(getCourtListingData(listingData));
         sb.append(getLogo(caseType));
         sb.append("\"ERMember\":\"").append(listingType.getHearingERMember()).append(NEW_LINE);
         sb.append("\"EEMember\":\"").append(listingType.getHearingEEMember()).append(NEW_LINE);
@@ -227,6 +246,7 @@ public class ListingHelper {
             sb.append("\"Court_town\":\"").append(nullCheck(listingData.getTribunalCorrespondenceAddress().getPostTown())).append(NEW_LINE);
             sb.append("\"Court_county\":\"").append(nullCheck(listingData.getTribunalCorrespondenceAddress().getCounty())).append(NEW_LINE);
             sb.append("\"Court_postCode\":\"").append(nullCheck(listingData.getTribunalCorrespondenceAddress().getPostCode())).append(NEW_LINE);
+            sb.append("\"Court_fullAddress\":\"").append(nullCheck(listingData.getTribunalCorrespondenceAddress().toString())).append(NEW_LINE);
         }
         sb.append("\"Court_telephone\":\"").append(nullCheck(listingData.getTribunalCorrespondenceTelephone())).append(NEW_LINE);
         sb.append("\"Court_fax\":\"").append(nullCheck(listingData.getTribunalCorrespondenceFax())).append(NEW_LINE);

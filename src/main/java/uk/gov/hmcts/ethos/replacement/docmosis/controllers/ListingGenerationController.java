@@ -16,7 +16,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingCallbackResponse;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.ListingService;
@@ -45,6 +44,26 @@ public class ListingGenerationController {
         this.defaultValuesReaderService = defaultValuesReaderService;
     }
 
+    @PostMapping(value = "/listingSingleCases", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "search hearings by venue and date on a specific case.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> listingSingleCases(
+            @RequestBody CCDRequest ccdRequest) {
+
+        log.info("LISTING SINGLE CASES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        CaseData caseData = listingService.processListingSingleCasesRequest(ccdRequest.getCaseDetails());
+        caseData.setPrintHearingCollection(caseData.getPrintHearingDetails());
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .build());
+    }
+
     @PostMapping(value = "/listingHearings", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "search hearings by venue and date.")
     @ApiResponses(value = {
@@ -58,18 +77,51 @@ public class ListingGenerationController {
             @RequestHeader(value = "Authorization") String userToken) {
 
         log.info("LISTING HEARINGS ---> " + LOG_MESSAGE + listingRequest.getCaseDetails().getCaseId());
-        ListingDetails listingDetails = listingService.processListingHearingsRequest(listingRequest.getCaseDetails(), userToken);
+        ListingData listingData = listingService.processListingHearingsRequest(listingRequest.getCaseDetails(), userToken);
 
         String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null ?
                 listingRequest.getCaseDetails().getCaseData().getListingVenue() : "";
         DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, managingOffice,
-                ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()));
+                ListingHelper.getCaseTypeId(listingRequest.getCaseDetails().getCaseTypeId()));
         log.info("Post Default values loaded: " + defaultValues);
-        ListingData listingData = defaultValuesReaderService.getListingData(listingDetails.getCaseData(), defaultValues);
+        listingData = defaultValuesReaderService.getListingData(listingData, defaultValues);
 
         return ResponseEntity.ok(ListingCallbackResponse.builder()
                 .data(listingData)
                 .build());
+    }
+
+    @PostMapping(value = "/generateListingsDocSingleCases", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "generate a listing document.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> generateListingsDocSingleCases(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+
+        log.info("GENERATE LISTINGS DOC SINGLE CASES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        List<String> errors = new ArrayList<>();
+        ListingData listingData = ccdRequest.getCaseDetails().getCaseData().getPrintHearingCollection();
+        if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
+            listingData = listingService.setCourtAddressFromCaseData(ccdRequest.getCaseDetails().getCaseData());
+            DocumentInfo documentInfo = listingService.processHearingDocument(listingData, ccdRequest.getCaseDetails().getCaseTypeId(), userToken);
+            return ResponseEntity.ok(CCDCallbackResponse.builder()
+                    .data(ccdRequest.getCaseDetails().getCaseData())
+                    .confirmation_header(GENERATED_DOCUMENT_URL + documentInfo.getMarkUp())
+                    .significant_item(generateSignificantItem(documentInfo))
+                    .build());
+        } else {
+            errors.add("No hearings have been found for your search criteria");
+            return ResponseEntity.ok(CCDCallbackResponse.builder()
+                    .errors(errors)
+                    .data(ccdRequest.getCaseDetails().getCaseData())
+                    .build());
+        }
     }
 
     @PostMapping(value = "/generateHearingDocument", consumes = APPLICATION_JSON_VALUE)
@@ -87,10 +139,11 @@ public class ListingGenerationController {
         log.info("GENERATE HEARING DOCUMENT ---> " + LOG_MESSAGE + listingRequest.getCaseDetails().getCaseId());
 
         List<String> errors = new ArrayList<>();
-        if (listingRequest.getCaseDetails().getCaseData().getListingCollection() != null && !listingRequest.getCaseDetails().getCaseData().getListingCollection().isEmpty()) {
-            DocumentInfo documentInfo = listingService.processHearingDocument(listingRequest.getCaseDetails(), userToken);
+        ListingData listingData = listingRequest.getCaseDetails().getCaseData();
+        if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
+            DocumentInfo documentInfo = listingService.processHearingDocument(listingData, listingRequest.getCaseDetails().getCaseTypeId(), userToken);
             return ResponseEntity.ok(ListingCallbackResponse.builder()
-                    .data(listingRequest.getCaseDetails().getCaseData())
+                    .data(listingData)
                     .confirmation_header(GENERATED_DOCUMENT_URL + documentInfo.getMarkUp())
                     .significant_item(generateSignificantItem(documentInfo))
                     .build());
@@ -98,7 +151,7 @@ public class ListingGenerationController {
             errors.add("No hearings have been found for your search criteria");
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .errors(errors)
-                    .data(listingRequest.getCaseDetails().getCaseData())
+                    .data(listingData)
                     .build());
         }
     }
