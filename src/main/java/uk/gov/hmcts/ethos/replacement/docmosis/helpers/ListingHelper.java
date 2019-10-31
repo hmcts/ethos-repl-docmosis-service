@@ -58,7 +58,10 @@ public class ListingHelper {
     }
 
     private static ListingType getClaimantRespondentDetails(ListingType listingType, ListingData listingData, CaseData caseData) {
-        boolean rule50 = caseData.getRestrictedReporting() != null && caseData.getRestrictedReporting().getRule503b().equals("Yes");
+        boolean rule50b = caseData.getRestrictedReporting() != null && caseData.getRestrictedReporting().getRule503b() != null &&
+                caseData.getRestrictedReporting().getRule503b().equals("Yes");
+        boolean rule50d = caseData.getRestrictedReporting() != null && caseData.getRestrictedReporting().getImposed() != null &&
+                caseData.getRestrictedReporting().getImposed().equals("Yes");
         boolean isPublicType = listingData.getHearingDocType() != null && listingData.getHearingDocType().equals(HEARING_DOC_ETCL) &&
                 listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC);
         boolean isPressListType = listingData.getHearingDocType() != null && listingData.getHearingDocType().equals(HEARING_DOC_ETCL) &&
@@ -68,10 +71,10 @@ public class ListingHelper {
         listingType.setRespondentOthers(" ");
         listingType.setClaimantRepresentative(" ");
         listingType.setRespondentRepresentative(" ");
-        if (rule50 && isPublicType) {
+        if ((rule50b && isPublicType) || (rule50d && isPublicType)) {
             listingType.setClaimantName(" ");
             listingType.setRespondent(" ");
-        } else if (rule50 && isPressListType) {
+        } else if ((rule50b && isPressListType) || (rule50d && isPressListType)) {
             listingType.setClaimantName(RULE_50_APPLIES);
             listingType.setRespondent(RULE_50_APPLIES);
         } else {
