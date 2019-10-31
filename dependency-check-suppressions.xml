@@ -172,4 +172,37 @@
         <cve>CVE-2014-3488</cve>
     </suppress>
 
+    <suppress>
+        <notes><![CDATA[ CVE-2019-14540  ]]></notes>
+        <cve>CVE-2019-14540</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-16335  ]]></notes>
+        <cve>CVE-2019-16335</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-16942  ]]></notes>
+        <cve>CVE-2019-16942</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-16943  ]]></notes>
+        <cve>CVE-2019-16943</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-17267  ]]></notes>
+        <cve>CVE-2019-17267</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-17531  ]]></notes>
+        <cve>CVE-2019-17531</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-12415  ]]></notes>
+        <cve>CVE-2019-12415</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-3488  ]]></notes>
+        <cve>CVE-2014-3488</cve>
+    </suppress>
+
 </suppressions>
