@@ -13,14 +13,20 @@
     <cpe>cpe:/a:bouncycastle:legion-of-the-bouncy-castle-java-crytography-api</cpe>
   </suppress>
 
-  <suppress>
+    <suppress>
+        <notes><![CDATA[file name: poi-ooxml-4.0.0.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.poi/poi-ooxml@.*$</packageUrl>
+        <cpe>cpe:/a:apache:poi</cpe>
+    </suppress>
+
+    <suppress>
     <notes><![CDATA[
    file name: d3js-3.4.11.jar
    ]]></notes>
     <gav regex="true">^org\.webjars:d3js:.*$</gav>
     <cve>CVE-2017-16044</cve>
   </suppress>
-  
+
   <suppress>
     <notes><![CDATA[ slf4j only has a beta version released with the 'fix', looks like lots of changes in it... ]]></notes>
     <cve>CVE-2018-8088</cve>
@@ -165,4 +171,5 @@
         <notes><![CDATA[ CVE-2014-3488  ]]></notes>
         <cve>CVE-2014-3488</cve>
     </suppress>
+
 </suppressions>
