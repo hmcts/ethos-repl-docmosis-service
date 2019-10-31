@@ -12,13 +12,6 @@
     <gav regex="true">^org\.bouncycastle:bcprov-jdk15on:.*$</gav>
     <cpe>cpe:/a:bouncycastle:legion-of-the-bouncy-castle-java-crytography-api</cpe>
   </suppress>
-
-    <suppress>
-        <notes><![CDATA[file name: poi-ooxml-4.0.0.jar]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.poi/poi-ooxml@.*$</packageUrl>
-        <cpe>cpe:/a:apache:poi</cpe>
-    </suppress>
-
     <suppress>
     <notes><![CDATA[
    file name: d3js-3.4.11.jar
