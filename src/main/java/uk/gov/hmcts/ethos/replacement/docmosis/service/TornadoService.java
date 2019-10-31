@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
 
 import java.io.*;
 import java.net.ConnectException;
@@ -19,7 +21,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static java.net.HttpURLConnection.HTTP_OK;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.OUTPUT_FILE_NAME;
 
 @Slf4j
 @Service("tornadoService")
@@ -39,13 +40,12 @@ public class TornadoService {
             conn = createConnection();
             log.info("Connected");
             UserDetails userDetails = userService.getUserDetails(authToken);
-            log.info("Coming to build instruction");
             buildInstruction(conn, caseData, userDetails);
-            log.info("End build instruction");
             int status = conn.getResponseCode();
             if (status == HTTP_OK) {
                 log.info("HTTP_OK");
-                documentInfo = createDocument(authToken, conn, caseData);
+                String documentName = Helper.getDocumentName(caseData);
+                documentInfo = createDocument(authToken, conn, documentName);
             } else {
                 log.error("Our call failed: status = " + status);
                 log.error("message:" + conn.getResponseMessage());
@@ -83,44 +83,79 @@ public class TornadoService {
 
     private void buildInstruction(HttpURLConnection conn, CaseData caseData, UserDetails userDetails) throws IOException {
         StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(), userDetails);
-        log.info("Sending request: " + sb.toString());
+        //log.info("Sending request: " + sb.toString());
         // send the instruction in UTF-8 encoding so that most character sets are available
-        log.info("Creating outputstreamwriter");
         OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
-        log.info("Writing toString");
         os.write(sb.toString());
-        log.info("Flushing");
         os.flush();
     }
 
-    private DocumentInfo createDocument(String authToken, HttpURLConnection conn, CaseData caseData) throws IOException {
-        byte[] buff = new byte[1000];
-        int bytesRead;
-        log.info("Create document");
-        File file = new File(OUTPUT_FILE_NAME);
-        log.info("Document created");
-        try (FileOutputStream fos = new FileOutputStream(file)) {
-            log.info("FileOutputStream");
-            while ((bytesRead = conn.getInputStream().read(buff, 0, buff.length)) != -1) {
-                fos.write(buff, 0, bytesRead);
-            }
+    private byte[] getBytesFromInputStream(InputStream is) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        byte[] buffer = new byte[0xFFFF];
+        for (int len = is.read(buffer); len != -1; len = is.read(buffer)) {
+            os.write(buffer, 0, len);
         }
-        log.info("File created: " + file.getAbsolutePath());
+        return os.toByteArray();
+    }
 
-        URI documentSelfPath = documentManagementService.uploadDocument(authToken, file);
+    private DocumentInfo createDocument(String authToken, HttpURLConnection conn, String documentName) throws IOException {
+        URI documentSelfPath = documentManagementService.uploadDocument(authToken, getBytesFromInputStream(conn.getInputStream()));
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
-        return generateDocumentInfo(caseData,
+        return generateDocumentInfo(documentName,
                 documentSelfPath,
                 documentManagementService.generateMarkupDocument(documentManagementService.generateDownloadableURL(documentSelfPath)));
     }
 
-    private DocumentInfo generateDocumentInfo(CaseData caseData, URI documentSelfPath, String markupURL) {
+    private DocumentInfo generateDocumentInfo(String documentName, URI documentSelfPath, String markupURL) {
         log.info("MarkupURL: "+markupURL);
         return DocumentInfo.builder()
                 .type(SignificantItemType.DOCUMENT.name())
-                .description(Helper.getDocumentName(caseData))
+                .description(documentName)
                 .markUp(markupURL)
                 .url(ccdGatewayBaseUrl + documentSelfPath.getRawPath() + "/binary")
                 .build();
     }
+
+    DocumentInfo listingGeneration(String authToken, ListingData listingData, String caseType) throws IOException {
+        HttpURLConnection conn = null;
+        DocumentInfo documentInfo = new DocumentInfo();
+        try {
+            conn = createConnection();
+            log.info("Connected");
+            UserDetails userDetails = userService.getUserDetails(authToken);
+            String documentName = ListingHelper.getListingDocName(listingData);
+            buildListingInstruction(conn, listingData, documentName, userDetails, caseType);
+            int status = conn.getResponseCode();
+            if (status == HTTP_OK) {
+                documentInfo = createDocument(authToken, conn, documentName);
+            } else {
+                log.error("message:" + conn.getResponseMessage());
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                String msg;
+                while ((msg = errorReader.readLine()) != null) {
+                    log.error(msg);
+                }
+            }
+        } catch (ConnectException e) {
+            log.error("Unable to connect to Docmosis: " + e.getMessage());
+            log.error("If you have a proxy, you will need the Proxy aware example code.");
+            System.exit(2);
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+        return documentInfo;
+    }
+
+    private void buildListingInstruction(HttpURLConnection conn, ListingData listingData, String documentName, UserDetails userDetails, String caseType) throws IOException {
+        StringBuilder sb = ListingHelper.buildListingDocumentContent(listingData, tornadoConfiguration.getAccessKey(), documentName, userDetails, caseType);
+        log.info("Sending request: " + sb.toString());
+        // send the instruction in UTF-8 encoding so that most character sets are available
+        OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
+        os.write(sb.toString());
+        os.flush();
+    }
+
 }

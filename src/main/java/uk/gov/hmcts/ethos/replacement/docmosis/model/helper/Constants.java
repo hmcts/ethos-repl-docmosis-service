@@ -5,8 +5,10 @@ import java.time.format.DateTimeFormatter;
 public class Constants {
 
     public static final DateTimeFormatter OLD_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    public static final DateTimeFormatter OLD_DATE_TIME_PATTERN2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final DateTimeFormatter NEW_DATE_PATTERN = DateTimeFormatter.ofPattern("d MMMM yyyy");
     public static final DateTimeFormatter NEW_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("d MMMM yyyy HH:mm");
+    public static final DateTimeFormatter NEW_TIME_PATTERN = DateTimeFormatter.ofPattern("HH:mm");
     public static final String NEW_LINE = "\",\n";
     public static final String OUTPUT_FILE_NAME = "document.docx";
 
@@ -48,6 +50,9 @@ public class Constants {
     public static final String ACCEPTED_STATE = "Accepted";
     public static final String REJECTED_STATE = "Rejected";
 
+    public static final String INDIVIDUAL_TYPE_CLAIMANT = "Individual";
+    public static final String MANUALLY_CREATED_POSITION = "Manually Created";
+
     public static final String CREATION_EVENT_TRIGGER_ID = "initiateCase";
     public static final String UPDATE_EVENT_TRIGGER_ID = "amendCaseDetails";
     public static final String UPDATE_EVENT_TRIGGER_ID_BULK = "amendCaseDetailsBulk";
@@ -72,6 +77,37 @@ public class Constants {
     public static final String WATFORD_OFFICE_NUMBER = "33";
     public static final String GLASGOW_OFFICE_NUMBER = "41";
 
-    public static final String DEFAULT_INIT_REF = "10000";
+    public static final String DEFAULT_INIT_REF = "20000";
+    public static final int DEFAULT_INIT_SUB_REF = 1;
     public static final String DEFAULT_MAX_REF = "99999";
+
+    public static final String DEFAULT_SELECT_ALL_VALUE = "999999";
+    public static final String SELECT_ALL_VALUE = "Select All";
+    public static final String SELECT_NONE_VALUE = "None";
+
+    public static final String MANCHESTER_LISTING_CASE_TYPE_ID = "Manchester_Listings";
+    public static final String SCOTLAND_LISTING_CASE_TYPE_ID = "Scotland_Listings";
+    public static final String LEEDS_LISTING_CASE_TYPE_ID = "Leeds_Listings";
+
+    public static final String IT56_TEMPLATE = "EM-TRB-SCO-ENG-00210";
+    public static final String IT57_TEMPLATE = "EM-TRB-SCO-ENG-00211";
+    public static final String PUBLIC_CASE_CAUSE_LIST_TEMPLATE = "EM-TRB-SCO-ENG-00212";
+    public static final String STAFF_CASE_CAUSE_LIST_TEMPLATE = "EM-TRB-SCO-ENG-00213";
+    public static final String PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE = "EM-TRB-SCO-ENG-00214";
+    public static final String STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE = "EM-TRB-SCO-ENG-00215";
+    public static final String PRESS_LIST_CAUSE_LIST_RANGE_TEMPLATE = "EM-TRB-SCO-ENG-00216";
+    public static final String PRESS_LIST_CAUSE_LIST_SINGLE_TEMPLATE = "EM-TRB-SCO-ENG-00217";
+
+    public static final String HEARING_DOC_ETCL = "ETCL";
+    public static final String HEARING_DOC_IT56 = "IT56";
+    public static final String HEARING_DOC_IT57 = "IT57";
+
+    public static final String HEARING_ETCL_PUBLIC = "Public";
+    public static final String HEARING_ETCL_STAFF = "Staff";
+    public static final String HEARING_ETCL_PRESS_LIST = "Press List";
+    public static final String RANGE_HEARING_DATE_TYPE = "Range";
+    public static final String SINGLE_HEARING_DATE_TYPE = "Single";
+
+    public static final String ALL_VENUES = "All";
+
 }

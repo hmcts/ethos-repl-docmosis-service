@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsights;
 import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
@@ -27,10 +26,8 @@ import java.util.Collections;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsights.DOCUMENT_NAME;
-import static uk.gov.hmcts.ethos.replacement.docmosis.appinsights.AppInsightsEvent.DOCUMENT_MANAGEMENT_UPLOAD_FAILURE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.OUTPUT_FILE_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.ResourceLoader.successfulDocumentManagementUploadResponse;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.ResourceLoader.unsuccessfulDocumentManagementUploadResponse;
 
@@ -43,8 +40,6 @@ public class DocumentManagementServiceTest {
     private AuthTokenGenerator authTokenGenerator;
     @Mock
     private UserService userService;
-    @Mock
-    private AppInsights appInsights;
     @InjectMocks
     private DocumentManagementService documentManagementService;
     @Rule
@@ -58,7 +53,7 @@ public class DocumentManagementServiceTest {
         file = createTestFile();
         markup = "<a target=\"_blank\" href=\"null/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary\">Document</a>";
         when(authTokenGenerator.generate()).thenReturn("authString");
-        documentManagementService = new DocumentManagementService(documentUploadClient, authTokenGenerator, userService, appInsights);
+        documentManagementService = new DocumentManagementService(documentUploadClient, authTokenGenerator, userService);
     }
 
     @Test
@@ -68,7 +63,7 @@ public class DocumentManagementServiceTest {
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
                 .thenReturn(successfulDocumentManagementUploadResponse());
-        URI documentSelfPath = documentManagementService.uploadDocument("authString", file);
+        URI documentSelfPath = documentManagementService.uploadDocument("authString", Files.readAllBytes(file.toPath()));
         String documentDownloadableURL = documentManagementService.generateDownloadableURL(documentSelfPath);
         assertEquals(documentManagementService.generateMarkupDocument(documentDownloadableURL), markup);
         assertNotNull(documentSelfPath);
@@ -78,19 +73,17 @@ public class DocumentManagementServiceTest {
     @Test
     public void uploadDocumentToDocumentManagementThrowsException() throws IOException, URISyntaxException {
         expectedException.expect(DocumentManagementException.class);
-        expectedException.expectMessage("Unable to upload document example.docx to document management");
+        expectedException.expectMessage("Unable to upload document document.docx to document management");
         UserDetails userDetails = new UserDetails("id", "mail@mail.com",
                 "userFirstName", "userLastName", Collections.singletonList("role"));
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
                 .thenReturn(unsuccessfulDocumentManagementUploadResponse());
-        documentManagementService.uploadDocument("authString", file);
-        verify(appInsights).trackEvent(DOCUMENT_MANAGEMENT_UPLOAD_FAILURE, DOCUMENT_NAME, anyString());
-
+        documentManagementService.uploadDocument("authString", Files.readAllBytes(file.toPath()));
     }
 
     private File createTestFile() {
-        Path path = Paths.get("example.docx");
+        Path path = Paths.get(OUTPUT_FILE_NAME);
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write("Hello World !!");
         } catch (IOException e) {

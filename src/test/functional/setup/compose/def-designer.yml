@@ -31,7 +31,6 @@ services:
       IDAM_S2S_URL: http://service-auth-provider-api:8080
       REFORM_TEAM: ccd
       REFORM_ENVIRONMENT: local
-      APPINSIGHTS_INSTRUMENTATIONKEY: key
       ELASTIC_SEARCH_ENABLED: "false"
       ELASTIC_SEARCH_HOST: "ccd-elasticsearch"
       ELASTIC_SEARCH_FAIL_ON_IMPORT: "false"

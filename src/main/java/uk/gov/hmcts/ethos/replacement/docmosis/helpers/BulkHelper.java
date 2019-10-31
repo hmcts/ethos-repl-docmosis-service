@@ -71,11 +71,11 @@ public class BulkHelper {
             }
             multipleType.setFileLocM(Optional.ofNullable(caseData.getFileLocation()).orElse(" "));
             multipleType.setReceiptDateM(Optional.ofNullable(caseData.getReceiptDate()).orElse(" "));
-            multipleType.setAcasOfficeM(Optional.ofNullable(caseData.getAcasOffice()).orElse(" "));
             multipleType.setPositionTypeM(Optional.ofNullable(caseData.getPositionType()).orElse(" "));
             multipleType.setFeeGroupReferenceM(Optional.ofNullable(caseData.getFeeGroupReference()).orElse(" "));
             multipleType.setJurCodesCollectionM(getJurCodesCollection(caseData.getJurCodesCollection()));
             multipleType.setStateM(getSubmitEventState(submitEvent));
+            multipleType.setSubMultipleM(" ");
             MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
             multipleTypeItem.setId(String.valueOf(submitEvent.getCaseId()));
             multipleTypeItem.setValue(multipleType);
@@ -102,7 +102,6 @@ public class BulkHelper {
         searchType.setRespondentRepS(multipleType.getRespondentRepM());
         searchType.setFileLocS(multipleType.getFileLocM());
         searchType.setReceiptDateS(multipleType.getReceiptDateM());
-        searchType.setAcasOfficeS(multipleType.getAcasOfficeM());
         searchType.setPositionTypeS(multipleType.getPositionTypeM());
         searchType.setFeeGroupReferenceS(multipleType.getFeeGroupReferenceM());
         searchType.setJurCodesCollectionS(multipleType.getJurCodesCollectionM());
@@ -160,16 +159,16 @@ public class BulkHelper {
         multipleType.setEthosCaseReferenceM(caseData.getEthosCaseReference()!=null ? caseData.getEthosCaseReference() : " ");
         multipleType.setFileLocM(!isNullOrEmpty(caseData.getFileLocation()) ? caseData.getFileLocation() : " ");
         multipleType.setReceiptDateM(!isNullOrEmpty(caseData.getReceiptDate()) ? caseData.getReceiptDate() : " ");
-        multipleType.setAcasOfficeM(!isNullOrEmpty(caseData.getAcasOffice()) ? caseData.getAcasOffice() : " ");
         multipleType.setPositionTypeM(!isNullOrEmpty(caseData.getPositionType()) ? caseData.getPositionType() : " ");
         multipleType.setFeeGroupReferenceM(!isNullOrEmpty(caseData.getFeeGroupReference()) ? caseData.getFeeGroupReference() : " ");
         multipleType.setJurCodesCollectionM(getJurCodesCollection(caseData.getJurCodesCollection()));
         multipleType.setStateM(!isNullOrEmpty(submitEvent.getState()) ? submitEvent.getState() : " ");
         multipleType.setMultipleReferenceM(!isNullOrEmpty(caseData.getMultipleReference()) ? caseData.getMultipleReference() : " ");
+        multipleType.setSubMultipleM(" ");
         return multipleType;
     }
 
-    private static String getJurCodesCollection(List<JurCodesTypeItem> jurCodesTypeItems) {
+    static String getJurCodesCollection(List<JurCodesTypeItem> jurCodesTypeItems) {
         if (jurCodesTypeItems != null) {
             return jurCodesTypeItems.stream()
                     .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())

@@ -28,8 +28,6 @@ public class SearchType {
     private String fileLocS;
     @JsonProperty("receiptDateS")
     private String receiptDateS;
-    @JsonProperty("acasOfficeS")
-    private String acasOfficeS;
     @JsonProperty("positionTypeS")
     private String positionTypeS;
     @JsonProperty("feeGroupReferenceS")

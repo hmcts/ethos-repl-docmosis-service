@@ -8,7 +8,7 @@
       "clerkResponsible": "Sue Spearitt",
       "feeGroupReference": "123456789123",
       "feeGroupReference_v2": "123456789123",
-      "multipleReference": "123123123",
+      "multipleReference": "",
       "respondentSurname": "Pedro",
       "respondentSurname_v2": "Pedro",
       "respondentRep": "Clerk LTD",
@@ -55,7 +55,6 @@
           "value": {
             "fileLocM": "with Mr Vincent Ryan",
             "clerkRespM": " ",
-            "acasOfficeM": " ",
             "receiptDateM": "1990-12-12",
             "positionTypeM": "Awaiting ET3",
             "claimantSurnameM": "Lady C Collins",
@@ -71,7 +70,6 @@
           "value": {
             "fileLocM": " ",
             "clerkRespM": " ",
-            "acasOfficeM": " ",
             "receiptDateM": "2020-12-12",
             "positionTypeM": "Awaiting ET3",
             "claimantSurnameM": "Mrs F Watson",
@@ -85,7 +83,6 @@
           "value": {
             "fileLocM": " ",
             "clerkRespM": " ",
-            "acasOfficeM": " ",
             "receiptDateM": "1990-12-12",
             "positionTypeM": "Awaiting ET3",
             "claimantSurnameM": "Lady C Collins",
@@ -100,7 +97,6 @@
           "value": {
             "fileLocS": "with Mr Vincent Ryan",
             "clerkRespS": " ",
-            "acasOfficeS": " ",
             "receiptDateS": "1990-12-12",
             "positionTypeS": "Awaiting ET3",
             "claimantSurnameS": "Lady C Collins",
@@ -116,7 +112,6 @@
           "value": {
             "fileLocS": " ",
             "clerkRespS": " ",
-            "acasOfficeS": " ",
             "receiptDateS": "2020-12-12",
             "positionTypeS": "Awaiting ET3",
             "claimantSurnameS": "Mrs F Watson",
@@ -130,7 +125,6 @@
           "value": {
             "fileLocS": " ",
             "clerkRespS": " ",
-            "acasOfficeS": " ",
             "receiptDateS": "1990-12-12",
             "positionTypeS": "Awaiting ET3",
             "claimantSurnameS": "Lady C Collins",

@@ -26,10 +26,6 @@ public class CaseData {
     private String ethosCaseReference;
     @JsonProperty("caseType")
     private String caseType;
-    @JsonProperty("multipleType")
-    private String multipleType;
-    @JsonProperty("multipleOthers")
-    private String multipleOthers;
     @JsonProperty("multipleReference")
     private String multipleReference;
     @JsonProperty("leadClaimant1")
@@ -66,6 +62,14 @@ public class CaseData {
     private String positionType;
     @JsonProperty("fileLocation")
     private String fileLocation;
+    @JsonProperty("fileLocationGlasgow")
+    private String fileLocationGlasgow;
+    @JsonProperty("fileLocationAberdeen")
+    private String fileLocationAberdeen;
+    @JsonProperty("fileLocationDundee")
+    private String fileLocationDundee;
+    @JsonProperty("fileLocationEdinburgh")
+    private String fileLocationEdinburgh;
     @JsonProperty("hearingType")
     private HearingType hearingType;
     @JsonProperty("hearingCollection")
@@ -78,16 +82,10 @@ public class CaseData {
     private List<JudgementDetailsTypeItem> judgementDetailsCollection;
     @JsonProperty("costsCollection")
     private List<CostsTypeItem> costsCollection;
-    @JsonProperty("disposeType")
-    private DisposeType disposeType;
-    @JsonProperty("NH_JudgementType")
-    private NhJudgementType NH_JudgementType;
     @JsonProperty("jurCodesCollection")
     private List<JurCodesTypeItem> jurCodesCollection;
     @JsonProperty("broughtForwardCollection")
     private List<BroughtForwardDatesTypeItem> broughtForwardCollection;
-    @JsonProperty("acasOffice")
-    private String acasOffice;
     @JsonProperty("clerkResponsible")
     private String clerkResponsible;
     @JsonProperty("userLocation")
@@ -96,46 +94,49 @@ public class CaseData {
     private String subMultipleReference;
     @JsonProperty("addSubMultipleComment")
     private String addSubMultipleComment;
-    @JsonProperty("panelCollection")
-    private List<PanelTypeItem> panelCollection;
     @JsonProperty("documentCollection")
     private List<DocumentTypeItem> documentCollection;
-    @JsonProperty("referToETJ")
-    private List<ReferralTypeItem> referToETJ;
-    @JsonProperty("withdrawType")
-    private WithdrawType withdrawType;
-    @JsonProperty("archiveType")
-    private ArchiveType archiveType;
     @JsonProperty("referredToJudge")
     private String referredToJudge;
     @JsonProperty("backFromJudge")
     private String backFromJudge;
-    @JsonProperty("additionalType")
-    private AdditionalType additionalType;
-    @JsonProperty("reconsiderationType")
-    private ReconsiderationType reconsiderationType;
-    @JsonProperty("reconsiderationCollection")
-    private List<ReconsiderationTypeItem> reconsiderationCollection;
-    @JsonProperty("correspondenceType")
-    private CorrespondenceType correspondenceType;
+    @JsonProperty("additionalCaseInfo")
+    private AdditionalCaseInfoType additionalCaseInfoType;
     @JsonProperty("correspondenceScotType")
     private CorrespondenceScotType correspondenceScotType;
+    @JsonProperty("correspondenceType")
+    private CorrespondenceType correspondenceType;
     @JsonProperty("caseNotes")
     private String caseNotes;
-    @JsonProperty("caseDocument")
-    private Document caseDocument;
     @JsonProperty("claimantWorkAddress")
     private ClaimantWorkAddressType claimantWorkAddress;
     @JsonProperty("claimantRepresentedQuestion")
     private String claimantRepresentedQuestion;
+    @JsonProperty("bulkCaseReferenceNumber")
+    private String bulkCaseReferenceNumber;
+    @JsonProperty("managingOffice")
+    private String managingOffice;
+    @JsonProperty("allocatedOffice")
+    private String allocatedOffice;
+    @JsonProperty("caseSource")
+    private String caseSource;
     @JsonProperty("state")
     private String state;
     @JsonProperty("stateAPI")
     private String stateAPI;
-    @JsonProperty("managingOffice")
-    private String managingOffice;
+    @JsonProperty("et3Received")
+    private String et3Received;
     @JsonProperty("conciliationTrack")
     private String conciliationTrack;
-
+    @JsonProperty("counterClaim")
+    private String counterClaim;
+    @JsonProperty("restrictedReporting")
+    private RestrictedReportingType restrictedReporting;
+    @JsonProperty("printHearing")
+    private PrintHearingType printHearing;
+    @JsonProperty("printHearingResults")
+    private PrintHearingType printHearingResults;
+    @JsonProperty("targetHearingDate")
+    private String targetHearingDate;
 
 }

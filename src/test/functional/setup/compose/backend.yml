@@ -17,7 +17,6 @@ services:
       DOCUMENT_MANAGEMENT_CASEWORKERROLE: "caseworker-test"
       SERVICE_AUTH_PROVIDER_URL: "http://service-auth-provider-api:8080"
       CCD_GATEWAY_BASE_URL: "http://127.0.0.1:3453"
-      APPINSIGHTS_INSTRUMENTATIONKEY: "key"
 
   tornado:
     image: "hmcts/tornado:latest"
@@ -47,7 +46,6 @@ services:
       REFORM_SERVICE_NAME: ccd-user-profile-api
       REFORM_TEAM: ccd
       REFORM_ENVIRONMENT: local
-      APPINSIGHTS_INSTRUMENTATIONKEY: key
     ports:
       - 4453:4453
     depends_on:
@@ -74,7 +72,6 @@ services:
       REFORM_SERVICE_NAME: ccd-definition-store-api
       REFORM_TEAM: ccd
       REFORM_ENVIRONMENT: local
-      APPINSIGHTS_INSTRUMENTATIONKEY: key
       ELASTIC_SEARCH_ENABLED: "${ES_ENABLED_DOCKER}"
       ELASTIC_SEARCH_HOST: "ccd-elasticsearch"
       ELASTIC_SEARCH_FAIL_ON_IMPORT: "true"
@@ -109,7 +106,6 @@ services:
       REFORM_SERVICE_NAME: ccd-data-store-api
       REFORM_TEAM: ccd
       REFORM_ENVIRONMENT: local
-      APPINSIGHTS_INSTRUMENTATIONKEY: key
       ELASTIC_SEARCH_ENABLED: "${ES_ENABLED_DOCKER}"
       ELASTIC_SEARCH_HOSTS: ccd-elasticsearch:9200
       ELASTIC_SEARCH_DATA_NODES_HOSTS: "http://ccd-elasticsearch:9200"

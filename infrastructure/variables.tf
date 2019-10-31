@@ -71,11 +71,6 @@ variable "ccd_gateway_url" {
   default = "http://127.0.0.1:3453"
 }
 
-variable "appinsights_instrumentation_key" {
-  description = "Instrumentation key of the App Insights instance this webapp should use. Module will create own App Insights resource if this is not provided"
-  default = ""
-}
-
 variable "component" {
   type = "string"
 }
@@ -87,4 +82,14 @@ variable "location_api" {
 
 variable "managed_identity_object_id" {
   default = ""
+}
+
+variable "appinsights_location" {
+  type        = "string"
+  default     = "West Europe"
+  description = "Location for Application Insights"
+}
+
+variable "enable_ase" {
+  default = false
 }

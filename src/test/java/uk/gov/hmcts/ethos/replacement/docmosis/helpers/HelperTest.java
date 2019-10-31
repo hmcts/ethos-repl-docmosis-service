@@ -91,7 +91,7 @@ public class HelperTest {
                 "3. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
                 "\"Respondent\":\"1. Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019 10:11\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t1_2\":\"true\",\n" +
@@ -146,10 +146,10 @@ public class HelperTest {
                 "\"Respondent\":\"\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"\",\n" +
-                "\"Hearing_date\":\"\",\n" +
-                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_date\":\"25 November 2019\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"Hearing_duration\":\"\",\n" +
+                "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t2_2A\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -431,7 +431,7 @@ public class HelperTest {
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"Hearing_duration\":\"2 hours\",\n" +
+                "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t7_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -485,10 +485,10 @@ public class HelperTest {
                 "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n" +
                 "2. 1333 Small Street, 22222 House, Liverpool, North West, L12 42R, UK\",\n" +
                 "\"Respondent\":\"1. Antonio Vazquez\",\n" +
-                "\"Hearing_date\":\"\",\n" +
-                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_date\":\"25 November 2019\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"Hearing_duration\":\"2 hours\",\n" +
+                "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t10_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -541,10 +541,10 @@ public class HelperTest {
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
                 "\"Respondent\":\"Antonio Vazquez\",\n" +
-                "\"Hearing_date\":\"\",\n" +
-                "\"Hearing_date_time\":\"\",\n" +
+                "\"Hearing_date\":\"25 November 2019\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"Hearing_duration\":\"2 hours\",\n" +
+                "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t9_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
                 "\"Court_addressLine2\":\"Alexandra House,\",\n" +
@@ -633,7 +633,7 @@ public class HelperTest {
                 "2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\",\n" +
                 "\"Respondent\":\"1. Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019 10:11\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t_Scot_7_1\":\"true\",\n" +
@@ -691,7 +691,7 @@ public class HelperTest {
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"Hearing_duration\":\"2 hours\",\n" +
+                "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t_Scot_24\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Eagle Building,\",\n" +
                 "\"Court_addressLine2\":\"215 Bothwell Street,\",\n" +
@@ -825,11 +825,11 @@ public class HelperTest {
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails).toString());
-        topLevel = "Part_16_Scot";
+        topLevel = "Part_9_Scot";
         part = "162";
         correspondenceScotType = new CorrespondenceScotType();
         correspondenceScotType.setTopLevelScotDocuments(topLevel);
-        correspondenceScotType.setPart16ScotDocuments(part);
+        correspondenceScotType.setPart9ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
         assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails).toString());

@@ -5,9 +5,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
@@ -47,6 +49,7 @@ public class DefaultValuesReaderServiceTest {
     private CaseDetails newcastleCaseDetails;
     private CaseDetails walesCaseDetails;
     private CaseDetails watfordCaseDetails;
+    private ListingData listingData;
 
     private CaseDetails getCaseDetails(String caseTypeId) {
         CaseDetails caseDetails = new CaseDetails();
@@ -57,8 +60,26 @@ public class DefaultValuesReaderServiceTest {
         return caseDetails;
     }
 
+    private ListingData getListingDataSetUp() {
+        listingData = new ListingData();
+        listingData.setTribunalCorrespondenceDX("DX");
+        listingData.setTribunalCorrespondenceEmail("m@m.com");
+        listingData.setTribunalCorrespondenceFax("100300200");
+        listingData.setTribunalCorrespondenceTelephone("077123123");
+        Address address = new Address();
+        address.setAddressLine1("AddressLine1");
+        address.setAddressLine2("AddressLine2");
+        address.setAddressLine3("AddressLine3");
+        address.setPostTown("Manchester");
+        address.setCountry("UK");
+        address.setPostCode("L1 122");
+        listingData.setTribunalCorrespondenceAddress(address);
+        return listingData;
+    }
+
     @Before
     public void setUp() {
+        listingData = getListingDataSetUp();
         manchesterCaseDetails = getCaseDetails(MANCHESTER_CASE_TYPE_ID);
         glasgowCaseDetails = getCaseDetails(SCOTLAND_CASE_TYPE_ID);
         bristolCaseDetails = getCaseDetails(BRISTOL_USERS_CASE_TYPE_ID);
@@ -71,9 +92,9 @@ public class DefaultValuesReaderServiceTest {
         newcastleCaseDetails = getCaseDetails(NEWCASTLE_USERS_CASE_TYPE_ID);
         walesCaseDetails = getCaseDetails(WALES_USERS_CASE_TYPE_ID);
         watfordCaseDetails = getCaseDetails(WATFORD_USERS_CASE_TYPE_ID);
-        preDefaultValues = DefaultValues.builder().claimantTypeOfClaimant("Individual").build();
+        preDefaultValues = DefaultValues.builder().claimantTypeOfClaimant(INDIVIDUAL_TYPE_CLAIMANT).build();
         postDefaultValuesManchester = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("Manchester Employment Tribunal")
                 .tribunalCorrespondenceAddressLine2("Alexandra House")
                 .tribunalCorrespondenceAddressLine3("14-22 The Parsonage")
@@ -85,7 +106,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("Manchesteret@justice.gov.uk")
                 .build();
         postDefaultValuesBristol = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("Bristol Civil and Family Justice Centre")
                 .tribunalCorrespondenceAddressLine2("2 Redcliff Street")
                 .tribunalCorrespondenceTown("Bristol")
@@ -96,7 +117,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("bristolet@justice.gov.uk")
                 .build();
         postDefaultValuesLeeds = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("4th Floor")
                 .tribunalCorrespondenceAddressLine2("City Exchange")
                 .tribunalCorrespondenceAddressLine3("11 Albion Street")
@@ -107,7 +128,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("leedset@hmcts.gsi.gov.uk")
                 .build();
         postDefaultValuesLondonCentral = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("Ground Floor")
                 .tribunalCorrespondenceAddressLine2("Victory House")
                 .tribunalCorrespondenceAddressLine3("30-34 Kingsway")
@@ -119,7 +140,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("londoncentralet@hmcts.gsi.gov.uk")
                 .build();
         postDefaultValuesLondonEast = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("2nd Floor")
                 .tribunalCorrespondenceAddressLine2("Import Building")
                 .tribunalCorrespondenceAddressLine3("2 Clove Crescent")
@@ -130,7 +151,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("eastlondon@justice.gov.uk")
                 .build();
         postDefaultValuesLondonSouth = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("Montague Court")
                 .tribunalCorrespondenceAddressLine2("101 London Road")
                 .tribunalCorrespondenceAddressLine3("West Croydon")
@@ -142,7 +163,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("londonsouthet@hmcts.gsi.gov.uk")
                 .build();
         postDefaultValuesMidlandsEast = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("Nottingham Justice Centre")
                 .tribunalCorrespondenceAddressLine2("Carrington Street")
                 .tribunalCorrespondenceTown("Nottingham")
@@ -152,7 +173,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("e.midlandseastet@justice.gov.uk")
                 .build();
         postDefaultValuesMidlandsWest = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("13th Floor")
                 .tribunalCorrespondenceAddressLine2("Centre City Tower")
                 .tribunalCorrespondenceAddressLine3("5-7 Hill Street")
@@ -163,7 +184,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("MidlandsWestET@justice.gov.uk")
                 .build();
         postDefaultValuesNewcastle = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("Kings Court")
                 .tribunalCorrespondenceAddressLine2("Earl Grey Way")
                 .tribunalCorrespondenceAddressLine3("Royal Quays")
@@ -175,7 +196,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("newcastleet@hmcts.gsi.gov.uk")
                 .build();
         postDefaultValuesWales = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("Fitzalan Place")
                 .tribunalCorrespondenceTown("Cardiff")
                 .tribunalCorrespondencePostCode("CF24 0RZ")
@@ -185,7 +206,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("cardiffet@justice.gov.uk")
                 .build();
         postDefaultValuesWatford = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("Watford Tribunal Hearing Centre")
                 .tribunalCorrespondenceAddressLine2("Radius House")
                 .tribunalCorrespondenceAddressLine3("51 Clarendon Road")
@@ -197,7 +218,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("watfordet@justice.gov.uk")
                 .build();
         postDefaultValuesGlasgow = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("Eagle Building")
                 .tribunalCorrespondenceAddressLine2("215 Bothwell Street")
                 .tribunalCorrespondenceTown("Glasgow")
@@ -206,10 +227,10 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceFax("01264 785 177")
                 .tribunalCorrespondenceDX("DX 580003")
                 .tribunalCorrespondenceEmail("glasgowet@justice.gov.uk")
-                .managingOffice("Glasgow")
+                .managingOffice(GLASGOW_OFFICE)
                 .build();
         postDefaultValuesAberdeen = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("Ground Floor")
                 .tribunalCorrespondenceAddressLine2("AB1, 48 Huntly Street")
                 .tribunalCorrespondenceTown("Aberdeen")
@@ -220,7 +241,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("aberdeenet@justice.gov.uk")
                 .build();
         postDefaultValuesDundee = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("Ground Floor")
                 .tribunalCorrespondenceAddressLine2("Block C, Caledonian House")
                 .tribunalCorrespondenceAddressLine3("Greenmarket")
@@ -232,7 +253,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("dundeeet@justice.gov.uk")
                 .build();
         postDefaultValuesEdinburgh = DefaultValues.builder()
-                .positionType("Manually Created")
+                .positionType(MANUALLY_CREATED_POSITION)
                 .tribunalCorrespondenceAddressLine1("54-56 Melville Street")
                 .tribunalCorrespondenceTown("Edinburgh")
                 .tribunalCorrespondencePostCode("EH3 7HF")
@@ -247,79 +268,79 @@ public class DefaultValuesReaderServiceTest {
 
     @Test
     public void getPreDefaultValues() {
-        DefaultValues preDefaultValues1 = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, glasgowCaseDetails);
+        DefaultValues preDefaultValues1 = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, "", glasgowCaseDetails.getCaseTypeId());
         assertEquals(preDefaultValues, preDefaultValues1);
     }
 
     @Test
     public void getManchesterPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, manchesterCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", manchesterCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesManchester, postDefaultValues1);
     }
 
     @Test
     public void getBristolPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, bristolCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", bristolCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesBristol, postDefaultValues1);
     }
 
     @Test
     public void getLeedsPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, leedsCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", leedsCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesLeeds, postDefaultValues1);
     }
 
     @Test
     public void getLondonCentralPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, londonCentralCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", londonCentralCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesLondonCentral, postDefaultValues1);
     }
 
     @Test
     public void getLondonEastPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, londonEastCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", londonEastCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesLondonEast, postDefaultValues1);
     }
 
     @Test
     public void getLondonSouthPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, londonSouthCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", londonSouthCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesLondonSouth, postDefaultValues1);
     }
 
     @Test
     public void getMidlandsEastPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, midlandsEastCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", midlandsEastCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesMidlandsEast, postDefaultValues1);
     }
 
     @Test
     public void getMidlandsWestPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, midlandsWestCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", midlandsWestCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesMidlandsWest, postDefaultValues1);
     }
 
     @Test
     public void getNewcastlePostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, newcastleCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", newcastleCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesNewcastle, postDefaultValues1);
     }
 
     @Test
     public void getWalesPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, walesCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", walesCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesWales, postDefaultValues1);
     }
 
     @Test
     public void getWatfordPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, watfordCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", watfordCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesWatford, postDefaultValues1);
     }
 
     @Test
     public void getGlasgowDefaultPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, glasgowCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesGlasgow, postDefaultValues1);
     }
 
@@ -327,45 +348,57 @@ public class DefaultValuesReaderServiceTest {
     public void getCaseData() {
         String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, " +
                 "tribunalCorrespondenceTelephone=0141 204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, " +
-                "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=null, multipleType=null, multipleOthers=null, " +
+                "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=null, " +
                 "multipleReference=null, leadClaimant=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "representativeClaimantType=null, responseTypeCollection=null, responseType=null, respondentCollection=null, repCollection=null, " +
-                "positionType=Manually Created, fileLocation=null, hearingType=null, hearingCollection=null, depositType=null, judgementCollection=null, " +
-                "judgementDetailsCollection=null, costsCollection=null, disposeType=null, NH_JudgementType=null, jurCodesCollection=null, " +
-                "broughtForwardCollection=null, acasOffice=null, clerkResponsible=null, userLocation=null, subMultipleReference=null, " +
-                "addSubMultipleComment=null, panelCollection=null, documentCollection=null, referToETJ=null, withdrawType=null, archiveType=null, " +
-                "referredToJudge=null, backFromJudge=null, additionalType=null, reconsiderationType=null, reconsiderationCollection=null, correspondenceType=null, " +
-                "correspondenceScotType=null, caseNotes=null, caseDocument=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, " +
-                "state=null, stateAPI=null, managingOffice=Glasgow, conciliationTrack=null)";
+                "positionType=Manually Created, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, " +
+                "fileLocationEdinburgh=null, hearingType=null, hearingCollection=null, depositType=null, judgementCollection=null, " +
+                "judgementDetailsCollection=null, costsCollection=null, jurCodesCollection=null, " +
+                "broughtForwardCollection=null, clerkResponsible=null, userLocation=null, subMultipleReference=null, " +
+                "addSubMultipleComment=null, documentCollection=null, referredToJudge=null, backFromJudge=null, additionalCaseInfoType=null, " +
+                "correspondenceScotType=null, correspondenceType=null, caseNotes=null, claimantWorkAddress=null, " +
+                "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=null, " +
+                "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearing=null, " +
+                "printHearingResults=null, targetHearingDate=null)";
         assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow).toString());
     }
 
     @Test
     public void getGlasgowOfficePostDefaultValues() {
         glasgowCaseDetails.getCaseData().setManagingOffice(GLASGOW_OFFICE);
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, glasgowCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, GLASGOW_OFFICE, glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesGlasgow.toString(), postDefaultValues1.toString());
     }
 
     @Test
     public void getAberdeenOfficePostDefaultValues() {
         glasgowCaseDetails.getCaseData().setManagingOffice(ABERDEEN_OFFICE);
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, glasgowCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ABERDEEN_OFFICE, glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesAberdeen.toString(), postDefaultValues1.toString());
     }
 
     @Test
     public void getDundeeOfficePostDefaultValues() {
         glasgowCaseDetails.getCaseData().setManagingOffice(DUNDEE_OFFICE);
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, glasgowCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, DUNDEE_OFFICE, glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesDundee, postDefaultValues1);
     }
 
     @Test
     public void getEdinburghOfficePostDefaultValues() {
         glasgowCaseDetails.getCaseData().setManagingOffice(EDINBURGH_OFFICE);
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, glasgowCaseDetails);
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, EDINBURGH_OFFICE, glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesEdinburgh, postDefaultValues1);
+    }
+
+    @Test
+    public void getListingData() {
+        String listingDataExpected = "ListingData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, " +
+                "tribunalCorrespondenceTelephone=0141 204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, " +
+                "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, hearingDateType=null, listingDate=null, listingDateFrom=null, " +
+                "listingDateTo=null, listingVenue=null, listingCollection=null, listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
+                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
+        assertEquals(listingDataExpected, defaultValuesReaderService.getListingData(listingData, postDefaultValuesGlasgow).toString());
     }
 }

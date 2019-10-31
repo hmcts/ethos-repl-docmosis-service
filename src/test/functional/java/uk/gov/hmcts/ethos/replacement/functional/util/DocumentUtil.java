@@ -15,6 +15,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatLocalDate;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatLocalDateTime;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 
 public class DocumentUtil {
 
@@ -97,11 +100,11 @@ public class DocumentUtil {
             sb.append("\"claimant_county\": \"" + nullCheck(claimantType.getClaimantAddressUK().getCounty())).append(NEW_LINE);
             sb.append("\"claimant_postCode\": \"" + nullCheck(claimantType.getClaimantAddressUK().getPostCode())).append(NEW_LINE);
             String typeOfClaimant = caseData.getClaimantTypeOfClaimant();
-            if (typeOfClaimant.equalsIgnoreCase("individual")) {
+            if (typeOfClaimant.equalsIgnoreCase(INDIVIDUAL_TYPE_CLAIMANT)) {
                 sb.append("\"claimant_full_name\": \"" + claimantIndType.claimantFullName()).append(NEW_LINE);
                 sb.append("\"Claimant\": \"" + claimantIndType.claimantFullName()).append(NEW_LINE);
                 //sb.append("\"claimant_email_address\": \"").append(NEW_LINE);
-            } else if (typeOfClaimant.equalsIgnoreCase("company")) {
+            } else if (typeOfClaimant.equalsIgnoreCase("Company")) {
                 sb.append("\"claimant_full_name\": \"" + caseData.getClaimantCompany()).append(NEW_LINE);
                 sb.append("\"Claimant\": \"" + caseData.getClaimantCompany()).append(NEW_LINE);
                 //sb.append("\"claimant_email_address\": \"").append(NEW_LINE);
@@ -185,20 +188,26 @@ public class DocumentUtil {
         //Currently checking collection not the HearingType
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             HearingType hearingType = caseData.getHearingCollection().get(0).getValue();
-            if (hearingType.getHearingDateStart() != null) {
-                sb.append("\"Hearing_date\": \"" + hearingType.getHearingDateStart()).append(NEW_LINE);
-                sb.append("\"Hearing_date_time\": \"" + hearingType.getHearingDateStart()).append(NEW_LINE);
+            if (hearingType.getHearingDateCollection() != null && !hearingType.getHearingDateCollection().isEmpty()) {
+                sb.append("\"Hearing_date\":\"").append(nullCheck(formatLocalDate(hearingType.getHearingDateCollection().get(0).getValue().getListedDate()))).append(NEW_LINE);
+                sb.append("\"Hearing_date_time\":\"").append(nullCheck(formatLocalDateTime(hearingType.getHearingDateCollection().get(0).getValue().getListedDate()))).append(NEW_LINE);
             } else {
-                sb.append("\"Hearing_date\": \"").append(NEW_LINE);
-                sb.append("\"Hearing_date_time\": \"").append(NEW_LINE);
+                sb.append("\"Hearing_date\":\"").append(NEW_LINE);
+                sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
             }
-            sb.append("\"Hearing_venue\": \"" + hearingType.getHearingVenue()).append(NEW_LINE);
-            //sb.append("\"hearing_address\": \"" + hearingType.getHearingVenue()).append(NEW_LINE);
-            if (hearingType.getEstHearing() != null) {
-                sb.append("\"Hearing_duration\": \"" + hearingType.getEstHearing()).append(NEW_LINE);
-            }
+            sb.append("\"Hearing_venue\":\"").append(nullCheck(hearingType.getHearingVenue())).append(NEW_LINE);
+            sb.append("\"Hearing_duration\":\"").append(nullCheck(getHearingDuration(hearingType))).append(NEW_LINE);
+        } else {
+            sb.append("\"Hearing_date\":\"").append(NEW_LINE);
+            sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
+            sb.append("\"Hearing_venue\":\"").append(NEW_LINE);
+            sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
         }
         return sb;
+    }
+
+    private static String getHearingDuration(HearingType hearingType) {
+        return String.join(" ", hearingType.getHearingEstLengthNum(), hearingType.getHearingEstLengthNumType());
     }
 
     private static String getTemplateName(CaseData caseData) {
@@ -251,13 +260,13 @@ public class DocumentUtil {
             if (correspondenceScotType.getPart6ScotDocuments() != null) return correspondenceScotType.getPart6ScotDocuments();
             if (correspondenceScotType.getPart7ScotDocuments() != null) return correspondenceScotType.getPart7ScotDocuments();
             if (correspondenceScotType.getPart8ScotDocuments() != null) return correspondenceScotType.getPart8ScotDocuments();
+            if (correspondenceScotType.getPart9ScotDocuments() != null) return correspondenceScotType.getPart9ScotDocuments();
             if (correspondenceScotType.getPart10ScotDocuments() != null) return correspondenceScotType.getPart10ScotDocuments();
             if (correspondenceScotType.getPart11ScotDocuments() != null) return correspondenceScotType.getPart11ScotDocuments();
             if (correspondenceScotType.getPart12ScotDocuments() != null) return correspondenceScotType.getPart12ScotDocuments();
             if (correspondenceScotType.getPart13ScotDocuments() != null) return correspondenceScotType.getPart13ScotDocuments();
             if (correspondenceScotType.getPart14ScotDocuments() != null) return correspondenceScotType.getPart14ScotDocuments();
             if (correspondenceScotType.getPart15ScotDocuments() != null) return correspondenceScotType.getPart15ScotDocuments();
-            if (correspondenceScotType.getPart16ScotDocuments() != null) return correspondenceScotType.getPart16ScotDocuments();
         }
         return "";
     }

@@ -12,8 +12,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.SubmitBulkEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.CaseIdTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.CaseType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.MultipleType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.SearchType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
@@ -23,6 +25,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumType
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 
 import java.io.IOException;
@@ -94,7 +97,6 @@ public class BulkUpdateServiceTest {
         submitBulkEvent.setCaseId(1111);
         submitBulkEvent.setCaseData(bulkData);
 
-        bulkSearchService = new BulkSearchService(ccdClient);
         bulkUpdateService = new BulkUpdateService(ccdClient, bulkSearchService);
 
         bulkRequestPayload = new BulkRequestPayload();
@@ -154,6 +156,9 @@ public class BulkUpdateServiceTest {
         bulkData.setMultipleReference("1111");
         submitBulkEvent.setCaseData(bulkData);
         List<SubmitBulkEvent> submitBulkEventList = new ArrayList<>(Collections.singletonList(submitBulkEvent));
+        BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
+        bulkCasesPayload.setSubmitEvents(new ArrayList<>(Collections.singleton(submitEvent)));
+        when(bulkSearchService.bulkCasesRetrievalRequest(isA(BulkDetails.class), isA(String.class))).thenReturn(bulkCasesPayload);
         when(ccdClient.retrieveBulkCases("authToken", MANCHESTER_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
         assert(bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()),
@@ -199,6 +204,11 @@ public class BulkUpdateServiceTest {
         bulkData.setPositionTypeV2("Awaiting");
         bulkData.setClaimantRepV2("ClaimantRep");
         bulkData.setRespondentRepV2("RespondentRep");
+        bulkData.setFileLocationAberdeen("Aberdeen");
+        bulkData.setFileLocationDundee("Dundee");
+        bulkData.setFileLocationEdinburgh("Edinburgh");
+        bulkData.setFileLocationGlasgow("Glasgow");
+        bulkData.setManagingOffice(GLASGOW_OFFICE);
         bulkDetails.setCaseData(bulkData);
         bulkDetails.setJurisdiction("TRIBUNALS");
         bulkDetails.setCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID);
@@ -218,6 +228,13 @@ public class BulkUpdateServiceTest {
         CaseIdTypeItem caseIdTypeItem = new CaseIdTypeItem();
         caseIdTypeItem.setValue(caseType);
         bulkData.setCaseIdCollection(new ArrayList<>(Collections.singletonList(caseIdTypeItem)));
+        MultipleType multipleType = new MultipleType();
+        multipleType.setSubMultipleM("12");
+        multipleType.setEthosCaseReferenceM("11111");
+        MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
+        multipleTypeItem.setId("1111");
+        multipleTypeItem.setValue(multipleType);
+        bulkData.setMultipleCollection(new ArrayList<>(Collections.singleton(multipleTypeItem)));
         bulkDetails.setCaseData(bulkData);
         return bulkDetails;
     }

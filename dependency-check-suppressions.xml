@@ -12,15 +12,14 @@
     <gav regex="true">^org\.bouncycastle:bcprov-jdk15on:.*$</gav>
     <cpe>cpe:/a:bouncycastle:legion-of-the-bouncy-castle-java-crytography-api</cpe>
   </suppress>
-
-  <suppress>
+    <suppress>
     <notes><![CDATA[
    file name: d3js-3.4.11.jar
    ]]></notes>
     <gav regex="true">^org\.webjars:d3js:.*$</gav>
     <cve>CVE-2017-16044</cve>
   </suppress>
-  
+
   <suppress>
     <notes><![CDATA[ slf4j only has a beta version released with the 'fix', looks like lots of changes in it... ]]></notes>
     <cve>CVE-2018-8088</cve>
@@ -153,4 +152,50 @@
         <notes><![CDATA[ CVE-2019-12402  ]]></notes>
         <cve>CVE-2019-12402</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-16869  ]]></notes>
+        <cve>CVE-2019-16869</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2015-2156  ]]></notes>
+        <cve>CVE-2015-2156</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-3488  ]]></notes>
+        <cve>CVE-2014-3488</cve>
+    </suppress>
+
+    <suppress>
+        <notes><![CDATA[ CVE-2019-14540  ]]></notes>
+        <cve>CVE-2019-14540</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-16335  ]]></notes>
+        <cve>CVE-2019-16335</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-16942  ]]></notes>
+        <cve>CVE-2019-16942</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-16943  ]]></notes>
+        <cve>CVE-2019-16943</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-17267  ]]></notes>
+        <cve>CVE-2019-17267</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-17531  ]]></notes>
+        <cve>CVE-2019-17531</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-12415  ]]></notes>
+        <cve>CVE-2019-12415</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-3488  ]]></notes>
+        <cve>CVE-2014-3488</cve>
+    </suppress>
+
 </suppressions>

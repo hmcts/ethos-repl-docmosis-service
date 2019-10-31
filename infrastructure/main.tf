@@ -26,8 +26,8 @@ module "repl-docmosis-backend" {
   subscription                    = "${var.subscription}"
   capacity                        = "${var.capacity}"
   common_tags                     = "${var.common_tags}"
-  appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
   is_frontend                     = false
+  enable_ase                      = "${var.enable_ase}"
 
   app_settings                         = {
     WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = "${var.autoheal}"
@@ -62,6 +62,21 @@ module "db" {
   sku_tier           = "GeneralPurpose"
   common_tags        = "${var.common_tags}"
   subscription       = "${var.subscription}"
+}
+
+resource "azurerm_key_vault_secret" "AZURE_APPINSGHTS_KEY" {
+  name         = "AppInsightsInstrumentationKey"
+  value        = "${azurerm_application_insights.appinsights.instrumentation_key}"
+  key_vault_id = "${module.key-vault.key_vault_id}"
+}
+
+resource "azurerm_application_insights" "appinsights" {
+  name                = "${var.product}-${var.component}-appinsights-${var.env}"
+  location            = "${var.appinsights_location}"
+  resource_group_name = "${local.vaultGroupName}"
+  application_type    = "Web"
+
+  tags = "${var.common_tags}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {

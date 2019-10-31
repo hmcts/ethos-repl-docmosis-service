@@ -57,11 +57,11 @@ public class BulkHelperTest {
     public void getMultipleTypeListBySubmitEventList() {
         String result = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, multipleReferenceM=1234, " +
                 "clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , respondentRepM= , " +
-                "fileLocM=Manchester, receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM= , jurCodesCollectionM=AA, " +
-                "stateM= )), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, " +
+                "fileLocM=Manchester, receiptDateM= , positionTypeM= , feeGroupReferenceM= , jurCodesCollectionM=AA, " +
+                "stateM= , subMultipleM= )), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, " +
                 "multipleReferenceM=1234, clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , " +
-                "respondentRepM= , fileLocM=Manchester, receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM= , " +
-                "jurCodesCollectionM=AA, stateM= ))]";
+                "respondentRepM= , fileLocM=Manchester, receiptDateM= , positionTypeM= , feeGroupReferenceM= , " +
+                "jurCodesCollectionM=AA, stateM= , subMultipleM= ))]";
         assertEquals(result, BulkHelper.getMultipleTypeListBySubmitEventList(submitEvents, "1234").toString());
     }
 
@@ -71,11 +71,11 @@ public class BulkHelperTest {
         submitEvents.get(1).setState("Pending");
         String result = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, multipleReferenceM=1234, " +
                 "clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , respondentRepM= , " +
-                "fileLocM=Manchester, receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM= , jurCodesCollectionM=AA, " +
-                "stateM=Submitted)), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, " +
+                "fileLocM=Manchester, receiptDateM= , positionTypeM= , feeGroupReferenceM= , jurCodesCollectionM=AA, " +
+                "stateM=Submitted, subMultipleM= )), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, " +
                 "multipleReferenceM=1234, clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , " +
-                "respondentRepM= , fileLocM=Manchester, receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM= , " +
-                "jurCodesCollectionM=AA, stateM=Submitted))]";
+                "respondentRepM= , fileLocM=Manchester, receiptDateM= , positionTypeM= , feeGroupReferenceM= , " +
+                "jurCodesCollectionM=AA, stateM=Submitted, subMultipleM= ))]";
         assertEquals(result, BulkHelper.getMultipleTypeListBySubmitEventList(submitEvents, "1234").toString());
     }
 
@@ -140,7 +140,7 @@ public class BulkHelperTest {
     public void getMultipleTypeFromSubmitEvent() {
         String result = "MultipleType(caseIDM=0, ethosCaseReferenceM= , leadClaimantM=null, multipleReferenceM= , clerkRespM= , " +
                 "claimantSurnameM=Mike, respondentSurnameM=Juan Pedro, claimantRepM= , respondentRepM= , fileLocM=Manchester, " +
-                "receiptDateM= , acasOfficeM= , positionTypeM= , feeGroupReferenceM=11111, jurCodesCollectionM= , stateM= )";
+                "receiptDateM= , positionTypeM= , feeGroupReferenceM=11111, jurCodesCollectionM= , stateM= , subMultipleM= )";
         assertEquals(result, BulkHelper.getMultipleTypeFromSubmitEvent(submitEventComplete).toString());
     }
 

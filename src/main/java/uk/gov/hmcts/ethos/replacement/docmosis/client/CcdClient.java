@@ -43,9 +43,6 @@ public class CcdClient {
 
     public CCDRequest startCaseCreation(String authToken, CaseDetails caseDetails) throws IOException {
         UserDetails userDetails = userService.getUserDetails(authToken);
-        log.info("UserDetails and roles: " + userDetails.getRoles());
-        log.info("UserDetails and id: " + userDetails.getId());
-        log.info("UserDetails and forname: " + userDetails.getForename());
         HttpEntity<String> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
         String uri = ccdClientConfig.buildStartCaseCreationUrl(userService.getUserDetails(authToken).getId(), caseDetails.getJurisdiction(),
@@ -84,7 +81,6 @@ public class CcdClient {
 
     private int getTotalPagesCount(String authToken, String caseTypeId, String jurisdiction) throws IOException {
         PaginatedSearchMetadata paginatedSearchMetadata = searchMetadata(authToken, caseTypeId, jurisdiction);
-        log.info("Pages: " + paginatedSearchMetadata.getTotalPagesCount());
         return paginatedSearchMetadata.getTotalPagesCount();
     }
 
