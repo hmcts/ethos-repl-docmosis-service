@@ -13,7 +13,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 public class BulkHelperTest {
@@ -159,6 +159,56 @@ public class BulkHelperTest {
         caseData.setFeeGroupReference("11111");
         submitEvent.setCaseData(caseData);
         return submitEvent;
+    }
+
+    private List<JurCodesTypeItem> getJurCodesTypeItems(String ... codes) {
+        JurCodesType jurCodesType = new JurCodesType();
+        jurCodesType.setJuridictionCodesList(codes[0]);
+        JurCodesTypeItem jurCodesTypeItem = new JurCodesTypeItem();
+        jurCodesTypeItem.setValue(jurCodesType);
+        JurCodesType jurCodesType1 = new JurCodesType();
+        jurCodesType1.setJuridictionCodesList(codes[1]);
+        JurCodesTypeItem jurCodesTypeItem1 = new JurCodesTypeItem();
+        jurCodesTypeItem1.setValue(jurCodesType1);
+        JurCodesType jurCodesType2 = new JurCodesType();
+        jurCodesType2.setJuridictionCodesList(codes[2]);
+        JurCodesTypeItem jurCodesTypeItem2 = new JurCodesTypeItem();
+        jurCodesTypeItem2.setValue(jurCodesType2);
+        return new ArrayList<>(Arrays.asList(jurCodesTypeItem, jurCodesTypeItem1, jurCodesTypeItem2));
+    }
+
+    @Test
+    public void containsAllJurCodes() {
+        List<JurCodesTypeItem> jurCodesTypeItems1 = getJurCodesTypeItems("A", "B", "C");
+        List<JurCodesTypeItem> jurCodesTypeItems2 = getJurCodesTypeItems("A", "B", "C");
+        assertTrue(BulkHelper.containsAllJurCodes(jurCodesTypeItems1, jurCodesTypeItems2));
+        jurCodesTypeItems1 = getJurCodesTypeItems("A", "B", "D");
+        jurCodesTypeItems2 = getJurCodesTypeItems("A", "C", "B");
+        assertFalse(BulkHelper.containsAllJurCodes(jurCodesTypeItems1, jurCodesTypeItems2));
+        assertFalse(BulkHelper.containsAllJurCodes(null, jurCodesTypeItems2));
+        assertFalse(BulkHelper.containsAllJurCodes(new ArrayList<>(), jurCodesTypeItems2));
+        assertTrue(BulkHelper.containsAllJurCodes(new ArrayList<>(), new ArrayList<>()));
+        assertTrue(BulkHelper.containsAllJurCodes(null, null));
+    }
+
+    @Test
+    public void getJurCodesListFromString() {
+        List<JurCodesTypeItem> jurCodesTypeItems1 = getJurCodesTypeItems("A", "B", "C");
+        List<JurCodesTypeItem> jurCodesTypeItems2 = getJurCodesTypeItems("A", "B", "C");
+        String jurCodes = BulkHelper.getJurCodesCollection(jurCodesTypeItems2);
+        assertTrue(BulkHelper.containsAllJurCodes(jurCodesTypeItems1, BulkHelper.getJurCodesListFromString(jurCodes)));
+
+        jurCodesTypeItems1 = getJurCodesTypeItems("A", "B", "D");
+        jurCodesTypeItems2 = getJurCodesTypeItems("A", "C", "B");
+        jurCodes = BulkHelper.getJurCodesCollection(jurCodesTypeItems2);
+        assertFalse(BulkHelper.containsAllJurCodes(jurCodesTypeItems1, BulkHelper.getJurCodesListFromString(jurCodes)));
+
+        assertFalse(BulkHelper.containsAllJurCodes(null, BulkHelper.getJurCodesListFromString(jurCodes)));
+        assertFalse(BulkHelper.containsAllJurCodes(new ArrayList<>(), BulkHelper.getJurCodesListFromString(jurCodes)));
+
+        assertTrue(BulkHelper.containsAllJurCodes(new ArrayList<>(), BulkHelper.getJurCodesListFromString(null)));
+        assertTrue(BulkHelper.containsAllJurCodes(new ArrayList<>(), BulkHelper.getJurCodesListFromString("")));
+        assertTrue(BulkHelper.containsAllJurCodes(new ArrayList<>(), BulkHelper.getJurCodesListFromString(" ")));
     }
 
 }
