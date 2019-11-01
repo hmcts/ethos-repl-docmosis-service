@@ -82,7 +82,7 @@ public class CreateBulkComponentTest {
     public void create_bulk_eng_with_some_non_existent_cases() throws IOException {
         testUtil.loadAuthToken();
 
-        String ethosCaseReference = testUtil.getUniqueCaseReference();
+        String ethosCaseReference = testUtil.getUniqueCaseReference(10);
         String caseDetails = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1_CASE1), "UTF-8");
         caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
 
@@ -92,9 +92,9 @@ public class CreateBulkComponentTest {
         Assert.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
         String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK5), "UTF-8");
         testData = testData.replace("#ETHOS-CASE-REFERENCE1#", ethosCaseReference);
-        ethosCaseReference = testUtil.getUniqueCaseReference();
+        ethosCaseReference = testUtil.getUniqueCaseReference(10);
         testData = testData.replace("#ETHOS-CASE-REFERENCE2#", ethosCaseReference);
-        ethosCaseReference = testUtil.getUniqueCaseReference();
+        ethosCaseReference = testUtil.getUniqueCaseReference(10);
         testData = testData.replace("#ETHOS-CASE-REFERENCE3#", ethosCaseReference);
 
         BulkRequest bulkRequest = testUtil.getBulkRequest(true, testData);
@@ -117,7 +117,7 @@ public class CreateBulkComponentTest {
         int count = 1;
         List<String> usedCaseReferences = new ArrayList<>();
         for (String caseDataFilePath : caseList) {
-            String ethosCaseReference = testUtil.getUniqueCaseReference();
+            String ethosCaseReference = testUtil.getUniqueCaseReference(10);
             usedCaseReferences.add(ethosCaseReference);
 
             String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
@@ -157,7 +157,7 @@ public class CreateBulkComponentTest {
 
         int count = 1;
         for (String caseDataFilePath : caseList) {
-            String ethosCaseReference = testUtil.getUniqueCaseReference();
+            String ethosCaseReference = testUtil.getUniqueCaseReference(10);
 
             String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
             caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
@@ -190,7 +190,7 @@ public class CreateBulkComponentTest {
 
         int count = 1;
         for (String caseDataFilePath : caseList) {
-            String ethosCaseReference = testUtil.getUniqueCaseReference();
+            String ethosCaseReference = testUtil.getUniqueCaseReference(10);
 
             String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
             caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
@@ -207,7 +207,7 @@ public class CreateBulkComponentTest {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_SCOT_BULK2_CASE1);
         for (String caseDataFilePath : caseList) {
-            String ethosCaseReference = testUtil.getUniqueCaseReference();
+            String ethosCaseReference = testUtil.getUniqueCaseReference(10);
 
             String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
             caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
@@ -233,11 +233,11 @@ public class CreateBulkComponentTest {
 
         String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK5), "UTF-8");
 
-        String ethosCaseReference = testUtil.getUniqueCaseReference();
+        String ethosCaseReference = testUtil.getUniqueCaseReference(10);
         testData = testData.replace("#ETHOS-CASE-REFERENCE1#", ethosCaseReference);
-        ethosCaseReference = testUtil.getUniqueCaseReference();
+        ethosCaseReference = testUtil.getUniqueCaseReference(10);
         testData = testData.replace("#ETHOS-CASE-REFERENCE2#", ethosCaseReference);
-        ethosCaseReference = testUtil.getUniqueCaseReference();
+        ethosCaseReference = testUtil.getUniqueCaseReference(10);
         testData = testData.replace("#ETHOS-CASE-REFERENCE3#", ethosCaseReference);
 
 
