@@ -8,6 +8,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.SearchType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
 
 import java.util.*;
@@ -188,7 +189,6 @@ public class BulkHelper {
     }
 
     private static List<CaseIdTypeItem> getCaseIdTypeItems(BulkDetails bulkDetails, List<String> multipleTypeItems) {
-        System.out.println("Cases: " + bulkDetails.getCaseData().getCaseIdCollection());
         return bulkDetails.getCaseData().getCaseIdCollection() != null ?
                 bulkDetails.getCaseData().getCaseIdCollection().stream()
                         .filter(p -> p.getValue().getEthosCaseReference() != null)
@@ -207,18 +207,36 @@ public class BulkHelper {
                 new ArrayList<>();
     }
 
-//    private static List<String> getJurCodesValues(List<JurCodesTypeItem> jurCodesTypeItems) {
-//        return jurCodesTypeItems != null ?
-//                jurCodesTypeItems.stream()
-//                        .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
-//                        .distinct()
-//                        .collect(Collectors.toList()) :
-//                new ArrayList<>();
-//    }
+    private static List<String> getJurCodesValues(List<JurCodesTypeItem> jurCodesTypeItems) {
+        return jurCodesTypeItems != null && !jurCodesTypeItems.isEmpty() ?
+                jurCodesTypeItems.stream()
+                        .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
+                        .distinct()
+                        .collect(Collectors.toList()) :
+                new ArrayList<>();
+    }
 
-//    public static boolean containsAllJurCodes(List<JurCodesTypeItem> jurCodesTypeItems1, List<JurCodesTypeItem> jurCodesTypeItems2) {
-//        return getJurCodesValues(jurCodesTypeItems1).containsAll(getJurCodesValues(jurCodesTypeItems2));
-//    }
+    public static boolean containsAllJurCodes(List<JurCodesTypeItem> jurCodesTypeItems1, List<JurCodesTypeItem> jurCodesTypeItems2) {
+        return getJurCodesValues(jurCodesTypeItems1).containsAll(getJurCodesValues(jurCodesTypeItems2));
+    }
+
+    public static List<JurCodesTypeItem> getJurCodesListFromString(String jurCodesStringList) {
+        List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>();
+        if (jurCodesStringList != null && !jurCodesStringList.trim().equals("")) {
+            List<String> codes = new ArrayList<>(Arrays.asList(jurCodesStringList.split(", ")));
+            jurCodesTypeItems = codes.stream()
+                    .map(code -> {
+                        JurCodesType jurCodesType = new JurCodesType();
+                        jurCodesType.setJuridictionCodesList(code);
+                        JurCodesTypeItem jurCodesTypeItem = new JurCodesTypeItem();
+                        jurCodesTypeItem.setValue(jurCodesType);
+                        jurCodesTypeItem.setId(code);
+                        return jurCodesTypeItem;
+                    })
+                    .collect(Collectors.toList());
+        }
+        return jurCodesTypeItems;
+    }
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();

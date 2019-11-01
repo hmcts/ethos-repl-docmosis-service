@@ -69,15 +69,29 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00026.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressLine1\":\"56 Block C\",\n" +
-                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 KJR\",\n" +
+                "\"claimant_reference\":\"1111111\",\n" +
+                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
                 "\"claimant_addressLine3\":\"\",\n" +
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 KJR\",\n" +
-                "\"claimant_reference\":\"1111111\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
+                "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"22 House\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"North West\",\n" +
+                "\"respondent_or_rep_postCode\":\"M12 42R\",\n" +
                 "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
                 "\"respondent_addressLine1\":\"11 Small Street\",\n" +
                 "\"respondent_addressLine2\":\"22 House\",\n" +
@@ -85,11 +99,9 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M12 42R\",\n" +
-                "\"resp_others\":\"2. Juan Garcia\\n3. Mike Jordan\",\n" +
-                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n" +
-                "2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n" +
-                "3. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
                 "\"Respondent\":\"1. Antonio Vazquez\",\n" +
+                "\"resp_others\":\"2. Juan Garcia\\n3. Mike Jordan\",\n" +
+                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n3. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -127,22 +139,36 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00027.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"claimant_or_rep_full_name\":\"Orlando LTD\",\n" +
                 "\"claimant_full_name\":\"Orlando LTD\",\n" +
                 "\"Claimant\":\"Orlando LTD\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"34\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Low Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 6gw\",\n" +
                 "\"claimant_addressLine1\":\"34\",\n" +
                 "\"claimant_addressLine2\":\"Low Street\",\n" +
                 "\"claimant_addressLine3\":\"\",\n" +
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
                 "\"claimant_postCode\":\"M3 6gw\",\n" +
-                "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_addressLine1\":\"56 Block C\",\n" +
-                "\"respondent_addressLine2\":\"Ellesmere Street\",\n" +
-                "\"respondent_addressLine3\":\"\",\n" +
-                "\"respondent_town\":\"Manchester\",\n" +
-                "\"respondent_county\":\"Lancashire\",\n" +
-                "\"respondent_postCode\":\"M3 KJR\",\n" +
+                "\"respondent_or_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"Lancashire\",\n" +
+                "\"respondent_or_rep_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"1111111\",\n" +
+                "\"respondent_full_name\":\"\",\n" +
+                "\"respondent_addressLine1\":\"\",\n" +
+                "\"respondent_addressLine2\":\"\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"\",\n" +
+                "\"respondent_county\":\"\",\n" +
+                "\"respondent_postCode\":\"\",\n" +
                 "\"Respondent\":\"\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"\",\n" +
@@ -183,14 +209,28 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00028.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"claimant_or_rep_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"34\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Low Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 6gw\",\n" +
                 "\"claimant_addressLine1\":\"34\",\n" +
                 "\"claimant_addressLine2\":\"Low Street\",\n" +
                 "\"claimant_addressLine3\":\"\",\n" +
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
                 "\"claimant_postCode\":\"M3 6gw\",\n" +
+                "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"22 House\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"North West\",\n" +
+                "\"respondent_or_rep_postCode\":\"M12 42R\",\n" +
                 "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
                 "\"respondent_addressLine1\":\"11 Small Street\",\n" +
                 "\"respondent_addressLine2\":\"22 House\",\n" +
@@ -198,9 +238,9 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -238,15 +278,29 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00029.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressLine1\":\"56 Block C\",\n" +
-                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 KJR\",\n" +
+                "\"claimant_reference\":\"1111111\",\n" +
+                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
                 "\"claimant_addressLine3\":\"\",\n" +
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 KJR\",\n" +
-                "\"claimant_reference\":\"1111111\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
+                "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"22 House\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"North West\",\n" +
+                "\"respondent_or_rep_postCode\":\"M12 42R\",\n" +
                 "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
                 "\"respondent_addressLine1\":\"11 Small Street\",\n" +
                 "\"respondent_addressLine2\":\"22 House\",\n" +
@@ -254,9 +308,9 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -294,26 +348,40 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00030.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressLine1\":\"56 Block C\",\n" +
-                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 KJR\",\n" +
+                "\"claimant_reference\":\"1111111\",\n" +
+                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
                 "\"claimant_addressLine3\":\"\",\n" +
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 KJR\",\n" +
-                "\"claimant_reference\":\"1111111\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"respondent_full_name\":\"RepresentativeNameRespondent1\",\n" +
-                "\"respondent_addressLine1\":\"56 Block C\",\n" +
-                "\"respondent_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
+                "\"respondent_or_rep_full_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"Lancashire\",\n" +
+                "\"respondent_or_rep_postCode\":\"M3 KJR\",\n" +
+                "\"respondent_reference\":\"3333333333\",\n" +
+                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_addressLine2\":\"22 House\",\n" +
                 "\"respondent_addressLine3\":\"\",\n" +
                 "\"respondent_town\":\"Manchester\",\n" +
-                "\"respondent_county\":\"Lancashire\",\n" +
-                "\"respondent_postCode\":\"M3 KJR\",\n" +
-                "\"respondent_reference\":\"3333333333\",\n" +
+                "\"respondent_county\":\"North West\",\n" +
+                "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -351,26 +419,40 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00031.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressLine1\":\"56 Block C\",\n" +
-                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 KJR\",\n" +
+                "\"claimant_reference\":\"1111111\",\n" +
+                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
                 "\"claimant_addressLine3\":\"\",\n" +
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 KJR\",\n" +
-                "\"claimant_reference\":\"1111111\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"respondent_full_name\":\"RepresentativeNameRespondent1\",\n" +
-                "\"respondent_addressLine1\":\"56 Block C\",\n" +
-                "\"respondent_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
+                "\"respondent_or_rep_full_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"Lancashire\",\n" +
+                "\"respondent_or_rep_postCode\":\"M3 KJR\",\n" +
+                "\"respondent_reference\":\"3333333333\",\n" +
+                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_addressLine2\":\"22 House\",\n" +
                 "\"respondent_addressLine3\":\"\",\n" +
                 "\"respondent_town\":\"Manchester\",\n" +
-                "\"respondent_county\":\"Lancashire\",\n" +
-                "\"respondent_postCode\":\"M3 KJR\",\n" +
-                "\"respondent_reference\":\"3333333333\",\n" +
+                "\"respondent_county\":\"North West\",\n" +
+                "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -408,26 +490,40 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00032.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressLine1\":\"56 Block C\",\n" +
-                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 KJR\",\n" +
+                "\"claimant_reference\":\"1111111\",\n" +
+                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
                 "\"claimant_addressLine3\":\"\",\n" +
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 KJR\",\n" +
-                "\"claimant_reference\":\"1111111\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"respondent_full_name\":\"RepresentativeNameRespondent1\",\n" +
-                "\"respondent_addressLine1\":\"56 Block C\",\n" +
-                "\"respondent_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
+                "\"respondent_or_rep_full_name\":\"RepresentativeNameRespondent1\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"Lancashire\",\n" +
+                "\"respondent_or_rep_postCode\":\"M3 KJR\",\n" +
+                "\"respondent_reference\":\"3333333333\",\n" +
+                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_addressLine2\":\"22 House\",\n" +
                 "\"respondent_addressLine3\":\"\",\n" +
                 "\"respondent_town\":\"Manchester\",\n" +
-                "\"respondent_county\":\"Lancashire\",\n" +
-                "\"respondent_postCode\":\"M3 KJR\",\n" +
-                "\"respondent_reference\":\"3333333333\",\n" +
+                "\"respondent_county\":\"North West\",\n" +
+                "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -465,15 +561,29 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00033.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressLine1\":\"56 Block C\",\n" +
-                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 KJR\",\n" +
+                "\"claimant_reference\":\"1111111\",\n" +
+                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
                 "\"claimant_addressLine3\":\"\",\n" +
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 KJR\",\n" +
-                "\"claimant_reference\":\"1111111\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
+                "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"22 House\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"North West\",\n" +
+                "\"respondent_or_rep_postCode\":\"M12 42R\",\n" +
                 "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
                 "\"respondent_addressLine1\":\"11 Small Street\",\n" +
                 "\"respondent_addressLine2\":\"22 House\",\n" +
@@ -481,10 +591,9 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M12 42R\",\n" +
-                "\"resp_others\":\"2. Mikey McCollier\",\n" +
-                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n" +
-                "2. 1333 Small Street, 22222 House, Liverpool, North West, L12 42R, UK\",\n" +
                 "\"Respondent\":\"1. Antonio Vazquez\",\n" +
+                "\"resp_others\":\"2. Mikey McCollier\",\n" +
+                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 1333 Small Street, 22222 House, Liverpool, North West, L12 42R, UK\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -522,15 +631,29 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-EGW-ENG-00034.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressLine1\":\"56 Block C\",\n" +
-                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 KJR\",\n" +
+                "\"claimant_reference\":\"1111111\",\n" +
+                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
                 "\"claimant_addressLine3\":\"\",\n" +
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 KJR\",\n" +
-                "\"claimant_reference\":\"1111111\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
+                "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"22 House\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"North West\",\n" +
+                "\"respondent_or_rep_postCode\":\"M12 42R\",\n" +
                 "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
                 "\"respondent_addressLine1\":\"11 Small Street\",\n" +
                 "\"respondent_addressLine2\":\"22 House\",\n" +
@@ -538,9 +661,9 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -578,7 +701,35 @@ public class HelperTest {
                 "\"templateName\":\".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"claimant_or_rep_full_name\":\"\",\n" +
+                "\"claimant_full_name\":\"\",\n" +
+                "\"Claimant\":\"\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"\",\n" +
+                "\"claimant_or_rep_county\":\"\",\n" +
+                "\"claimant_or_rep_postCode\":\"\",\n" +
+                "\"claimant_addressLine1\":\"\",\n" +
+                "\"claimant_addressLine2\":\"\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"\",\n" +
+                "\"claimant_county\":\"\",\n" +
+                "\"claimant_postCode\":\"\",\n" +
+                "\"respondent_or_rep_full_name\":\"\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"\",\n" +
+                "\"respondent_or_rep_county\":\"\",\n" +
+                "\"respondent_or_rep_postCode\":\"\",\n" +
                 "\"respondent_full_name\":\"\",\n" +
+                "\"respondent_addressLine1\":\"\",\n" +
+                "\"respondent_addressLine2\":\"\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"\",\n" +
+                "\"respondent_county\":\"\",\n" +
+                "\"respondent_postCode\":\"\",\n" +
                 "\"Respondent\":\"\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"\",\n" +
@@ -612,15 +763,29 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-SCO-ENG-00042.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_addressLine1\":\"56 Block C\",\n" +
-                "\"claimant_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 KJR\",\n" +
+                "\"claimant_reference\":\"1111111\",\n" +
+                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
                 "\"claimant_addressLine3\":\"\",\n" +
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 KJR\",\n" +
-                "\"claimant_reference\":\"1111111\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
+                "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"22 House\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"North West\",\n" +
+                "\"respondent_or_rep_postCode\":\"M12 42R\",\n" +
                 "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
                 "\"respondent_addressLine1\":\"11 Small Street\",\n" +
                 "\"respondent_addressLine2\":\"22 House\",\n" +
@@ -628,10 +793,9 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M12 42R\",\n" +
-                "\"resp_others\":\"2. Juan Garcia\",\n" +
-                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n" +
-                "2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\",\n" +
                 "\"Respondent\":\"1. Antonio Vazquez\",\n" +
+                "\"resp_others\":\"2. Juan Garcia\",\n" +
+                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -669,22 +833,36 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-SCO-ENG-00043.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"claimant_or_rep_full_name\":\"Orlando LTD\",\n" +
                 "\"claimant_full_name\":\"Orlando LTD\",\n" +
                 "\"Claimant\":\"Orlando LTD\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"34\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Low Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 6gw\",\n" +
                 "\"claimant_addressLine1\":\"34\",\n" +
                 "\"claimant_addressLine2\":\"Low Street\",\n" +
                 "\"claimant_addressLine3\":\"\",\n" +
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
                 "\"claimant_postCode\":\"M3 6gw\",\n" +
-                "\"respondent_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_addressLine1\":\"56 Block C\",\n" +
-                "\"respondent_addressLine2\":\"Ellesmere Street\",\n" +
-                "\"respondent_addressLine3\":\"\",\n" +
-                "\"respondent_town\":\"Manchester\",\n" +
-                "\"respondent_county\":\"Lancashire\",\n" +
-                "\"respondent_postCode\":\"M3 KJR\",\n" +
+                "\"respondent_or_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"Lancashire\",\n" +
+                "\"respondent_or_rep_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"1111111\",\n" +
+                "\"respondent_full_name\":\"\",\n" +
+                "\"respondent_addressLine1\":\"\",\n" +
+                "\"respondent_addressLine2\":\"\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"\",\n" +
+                "\"respondent_county\":\"\",\n" +
+                "\"respondent_postCode\":\"\",\n" +
                 "\"Respondent\":\"\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"\",\n" +
@@ -725,14 +903,28 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-SCO-ENG-00044.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"claimant_or_rep_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
                 "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"34\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Low Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 6gw\",\n" +
                 "\"claimant_addressLine1\":\"34\",\n" +
                 "\"claimant_addressLine2\":\"Low Street\",\n" +
                 "\"claimant_addressLine3\":\"\",\n" +
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
                 "\"claimant_postCode\":\"M3 6gw\",\n" +
+                "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"22 House\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"North West\",\n" +
+                "\"respondent_or_rep_postCode\":\"M12 42R\",\n" +
                 "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
                 "\"respondent_addressLine1\":\"11 Small Street\",\n" +
                 "\"respondent_addressLine2\":\"22 House\",\n" +
@@ -740,9 +932,9 @@ public class HelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
@@ -851,7 +1043,35 @@ public class HelperTest {
                 "\"templateName\":\"Part_18.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"claimant_or_rep_full_name\":\"\",\n" +
+                "\"claimant_full_name\":\"\",\n" +
+                "\"Claimant\":\"\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"\",\n" +
+                "\"claimant_or_rep_county\":\"\",\n" +
+                "\"claimant_or_rep_postCode\":\"\",\n" +
+                "\"claimant_addressLine1\":\"\",\n" +
+                "\"claimant_addressLine2\":\"\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"\",\n" +
+                "\"claimant_county\":\"\",\n" +
+                "\"claimant_postCode\":\"\",\n" +
+                "\"respondent_or_rep_full_name\":\"\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"\",\n" +
+                "\"respondent_or_rep_county\":\"\",\n" +
+                "\"respondent_or_rep_postCode\":\"\",\n" +
                 "\"respondent_full_name\":\"\",\n" +
+                "\"respondent_addressLine1\":\"\",\n" +
+                "\"respondent_addressLine2\":\"\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"\",\n" +
+                "\"respondent_county\":\"\",\n" +
+                "\"respondent_postCode\":\"\",\n" +
                 "\"Respondent\":\"\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"\",\n" +
@@ -885,7 +1105,35 @@ public class HelperTest {
                 "\"templateName\":\"" + topLevel + ".docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
+                "\"claimant_or_rep_full_name\":\"\",\n" +
+                "\"claimant_full_name\":\"\",\n" +
+                "\"Claimant\":\"\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"\",\n" +
+                "\"claimant_or_rep_county\":\"\",\n" +
+                "\"claimant_or_rep_postCode\":\"\",\n" +
+                "\"claimant_addressLine1\":\"\",\n" +
+                "\"claimant_addressLine2\":\"\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"\",\n" +
+                "\"claimant_county\":\"\",\n" +
+                "\"claimant_postCode\":\"\",\n" +
+                "\"respondent_or_rep_full_name\":\"\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"\",\n" +
+                "\"respondent_or_rep_county\":\"\",\n" +
+                "\"respondent_or_rep_postCode\":\"\",\n" +
                 "\"respondent_full_name\":\"\",\n" +
+                "\"respondent_addressLine1\":\"\",\n" +
+                "\"respondent_addressLine2\":\"\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"\",\n" +
+                "\"respondent_county\":\"\",\n" +
+                "\"respondent_postCode\":\"\",\n" +
                 "\"Respondent\":\"\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"\",\n" +
