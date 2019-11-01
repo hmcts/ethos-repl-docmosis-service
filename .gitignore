@@ -24,3 +24,9 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+src/test/functional/resources/documents/*
+node_modules/
+example.docx
+target
+

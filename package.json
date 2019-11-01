@@ -1,0 +1,50 @@
+{
+  "name": "EthosProject",
+  "description": "End to End test for Probate Back Office",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=8.9"
+  },
+  "scripts": {
+    "lint": "NODE_PATH=. eslint .",
+    "eslint": "NODE_PATH=. eslint .",
+    "test-e2e": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run -c ./src/test/end-to-end/ --steps",
+    "test-crossbrowser-e2e": "NODE_PATH=. codeceptjs run -c src/test/end-to-end/saucelabs.conf.js --steps",
+    "test:fullfunctional": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run-multiple parallel -c ./src/test/end-to-end/ --steps --reporter mochawesome"
+  },
+  "dependencies": {
+    "randomstring": "^1.1.5",
+    "require-directory": "^2.1.1"
+  },
+  "devDependencies": {
+    "codeceptjs": "^2.2.1",
+    "eslint": "^6.1.0",
+    "eslint-plugin-mocha": "^6.0.0",
+    "istanbul": "^1.1.0-alpha.1",
+    "mocha": "^3.5.3",
+    "mocha-jenkins-reporter": "^0.4.2",
+    "mocha-multi": "^1.1.0",
+    "mochawesome": "^4.0.1",
+    "nock": "^10.0.6",
+    "nodemon": "^1.19.1",
+    "nsp": "^3.2.1",
+    "pa11y": "^4.13.2",
+    "phantomjs-prebuilt": "^2.1.16",
+    "proxyquire": "^2.1.2",
+    "puppeteer": "^1.19.0",
+    "rewire": "^4.0.1",
+    "selenium-standalone": "^6.16.0",
+    "sinon": "^1.17.7",
+    "sinon-chai": "^3.3.0",
+    "sonar-scanner": "^3.1.0",
+    "sonarqube-scanner": "^2.5.0",
+    "superagent-proxy": "^2.0.0",
+    "supertest": "^4.0.2",
+    "unirest": "^0.6.0",
+    "uuid": "^3.3.2",
+    "watch": "^1.0.2",
+    "webdriverio": "^4.14.4",
+    "when": "^3.7.8"
+  }
+}
