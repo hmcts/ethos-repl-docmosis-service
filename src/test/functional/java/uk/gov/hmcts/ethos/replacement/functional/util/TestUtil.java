@@ -8,8 +8,10 @@ import io.restassured.config.RestAssuredConfig;
 import io.restassured.config.SSLConfig;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import io.restassured.response.ResponseBody;
 import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.rest.SerenityRest;
+import okhttp3.RequestBody;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -170,6 +172,61 @@ public class TestUtil {
 
         verifyBulkResponse(testData, response);
 
+    }
+    //End-point //createSubMultiple
+    public void executeCreateSubMultiples(boolean isScotland, String testDataFilePath,int locationRefNo,String case_type) throws IOException {
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
+        loadAuthToken();
+        testData = testData.replace("#CASE_TYPE_ID#", case_type);
+        String ethosCaseReference1 = getUniqueCaseReference(5);
+        String multipleReference = locationRefNo+ethosCaseReference1;
+        testData = testData.replace("#MULTIPLEREFERENCE#",multipleReference);
+        ethosCaseReference1 = locationRefNo+ethosCaseReference1 +"/19";
+        testData = testData.replace("#ETHOS_CASE_REFERENCE_M1#", ethosCaseReference1);
+        String ethosCaseReference2 = getUniqueCaseReference(5);
+        ethosCaseReference2 = locationRefNo+ethosCaseReference2+"/19";
+        testData = testData.replace("#ETHOS_CASE_REFERENCE_M2#", ethosCaseReference2);
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.CREATE_SUB_MULTIPLE_URI);
+        String MultipleValue = response.body().jsonPath().getString("data.multipleCollection[0].value.subMultipleM");
+        String expectedSubMultipleValue = response.body().jsonPath().getString("data.subMultipleCollection[0].value.subMultipleRefT");
+        String expectedMultipleValue = MultipleValue.split("/")[0].toString();
+        String expectedMultipleValue1 = expectedSubMultipleValue.split("/")[0].toString();
+        Assert.assertEquals(expectedMultipleValue, multipleReference);
+        Assert.assertEquals(expectedMultipleValue1, multipleReference);
+    }
+    //End-point //updateSubMultiple
+    public void executeUpdateSubMultiples(boolean isScotland, String testDataFilePath, int locationRefNo, String case_type) throws IOException {
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
+        loadAuthToken();
+        testData = testData.replace("#CASE_TYPE_ID#", case_type);
+        String ethosCaseReference1 = getUniqueCaseReference(5);
+        String multipleReference = locationRefNo+ethosCaseReference1;
+        testData = testData.replace("#MULTIPLEREFERENCE#",multipleReference);
+        ethosCaseReference1 = locationRefNo+ethosCaseReference1 +"/19";
+        testData = testData.replace("#ETHOS_CASE_REFERENCE_M1#", ethosCaseReference1);
+        String ethosCaseReference2 = getUniqueCaseReference(5);
+        ethosCaseReference2 = locationRefNo+ethosCaseReference2+"/19";
+        testData = testData.replace("#ETHOS_CASE_REFERENCE_M2#", ethosCaseReference2);
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.UPDATE_SUB_MULTIPLE_URI);
+
+        String actualValue = JsonPath.read(testData, "$.case_details.case_data.subMultipleRef");
+        String expectedMultipleValue = response.body().jsonPath().getString("data.multipleCollection[1].value.subMultipleM");
+        String expectedSubMultipleValue = response.body().jsonPath().getString("data.subMultipleCollection[0].value.subMultipleRefT");
+        Assert.assertEquals(expectedMultipleValue, actualValue);
+        Assert.assertEquals(expectedSubMultipleValue, actualValue);
+    }
+    //deleteSubMultiple
+    public void executeDeleteSubMultiples(boolean isScotland, String testDataFilePath, String case_type) throws IOException{
+        Response response;
+        String testData = FileUtils.readFileToString(new File(testDataFilePath), "UTF-8");
+        BulkRequest bulkRequest = getBulkRequest(isScotland, testData);
+        response = getBulkResponse(bulkRequest, Constants.DELETE_SUB_MULTIPLE_URI);
+        String expectedMultipleValue = response.body().jsonPath().getString("data.multipleCollection[1].value.subMultipleM");
+        Assert.assertNotNull(expectedMultipleValue);
     }
 
     //End-point /searchBulk
@@ -351,13 +408,10 @@ public class TestUtil {
         CCDRequest ccdRequest;
         Response response;
         int count = 1;
-
         for (String caseDataFilePath : caseList) {
-            String ethosCaseReference = getUniqueCaseReference();
-
+            String ethosCaseReference = getUniqueCaseReference(10);
             String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
             caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseReference);
-
             ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
             response = getResponse(ccdRequest, Constants.CREATE_CASE_URI);
 
@@ -366,6 +420,7 @@ public class TestUtil {
             testData = testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseReference);
             count++;
         }
+
         return testData;
     }
 
@@ -433,7 +488,11 @@ public class TestUtil {
         Assert.assertTrue("Expected value \""+ expectedValue + "\" doesn't exist in Document with version: "+  docVersion +" \n", hasMatched);
     }
 
-    public String getUniqueCaseReference() {
-        return RandomStringUtils.randomNumeric(10);
+    public String getUniqueCaseReference(int digit) {
+        return RandomStringUtils.randomNumeric(digit);
+    }
+
+
+    public void executeDeleteSubMultiples(boolean b, String testDataEngUpdateSubMultiple, int i, String manchester_multiples_dev) {
     }
 }
