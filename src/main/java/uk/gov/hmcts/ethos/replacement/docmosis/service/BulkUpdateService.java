@@ -126,6 +126,9 @@ public class BulkUpdateService {
         bulkData.setFeeGroupReferenceV2(null);
         bulkData.setClaimantSurnameV2(null);
         bulkData.setRespondentSurnameV2(null);
+        bulkData.setFlag1Update(null);
+        bulkData.setFlag2Update(null);
+        bulkData.setEQPUpdate(null);
         bulkRequestPayload.getBulkDetails().setCaseData(bulkData);
         return bulkRequestPayload;
     }
@@ -192,6 +195,9 @@ public class BulkUpdateService {
             String multipleRefNewValue = bulkData.getMultipleReferenceV2();
             String clerkNewValue = bulkData.getClerkResponsibleV2();
             String positionTypeNewValue = bulkData.getPositionTypeV2();
+            String flag1NewValue = bulkData.getFlag1Update();
+            String flag2NewValue = bulkData.getFlag2Update();
+            String EQPNewValue = bulkData.getEQPUpdate();
             SubmitEvent submitEvent = ccdClient.retrieveCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             boolean updated = false;
             boolean multipleReferenceUpdated = false;
@@ -287,6 +293,18 @@ public class BulkUpdateService {
                 updated = true;
                 submitEvent.getCaseData().setPositionType(positionTypeNewValue);
             }
+            if (!isNullOrEmpty(flag1NewValue)) {
+                updated = true;
+                submitEvent.getCaseData().setFlag1(flag1NewValue);
+            }
+            if (!isNullOrEmpty(flag2NewValue)) {
+                updated = true;
+                submitEvent.getCaseData().setFlag2(flag2NewValue);
+            }
+            if (!isNullOrEmpty(EQPNewValue)) {
+                updated = true;
+                submitEvent.getCaseData().setEQP(EQPNewValue);
+            }
             if (updated) {
                 boolean isThisCaseLead = false;
                 // If multipleReference was updated then add the new values to the bulk case
@@ -340,6 +358,7 @@ public class BulkUpdateService {
                 .map(searchTypeItem -> searchTypeItem.getValue().getEthosCaseReferenceS())
                 .collect(Collectors.toList());
         String subMultipleRefNewValue = bulkData.getSubMultipleDynamicList() != null ? bulkData.getSubMultipleDynamicList().getValue().getCode() : "";
+        String subMultipleTitleNewValue = bulkData.getSubMultipleDynamicList() != null ? bulkData.getSubMultipleDynamicList().getValue().getLabel() : "";
         for (MultipleTypeItem multipleTypeItem : multipleTypeItemList) {
             log.info("Adding FLAGS to case");
             boolean updated = false;
@@ -347,6 +366,7 @@ public class BulkUpdateService {
                     !subMultipleRefNewValue.equals(DEFAULT_SELECT_ALL_VALUE) &&
                     refNumbersFromSearchList.contains(multipleTypeItem.getValue().getEthosCaseReferenceM())) {
                 multipleTypeItem.getValue().setSubMultipleM(subMultipleRefNewValue);
+                multipleTypeItem.getValue().setSubMultipleTitleM(subMultipleTitleNewValue);
                 updated = true;
             }
             //Keep the old info for flags and subMultiple ref
@@ -355,6 +375,7 @@ public class BulkUpdateService {
                         .filter(multipleTypeItem1 -> multipleTypeItem.getValue().getEthosCaseReferenceM().equals(multipleTypeItem1.getValue().getEthosCaseReferenceM()))
                         .findFirst();
                 multipleTypeItem.getValue().setSubMultipleM(previousMultipleTypeItem.isPresent() ? previousMultipleTypeItem.get().getValue().getSubMultipleM() : " ");
+                multipleTypeItem.getValue().setSubMultipleTitleM(previousMultipleTypeItem.isPresent() ? previousMultipleTypeItem.get().getValue().getSubMultipleTitleM() : " ");
             }
             multipleTypeItemsAux.add(multipleTypeItem);
         }
