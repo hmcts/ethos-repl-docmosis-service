@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatLocalDate;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatLocalDateTime;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.FILE_EXTENSION;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 
 public class DocumentUtil {
@@ -26,7 +27,6 @@ public class DocumentUtil {
     public static final String OUTPUT_FILE_NAME = "document.docx";
 
     public static String buildDocumentContent(CaseDetails caseDetails, String accessKey) {
-        String FILE_EXTENSION = ".docx";
         StringBuilder sb = new StringBuilder();
         CaseData caseData = caseDetails.getCaseData();
         String templateName = getTemplateName(caseData);

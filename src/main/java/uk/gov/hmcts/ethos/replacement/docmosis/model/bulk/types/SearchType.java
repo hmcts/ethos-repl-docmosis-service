@@ -36,4 +36,24 @@ public class SearchType {
     private String jurCodesCollectionS;
     @JsonProperty("stateS")
     private String stateS;
+    @JsonProperty("currentPositionS")
+    private String currentPositionS;
+    @JsonProperty("claimantAddressLine1S")
+    private String claimantAddressLine1S;
+    @JsonProperty("claimantPostCodeS")
+    private String claimantPostCodeS;
+    @JsonProperty("respondentAddressLine1S")
+    private String respondentAddressLine1S;
+    @JsonProperty("respondentPostCodeS")
+    private String respondentPostCodeS;
+    @JsonProperty("flag1S")
+    private String flag1S;
+    @JsonProperty("flag2S")
+    private String flag2S;
+    @JsonProperty("EQPS")
+    private String EQPS;
+    @JsonProperty("respondentRepOrgS")
+    private String respondentRepOrgS;
+    @JsonProperty("claimantRepOrgS")
+    private String claimantRepOrgS;
 }

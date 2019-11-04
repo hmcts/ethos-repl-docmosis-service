@@ -60,7 +60,10 @@ public class DocumentGenerationServiceTest {
         bulkDetails.setCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID);
         bulkRequest.setCaseDetails(bulkDetails);
         documentGenerationService = new DocumentGenerationService(tornadoService, ccdClient);
-        documentInfo = DocumentInfo.builder().description("resources/example.json").build();
+        documentInfo = DocumentInfo.builder().description("resources/exampleV1.json").build();
+        documentInfo.setMarkUp("Markup");
+        documentInfo.setType("Document");
+        documentInfo.setUrl("http://google.com");
         bulkDocumentInfo = new BulkDocumentInfo();
         bulkDocumentInfo.setMarkUps(documentInfo.getMarkUp());
         bulkDocumentInfo.setErrors(new ArrayList<>());
@@ -92,6 +95,21 @@ public class DocumentGenerationServiceTest {
         assertEquals(bulkDocumentInfo.toString(), bulkDocumentInfo1.toString());
     }
 
+    @Test
+    public void processBulkDocumentRequestWithErrors() throws IOException {
+        SubmitEvent submitEvent = new SubmitEvent();
+        submitEvent.setCaseId(1);
+        submitEvent.setCaseData(new CaseData());
+        bulkRequest.getCaseDetails().getCaseData().setSearchCollection(null);
+        List<SubmitEvent> submitEvents = Collections.singletonList(submitEvent);
+        when(tornadoService.documentGeneration(anyString(), any())).thenReturn(documentInfo);
+        when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
+
+        BulkDocumentInfo bulkDocumentInfo1 = documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");
+        assertEquals("BulkDocumentInfo(markUps=, errors=[There are not cases searched to " +
+                "generate letters], documentInfo=null)", bulkDocumentInfo1.toString());
+    }
+
     @Test(expected = Exception.class)
     public void processBulkDocumentRequestException() throws IOException {
         SubmitEvent submitEvent = new SubmitEvent();
@@ -102,5 +120,28 @@ public class DocumentGenerationServiceTest {
         when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
 
         documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");
+    }
+
+    @Test
+    public void processBulkScheduleRequest() throws IOException {
+        when(tornadoService.scheduleGeneration(anyString(), any())).thenReturn(documentInfo);
+        BulkDocumentInfo bulkDocumentInfo1 = documentGenerationService.processBulkScheduleRequest(bulkRequest, "authToken");
+        assertEquals("BulkDocumentInfo(markUps=Markup, errors=[], documentInfo=DocumentInfo(type=Document, " +
+                "description=resources/exampleV1.json, url=http://google.com, markUp=Markup))", bulkDocumentInfo1.toString());
+    }
+
+    @Test
+    public void processBulkScheduleRequestWithErrors() throws IOException {
+        bulkRequest.getCaseDetails().getCaseData().setSearchCollection(null);
+        when(tornadoService.scheduleGeneration(anyString(), any())).thenReturn(documentInfo);
+        BulkDocumentInfo bulkDocumentInfo1 = documentGenerationService.processBulkScheduleRequest(bulkRequest, "authToken");
+        assertEquals("BulkDocumentInfo(markUps= , errors=[There are not cases searched to generate schedules], " +
+                "documentInfo=DocumentInfo(type=null, description=null, url=null, markUp=null))", bulkDocumentInfo1.toString());
+    }
+
+    @Test(expected = Exception.class)
+    public void processBulkScheduleRequestException() throws IOException {
+        when(tornadoService.scheduleGeneration(anyString(), any())).thenThrow(feignError());
+        documentGenerationService.processBulkScheduleRequest(bulkRequest, "authToken");
     }
 }

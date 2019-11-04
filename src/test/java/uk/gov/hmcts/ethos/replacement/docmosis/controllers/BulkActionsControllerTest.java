@@ -70,6 +70,7 @@ public class BulkActionsControllerTest {
     private static final String MID_UPDATE_SUB_MULTIPLE_URL = "/midUpdateSubMultiple";
     private static final String UPDATE_SUB_MULTIPLE_URL = "/updateSubMultiple";
     private static final String DELETE_SUB_MULTIPLE_URL = "/deleteSubMultiple";
+    private static final String GENERATE_BULK_SCHEDULE_URL = "/generateBulkSchedule";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -613,6 +614,66 @@ public class BulkActionsControllerTest {
     public void deleteSubMultipleError500() throws Exception {
         when(subMultipleService.deleteSubMultipleLogic(isA(BulkDetails.class))).thenThrow(feignError());
         mvc.perform(post(DELETE_SUB_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void generateBulkSchedule() throws Exception {
+        when(documentGenerationService.processBulkScheduleRequest(isA(BulkRequest.class), isA(String.class))).thenReturn(bulkDocumentInfo);
+        mvc.perform(post(GENERATE_BULK_SCHEDULE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateBulkScheduleWithErrors() throws Exception {
+        bulkDocumentInfo.setErrors(new ArrayList<>(Collections.singleton("Error")));
+        when(documentGenerationService.processBulkScheduleRequest(isA(BulkRequest.class), isA(String.class))).thenReturn(bulkDocumentInfo);
+        mvc.perform(post(GENERATE_BULK_SCHEDULE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateBulkScheduleWithBulkInfo() throws Exception {
+        bulkDocumentInfo.setDocumentInfo(new DocumentInfo());
+        when(documentGenerationService.processBulkScheduleRequest(isA(BulkRequest.class), isA(String.class))).thenReturn(bulkDocumentInfo);
+        mvc.perform(post(GENERATE_BULK_SCHEDULE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateBulkScheduleError400() throws Exception {
+        mvc.perform(post(GENERATE_BULK_SCHEDULE_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void generateBulkScheduleError500() throws Exception {
+        when(documentGenerationService.processBulkScheduleRequest(isA(BulkRequest.class), isA(String.class))).thenThrow(feignError());
+        mvc.perform(post(GENERATE_BULK_SCHEDULE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

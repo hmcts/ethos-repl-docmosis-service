@@ -191,6 +191,9 @@ public class BulkUpdateServiceTest {
         assertNull(bulkData.getMultipleReferenceV2());
         assertNull(bulkData.getFileLocationV2());
         assertNull(bulkData.getFeeGroupReferenceV2());
+        assertNull(bulkData.getFlag1Update());
+        assertNull(bulkData.getFlag2Update());
+        assertNull(bulkData.getEQPUpdate());
     }
 
     private BulkDetails getBulkDetailsWithValues() {
@@ -204,6 +207,9 @@ public class BulkUpdateServiceTest {
         bulkData.setPositionTypeV2("Awaiting");
         bulkData.setClaimantRepV2("ClaimantRep");
         bulkData.setRespondentRepV2("RespondentRep");
+        bulkData.setFlag1Update("Flag1");
+        bulkData.setFlag2Update("Flag2");
+        bulkData.setEQPUpdate("EQP");
         bulkData.setFileLocationAberdeen("Aberdeen");
         bulkData.setFileLocationDundee("Dundee");
         bulkData.setFileLocationEdinburgh("Edinburgh");

@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.*;
@@ -44,6 +45,7 @@ public class SubMultipleService {
                 for (MultipleTypeItem multipleTypeItem : bulkDetails.getCaseData().getMultipleCollection()) {
                     if (subMultiplesList.contains(multipleTypeItem.getValue().getEthosCaseReferenceM())) {
                         multipleTypeItem.getValue().setSubMultipleM(subMultipleRefNumber);
+                        multipleTypeItem.getValue().setSubMultipleTitleM(bulkDetails.getCaseData().getSubMultipleName());
                     }
                     multipleTypeItems.add(multipleTypeItem);
                 }
@@ -149,6 +151,7 @@ public class SubMultipleService {
         for (MultipleTypeItem multipleTypeItem : bulkData.getMultipleCollection()) {
             if (multipleTypeItem.getValue().getSubMultipleM().equals(refSelected)) {
                 multipleTypeItem.getValue().setSubMultipleM(" ");
+                multipleTypeItem.getValue().setSubMultipleTitleM(" ");
             }
             auxList.add(multipleTypeItem);
         }
@@ -205,8 +208,11 @@ public class SubMultipleService {
                 String subMultipleRef = multipleTypeItem.getValue().getSubMultipleM();
                 if (subMultipleRef.equals(subMultipleRefNumber) && !midSearchCollection.contains(caseRefNumber)) {
                     multipleTypeItem.getValue().setSubMultipleM(" ");
+                    multipleTypeItem.getValue().setSubMultipleTitleM(" ");
                 } else if (subMultipleRef.equals(" ") && midSearchCollection.contains(caseRefNumber)) {
                     multipleTypeItem.getValue().setSubMultipleM(subMultipleRefNumber);
+                    multipleTypeItem.getValue().setSubMultipleTitleM(BulkHelper.getSubMultipleTitle(subMultipleRefNumber, bulkData).isPresent() ?
+                            BulkHelper.getSubMultipleTitle(subMultipleRefNumber, bulkData).get().getValue().getSubMultipleNameT() : " ");
                 }
                 auxMultiplesList.add(multipleTypeItem);
             }

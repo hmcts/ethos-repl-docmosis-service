@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingCallbackResponse;
@@ -112,7 +112,7 @@ public class ListingGenerationController {
             return ResponseEntity.ok(CCDCallbackResponse.builder()
                     .data(ccdRequest.getCaseDetails().getCaseData())
                     .confirmation_header(GENERATED_DOCUMENT_URL + documentInfo.getMarkUp())
-                    .significant_item(generateSignificantItem(documentInfo))
+                    .significant_item(Helper.generateSignificantItem(documentInfo))
                     .build());
         } else {
             errors.add("No hearings have been found for your search criteria");
@@ -144,7 +144,7 @@ public class ListingGenerationController {
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .data(listingData)
                     .confirmation_header(GENERATED_DOCUMENT_URL + documentInfo.getMarkUp())
-                    .significant_item(generateSignificantItem(documentInfo))
+                    .significant_item(Helper.generateSignificantItem(documentInfo))
                     .build());
         } else {
             errors.add("No hearings have been found for your search criteria");
@@ -153,15 +153,6 @@ public class ListingGenerationController {
                     .data(listingData)
                     .build());
         }
-    }
-
-    private SignificantItem generateSignificantItem(DocumentInfo documentInfo) {
-        log.info("generateSignificantItem for document: " + documentInfo);
-        return SignificantItem.builder()
-                .url(documentInfo.getUrl())
-                .description(documentInfo.getDescription())
-                .type(SignificantItemType.DOCUMENT.name())
-                .build();
     }
 
 }

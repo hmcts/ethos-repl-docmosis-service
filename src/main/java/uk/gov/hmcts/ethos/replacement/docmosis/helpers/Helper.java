@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SignificantItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
@@ -45,7 +47,6 @@ public class Helper {
     }
 
     public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails) {
-        String FILE_EXTENSION = ".docx";
         StringBuilder sb = new StringBuilder();
         String templateName = getTemplateName(caseData);
 
@@ -381,7 +382,17 @@ public class Helper {
         return sb;
     }
 
-    private static String nullCheck(String value) {
+    public static String nullCheck(String value) {
         return Optional.ofNullable(value).orElse("");
     }
+
+    public static SignificantItem generateSignificantItem(DocumentInfo documentInfo) {
+        log.info("generateSignificantItem for document: " + documentInfo);
+        return SignificantItem.builder()
+                .url(documentInfo.getUrl())
+                .description(documentInfo.getDescription())
+                .type(SignificantItemType.DOCUMENT.name())
+                .build();
+    }
+
 }

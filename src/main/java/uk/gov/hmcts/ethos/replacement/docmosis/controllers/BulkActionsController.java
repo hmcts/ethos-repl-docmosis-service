@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkCallbackResponse;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDCallbackResponse;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
@@ -347,6 +349,37 @@ public class BulkActionsController {
                 .errors(bulkRequestPayload.getErrors())
                 .data(bulkRequestPayload.getBulkDetails().getCaseData())
                 .build());
+    }
+
+    @PostMapping(value = "/generateBulkSchedule", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "generate a multiple schedule.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<BulkCallbackResponse> generateBulkSchedule(
+            @RequestBody BulkRequest bulkRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("GENERATE BULK SCHEDULE ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
+
+        BulkDocumentInfo bulkDocumentInfo = documentGenerationService.processBulkScheduleRequest(bulkRequest, userToken);
+
+        if (bulkDocumentInfo.getErrors().isEmpty()) {
+            return ResponseEntity.ok(BulkCallbackResponse.builder()
+                    .data(bulkRequest.getCaseDetails().getCaseData())
+                    .significant_item(Helper.generateSignificantItem(bulkDocumentInfo.getDocumentInfo() != null ?
+                            bulkDocumentInfo.getDocumentInfo() : new DocumentInfo()))
+                    .confirmation_header(GENERATED_DOCUMENTS_URL + bulkDocumentInfo.getMarkUps())
+                    .build());
+        } else {
+            return ResponseEntity.ok(BulkCallbackResponse.builder()
+                    .errors(bulkDocumentInfo.getErrors())
+                    .data(bulkRequest.getCaseDetails().getCaseData())
+                    .confirmation_header(GENERATED_DOCUMENTS_URL + bulkDocumentInfo.getMarkUps())
+                    .build());
+        }
     }
 
 }
