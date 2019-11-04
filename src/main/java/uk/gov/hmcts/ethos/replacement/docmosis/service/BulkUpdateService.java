@@ -16,8 +16,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.CaseType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
@@ -129,6 +131,7 @@ public class BulkUpdateService {
         bulkData.setFlag1Update(null);
         bulkData.setFlag2Update(null);
         bulkData.setEQPUpdate(null);
+        bulkData.setOutcomeUpdate(null);
         bulkRequestPayload.getBulkDetails().setCaseData(bulkData);
         return bulkRequestPayload;
     }
@@ -198,6 +201,8 @@ public class BulkUpdateService {
             String flag1NewValue = bulkData.getFlag1Update();
             String flag2NewValue = bulkData.getFlag2Update();
             String EQPNewValue = bulkData.getEQPUpdate();
+            String jurCodeSelected = bulkData.getJurCodesDynamicList().getValue().getCode();
+            String outcomeNewValue = bulkData.getOutcomeUpdate();
             SubmitEvent submitEvent = ccdClient.retrieveCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             boolean updated = false;
             boolean multipleReferenceUpdated = false;
@@ -216,6 +221,21 @@ public class BulkUpdateService {
                     respondentSumTypeItems.add(respondentSumTypeItem);
                     submitEvent.getCaseData().setRespondentCollection(respondentSumTypeItems);
                 }
+            }
+            if (!isNullOrEmpty(jurCodeSelected) && !jurCodeSelected.equals(SELECT_NONE_VALUE) && !isNullOrEmpty(outcomeNewValue)) {
+                List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>();
+                if (submitEvent.getCaseData().getJurCodesCollection() != null && !submitEvent.getCaseData().getJurCodesCollection().isEmpty()) {
+                    for (JurCodesTypeItem jurCodesTypeItem : submitEvent.getCaseData().getJurCodesCollection()) {
+                        if (jurCodesTypeItem.getValue().getJuridictionCodesList().equals(jurCodeSelected)) {
+                            JurCodesType jurCodesType = jurCodesTypeItem.getValue();
+                            jurCodesType.setJudgmentOutcome(outcomeNewValue);
+                            jurCodesTypeItem.setValue(jurCodesType);
+                            updated = true;
+                        }
+                        jurCodesTypeItems.add(jurCodesTypeItem);
+                    }
+                }
+                submitEvent.getCaseData().setJurCodesCollection(jurCodesTypeItems);
             }
             if (!isNullOrEmpty(fileLocationNewValue)) {
                 updated = true;

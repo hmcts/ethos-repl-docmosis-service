@@ -123,8 +123,8 @@ public class BulkData {
     @JsonProperty("EQPUpdate")
     private String EQPUpdate;
 
-    @JsonProperty("midJurCodesCollection")
-    private List<String> midJurCodesCollection;
+    @JsonProperty("jurCodesDynamicList")
+    private DynamicFixedListType jurCodesDynamicList;
     @JsonProperty("outcomeUpdate")
     private String outcomeUpdate;
 
