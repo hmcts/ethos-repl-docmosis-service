@@ -173,6 +173,16 @@ public class BulkCreationServiceTest {
     }
 
     @Test
+    public void caseCreationRequestWithEmptyCaseIds() throws IOException {
+        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
+        BulkDetails bulkDetails = getBulkDetails("Yes", "Single");
+        bulkDetails.getCaseData().setCaseIdCollection(null);
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkDetails, "authToken");
+        assertEquals("[]", bulkCasesPayload.getSubmitEvents().toString());
+    }
+
+    @Test
     public void caseCreationRequestComplexCase() throws IOException {
         List<SubmitEvent> submitEventList = new ArrayList<>(Arrays.asList(submitEvent, submitEvent2, submitEvent3));
         String expectedResult = "[MultipleTypeItem(id=22222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=281231, leadClaimantM=No, " +
@@ -266,7 +276,7 @@ public class BulkCreationServiceTest {
                 "respondentRepOrgM= , claimantRepOrgM= ))], subMultipleCollection=null, subMultipleDynamicList=null, searchCollectionCount=null, " +
                 "multipleCollectionCount=3, correspondenceType=null, correspondenceScotType=null, selectAll=null, scheduleDocName=null, positionType=null, " +
                 "flag1=null, flag2=null, EQP=null, submissionRef=null, claimantOrg=null, respondentOrg=null, state=null, flag1Update=null, flag2Update=null, " +
-                "EQPUpdate=null), caseTypeId=Manchester_V3, createdDate=null, lastModified=null, dataClassification=null))";
+                "EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null), caseTypeId=Manchester_V3, createdDate=null, lastModified=null, dataClassification=null))";
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails("Yes", "Single"),
                 bulkCasesPayload, "authToken");
         assertEquals(result, bulkRequestPayload.toString());
@@ -297,8 +307,8 @@ public class BulkCreationServiceTest {
                 "respondentPostCodeM= , flag1M= , flag2M= , EQPM= , respondentRepOrgM= , claimantRepOrgM= ))], subMultipleCollection=null, " +
                 "subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=3, correspondenceType=null, correspondenceScotType=null, " +
                 "selectAll=null, scheduleDocName=null, positionType=null, flag1=null, flag2=null, EQP=null, submissionRef=null, claimantOrg=null, " +
-                "respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null), caseTypeId=Manchester_V3, createdDate=null, " +
-                "lastModified=null, dataClassification=null))";
+                "respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null), " +
+                "caseTypeId=Manchester_V3, createdDate=null, lastModified=null, dataClassification=null))";
         bulkCasesPayload.getSubmitEvents().get(2).setState("Submitted");
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails("Yes", "Single"),
                 bulkCasesPayload, "authToken");
@@ -322,8 +332,8 @@ public class BulkCreationServiceTest {
                 "respondentAddressLine1M=null, respondentPostCodeM=null, flag1M=null, flag2M=null, EQPM=null, respondentRepOrgM=null, " +
                 "claimantRepOrgM=null))], subMultipleCollection=null, subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=1, " +
                 "correspondenceType=null, correspondenceScotType=null, selectAll=null, scheduleDocName=null, positionType=null, flag1=null, flag2=null, " +
-                "EQP=null, submissionRef=null, claimantOrg=null, respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null), " +
-                "caseTypeId=Manchester_V3, createdDate=null, lastModified=null, dataClassification=null))";
+                "EQP=null, submissionRef=null, claimantOrg=null, respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, " +
+                "jurCodesDynamicList=null, outcomeUpdate=null), caseTypeId=Manchester_V3, createdDate=null, lastModified=null, dataClassification=null))";
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, "authToken");
         assertEquals(result, bulkRequestPayload.toString());
     }

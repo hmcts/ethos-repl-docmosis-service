@@ -272,7 +272,7 @@ public class BulkActionsController {
     }
 
     @PostMapping(value = "/filterDefaultedNoneDynamicList", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "populate a dynamic list with all sub multiple names and None as default.")
+    @ApiOperation(value = "populate a dynamic list with all sub multiple names and jurCodes and None as default.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = CCDCallbackResponse.class),

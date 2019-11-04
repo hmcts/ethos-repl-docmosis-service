@@ -126,7 +126,9 @@ public class BulkSearchService {
         bulkData.setClaimantOrg(null);
         bulkData.setRespondentOrg(null);
         bulkData.setPositionType(null);
-        //bulkData.setJurCodesCollection(null);
+        if (bulkData.getSearchCollection() == null || bulkData.getSearchCollection().isEmpty()) {
+            bulkData.setJurCodesCollection(null);
+        }
         bulkData.setFlag1(null);
         bulkData.setFlag2(null);
         bulkData.setEQP(null);

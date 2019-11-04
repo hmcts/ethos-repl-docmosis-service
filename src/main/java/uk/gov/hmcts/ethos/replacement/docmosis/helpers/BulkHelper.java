@@ -225,11 +225,15 @@ public class BulkHelper {
     }
 
     public static List<String> getCaseIds(BulkDetails bulkDetails) {
-        return bulkDetails.getCaseData().getCaseIdCollection().stream()
-                .filter(key -> key.getId() != null)
-                .map(caseId -> caseId.getValue().getEthosCaseReference())
-                .distinct()
-                .collect(Collectors.toList());
+        if (bulkDetails.getCaseData().getCaseIdCollection() != null && !bulkDetails.getCaseData().getCaseIdCollection().isEmpty()) {
+            return bulkDetails.getCaseData().getCaseIdCollection().stream()
+                    .filter(key -> key.getId() != null)
+                    .map(caseId -> caseId.getValue().getEthosCaseReference())
+                    .distinct()
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     private static List<CaseIdTypeItem> getCaseIdTypeItems(BulkDetails bulkDetails, List<String> multipleTypeItems) {
