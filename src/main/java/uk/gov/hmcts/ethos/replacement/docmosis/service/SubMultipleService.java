@@ -247,8 +247,7 @@ public class SubMultipleService {
                     multipleTypeItem.getValue().setSubMultipleTitleM(" ");
                 } else if (subMultipleRef.equals(" ") && midSearchCollection.contains(caseRefNumber)) {
                     multipleTypeItem.getValue().setSubMultipleM(subMultipleRefNumber);
-                    multipleTypeItem.getValue().setSubMultipleTitleM(BulkHelper.getSubMultipleTitle(subMultipleRefNumber, bulkData).isPresent() ?
-                            BulkHelper.getSubMultipleTitle(subMultipleRefNumber, bulkData).get().getValue().getSubMultipleNameT() : " ");
+                    multipleTypeItem.getValue().setSubMultipleTitleM(BulkHelper.getSubMultipleTitle(subMultipleRefNumber, bulkData));
                 }
                 auxMultiplesList.add(multipleTypeItem);
             }
