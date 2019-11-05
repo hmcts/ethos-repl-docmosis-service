@@ -1,0 +1,184 @@
+{
+  "case_data": {
+    "bulkCaseTitle": "Title1",
+    "scheduleDocName": "List Cases",
+    "multipleReference": "210001",
+    "claimantSurname": "Juan",
+    "claimantSurname_v2": "Juan",
+    "claimantRep": "Asda LTD",
+    "clerkResponsible": "Sue Spearitt",
+    "feeGroupReference": "123456789123",
+    "feeGroupReference_v2": "123456789123",
+    "respondentSurname": "Pedro",
+    "respondentSurname_v2": "Pedro",
+    "respondentRep": "Clerk LTD",
+    "ethosCaseReference": "111",
+    "fileLocation": "Manchester",
+    "fileLocation_v2": "Manchester",
+    "jurCodesCollection": [
+      {
+        "value": {
+          "juridictionCodesList": "TUS"
+        },
+        "id": "670aa446-a0bf-485f-83b4-5ca6aea78add"
+      },
+      {
+        "value": {
+          "juridictionCodesList": "PLD"
+        },
+        "id": "5a37521b-0b96-4924-a92c-988c8c9e1fcf"
+      },
+      {
+        "value": {
+          "juridictionCodesList": "DAG"
+        },
+        "id": "1df45233-aa11-4225-83b7-3ed00e26a762"
+      },
+      {
+        "value": {
+          "juridictionCodesList": "IRF"
+        },
+        "id": "3588acd0-9c0e-4568-8e79-6e024283b9c7"
+      }
+    ],
+    "caseIdCollection": [
+      {
+        "id": "1559817606275162",
+        "value": {
+          "ethos_CaseReference": "111"
+        }
+      }
+    ],
+    "subMultipleCollection": [
+      {
+        "id": "1559817606275162",
+        "value": {
+          "subMultipleNameT": "SubMultiple1",
+          "subMultipleRefT": "211000"
+        }
+      },
+      {
+        "id": "1559817606275162",
+        "value": {
+          "subMultipleNameT": "SubMultiple2",
+          "subMultipleRefT": "211001"
+        }
+      }
+    ],
+    "multipleCollection": [
+      {
+        "id": "1559817606275162",
+        "value": {
+          "fileLocM": "with Mr Vincent Ryan",
+          "clerkRespM": " ",
+          "receiptDateM": "1990-12-12",
+          "positionTypeM": "Awaiting ET3",
+          "claimantSurnameM": "Lady C Collins",
+          "feeGroupReferenceM": "123456789123",
+          "multipleReferenceM": "123123123",
+          "respondentSurnameM": "Emma Watson",
+          "jurCodesCollectionTextM": "AX, AB",
+          "ethosCaseReferenceM": "2120000/2019",
+          "respondentAddressLine1M": "Sillavan Way",
+          "respondentPostCodeM": "M12 122",
+          "currentPositionM": "With judge",
+          "subMultipleM": "211000",
+          "stateM": "Submitted"
+        }
+      },
+      {
+        "id": "1560253193641698",
+        "value": {
+          "fileLocM": " ",
+          "clerkRespM": " ",
+          "receiptDateM": "2020-12-12",
+          "positionTypeM": "Awaiting ET3",
+          "claimantSurnameM": "Mrs F Watson",
+          "claimantAddressLine1M": "Avenue",
+          "claimantPostCodeM": "L232323",
+          "feeGroupReferenceM": "123456789123",
+          "multipleReferenceM": "123123123",
+          "respondentSurnameM": "Mr Steve Martin",
+          "ethosCaseReferenceM": "2120001/2019",
+          "respondentAddressLine1M": "Sillavan Street",
+          "currentPositionM": "Nowhere",
+          "respondentPostCodeM": "M12 222",
+          "subMultipleM": "211000"
+        }
+      },
+      {
+        "id": "1560334065531223",
+        "value": {
+          "fileLocM": " ",
+          "clerkRespM": " ",
+          "receiptDateM": "1990-12-12",
+          "positionTypeM": "Awaiting ET3",
+          "claimantSurnameM": "Juan Pedro Martin",
+          "feeGroupReferenceM": "123456789123",
+          "multipleReferenceM": "123123123",
+          "respondentSurnameM": "Emma Watson",
+          "ethosCaseReferenceM": "2120002/2019",
+          "subMultipleM": "211001"
+        }
+      }
+    ],
+    "searchCollection": [
+      {
+        "id": "1559817606275162",
+        "value": {
+          "fileLocS": "with Mr Vincent Ryan",
+          "clerkRespS": " ",
+          "receiptDateS": "1990-12-12",
+          "positionTypeS": "Awaiting ET3",
+          "claimantSurnameS": "Lady C Collins",
+          "feeGroupReferenceS": "123456789123",
+          "multipleReferenceS": "123123123",
+          "respondentSurnameS": "Emma Watson",
+          "jurCodesCollectionTextS": "AX, AB",
+          "ethosCaseReferenceS": "2120000/2019",
+          "respondentAddressLine1S": "Sillavan Way",
+          "currentPositionS": "With judge",
+          "respondentPostCodeS": "M12 122",
+          "stateS": "Submitted"
+        }
+      },
+      {
+        "id": "1560253193641698",
+        "value": {
+          "fileLocS": " ",
+          "clerkRespS": " ",
+          "receiptDateS": "2020-12-12",
+          "positionTypeS": "Awaiting ET3",
+          "claimantSurnameS": "Mrs F Watson",
+          "claimantAddressLine1S": "Avenue",
+          "claimantPostCodeS": "L232323",
+          "feeGroupReferenceS": "123456789123",
+          "multipleReferenceS": "123123123",
+          "ethosCaseReferenceS": "2120001/2019",
+          "respondentSurnameS": "Mr Steve Martin",
+          "respondentAddressLine1S": "Sillavan Street",
+          "currentPositionS": "Nowhere",
+          "respondentPostCodeS": "M12 222"
+        }
+      },
+      {
+        "id": "1560334065531223",
+        "value": {
+          "fileLocS": " ",
+          "clerkRespS": " ",
+          "receiptDateS": "1990-12-12",
+          "positionTypeS": "Awaiting ET3",
+          "claimantSurnameS": "Juan Pedro Martin",
+          "feeGroupReferenceS": "123456789123",
+          "multipleReferenceS": "123123123",
+          "ethosCaseReferenceS": "2120002/2019",
+          "respondentSurnameS": "Emma Watson"}
+      }
+    ]
+  },
+  "id": "232323232",
+  "jurisdiction": "Nothing",
+  "case_type_id" : "Manchester_Dev",
+  "state": "UK"
+}
+

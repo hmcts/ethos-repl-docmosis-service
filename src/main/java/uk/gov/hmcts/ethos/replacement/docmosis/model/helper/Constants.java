@@ -111,4 +111,14 @@ public class Constants {
     public static final String ALL_VENUES = "All";
     public static final String RULE_50_APPLIES = "Order made pursuant to Rule 50";
 
+    public static final String LIST_CASES = "EM-TRB-SUM-ENG-00220";
+    public static final String MULTIPLE_SCHEDULE = "EM-TRB-SUM-ENG-00221";
+    public static final String MULTIPLE_SCHEDULE_DETAILED = "EM-TRB-SUM-ENG-00222";
+
+    public static final String LIST_CASES_CONFIG = "List Cases";
+    public static final String MULTIPLE_SCHEDULE_CONFIG = "Multiple Schedule";
+    public static final String MULTIPLE_SCHEDULE_DETAILED_CONFIG = "Multiple Schedule (Detailed)";
+
+    public static final String FILE_EXTENSION = ".docx";
+
 }

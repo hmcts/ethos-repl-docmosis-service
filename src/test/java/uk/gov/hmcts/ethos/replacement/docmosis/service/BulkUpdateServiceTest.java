@@ -14,15 +14,15 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.SubmitBulkEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.CaseType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.MultipleType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.SearchType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
@@ -64,6 +64,8 @@ public class BulkUpdateServiceTest {
         bulkDetails = new BulkDetails();
         BulkData bulkData = new BulkData();
         bulkData.setMultipleReference("1111");
+        bulkData.setJurCodesDynamicList(getJurCodesDynamicList());
+        bulkData.setJurCodesCollection(getJurCodesCollection());
         bulkDetails.setJurisdiction("TRIBUNALS");
         bulkDetails.setCaseData(bulkData);
         bulkDetails.setCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID);
@@ -86,6 +88,7 @@ public class BulkUpdateServiceTest {
         RepresentedTypeRItem representedTypeRItem = new RepresentedTypeRItem();
         representedTypeRItem.setValue(representedTypeR);
         caseData.setRepCollection(new ArrayList<>(Collections.singletonList(representedTypeRItem)));
+        caseData.setJurCodesCollection(getJurCodesCollection());
         submitEvent = new SubmitEvent();
         submitEvent.setCaseId(1111);
         submitEvent.setCaseData(caseData);
@@ -135,7 +138,7 @@ public class BulkUpdateServiceTest {
 
     @Test
     public void caseUpdateFieldsRequest() throws IOException {
-        when(ccdClient.retrieveCase("authToken", MANCHESTER_USERS_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
+        when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
         when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenReturn(ccdRequest);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
         bulkUpdateService.caseUpdateFieldsRequest(bulkRequest.getCaseDetails(), searchTypeItem, "authToken", submitBulkEvent);
@@ -191,6 +194,9 @@ public class BulkUpdateServiceTest {
         assertNull(bulkData.getMultipleReferenceV2());
         assertNull(bulkData.getFileLocationV2());
         assertNull(bulkData.getFeeGroupReferenceV2());
+        assertNull(bulkData.getFlag1Update());
+        assertNull(bulkData.getFlag2Update());
+        assertNull(bulkData.getEQPUpdate());
     }
 
     private BulkDetails getBulkDetailsWithValues() {
@@ -204,15 +210,40 @@ public class BulkUpdateServiceTest {
         bulkData.setPositionTypeV2("Awaiting");
         bulkData.setClaimantRepV2("ClaimantRep");
         bulkData.setRespondentRepV2("RespondentRep");
+        bulkData.setFlag1Update("Flag1");
+        bulkData.setFlag2Update("Flag2");
+        bulkData.setEQPUpdate("EQP");
         bulkData.setFileLocationAberdeen("Aberdeen");
         bulkData.setFileLocationDundee("Dundee");
         bulkData.setFileLocationEdinburgh("Edinburgh");
         bulkData.setFileLocationGlasgow("Glasgow");
+        bulkData.setJurCodesDynamicList(getJurCodesDynamicList());
+        bulkData.setOutcomeUpdate("OutcomeNew");
         bulkData.setManagingOffice(GLASGOW_OFFICE);
         bulkDetails.setCaseData(bulkData);
         bulkDetails.setJurisdiction("TRIBUNALS");
         bulkDetails.setCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID);
         return bulkDetails;
+    }
+
+    private DynamicFixedListType getJurCodesDynamicList() {
+        DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+        DynamicValueType dynamicValueType = new DynamicValueType();
+        dynamicValueType.setLabel("COM");
+        dynamicValueType.setCode("COM");
+        dynamicFixedListType.setValue(dynamicValueType);
+        List<DynamicValueType> listItems = new ArrayList<>(Collections.singleton(dynamicValueType));
+        dynamicFixedListType.setListItems(listItems);
+        return dynamicFixedListType;
+    }
+
+    private List<JurCodesTypeItem> getJurCodesCollection() {
+        JurCodesTypeItem jurCodesTypeItem = new JurCodesTypeItem();
+        JurCodesType jurCodesType = new JurCodesType();
+        jurCodesType.setJuridictionCodesList("COM");
+        jurCodesTypeItem.setId("COM");
+        jurCodesTypeItem.setValue(jurCodesType);
+        return new ArrayList<>(Collections.singleton(jurCodesTypeItem));
     }
 
     private BulkDetails getBulkDetailsCompleteWithValues(BulkDetails bulkDetails) {
