@@ -153,7 +153,7 @@
       "responseRespondentName" : "RespondentName",
       "response_received": "Yes",
       "response_referred_to_judge": "Yes",
-      "response_required_info_absent?": "Yes",
+      "responseRequiredInfoAbsent": "Yes",
       "response_returned_from_judge": "Yes",
       "response_status": "Status",
       "rejection_reason" : "none",
