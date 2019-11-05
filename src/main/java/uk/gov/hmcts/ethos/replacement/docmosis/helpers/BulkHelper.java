@@ -364,8 +364,7 @@ public class BulkHelper {
             while (entries.hasNext()) {
                 Map.Entry<String, List<SearchType>> subMultipleEntry = entries.next();
                 sb.append("{\"SubMultiple_No\":\"").append(subMultipleEntry.getKey()).append(NEW_LINE);
-                sb.append("\"SubMultiple_title\":\"").append(getSubMultipleTitle(subMultipleEntry.getKey(), bulkData).isPresent() ?
-                        getSubMultipleTitle(subMultipleEntry.getKey(), bulkData).get().getValue().getSubMultipleNameT() : " ").append(NEW_LINE);
+                sb.append("\"SubMultiple_title\":\"").append(getSubMultipleTitle(subMultipleEntry.getKey(), bulkData)).append(NEW_LINE);
                 sb.append("\"multiple\":[\n");
                 for (int i = 0; i < subMultipleEntry.getValue().size(); i++) {
                     sb.append(getMultipleTypeRow(subMultipleEntry.getValue().get(i)));
@@ -399,10 +398,13 @@ public class BulkHelper {
         return multipleMap;
     }
 
-    public static Optional<SubMultipleTypeItem> getSubMultipleTitle(String subMultipleRef, BulkData bulkData) {
-        return bulkData.getSubMultipleCollection().stream()
+    public static String getSubMultipleTitle(String subMultipleRef, BulkData bulkData) {
+        Optional<SubMultipleTypeItem> subMultipleTypeItem = bulkData.getSubMultipleCollection().stream()
                 .filter(subMultiple -> subMultiple.getValue().getSubMultipleRefT().equals(subMultipleRef))
                 .findFirst();
+        if (subMultipleTypeItem.isPresent()) {
+            return subMultipleTypeItem.get().getValue().getSubMultipleNameT();
+        } return " ";
     }
 
     public static String getScheduleDocName(String scheduleDocName) {
