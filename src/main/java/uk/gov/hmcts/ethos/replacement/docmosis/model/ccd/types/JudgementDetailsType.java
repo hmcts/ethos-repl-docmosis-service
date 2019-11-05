@@ -32,10 +32,10 @@ public class JudgementDetailsType {
     private String certOfCorrectionSent;
     @JsonProperty("non-financial_award")
     private String nonFinancialAward;
-    @JsonProperty("total_award_£")
+    @JsonProperty("total_award")
     private String totalAward;
     @JsonProperty("adjustment")
     private String adjustment;
-    @JsonProperty("adjustment_%")
+    @JsonProperty("adjustmentPercentage")
     private String adjustmentPercentage;
 }
