@@ -360,7 +360,7 @@ public class DefaultValuesReaderServiceTest {
                 "correspondenceScotType=null, correspondenceType=null, caseNotes=null, claimantWorkAddress=null, " +
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=null, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
-                "printHearingCollection=null, targetHearingDate=null)";
+                "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null)";
         assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow).toString());
     }
 

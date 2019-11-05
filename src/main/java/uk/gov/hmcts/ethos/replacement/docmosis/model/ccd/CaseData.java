@@ -140,4 +140,11 @@ public class CaseData {
     @JsonProperty("targetHearingDate")
     private String targetHearingDate;
 
+    @JsonProperty("EQP")
+    private String EQP;
+    @JsonProperty("flag1")
+    private String flag1;
+    @JsonProperty("flag2")
+    private String flag2;
+
 }

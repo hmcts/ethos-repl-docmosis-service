@@ -95,5 +95,38 @@ public class BulkData {
     @JsonProperty("correspondenceScotType")
     private CorrespondenceScotType correspondenceScotType;
 
+    @JsonProperty("selectAll")
+    private String selectAll;
+    @JsonProperty("scheduleDocName")
+    private String scheduleDocName;
+    @JsonProperty("positionType")
+    private String positionType;
+    @JsonProperty("flag1")
+    private String flag1;
+    @JsonProperty("flag2")
+    private String flag2;
+    @JsonProperty("EQP")
+    private String EQP;
+    @JsonProperty("submissionRef")
+    private String submissionRef;
+    @JsonProperty("claimantOrg")
+    private String claimantOrg;
+    @JsonProperty("respondentOrg")
+    private String respondentOrg;
+    @JsonProperty("state")
+    private String state;
+
+    @JsonProperty("flag1Update")
+    private String flag1Update;
+    @JsonProperty("flag2Update")
+    private String flag2Update;
+    @JsonProperty("EQPUpdate")
+    private String EQPUpdate;
+
+    @JsonProperty("jurCodesDynamicList")
+    private DynamicFixedListType jurCodesDynamicList;
+    @JsonProperty("outcomeUpdate")
+    private String outcomeUpdate;
+
 }
 

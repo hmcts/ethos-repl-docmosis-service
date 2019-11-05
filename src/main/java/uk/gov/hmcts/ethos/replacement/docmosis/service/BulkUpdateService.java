@@ -16,8 +16,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.CaseType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
@@ -126,6 +128,10 @@ public class BulkUpdateService {
         bulkData.setFeeGroupReferenceV2(null);
         bulkData.setClaimantSurnameV2(null);
         bulkData.setRespondentSurnameV2(null);
+        bulkData.setFlag1Update(null);
+        bulkData.setFlag2Update(null);
+        bulkData.setEQPUpdate(null);
+        bulkData.setOutcomeUpdate(null);
         bulkRequestPayload.getBulkDetails().setCaseData(bulkData);
         return bulkRequestPayload;
     }
@@ -192,6 +198,11 @@ public class BulkUpdateService {
             String multipleRefNewValue = bulkData.getMultipleReferenceV2();
             String clerkNewValue = bulkData.getClerkResponsibleV2();
             String positionTypeNewValue = bulkData.getPositionTypeV2();
+            String flag1NewValue = bulkData.getFlag1Update();
+            String flag2NewValue = bulkData.getFlag2Update();
+            String EQPNewValue = bulkData.getEQPUpdate();
+            String jurCodeSelected = bulkData.getJurCodesDynamicList().getValue().getCode();
+            String outcomeNewValue = bulkData.getOutcomeUpdate();
             SubmitEvent submitEvent = ccdClient.retrieveCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             boolean updated = false;
             boolean multipleReferenceUpdated = false;
@@ -210,6 +221,21 @@ public class BulkUpdateService {
                     respondentSumTypeItems.add(respondentSumTypeItem);
                     submitEvent.getCaseData().setRespondentCollection(respondentSumTypeItems);
                 }
+            }
+            if (!isNullOrEmpty(jurCodeSelected) && !jurCodeSelected.equals(SELECT_NONE_VALUE) && !isNullOrEmpty(outcomeNewValue)) {
+                List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>();
+                if (submitEvent.getCaseData().getJurCodesCollection() != null && !submitEvent.getCaseData().getJurCodesCollection().isEmpty()) {
+                    for (JurCodesTypeItem jurCodesTypeItem : submitEvent.getCaseData().getJurCodesCollection()) {
+                        if (jurCodesTypeItem.getValue().getJuridictionCodesList().equals(jurCodeSelected)) {
+                            JurCodesType jurCodesType = jurCodesTypeItem.getValue();
+                            jurCodesType.setJudgmentOutcome(outcomeNewValue);
+                            jurCodesTypeItem.setValue(jurCodesType);
+                            updated = true;
+                        }
+                        jurCodesTypeItems.add(jurCodesTypeItem);
+                    }
+                }
+                submitEvent.getCaseData().setJurCodesCollection(jurCodesTypeItems);
             }
             if (!isNullOrEmpty(fileLocationNewValue)) {
                 updated = true;
@@ -287,6 +313,18 @@ public class BulkUpdateService {
                 updated = true;
                 submitEvent.getCaseData().setPositionType(positionTypeNewValue);
             }
+            if (!isNullOrEmpty(flag1NewValue)) {
+                updated = true;
+                submitEvent.getCaseData().setFlag1(flag1NewValue);
+            }
+            if (!isNullOrEmpty(flag2NewValue)) {
+                updated = true;
+                submitEvent.getCaseData().setFlag2(flag2NewValue);
+            }
+            if (!isNullOrEmpty(EQPNewValue)) {
+                updated = true;
+                submitEvent.getCaseData().setEQP(EQPNewValue);
+            }
             if (updated) {
                 boolean isThisCaseLead = false;
                 // If multipleReference was updated then add the new values to the bulk case
@@ -340,6 +378,7 @@ public class BulkUpdateService {
                 .map(searchTypeItem -> searchTypeItem.getValue().getEthosCaseReferenceS())
                 .collect(Collectors.toList());
         String subMultipleRefNewValue = bulkData.getSubMultipleDynamicList() != null ? bulkData.getSubMultipleDynamicList().getValue().getCode() : "";
+        String subMultipleTitleNewValue = bulkData.getSubMultipleDynamicList() != null ? bulkData.getSubMultipleDynamicList().getValue().getLabel() : "";
         for (MultipleTypeItem multipleTypeItem : multipleTypeItemList) {
             log.info("Adding FLAGS to case");
             boolean updated = false;
@@ -347,6 +386,7 @@ public class BulkUpdateService {
                     !subMultipleRefNewValue.equals(DEFAULT_SELECT_ALL_VALUE) &&
                     refNumbersFromSearchList.contains(multipleTypeItem.getValue().getEthosCaseReferenceM())) {
                 multipleTypeItem.getValue().setSubMultipleM(subMultipleRefNewValue);
+                multipleTypeItem.getValue().setSubMultipleTitleM(subMultipleTitleNewValue);
                 updated = true;
             }
             //Keep the old info for flags and subMultiple ref
@@ -355,6 +395,7 @@ public class BulkUpdateService {
                         .filter(multipleTypeItem1 -> multipleTypeItem.getValue().getEthosCaseReferenceM().equals(multipleTypeItem1.getValue().getEthosCaseReferenceM()))
                         .findFirst();
                 multipleTypeItem.getValue().setSubMultipleM(previousMultipleTypeItem.isPresent() ? previousMultipleTypeItem.get().getValue().getSubMultipleM() : " ");
+                multipleTypeItem.getValue().setSubMultipleTitleM(previousMultipleTypeItem.isPresent() ? previousMultipleTypeItem.get().getValue().getSubMultipleTitleM() : " ");
             }
             multipleTypeItemsAux.add(multipleTypeItem);
         }

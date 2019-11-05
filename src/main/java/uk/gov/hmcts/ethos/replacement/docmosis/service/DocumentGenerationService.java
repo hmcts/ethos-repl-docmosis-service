@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
@@ -83,4 +84,25 @@ public class DocumentGenerationService {
         }
         return caseDataResultList;
     }
+
+    public BulkDocumentInfo processBulkScheduleRequest(BulkRequest bulkRequest, String authToken) {
+        BulkDocumentInfo bulkDocumentInfo = new BulkDocumentInfo();
+        BulkData bulkData = bulkRequest.getCaseDetails().getCaseData();
+        List<String> errors = new ArrayList<>();
+        DocumentInfo documentInfo = new DocumentInfo();
+        try {
+            if (bulkData.getSearchCollection() != null && !bulkData.getSearchCollection().isEmpty()) {
+                documentInfo = tornadoService.scheduleGeneration(authToken, bulkData);
+            } else {
+                errors.add("There are not cases searched to generate schedules");
+            }
+        } catch (Exception ex) {
+            throw new DocumentManagementException(MESSAGE + bulkRequest.getCaseDetails().getCaseId() + ex.getMessage());
+        }
+        bulkDocumentInfo.setErrors(errors);
+        bulkDocumentInfo.setMarkUps(documentInfo.getMarkUp() != null ? documentInfo.getMarkUp() : " ");
+        bulkDocumentInfo.setDocumentInfo(documentInfo);
+        return bulkDocumentInfo;
+    }
+
 }

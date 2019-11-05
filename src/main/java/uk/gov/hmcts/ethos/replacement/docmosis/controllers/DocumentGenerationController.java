@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 
@@ -57,17 +57,8 @@ public class DocumentGenerationController {
                 .errors(errors)
                 .data(caseData)
                 .confirmation_header(GENERATED_DOCUMENT_URL + documentInfo.getMarkUp())
-                .significant_item(generateSignificantItem(documentInfo))
+                .significant_item(Helper.generateSignificantItem(documentInfo))
                 .build());
-    }
-
-    private SignificantItem generateSignificantItem(DocumentInfo documentInfo) {
-        log.info("generateSignificantItem for document: " + documentInfo);
-        return SignificantItem.builder()
-                .url(documentInfo.getUrl())
-                .description(documentInfo.getDescription())
-                .type(SignificantItemType.DOCUMENT.name())
-                .build();
     }
 
 }

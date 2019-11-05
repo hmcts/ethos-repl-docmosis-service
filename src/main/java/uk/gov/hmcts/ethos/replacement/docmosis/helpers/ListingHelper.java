@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatCurrentDate;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 @Slf4j
@@ -106,7 +107,6 @@ public class ListingHelper {
     }
 
     public static StringBuilder buildListingDocumentContent(ListingData listingData, String accessKey, String templateName, UserDetails userDetails, String caseType) {
-        String FILE_EXTENSION = ".docx";
         StringBuilder sb = new StringBuilder();
 
         // Start building the instruction
@@ -256,10 +256,6 @@ public class ListingHelper {
         sb.append("\"Court_DX\":\"").append(nullCheck(listingData.getTribunalCorrespondenceDX())).append(NEW_LINE);
         sb.append("\"Court_Email\":\"").append(nullCheck(listingData.getTribunalCorrespondenceEmail())).append(NEW_LINE);
         return sb;
-    }
-
-    private static String nullCheck(String value) {
-        return Optional.ofNullable(value).orElse("");
     }
 
     public static String getListingDocName(ListingData listingData) {

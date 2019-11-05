@@ -40,5 +40,27 @@ public class MultipleType {
     private String stateM;
     @JsonProperty("subMultipleM")
     private String subMultipleM;
+    @JsonProperty("subMultipleTitleM")
+    private String subMultipleTitleM;
+    @JsonProperty("currentPositionM")
+    private String currentPositionM;
+    @JsonProperty("claimantAddressLine1M")
+    private String claimantAddressLine1M;
+    @JsonProperty("claimantPostCodeM")
+    private String claimantPostCodeM;
+    @JsonProperty("respondentAddressLine1M")
+    private String respondentAddressLine1M;
+    @JsonProperty("respondentPostCodeM")
+    private String respondentPostCodeM;
+    @JsonProperty("flag1M")
+    private String flag1M;
+    @JsonProperty("flag2M")
+    private String flag2M;
+    @JsonProperty("EQPM")
+    private String EQPM;
+    @JsonProperty("respondentRepOrgM")
+    private String respondentRepOrgM;
+    @JsonProperty("claimantRepOrgM")
+    private String claimantRepOrgM;
 
 }
