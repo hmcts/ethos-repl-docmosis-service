@@ -18,9 +18,9 @@ import java.util.ArrayList;
 @ComponentScan(basePackages = "uk.gov.hmcts.ethos.replacement.docmosis.client")
 
 
-//@EnableFeignClients(basePackages =
-//        {"uk.gov.hmcts.ethos.replacement.docmosis.idam"
-//        })
+@EnableFeignClients(basePackages =
+        {"uk.gov.hmcts.ethos.replacement.docmosis.idam"
+        })
 public class ConsumerApplication {
     @Bean
     public RestTemplate restTemplate() {
@@ -39,23 +39,6 @@ public class ConsumerApplication {
     @Bean
     FeignClientProperties feignClientProperties() {
         return new FeignClientProperties();
-    }
-
-    @Bean
-    IdamApi idamApi() {
-        UserDetails userDetails;
-        userDetails = new UserDetails("1", "example@hotmail.com", "Mike", "Jordan", new ArrayList<>());
-        IdamApi idamApi = authorisation -> userDetails;
-        return idamApi;
-    }
-    @Bean
-    UserService userService() {
-        return new UserService(idamApi());
-    }
-
-    @Bean
-    AuthTokenGenerator authTokenGenerator() {
-        return new AuthTokenGeneratorStub();
     }
 
 }

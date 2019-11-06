@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.ResourceUtils;
@@ -30,6 +31,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
+import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -86,10 +89,9 @@ public class CCDApiTest {
 
         ObjectMapper mapper = new ObjectMapper();
         CCDRequest ccdObject = mapper.readValue(json, CCDRequest.class);
-
         UserDetails userDetails = new UserDetails("18","email","forename","surname",new ArrayList<>());
         Mockito.when(mockUserService.getUserDetails("authToken")).thenReturn(userDetails);
-
+        Mockito.when(authTokenGenerator.generate()).thenReturn("authToken");
         SubmitEvent submitEvent = ccdApi.submitEventForCase("authToken",new CaseData(),"Manchester_Dev","EMPLOYMENT",ccdObject,"1561736564850897");
         Assert.assertEquals("stateValue", submitEvent.getState());
     }
@@ -123,6 +125,10 @@ public class CCDApiTest {
     @MockBean
     public UserService mockUserService;
 
+
+    @MockBean(name = "authTokenGenerator")
+    public AuthTokenGenerator authTokenGenerator;
+
     @Test
     @PactTestFor(pactMethod = "getCasePact")
     void verifyCreateCase2() throws IOException {
@@ -133,8 +139,10 @@ public class CCDApiTest {
         CaseDetails caseDetails = new CaseDetails();
         caseDetails.setJurisdiction("JID");
         caseDetails.setCaseTypeId("CASETYPEID");
+
         UserDetails userDetails = new UserDetails("userId","email","forename","surname",new ArrayList<>());
         Mockito.when(mockUserService.getUserDetails("authToken")).thenReturn(userDetails);
+        Mockito.when(authTokenGenerator.generate()).thenReturn("authToken");
         CCDRequest response = ccdApi.startCaseCreation("authToken",caseDetails);
         Assert.assertEquals("value", response.getEventId());
         Assert.assertEquals("tokenValue", response.getToken());
