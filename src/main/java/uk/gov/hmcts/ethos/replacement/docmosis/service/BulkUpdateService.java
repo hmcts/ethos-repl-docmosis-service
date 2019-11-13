@@ -201,9 +201,12 @@ public class BulkUpdateService {
             String flag1NewValue = bulkData.getFlag1Update();
             String flag2NewValue = bulkData.getFlag2Update();
             String EQPNewValue = bulkData.getEQPUpdate();
+            log.info("Empty JurCodes???");
             String jurCodeSelected = bulkData.getJurCodesDynamicList().getValue().getCode();
             String outcomeNewValue = bulkData.getOutcomeUpdate();
+            log.info("JurCodes fine");
             SubmitEvent submitEvent = ccdClient.retrieveCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
+            log.info("Retrieve case passed");
             boolean updated = false;
             boolean multipleReferenceUpdated = false;
             if (!isNullOrEmpty(respondentNameNewValue)) {
@@ -328,6 +331,7 @@ public class BulkUpdateService {
             if (updated) {
                 boolean isThisCaseLead = false;
                 // If multipleReference was updated then add the new values to the bulk case
+                log.info("Coming to update");
                 if (multipleReferenceUpdated) {
                     BulkData bulkData1 = submitBulkEvent.getCaseData();
                     MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
@@ -363,9 +367,13 @@ public class BulkUpdateService {
                 } else {
                     submitEvent.getCaseData().setLeadClaimant("No");
                 }
+                log.info("Ready to startEvent");
                 CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
                 ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
+            } else {
+                log.info("No updated");
             }
+            log.info("End fine");
             return submitBulkEvent;
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + searchTypeItem.getId() + ex.getMessage());
