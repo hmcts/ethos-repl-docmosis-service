@@ -1,0 +1,95 @@
+{
+    "provider": {
+        "name": "ccd-data-store-api"
+    },
+    "consumer": {
+        "name": "ethos-repl-docmosis-service1"
+    },
+    "interactions": [
+        {
+            "description": "a request to get the Case",
+            "request": {
+                "method": "GET",
+                "path": "/caseworkers/userId/jurisdictions/JID/case-types/CASETYPEID/event-triggers/initiateCase/token",
+                "headers": {
+                    "Authorization": "authToken",
+                    "Serviceauthorization": "authToken"
+                },
+                "query": {
+                    "ignore-warning": [
+                        "true"
+                    ]
+                },
+                "matchingRules": {
+                    "query": {
+                        "ignore-warning": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": "true"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    }
+                }
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": {
+                    "event_id": "value",
+                    "token": "tokenValue"
+                },
+                "matchingRules": {
+                    "header": {
+                        "Content-Type": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": "application/json"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    },
+                    "body": {
+                        "$.event_id": {
+                            "matchers": [
+                                {
+                                    "match": "include",
+                                    "value": "value"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.token": {
+                            "matchers": [
+                                {
+                                    "match": "include",
+                                    "value": "tokenValue"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    }
+                }
+            },
+            "providerStates": [
+                {
+                    "name": "provider to get the created Case"
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "pactSpecification": {
+            "version": "3.0.0"
+        },
+        "pact-jvm": {
+            "version": "3.5.24"
+        }
+    }
+}

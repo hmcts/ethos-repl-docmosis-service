@@ -1,0 +1,142 @@
+{
+    "provider": {
+        "name": "ccd-data-store-api"
+    },
+    "consumer": {
+        "name": "ethos-repl-docmosis-service"
+    },
+    "interactions": [
+        {
+            "description": "a request to submit Case",
+            "request": {
+                "method": "POST",
+                "path": "/caseworkers/18/jurisdictions/EMPLOYMENT/case-types/Manchester_Dev/cases/1561736564850897/events",
+                "headers": {
+                    "Authorization": "authToken",
+                    "Serviceauthorization": "authToken"
+                },
+                "body": {
+                    "event": {
+                        "id": null,
+                        "summary": "Case updated by bulk",
+                        "description": null
+                    },
+                    "data": {
+                        "additionalCaseInfo": null,
+                        "broughtForwardCollection": null,
+                        "targetHearingDate": null,
+                        "conciliationTrack": null,
+                        "claimantWorkAddressQuestion": null,
+                        "caseNotes": null,
+                        "receiptDate": null,
+                        "tribunalCorrespondenceFax": null,
+                        "stateAPI": null,
+                        "hearingCollection": null,
+                        "repCollection": null,
+                        "documentCollection": null,
+                        "feeGroupReference": null,
+                        "addSubMultipleComment": null,
+                        "state": null,
+                        "claimantIndType": null,
+                        "tribunalCorrespondenceEmail": null,
+                        "userLocation": null,
+                        "subMultipleReference": null,
+                        "preAcceptCase": null,
+                        "allocatedOffice": null,
+                        "respondentCollection": null,
+                        "hearingType": null,
+                        "caseSource": null,
+                        "depositType": null,
+                        "claimant_Company": null,
+                        "tribunalCorrespondenceAddress": null,
+                        "printHearingResults": null,
+                        "costsCollection": null,
+                        "backFromJudge": null,
+                        "fileLocationAberdeen": null,
+                        "referredToJudge": null,
+                        "counterClaim": null,
+                        "fileLocation": null,
+                        "responseTypeCollection": null,
+                        "fileLocationEdinburgh": null,
+                        "managingOffice": null,
+                        "ethosCaseReference": null,
+                        "correspondenceType": null,
+                        "multipleReference": null,
+                        "representativeClaimantType": null,
+                        "tribunalCorrespondenceDX": null,
+                        "fileLocationDundee": null,
+                        "judgementCollection": null,
+                        "claimant_TypeOfClaimant": null,
+                        "claimantRepresentedQuestion": null,
+                        "responseType": null,
+                        "jurCodesCollection": null,
+                        "tribunalCorrespondenceTelephone": null,
+                        "caseType": null,
+                        "fileLocationGlasgow": null,
+                        "claimantOtherType": null,
+                        "clerkResponsible": null,
+                        "claimantWorkAddress": null,
+                        "bulkCaseReferenceNumber": null,
+                        "leadClaimant1": null,
+                        "printHearing": null,
+                        "judgementDetailsCollection": null,
+                        "claimantType": null,
+                        "et3Received": null,
+                        "positionType": null,
+                        "restrictedReporting": null,
+                        "correspondenceScotType": null
+                    },
+                    "event_token": null,
+                    "security_classification": null,
+                    "ignore_warning": false
+                }
+            },
+            "response": {
+                "status": 201,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": {
+                    "state": "stateValue"
+                },
+                "matchingRules": {
+                    "header": {
+                        "Content-Type": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": "application/json"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    },
+                    "body": {
+                        "$.state": {
+                            "matchers": [
+                                {
+                                    "match": "include",
+                                    "value": "stateValue"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    }
+                }
+            },
+            "providerStates": [
+                {
+                    "name": "provider submit a new Case"
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "pactSpecification": {
+            "version": "3.0.0"
+        },
+        "pact-jvm": {
+            "version": "3.5.24"
+        }
+    }
+}

@@ -167,6 +167,11 @@ dependencies {
     testPactImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
     testPactCompile sourceSets.main.runtimeClasspath
     testPactCompile sourceSets.test.runtimeClasspath
+
+    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '2.0.52'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.0.52'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.0.52'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.0.52'
 }
 
 jar {
