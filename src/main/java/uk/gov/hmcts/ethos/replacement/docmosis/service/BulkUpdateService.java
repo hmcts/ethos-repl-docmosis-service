@@ -205,6 +205,11 @@ public class BulkUpdateService {
             String jurCodeSelected = bulkData.getJurCodesDynamicList().getValue().getCode();
             String outcomeNewValue = bulkData.getOutcomeUpdate();
             log.info("JurCodes fine");
+            log.info("AuthToken: " + authToken);
+            log.info("bulkDetails.getCaseTypeId(): " + bulkDetails.getCaseTypeId());
+            log.info("CaseTypeId: " + BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()));
+            log.info("JUR: " + bulkDetails.getJurisdiction());
+            log.info("CaseID: " + caseId);
             SubmitEvent submitEvent = ccdClient.retrieveCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             log.info("Retrieve case passed");
             boolean updated = false;
