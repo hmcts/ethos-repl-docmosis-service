@@ -101,6 +101,7 @@ public class CcdClientConfig {
             throw new IOException("authToken regex exception");
         }
         headers.add(HttpHeaders.AUTHORIZATION, authToken);
+        log.info("TOKEN GENERATED: " + authTokenGenerator.generate());
         headers.add(SERVICE_AUTHORIZATION, authTokenGenerator.generate());
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
         return headers;
