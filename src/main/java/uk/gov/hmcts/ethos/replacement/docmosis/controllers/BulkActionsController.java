@@ -100,6 +100,7 @@ public class BulkActionsController {
 
         bulkRequestPayload = bulkUpdateService.clearUpFields(bulkRequestPayload);
 
+        log.info("BulkRequestPayload: " + bulkRequestPayload.getBulkDetails());
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
                 .data(bulkRequestPayload.getBulkDetails().getCaseData())
