@@ -109,12 +109,7 @@ public class CcdClient {
                 "      \"should\": [\n" +
                 "        {\n" +
                 "          \"match\": {\n" +
-                "            \"data.ethosCaseReference\": \"4120142/2019\"\n" +
-                "          }\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"match\": {\n" +
-                "            \"data.ethosCaseReference\": \"4120134/2019\"\n" +
+                "            \"data.ethosCaseReference\": \"4120130/2019\"\n" +
                 "          }\n" +
                 "        }\n" +
                 "      ]\n" +
