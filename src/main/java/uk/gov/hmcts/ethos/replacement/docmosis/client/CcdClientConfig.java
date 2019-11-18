@@ -30,6 +30,7 @@ public class CcdClientConfig {
             "%s/caseworkers/%s/jurisdictions/%s/case-types/%s/cases/%s/events";
     private static final String PAGINATION_METADATA_FORMAT =
             "%s/caseworkers/%s/jurisdictions/%s/case-types/%s/cases/pagination_metadata";
+    private static final String SEARCH_CASES_FORMAT = "%s/searchCases?%s";
 
     @Value("${ccd.data.store.api.url}")
     private String CCD_DATA_STORE_API_BASE_URL;
@@ -70,6 +71,13 @@ public class CcdClientConfig {
     //    CREATED_DATE("created_date"),
     //    LAST_MODIFIED_DATE("last_modified_date"),
     //    SECURITY_CLASSIFICATION("security_classification");
+
+    String buildRetrieveCasesUrlElasticSearch(String uid, String ctid) {
+        String param = "ctid=" + ctid;
+        //log.info("Looking cases by: uid: " + uid + " jid: " + jid + " ctid: " + ctid + " param: " + param);
+        log.info("Format: " + String.format(SEARCH_CASES_FORMAT, CCD_DATA_STORE_API_BASE_URL, param));
+        return String.format(SEARCH_CASES_FORMAT, CCD_DATA_STORE_API_BASE_URL, param);
+    }
 
     String buildStartEventForCaseUrl(String uid, String jid, String ctid, String cid) {
         return String.format(START_EVENT_FOR_CASE_URL_CASEWORKER_FORMAT, CCD_DATA_STORE_API_BASE_URL, uid, jid, ctid, cid, UPDATE_EVENT_TRIGGER_ID);
