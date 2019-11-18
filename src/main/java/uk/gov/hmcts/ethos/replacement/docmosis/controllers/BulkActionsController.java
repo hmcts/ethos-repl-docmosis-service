@@ -69,7 +69,7 @@ public class BulkActionsController {
             bulkRequest.getCaseDetails().getCaseData().setMultipleReference(reference);
         }
 
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken);
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkRequest.getCaseDetails(), userToken);
 
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken);
 
