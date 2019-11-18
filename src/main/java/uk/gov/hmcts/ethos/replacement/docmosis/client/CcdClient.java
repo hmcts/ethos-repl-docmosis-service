@@ -106,13 +106,9 @@ public class CcdClient {
         String search = "{\n" +
                 "  \"query\": {\n" +
                 "    \"bool\": {\n" +
-                "      \"should\": [\n" +
-                "        {\n" +
-                "          \"match\": {\n" +
-                "            \"data.ethosCaseReference\": \"4120130/2019\"\n" +
-                "          }\n" +
-                "        }\n" +
-                "      ]\n" +
+                "       \"match\": {\n" +
+                "           \"data.ethosCaseReference\": \"4120130/2019\"\n" +
+                "       }\n" +
                 "    }\n" +
                 "  }\n" +
                 "}";
