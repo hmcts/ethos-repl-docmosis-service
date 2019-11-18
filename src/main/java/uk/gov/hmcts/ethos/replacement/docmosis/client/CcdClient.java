@@ -101,16 +101,16 @@ public class CcdClient {
     public List<SubmitEvent> retrieveCasesElasticSearch(String authToken, String caseTypeId, String jurisdiction) throws IOException {
         //HttpEntity<CCDRequest> request =
         //        new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
+
+        //SearchSourceBuilder search = new SearchSourceBuilder();
+
+        log.info("Before the search bulk ES");
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        String userDetailsId = userService.getUserDetails(authToken).getId();
         String search = "{\n" +
-                "  \"query\": {\n" +
-                "    \"bool\": {\n" +
-                "       \"match\": {\n" +
-                "           \"data.ethosCaseReference\": \"4120130/2019\"\n" +
-                "       }\n" +
-                "    }\n" +
-                "  }\n" +
+                "    \"query\": {\n" +
+                "        \"match_all\": {}\n" +
+                "    },\n" +
+                "    \"size\": 5\n" +
                 "}";
         HttpEntity<String> request =
                 new HttpEntity<>(search, ccdClientConfig.buildHeaders(authToken));
