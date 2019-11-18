@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
@@ -151,7 +153,47 @@ public class TornadoService {
 
     private void buildListingInstruction(HttpURLConnection conn, ListingData listingData, String documentName, UserDetails userDetails, String caseType) throws IOException {
         StringBuilder sb = ListingHelper.buildListingDocumentContent(listingData, tornadoConfiguration.getAccessKey(), documentName, userDetails, caseType);
-        log.info("Sending request: " + sb.toString());
+        //log.info("Sending request: " + sb.toString());
+        // send the instruction in UTF-8 encoding so that most character sets are available
+        OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
+        os.write(sb.toString());
+        os.flush();
+    }
+
+    DocumentInfo scheduleGeneration(String authToken, BulkData bulkData) throws IOException {
+        HttpURLConnection conn = null;
+        DocumentInfo documentInfo = new DocumentInfo();
+        try {
+            conn = createConnection();
+            log.info("Connected");
+            buildScheduleInstruction(conn, bulkData);
+            int status = conn.getResponseCode();
+            if (status == HTTP_OK) {
+                log.info("HTTP_OK");
+                documentInfo = createDocument(authToken, conn, BulkHelper.getScheduleDocName(bulkData.getScheduleDocName()));
+            } else {
+                log.error("message:" + conn.getResponseMessage());
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                String msg;
+                while ((msg = errorReader.readLine()) != null) {
+                    log.error(msg);
+                }
+            }
+        } catch (ConnectException e) {
+            log.error("Unable to connect to Docmosis: " + e.getMessage());
+            log.error("If you have a proxy, you will need the Proxy aware example code.");
+            System.exit(2);
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+        return documentInfo;
+    }
+
+    private void buildScheduleInstruction(HttpURLConnection conn, BulkData bulkData) throws IOException {
+        StringBuilder sb = BulkHelper.buildScheduleDocumentContent(bulkData, tornadoConfiguration.getAccessKey());
+        //log.info("Sending request: " + sb.toString());
         // send the instruction in UTF-8 encoding so that most character sets are available
         OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
         os.write(sb.toString());

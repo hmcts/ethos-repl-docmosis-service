@@ -17,11 +17,11 @@ public class RespondentSumType {
     private String rejectionReason;
     @JsonProperty("rejection_reason_other")
     private String rejectionReasonOther;
-    @JsonProperty("response_out_of_time?")
+    @JsonProperty("responseOutOfTime")
     private String responseOutOfTime;
-    @JsonProperty("response_not_on_prescribed_form?")
+    @JsonProperty("responseNotOnPrescribedForm")
     private String responseNotOnPrescribedForm;
-    @JsonProperty("response_required_info_absent?")
+    @JsonProperty("responseRequiredInfoAbsent")
     private String responseRequiredInfoAbsent;
     @JsonProperty("responseNotes")
     private String responseNotes;
