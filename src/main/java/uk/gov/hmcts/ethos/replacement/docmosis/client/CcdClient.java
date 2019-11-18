@@ -98,6 +98,43 @@ public class CcdClient {
         return submitEvents;
     }
 
+    public List<SubmitEvent> retrieveCasesElasticSearch(String authToken, String caseTypeId, String jurisdiction) throws IOException {
+        //HttpEntity<CCDRequest> request =
+        //        new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
+        List<SubmitEvent> submitEvents = new ArrayList<>();
+        String userDetailsId = userService.getUserDetails(authToken).getId();
+        String search = "{\n" +
+                "  \"query\": {\n" +
+                "    \"bool\": {\n" +
+                "      \"should\": [\n" +
+                "        {\n" +
+                "          \"match\": {\n" +
+                "            \"data.ethosCaseReference\": \"4120142/2019\"\n" +
+                "          }\n" +
+                "        },\n" +
+                "        {\n" +
+                "          \"match\": {\n" +
+                "            \"data.ethosCaseReference\": \"4120134/2019\"\n" +
+                "          }\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        HttpEntity<String> request =
+                new HttpEntity<>(search, ccdClientConfig.buildHeaders(authToken));
+        log.info("REQUEST: " + request);
+        String url = ccdClientConfig.buildRetrieveCasesUrlElasticSearch(authToken, caseTypeId);
+        CaseSearchResult caseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, new ParameterizedTypeReference<CaseSearchResult>(){}).getBody();
+        if (caseSearchResult != null && caseSearchResult.getCases() != null) {
+            log.info("SUBMIT EVENTS: " + caseSearchResult.getCases());
+            submitEvents.addAll(caseSearchResult.getCases());
+        } else {
+            log.info("RECEIVED EMPTY");
+        }
+        return submitEvents;
+    }
+
     public List<SubmitBulkEvent> retrieveBulkCases(String authToken, String caseTypeId, String jurisdiction) throws IOException {
         HttpEntity<BulkRequest> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
