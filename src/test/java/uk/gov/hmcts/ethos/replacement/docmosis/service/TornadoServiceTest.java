@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
@@ -32,6 +33,7 @@ public class TornadoServiceTest {
     private UserService userService;
     private DocumentInfo documentInfo;
     private CaseData caseData;
+    private BulkData bulkData;
     private ListingData listingData;
     private UserDetails userDetails;
 
@@ -41,6 +43,9 @@ public class TornadoServiceTest {
         TornadoConfiguration tornadoConfiguration = new TornadoConfiguration();
         tornadoConfiguration.setUrl("http://google.com");
         caseData = new CaseData();
+        bulkData = new BulkData();
+        bulkData.setScheduleDocName(LIST_CASES_CONFIG);
+        bulkData.setSearchCollection(new ArrayList<>());
         listingData = new ListingData();
         ListingTypeItem listingTypeItem = new ListingTypeItem();
         ListingType listingType = new ListingType();
@@ -75,4 +80,11 @@ public class TornadoServiceTest {
         DocumentInfo documentInfo1 = tornadoService.listingGeneration("TOKEN", listingData, MANCHESTER_LISTING_CASE_TYPE_ID);
         assertEquals(documentInfo.toString(), documentInfo1.toString());
     }
+
+    @Test
+    public void scheduleGeneration() throws IOException {
+        DocumentInfo documentInfo1 = tornadoService.scheduleGeneration("TOKEN", bulkData);
+        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    }
+
 }

@@ -3,16 +3,19 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.DEFAULT_SELECT_ALL_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SELECT_NONE_VALUE;
 
 @Slf4j
 @Service("subMultipleService")
@@ -44,6 +47,7 @@ public class SubMultipleService {
                 for (MultipleTypeItem multipleTypeItem : bulkDetails.getCaseData().getMultipleCollection()) {
                     if (subMultiplesList.contains(multipleTypeItem.getValue().getEthosCaseReferenceM())) {
                         multipleTypeItem.getValue().setSubMultipleM(subMultipleRefNumber);
+                        multipleTypeItem.getValue().setSubMultipleTitleM(bulkDetails.getCaseData().getSubMultipleName());
                     }
                     multipleTypeItems.add(multipleTypeItem);
                 }
@@ -90,16 +94,37 @@ public class SubMultipleService {
         return bulkRequestPayload;
     }
 
-    public BulkRequestPayload populateFilterDefaultedDynamicListLogic(BulkDetails bulkDetails, String defaultValue) {
-        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+    private List<DynamicValueType> createDynamicFixListWithDefaultValue(String defaultCode, String defaultValue) {
         List<DynamicValueType> listItems = new ArrayList<>();
         DynamicValueType defaultDynamicValueType = new DynamicValueType();
-        defaultDynamicValueType.setCode(DEFAULT_SELECT_ALL_VALUE);
+        defaultDynamicValueType.setCode(defaultCode);
         defaultDynamicValueType.setLabel(defaultValue);
         listItems.add(defaultDynamicValueType);
-        bulkDetails.setCaseData(createSubMultipleDynamicList(bulkDetails.getCaseData(), getSubMultipleListItems(bulkDetails, listItems)));
+        return listItems;
+    }
+
+    public BulkRequestPayload populateFilterDefaultedDynamicListLogic(BulkDetails bulkDetails, String defaultValue) {
+        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        List<DynamicValueType> subMultipleItems = createDynamicFixListWithDefaultValue(DEFAULT_SELECT_ALL_VALUE, defaultValue);
+        bulkDetails.setCaseData(createSubMultipleDynamicList(bulkDetails.getCaseData(), getSubMultipleListItems(bulkDetails, subMultipleItems)));
+        if (defaultValue.equals(SELECT_NONE_VALUE)) {
+            List<DynamicValueType> jurCodesItems = createDynamicFixListWithDefaultValue(defaultValue, defaultValue);
+            bulkDetails.setCaseData(createJurCodeDynamicList(bulkDetails.getCaseData(), getJurCodeListItems(bulkDetails, jurCodesItems)));
+        }
         bulkRequestPayload.setBulkDetails(bulkDetails);
         return bulkRequestPayload;
+    }
+
+    private List<DynamicValueType> getJurCodeListItems(BulkDetails bulkDetails, List<DynamicValueType> listItems) {
+        if (bulkDetails.getCaseData().getJurCodesCollection() != null && bulkDetails.getCaseData().getSearchCollection() != null) {
+            for (JurCodesTypeItem jurCodesTypeItem : bulkDetails.getCaseData().getJurCodesCollection()) {
+                DynamicValueType dynamicValueType = new DynamicValueType();
+                dynamicValueType.setCode(jurCodesTypeItem.getValue().getJuridictionCodesList());
+                dynamicValueType.setLabel(jurCodesTypeItem.getValue().getJuridictionCodesList());
+                listItems.add(dynamicValueType);
+            }
+        }
+        return listItems;
     }
 
     private List<DynamicValueType> getSubMultipleListItems(BulkDetails bulkDetails, List<DynamicValueType> listItems) {
@@ -112,6 +137,19 @@ public class SubMultipleService {
             }
         }
         return listItems;
+    }
+
+    private BulkData createJurCodeDynamicList(BulkData bulkData, List<DynamicValueType> listItems) {
+        if (bulkData.getJurCodesDynamicList() != null) {
+            bulkData.getJurCodesDynamicList().setListItems(listItems);
+        } else {
+            DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+            dynamicFixedListType.setListItems(listItems);
+            bulkData.setJurCodesDynamicList(dynamicFixedListType);
+        }
+        //Default dynamic list
+        bulkData.getJurCodesDynamicList().setValue(listItems.get(0));
+        return bulkData;
     }
 
     private BulkData createSubMultipleDynamicList(BulkData bulkData, List<DynamicValueType> listItems) {
@@ -149,6 +187,7 @@ public class SubMultipleService {
         for (MultipleTypeItem multipleTypeItem : bulkData.getMultipleCollection()) {
             if (multipleTypeItem.getValue().getSubMultipleM().equals(refSelected)) {
                 multipleTypeItem.getValue().setSubMultipleM(" ");
+                multipleTypeItem.getValue().setSubMultipleTitleM(" ");
             }
             auxList.add(multipleTypeItem);
         }
@@ -205,8 +244,10 @@ public class SubMultipleService {
                 String subMultipleRef = multipleTypeItem.getValue().getSubMultipleM();
                 if (subMultipleRef.equals(subMultipleRefNumber) && !midSearchCollection.contains(caseRefNumber)) {
                     multipleTypeItem.getValue().setSubMultipleM(" ");
+                    multipleTypeItem.getValue().setSubMultipleTitleM(" ");
                 } else if (subMultipleRef.equals(" ") && midSearchCollection.contains(caseRefNumber)) {
                     multipleTypeItem.getValue().setSubMultipleM(subMultipleRefNumber);
+                    multipleTypeItem.getValue().setSubMultipleTitleM(BulkHelper.getSubMultipleTitle(subMultipleRefNumber, bulkData));
                 }
                 auxMultiplesList.add(multipleTypeItem);
             }

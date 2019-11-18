@@ -213,6 +213,24 @@ public class CaseActionsForCaseWorkerController {
                 .build());
     }
 
+    @PostMapping(value = "/amendCaseState", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "amend the case state for a single case.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> amendCaseState(
+            @RequestBody CCDRequest ccdRequest) {
+        log.info("AMEND CASE STATE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        caseData.setState(ccdRequest.getCaseDetails().getState());
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .build());
+    }
+
     private DefaultValues getPostDefaultValues(CaseDetails caseDetails) {
         String caseTypeId = caseDetails.getCaseTypeId();
         String managingOffice = caseDetails.getCaseData().getManagingOffice() != null ? caseDetails.getCaseData().getManagingOffice() : "";
