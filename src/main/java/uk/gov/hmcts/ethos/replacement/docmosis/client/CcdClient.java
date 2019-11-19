@@ -1,6 +1,9 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.client;
 
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermsQueryBuilder;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -106,14 +109,19 @@ public class CcdClient {
 
         log.info("Before the search bulk ES");
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        String search = "{\n" +
-                "    \"query\": {\n" +
-                "        \"match_all\": {}\n" +
-                "    },\n" +
-                "    \"size\": 5\n" +
-                "}";
+//        String search = "{\n" +
+//                "    \"query\": {\n" +
+//                "        \"match_all\": {}\n" +
+//                "    },\n" +
+//                "    \"size\": 5\n" +
+//                "}";
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("ethosCaseReference",
+                "2420117/2019", "2420118/2019");
+        SearchSourceBuilder ssb = new SearchSourceBuilder()
+                .query(termsQueryBuilder);
+        log.info("Search: " + ssb.toString());
         HttpEntity<String> request =
-                new HttpEntity<>(search, ccdClientConfig.buildHeaders(authToken));
+                new HttpEntity<>(ssb.toString(), ccdClientConfig.buildHeaders(authToken));
         log.info("REQUEST: " + request);
         String url = ccdClientConfig.buildRetrieveCasesUrlElasticSearch(authToken, caseTypeId);
         CaseSearchResult caseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, new ParameterizedTypeReference<CaseSearchResult>(){}).getBody();
