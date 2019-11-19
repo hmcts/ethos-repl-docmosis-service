@@ -129,15 +129,11 @@ public class CcdClient {
 //        SearchSourceBuilder ssb = new SearchSourceBuilder()
 //                .query(boolQueryBuilder);
 
-        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("data.ethosCaseReference",
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("case.ethosCaseReference",
                 "2420117/2019", "2420118/2019");
-        BoolQueryBuilder query = boolQuery().must(termsQueryBuilder);
-        BoolQueryBuilder filter = boolQuery()
-                .should(QueryBuilders.matchQuery("data.ethosCaseReference", "2420117/2019"))
-                .should(QueryBuilders.matchQuery("data.ethosCaseReference", "2420118/2019"));
+        BoolQueryBuilder filter = boolQuery().must(termsQueryBuilder);
         SearchSourceBuilder ssb = new SearchSourceBuilder()
-                .query(query.filter(filter));
-
+                .query(filter);
         log.info("Search: " + ssb.toString());
         HttpEntity<String> request =
                 new HttpEntity<>(ssb.toString(), ccdClientConfig.buildHeaders(authToken));
