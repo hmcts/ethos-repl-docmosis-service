@@ -197,5 +197,8 @@
         <notes><![CDATA[ CVE-2014-3488  ]]></notes>
         <cve>CVE-2014-3488</cve>
     </suppress>
-
+    <suppress>
+        <notes><![CDATA[ CVE-2019-7614  ]]></notes>
+        <cve>CVE-2019-7614</cve>
+    </suppress>
 </suppressions>
