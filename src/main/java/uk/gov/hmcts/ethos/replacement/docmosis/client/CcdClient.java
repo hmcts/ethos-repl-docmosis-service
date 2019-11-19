@@ -115,7 +115,7 @@ public class CcdClient {
 //                "    },\n" +
 //                "    \"size\": 5\n" +
 //                "}";
-        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("ethosCaseReference",
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("data.ethosCaseReference",
                 "2420117/2019", "2420118/2019");
         SearchSourceBuilder ssb = new SearchSourceBuilder()
                 .query(termsQueryBuilder);
