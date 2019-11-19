@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+
 @Slf4j
 @Component
 public class CcdClient {
@@ -121,11 +123,21 @@ public class CcdClient {
 //        SearchSourceBuilder ssb = new SearchSourceBuilder()
 //                .query(termsQueryBuilder);
 
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                .should(QueryBuilders.matchQuery("data.ethosCaseReference", "2420117/2019"))
-                .should(QueryBuilders.matchQuery("data.ethosCaseReference", "2420118/2019"));
+//        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+//                .should(QueryBuilders.matchQuery("data.ethosCaseReference", "2420117/2019"))
+//                .should(QueryBuilders.matchQuery("data.ethosCaseReference", "2420118/2019"));
+//        SearchSourceBuilder ssb = new SearchSourceBuilder()
+//                .query(boolQueryBuilder);
+
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("case.ethosCaseReference",
+                "2420117/2019", "2420118/2019");
+        BoolQueryBuilder query = boolQuery().must(termsQueryBuilder);
+        BoolQueryBuilder filter = boolQuery()
+                .should(QueryBuilders.matchQuery("case.ethosCaseReference", "2420117/2019"))
+                .should(QueryBuilders.matchQuery("case.ethosCaseReference", "2420118/2019"));
         SearchSourceBuilder ssb = new SearchSourceBuilder()
-                .query(boolQueryBuilder);
+                .query(query.filter(filter));
+
         log.info("Search: " + ssb.toString());
         HttpEntity<String> request =
                 new HttpEntity<>(ssb.toString(), ccdClientConfig.buildHeaders(authToken));
