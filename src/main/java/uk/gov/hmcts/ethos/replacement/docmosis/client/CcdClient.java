@@ -124,8 +124,8 @@ public class CcdClient {
 //                .query(termsQueryBuilder);
 
         BoolQueryBuilder queryBuilder = boolQuery()
-                .should(QueryBuilders.matchQuery("case.ethosCaseReference", "2420117/2019"))
-                .should(QueryBuilders.matchQuery("case.ethosCaseReference", "2420118/2019"));
+                .should(QueryBuilders.matchQuery("data.ethosCaseReference", "2420117/2019"))
+                .should(QueryBuilders.matchQuery("data.ethosCaseReference", "2420118/2019"));
         BoolQueryBuilder query = QueryBuilders.boolQuery()
                 .filter(queryBuilder);
 
