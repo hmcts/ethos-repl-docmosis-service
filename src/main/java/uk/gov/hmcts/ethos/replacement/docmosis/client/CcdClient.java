@@ -172,7 +172,7 @@ public class CcdClient {
         HttpEntity<String> request =
                 new HttpEntity<>(ssb, ccdClientConfig.buildHeaders(authToken));
         log.info("REQUEST: " + request);
-        String url = ccdClientConfig.buildRetrieveCasesUrlElasticSearch(authToken, caseTypeId);
+        String url = ccdClientConfig.buildRetrieveCasesUrlElasticSearch(caseTypeId);
         CaseSearchResult caseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, new ParameterizedTypeReference<CaseSearchResult>(){}).getBody();
         if (caseSearchResult != null && caseSearchResult.getCases() != null) {
             log.info("SUBMIT EVENTS: " + caseSearchResult.getCases());
