@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Slf4j
 @Component
@@ -120,27 +120,28 @@ public class CcdClient {
 //                "    },\n" +
 //                "    \"size\": 5\n" +
 //                "}";
-        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("data.ethosCaseReference",
+        TermsQueryBuilder termsQueryBuilder = termsQuery("data.ethosCaseReference",
                 "2420117/2019", "2420118/2019");
-//        SearchSourceBuilder ssb = new SearchSourceBuilder()
-//                .query(termsQueryBuilder);
 
         BoolQueryBuilder queryBuilder = boolQuery()
-                .should(QueryBuilders.matchQuery("data.ethosCaseReference", "2420117/2019"))
-                .should(QueryBuilders.matchQuery("data.ethosCaseReference", "2420118/2019"));
+                .should(matchQuery("data.ethosCaseReference", "2420117/2019"))
+                .should(matchQuery("data.ethosCaseReference", "2420118/2019"));
 
 //        BoolQueryBuilder query = QueryBuilders.boolQuery()
 //                .filter(queryBuilder);
 
-        NestedQueryBuilder nestedQueryBuilder = QueryBuilders.nestedQuery(
-                "data", termsQueryBuilder, ScoreMode.Avg);
+//        NestedQueryBuilder nestedQueryBuilder = QueryBuilders.nestedQuery(
+//                "data", termsQueryBuilder, ScoreMode.Avg);
 
 //        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("data.ethosCaseReference",
 //                "2420117/2019", "2420118/2019");
 //        BoolQueryBuilder filter = boolQuery().must(termsQueryBuilder);
 
+        BoolQueryBuilder filter = boolQuery().filter(QueryBuilders.termQuery("data.ethosCaseReference",
+                "2420117/2019"));
+
         SearchSourceBuilder ssb = new SearchSourceBuilder()
-                .query(nestedQueryBuilder);
+                .query(filter);
         log.info("Search: " + ssb.toString());
         HttpEntity<String> request =
                 new HttpEntity<>(ssb.toString(), ccdClientConfig.buildHeaders(authToken));
