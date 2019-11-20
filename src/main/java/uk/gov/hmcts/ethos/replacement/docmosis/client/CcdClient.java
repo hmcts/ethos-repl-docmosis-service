@@ -104,29 +104,18 @@ public class CcdClient {
     }
 
     public List<SubmitEvent> retrieveCasesElasticSearch(String authToken, String caseTypeId, String jurisdiction) throws IOException {
-        //HttpEntity<CCDRequest> request =
-        //        new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
-
-        //SearchSourceBuilder search = new SearchSourceBuilder();
-
         log.info("Before the search bulk ES");
         List<SubmitEvent> submitEvents = new ArrayList<>();
-//        String search = "{\n" +
-//                "    \"query\": {\n" +
-//                "        \"match_all\": {}\n" +
-//                "    },\n" +
-//                "    \"size\": 5\n" +
-//                "}";
 //        TermsQueryBuilder termsQueryBuilder = termsQuery("data.ethosCaseReference",
 //                "2420117/2019", "2420118/2019");
 
-        QueryBuilder queryBuilder1 = wildcardQuery("data.ethosCaseReference", "2420086*2019");
-        QueryBuilder queryBuilder2 = wildcardQuery("data.ethosCaseReference", "2420118*2018");
-        QueryBuilder queryBuilder3 = wildcardQuery("data.ethosCaseReference", "2420117*2019");
-        List<QueryBuilder> queryBuilderList = new ArrayList<>(Arrays.asList(queryBuilder1, queryBuilder2, queryBuilder3));
+        List<String> list = new ArrayList<>(Arrays.asList("2420086/2019", "2420118/2018", "2420117*"));
         BoolQueryBuilder query = boolQuery();
-        for (QueryBuilder queryBuilder : queryBuilderList) {
-            query.should(queryBuilder);
+        if (list.isEmpty()) {
+            return submitEvents;
+        }
+        for (String caseReferences : list) {
+            query.should(wildcardQuery("data.ethosCaseReference", caseReferences));
         }
         SearchSourceBuilder ssb = new SearchSourceBuilder()
                 .query(query);
@@ -161,34 +150,7 @@ public class CcdClient {
 //                "        }\n" +
 //                "    }\n" +
 //                "}";
-//        String NO WORKING = "{ \n" +
-//                "   \"query\":{ \n" +
-//                "      \"filter\":{ \n" +
-//                "         \"bool\":{ \n" +
-//                "            \"should\":[ \n" +
-//                "               { \n" +
-//                "                  \"query\":{ \n" +
-//                "                     \"wildcard\":{ \n" +
-//                "                        \"data.ethosCaseReference\":{ \n" +
-//                "                           \"value\":\"2420086*\"\n" +
-//                "                        }\n" +
-//                "                     }\n" +
-//                "                  }\n" +
-//                "               },\n" +
-//                "               { \n" +
-//                "                  \"query\":{ \n" +
-//                "                     \"wildcard\":{ \n" +
-//                "                        \"data.ethosCaseReference\":{ \n" +
-//                "                           \"value\":\"2420117*\"\n" +
-//                "                        }\n" +
-//                "                     }\n" +
-//                "                  }\n" +
-//                "               }\n" +
-//                "            ]\n" +
-//                "         }\n" +
-//                "      }\n" +
-//                "   }\n" +
-//                "}";
+
 //        String ssb = "{ \n" +
 //                "   \"query\":{ \n" +
 //                "      \"wildcard\":{ \n" +
