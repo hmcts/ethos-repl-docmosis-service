@@ -1,7 +1,9 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.client;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermsQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -126,15 +128,19 @@ public class CcdClient {
         BoolQueryBuilder queryBuilder = boolQuery()
                 .should(QueryBuilders.matchQuery("data.ethosCaseReference", "2420117/2019"))
                 .should(QueryBuilders.matchQuery("data.ethosCaseReference", "2420118/2019"));
-        BoolQueryBuilder query = QueryBuilders.boolQuery()
-                .filter(queryBuilder);
+
+//        BoolQueryBuilder query = QueryBuilders.boolQuery()
+//                .filter(queryBuilder);
+
+        NestedQueryBuilder nestedQueryBuilder = QueryBuilders.nestedQuery(
+                "data", queryBuilder, ScoreMode.None);
 
 //        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("data.ethosCaseReference",
 //                "2420117/2019", "2420118/2019");
 //        BoolQueryBuilder filter = boolQuery().must(termsQueryBuilder);
 
         SearchSourceBuilder ssb = new SearchSourceBuilder()
-                .query(query);
+                .query(nestedQueryBuilder);
         log.info("Search: " + ssb.toString());
         HttpEntity<String> request =
                 new HttpEntity<>(ssb.toString(), ccdClientConfig.buildHeaders(authToken));
