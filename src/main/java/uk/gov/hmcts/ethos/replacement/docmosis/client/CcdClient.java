@@ -109,13 +109,13 @@ public class CcdClient {
 //        TermsQueryBuilder termsQueryBuilder = termsQuery("data.ethosCaseReference",
 //                "2420117/2019", "2420118/2019");
 
-        List<String> list = new ArrayList<>(Arrays.asList("2420086\\/2019", "2420118\\/2019", "2420117*"));
+        List<String> list = new ArrayList<>(Arrays.asList("2420086/2019", "2420118/2019", "2420117*"));
         if (list.isEmpty()) {
             return submitEvents;
         }
         BoolQueryBuilder query = boolQuery();
         for (String caseReferences : list) {
-            query.should(wildcardQuery("data.ethosCaseReference", caseReferences));
+            query.should(wildcardQuery("data.ethosCaseReference.keyword", caseReferences));
         }
         SearchSourceBuilder ssb = new SearchSourceBuilder()
                 .query(query);
