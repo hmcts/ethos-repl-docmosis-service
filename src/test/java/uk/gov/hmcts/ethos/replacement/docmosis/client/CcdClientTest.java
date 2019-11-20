@@ -213,29 +213,4 @@ public class CcdClientTest {
         verifyNoMoreInteractions(restTemplate);
     }
 
-    private void elasticSearch() {
-        String search = "{\n" +
-                "  \"query\": {\n" +
-                "    \"bool\": {\n" +
-                "      \"should\": [\n" +
-                "        {\n" +
-                "          \"match\": {\n" +
-                "            \"data.ethosCaseReference\": \"2110000/2019\"\n" +
-                "          }\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"match\": {\n" +
-                "            \"data.ethosCaseReference\": \"2110001/2019\"\n" +
-                "          }\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"match\": {\n" +
-                "            \"data.ethosCaseReference\": \"2110002/2019\"\n" +
-                "          }\n" +
-                "        }\n" +
-                "      ]\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
-    }
 }
