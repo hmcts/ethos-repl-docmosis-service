@@ -107,6 +107,8 @@ public class CcdClient {
         log.info("Before the search bulk ES");
         List<SubmitEvent> submitEvents = new ArrayList<>();
 
+        TermsQueryBuilder termsQueryBuilder = termsQuery("data.ethosCaseReference.keyword", "2420117/2019", "2420118/2019");
+
         List<String> list = new ArrayList<>(Arrays.asList("2420086/2019", "2420118/2019", "2420117"));
         if (list.isEmpty()) {
             return submitEvents;
@@ -116,7 +118,7 @@ public class CcdClient {
             query.should(matchQuery("data.ethosCaseReference.keyword", caseReferences));
         }
         SearchSourceBuilder ssb = new SearchSourceBuilder()
-                .query(query);
+                .query(termsQueryBuilder);
 
         log.info("Search: " + ssb.toString());
         HttpEntity<String> request =
