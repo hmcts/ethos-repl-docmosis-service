@@ -19,6 +19,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -116,14 +117,19 @@ public class CcdClient {
 //                "    },\n" +
 //                "    \"size\": 5\n" +
 //                "}";
-        TermsQueryBuilder termsQueryBuilder = termsQuery("data.ethosCaseReference",
-                "2420117/2019", "2420118/2019");
+//        TermsQueryBuilder termsQueryBuilder = termsQuery("data.ethosCaseReference",
+//                "2420117/2019", "2420118/2019");
 
-        BoolQueryBuilder queryBuilder = boolQuery()
-                .should(wildcardQuery("data.ethosCaseReference", "2420086*"))
-                .should(wildcardQuery("data.ethosCaseReference", "2420118*"));
+        QueryBuilder queryBuilder1 = wildcardQuery("data.ethosCaseReference", "2420086?2019");
+        QueryBuilder queryBuilder2 = wildcardQuery("data.ethosCaseReference", "2420118?2018");
+        QueryBuilder queryBuilder3 = wildcardQuery("data.ethosCaseReference", "2420117?2019");
+        List<QueryBuilder> queryBuilderList = new ArrayList<>(Arrays.asList(queryBuilder1, queryBuilder2, queryBuilder3));
+        BoolQueryBuilder query = boolQuery();
+        for (QueryBuilder queryBuilder : queryBuilderList) {
+            query.should(queryBuilder);
+        }
         SearchSourceBuilder ssb = new SearchSourceBuilder()
-                .query(queryBuilder);
+                .query(query);
 
 //        BoolQueryBuilder query = QueryBuilders.boolQuery()
 //                .filter(queryBuilder);
@@ -138,8 +144,8 @@ public class CcdClient {
 //        BoolQueryBuilder filter = boolQuery().filter(QueryBuilders.termQuery("data.ethosCaseReference",
 //                "2420117/2019"));
 
-        BoolQueryBuilder filter = boolQuery().filter(QueryBuilders.matchQuery("data.ethosCaseReference",
-                "2420117/2019"));
+//        BoolQueryBuilder filter = boolQuery().filter(QueryBuilders.matchQuery("data.ethosCaseReference",
+//                "2420117/2019"));
 
 
 //        SearchSourceBuilder ssb = new SearchSourceBuilder()
