@@ -145,18 +145,29 @@ public class CcdClient {
 
 //        SearchSourceBuilder ssb = new SearchSourceBuilder()
 //                .query(filter);
-        String ssb = "{ \n" +
-                "   \"query\":{ \n" +
-                "      \"bool\":{ \n" +
-                "         \"filter\":{ \n" +
-                "            \"match\":{ \n" +
-                "               \"data.ethosCaseReference\":\"2420086/2019\"\n" +
+        String ssb = "{\n" +
+                "    \"query\": {\n" +
+                "        \"wildcard\": {\n" +
+                "            \"data.ethosCaseReference\": {\n" +
+                "                \"value\": \"2420086*\",\n" +
+                "                \"boost\": 1.0,\n" +
+                "                \"rewrite\": \"constant_score\"\n" +
                 "            }\n" +
-                "         }\n" +
-                "      }\n" +
-                "   },\n" +
-                "   \"size\":50\n" +
+                "        }\n" +
+                "    }\n" +
                 "}";
+//        String ssb = "{ \n" +
+//                "   \"query\":{ \n" +
+//                "      \"wildcard\":{ \n" +
+//                "         \"filter\":{ \n" +
+//                "            \"match\":{ \n" +
+//                "               \"data.ethosCaseReference\":\"2420086/2019\"\n" +
+//                "            }\n" +
+//                "         }\n" +
+//                "      }\n" +
+//                "   },\n" +
+//                "   \"size\":50\n" +
+//                "}";
         log.info("Search: " + ssb);
         HttpEntity<String> request =
                 new HttpEntity<>(ssb, ccdClientConfig.buildHeaders(authToken));
