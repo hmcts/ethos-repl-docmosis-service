@@ -72,7 +72,7 @@ public class CcdClientConfig {
     //    LAST_MODIFIED_DATE("last_modified_date"),
     //    SECURITY_CLASSIFICATION("security_classification");
 
-    String buildRetrieveCasesUrlElasticSearch(String uid, String ctid) {
+    String buildRetrieveCasesUrlElasticSearch(String ctid) {
         String param = "ctid=" + ctid;
         //log.info("Looking cases by: uid: " + uid + " jid: " + jid + " ctid: " + ctid + " param: " + param);
         log.info("Format: " + String.format(SEARCH_CASES_FORMAT, CCD_DATA_STORE_API_BASE_URL, param));
