@@ -106,64 +106,20 @@ public class CcdClient {
     public List<SubmitEvent> retrieveCasesElasticSearch(String authToken, String caseTypeId, String jurisdiction) throws IOException {
         log.info("Before the search bulk ES");
         List<SubmitEvent> submitEvents = new ArrayList<>();
-//        TermsQueryBuilder termsQueryBuilder = termsQuery("data.ethosCaseReference",
-//                "2420117/2019", "2420118/2019");
+
+        TermsQueryBuilder termsQueryBuilder = termsQuery("data.ethosCaseReference.keyword", "2420117/2019", "2420118/2019");
 
         List<String> list = new ArrayList<>(Arrays.asList("2420086/2019", "2420118/2019", "2420117"));
         if (list.isEmpty()) {
             return submitEvents;
         }
-        // wildcard with * found, what happens without
         BoolQueryBuilder query = boolQuery();
         for (String caseReferences : list) {
             query.should(matchQuery("data.ethosCaseReference.keyword", caseReferences));
         }
         SearchSourceBuilder ssb = new SearchSourceBuilder()
-                .query(query);
+                .query(termsQueryBuilder);
 
-//        BoolQueryBuilder query = QueryBuilders.boolQuery()
-//                .filter(queryBuilder);
-
-//        NestedQueryBuilder nestedQueryBuilder = QueryBuilders.nestedQuery(
-//                "data", termsQueryBuilder, ScoreMode.Avg);
-
-//        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("data.ethosCaseReference",
-//                "2420117/2019", "2420118/2019");
-//        BoolQueryBuilder filter = boolQuery().must(termsQueryBuilder);
-
-//        BoolQueryBuilder filter = boolQuery().filter(QueryBuilders.termQuery("data.ethosCaseReference",
-//                "2420117/2019"));
-
-//        BoolQueryBuilder filter = boolQuery().filter(QueryBuilders.matchQuery("data.ethosCaseReference",
-//                "2420117/2019"));
-
-
-//        SearchSourceBuilder ssb = new SearchSourceBuilder()
-//                .query(filter);
-//        String GOOD = "{\n" +
-//                "    \"query\": {\n" +
-//                "        \"wildcard\": {\n" +
-//                "            \"data.ethosCaseReference\": {\n" +
-//                "                \"value\": \"2420086*\",\n" +
-//                "                \"boost\": 1.0,\n" +
-//                "                \"rewrite\": \"constant_score\"\n" +
-//                "            }\n" +
-//                "        }\n" +
-//                "    }\n" +
-//                "}";
-
-//        String ssb = "{ \n" +
-//                "   \"query\":{ \n" +
-//                "      \"wildcard\":{ \n" +
-//                "         \"filter\":{ \n" +
-//                "            \"match\":{ \n" +
-//                "               \"data.ethosCaseReference\":\"2420086/2019\"\n" +
-//                "            }\n" +
-//                "         }\n" +
-//                "      }\n" +
-//                "   },\n" +
-//                "   \"size\":50\n" +
-//                "}";
         log.info("Search: " + ssb.toString());
         HttpEntity<String> request =
                 new HttpEntity<>(ssb.toString(), ccdClientConfig.buildHeaders(authToken));
