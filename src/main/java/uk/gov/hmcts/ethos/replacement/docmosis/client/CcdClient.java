@@ -143,11 +143,22 @@ public class CcdClient {
         BoolQueryBuilder filter = boolQuery().filter(QueryBuilders.matchQuery("data.ethosCaseReference",
                 "2420117/2019"));
 
-        SearchSourceBuilder ssb = new SearchSourceBuilder()
-                .query(filter);
-        log.info("Search: " + ssb.toString());
+//        SearchSourceBuilder ssb = new SearchSourceBuilder()
+//                .query(filter);
+        String ssb = "{ \n" +
+                "   \"query\":{ \n" +
+                "      \"bool\":{ \n" +
+                "         \"filter\":{ \n" +
+                "            \"match\":{ \n" +
+                "               \"data.ethosCaseReference\":\"2420117/2019\"\n" +
+                "            }\n" +
+                "         }\n" +
+                "      }\n" +
+                "   }\n" +
+                "}";
+        log.info("Search: " + ssb);
         HttpEntity<String> request =
-                new HttpEntity<>(ssb.toString(), ccdClientConfig.buildHeaders(authToken));
+                new HttpEntity<>(ssb, ccdClientConfig.buildHeaders(authToken));
         log.info("REQUEST: " + request);
         String url = ccdClientConfig.buildRetrieveCasesUrlElasticSearch(authToken, caseTypeId);
         CaseSearchResult caseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, new ParameterizedTypeReference<CaseSearchResult>(){}).getBody();
