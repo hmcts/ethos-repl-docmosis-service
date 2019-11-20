@@ -154,7 +154,8 @@ public class CcdClient {
                 "            }\n" +
                 "         }\n" +
                 "      }\n" +
-                "   }\n" +
+                "   },\n" +
+                "   \"size\":50\n" +
                 "}";
         log.info("Search: " + ssb);
         HttpEntity<String> request =
