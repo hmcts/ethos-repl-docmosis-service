@@ -120,9 +120,9 @@ public class CcdClient {
 //        TermsQueryBuilder termsQueryBuilder = termsQuery("data.ethosCaseReference",
 //                "2420117/2019", "2420118/2019");
 
-        QueryBuilder queryBuilder1 = wildcardQuery("data.ethosCaseReference", "2420086*2019");
-        QueryBuilder queryBuilder2 = wildcardQuery("data.ethosCaseReference", "2420118*2018");
-        QueryBuilder queryBuilder3 = wildcardQuery("data.ethosCaseReference", "2420117*2019");
+        QueryBuilder queryBuilder1 = wildcardQuery("data.ethosCaseReference", "2420086?2019");
+        QueryBuilder queryBuilder2 = wildcardQuery("data.ethosCaseReference", "2420118?2018");
+        QueryBuilder queryBuilder3 = wildcardQuery("data.ethosCaseReference", "2420117?2019");
         List<QueryBuilder> queryBuilderList = new ArrayList<>(Arrays.asList(queryBuilder1, queryBuilder2, queryBuilder3));
         BoolQueryBuilder query = boolQuery();
         for (QueryBuilder queryBuilder : queryBuilderList) {
