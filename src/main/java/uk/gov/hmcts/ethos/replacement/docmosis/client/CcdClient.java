@@ -120,8 +120,8 @@ public class CcdClient {
 //                "    },\n" +
 //                "    \"size\": 5\n" +
 //                "}";
-//        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("data.ethosCaseReference",
-//                "2420117/2019", "2420118/2019");
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("data.ethosCaseReference",
+                "2420117/2019", "2420118/2019");
 //        SearchSourceBuilder ssb = new SearchSourceBuilder()
 //                .query(termsQueryBuilder);
 
@@ -133,7 +133,7 @@ public class CcdClient {
 //                .filter(queryBuilder);
 
         NestedQueryBuilder nestedQueryBuilder = QueryBuilders.nestedQuery(
-                "data", queryBuilder, ScoreMode.None);
+                "data", termsQueryBuilder, ScoreMode.Avg);
 
 //        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("data.ethosCaseReference",
 //                "2420117/2019", "2420118/2019");
