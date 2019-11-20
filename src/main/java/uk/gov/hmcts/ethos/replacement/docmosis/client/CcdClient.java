@@ -144,16 +144,44 @@ public class CcdClient {
 
 //        SearchSourceBuilder ssb = new SearchSourceBuilder()
 //                .query(filter);
-        String ssb = "{\n" +
-                "    \"query\": {\n" +
-                "        \"wildcard\": {\n" +
-                "            \"data.ethosCaseReference\": {\n" +
-                "                \"value\": \"2420086*\",\n" +
-                "                \"boost\": 1.0,\n" +
-                "                \"rewrite\": \"constant_score\"\n" +
-                "            }\n" +
-                "        }\n" +
-                "    }\n" +
+//        String GOOD = "{\n" +
+//                "    \"query\": {\n" +
+//                "        \"wildcard\": {\n" +
+//                "            \"data.ethosCaseReference\": {\n" +
+//                "                \"value\": \"2420086*\",\n" +
+//                "                \"boost\": 1.0,\n" +
+//                "                \"rewrite\": \"constant_score\"\n" +
+//                "            }\n" +
+//                "        }\n" +
+//                "    }\n" +
+//                "}";
+        String ssb = "{ \n" +
+                "   \"query\":{ \n" +
+                "      \"filter\":{ \n" +
+                "         \"bool\":{ \n" +
+                "            \"should\":[ \n" +
+                "               { \n" +
+                "                  \"query\":{ \n" +
+                "                     \"wildcard\":{ \n" +
+                "                        \"data.ethosCaseReference\":{ \n" +
+                "                           \"value\":\"2420086*\"\n" +
+                "                        }\n" +
+                "                     }\n" +
+                "                  }\n" +
+                "               },\n" +
+                "               { \n" +
+                "                  \"query\":{ \n" +
+                "                     \"wildcard\":{ \n" +
+                "                        \"data.ethosCaseReference\":{ \n" +
+                "                           \"value\":\"2420117*\"\n" +
+                "                        }\n" +
+                "                     }\n" +
+                "                  }\n" +
+                "               }\n" +
+                "            ]\n" +
+                "         }\n" +
+                "      }\n" +
+                "   }\n" +
                 "}";
 //        String ssb = "{ \n" +
 //                "   \"query\":{ \n" +
