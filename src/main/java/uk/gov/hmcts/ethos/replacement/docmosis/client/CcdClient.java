@@ -137,7 +137,10 @@ public class CcdClient {
 //                "2420117/2019", "2420118/2019");
 //        BoolQueryBuilder filter = boolQuery().must(termsQueryBuilder);
 
-        BoolQueryBuilder filter = boolQuery().filter(QueryBuilders.termQuery("data.ethosCaseReference",
+//        BoolQueryBuilder filter = boolQuery().filter(QueryBuilders.termQuery("data.ethosCaseReference",
+//                "2420117/2019"));
+
+        BoolQueryBuilder filter = boolQuery().filter(QueryBuilders.matchQuery("data.ethosCaseReference",
                 "2420117/2019"));
 
         SearchSourceBuilder ssb = new SearchSourceBuilder()
