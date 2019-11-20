@@ -2,10 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.client;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.search.join.ScoreMode;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.NestedQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.TermsQueryBuilder;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -123,8 +120,10 @@ public class CcdClient {
                 "2420117/2019", "2420118/2019");
 
         BoolQueryBuilder queryBuilder = boolQuery()
-                .should(matchQuery("data.ethosCaseReference", "2420117/2019"))
-                .should(matchQuery("data.ethosCaseReference", "2420118/2019"));
+                .should(wildcardQuery("data.ethosCaseReference", "2420086*"))
+                .should(wildcardQuery("data.ethosCaseReference", "2420118*"));
+        SearchSourceBuilder ssb = new SearchSourceBuilder()
+                .query(queryBuilder);
 
 //        BoolQueryBuilder query = QueryBuilders.boolQuery()
 //                .filter(queryBuilder);
@@ -142,6 +141,7 @@ public class CcdClient {
         BoolQueryBuilder filter = boolQuery().filter(QueryBuilders.matchQuery("data.ethosCaseReference",
                 "2420117/2019"));
 
+
 //        SearchSourceBuilder ssb = new SearchSourceBuilder()
 //                .query(filter);
 //        String GOOD = "{\n" +
@@ -155,34 +155,34 @@ public class CcdClient {
 //                "        }\n" +
 //                "    }\n" +
 //                "}";
-        String ssb = "{ \n" +
-                "   \"query\":{ \n" +
-                "      \"filter\":{ \n" +
-                "         \"bool\":{ \n" +
-                "            \"should\":[ \n" +
-                "               { \n" +
-                "                  \"query\":{ \n" +
-                "                     \"wildcard\":{ \n" +
-                "                        \"data.ethosCaseReference\":{ \n" +
-                "                           \"value\":\"2420086*\"\n" +
-                "                        }\n" +
-                "                     }\n" +
-                "                  }\n" +
-                "               },\n" +
-                "               { \n" +
-                "                  \"query\":{ \n" +
-                "                     \"wildcard\":{ \n" +
-                "                        \"data.ethosCaseReference\":{ \n" +
-                "                           \"value\":\"2420117*\"\n" +
-                "                        }\n" +
-                "                     }\n" +
-                "                  }\n" +
-                "               }\n" +
-                "            ]\n" +
-                "         }\n" +
-                "      }\n" +
-                "   }\n" +
-                "}";
+//        String NO WORKING = "{ \n" +
+//                "   \"query\":{ \n" +
+//                "      \"filter\":{ \n" +
+//                "         \"bool\":{ \n" +
+//                "            \"should\":[ \n" +
+//                "               { \n" +
+//                "                  \"query\":{ \n" +
+//                "                     \"wildcard\":{ \n" +
+//                "                        \"data.ethosCaseReference\":{ \n" +
+//                "                           \"value\":\"2420086*\"\n" +
+//                "                        }\n" +
+//                "                     }\n" +
+//                "                  }\n" +
+//                "               },\n" +
+//                "               { \n" +
+//                "                  \"query\":{ \n" +
+//                "                     \"wildcard\":{ \n" +
+//                "                        \"data.ethosCaseReference\":{ \n" +
+//                "                           \"value\":\"2420117*\"\n" +
+//                "                        }\n" +
+//                "                     }\n" +
+//                "                  }\n" +
+//                "               }\n" +
+//                "            ]\n" +
+//                "         }\n" +
+//                "      }\n" +
+//                "   }\n" +
+//                "}";
 //        String ssb = "{ \n" +
 //                "   \"query\":{ \n" +
 //                "      \"wildcard\":{ \n" +
@@ -195,9 +195,9 @@ public class CcdClient {
 //                "   },\n" +
 //                "   \"size\":50\n" +
 //                "}";
-        log.info("Search: " + ssb);
+        log.info("Search: " + ssb.toString());
         HttpEntity<String> request =
-                new HttpEntity<>(ssb, ccdClientConfig.buildHeaders(authToken));
+                new HttpEntity<>(ssb.toString(), ccdClientConfig.buildHeaders(authToken));
         log.info("REQUEST: " + request);
         String url = ccdClientConfig.buildRetrieveCasesUrlElasticSearch(caseTypeId);
         CaseSearchResult caseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, new ParameterizedTypeReference<CaseSearchResult>(){}).getBody();
