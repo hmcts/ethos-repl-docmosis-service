@@ -150,11 +150,12 @@ public class CcdClient {
                 "      \"bool\":{ \n" +
                 "         \"filter\":{ \n" +
                 "            \"match\":{ \n" +
-                "               \"data.ethosCaseReference\":\"2420117/2019\"\n" +
+                "               \"data.ethosCaseReference\":\"2420086/2019\"\n" +
                 "            }\n" +
                 "         }\n" +
                 "      }\n" +
-                "   }\n" +
+                "   },\n" +
+                "   \"size\":50\n" +
                 "}";
         log.info("Search: " + ssb);
         HttpEntity<String> request =
