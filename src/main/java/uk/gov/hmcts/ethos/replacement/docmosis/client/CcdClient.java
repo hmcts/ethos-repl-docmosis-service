@@ -100,11 +100,10 @@ public class CcdClient {
         List<SubmitEvent> submitEvents = new ArrayList<>();
         HttpEntity<String> request =
                 new HttpEntity<>(ESHelper.getSearchQuery(caseIds), ccdClientConfig.buildHeaders(authToken));
-        log.info("REQUEST: " + request);
+        //log.info("REQUEST: " + request);
         String url = ccdClientConfig.buildRetrieveCasesUrlElasticSearch(caseTypeId);
         CaseSearchResult caseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, CaseSearchResult.class).getBody();
         if (caseSearchResult != null && caseSearchResult.getCases() != null) {
-            log.info("SUBMIT EVENTS: " + caseSearchResult.getCases());
             submitEvents.addAll(caseSearchResult.getCases());
         }
         return submitEvents;
