@@ -74,7 +74,6 @@ public class CcdClientConfig {
 
     String buildRetrieveCasesUrlElasticSearch(String ctid) {
         String param = "ctid=" + ctid;
-        //log.info("Looking cases by: uid: " + uid + " jid: " + jid + " ctid: " + ctid + " param: " + param);
         log.info("Format: " + String.format(SEARCH_CASES_FORMAT, CCD_DATA_STORE_API_BASE_URL, param));
         return String.format(SEARCH_CASES_FORMAT, CCD_DATA_STORE_API_BASE_URL, param);
     }
@@ -109,7 +108,6 @@ public class CcdClientConfig {
             throw new IOException("authToken regex exception");
         }
         headers.add(HttpHeaders.AUTHORIZATION, authToken);
-        log.info("TOKEN GENERATED: " + authTokenGenerator.generate());
         headers.add(SERVICE_AUTHORIZATION, authTokenGenerator.generate());
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
         return headers;
