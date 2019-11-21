@@ -2,11 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.model.ccd;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
-
 public class CaseSearchResult {
-
-    public static final CaseSearchResult EMPTY = new CaseSearchResult(0L, emptyList());
 
     private Long total;
     private List<SubmitEvent> cases;

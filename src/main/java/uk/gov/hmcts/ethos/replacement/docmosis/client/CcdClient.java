@@ -1,16 +1,13 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.client;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.lucene.search.join.ScoreMode;
-import org.elasticsearch.index.query.*;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ESHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.SubmitBulkEvent;
@@ -19,10 +16,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Slf4j
 @Component
@@ -47,7 +41,6 @@ public class CcdClient {
     }
 
     public CCDRequest startCaseCreation(String authToken, CaseDetails caseDetails) throws IOException {
-        UserDetails userDetails = userService.getUserDetails(authToken);
         HttpEntity<String> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
         String uri = ccdClientConfig.buildStartCaseCreationUrl(userService.getUserDetails(authToken).getId(), caseDetails.getJurisdiction(),
@@ -103,34 +96,16 @@ public class CcdClient {
         return submitEvents;
     }
 
-    public List<SubmitEvent> retrieveCasesElasticSearch(String authToken, String caseTypeId, String jurisdiction) throws IOException {
-        log.info("Before the search bulk ES");
+    public List<SubmitEvent> retrieveCasesElasticSearch(String authToken, String caseTypeId, List<String> caseIds) throws IOException {
         List<SubmitEvent> submitEvents = new ArrayList<>();
-
-        TermsQueryBuilder termsQueryBuilder = termsQuery("data.ethosCaseReference.keyword", "2420117/2019", "2420118/2019");
-
-        List<String> list = new ArrayList<>(Arrays.asList("2420086/2019", "2420118/2019", "2420117"));
-        if (list.isEmpty()) {
-            return submitEvents;
-        }
-        BoolQueryBuilder query = boolQuery();
-        for (String caseReferences : list) {
-            query.should(matchQuery("data.ethosCaseReference.keyword", caseReferences));
-        }
-        SearchSourceBuilder ssb = new SearchSourceBuilder()
-                .query(termsQueryBuilder);
-
-        log.info("Search: " + ssb.toString());
         HttpEntity<String> request =
-                new HttpEntity<>(ssb.toString(), ccdClientConfig.buildHeaders(authToken));
+                new HttpEntity<>(ESHelper.getSearchQuery(caseIds), ccdClientConfig.buildHeaders(authToken));
         log.info("REQUEST: " + request);
         String url = ccdClientConfig.buildRetrieveCasesUrlElasticSearch(caseTypeId);
-        CaseSearchResult caseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, new ParameterizedTypeReference<CaseSearchResult>(){}).getBody();
+        CaseSearchResult caseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, CaseSearchResult.class).getBody();
         if (caseSearchResult != null && caseSearchResult.getCases() != null) {
             log.info("SUBMIT EVENTS: " + caseSearchResult.getCases());
             submitEvents.addAll(caseSearchResult.getCases());
-        } else {
-            log.info("RECEIVED EMPTY");
         }
         return submitEvents;
     }
