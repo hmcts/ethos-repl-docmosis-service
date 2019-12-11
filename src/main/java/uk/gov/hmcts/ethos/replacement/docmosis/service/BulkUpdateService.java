@@ -95,7 +95,7 @@ public class BulkUpdateService {
 
                 // 4) Refresh multiple collection for bulk getting elements from caseIdCollection
                 log.info("Refreshing multiple type list");
-                BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkDetails, userToken);
+                BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkDetails, userToken);
                 List<MultipleTypeItem> multipleTypeItemList = BulkHelper.getMultipleTypeListBySubmitEventList(
                         bulkCasesPayload.getSubmitEvents(),
                         bulkDetails.getCaseData().getMultipleReference());
