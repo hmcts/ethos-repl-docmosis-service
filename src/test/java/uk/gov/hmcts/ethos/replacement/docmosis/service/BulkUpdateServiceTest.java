@@ -161,7 +161,7 @@ public class BulkUpdateServiceTest {
         List<SubmitBulkEvent> submitBulkEventList = new ArrayList<>(Collections.singletonList(submitBulkEvent));
         BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
         bulkCasesPayload.setSubmitEvents(new ArrayList<>(Collections.singleton(submitEvent)));
-        when(bulkSearchService.bulkCasesRetrievalRequest(isA(BulkDetails.class), isA(String.class))).thenReturn(bulkCasesPayload);
+        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), isA(String.class))).thenReturn(bulkCasesPayload);
         when(ccdClient.retrieveBulkCases("authToken", MANCHESTER_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
         assert(bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()),

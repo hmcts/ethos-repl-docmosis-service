@@ -47,6 +47,12 @@ public class CcdClientConfigTest {
     }
 
     @Test
+    public void buildRetrieveCasesUrlElasticSearch() {
+        String uri = ccdClientConfig.buildRetrieveCasesUrlElasticSearch("1123");
+        assertEquals("null/searchCases?ctid=1123", uri);
+    }
+
+    @Test
     public void buildStartEventForCaseUrl() {
         String uri = ccdClientConfig.buildStartEventForCaseUrl("1123", "TRIBUNALS", "TRIB_03", "1222222");
         assertEquals("null/caseworkers/1123/jurisdictions/TRIBUNALS/case-types/TRIB_03/cases/1222222/event-triggers/amendCaseDetails/token", uri);

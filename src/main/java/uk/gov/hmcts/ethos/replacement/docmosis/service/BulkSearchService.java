@@ -155,6 +155,24 @@ public class BulkSearchService {
         }
     }
 
+    public BulkCasesPayload bulkCasesRetrievalRequestElasticSearch(BulkDetails bulkDetails, String authToken) {
+        try {
+            List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
+            if (caseIds != null && !caseIds.isEmpty()) {
+                return filterSubmitEventsElasticSearch(ccdClient.retrieveCasesElasticSearch(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds),
+                        bulkDetails.getCaseData().getMultipleReference());
+            } else {
+                BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
+                bulkCasesPayload.setAlreadyTakenIds(new ArrayList<>());
+                bulkCasesPayload.setSubmitEvents(new ArrayList<>());
+                bulkCasesPayload.setMultipleTypeItems(new ArrayList<>());
+                return bulkCasesPayload;
+            }
+        } catch (Exception ex) {
+            throw new CaseCreationException(MESSAGE + bulkDetails.getCaseId() + ex.getMessage());
+        }
+    }
+
     BulkCasesPayload filterSubmitEvents(List<SubmitEvent> submitEvents, List<String> caseIds, String multipleReference) {
         log.info("Cases found: " + submitEvents.size());
         BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
@@ -172,6 +190,23 @@ public class BulkSearchService {
             }
         }
         bulkCasesPayload.setSubmitEvents(submitEventFiltered);
+        bulkCasesPayload.setAlreadyTakenIds(alreadyTakenIds);
+        return bulkCasesPayload;
+    }
+
+    BulkCasesPayload filterSubmitEventsElasticSearch(List<SubmitEvent> submitEvents, String multipleReference) {
+        log.info("Cases found ES: " + submitEvents.size());
+        BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
+        multipleReference = multipleReference != null ? multipleReference : "";
+        List<String> alreadyTakenIds = new ArrayList<>();
+        for (SubmitEvent submitEvent : submitEvents) {
+            CaseData caseData = submitEvent.getCaseData();
+            if (caseData.getMultipleReference() != null && !caseData.getMultipleReference().trim().isEmpty()
+                    && !caseData.getMultipleReference().equals(multipleReference)) {
+                alreadyTakenIds.add(caseData.getEthosCaseReference());
+            }
+        }
+        bulkCasesPayload.setSubmitEvents(submitEvents);
         bulkCasesPayload.setAlreadyTakenIds(alreadyTakenIds);
         return bulkCasesPayload;
     }
