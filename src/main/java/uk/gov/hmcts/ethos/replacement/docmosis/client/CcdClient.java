@@ -7,7 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ESHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.SubmitBulkEvent;
@@ -41,7 +41,6 @@ public class CcdClient {
     }
 
     public CCDRequest startCaseCreation(String authToken, CaseDetails caseDetails) throws IOException {
-        UserDetails userDetails = userService.getUserDetails(authToken);
         HttpEntity<String> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
         String uri = ccdClientConfig.buildStartCaseCreationUrl(userService.getUserDetails(authToken).getId(), caseDetails.getJurisdiction(),
@@ -60,7 +59,6 @@ public class CcdClient {
     public SubmitEvent retrieveCase(String authToken, String caseTypeId, String jurisdiction, String cid) throws IOException {
         HttpEntity<CCDRequest> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
-        log.info("USER: " + userService.getUserDetails(authToken).getId());
         String uri = ccdClientConfig.buildRetrieveCaseUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
                 caseTypeId, cid);
         return restTemplate.exchange(uri, HttpMethod.GET, request, SubmitEvent.class).getBody();
@@ -94,6 +92,19 @@ public class CcdClient {
             if (submitEventAux != null) {
                 submitEvents.addAll(submitEventAux);
             }
+        }
+        return submitEvents;
+    }
+
+    public List<SubmitEvent> retrieveCasesElasticSearch(String authToken, String caseTypeId, List<String> caseIds) throws IOException {
+        List<SubmitEvent> submitEvents = new ArrayList<>();
+        HttpEntity<String> request =
+                new HttpEntity<>(ESHelper.getSearchQuery(caseIds), ccdClientConfig.buildHeaders(authToken));
+        //log.info("REQUEST: " + request);
+        String url = ccdClientConfig.buildRetrieveCasesUrlElasticSearch(caseTypeId);
+        CaseSearchResult caseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, CaseSearchResult.class).getBody();
+        if (caseSearchResult != null && caseSearchResult.getCases() != null) {
+            submitEvents.addAll(caseSearchResult.getCases());
         }
         return submitEvents;
     }

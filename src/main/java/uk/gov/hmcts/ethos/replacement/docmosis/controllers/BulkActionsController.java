@@ -81,6 +81,37 @@ public class BulkActionsController {
                 .build());
     }
 
+    @PostMapping(value = "/createBulkES", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "creates a bulk case. Retrieves cases by ethos case reference.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<BulkCallbackResponse> createBulkES(
+            @RequestBody BulkRequest bulkRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("CREATE BULKES ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
+
+        if (bulkRequest.getCaseDetails().getCaseData().getMultipleReference() == null || bulkRequest.getCaseDetails().getCaseData().getMultipleReference().trim().equals("")) {
+            String reference = multipleReferenceService.createReference(bulkRequest.getCaseDetails().getCaseTypeId(), bulkRequest.getCaseDetails().getCaseId());
+            log.info("Reference generated: " + reference);
+            bulkRequest.getCaseDetails().getCaseData().setMultipleReference(reference);
+        }
+
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkRequest.getCaseDetails(), userToken);
+
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken);
+
+        bulkRequestPayload = bulkCreationService.updateLeadCase(bulkRequestPayload, userToken);
+
+        return ResponseEntity.ok(BulkCallbackResponse.builder()
+                .errors(bulkRequestPayload.getErrors())
+                .data(bulkRequestPayload.getBulkDetails().getCaseData())
+                .build());
+    }
+
     @PostMapping(value = "/updateBulk", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "updates cases in a bulk case. Update cases in searchCollection by given fields.")
     @ApiResponses(value = {
