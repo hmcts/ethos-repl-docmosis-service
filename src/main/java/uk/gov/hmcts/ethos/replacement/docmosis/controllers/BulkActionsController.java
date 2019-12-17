@@ -16,9 +16,12 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
+
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SELECT_ALL_VALUE;
@@ -35,18 +38,16 @@ public class BulkActionsController {
     private final BulkUpdateService bulkUpdateService;
     private final BulkSearchService bulkSearchService;
     private final DocumentGenerationService documentGenerationService;
-    private final MultipleReferenceService multipleReferenceService;
     private final SubMultipleService subMultipleService;
 
     @Autowired
     public BulkActionsController(BulkCreationService bulkCreationService, BulkUpdateService bulkUpdateService,
                                  BulkSearchService bulkSearchService, DocumentGenerationService documentGenerationService,
-                                 MultipleReferenceService multipleReferenceService, SubMultipleService subMultipleService) {
+                                 SubMultipleService subMultipleService) {
         this.bulkCreationService = bulkCreationService;
         this.bulkUpdateService = bulkUpdateService;
         this.bulkSearchService = bulkSearchService;
         this.documentGenerationService = documentGenerationService;
-        this.multipleReferenceService = multipleReferenceService;
         this.subMultipleService = subMultipleService;
     }
 
@@ -58,16 +59,10 @@ public class BulkActionsController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<BulkCallbackResponse> createBulk(
+    @Deprecated public ResponseEntity<BulkCallbackResponse> createBulk(
             @RequestBody BulkRequest bulkRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("CREATE BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
-
-        if (bulkRequest.getCaseDetails().getCaseData().getMultipleReference() == null || bulkRequest.getCaseDetails().getCaseData().getMultipleReference().trim().equals("")) {
-            String reference = multipleReferenceService.createReference(bulkRequest.getCaseDetails().getCaseTypeId(), bulkRequest.getCaseDetails().getCaseId());
-            log.info("Reference generated: " + reference);
-            bulkRequest.getCaseDetails().getCaseData().setMultipleReference(reference);
-        }
 
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken);
 
@@ -94,13 +89,7 @@ public class BulkActionsController {
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("CREATE BULKES ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
-        if (bulkRequest.getCaseDetails().getCaseData().getMultipleReference() == null || bulkRequest.getCaseDetails().getCaseData().getMultipleReference().trim().equals("")) {
-            String reference = multipleReferenceService.createReference(bulkRequest.getCaseDetails().getCaseTypeId(), bulkRequest.getCaseDetails().getCaseId());
-            log.info("Reference generated: " + reference);
-            bulkRequest.getCaseDetails().getCaseData().setMultipleReference(reference);
-        }
-
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkRequest.getCaseDetails(), userToken);
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkRequest.getCaseDetails(), userToken, true);
 
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken);
 
@@ -414,4 +403,26 @@ public class BulkActionsController {
         }
     }
 
+    @PostMapping(value = "/preAcceptBulk", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "accept a bulk of cases.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<BulkCallbackResponse> preAcceptBulk(
+            @RequestBody BulkRequest bulkRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("PRE ACCEPT BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
+
+        List<SubmitEvent> submitEvents = bulkSearchService.retrievalCasesForPreAcceptRequest(bulkRequest.getCaseDetails(), userToken);
+
+        BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(), submitEvents, userToken);
+
+        return ResponseEntity.ok(BulkCallbackResponse.builder()
+                .errors(bulkRequestPayload.getErrors())
+                .data(bulkRequestPayload.getBulkDetails().getCaseData())
+                .build());
+    }
 }

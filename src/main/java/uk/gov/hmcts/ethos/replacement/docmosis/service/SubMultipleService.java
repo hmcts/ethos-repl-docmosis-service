@@ -28,6 +28,14 @@ public class SubMultipleService {
         this.subMultipleReferenceService = subMultipleReferenceService;
     }
 
+    private String generateSubMultipleRef(BulkDetails bulkDetails) {
+        if (bulkDetails.getCaseData().getSubMultipleRef() == null || bulkDetails.getCaseData().getSubMultipleRef().trim().equals("")) {
+            return subMultipleReferenceService.createReference(bulkDetails.getCaseTypeId(), bulkDetails.getCaseData().getMultipleReference());
+        } else {
+            return bulkDetails.getCaseData().getSubMultipleRef();
+        }
+    }
+
     public BulkRequestPayload createSubMultipleLogic(BulkDetails bulkDetails) {
         BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
         List<String> errors = new ArrayList<>();
@@ -41,7 +49,7 @@ public class SubMultipleService {
                         .findFirst();
                 multipleTypeItem.ifPresent(typeItem -> subMultiplesList.add(typeItem.getValue().getEthosCaseReferenceM()));
             }
-            String subMultipleRefNumber = subMultipleReferenceService.createReference(bulkDetails.getCaseTypeId(), bulkDetails.getCaseData().getMultipleReference());
+            String subMultipleRefNumber = generateSubMultipleRef(bulkDetails);
             if (!subMultiplesList.isEmpty()) {
                 List<MultipleTypeItem> multipleTypeItems = new ArrayList<>();
                 for (MultipleTypeItem multipleTypeItem : bulkDetails.getCaseData().getMultipleCollection()) {
