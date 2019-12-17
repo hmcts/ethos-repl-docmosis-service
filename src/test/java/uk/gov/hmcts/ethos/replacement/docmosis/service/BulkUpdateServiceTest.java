@@ -274,6 +274,7 @@ public class BulkUpdateServiceTest {
         MultipleType multipleType = new MultipleType();
         multipleType.setSubMultipleM("12");
         multipleType.setEthosCaseReferenceM("11111");
+        multipleType.setStateM(SUBMITTED_STATE);
         MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
         multipleTypeItem.setId("1111");
         multipleTypeItem.setValue(multipleType);
