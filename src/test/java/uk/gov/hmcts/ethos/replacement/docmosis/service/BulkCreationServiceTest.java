@@ -46,6 +46,8 @@ public class BulkCreationServiceTest {
     @Mock
     private CcdClient ccdClient;
     @Mock
+    private MultipleReferenceService multipleReferenceService;
+    @Mock
     private BulkUpdateService bulkUpdateService;
     @Mock
     private BulkSearchService bulkSearchService;
@@ -142,7 +144,7 @@ public class BulkCreationServiceTest {
         submitEvent3 = new SubmitEvent();
         submitEvent3.setState("Accepted");
         submitEvent3.setCaseData(getCaseData("1122"));
-        bulkSearchService = new BulkSearchService(ccdClient);
+        bulkSearchService = new BulkSearchService(ccdClient, multipleReferenceService);
         bulkCreationService = new BulkCreationService(ccdClient, bulkUpdateService, bulkSearchService);
 
         bulkCasesPayload = new BulkCasesPayload();
@@ -183,14 +185,14 @@ public class BulkCreationServiceTest {
     @Test(expected = Exception.class)
     public void caseCreationRequestExceptionElasticSearch() throws IOException {
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenThrow(feignError());
-        bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken");
+        bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true);
     }
 
     @Test
     public void caseCreationRequestElasticSearch() throws IOException {
         List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true);
         assertEquals(submitEventList, bulkCasesPayload.getSubmitEvents());
     }
 
@@ -200,7 +202,7 @@ public class BulkCreationServiceTest {
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
         BulkDetails bulkDetails = getBulkDetails("Yes", "Single");
         bulkDetails.getCaseData().setCaseIdCollection(null);
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkDetails, "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkDetails, "authToken", true);
         assertEquals("[]", bulkCasesPayload.getSubmitEvents().toString());
     }
 
@@ -420,6 +422,30 @@ public class BulkCreationServiceTest {
         bulkDetails.setJurisdiction("TRIBUNALS");
         bulkDetails.setCaseTypeId(Constants.MANCHESTER_BULK_CASE_TYPE_ID);
         return bulkDetails;
+    }
+
+    @Test
+    public void retrievalCasesForPreAcceptRequest() throws IOException {
+        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
+        List<SubmitEvent> casesForPreAcceptRequest = bulkSearchService.retrievalCasesForPreAcceptRequest(getBulkDetails("Yes", "Single"), "authToken");
+        assertEquals(submitEventList, casesForPreAcceptRequest);
+    }
+
+    @Test
+    public void retrievalCasesForPreAcceptRequestWithEmptyCaseIds() throws IOException {
+        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
+        BulkDetails bulkDetails = getBulkDetails("Yes", "Single");
+        bulkDetails.getCaseData().setCaseIdCollection(null);
+        List<SubmitEvent> casesForPreAcceptRequest = bulkSearchService.retrievalCasesForPreAcceptRequest(bulkDetails, "authToken");
+        assertEquals("[]", casesForPreAcceptRequest.toString());
+    }
+
+    @Test(expected = Exception.class)
+    public void retrievalCasesForPreAcceptRequestException() throws IOException {
+        when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenThrow(feignError());
+        bulkSearchService.retrievalCasesForPreAcceptRequest(getBulkDetails("Yes", "Single"), "authToken");
     }
 
 }
