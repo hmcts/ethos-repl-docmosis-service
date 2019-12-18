@@ -200,17 +200,17 @@ public class BulkSearchService {
         }
     }
 
-    private List<SubmitEvent> filterPreAcceptCases(List<SubmitEvent> submitEvents, List<String> caseIds) {
-        log.info("Cases found pre accept: " + submitEvents.size());
-        List<SubmitEvent> submitEventFiltered = new ArrayList<>();
-        for (SubmitEvent submitEvent : submitEvents) {
-            CaseData caseData = submitEvent.getCaseData();
-            if (caseIds.contains(caseData.getEthosCaseReference())) {
-                submitEventFiltered.add(submitEvent);
-            }
-        }
-        return submitEventFiltered;
-    }
+//    private List<SubmitEvent> filterPreAcceptCases(List<SubmitEvent> submitEvents, List<String> caseIds) {
+//        log.info("Cases found pre accept: " + submitEvents.size());
+//        List<SubmitEvent> submitEventFiltered = new ArrayList<>();
+//        for (SubmitEvent submitEvent : submitEvents) {
+//            CaseData caseData = submitEvent.getCaseData();
+//            if (caseIds.contains(caseData.getEthosCaseReference())) {
+//                submitEventFiltered.add(submitEvent);
+//            }
+//        }
+//        return submitEventFiltered;
+//    }
 
     BulkCasesPayload filterSubmitEvents(List<SubmitEvent> submitEvents, List<String> caseIds, String multipleReference, boolean creationFlag) {
         log.info("Cases found: " + submitEvents.size());
