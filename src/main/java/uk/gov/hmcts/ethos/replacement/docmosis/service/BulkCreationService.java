@@ -110,7 +110,7 @@ public class BulkCreationService {
             List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken,
                     BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction());
             BulkCasesPayload bulkCasesPayload = bulkSearchService.filterSubmitEvents(submitEvents, unionLists,
-                    bulkDetails.getCaseData().getMultipleReference());
+                    bulkDetails.getCaseData().getMultipleReference(), false);
             if (bulkCasesPayload.getAlreadyTakenIds() != null && bulkCasesPayload.getAlreadyTakenIds().isEmpty()) {
                 List<SubmitEvent> allSubmitEventsToUpdate = bulkCasesPayload.getSubmitEvents();
                 if (!allSubmitEventsToUpdate.isEmpty()) {
