@@ -214,15 +214,6 @@ public class BulkCreationServiceTest {
     }
 
     @Test
-    public void caseCreationRequestElasticSearchWithCaseAlreadyAssigned() throws IOException {
-        submitEvent.getCaseData().setMultipleReference("123345");
-        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
-        when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken");
-        assertEquals(submitEventList, bulkCasesPayload.getSubmitEvents());
-    }
-
-    @Test
     public void caseCreationRequestWithEmptyCaseIdsElasticSearch() throws IOException {
         List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
