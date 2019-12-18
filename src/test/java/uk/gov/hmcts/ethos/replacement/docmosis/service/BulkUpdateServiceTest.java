@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -66,9 +67,20 @@ public class BulkUpdateServiceTest {
         bulkData.setMultipleReference("1111");
         bulkData.setJurCodesDynamicList(getJurCodesDynamicList());
         bulkData.setJurCodesCollection(getJurCodesCollection());
+
+        MultipleType multipleType = new MultipleType();
+        multipleType.setEthosCaseReferenceM("2222");
+        multipleType.setRespondentRepM("JuanPedro");
+        multipleType.setSubMultipleM(" ");
+        MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
+        multipleTypeItem.setValue(multipleType);
+        multipleTypeItem.setId("2222");
+        bulkData.setMultipleCollection(new ArrayList<>(Collections.singletonList(multipleTypeItem)));
+
         bulkDetails.setJurisdiction("TRIBUNALS");
         bulkDetails.setCaseData(bulkData);
         bulkDetails.setCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID);
+        bulkDetails.setCaseId("2300001/2019");
         bulkRequest.setCaseDetails(bulkDetails);
 
         CaseData caseData = new CaseData();
@@ -161,7 +173,7 @@ public class BulkUpdateServiceTest {
         List<SubmitBulkEvent> submitBulkEventList = new ArrayList<>(Collections.singletonList(submitBulkEvent));
         BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
         bulkCasesPayload.setSubmitEvents(new ArrayList<>(Collections.singleton(submitEvent)));
-        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), isA(String.class))).thenReturn(bulkCasesPayload);
+        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), isA(String.class), isA(Boolean.class))).thenReturn(bulkCasesPayload);
         when(ccdClient.retrieveBulkCases("authToken", MANCHESTER_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
         assert(bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()),
@@ -262,6 +274,7 @@ public class BulkUpdateServiceTest {
         MultipleType multipleType = new MultipleType();
         multipleType.setSubMultipleM("12");
         multipleType.setEthosCaseReferenceM("11111");
+        multipleType.setStateM(SUBMITTED_STATE);
         MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
         multipleTypeItem.setId("1111");
         multipleTypeItem.setValue(multipleType);
@@ -269,4 +282,32 @@ public class BulkUpdateServiceTest {
         bulkDetails.setCaseData(bulkData);
         return bulkDetails;
     }
+
+    @Test
+    public void bulkPreAcceptLogicEmptyCases() {
+        List<String> errors = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(), new ArrayList<>(), "authToken").getErrors();
+        assertEquals("[No cases on the multiple case: 2300001/2019]", errors.toString());
+    }
+
+    @Test
+    public void bulkPreAcceptLogic() {
+        List<SubmitEvent> submitEvents = new ArrayList<>(Collections.singleton(submitEvent));
+        bulkRequest.setCaseDetails(getBulkDetailsCompleteWithValues(bulkRequest.getCaseDetails()));
+        BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(), submitEvents, "authToken");
+        String multipleCollection = "[MultipleTypeItem(id=1111, value=MultipleType(caseIDM=null, ethosCaseReferenceM=11111, leadClaimantM=null, " +
+                "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, " +
+                "fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=Accepted, " +
+                "subMultipleM=12, subMultipleTitleM=null, currentPositionM=null, claimantAddressLine1M=null, claimantPostCodeM=null, " +
+                "respondentAddressLine1M=null, respondentPostCodeM=null, flag1M=null, flag2M=null, EQPM=null, respondentRepOrgM=null, claimantRepOrgM=null))]";
+        assertEquals(multipleCollection, bulkRequestPayload.getBulkDetails().getCaseData().getMultipleCollection().toString());
+    }
+
+    @Test(expected = Exception.class)
+    public void bulkPreAcceptLogicException() throws IOException {
+        List<SubmitEvent> submitEvents = new ArrayList<>(Collections.singleton(submitEvent));
+        when(ccdClient.startEventForCasePreAcceptBulkSingle(anyString(), anyString(), anyString(), anyString())).thenThrow(feignError());
+        bulkRequest.setCaseDetails(getBulkDetailsCompleteWithValues(bulkRequest.getCaseDetails()));
+        bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(), submitEvents, "authToken");
+    }
+
 }

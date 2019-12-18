@@ -32,6 +32,8 @@ public class BulkSearchServiceTest {
     private BulkSearchService bulkSearchService;
     @Mock
     private CcdClient ccdClient;
+    @Mock
+    private MultipleReferenceService multipleReferenceService;
     private BulkRequest bulkRequest;
     private BulkDetails bulkDetails;
 
@@ -62,7 +64,7 @@ public class BulkSearchServiceTest {
         bulkDetails.setCaseData(bulkData);
         bulkRequest.setCaseDetails(bulkDetails);
 
-        bulkSearchService = new BulkSearchService(ccdClient);
+        bulkSearchService = new BulkSearchService(ccdClient, multipleReferenceService);
     }
 
     @Test
