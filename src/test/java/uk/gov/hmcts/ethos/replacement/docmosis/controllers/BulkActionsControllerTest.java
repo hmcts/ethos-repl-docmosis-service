@@ -72,6 +72,7 @@ public class BulkActionsControllerTest {
     private static final String UPDATE_SUB_MULTIPLE_URL = "/updateSubMultiple";
     private static final String DELETE_SUB_MULTIPLE_URL = "/deleteSubMultiple";
     private static final String GENERATE_BULK_SCHEDULE_URL = "/generateBulkSchedule";
+    private static final String PRE_ACCEPT_BULK_URL = "/preAcceptBulk";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -149,7 +150,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void createBulkCaseES() throws Exception {
-        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), eq(AUTH_TOKEN))).thenReturn(bulkCasesPayload);
+        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), eq(AUTH_TOKEN), isA(Boolean.class))).thenReturn(bulkCasesPayload);
         when(bulkCreationService.bulkCreationLogic(isA(BulkDetails.class), isA(BulkCasesPayload.class), eq(AUTH_TOKEN))).
                 thenReturn(bulkRequestPayload);
         when(bulkCreationService.updateLeadCase(isA(BulkRequestPayload.class), eq(AUTH_TOKEN))).thenReturn(bulkRequestPayload);
@@ -193,7 +194,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void createBulkCaseESError500() throws Exception {
-        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), eq(AUTH_TOKEN))).thenThrow(feignError());
+        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), eq(AUTH_TOKEN), isA(Boolean.class))).thenThrow(feignError());
         mvc.perform(post(CREATION_BULK_ES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -716,4 +717,36 @@ public class BulkActionsControllerTest {
                 .andExpect(status().isInternalServerError());
     }
 
+    @Test
+    public void preAcceptBulk() throws Exception {
+        when(bulkSearchService.retrievalCasesForPreAcceptRequest(isA(BulkDetails.class), eq(AUTH_TOKEN))).thenReturn(bulkCasesPayload.getSubmitEvents());
+        when(bulkUpdateService.bulkPreAcceptLogic(isA(BulkDetails.class), any(), eq(AUTH_TOKEN))).thenReturn(bulkRequestPayload);
+        mvc.perform(post(PRE_ACCEPT_BULK_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void preAcceptBulkError400() throws Exception {
+        mvc.perform(post(PRE_ACCEPT_BULK_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void preAcceptBulkError500() throws Exception {
+        when(bulkSearchService.retrievalCasesForPreAcceptRequest(isA(BulkDetails.class), eq(AUTH_TOKEN))).thenThrow(feignError());
+        mvc.perform(post(PRE_ACCEPT_BULK_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
 }
