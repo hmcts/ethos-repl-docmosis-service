@@ -10,20 +10,32 @@ import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MidSearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.CaseType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.MultipleType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.JurCodesType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class BulkSearchServiceTest {
@@ -36,6 +48,7 @@ public class BulkSearchServiceTest {
     private MultipleReferenceService multipleReferenceService;
     private BulkRequest bulkRequest;
     private BulkDetails bulkDetails;
+    private SubmitEvent submitEvent;
 
     @Before
     public void setUp() {
@@ -61,8 +74,12 @@ public class BulkSearchServiceTest {
         midSearchTypeItem1.setValue("2222");
         bulkData.setMidSearchCollection(new ArrayList<>(Arrays.asList(midSearchTypeItem, midSearchTypeItem1)));
         bulkDetails.setJurisdiction("TRIBUNALS");
+        bulkDetails.setCaseTypeId("Manchester");
         bulkDetails.setCaseData(bulkData);
         bulkRequest.setCaseDetails(bulkDetails);
+        submitEvent = new SubmitEvent();
+        submitEvent.setState("Accepted");
+        submitEvent.setCaseData(getCaseData());
 
         bulkSearchService = new BulkSearchService(ccdClient, multipleReferenceService);
     }
@@ -94,7 +111,7 @@ public class BulkSearchServiceTest {
                 "respondentRepOrgM=null, claimantRepOrgM=null))], subMultipleCollection=null, subMultipleDynamicList=null, searchCollectionCount=null, " +
                 "multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null, selectAll=null, scheduleDocName=null, " +
                 "positionType=null, flag1=null, flag2=null, EQP=null, submissionRef=null, claimantOrg=null, respondentOrg=null, state=null, " +
-                "flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null), caseTypeId=null, " +
+                "flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null), caseTypeId=Manchester, " +
                 "createdDate=null, lastModified=null, dataClassification=null))";
         bulkDetails.getCaseData().setMidSearchCollection(null);
         BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkSearchLogic(bulkDetails);
@@ -118,7 +135,7 @@ public class BulkSearchServiceTest {
                 "claimantRepOrgM=null))], subMultipleCollection=null, subMultipleDynamicList=null, searchCollectionCount=null, " +
                 "multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null, selectAll=null, scheduleDocName=null, " +
                 "positionType=null, flag1=null, flag2=null, EQP=null, submissionRef=null, claimantOrg=null, respondentOrg=null, state=null, " +
-                "flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null), caseTypeId=null, " +
+                "flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null), caseTypeId=Manchester, " +
                 "createdDate=null, lastModified=null, dataClassification=null))";
         bulkDetails.getCaseData().setRespondentRep("JuanPedro");
         BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(bulkDetails, false);
@@ -142,7 +159,7 @@ public class BulkSearchServiceTest {
                 "claimantRepOrgM=null))], subMultipleCollection=null, subMultipleDynamicList=null, searchCollectionCount=null, " +
                 "multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null, selectAll=Yes, scheduleDocName=null, " +
                 "positionType=null, flag1=null, flag2=null, EQP=null, submissionRef=null, claimantOrg=null, respondentOrg=null, state=null, " +
-                "flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null), caseTypeId=null, " +
+                "flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null), caseTypeId=Manchester, " +
                 "createdDate=null, lastModified=null, dataClassification=null))";
         bulkDetails.getCaseData().setRespondentRep("JuanPedro");
         bulkDetails.getCaseData().setSelectAll("Yes");
@@ -162,7 +179,7 @@ public class BulkSearchServiceTest {
                 "MidSearchTypeItem(id=2222, value=2222)], multipleCollection=null, subMultipleCollection=null, subMultipleDynamicList=null, " +
                 "searchCollectionCount=null, multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null, selectAll=null, " +
                 "scheduleDocName=null, positionType=null, flag1=null, flag2=null, EQP=null, submissionRef=null, claimantOrg=null, respondentOrg=null, " +
-                "state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null), caseTypeId=null, " +
+                "state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null), caseTypeId=Manchester, " +
                 "createdDate=null, lastModified=null, dataClassification=null))";
         bulkDetails.getCaseData().setMultipleCollection(null);
         BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(bulkDetails, false);
@@ -185,7 +202,7 @@ public class BulkSearchServiceTest {
                 "claimantRepOrgM=null))], subMultipleCollection=null, subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=null, " +
                 "correspondenceType=null, correspondenceScotType=null, selectAll=null, scheduleDocName=null, positionType=null, flag1=null, flag2=null, " +
                 "EQP=null, submissionRef=null, claimantOrg=null, respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, " +
-                "jurCodesDynamicList=null, outcomeUpdate=null), caseTypeId=null, createdDate=null, lastModified=null, dataClassification=null))";
+                "jurCodesDynamicList=null, outcomeUpdate=null), caseTypeId=Manchester, createdDate=null, lastModified=null, dataClassification=null))";
         bulkDetails.getCaseData().setRespondentRep("JuanPedro");
         DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
         DynamicValueType dynamicValueType = new DynamicValueType();
@@ -216,7 +233,7 @@ public class BulkSearchServiceTest {
                 "subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null, " +
                 "selectAll=null, scheduleDocName=null, positionType=null, flag1=null, flag2=null, EQP=null, submissionRef=null, claimantOrg=null, " +
                 "respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null), " +
-                "caseTypeId=null, createdDate=null, lastModified=null, dataClassification=null))";
+                "caseTypeId=Manchester, createdDate=null, lastModified=null, dataClassification=null))";
         bulkDetails.getCaseData().setRespondentRep("JuanPedro");
         BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(bulkDetails, true);
         assertEquals(result, bulkRequestPayload.toString());
@@ -238,7 +255,7 @@ public class BulkSearchServiceTest {
                 "claimantRepOrgM=null))], subMultipleCollection=null, subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=null, " +
                 "correspondenceType=null, correspondenceScotType=null, selectAll=null, scheduleDocName=null, positionType=null, flag1=null, flag2=null, EQP=null, " +
                 "submissionRef=null, claimantOrg=null, respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, " +
-                "outcomeUpdate=null), caseTypeId=null, createdDate=null, lastModified=null, dataClassification=null))";
+                "outcomeUpdate=null), caseTypeId=Manchester, createdDate=null, lastModified=null, dataClassification=null))";
         bulkDetails.getCaseData().setRespondentRep("JuanPedro");
         bulkDetails.getCaseData().getMultipleCollection().get(0).getValue().setSubMultipleM("4200001/1");
         BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(bulkDetails, true);
@@ -306,5 +323,48 @@ public class BulkSearchServiceTest {
         multipleTypeItemList.add(multipleTypeItem2);
         multipleTypeItemList.add(multipleTypeItem3);
         return multipleTypeItemList;
+    }
+
+    private CaseData getCaseData() {
+        CaseData caseData = new CaseData();
+        caseData.setFeeGroupReference("111122211");
+        caseData.setEthosCaseReference("1111");
+        caseData.setMultipleReference("123456");
+        ClaimantIndType claimantIndType = new ClaimantIndType();
+        claimantIndType.setClaimantLastName("Fernandez");
+        caseData.setClaimantIndType(claimantIndType);
+        RespondentSumType respondentSumType = new RespondentSumType();
+        respondentSumType.setRespondentName("Mr Respondent");
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setValue(respondentSumType);
+        caseData.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
+        return caseData;
+    }
+
+    private BulkData getSimpleBulkData(BulkData bulkData) {
+        CaseType caseType = new CaseType();
+        caseType.setEthosCaseReference("1111");
+        CaseIdTypeItem caseIdTypeItem = new CaseIdTypeItem();
+        caseIdTypeItem.setId("1111");
+        caseIdTypeItem.setValue(caseType);
+        bulkData.setCaseIdCollection(new ArrayList<>(Collections.singletonList(caseIdTypeItem)));
+        MultipleType multipleType = new MultipleType();
+        multipleType.setEthosCaseReferenceM("281231");
+        multipleType.setLeadClaimantM("Yes");
+        MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
+        multipleTypeItem.setValue(multipleType);
+        multipleTypeItem.setId("22222");
+        bulkData.setMultipleCollection(new ArrayList<>(Collections.singletonList(multipleTypeItem)));
+        bulkData.setMultipleReference("12345");
+        return bulkData;
+    }
+
+    @Test
+    public void caseUpdateRequestElasticSearch() throws IOException {
+        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
+        bulkDetails.setCaseData(getSimpleBulkData(bulkDetails.getCaseData()));
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkDetails, "authToken", false);
+        assertEquals(submitEventList, bulkCasesPayload.getSubmitEvents());
     }
 }

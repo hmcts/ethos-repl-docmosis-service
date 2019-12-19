@@ -121,4 +121,6 @@ public class Constants {
 
     public static final String FILE_EXTENSION = ".docx";
 
+    public static final int MAX_ES_SIZE = 10000;
+
 }
