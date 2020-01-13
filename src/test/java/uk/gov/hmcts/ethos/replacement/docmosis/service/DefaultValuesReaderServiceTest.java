@@ -95,6 +95,7 @@ public class DefaultValuesReaderServiceTest {
         preDefaultValues = DefaultValues.builder().claimantTypeOfClaimant(INDIVIDUAL_TYPE_CLAIMANT).build();
         postDefaultValuesManchester = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Manchester Employment Tribunal")
                 .tribunalCorrespondenceAddressLine2("Alexandra House")
                 .tribunalCorrespondenceAddressLine3("14-22 The Parsonage")
@@ -107,6 +108,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesBristol = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Bristol Civil and Family Justice Centre")
                 .tribunalCorrespondenceAddressLine2("2 Redcliff Street")
                 .tribunalCorrespondenceTown("Bristol")
@@ -118,6 +120,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesLeeds = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("4th Floor")
                 .tribunalCorrespondenceAddressLine2("City Exchange")
                 .tribunalCorrespondenceAddressLine3("11 Albion Street")
@@ -129,6 +132,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesLondonCentral = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Ground Floor")
                 .tribunalCorrespondenceAddressLine2("Victory House")
                 .tribunalCorrespondenceAddressLine3("30-34 Kingsway")
@@ -141,6 +145,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesLondonEast = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("2nd Floor")
                 .tribunalCorrespondenceAddressLine2("Import Building")
                 .tribunalCorrespondenceAddressLine3("2 Clove Crescent")
@@ -152,6 +157,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesLondonSouth = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Montague Court")
                 .tribunalCorrespondenceAddressLine2("101 London Road")
                 .tribunalCorrespondenceAddressLine3("West Croydon")
@@ -164,6 +170,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesMidlandsEast = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Nottingham Justice Centre")
                 .tribunalCorrespondenceAddressLine2("Carrington Street")
                 .tribunalCorrespondenceTown("Nottingham")
@@ -174,6 +181,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesMidlandsWest = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("13th Floor")
                 .tribunalCorrespondenceAddressLine2("Centre City Tower")
                 .tribunalCorrespondenceAddressLine3("5-7 Hill Street")
@@ -185,6 +193,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesNewcastle = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Kings Court")
                 .tribunalCorrespondenceAddressLine2("Earl Grey Way")
                 .tribunalCorrespondenceAddressLine3("Royal Quays")
@@ -197,6 +206,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesWales = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Fitzalan Place")
                 .tribunalCorrespondenceTown("Cardiff")
                 .tribunalCorrespondencePostCode("CF24 0RZ")
@@ -207,6 +217,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesWatford = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Watford Tribunal Hearing Centre")
                 .tribunalCorrespondenceAddressLine2("Radius House")
                 .tribunalCorrespondenceAddressLine3("51 Clarendon Road")
@@ -219,6 +230,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesGlasgow = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Eagle Building")
                 .tribunalCorrespondenceAddressLine2("215 Bothwell Street")
                 .tribunalCorrespondenceTown("Glasgow")
@@ -231,6 +243,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesAberdeen = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Ground Floor")
                 .tribunalCorrespondenceAddressLine2("AB1, 48 Huntly Street")
                 .tribunalCorrespondenceTown("Aberdeen")
@@ -242,6 +255,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesDundee = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Ground Floor")
                 .tribunalCorrespondenceAddressLine2("Block C, Caledonian House")
                 .tribunalCorrespondenceAddressLine3("Greenmarket")
@@ -254,6 +268,7 @@ public class DefaultValuesReaderServiceTest {
                 .build();
         postDefaultValuesEdinburgh = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("54-56 Melville Street")
                 .tribunalCorrespondenceTown("Edinburgh")
                 .tribunalCorrespondencePostCode("EH3 7HF")
@@ -348,13 +363,13 @@ public class DefaultValuesReaderServiceTest {
     public void getCaseData() {
         String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, " +
                 "tribunalCorrespondenceTelephone=0141 204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, " +
-                "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=null, " +
+                "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=Single, " +
                 "multipleReference=null, leadClaimant=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
-                "representativeClaimantType=null, responseTypeCollection=null, responseType=null, respondentCollection=null, repCollection=null, " +
-                "positionType=Manually Created, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, " +
-                "fileLocationEdinburgh=null, hearingType=null, hearingCollection=null, depositType=null, judgementCollection=null, " +
-                "judgementDetailsCollection=null, costsCollection=null, jurCodesCollection=null, " +
+                "claimantWorkAddressQRespondent=null, representativeClaimantType=null, responseTypeCollection=null, responseType=null, " +
+                "respondentCollection=null, repCollection=null, positionType=Manually Created, fileLocation=null, fileLocationGlasgow=null, " +
+                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingType=null, hearingCollection=null, " +
+                "depositType=null, judgementCollection=null, judgementDetailsCollection=null, costsCollection=null, jurCodesCollection=null, " +
                 "broughtForwardCollection=null, clerkResponsible=null, userLocation=null, subMultipleReference=null, " +
                 "addSubMultipleComment=null, documentCollection=null, referredToJudge=null, backFromJudge=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, caseNotes=null, claimantWorkAddress=null, " +

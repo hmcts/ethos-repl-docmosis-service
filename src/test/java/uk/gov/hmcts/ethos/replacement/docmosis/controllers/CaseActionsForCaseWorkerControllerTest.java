@@ -34,8 +34,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.GLASGOW_OFFICE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringRunner.class)
@@ -102,6 +101,7 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .positionType("Awaiting ET3")
                 .claimantTypeOfClaimant(INDIVIDUAL_TYPE_CLAIMANT)
                 .managingOffice(GLASGOW_OFFICE)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("")
                 .tribunalCorrespondenceAddressLine2("")
                 .tribunalCorrespondenceAddressLine3("")

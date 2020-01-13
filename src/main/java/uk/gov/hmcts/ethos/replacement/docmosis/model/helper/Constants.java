@@ -50,6 +50,7 @@ public class Constants {
     public static final String ACCEPTED_STATE = "Accepted";
     public static final String REJECTED_STATE = "Rejected";
 
+    public static final String SINGLE_CASE_TYPE = "Single";
     public static final String INDIVIDUAL_TYPE_CLAIMANT = "Individual";
     public static final String MANUALLY_CREATED_POSITION = "Manually Created";
 

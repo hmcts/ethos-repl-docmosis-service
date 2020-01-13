@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
@@ -226,6 +227,23 @@ public class CaseActionsForCaseWorkerController {
         log.info("AMEND CASE STATE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         caseData.setState(ccdRequest.getCaseDetails().getState());
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .build());
+    }
+
+    @PostMapping(value = "/midRespondentAddress", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the mid dynamic fixed list with the respondent addresses.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> midRespondentAddress(
+            @RequestBody CCDRequest ccdRequest) {
+        log.info("MID RESPONDENT ADDRESS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        CaseData caseData = Helper.midRespondentAddress(ccdRequest.getCaseDetails().getCaseData());
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
                 .build());
