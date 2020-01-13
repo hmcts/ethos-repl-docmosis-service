@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.model.ccd;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
@@ -49,6 +50,8 @@ public class CaseData {
     private String feeGroupReference;
     @JsonProperty("claimantWorkAddressQuestion")
     private String claimantWorkAddressQuestion;
+    @JsonProperty("claimantWorkAddressQRespondent")
+    private DynamicFixedListType claimantWorkAddressQRespondent;
     @JsonProperty("representativeClaimantType")
     private RepresentedTypeC representativeClaimantType;
     @JsonProperty("responseTypeCollection")
