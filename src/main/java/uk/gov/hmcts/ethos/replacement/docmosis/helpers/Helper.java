@@ -2,15 +2,19 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicFixedListType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SignificantItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -395,4 +399,33 @@ public class Helper {
                 .build();
     }
 
+    private static List<DynamicValueType> createDynamicRespondentAddressFixedList(List<RespondentSumTypeItem> respondentCollection) {
+        List<DynamicValueType> listItems = new ArrayList<>();
+        if (respondentCollection != null) {
+            for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
+                DynamicValueType dynamicValueType = new DynamicValueType();
+                RespondentSumType respondentSumType = respondentSumTypeItem.getValue();
+                dynamicValueType.setCode(respondentSumType.getRespondentName());
+                dynamicValueType.setLabel(respondentSumType.getRespondentName() + " - " + respondentSumType.getRespondentAddress().toString());
+                listItems.add(dynamicValueType);
+            }
+        }
+        return listItems;
+    }
+
+    public static CaseData midRespondentAddress(CaseData caseData) {
+        List<DynamicValueType> listItems = createDynamicRespondentAddressFixedList(caseData.getRespondentCollection());
+        if (!listItems.isEmpty()) {
+            if (caseData.getClaimantWorkAddressQRespondent() != null) {
+                caseData.getClaimantWorkAddressQRespondent().setListItems(listItems);
+            } else {
+                DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+                dynamicFixedListType.setListItems(listItems);
+                caseData.setClaimantWorkAddressQRespondent(dynamicFixedListType);
+            }
+            //Default dynamic list
+            caseData.getClaimantWorkAddressQRespondent().setValue(listItems.get(0));
+        }
+        return caseData;
+    }
 }

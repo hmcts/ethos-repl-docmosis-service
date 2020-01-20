@@ -34,8 +34,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.GLASGOW_OFFICE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringRunner.class)
@@ -53,6 +52,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String PRE_ACCEPT_CASE_URL = "/preAcceptCase";
     private static final String AMEND_CASE_DETAILS_URL = "/amendCaseDetails";
     private static final String AMEND_CASE_STATE_URL = "/amendCaseState";
+    private static final String MID_RESPONDENT_ADDRESS_URL = "/midRespondentAddress";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -102,6 +102,7 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .positionType("Awaiting ET3")
                 .claimantTypeOfClaimant(INDIVIDUAL_TYPE_CLAIMANT)
                 .managingOffice(GLASGOW_OFFICE)
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("")
                 .tribunalCorrespondenceAddressLine2("")
                 .tribunalCorrespondenceAddressLine3("")
@@ -422,4 +423,38 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void midRespondentAddress() throws Exception {
+        mvc.perform(post(MID_RESPONDENT_ADDRESS_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void midRespondentAddressPopulated() throws Exception {
+        mvc.perform(post(MID_RESPONDENT_ADDRESS_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void midRespondentAddressError400() throws Exception {
+        mvc.perform(post(MID_RESPONDENT_ADDRESS_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
 }
