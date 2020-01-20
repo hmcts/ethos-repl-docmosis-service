@@ -124,4 +124,5 @@ public class Constants {
 
     public static final int MAX_ES_SIZE = 10000;
 
+    public static final int NUMBER_THREADS = 250;
 }
