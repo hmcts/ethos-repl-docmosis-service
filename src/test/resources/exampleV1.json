@@ -242,6 +242,7 @@
           }
         ]
       },
+      "claimantWorkAddressQuestion": "Yes",
       "judgementCollection": [
         {
           "id": "12121",
