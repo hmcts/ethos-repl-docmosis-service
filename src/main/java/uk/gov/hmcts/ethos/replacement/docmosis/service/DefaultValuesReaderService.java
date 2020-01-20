@@ -121,14 +121,14 @@ public class DefaultValuesReaderService {
                 .build();
     }
 
-    public CaseData getCaseData(CaseData caseData, DefaultValues defaultValues) {
+    public CaseData getCaseData(CaseData caseData, DefaultValues defaultValues, boolean creationFlag) {
         if (caseData.getPositionType() == null) {
             caseData.setPositionType(defaultValues.getPositionType());
         }
         if (defaultValues.getManagingOffice() != null) {
             caseData.setManagingOffice(defaultValues.getManagingOffice());
         }
-        if (defaultValues.getCaseType() != null) {
+        if (creationFlag && defaultValues.getCaseType() != null) {
             caseData.setCaseType(defaultValues.getCaseType());
         }
         caseData.setTribunalCorrespondenceAddress(getTribunalCorrespondenceAddress(defaultValues));

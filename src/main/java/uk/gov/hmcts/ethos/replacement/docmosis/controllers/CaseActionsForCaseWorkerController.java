@@ -163,7 +163,7 @@ public class CaseActionsForCaseWorkerController {
             log.info("POST DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
-            caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
+            caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues, true);
             if (caseData.getEthosCaseReference() == null || caseData.getEthosCaseReference().trim().equals("")) {
                 String reference = singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getCaseId());
                 log.info("Reference generated: " + reference);
@@ -208,7 +208,7 @@ public class CaseActionsForCaseWorkerController {
         log.info("AMEND CASE DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
         DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
         log.info("Post Default values loaded: " + defaultValues);
-        CaseData caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
+        CaseData caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues, false);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
                 .build());
