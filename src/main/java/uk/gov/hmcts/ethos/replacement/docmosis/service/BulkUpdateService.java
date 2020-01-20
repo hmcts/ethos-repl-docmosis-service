@@ -186,31 +186,6 @@ public class BulkUpdateService {
         }
     }
 
-    void caseUpdateMultipleReferenceRequest(BulkDetails bulkDetails, SubmitEvent submitEvent, String authToken, String multipleRef, String caseType) {
-        try {
-            String caseId = String.valueOf(submitEvent.getCaseId());
-            CCDRequest returnedRequest;
-            log.info("Current state ---> " + submitEvent.getState());
-            if (submitEvent.getState().equals(PENDING_STATE)) {
-                // Moving to submitted_state
-                log.info("Moving from pending to submitted");
-                returnedRequest = ccdClient.startEventForCaseBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
-                submitEvent.getCaseData().setState(SUBMITTED_STATE);
-            } else {
-                // Moving to accepted_state
-                log.info("Moving to accepted state");
-                returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
-            }
-            submitEvent.getCaseData().setLeadClaimant("No");
-            submitEvent.getCaseData().setMultipleReference(multipleRef);
-            submitEvent.getCaseData().setCaseType(caseType);
-
-            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
-        } catch (Exception ex) {
-            throw new CaseCreationException(MESSAGE + submitEvent.getCaseId() + ex.getMessage());
-        }
-    }
-
     SubmitBulkEventSubmitEventType caseUpdateFieldsRequest(BulkDetails bulkDetails, SearchTypeItem searchTypeItem, String authToken, SubmitBulkEvent submitBulkEvent) {
         try {
             SubmitBulkEventSubmitEventType submitBulkEventSubmitEventType = new SubmitBulkEventSubmitEventType();
