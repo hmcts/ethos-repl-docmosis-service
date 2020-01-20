@@ -230,6 +230,18 @@
           }
         }
       ],
+      "claimantWorkAddressQRespondent": {
+        "value": {
+          "code": "12121",
+          "label": "56 Block C, Long Street"
+        },
+        "list_items": [
+          {
+            "code": "12121",
+            "label": "56 Block C, Long Street"
+          }
+        ]
+      },
       "judgementCollection": [
         {
           "id": "12121",

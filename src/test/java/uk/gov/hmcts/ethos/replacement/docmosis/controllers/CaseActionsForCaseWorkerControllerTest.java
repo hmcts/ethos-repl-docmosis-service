@@ -52,6 +52,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String PRE_ACCEPT_CASE_URL = "/preAcceptCase";
     private static final String AMEND_CASE_DETAILS_URL = "/amendCaseDetails";
     private static final String AMEND_CASE_STATE_URL = "/amendCaseState";
+    private static final String MID_RESPONDENT_ADDRESS_URL = "/midRespondentAddress";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -422,4 +423,38 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void midRespondentAddress() throws Exception {
+        mvc.perform(post(MID_RESPONDENT_ADDRESS_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void midRespondentAddressPopulated() throws Exception {
+        mvc.perform(post(MID_RESPONDENT_ADDRESS_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void midRespondentAddressError400() throws Exception {
+        mvc.perform(post(MID_RESPONDENT_ADDRESS_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
 }
