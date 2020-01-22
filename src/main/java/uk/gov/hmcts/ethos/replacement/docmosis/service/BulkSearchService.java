@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.DEFAULT_SELECT_ALL_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SUBMITTED_STATE;
 
 @Slf4j
 @Service("bulkSearchService")
@@ -178,6 +179,7 @@ public class BulkSearchService {
                 bulkCasesPayload.setAlreadyTakenIds(new ArrayList<>());
                 bulkCasesPayload.setSubmitEvents(new ArrayList<>());
                 bulkCasesPayload.setMultipleTypeItems(new ArrayList<>());
+                bulkCasesPayload.setErrors(new ArrayList<>());
                 return bulkCasesPayload;
             }
         } catch (Exception ex) {
@@ -243,6 +245,7 @@ public class BulkSearchService {
         BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
         multipleReference = multipleReference != null ? multipleReference : "";
         List<String> alreadyTakenIds = new ArrayList<>();
+        List<String> unprocessableState = new ArrayList<>();
         for (SubmitEvent submitEvent : submitEvents) {
             CaseData caseData = submitEvent.getCaseData();
             if (caseData.getMultipleReference() != null && !caseData.getMultipleReference().trim().isEmpty()) {
@@ -254,10 +257,24 @@ public class BulkSearchService {
                     alreadyTakenIds.add(caseData.getEthosCaseReference());
                 }
             }
+            if (!submitEvent.getState().equals(SUBMITTED_STATE)) {
+                unprocessableState.add(submitEvent.getCaseData().getEthosCaseReference());
+            }
         }
         bulkCasesPayload.setSubmitEvents(submitEvents);
-        bulkCasesPayload.setAlreadyTakenIds(alreadyTakenIds);
+        bulkCasesPayload.setErrors(checkSearchingCasesErrors(alreadyTakenIds, unprocessableState));
         return bulkCasesPayload;
+    }
+
+    private List<String> checkSearchingCasesErrors(List<String> alreadyTakenIds, List<String> unprocessableState) {
+        List<String> errors = new ArrayList<>();
+        if (!alreadyTakenIds.isEmpty()) {
+            errors.add("These cases are already assigned to a multiple case: " + alreadyTakenIds);
+        }
+        if (!unprocessableState.isEmpty()) {
+            errors.add("The state of these cases: " + unprocessableState + " have not been accepted");
+        }
+        return errors;
     }
 
     List<MidSearchTypeItem> midSearchCasesByFieldsRequest(List<MultipleTypeItem> multipleTypeItemToSearchBy, BulkDetails bulkDetails, boolean subMultiple) {
