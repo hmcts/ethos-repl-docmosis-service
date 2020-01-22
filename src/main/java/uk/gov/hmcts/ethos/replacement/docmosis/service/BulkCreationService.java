@@ -8,13 +8,14 @@ import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.CaseCreationException;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.MultipleTypeListCaseRefNumListType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.MultipleType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
-import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkUpdateTask;
+import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkCreationTask;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -51,9 +52,8 @@ public class BulkCreationService {
 
                 // 2) Add list of cases to the multiple bulk case collection
                 if (!submitEvents.isEmpty()) {
-                    String multipleReference = bulkDetails.getCaseData().getMultipleReference();
                     List<MultipleTypeItem> multipleTypeItemList = BulkHelper.getMultipleTypeListBySubmitEventList(submitEvents,
-                            multipleReference);
+                            bulkDetails.getCaseData().getMultipleReference());
                     bulkRequestPayload.setBulkDetails(BulkHelper.setMultipleCollection(bulkDetails, multipleTypeItemList));
                 } else {
                     bulkRequestPayload.setBulkDetails(BulkHelper.setMultipleCollection(bulkDetails, bulkDetails.getCaseData().getMultipleCollection()));
@@ -63,22 +63,27 @@ public class BulkCreationService {
                 Instant start = Instant.now();
                 ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
                 List<Future<String>> bulkUpdateTaskList = new ArrayList<>();
-                for (SubmitEvent submitEvent : submitEvents) {
-                    if (!submitEvent.getState().equals(SUBMITTED_STATE)) {
-                        Future<String> submit = executor.submit(new BulkUpdateTask(bulkDetails, submitEvent, userToken,
-                                bulkDetails.getCaseData().getMultipleReference(), "Multiple", ccdClient));
-                        bulkUpdateTaskList.add(submit);
-                    } else {
-                        errors.add("The state of case id: " + submitEvent.getCaseData().getEthosCaseReference() + " has not been accepted");
-                        bulkRequestPayload.setErrors(errors);
-                        bulkRequestPayload.setBulkDetails(bulkDetails);
-                        executor.shutdown();
-                        return bulkRequestPayload;
+                List<String> ethosCaseReferenceNumbers = new ArrayList<>();
+                try {
+                    for (SubmitEvent submitEvent : submitEvents) {
+                        if (!submitEvent.getState().equals(SUBMITTED_STATE)) {
+                            Future<String> submit = executor.submit(new BulkCreationTask(bulkDetails, submitEvent, userToken,
+                                    bulkDetails.getCaseData().getMultipleReference(), "Multiple", ccdClient));
+                            bulkUpdateTaskList.add(submit);
+                        } else {
+                            errors.add("The state of case id: " + submitEvent.getCaseData().getEthosCaseReference() + " has not been accepted");
+                            bulkRequestPayload.setErrors(errors);
+                            bulkRequestPayload.setBulkDetails(bulkDetails);
+                            executor.shutdown();
+                            return bulkRequestPayload;
+                        }
                     }
+                    ethosCaseReferenceNumbers = BulkHelper.waitThreadsToFinish(bulkUpdateTaskList, executor);
+                    log.info("End in time: " + Duration.between(start, Instant.now()).toMillis());
+                } catch (Exception e) {
+                    log.error("Error processing bulk update threads");
+                    errors.add("Cases updated: " + ethosCaseReferenceNumbers);
                 }
-                waitThreadsToFinish(bulkUpdateTaskList, bulkDetails.getCaseId(), executor);
-                log.info("End in time: " + Duration.between(start, Instant.now()).toMillis());
-
             } else {
                 errors.add("These cases are already assigned to a multiple case: " + bulkCasesPayload.getAlreadyTakenIds().toString());
             }
@@ -88,19 +93,6 @@ public class BulkCreationService {
         }
         bulkRequestPayload.setErrors(errors);
         return bulkRequestPayload;
-    }
-
-    public void waitThreadsToFinish(List<Future<String>> bulkUpdateTaskList, String bulkCaseId, ExecutorService executor) {
-        List<String> ethosCaseReferenceNumbers = new ArrayList<>();
-        for (Future<String> future : bulkUpdateTaskList) {
-            try {
-                ethosCaseReferenceNumbers.add(future.get());
-            } catch (InterruptedException | ExecutionException e) {
-                throw new CaseCreationException(MESSAGE + bulkCaseId + e.getMessage());
-            }
-        }
-        log.info("EthosCaseReferenceNumbers: " + ethosCaseReferenceNumbers);
-        executor.shutdown();
     }
 
     public BulkRequestPayload bulkUpdateCaseIdsLogic(BulkRequest bulkRequest, String authToken) {
@@ -122,14 +114,16 @@ public class BulkCreationService {
 
     BulkCasesPayload updateBulkRequest(BulkRequest bulkRequest, String authToken) {
         BulkDetails bulkDetails = bulkRequest.getCaseDetails();
-
+        BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
+        List<String> errors = new ArrayList<>();
+        MultipleTypeListCaseRefNumListType multipleTypeListCaseRefNumListType = new MultipleTypeListCaseRefNumListType();
         List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
         List<String> multipleCaseIds = BulkHelper.getMultipleCaseIds(bulkDetails);
         try {
             List<String> unionLists = Stream.concat(caseIds.stream(), multipleCaseIds.stream()).distinct().collect(Collectors.toList());
             List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken,
                     BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction());
-            BulkCasesPayload bulkCasesPayload = bulkSearchService.filterSubmitEvents(submitEvents, unionLists,
+            bulkCasesPayload = bulkSearchService.filterSubmitEvents(submitEvents, unionLists,
                     bulkDetails.getCaseData().getMultipleReference(), false);
             if (bulkCasesPayload.getAlreadyTakenIds() != null && bulkCasesPayload.getAlreadyTakenIds().isEmpty()) {
                 List<SubmitEvent> allSubmitEventsToUpdate = bulkCasesPayload.getSubmitEvents();
@@ -147,35 +141,37 @@ public class BulkCreationService {
                                 casesToRemove.add(submitEvent);
                             }
                         } else {
-                            List<String> errors = new ArrayList<>();
                             errors.add("The state of case id: " + submitEvent.getCaseData().getEthosCaseReference() + " has not been accepted");
                             bulkCasesPayload.setErrors(errors);
                             return bulkCasesPayload;
                         }
                     }
-                    List<MultipleTypeItem> multipleTypeItemListFinal = new ArrayList<>();
                     // Delete old cases
                     if (bulkDetails.getCaseData().getMultipleCollection() != null) {
-                        multipleTypeItemListFinal = getMultipleTypeListAfterDeletions(bulkDetails.getCaseData().getMultipleCollection(),
+                        multipleTypeListCaseRefNumListType = getMultipleTypeListAfterDeletions(bulkDetails.getCaseData().getMultipleCollection(),
                                 casesToRemove, bulkRequest.getCaseDetails(), authToken);
                     }
                     // Add new cases
-                    bulkCasesPayload.setMultipleTypeItems(getMultipleTypeListAfterAdditions(multipleTypeItemListFinal, casesToAdd,
-                            bulkRequest.getCaseDetails(), authToken));
+                    bulkCasesPayload.setMultipleTypeItems(getMultipleTypeListAfterAdditions(multipleTypeListCaseRefNumListType.getMultipleTypeItemList(),
+                            casesToAdd, bulkRequest.getCaseDetails(), authToken).getMultipleTypeItemList());
                 } else {
                     bulkCasesPayload.setMultipleTypeItems(bulkDetails.getCaseData().getMultipleCollection());
                 }
             }
-            return bulkCasesPayload;
         } catch (Exception ex) {
-            throw new CaseCreationException(MESSAGE + bulkDetails.getCaseId() + ex.getMessage());
+            log.error("Error processing bulk update threads");
+            String cases = multipleTypeListCaseRefNumListType.getCaseRefNumberList() != null ? multipleTypeListCaseRefNumListType.getCaseRefNumberList().toString() : "[]";
+            errors.add("Cases updated: " + cases);
         }
+        bulkCasesPayload.setErrors(errors);
+        return bulkCasesPayload;
     }
 
-    private List<MultipleTypeItem> getMultipleTypeListAfterAdditions(List<MultipleTypeItem> multipleTypeItemListFinal, List<SubmitEvent> casesToAdd,
-                                                                     BulkDetails bulkDetails, String authToken) {
+    private MultipleTypeListCaseRefNumListType getMultipleTypeListAfterAdditions(List<MultipleTypeItem> multipleTypeItemListFinal, List<SubmitEvent> casesToAdd,
+                                                                     BulkDetails bulkDetails, String authToken) throws ExecutionException, InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
         List<Future<String>> bulkUpdateTaskList = new ArrayList<>();
+        MultipleTypeListCaseRefNumListType multipleTypeListCaseRefNumListType = new MultipleTypeListCaseRefNumListType();
         for (SubmitEvent submitEvent : casesToAdd) {
             MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
             multipleTypeItem.setId(String.valueOf(submitEvent.getCaseId()));
@@ -184,19 +180,21 @@ public class BulkCreationService {
             multipleTypeItem.setValue(multipleType);
             multipleTypeItemListFinal.add(multipleTypeItem);
 
-            Future<String> submit = executor.submit(new BulkUpdateTask(bulkDetails, submitEvent, authToken,
+            Future<String> submit = executor.submit(new BulkCreationTask(bulkDetails, submitEvent, authToken,
                     bulkDetails.getCaseData().getMultipleReference(), "Multiple", ccdClient));
             bulkUpdateTaskList.add(submit);
         }
-        waitThreadsToFinish(bulkUpdateTaskList, bulkDetails.getCaseId(), executor);
-        return multipleTypeItemListFinal;
+        multipleTypeListCaseRefNumListType.setMultipleTypeItemList(multipleTypeItemListFinal);
+        multipleTypeListCaseRefNumListType.setCaseRefNumberList(BulkHelper.waitThreadsToFinish(bulkUpdateTaskList, executor));
+        return multipleTypeListCaseRefNumListType;
     }
 
-    private List<MultipleTypeItem> getMultipleTypeListAfterDeletions(List<MultipleTypeItem> multipleTypeItemList, List<SubmitEvent> casesToRemove,
-                                                                     BulkDetails bulkDetails, String authToken) {
+    private MultipleTypeListCaseRefNumListType getMultipleTypeListAfterDeletions(List<MultipleTypeItem> multipleTypeItemList, List<SubmitEvent> casesToRemove,
+                                                                                 BulkDetails bulkDetails, String authToken) throws ExecutionException, InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
         List<Future<String>> bulkUpdateTaskList = new ArrayList<>();
         List<MultipleTypeItem> multipleTypeItemListAux = new ArrayList<>();
+        MultipleTypeListCaseRefNumListType multipleTypeListCaseRefNumListType = new MultipleTypeListCaseRefNumListType();
         for (MultipleTypeItem multipleTypeItem : multipleTypeItemList) {
             boolean found = false;
             SubmitEvent eventToDelete = new SubmitEvent();
@@ -210,12 +208,13 @@ public class BulkCreationService {
             if (!found) {
                 multipleTypeItemListAux.add(multipleTypeItem);
             } else {
-                Future<String> submit = executor.submit(new BulkUpdateTask(bulkDetails, eventToDelete, authToken, " ", "Single", ccdClient));
+                Future<String> submit = executor.submit(new BulkCreationTask(bulkDetails, eventToDelete, authToken, " ", "Single", ccdClient));
                 bulkUpdateTaskList.add(submit);
             }
         }
-        waitThreadsToFinish(bulkUpdateTaskList, bulkDetails.getCaseId(), executor);
-        return multipleTypeItemListAux;
+        multipleTypeListCaseRefNumListType.setMultipleTypeItemList(multipleTypeItemListAux);
+        multipleTypeListCaseRefNumListType.setCaseRefNumberList(BulkHelper.waitThreadsToFinish(bulkUpdateTaskList, executor));
+        return multipleTypeListCaseRefNumListType;
     }
 
     public BulkRequestPayload updateLeadCase(BulkRequestPayload bulkRequestPayload, String authToken) {

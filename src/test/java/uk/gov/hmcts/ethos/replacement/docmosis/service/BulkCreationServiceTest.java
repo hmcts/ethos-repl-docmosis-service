@@ -291,13 +291,14 @@ public class BulkCreationServiceTest {
         assertEquals(expectedResult, bulkCasesPayload.getMultipleTypeItems().toString());
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void updateBulkRequestPendingStateException() throws IOException {
         submitEvent.setState(PENDING_STATE);
         List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
         when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenThrow(feignError());
-        bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        assertEquals("[Cases updated: []]", bulkCasesPayload.getErrors().toString());
     }
 
     @Test
@@ -313,10 +314,11 @@ public class BulkCreationServiceTest {
         assertEquals(expectedResult, bulkCasesPayload.getMultipleTypeItems().toString());
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void updateBulkRequestException() throws IOException {
         when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenThrow(feignError());
-        bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        assertEquals("[Cases updated: []]", bulkCasesPayload.getErrors().toString());
     }
 
     @Test
@@ -324,6 +326,15 @@ public class BulkCreationServiceTest {
         String result = "[These cases are already assigned to a multiple case: [1, 2]]";
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails("Yes", "Single"),
                 bulkCasesPayloadWithErrors, "authToken");
+        assertEquals(result, bulkRequestPayload.getErrors().toString());
+    }
+
+    @Test
+    public void bulkCreationLogicAsyncErrors() throws IOException {
+        String result = "[Cases updated: []]";
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenThrow(feignError());
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails("Yes", "Single"),
+                bulkCasesPayload, "authToken");
         assertEquals(result, bulkRequestPayload.getErrors().toString());
     }
 
