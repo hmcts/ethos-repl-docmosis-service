@@ -36,6 +36,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.PENDING_STATE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -205,12 +206,21 @@ public class BulkCreationServiceTest {
     }
 
     @Test
+    public void caseCreationRequestElasticSearchWithCaseSubmitted() throws IOException {
+        submitEvent.setState(SUBMITTED_STATE);
+        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true);
+        assertEquals("[The state of these cases: [1111] have not been accepted]", bulkCasesPayload.getErrors().toString());
+    }
+
+    @Test
     public void caseCreationRequestElasticSearchWithCaseAlreadyAssigned() throws IOException {
         submitEvent.getCaseData().setMultipleReference("123345");
         List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true);
-        assertEquals(submitEventList, bulkCasesPayload.getSubmitEvents());
+        assertEquals("[These cases are already assigned to a multiple case: [1111]]", bulkCasesPayload.getErrors().toString());
     }
 
     @Test
