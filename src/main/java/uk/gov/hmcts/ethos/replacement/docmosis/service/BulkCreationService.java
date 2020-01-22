@@ -43,7 +43,6 @@ public class BulkCreationService {
     }
 
     public BulkRequestPayload bulkCreationLogic(BulkDetails bulkDetails, BulkCasesPayload bulkCasesPayload, String userToken) {
-        List<String> errors = new ArrayList<>();
         BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
         if (bulkCasesPayload.getErrors().isEmpty()) {
             // 1) Retrieve cases by ethos reference
@@ -57,28 +56,33 @@ public class BulkCreationService {
                 bulkRequestPayload.setBulkDetails(BulkHelper.setMultipleCollection(bulkDetails, bulkDetails.getCaseData().getMultipleCollection()));
             }
             // 3) Create an event to update multiple reference field to all cases
-            Instant start = Instant.now();
-            ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
-            List<Future<String>> bulkUpdateTaskList = new ArrayList<>();
-            List<String> ethosCaseReferenceNumbers = new ArrayList<>();
-            try {
-                for (SubmitEvent submitEvent : submitEvents) {
-                    Future<String> submit = executor.submit(new BulkCreationTask(bulkDetails, submitEvent, userToken,
-                            bulkDetails.getCaseData().getMultipleReference(), "Multiple", ccdClient));
-                    bulkUpdateTaskList.add(submit);
-                }
-                ethosCaseReferenceNumbers = BulkHelper.waitThreadsToFinish(bulkUpdateTaskList, executor);
-                log.info("End in time: " + Duration.between(start, Instant.now()).toMillis());
-            } catch (Exception e) {
-                log.error("Error processing bulk update threads");
-                errors.add("Cases updated: " + ethosCaseReferenceNumbers);
-            }
-        }
-        if (bulkRequestPayload.getBulkDetails() == null) {
+            bulkRequestPayload.setErrors(createCaseEventsToUpdateMultipleRef(submitEvents, bulkDetails, userToken));
+        } else {
+            bulkRequestPayload.setErrors(bulkCasesPayload.getErrors());
             bulkRequestPayload.setBulkDetails(bulkDetails);
         }
-        bulkRequestPayload.setErrors(errors);
         return bulkRequestPayload;
+    }
+
+    private List<String> createCaseEventsToUpdateMultipleRef(List<SubmitEvent> submitEvents, BulkDetails bulkDetails, String userToken) {
+        Instant start = Instant.now();
+        ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
+        List<Future<String>> bulkUpdateTaskList = new ArrayList<>();
+        List<String> ethosCaseReferenceNumbers = new ArrayList<>();
+        List<String> errors = new ArrayList<>();
+        try {
+            for (SubmitEvent submitEvent : submitEvents) {
+                Future<String> submit = executor.submit(new BulkCreationTask(bulkDetails, submitEvent, userToken,
+                        bulkDetails.getCaseData().getMultipleReference(), "Multiple", ccdClient));
+                bulkUpdateTaskList.add(submit);
+            }
+            ethosCaseReferenceNumbers = BulkHelper.waitThreadsToFinish(bulkUpdateTaskList, executor);
+            log.info("End in time: " + Duration.between(start, Instant.now()).toMillis());
+        } catch (Exception e) {
+            log.error("Error processing bulk update threads");
+            errors.add("Cases updated: " + ethosCaseReferenceNumbers);
+        }
+        return errors;
     }
 
     public BulkRequestPayload bulkUpdateCaseIdsLogic(BulkRequest bulkRequest, String authToken) {
