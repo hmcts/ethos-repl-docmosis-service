@@ -257,7 +257,7 @@ public class BulkSearchService {
                     alreadyTakenIds.add(caseData.getEthosCaseReference());
                 }
             }
-            if (!submitEvent.getState().equals(SUBMITTED_STATE)) {
+            if (submitEvent.getState().equals(SUBMITTED_STATE)) {
                 unprocessableState.add(submitEvent.getCaseData().getEthosCaseReference());
             }
         }
