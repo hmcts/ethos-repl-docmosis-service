@@ -22,12 +22,17 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
+import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkUpdateTask;
 
-import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -68,7 +73,9 @@ public class BulkUpdateService {
                 // 3) Create an event to update fields to the searched cases
                 SubmitBulkEventSubmitEventType submitBulkEventSubmitEventType = createEventToUpdateCasesSearched(searchTypeItemList, bulkDetails, userToken,
                         multRefComplexType.getSubmitBulkEvent(), multipleReferenceV2);
-
+                if (submitBulkEventSubmitEventType.getErrors() != null) {
+                    errors.addAll(submitBulkEventSubmitEventType.getErrors());
+                }
                 // 4) Refresh multiple collection for bulk
                 List<MultipleTypeItem> multipleTypeItemListAux = refreshMultipleCollection(bulkDetails, submitBulkEventSubmitEventType);
 
@@ -91,21 +98,31 @@ public class BulkUpdateService {
                                                                             SubmitBulkEvent submitBulkEvent, String multipleReferenceV2) {
         SubmitBulkEventSubmitEventType submitBulkEventSubmitEventType = new SubmitBulkEventSubmitEventType();
         List<SubmitEvent> submitEventList = new ArrayList<>();
-        for (SearchTypeItem searchTypeItem : searchTypeItemList) {
-            submitBulkEventSubmitEventType = caseUpdateFieldsRequest(bulkDetails, searchTypeItem, userToken, submitBulkEvent);
-            if (submitBulkEventSubmitEventType.getSubmitEvent() != null) {
-                log.info("Case updated then add to the submitEventList");
-                submitEventList.add(submitBulkEventSubmitEventType.getSubmitEvent());
-            }
-            if (!isNullOrEmpty(multipleReferenceV2)) {
-                log.info("Removing case from multiples as it has been already moved to a different BULK");
-                bulkDetails.getCaseData().getMultipleCollection()
-                        .removeIf(id -> searchTypeItem.getValue().getEthosCaseReferenceS().equals(id.getValue().getEthosCaseReferenceM()));
-                bulkDetails.getCaseData().setSearchCollection(new ArrayList<>());
-                bulkDetails.getCaseData().setSearchCollectionCount(null);
-            }
-        }
+
+        Instant start = Instant.now();
+        ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
+        List<Future<String>> bulkUpdateTaskList = new ArrayList<>();
+        List<String> ethosCaseReferenceNumbers = new ArrayList<>();
         try {
+            for (SearchTypeItem searchTypeItem : searchTypeItemList) {
+                submitBulkEventSubmitEventType = caseUpdateFieldsRequest(bulkDetails, searchTypeItem, userToken, submitBulkEvent, executor, bulkUpdateTaskList);
+                if (submitBulkEventSubmitEventType.getSubmitEvent() != null) {
+                    log.info("Case updated then add to the submitEventList");
+                    submitEventList.add(submitBulkEventSubmitEventType.getSubmitEvent());
+                }
+                if (!isNullOrEmpty(multipleReferenceV2)) {
+                    log.info("Removing case from multiples as it has been already moved to a different BULK");
+                    bulkDetails.getCaseData().getMultipleCollection()
+                            .removeIf(id -> searchTypeItem.getValue().getEthosCaseReferenceS().equals(id.getValue().getEthosCaseReferenceM()));
+                    bulkDetails.getCaseData().setSearchCollection(new ArrayList<>());
+                    bulkDetails.getCaseData().setSearchCollectionCount(null);
+                }
+            }
+            if (submitBulkEventSubmitEventType.getBulkUpdateTaskList() != null) {
+                ethosCaseReferenceNumbers = BulkHelper.waitThreadsToFinish(submitBulkEventSubmitEventType.getBulkUpdateTaskList(), executor);
+            }
+            log.info("End in time: " + Duration.between(start, Instant.now()).toMillis());
+
             //Add the cases searched and updated to a different bulk if multiple ref changed
             if (!searchTypeItemList.isEmpty() && !isNullOrEmpty(multipleReferenceV2)) {
                 log.info("Adding to the new bulk");
@@ -116,8 +133,9 @@ public class BulkUpdateService {
                 CCDRequest returnedRequest = ccdClient.startBulkEventForCase(userToken, bulkDetails.getCaseTypeId(), bulkDetails.getJurisdiction(), bulkCaseId);
                 ccdClient.submitBulkEventForCase(userToken, submitBulkEvent.getCaseData(), bulkDetails.getCaseTypeId(), bulkDetails.getJurisdiction(), returnedRequest, bulkCaseId);
             }
-        } catch (IOException ex) {
-            throw new CaseCreationException(MESSAGE + bulkDetails.getCaseId() + ex.getMessage());
+        } catch (Exception ex) {
+            log.error("Error processing bulk update threads");
+            submitBulkEventSubmitEventType.setErrors(new ArrayList<>(Collections.singletonList("Cases updated: " + ethosCaseReferenceNumbers)));
         }
         submitBulkEventSubmitEventType.setBulkDetails(bulkDetails);
         submitBulkEventSubmitEventType.setSubmitEventList(submitEventList);
@@ -186,7 +204,8 @@ public class BulkUpdateService {
         }
     }
 
-    SubmitBulkEventSubmitEventType caseUpdateFieldsRequest(BulkDetails bulkDetails, SearchTypeItem searchTypeItem, String authToken, SubmitBulkEvent submitBulkEvent) {
+    SubmitBulkEventSubmitEventType caseUpdateFieldsRequest(BulkDetails bulkDetails, SearchTypeItem searchTypeItem, String authToken,
+                                                           SubmitBulkEvent submitBulkEvent, ExecutorService executor, List<Future<String>> bulkUpdateTaskList) {
         try {
             SubmitBulkEventSubmitEventType submitBulkEventSubmitEventType = new SubmitBulkEventSubmitEventType();
             String caseId = searchTypeItem.getId();
@@ -368,8 +387,12 @@ public class BulkUpdateService {
                 } else {
                     submitEvent.getCaseData().setLeadClaimant("No");
                 }
-                CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
-                ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
+
+                //Send an event update to the single case
+                Future<String> submit = executor.submit(new BulkUpdateTask(bulkDetails, submitEvent, authToken, ccdClient));
+                bulkUpdateTaskList.add(submit);
+                submitBulkEventSubmitEventType.setBulkUpdateTaskList(bulkUpdateTaskList);
+
                 //Update the value to return
                 submitBulkEventSubmitEventType.setSubmitBulkEvent(submitBulkEvent);
                 submitBulkEventSubmitEventType.setSubmitEvent(submitEvent);
