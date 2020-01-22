@@ -140,7 +140,7 @@ public class BulkSearchService {
         return bulkData;
     }
 
-    private String generateMultipleRef(BulkDetails bulkDetails) {
+    public String generateMultipleRef(BulkDetails bulkDetails) {
         if (bulkDetails.getCaseData().getMultipleReference() == null || bulkDetails.getCaseData().getMultipleReference().trim().equals("")) {
             return multipleReferenceService.createReference(bulkDetails.getCaseTypeId(), bulkDetails.getCaseId());
         } else {
@@ -169,7 +169,6 @@ public class BulkSearchService {
 
     public BulkCasesPayload bulkCasesRetrievalRequestElasticSearch(BulkDetails bulkDetails, String authToken, boolean creationFlag) {
         try {
-            bulkDetails.getCaseData().setMultipleReference(generateMultipleRef(bulkDetails));
             List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
             if (caseIds != null && !caseIds.isEmpty()) {
                 return filterSubmitEventsElasticSearch(ccdClient.retrieveCasesElasticSearch(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds),
