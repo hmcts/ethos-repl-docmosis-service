@@ -184,7 +184,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void postDefaultValuesFromET1WithPositionTypeDefined() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenReturn(defaultValues);
-        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
+        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class), (isA(Boolean.class)))).thenReturn(submitEvent.getCaseData());
         when(singleReferenceService.createReference(isA(String.class), isA(String.class))).thenReturn("5100001/2019");
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
@@ -199,7 +199,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void postDefaultValues() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenReturn(defaultValues);
-        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
+        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class), (isA(Boolean.class)))).thenReturn(submitEvent.getCaseData());
         when(singleReferenceService.createReference(isA(String.class), isA(String.class))).thenReturn("5100001/2019");
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent2.toString())
@@ -240,7 +240,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void amendCaseDetails() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenReturn(defaultValues);
-        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
+        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class), (isA(Boolean.class)))).thenReturn(submitEvent.getCaseData());
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)

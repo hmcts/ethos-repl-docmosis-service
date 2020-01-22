@@ -95,8 +95,8 @@ public class BulkHelperTest {
 
     @Test
     public void getMultipleTypeListBySubmitEventListWithStates() {
-        submitEvents.get(0).setState("Submitted");
-        submitEvents.get(1).setState("Pending");
+        submitEvents.get(0).setState(SUBMITTED_STATE);
+        submitEvents.get(1).setState(PENDING_STATE);
         String result = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, multipleReferenceM=1234, " +
                 "clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , respondentRepM= , fileLocM=Manchester, " +
                 "receiptDateM= , positionTypeM= , feeGroupReferenceM= , jurCodesCollectionM=AA, stateM=Submitted, subMultipleM= , subMultipleTitleM= , " +
