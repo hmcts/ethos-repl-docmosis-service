@@ -48,8 +48,6 @@ public class BulkCreationServiceTest {
     @Mock
     private MultipleReferenceService multipleReferenceService;
     @Mock
-    private BulkUpdateService bulkUpdateService;
-    @Mock
     private BulkSearchService bulkSearchService;
     private BulkRequest bulkRequest;
     private BulkRequest bulkRequest1;
@@ -145,7 +143,7 @@ public class BulkCreationServiceTest {
         submitEvent3.setState("Accepted");
         submitEvent3.setCaseData(getCaseData("1122"));
         bulkSearchService = new BulkSearchService(ccdClient, multipleReferenceService);
-        bulkCreationService = new BulkCreationService(ccdClient, bulkUpdateService, bulkSearchService);
+        bulkCreationService = new BulkCreationService(ccdClient, bulkSearchService);
 
         bulkCasesPayload = new BulkCasesPayload();
         bulkCasesPayloadWithErrors = new BulkCasesPayload();
@@ -275,6 +273,35 @@ public class BulkCreationServiceTest {
     }
 
     @Test
+    public void updateBulkRequestPendingState() throws IOException {
+        submitEvent.setState(PENDING_STATE);
+        String expectedResult = "[MultipleTypeItem(id=22222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=281231, leadClaimantM=Yes, " +
+                "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, " +
+                "fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, subMultipleM=null, " +
+                "subMultipleTitleM=null, currentPositionM=null, claimantAddressLine1M=null, claimantPostCodeM=null, respondentAddressLine1M=null, " +
+                "respondentPostCodeM=null, flag1M=null, flag2M=null, EQPM=null, respondentRepOrgM=null, claimantRepOrgM=null)), " +
+                "MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=null, multipleReferenceM=null, clerkRespM= , " +
+                "claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , positionTypeM= , " +
+                "feeGroupReferenceM=111122211, jurCodesCollectionM= , stateM=Pending, subMultipleM= , subMultipleTitleM= , currentPositionM= , " +
+                "claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , " +
+                "respondentRepOrgM= , claimantRepOrgM= ))]";
+        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
+        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        assertEquals(expectedResult, bulkCasesPayload.getMultipleTypeItems().toString());
+    }
+
+    @Test
+    public void updateBulkRequestPendingStateException() throws IOException {
+        submitEvent.setState(PENDING_STATE);
+        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
+        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenThrow(feignError());
+        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        assertEquals("[Cases updated: []]", bulkCasesPayload.getErrors().toString());
+    }
+
+    @Test
     public void updateBulkRequestDeletions() throws IOException {
         List<SubmitEvent> submitEventList = new ArrayList<>(Arrays.asList(submitEvent, submitEvent1));
         String expectedResult = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=null, " +
@@ -287,10 +314,11 @@ public class BulkCreationServiceTest {
         assertEquals(expectedResult, bulkCasesPayload.getMultipleTypeItems().toString());
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void updateBulkRequestException() throws IOException {
         when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenThrow(feignError());
-        bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        assertEquals("[Cases updated: []]", bulkCasesPayload.getErrors().toString());
     }
 
     @Test
@@ -298,6 +326,15 @@ public class BulkCreationServiceTest {
         String result = "[These cases are already assigned to a multiple case: [1, 2]]";
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails("Yes", "Single"),
                 bulkCasesPayloadWithErrors, "authToken");
+        assertEquals(result, bulkRequestPayload.getErrors().toString());
+    }
+
+    @Test
+    public void bulkCreationLogicAsyncErrors() throws IOException {
+        String result = "[Cases updated: []]";
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenThrow(feignError());
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails("Yes", "Single"),
+                bulkCasesPayload, "authToken");
         assertEquals(result, bulkRequestPayload.getErrors().toString());
     }
 

@@ -17,6 +17,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -415,5 +418,15 @@ public class BulkHelper {
         } else {
             return MULTIPLE_SCHEDULE_DETAILED;
         }
+    }
+
+    public static List<String> waitThreadsToFinish(List<Future<String>> bulkUpdateTaskList, ExecutorService executor) throws ExecutionException, InterruptedException {
+        List<String> ethosCaseReferenceNumbers = new ArrayList<>();
+        for (Future<String> future : bulkUpdateTaskList) {
+            ethosCaseReferenceNumbers.add(future.get());
+        }
+        log.info("EthosCaseReferenceNumbers: " + ethosCaseReferenceNumbers);
+        executor.shutdown();
+        return ethosCaseReferenceNumbers;
     }
 }
