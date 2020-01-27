@@ -217,4 +217,8 @@
         <notes><![CDATA[ CVE-2019-17563  ]]></notes>
         <cve>CVE-2019-17563</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-5398  ]]></notes>
+        <cve>CVE-2020-5398</cve>
+    </suppress>
 </suppressions>
