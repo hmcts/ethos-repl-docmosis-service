@@ -76,6 +76,23 @@ public class BulkActionsController {
                 .build());
     }
 
+    @PostMapping(value = "/afterSubmittedBulk", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "display the bulk info.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<BulkCallbackResponse> afterSubmittedBulk(
+            @RequestBody BulkRequest bulkRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("AFTER SUBMITTED BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails());
+        return ResponseEntity.ok(BulkCallbackResponse.builder()
+                .data(bulkRequest.getCaseDetails().getCaseData())
+                .build());
+    }
+
     @PostMapping(value = "/createBulkES", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "creates a bulk case. Retrieves cases by ethos case reference.")
     @ApiResponses(value = {
