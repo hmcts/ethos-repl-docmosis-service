@@ -119,6 +119,7 @@ public class BulkHelper {
         multipleType.setFlag1M(Optional.ofNullable(caseData.getFlag1()).orElse(" "));
         multipleType.setFlag2M(Optional.ofNullable(caseData.getFlag2()).orElse(" "));
         multipleType.setEQPM(Optional.ofNullable(caseData.getEQP()).orElse(" "));
+        multipleType.setLeadClaimantM(Optional.ofNullable(caseData.getLeadClaimant()).orElse("No"));
         return multipleType;
     }
 
