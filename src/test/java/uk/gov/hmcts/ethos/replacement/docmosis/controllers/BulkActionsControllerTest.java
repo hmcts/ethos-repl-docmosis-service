@@ -73,6 +73,7 @@ public class BulkActionsControllerTest {
     private static final String DELETE_SUB_MULTIPLE_URL = "/deleteSubMultiple";
     private static final String GENERATE_BULK_SCHEDULE_URL = "/generateBulkSchedule";
     private static final String PRE_ACCEPT_BULK_URL = "/preAcceptBulk";
+    private static final String AFTER_SUBMITTED_BULK_URL = "/afterSubmittedBulk";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -748,5 +749,16 @@ public class BulkActionsControllerTest {
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void afterSubmittedBulk() throws Exception {
+        mvc.perform(post(AFTER_SUBMITTED_BULK_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
     }
 }
