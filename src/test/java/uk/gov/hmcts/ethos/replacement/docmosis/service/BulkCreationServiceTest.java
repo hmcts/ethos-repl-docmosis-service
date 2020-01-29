@@ -57,7 +57,6 @@ public class BulkCreationServiceTest {
     private SubmitEvent submitEvent2;
     private SubmitEvent submitEvent3;
     private BulkCasesPayload bulkCasesPayload;
-    private BulkCasesPayload bulkCasesPayloadWithErrors;
     private BulkRequestPayload bulkRequestPayload;
 
     private BulkDetails getBulkDetails(String lead, String caseIdSize) {
@@ -147,8 +146,6 @@ public class BulkCreationServiceTest {
         bulkCreationService = new BulkCreationService(ccdClient, bulkSearchService);
 
         bulkCasesPayload = new BulkCasesPayload();
-        bulkCasesPayloadWithErrors = new BulkCasesPayload();
-        bulkCasesPayloadWithErrors.setAlreadyTakenIds(new ArrayList<>(Arrays.asList("1", "2")));
         bulkCasesPayload.setAlreadyTakenIds(new ArrayList<>());
         bulkCasesPayload.setSubmitEvents(new ArrayList<>(Arrays.asList(submitEvent, submitEvent2, submitEvent3)));
         bulkCasesPayload.setErrors(new ArrayList<>());
@@ -241,12 +238,12 @@ public class BulkCreationServiceTest {
                 "fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, " +
                 "subMultipleM=null, subMultipleTitleM=null, currentPositionM=null, claimantAddressLine1M=null, claimantPostCodeM=null, " +
                 "respondentAddressLine1M=null, respondentPostCodeM=null, flag1M=null, flag2M=null, EQPM=null, respondentRepOrgM=null, claimantRepOrgM=null)), " +
-                "MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=null, multipleReferenceM=null, clerkRespM= , " +
+                "MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=No, multipleReferenceM=null, clerkRespM= , " +
                 "claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , positionTypeM= , " +
                 "feeGroupReferenceM=111122211, jurCodesCollectionM= , stateM=Accepted, subMultipleM= , subMultipleTitleM= , currentPositionM= , " +
                 "claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , " +
                 "respondentRepOrgM= , claimantRepOrgM= )), " +
-                "MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1122, leadClaimantM=null, multipleReferenceM=null, " +
+                "MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1122, leadClaimantM=No, multipleReferenceM=null, " +
                 "clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , " +
                 "receiptDateM= , positionTypeM= , feeGroupReferenceM=111122211, jurCodesCollectionM= , stateM=Accepted, subMultipleM= , " +
                 "subMultipleTitleM= , currentPositionM= , claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , respondentPostCodeM= , " +
@@ -264,7 +261,7 @@ public class BulkCreationServiceTest {
                 "fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, subMultipleM=null, " +
                 "subMultipleTitleM=null, currentPositionM=null, claimantAddressLine1M=null, claimantPostCodeM=null, respondentAddressLine1M=null, " +
                 "respondentPostCodeM=null, flag1M=null, flag2M=null, EQPM=null, respondentRepOrgM=null, claimantRepOrgM=null)), " +
-                "MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=null, multipleReferenceM=null, clerkRespM= , " +
+                "MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=No, multipleReferenceM=null, clerkRespM= , " +
                 "claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , positionTypeM= , " +
                 "feeGroupReferenceM=111122211, jurCodesCollectionM= , stateM=Accepted, subMultipleM= , subMultipleTitleM= , currentPositionM= , " +
                 "claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , " +
@@ -291,7 +288,7 @@ public class BulkCreationServiceTest {
                 "fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, subMultipleM=null, " +
                 "subMultipleTitleM=null, currentPositionM=null, claimantAddressLine1M=null, claimantPostCodeM=null, respondentAddressLine1M=null, " +
                 "respondentPostCodeM=null, flag1M=null, flag2M=null, EQPM=null, respondentRepOrgM=null, claimantRepOrgM=null)), " +
-                "MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=null, multipleReferenceM=null, clerkRespM= , " +
+                "MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=No, multipleReferenceM=null, clerkRespM= , " +
                 "claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , positionTypeM= , " +
                 "feeGroupReferenceM=111122211, jurCodesCollectionM= , stateM=Pending, subMultipleM= , subMultipleTitleM= , currentPositionM= , " +
                 "claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , " +
@@ -309,13 +306,13 @@ public class BulkCreationServiceTest {
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenThrow(feignError());
         BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
-        assertEquals("[Cases updated: []]", bulkCasesPayload.getErrors().toString());
+        assertEquals("[]", bulkCasesPayload.getErrors().toString());
     }
 
     @Test
     public void updateBulkRequestDeletions() throws IOException {
         List<SubmitEvent> submitEventList = new ArrayList<>(Arrays.asList(submitEvent, submitEvent1));
-        String expectedResult = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=null, " +
+        String expectedResult = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=No, " +
                 "multipleReferenceM=null, clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , " +
                 "respondentRepM= , fileLocM= , receiptDateM= , positionTypeM= , feeGroupReferenceM=111122211, jurCodesCollectionM= , " +
                 "stateM=Accepted, subMultipleM= , subMultipleTitleM= , currentPositionM= , claimantAddressLine1M= , claimantPostCodeM= , " +
@@ -329,16 +326,7 @@ public class BulkCreationServiceTest {
     public void updateBulkRequestException() throws IOException {
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenThrow(feignError());
         BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
-        assertEquals("[Cases updated: []]", bulkCasesPayload.getErrors().toString());
-    }
-
-    @Test
-    public void bulkCreationLogicAsyncErrors() throws IOException {
-        String result = "[Cases updated: []]";
-        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenThrow(feignError());
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails("Yes", "Single"),
-                bulkCasesPayload, "authToken");
-        assertEquals(result, bulkRequestPayload.getErrors().toString());
+        assertEquals("[]", bulkCasesPayload.getErrors().toString());
     }
 
     @Test
@@ -351,16 +339,16 @@ public class BulkCreationServiceTest {
                 "positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, " +
                 "fileLocationEdinburgh=null, managingOffice=null, subMultipleName=null, subMultipleRef=null, caseIdCollection=[CaseIdTypeItem(id=1111, " +
                 "value=CaseType(ethosCaseReference=1111))], searchCollection=null, midSearchCollection=null, multipleCollection=[MultipleTypeItem(id=0, " +
-                "value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=null, multipleReferenceM= , clerkRespM= , claimantSurnameM=Fernandez, " +
+                "value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=Yes, multipleReferenceM= , clerkRespM= , claimantSurnameM=Fernandez, " +
                 "respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , positionTypeM= , feeGroupReferenceM=111122211, " +
                 "jurCodesCollectionM= , stateM=Accepted, subMultipleM= , subMultipleTitleM= , currentPositionM= , claimantAddressLine1M= , claimantPostCodeM= , " +
                 "respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , respondentRepOrgM= , claimantRepOrgM= )), " +
-                "MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=111111, leadClaimantM=null, multipleReferenceM= , clerkRespM= , " +
+                "MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=111111, leadClaimantM=No, multipleReferenceM= , clerkRespM= , " +
                 "claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , positionTypeM= , " +
                 "feeGroupReferenceM=111122211, jurCodesCollectionM= , stateM=Accepted, subMultipleM= , subMultipleTitleM= , currentPositionM= , " +
                 "claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , " +
                 "respondentRepOrgM= , claimantRepOrgM= )), " +
-                "MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1122, leadClaimantM=null, multipleReferenceM= , clerkRespM= , " +
+                "MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1122, leadClaimantM=No, multipleReferenceM= , clerkRespM= , " +
                 "claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , positionTypeM= , " +
                 "feeGroupReferenceM=111122211, jurCodesCollectionM= , stateM=Accepted, subMultipleM= , subMultipleTitleM= , currentPositionM= , " +
                 "claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , " +

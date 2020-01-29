@@ -8,13 +8,12 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 
 import java.io.IOException;
-import java.util.concurrent.Callable;
 
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.PENDING_STATE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SUBMITTED_STATE;
 
 @Slf4j
-public class BulkCreationTask implements Callable<String> {
+public class BulkCreationTask implements Runnable {
 
     private BulkDetails bulkDetails;
     private SubmitEvent submitEvent;
@@ -33,28 +32,27 @@ public class BulkCreationTask implements Callable<String> {
     }
 
     @Override
-    public String call() throws IOException {
-
+    public void run() {
         log.info("Waiting: " + Thread.currentThread().getName());
-
         String caseId = String.valueOf(submitEvent.getCaseId());
         CCDRequest returnedRequest;
         log.info("Current state ---> " + submitEvent.getState());
-        if (submitEvent.getState().equals(PENDING_STATE)) {
+        try {
+            if (submitEvent.getState().equals(PENDING_STATE)) {
             // Moving to submitted_state
             log.info("Moving from pending to submitted");
-            returnedRequest = ccdClient.startEventForCaseBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
+                returnedRequest = ccdClient.startEventForCaseBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             submitEvent.getCaseData().setState(SUBMITTED_STATE);
-        } else {
-            // Moving to accepted_state
-            log.info("Moving to accepted state");
-            returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
+            } else {
+                // Moving to accepted_state
+                log.info("Moving to accepted state");
+                returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
+            }
+            submitEvent.getCaseData().setMultipleReference(multipleRef);
+            submitEvent.getCaseData().setCaseType(caseType);
+            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
+        } catch (IOException e) {
+            log.error("Error processing bulk update threads");
         }
-        submitEvent.getCaseData().setLeadClaimant("No");
-        submitEvent.getCaseData().setMultipleReference(multipleRef);
-        submitEvent.getCaseData().setCaseType(caseType);
-
-        ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
-        return submitEvent.getCaseData().getEthosCaseReference();
     }
 }
