@@ -150,7 +150,6 @@ public class BulkSearchService {
 
     public BulkCasesPayload bulkCasesRetrievalRequest(BulkDetails bulkDetails, String authToken) {
         try {
-            bulkDetails.getCaseData().setMultipleReference(generateMultipleRef(bulkDetails));
             List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
             if (caseIds != null && !caseIds.isEmpty()) {
                 return filterSubmitEvents(ccdClient.retrieveCases(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
@@ -160,6 +159,7 @@ public class BulkSearchService {
                 bulkCasesPayload.setAlreadyTakenIds(new ArrayList<>());
                 bulkCasesPayload.setSubmitEvents(new ArrayList<>());
                 bulkCasesPayload.setMultipleTypeItems(new ArrayList<>());
+                bulkCasesPayload.setErrors(new ArrayList<>());
                 return bulkCasesPayload;
             }
         } catch (Exception ex) {
@@ -218,6 +218,7 @@ public class BulkSearchService {
         BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
         multipleReference = multipleReference != null ? multipleReference : "";
         List<String> alreadyTakenIds = new ArrayList<>();
+        List<String> unprocessableState = new ArrayList<>();
         List<SubmitEvent> submitEventFiltered = new ArrayList<>();
         for (SubmitEvent submitEvent : submitEvents) {
             CaseData caseData = submitEvent.getCaseData();
@@ -231,11 +232,14 @@ public class BulkSearchService {
                         alreadyTakenIds.add(caseData.getEthosCaseReference());
                     }
                 }
+                if (submitEvent.getState().equals(SUBMITTED_STATE)) {
+                    unprocessableState.add(submitEvent.getCaseData().getEthosCaseReference());
+                }
                 submitEventFiltered.add(submitEvent);
             }
         }
         bulkCasesPayload.setSubmitEvents(submitEventFiltered);
-        bulkCasesPayload.setAlreadyTakenIds(alreadyTakenIds);
+        bulkCasesPayload.setErrors(checkSearchingCasesErrors(alreadyTakenIds, unprocessableState));
         return bulkCasesPayload;
     }
 

@@ -90,6 +90,7 @@ public class BulkActionsController {
         log.info("AFTER SUBMITTED BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails());
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .data(bulkRequest.getCaseDetails().getCaseData())
+                .confirmation_header("Updates are being processed")
                 .build());
     }
 
