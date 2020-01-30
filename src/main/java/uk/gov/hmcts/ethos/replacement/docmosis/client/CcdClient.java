@@ -103,6 +103,7 @@ public class CcdClient {
         //log.info("REQUEST: " + request);
         String url = ccdClientConfig.buildRetrieveCasesUrlElasticSearch(caseTypeId);
         CaseSearchResult caseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, CaseSearchResult.class).getBody();
+        log.info("CaseSearchResult: " + caseSearchResult);
         if (caseSearchResult != null && caseSearchResult.getCases() != null) {
             submitEvents.addAll(caseSearchResult.getCases());
         }

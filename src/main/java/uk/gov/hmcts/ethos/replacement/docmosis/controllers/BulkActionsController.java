@@ -106,7 +106,9 @@ public class BulkActionsController {
 
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkRequest.getCaseDetails(), userToken, true);
 
+        log.info("BULKCASESPAYLOAD: " + bulkCasesPayload);
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken);
+        log.info("bulkRequestPayload: " + bulkRequestPayload);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
