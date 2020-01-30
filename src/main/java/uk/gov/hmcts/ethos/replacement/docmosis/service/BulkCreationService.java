@@ -44,6 +44,7 @@ public class BulkCreationService {
     public BulkRequestPayload bulkCreationLogic(BulkDetails bulkDetails, BulkCasesPayload bulkCasesPayload, String userToken) {
         BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
         if (bulkCasesPayload.getErrors().isEmpty()) {
+            log.info("ERROR EMPTY");
             // 1) Retrieve cases by ethos reference
             List<SubmitEvent> submitEvents = bulkCasesPayload.getSubmitEvents();
             // 2) Create multiple ref number
@@ -61,6 +62,7 @@ public class BulkCreationService {
             // 5) Create an event to update multiple reference field to all cases
             createCaseEventsToUpdateMultipleRef(submitEvents, bulkDetails, userToken);
         } else {
+            log.info("SOME ERRORS");
             bulkRequestPayload.setBulkDetails(bulkDetails);
         }
         bulkRequestPayload.setErrors(bulkCasesPayload.getErrors());
