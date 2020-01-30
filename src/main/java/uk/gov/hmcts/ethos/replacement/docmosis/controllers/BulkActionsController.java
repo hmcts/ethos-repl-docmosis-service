@@ -157,8 +157,6 @@ public class BulkActionsController {
 
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, userToken);
 
-        bulkRequestPayload = bulkCreationService.updateLeadCase(bulkRequestPayload, userToken);
-
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
                 .data(bulkRequestPayload.getBulkDetails().getCaseData())

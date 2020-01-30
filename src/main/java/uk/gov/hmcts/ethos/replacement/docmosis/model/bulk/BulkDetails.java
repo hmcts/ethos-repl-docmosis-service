@@ -2,31 +2,17 @@ package uk.gov.hmcts.ethos.replacement.docmosis.model.bulk;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
-
-import java.time.LocalDateTime;
-import java.util.Map;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.generic.GenericCaseDetails;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
-public class BulkDetails {
+public class BulkDetails extends GenericCaseDetails {
 
-    @JsonProperty("id")
-    private String caseId;
-    @JsonProperty("jurisdiction")
-    private String jurisdiction;
-    @JsonProperty("state")
-    private String state;
     @JsonProperty("case_data")
     private BulkData caseData;
-
-    @JsonProperty("case_type_id")
-    private String caseTypeId;
-    @JsonProperty("created_date")
-    private LocalDateTime createdDate;
-    @JsonProperty("last_modified")
-    private LocalDateTime lastModified;
-    @JsonProperty("data_classification")
-    private Map<String, JsonNode> dataClassification;
 }
