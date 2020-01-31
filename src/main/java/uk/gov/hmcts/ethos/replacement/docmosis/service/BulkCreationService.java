@@ -151,7 +151,8 @@ public class BulkCreationService {
             //Get all caseIds user introduced and current ones
             List<String> unionLists = Stream.concat(caseIds.stream(), multipleCaseIds.stream())
                     .distinct().collect(Collectors.toList());
-
+            log.info("UNIONLISTS:" + unionLists);
+            log.info("multipleCaseIds: " + multipleCaseIds);
             bulkCasesPayload = bulkSearchService.filterSubmitEventsElasticSearch(
                     ccdClient.retrieveCasesElasticSearch(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), unionLists),
                     bulkDetails.getCaseData().getMultipleReference(), false);
@@ -162,27 +163,10 @@ public class BulkCreationService {
 
             if (bulkCasesPayload.getErrors().isEmpty()) {
                 List<SubmitEvent> allSubmitEventsToUpdate = bulkCasesPayload.getSubmitEvents();
+                log.info("ALLSUBMITEVENTSTOUPDATE: " + allSubmitEventsToUpdate);
+                log.info("CASE IDS: " + caseIds);
                 if (!allSubmitEventsToUpdate.isEmpty()) {
-                    List<SubmitEvent> casesToAdd = new ArrayList<>();
-                    List<SubmitEvent> casesToRemove = new ArrayList<>();
-                    for (SubmitEvent submitEvent : allSubmitEventsToUpdate) {
-                        log.info("State SubmitEvent: " + submitEvent.getState());
-                        String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
-                        if (caseIds.contains(ethosCaseRef) && !multipleCaseIds.contains(ethosCaseRef)) {
-                            casesToAdd.add(submitEvent);
-                        } else if (!caseIds.contains(ethosCaseRef) && multipleCaseIds.contains(ethosCaseRef)) {
-                            casesToRemove.add(submitEvent);
-                        }
-                    }
-                    // Delete old cases
-                    List<MultipleTypeItem> multipleTypeItems = new ArrayList<>();
-                    if (bulkDetails.getCaseData().getMultipleCollection() != null) {
-                        multipleTypeItems = getMultipleTypeListAfterDeletions(bulkDetails.getCaseData().getMultipleCollection(),
-                                casesToRemove, bulkRequest.getCaseDetails(), authToken);
-                    }
-                    // Add new cases
-                    bulkCasesPayload.setMultipleTypeItems(getMultipleTypeListAfterAdditions(multipleTypeItems, casesToAdd,
-                            bulkRequest.getCaseDetails(), authToken));
+                    bulkCasesPayload.setMultipleTypeItems(addRemoveNewCases(allSubmitEventsToUpdate, caseIds, multipleCaseIds, bulkDetails, authToken));
                 } else {
                     bulkCasesPayload.setMultipleTypeItems(bulkDetails.getCaseData().getMultipleCollection());
                 }
@@ -194,6 +178,36 @@ public class BulkCreationService {
         }
         bulkCasesPayload.setErrors(errors);
         return bulkCasesPayload;
+    }
+
+    private List<MultipleTypeItem> addRemoveNewCases(List<SubmitEvent> allSubmitEventsToUpdate, List<String> caseIds, List<String> multipleCaseIds,
+                                                     BulkDetails bulkDetails, String authToken) {
+        List<SubmitEvent> casesToAdd = new ArrayList<>();
+        List<SubmitEvent> casesToRemove = new ArrayList<>();
+        boolean lead = false;
+        for (SubmitEvent submitEvent : allSubmitEventsToUpdate) {
+            String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
+            log.info("Checking the lead: ");
+            if (caseIds.contains(ethosCaseRef) && !lead) {
+                submitEvent.getCaseData().setLeadClaimant("Yes");
+                lead = true;
+            } else {
+                submitEvent.getCaseData().setLeadClaimant("No");
+            }
+            log.info("State SubmitEvent: " + submitEvent.getState());
+            if (caseIds.contains(ethosCaseRef) && !multipleCaseIds.contains(ethosCaseRef)) {
+                casesToAdd.add(submitEvent);
+            } else if (!caseIds.contains(ethosCaseRef) && multipleCaseIds.contains(ethosCaseRef)) {
+                casesToRemove.add(submitEvent);
+            }
+        }
+        // Delete old cases
+        List<MultipleTypeItem> multipleTypeItems = new ArrayList<>();
+        if (bulkDetails.getCaseData().getMultipleCollection() != null) {
+            multipleTypeItems = getMultipleTypeListAfterDeletions(bulkDetails.getCaseData().getMultipleCollection(), casesToRemove, bulkDetails, authToken);
+        }
+        // Add new cases
+        return getMultipleTypeListAfterAdditions(multipleTypeItems, casesToAdd, bulkDetails, authToken);
     }
 
     //    BulkCasesPayload updateBulkRequest(BulkRequest bulkRequest, String authToken) {
@@ -253,7 +267,7 @@ public class BulkCreationService {
 //    }
 
     private List<MultipleTypeItem> getMultipleTypeListAfterAdditions(List<MultipleTypeItem> multipleTypeItemListFinal, List<SubmitEvent> casesToAdd,
-                                                                     BulkDetails bulkDetails, String authToken) throws ExecutionException, InterruptedException {
+                                                                     BulkDetails bulkDetails, String authToken) {
         ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
         for (SubmitEvent submitEvent : casesToAdd) {
             MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
@@ -262,7 +276,7 @@ public class BulkCreationService {
             multipleType.setMultipleReferenceM(bulkDetails.getCaseData().getMultipleReference());
             multipleTypeItem.setValue(multipleType);
             multipleTypeItemListFinal.add(multipleTypeItem);
-            submitEvent.getCaseData().setLeadClaimant("No");
+            //submitEvent.getCaseData().setLeadClaimant("No");
             executor.execute(new BulkCreationTask(bulkDetails, submitEvent, authToken,
                     bulkDetails.getCaseData().getMultipleReference(), "Multiple", ccdClient));
         }
@@ -271,7 +285,7 @@ public class BulkCreationService {
     }
 
     private List<MultipleTypeItem> getMultipleTypeListAfterDeletions(List<MultipleTypeItem> multipleTypeItemList, List<SubmitEvent> casesToRemove,
-                                                                                 BulkDetails bulkDetails, String authToken) throws ExecutionException, InterruptedException {
+                                                                                 BulkDetails bulkDetails, String authToken) {
         ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
         List<MultipleTypeItem> multipleTypeItemListAux = new ArrayList<>();
         for (MultipleTypeItem multipleTypeItem : multipleTypeItemList) {
@@ -287,7 +301,7 @@ public class BulkCreationService {
             if (!found) {
                 multipleTypeItemListAux.add(multipleTypeItem);
             } else {
-                eventToDelete.getCaseData().setLeadClaimant("No");
+                //eventToDelete.getCaseData().setLeadClaimant("No");
                 executor.execute(new BulkCreationTask(bulkDetails, eventToDelete, authToken, " ", "Single", ccdClient));
             }
         }
