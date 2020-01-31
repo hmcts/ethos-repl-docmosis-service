@@ -89,6 +89,15 @@ public class Constants {
     public static final String MANCHESTER_LISTING_CASE_TYPE_ID = "Manchester_Listings";
     public static final String SCOTLAND_LISTING_CASE_TYPE_ID = "Scotland_Listings";
     public static final String LEEDS_LISTING_CASE_TYPE_ID = "Leeds_Listings";
+    public static final String BRISTOL_LISTING_CASE_TYPE_ID = "Bristol_Listings";
+    public static final String LONDON_CENTRAL_LISTING_CASE_TYPE_ID = "LondonCentral_Listings";
+    public static final String LONDON_EAST_LISTING_CASE_TYPE_ID = "LondonEast_Listings";
+    public static final String LONDON_SOUTH_LISTING_CASE_TYPE_ID = "LondonSouth_Listings";
+    public static final String MIDLANDS_EAST_LISTING_CASE_TYPE_ID = "MidlandsEast_Listings";
+    public static final String MIDLANDS_WEST_LISTING_CASE_TYPE_ID = "MidlandsWest_Listings";
+    public static final String NEWCASTLE_LISTING_CASE_TYPE_ID = "Newcastle_Listings";
+    public static final String WALES_LISTING_CASE_TYPE_ID = "Wales_Listings";
+    public static final String WATFORD_LISTING_CASE_TYPE_ID = "Watford_Listings";
 
     public static final String IT56_TEMPLATE = "EM-TRB-SCO-ENG-00210";
     public static final String IT57_TEMPLATE = "EM-TRB-SCO-ENG-00211";

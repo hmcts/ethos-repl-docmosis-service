@@ -27,6 +27,24 @@ public class ListingHelper {
                 return MANCHESTER_USERS_CASE_TYPE_ID;
             case LEEDS_LISTING_CASE_TYPE_ID:
                 return LEEDS_USERS_CASE_TYPE_ID;
+            case BRISTOL_LISTING_CASE_TYPE_ID:
+                return BRISTOL_USERS_CASE_TYPE_ID;
+            case LONDON_CENTRAL_LISTING_CASE_TYPE_ID:
+                return LONDON_CENTRAL_USERS_CASE_TYPE_ID;
+            case LONDON_EAST_LISTING_CASE_TYPE_ID:
+                return LONDON_EAST_USERS_CASE_TYPE_ID;
+            case LONDON_SOUTH_LISTING_CASE_TYPE_ID:
+                return LONDON_SOUTH_USERS_CASE_TYPE_ID;
+            case MIDLANDS_EAST_LISTING_CASE_TYPE_ID:
+                return MIDLANDS_EAST_USERS_CASE_TYPE_ID;
+            case MIDLANDS_WEST_LISTING_CASE_TYPE_ID:
+                return MIDLANDS_WEST_USERS_CASE_TYPE_ID;
+            case NEWCASTLE_LISTING_CASE_TYPE_ID:
+                return NEWCASTLE_USERS_CASE_TYPE_ID;
+            case WALES_LISTING_CASE_TYPE_ID:
+                return WALES_USERS_CASE_TYPE_ID;
+            case WATFORD_LISTING_CASE_TYPE_ID:
+                return WATFORD_USERS_CASE_TYPE_ID;
             default:
                 return SCOTLAND_USERS_CASE_TYPE_ID;
         }
@@ -141,10 +159,10 @@ public class ListingHelper {
 
     private static StringBuilder getLogo(String caseType) {
         StringBuilder sb = new StringBuilder();
-        if (caseType.equals(MANCHESTER_LISTING_CASE_TYPE_ID)) {
-            sb.append("\"listing_logo\":\"").append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
-        } else {
+        if (caseType.equals(SCOTLAND_LISTING_CASE_TYPE_ID)) {
             sb.append("\"listing_logo\":\"").append("[userImage:").append("schmcts.png]").append(NEW_LINE);
+        } else {
+            sb.append("\"listing_logo\":\"").append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
         }
         return sb;
     }
