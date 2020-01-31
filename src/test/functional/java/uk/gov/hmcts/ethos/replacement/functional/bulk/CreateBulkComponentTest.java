@@ -6,7 +6,6 @@ import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
-import org.json.JSONException;
 import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
