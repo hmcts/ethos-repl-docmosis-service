@@ -328,7 +328,16 @@ public class BulkSearchServiceTest {
         List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
         bulkDetails.setCaseData(getSimpleBulkData(bulkDetails.getCaseData()));
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkDetails, "authToken", false);
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkDetails, "authToken", false, true);
+        assertEquals(submitEventList, bulkCasesPayload.getSubmitEvents());
+    }
+
+    @Test
+    public void caseUpdateRequestElasticSearchNoFiltered() throws IOException {
+        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
+        bulkDetails.setCaseData(getSimpleBulkData(bulkDetails.getCaseData()));
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkDetails, "authToken", false, false);
         assertEquals(submitEventList, bulkCasesPayload.getSubmitEvents());
     }
 }
