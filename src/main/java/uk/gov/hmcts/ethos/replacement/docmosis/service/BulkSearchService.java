@@ -171,12 +171,9 @@ public class BulkSearchService {
         try {
             List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
             if (caseIds != null && !caseIds.isEmpty()) {
-                log.info("CaseIDS: " + caseIds);
-                log.info("MultipleREF: " + bulkDetails.getCaseData().getMultipleReference());
                 return filterSubmitEventsElasticSearch(ccdClient.retrieveCasesElasticSearch(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds),
                         bulkDetails.getCaseData().getMultipleReference(), creationFlag);
             } else {
-                log.info("EMPTY CASEIDS");
                 BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
                 bulkCasesPayload.setAlreadyTakenIds(new ArrayList<>());
                 bulkCasesPayload.setSubmitEvents(new ArrayList<>());
@@ -185,7 +182,6 @@ public class BulkSearchService {
                 return bulkCasesPayload;
             }
         } catch (Exception ex) {
-            log.info("Exception ES");
             throw new CaseCreationException(MESSAGE + bulkDetails.getCaseId() + ex.getMessage());
         }
     }
@@ -270,7 +266,6 @@ public class BulkSearchService {
         }
         bulkCasesPayload.setSubmitEvents(submitEvents);
         bulkCasesPayload.setErrors(checkSearchingCasesErrors(alreadyTakenIds, unprocessableState));
-        log.info("END OF FILTER");
         return bulkCasesPayload;
     }
 
