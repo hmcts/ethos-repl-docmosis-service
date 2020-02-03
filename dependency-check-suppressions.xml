@@ -221,4 +221,12 @@
         <notes><![CDATA[ CVE-2020-5398  ]]></notes>
         <cve>CVE-2020-5398</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-20445  ]]></notes>
+        <cve>CVE-2019-20445</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-20444  ]]></notes>
+        <cve>CVE-2019-20444</cve>
+    </suppress>
 </suppressions>
