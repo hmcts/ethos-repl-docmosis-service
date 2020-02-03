@@ -258,6 +258,7 @@ public class BulkSearchService {
         multipleReference = multipleReference != null ? multipleReference : "";
         List<String> alreadyTakenIds = new ArrayList<>();
         List<String> unprocessableState = new ArrayList<>();
+        log.info("SubmitEvents from ES: " + submitEvents);
         for (SubmitEvent submitEvent : submitEvents) {
             CaseData caseData = submitEvent.getCaseData();
             if (caseData.getMultipleReference() != null && !caseData.getMultipleReference().trim().isEmpty()) {
