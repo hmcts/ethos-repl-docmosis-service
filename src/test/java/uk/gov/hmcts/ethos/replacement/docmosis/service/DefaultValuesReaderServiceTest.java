@@ -134,8 +134,8 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceTown("Leeds")
                 .tribunalCorrespondencePostCode("LS1 5ES")
                 .tribunalCorrespondenceTelephone("0113 245 9741")
-                .tribunalCorrespondenceFax("0113 242 8843")
-                .tribunalCorrespondenceEmail("leedset@hmcts.gsi.gov.uk")
+                .tribunalCorrespondenceFax("01264 785136")
+                .tribunalCorrespondenceEmail("LeedsET@justice.gov.uk")
                 .build();
         postDefaultValuesLondonCentral = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
