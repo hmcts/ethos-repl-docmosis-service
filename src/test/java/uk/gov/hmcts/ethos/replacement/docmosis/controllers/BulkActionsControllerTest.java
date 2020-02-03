@@ -135,8 +135,8 @@ public class BulkActionsControllerTest {
 
     @Test
     public void createBulkCase() throws Exception {
-        when(bulkSearchService.bulkCasesRetrievalRequest(isA(BulkDetails.class), eq(AUTH_TOKEN))).thenReturn(bulkCasesPayload);
-        when(bulkCreationService.bulkCreationLogic(isA(BulkDetails.class), isA(BulkCasesPayload.class), eq(AUTH_TOKEN))).
+        when(bulkSearchService.bulkCasesRetrievalRequest(isA(BulkDetails.class), eq(AUTH_TOKEN), isA(Boolean.class))).thenReturn(bulkCasesPayload);
+        when(bulkCreationService.bulkCreationLogic(isA(BulkDetails.class), isA(BulkCasesPayload.class), eq(AUTH_TOKEN), isA(Boolean.class))).
                 thenReturn(bulkRequestPayload);
         when(bulkCreationService.updateLeadCase(isA(BulkRequestPayload.class), eq(AUTH_TOKEN))).thenReturn(bulkRequestPayload);
         mvc.perform(post(CREATION_BULK_URL)
@@ -151,8 +151,8 @@ public class BulkActionsControllerTest {
 
     @Test
     public void createBulkCaseES() throws Exception {
-        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), eq(AUTH_TOKEN), isA(Boolean.class))).thenReturn(bulkCasesPayload);
-        when(bulkCreationService.bulkCreationLogic(isA(BulkDetails.class), isA(BulkCasesPayload.class), eq(AUTH_TOKEN))).
+        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), eq(AUTH_TOKEN), isA(Boolean.class), isA(Boolean.class))).thenReturn(bulkCasesPayload);
+        when(bulkCreationService.bulkCreationLogic(isA(BulkDetails.class), isA(BulkCasesPayload.class), eq(AUTH_TOKEN), isA(Boolean.class))).
                 thenReturn(bulkRequestPayload);
         when(bulkCreationService.updateLeadCase(isA(BulkRequestPayload.class), eq(AUTH_TOKEN))).thenReturn(bulkRequestPayload);
         mvc.perform(post(CREATION_BULK_ES_URL)
@@ -185,7 +185,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void createBulkCaseError500() throws Exception {
-        when(bulkSearchService.bulkCasesRetrievalRequest(isA(BulkDetails.class), eq(AUTH_TOKEN))).thenThrow(feignError());
+        when(bulkSearchService.bulkCasesRetrievalRequest(isA(BulkDetails.class), eq(AUTH_TOKEN), isA(Boolean.class))).thenThrow(feignError());
         mvc.perform(post(CREATION_BULK_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -195,7 +195,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void createBulkCaseESError500() throws Exception {
-        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), eq(AUTH_TOKEN), isA(Boolean.class))).thenThrow(feignError());
+        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), eq(AUTH_TOKEN), isA(Boolean.class), isA(Boolean.class))).thenThrow(feignError());
         mvc.perform(post(CREATION_BULK_ES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)

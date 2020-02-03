@@ -158,14 +158,14 @@ public class BulkCreationServiceTest {
     @Test(expected = Exception.class)
     public void caseCreationRequestException() throws IOException {
         when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenThrow(feignError());
-        bulkSearchService.bulkCasesRetrievalRequest(getBulkDetails("Yes", "Single"), "authToken");
+        bulkSearchService.bulkCasesRetrievalRequest(getBulkDetails("Yes", "Single"), "authToken", true);
     }
 
     @Test
     public void caseCreationRequest() throws IOException {
         List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
         when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(getBulkDetails("Yes", "Single"), "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(getBulkDetails("Yes", "Single"), "authToken", true);
         assertEquals(submitEventList, bulkCasesPayload.getSubmitEvents());
     }
 
@@ -174,7 +174,7 @@ public class BulkCreationServiceTest {
         submitEvent.getCaseData().setMultipleReference("123345");
         List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
         when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(getBulkDetails("Yes", "Single"), "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(getBulkDetails("Yes", "Single"), "authToken", true);
         assertEquals(submitEventList, bulkCasesPayload.getSubmitEvents());
     }
 
@@ -184,21 +184,21 @@ public class BulkCreationServiceTest {
         when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
         BulkDetails bulkDetails = getBulkDetails("Yes", "Single");
         bulkDetails.getCaseData().setCaseIdCollection(null);
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkDetails, "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkDetails, "authToken", true);
         assertEquals("[]", bulkCasesPayload.getSubmitEvents().toString());
     }
 
     @Test(expected = Exception.class)
     public void caseCreationRequestExceptionElasticSearch() throws IOException {
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenThrow(feignError());
-        bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true);
+        bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true, true);
     }
 
     @Test
     public void caseCreationRequestElasticSearch() throws IOException {
         List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true);
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true, true);
         assertEquals(submitEventList, bulkCasesPayload.getSubmitEvents());
     }
 
@@ -207,7 +207,7 @@ public class BulkCreationServiceTest {
         submitEvent.setState(SUBMITTED_STATE);
         List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true);
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true, true);
         assertEquals("[The state of these cases: [1111] have not been accepted]", bulkCasesPayload.getErrors().toString());
     }
 
@@ -216,7 +216,7 @@ public class BulkCreationServiceTest {
         submitEvent.getCaseData().setMultipleReference("123345");
         List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true);
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true, true);
         assertEquals("[These cases are already assigned to a multiple case: [1111]]", bulkCasesPayload.getErrors().toString());
     }
 
@@ -226,7 +226,7 @@ public class BulkCreationServiceTest {
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
         BulkDetails bulkDetails = getBulkDetails("Yes", "Single");
         bulkDetails.getCaseData().setCaseIdCollection(null);
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkDetails, "authToken", true);
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkDetails, "authToken", true, true);
         assertEquals("[]", bulkCasesPayload.getSubmitEvents().toString());
     }
 
@@ -356,8 +356,23 @@ public class BulkCreationServiceTest {
                 "flag2=null, EQP=null, submissionRef=null, claimantOrg=null, respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, " +
                 "jurCodesDynamicList=null, outcomeUpdate=null))";
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails("Yes", "Single"),
-                bulkCasesPayload, "authToken");
+                bulkCasesPayload, "authToken", false);
         assertEquals(result, bulkRequestPayload.getBulkDetails().toString());
+    }
+
+    @Test
+    public void bulkCreationLogicAfterSubmittedCallback() {
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails("Yes", "Single"),
+                bulkCasesPayload, "authToken", true);
+        assertNull(bulkRequestPayload.getBulkDetails().getCaseData().getMultipleReference());
+    }
+
+    @Test
+    public void bulkCreationLogicWithErrors() {
+        bulkCasesPayload.setErrors(new ArrayList<>(Collections.singleton("Errors")));
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails("Yes", "Single"),
+                bulkCasesPayload, "authToken", true);
+        assertEquals("[Errors]", bulkRequestPayload.getErrors().toString());
     }
 
     @Test
