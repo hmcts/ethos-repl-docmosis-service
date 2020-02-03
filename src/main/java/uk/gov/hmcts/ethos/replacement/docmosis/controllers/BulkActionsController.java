@@ -64,30 +64,13 @@ public class BulkActionsController {
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("CREATE BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken);
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken, true);
 
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken);
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, false);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
                 .data(bulkRequestPayload.getBulkDetails().getCaseData())
-                .build());
-    }
-
-    @PostMapping(value = "/afterSubmittedBulk", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "display the bulk info.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<BulkCallbackResponse> afterSubmittedBulk(
-            @RequestBody BulkRequest bulkRequest) {
-        log.info("AFTER SUBMITTED BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails());
-        return ResponseEntity.ok(BulkCallbackResponse.builder()
-                .data(bulkRequest.getCaseDetails().getCaseData())
-                .confirmation_header("Updates are being processed...")
                 .build());
     }
 
@@ -104,15 +87,39 @@ public class BulkActionsController {
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("CREATE BULKES ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkRequest.getCaseDetails(), userToken, true);
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
+                bulkRequest.getCaseDetails(), userToken, true, true);
 
-        log.info("BULKCASESPAYLOAD: " + bulkCasesPayload);
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken);
-        log.info("bulkRequestPayload: " + bulkRequestPayload);
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, false);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
                 .data(bulkRequestPayload.getBulkDetails().getCaseData())
+                .build());
+    }
+
+    @PostMapping(value = "/afterSubmittedBulk", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "display the bulk info.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<BulkCallbackResponse> afterSubmittedBulk(
+            @RequestBody BulkRequest bulkRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("AFTER SUBMITTED BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
+
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
+                bulkRequest.getCaseDetails(), userToken, true, false);
+        //BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken, false);
+
+        bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, true);
+
+        return ResponseEntity.ok(BulkCallbackResponse.builder()
+                .data(bulkRequest.getCaseDetails().getCaseData())
+                .confirmation_header("Updates are being processed...")
                 .build());
     }
 
@@ -135,7 +142,6 @@ public class BulkActionsController {
 
         bulkRequestPayload = bulkUpdateService.clearUpFields(bulkRequestPayload);
 
-        log.info("BulkRequestPayload: " + bulkRequestPayload.getBulkDetails());
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
                 .data(bulkRequestPayload.getBulkDetails().getCaseData())
