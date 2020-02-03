@@ -153,6 +153,9 @@ public class BulkCreationService {
             //Get all caseIds user introduced and current ones
             List<String> unionLists = Stream.concat(caseIds.stream(), multipleCaseIds.stream())
                     .distinct().collect(Collectors.toList());
+            log.info("UNION LIST:" + unionLists);
+            log.info("multipleCaseIds: " + multipleCaseIds);
+            log.info("caseIds: " + caseIds);
             bulkCasesPayload = bulkSearchService.filterSubmitEventsElasticSearch(
                     ccdClient.retrieveCasesElasticSearch(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), unionLists),
                     bulkDetails.getCaseData().getMultipleReference(), false);
@@ -160,7 +163,7 @@ public class BulkCreationService {
 //                    BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction());
 //            bulkCasesPayload = bulkSearchService.filterSubmitEvents(submitEvents, unionLists,
 //                    bulkDetails.getCaseData().getMultipleReference(), false);
-
+            log.info("SugmittedEvents: " + bulkCasesPayload.getSubmitEvents());
             if (bulkCasesPayload.getErrors().isEmpty()) {
                 List<SubmitEvent> allSubmitEventsToUpdate = bulkCasesPayload.getSubmitEvents();
                 if (!allSubmitEventsToUpdate.isEmpty()) {
@@ -183,10 +186,13 @@ public class BulkCreationService {
         List<SubmitEvent> casesToAdd = new ArrayList<>();
         List<SubmitEvent> casesToRemove = new ArrayList<>();
         boolean lead = false;
+        String leadId = "";
         for (SubmitEvent submitEvent : allSubmitEventsToUpdate) {
             String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
             if (caseIds.contains(ethosCaseRef) && !lead) {
                 submitEvent.getCaseData().setLeadClaimant("Yes");
+                leadId = submitEvent.getCaseData().getEthosCaseReference();
+                log.info("LeadId: " + leadId);
                 lead = true;
             } else {
                 submitEvent.getCaseData().setLeadClaimant("No");
@@ -201,7 +207,7 @@ public class BulkCreationService {
         // Delete old cases
         List<MultipleTypeItem> multipleTypeItems = new ArrayList<>();
         if (bulkDetails.getCaseData().getMultipleCollection() != null) {
-            multipleTypeItems = getMultipleTypeListAfterDeletions(bulkDetails.getCaseData().getMultipleCollection(), casesToRemove, bulkDetails, authToken);
+            multipleTypeItems = getMultipleTypeListAfterDeletions(bulkDetails.getCaseData().getMultipleCollection(), casesToRemove, bulkDetails, authToken, leadId);
         }
         // Add new cases
         return getMultipleTypeListAfterAdditions(multipleTypeItems, casesToAdd, bulkDetails, authToken);
@@ -281,7 +287,7 @@ public class BulkCreationService {
     }
 
     private List<MultipleTypeItem> getMultipleTypeListAfterDeletions(List<MultipleTypeItem> multipleTypeItemList, List<SubmitEvent> casesToRemove,
-                                                                                 BulkDetails bulkDetails, String authToken) {
+                                                                                 BulkDetails bulkDetails, String authToken, String leadId) {
         ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
         List<MultipleTypeItem> multipleTypeItemListAux = new ArrayList<>();
         for (MultipleTypeItem multipleTypeItem : multipleTypeItemList) {
@@ -295,6 +301,9 @@ public class BulkCreationService {
                 }
             }
             if (!found) {
+                if (multipleTypeItem.getValue().getEthosCaseReferenceM().equals(leadId)) {
+                    multipleTypeItem.getValue().setLeadClaimantM("Yes");
+                }
                 multipleTypeItemListAux.add(multipleTypeItem);
             } else {
                 executor.execute(new BulkCreationTask(bulkDetails, eventToDelete, authToken, " ", "Single", ccdClient));
