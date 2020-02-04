@@ -255,8 +255,8 @@ public class BulkCreationServiceTest {
 
     @Test
     public void updateBulkRequest() throws IOException {
-        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
-        String expectedResult = "[MultipleTypeItem(id=22222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=281231, leadClaimantM=Yes, " +
+        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
+        String expectedResult = "[MultipleTypeItem(id=22222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=281231, leadClaimantM=No, " +
                 "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, " +
                 "fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, subMultipleM=null, " +
                 "subMultipleTitleM=null, currentPositionM=null, claimantAddressLine1M=null, claimantPostCodeM=null, respondentAddressLine1M=null, " +
@@ -274,7 +274,7 @@ public class BulkCreationServiceTest {
     @Test
     public void updateBulkRequestUpdateFlagNoFreeSingleCases() throws IOException {
         submitEvent.getCaseData().setMultipleReference("111111111");
-        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
         BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
         assertNull(bulkCasesPayload.getMultipleTypeItems());
@@ -283,7 +283,7 @@ public class BulkCreationServiceTest {
     @Test
     public void updateBulkRequestPendingState() throws IOException {
         submitEvent.setState(PENDING_STATE);
-        String expectedResult = "[MultipleTypeItem(id=22222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=281231, leadClaimantM=Yes, " +
+        String expectedResult = "[MultipleTypeItem(id=22222, value=MultipleType(caseIDM=null, ethosCaseReferenceM=281231, leadClaimantM=No, " +
                 "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, " +
                 "fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=null, subMultipleM=null, " +
                 "subMultipleTitleM=null, currentPositionM=null, claimantAddressLine1M=null, claimantPostCodeM=null, respondentAddressLine1M=null, " +
@@ -293,7 +293,7 @@ public class BulkCreationServiceTest {
                 "feeGroupReferenceM=111122211, jurCodesCollectionM= , stateM=Pending, subMultipleM= , subMultipleTitleM= , currentPositionM= , " +
                 "claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , " +
                 "respondentRepOrgM= , claimantRepOrgM= ))]";
-        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
         BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
         assertEquals(expectedResult, bulkCasesPayload.getMultipleTypeItems().toString());
@@ -302,7 +302,7 @@ public class BulkCreationServiceTest {
     @Test
     public void updateBulkRequestPendingStateException() throws IOException {
         submitEvent.setState(PENDING_STATE);
-        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenThrow(feignError());
         BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
