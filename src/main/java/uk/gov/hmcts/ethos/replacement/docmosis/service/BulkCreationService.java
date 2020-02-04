@@ -46,9 +46,11 @@ public class BulkCreationService {
         if (bulkCasesPayload.getErrors().isEmpty()) {
             // 1) Retrieve cases by ethos reference
             List<SubmitEvent> submitEvents = bulkCasesPayload.getSubmitEvents();
+            log.info("SubmitEvents: " + submitEvents);
             // 2) Add lead case
             if (!submitEvents.isEmpty()) {
                 submitEvents.get(0).getCaseData().setLeadClaimant("Yes");
+                log.info("SubmitEvent Lead: " + submitEvents.get(0).getCaseData().getEthosCaseReference());
             }
             if (!afterSubmittedCallback) {
                 // 3) Create multiple ref number
@@ -303,6 +305,7 @@ public class BulkCreationService {
                 }
             }
             if (!found) {
+                log.info("LeadId: " + leadId);
                 if (multipleTypeItem.getValue().getEthosCaseReferenceM().equals(leadId)) {
                     multipleTypeItem.getValue().setLeadClaimantM("Yes");
                 }
