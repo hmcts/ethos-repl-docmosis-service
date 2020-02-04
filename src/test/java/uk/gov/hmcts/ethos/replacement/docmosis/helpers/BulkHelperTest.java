@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
@@ -336,4 +337,33 @@ public class BulkHelperTest {
                 "}\n";
         assertEquals(expected, BulkHelper.buildScheduleDocumentContent(bulkDetailsScheduleDetailed.getCaseData(), "").toString());
     }
+
+    private SubmitEvent createSubmitEvent(String ethosCaseReference) {
+        SubmitEvent submitEvent = new SubmitEvent();
+        CaseData caseData = new CaseData();
+        caseData.setEthosCaseReference(ethosCaseReference);
+        submitEvent.setCaseData(caseData);
+        return submitEvent;
+    }
+
+    @Test
+    public void calculateLeadCase() {
+        List<SubmitEvent> submitEventList = new ArrayList<>(Arrays.asList(createSubmitEvent("1"), createSubmitEvent("2"),
+                createSubmitEvent("3"), createSubmitEvent("4")));
+        List<String> caseIds = new ArrayList<>(Arrays.asList("5", "2", "3"));
+        List<SubmitEvent> submitEventListResult = BulkHelper.calculateLeadCase(submitEventList, caseIds);
+        assertEquals("[2, 1, 3, 4]", submitEventListResult.stream()
+                .map(submitEvent1 -> submitEvent1.getCaseData().getEthosCaseReference()).collect(Collectors.toList()).toString());
+    }
+
+    @Test
+    public void calculateLeadCase2() {
+        List<SubmitEvent> submitEventList = new ArrayList<>(Arrays.asList(createSubmitEvent("1"), createSubmitEvent("2"),
+                createSubmitEvent("3"), createSubmitEvent("5")));
+        List<String> caseIds = new ArrayList<>(Arrays.asList("5", "2", "3"));
+        List<SubmitEvent> submitEventListResult = BulkHelper.calculateLeadCase(submitEventList, caseIds);
+        assertEquals("[5, 1, 2, 3]", submitEventListResult.stream()
+                .map(submitEvent1 -> submitEvent1.getCaseData().getEthosCaseReference()).collect(Collectors.toList()).toString());
+    }
+
 }

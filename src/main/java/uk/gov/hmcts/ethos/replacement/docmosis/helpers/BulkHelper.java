@@ -430,4 +430,21 @@ public class BulkHelper {
         executor.shutdown();
         return ethosCaseReferenceNumbers;
     }
+
+    public static List<SubmitEvent> calculateLeadCase(List<SubmitEvent> submitEvents, List<String> caseIds) {
+        for (String caseId : caseIds) {
+            int index = submitEvents.stream()
+                    .map(submitEvent -> submitEvent.getCaseData().getEthosCaseReference())
+                    .collect(Collectors.toList())
+                    .indexOf(caseId);
+            if (index != -1) {
+                SubmitEvent submitEvent = submitEvents.get(index);
+                submitEvent.getCaseData().setLeadClaimant("Yes");
+                submitEvents.remove(index);
+                submitEvents.add(0, submitEvent);
+                return submitEvents;
+            }
+        }
+        return submitEvents;
+    }
 }
