@@ -163,7 +163,7 @@ public class BulkCreationServiceTest {
 
     @Test
     public void caseCreationRequest() throws IOException {
-        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(getBulkDetails("Yes", "Single"), "authToken", true);
         assertEquals(submitEventList, bulkCasesPayload.getSubmitEvents());
@@ -172,7 +172,7 @@ public class BulkCreationServiceTest {
     @Test
     public void caseCreationRequestWithCaseAlreadyAssigned() throws IOException {
         submitEvent.getCaseData().setMultipleReference("123345");
-        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(getBulkDetails("Yes", "Single"), "authToken", true);
         assertEquals(submitEventList, bulkCasesPayload.getSubmitEvents());
@@ -196,7 +196,7 @@ public class BulkCreationServiceTest {
 
     @Test
     public void caseCreationRequestElasticSearch() throws IOException {
-        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true, true);
         assertEquals(submitEventList, bulkCasesPayload.getSubmitEvents());
@@ -205,7 +205,7 @@ public class BulkCreationServiceTest {
     @Test
     public void caseCreationRequestElasticSearchWithCaseSubmitted() throws IOException {
         submitEvent.setState(SUBMITTED_STATE);
-        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true, true);
         assertEquals("[The state of these cases: [1111] have not been accepted]", bulkCasesPayload.getErrors().toString());
@@ -214,7 +214,7 @@ public class BulkCreationServiceTest {
     @Test
     public void caseCreationRequestElasticSearchWithCaseAlreadyAssigned() throws IOException {
         submitEvent.getCaseData().setMultipleReference("123345");
-        List<SubmitEvent> submitEventList = Collections.singletonList(submitEvent);
+        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(getBulkDetails("Yes", "Single"), "authToken", true, true);
         assertEquals("[These cases are already assigned to a multiple case: [1111]]", bulkCasesPayload.getErrors().toString());
@@ -339,7 +339,7 @@ public class BulkCreationServiceTest {
                 "respondentSurnameV2=null, multipleReferenceV2=null, clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, " +
                 "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, managingOffice=null, subMultipleName=null, " +
                 "subMultipleRef=null, caseIdCollection=[CaseIdTypeItem(id=1111, value=CaseType(ethosCaseReference=1111))], searchCollection=null, " +
-                "midSearchCollection=null, multipleCollection=[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=Yes, " +
+                "midSearchCollection=null, multipleCollection=[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=No, " +
                 "multipleReferenceM= , clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , " +
                 "receiptDateM= , positionTypeM= , feeGroupReferenceM=111122211, jurCodesCollectionM= , stateM=Accepted, subMultipleM= , subMultipleTitleM= , " +
                 "currentPositionM= , claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , " +
