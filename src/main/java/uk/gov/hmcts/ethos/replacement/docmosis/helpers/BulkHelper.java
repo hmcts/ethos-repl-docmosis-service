@@ -217,6 +217,15 @@ public class BulkHelper {
         return multipleType;
     }
 
+    public static MultipleTypeItem getMultipleTypeItemFromSubmitEvent(SubmitEvent submitEvent, String multipleReference) {
+        MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
+        multipleTypeItem.setId(String.valueOf(submitEvent.getCaseId()));
+        MultipleType multipleType = BulkHelper.getMultipleTypeFromSubmitEvent(submitEvent);
+        multipleType.setMultipleReferenceM(multipleReference);
+        multipleTypeItem.setValue(multipleType);
+        return multipleTypeItem;
+    }
+
     static String getJurCodesCollection(List<JurCodesTypeItem> jurCodesTypeItems) {
         if (jurCodesTypeItems != null) {
             return jurCodesTypeItems.stream()
