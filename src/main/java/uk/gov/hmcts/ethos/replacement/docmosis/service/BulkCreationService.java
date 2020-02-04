@@ -166,7 +166,8 @@ public class BulkCreationService {
             if (bulkCasesPayload.getErrors().isEmpty()) {
                 List<SubmitEvent> allSubmitEventsToUpdate = bulkCasesPayload.getSubmitEvents();
                 if (!allSubmitEventsToUpdate.isEmpty()) {
-                    bulkCasesPayload.setMultipleTypeItems(addRemoveNewCases(allSubmitEventsToUpdate, caseIds, multipleCaseIds, bulkDetails, authToken));
+                    bulkCasesPayload.setMultipleTypeItems(addRemoveNewCases(BulkHelper.calculateLeadCase(allSubmitEventsToUpdate, caseIds),
+                            caseIds, multipleCaseIds, bulkDetails, authToken));
                 } else {
                     bulkCasesPayload.setMultipleTypeItems(bulkDetails.getCaseData().getMultipleCollection());
                 }
@@ -184,18 +185,18 @@ public class BulkCreationService {
                                                      BulkDetails bulkDetails, String authToken) {
         List<SubmitEvent> casesToAdd = new ArrayList<>();
         List<SubmitEvent> casesToRemove = new ArrayList<>();
-        boolean lead = false;
-        String leadId = "";
+//        boolean lead = false;
+//        String leadId = "";
         for (SubmitEvent submitEvent : allSubmitEventsToUpdate) {
             String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
-            if (caseIds.contains(ethosCaseRef) && !lead) {
-                submitEvent.getCaseData().setLeadClaimant("Yes");
-                leadId = submitEvent.getCaseData().getEthosCaseReference();
-                log.info("LeadId: " + leadId);
-                lead = true;
-            } else {
-                submitEvent.getCaseData().setLeadClaimant("No");
-            }
+//            if (caseIds.contains(ethosCaseRef) && !lead) {
+//                submitEvent.getCaseData().setLeadClaimant("Yes");
+//                leadId = submitEvent.getCaseData().getEthosCaseReference();
+//                log.info("LeadId: " + leadId);
+//                lead = true;
+//            } else {
+//                submitEvent.getCaseData().setLeadClaimant("No");
+//            }
             log.info("State SubmitEvent: " + submitEvent.getState());
             if (caseIds.contains(ethosCaseRef) && !multipleCaseIds.contains(ethosCaseRef)) {
                 casesToAdd.add(submitEvent);
@@ -206,6 +207,7 @@ public class BulkCreationService {
         // Delete old cases
         List<MultipleTypeItem> multipleTypeItems = new ArrayList<>();
         if (bulkDetails.getCaseData().getMultipleCollection() != null) {
+            String leadId = allSubmitEventsToUpdate.get(0).getCaseData().getEthosCaseReference();
             multipleTypeItems = getMultipleTypeListAfterDeletions(bulkDetails.getCaseData().getMultipleCollection(), casesToRemove, bulkDetails, authToken, leadId);
         }
         // Add new cases
@@ -303,6 +305,8 @@ public class BulkCreationService {
                 log.info("LeadId: " + leadId);
                 if (multipleTypeItem.getValue().getEthosCaseReferenceM().equals(leadId)) {
                     multipleTypeItem.getValue().setLeadClaimantM("Yes");
+                } else {
+                    multipleTypeItem.getValue().setLeadClaimantM("No");
                 }
                 multipleTypeItemListAux.add(multipleTypeItem);
             } else {
