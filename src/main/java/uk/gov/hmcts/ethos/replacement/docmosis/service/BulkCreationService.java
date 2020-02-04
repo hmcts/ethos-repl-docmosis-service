@@ -207,8 +207,8 @@ public class BulkCreationService {
         // Delete old cases
         List<MultipleTypeItem> multipleTypeItems = new ArrayList<>();
         if (bulkDetails.getCaseData().getMultipleCollection() != null) {
-            String leadId = allSubmitEventsToUpdate.get(0).getCaseData().getEthosCaseReference();
-            multipleTypeItems = getMultipleTypeListAfterDeletions(bulkDetails.getCaseData().getMultipleCollection(), casesToRemove, bulkDetails, authToken, leadId);
+            SubmitEvent submitEventLead = allSubmitEventsToUpdate.get(0);
+            multipleTypeItems = getMultipleTypeListAfterDeletions(bulkDetails.getCaseData().getMultipleCollection(), casesToRemove, bulkDetails, authToken, submitEventLead);
         }
         // Add new cases
         return getMultipleTypeListAfterAdditions(multipleTypeItems, casesToAdd, bulkDetails, authToken);
@@ -288,7 +288,7 @@ public class BulkCreationService {
     }
 
     private List<MultipleTypeItem> getMultipleTypeListAfterDeletions(List<MultipleTypeItem> multipleTypeItemList, List<SubmitEvent> casesToRemove,
-                                                                                 BulkDetails bulkDetails, String authToken, String leadId) {
+                                                                                 BulkDetails bulkDetails, String authToken, SubmitEvent submitEventLead) {
         ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
         List<MultipleTypeItem> multipleTypeItemListAux = new ArrayList<>();
         for (MultipleTypeItem multipleTypeItem : multipleTypeItemList) {
@@ -302,9 +302,11 @@ public class BulkCreationService {
                 }
             }
             if (!found) {
-                log.info("LeadId: " + leadId);
-                if (multipleTypeItem.getValue().getEthosCaseReferenceM().equals(leadId)) {
+                log.info("LeadId: " + submitEventLead.getCaseData().getEthosCaseReference());
+                if (multipleTypeItem.getValue().getEthosCaseReferenceM().equals(submitEventLead.getCaseData().getEthosCaseReference())) {
                     multipleTypeItem.getValue().setLeadClaimantM("Yes");
+                    executor.execute(new BulkCreationTask(bulkDetails, submitEventLead, authToken,
+                            bulkDetails.getCaseData().getMultipleReference(), "Multiple", ccdClient));
                 } else {
                     multipleTypeItem.getValue().setLeadClaimantM("No");
                 }
