@@ -46,13 +46,15 @@ public class BulkCreationService {
         if (bulkCasesPayload.getErrors().isEmpty()) {
             // 1) Retrieve cases by ethos reference
             List<SubmitEvent> submitEvents = bulkCasesPayload.getSubmitEvents();
+            // 2) Add lead case
+            if (!submitEvents.isEmpty()) {
+                submitEvents.get(0).getCaseData().setLeadClaimant("Yes");
+            }
             if (!afterSubmittedCallback) {
-                // 2) Create multiple ref number
+                // 3) Create multiple ref number
                 bulkDetails.getCaseData().setMultipleReference(bulkSearchService.generateMultipleRef(bulkDetails));
-                // 3) Add list of cases to the multiple bulk case collection
+                // 4) Add list of cases to the multiple bulk case collection
                 if (!submitEvents.isEmpty()) {
-                    // 4) Add lead case
-                    submitEvents.get(0).getCaseData().setLeadClaimant("Yes");
                     List<MultipleTypeItem> multipleTypeItemList = BulkHelper.getMultipleTypeListBySubmitEventList(submitEvents,
                             bulkDetails.getCaseData().getMultipleReference());
                     bulkRequestPayload.setBulkDetails(BulkHelper.setMultipleCollection(bulkDetails, multipleTypeItemList));
