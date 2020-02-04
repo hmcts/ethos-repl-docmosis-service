@@ -98,6 +98,7 @@ public class CcdClient {
 
     public List<SubmitEvent> retrieveCasesElasticSearch(String authToken, String caseTypeId, List<String> caseIds) throws IOException {
         List<SubmitEvent> submitEvents = new ArrayList<>();
+        log.info("QUERY: " + ESHelper.getSearchQuery(caseIds));
         HttpEntity<String> request =
                 new HttpEntity<>(ESHelper.getSearchQuery(caseIds), ccdClientConfig.buildHeaders(authToken));
         //log.info("REQUEST: " + request);
