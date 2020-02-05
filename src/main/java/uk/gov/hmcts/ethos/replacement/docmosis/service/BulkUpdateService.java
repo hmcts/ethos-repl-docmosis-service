@@ -61,6 +61,7 @@ public class BulkUpdateService {
             errors.add("There is not searchable list in the multiple case yet");
         } else {
             String multipleReferenceV2 = bulkDetails.getCaseData().getMultipleReferenceV2();
+            //If exists the multiple with ref then returned to be used
             MultRefComplexType multRefComplexType = checkMultipleReferenceExists(bulkDetails, userToken, multipleReferenceV2);
             // 2) Check if new multiple reference exists or it has the same as the current bulk
             if (!isNullOrEmpty(multipleReferenceV2)) {
@@ -101,11 +102,9 @@ public class BulkUpdateService {
 
         Instant start = Instant.now();
         ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
-        List<Future<String>> bulkUpdateTaskList = new ArrayList<>();
-        List<String> ethosCaseReferenceNumbers = new ArrayList<>();
         try {
             for (SearchTypeItem searchTypeItem : searchTypeItemList) {
-                submitBulkEventSubmitEventType = caseUpdateFieldsRequest(bulkDetails, searchTypeItem, userToken, submitBulkEvent, executor, bulkUpdateTaskList);
+                submitBulkEventSubmitEventType = caseUpdateFieldsRequest(bulkDetails, searchTypeItem, userToken, submitBulkEvent, executor);
                 if (submitBulkEventSubmitEventType.getSubmitEvent() != null) {
                     log.info("Case updated then add to the submitEventList");
                     submitEventList.add(submitBulkEventSubmitEventType.getSubmitEvent());
@@ -117,9 +116,6 @@ public class BulkUpdateService {
                     bulkDetails.getCaseData().setSearchCollection(new ArrayList<>());
                     bulkDetails.getCaseData().setSearchCollectionCount(null);
                 }
-            }
-            if (submitBulkEventSubmitEventType.getBulkUpdateTaskList() != null) {
-                ethosCaseReferenceNumbers = BulkHelper.waitThreadsToFinish(submitBulkEventSubmitEventType.getBulkUpdateTaskList(), executor);
             }
             log.info("End in time: " + Duration.between(start, Instant.now()).toMillis());
 
@@ -135,8 +131,8 @@ public class BulkUpdateService {
             }
         } catch (Exception ex) {
             log.error("Error processing bulk update threads");
-            submitBulkEventSubmitEventType.setErrors(new ArrayList<>(Collections.singletonList("Cases updated: " + ethosCaseReferenceNumbers)));
         }
+        executor.shutdown();
         submitBulkEventSubmitEventType.setBulkDetails(bulkDetails);
         submitBulkEventSubmitEventType.setSubmitEventList(submitEventList);
         return submitBulkEventSubmitEventType;
@@ -205,7 +201,7 @@ public class BulkUpdateService {
     }
 
     SubmitBulkEventSubmitEventType caseUpdateFieldsRequest(BulkDetails bulkDetails, SearchTypeItem searchTypeItem, String authToken,
-                                                           SubmitBulkEvent submitBulkEvent, ExecutorService executor, List<Future<String>> bulkUpdateTaskList) {
+                                                           SubmitBulkEvent submitBulkEvent, ExecutorService executor) {
         try {
             SubmitBulkEventSubmitEventType submitBulkEventSubmitEventType = new SubmitBulkEventSubmitEventType();
             String caseId = searchTypeItem.getId();
@@ -389,9 +385,7 @@ public class BulkUpdateService {
                 }
 
                 //Send an event update to the single case
-                Future<String> submit = executor.submit(new BulkUpdateTask(bulkDetails, submitEvent, authToken, ccdClient));
-                bulkUpdateTaskList.add(submit);
-                submitBulkEventSubmitEventType.setBulkUpdateTaskList(bulkUpdateTaskList);
+                executor.execute(new BulkUpdateTask(bulkDetails, submitEvent, authToken, ccdClient));
 
                 //Update the value to return
                 submitBulkEventSubmitEventType.setSubmitBulkEvent(submitBulkEvent);

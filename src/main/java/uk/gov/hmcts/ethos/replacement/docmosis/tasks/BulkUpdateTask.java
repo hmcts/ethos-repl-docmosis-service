@@ -7,10 +7,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 
-import java.util.concurrent.Callable;
+import java.io.IOException;
 
 @Slf4j
-public class BulkUpdateTask implements Callable<String> {
+public class BulkUpdateTask implements Runnable {
 
     private BulkDetails bulkDetails;
     private SubmitEvent submitEvent;
@@ -25,14 +25,17 @@ public class BulkUpdateTask implements Callable<String> {
     }
 
     @Override
-    public String call() throws Exception {
+    public void run() {
 
         log.info("Waiting: " + Thread.currentThread().getName());
         String caseId = String.valueOf(submitEvent.getCaseId());
-        CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                bulkDetails.getJurisdiction(), caseId);
-        ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                bulkDetails.getJurisdiction(), returnedRequest, caseId);
-        return submitEvent.getCaseData().getEthosCaseReference();
+        try {
+            CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                    bulkDetails.getJurisdiction(), caseId);
+            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                    bulkDetails.getJurisdiction(), returnedRequest, caseId);
+        } catch (IOException e) {
+            log.error("Error processing bulk update threads");
+        }
     }
 }
