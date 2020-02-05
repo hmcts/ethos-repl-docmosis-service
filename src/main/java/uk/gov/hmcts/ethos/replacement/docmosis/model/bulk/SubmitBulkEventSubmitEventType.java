@@ -4,7 +4,6 @@ import lombok.Data;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 
 import java.util.List;
-import java.util.concurrent.Future;
 
 @Data
 public class SubmitBulkEventSubmitEventType {
@@ -16,8 +15,6 @@ public class SubmitBulkEventSubmitEventType {
     private BulkDetails bulkDetails;
 
     private List<SubmitEvent> submitEventList;
-
-    private List<Future<String>> bulkUpdateTaskList;
 
     private List<String> errors;
 }

@@ -105,6 +105,10 @@ public class BulkCreationService {
             bulkCasesPayload = bulkSearchService.filterSubmitEventsElasticSearch(
                     ccdClient.retrieveCasesElasticSearch(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), unionLists),
                     bulkDetails.getCaseData().getMultipleReference(), false);
+//            List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken,
+//                    BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction());
+//            bulkCasesPayload = bulkSearchService.filterSubmitEvents(submitEvents, unionLists,
+//                    bulkDetails.getCaseData().getMultipleReference(), false, true);
             if (bulkCasesPayload.getErrors().isEmpty()) {
                 List<SubmitEvent> allSubmitEventsToUpdate = bulkCasesPayload.getSubmitEvents();
                 if (!allSubmitEventsToUpdate.isEmpty()) {

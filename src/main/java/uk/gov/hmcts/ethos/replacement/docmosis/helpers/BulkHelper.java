@@ -430,16 +430,6 @@ public class BulkHelper {
         }
     }
 
-    public static List<String> waitThreadsToFinish(List<Future<String>> bulkUpdateTaskList, ExecutorService executor) throws ExecutionException, InterruptedException {
-        List<String> ethosCaseReferenceNumbers = new ArrayList<>();
-        for (Future<String> future : bulkUpdateTaskList) {
-            ethosCaseReferenceNumbers.add(future.get());
-        }
-        log.info("EthosCaseReferenceNumbers: " + ethosCaseReferenceNumbers);
-        executor.shutdown();
-        return ethosCaseReferenceNumbers;
-    }
-
     public static List<SubmitEvent> calculateLeadCase(List<SubmitEvent> submitEvents, List<String> caseIds) {
         for (String caseId : caseIds) {
             int index = submitEvents.stream()
