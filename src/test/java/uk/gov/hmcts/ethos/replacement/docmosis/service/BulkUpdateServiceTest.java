@@ -34,7 +34,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -59,7 +58,6 @@ public class BulkUpdateServiceTest {
     private SubmitBulkEvent submitBulkEvent;
     private BulkRequestPayload bulkRequestPayload;
     private ExecutorService executor;
-    private List<Future<String>> bulkUpdateTaskList;
 
     @Before
     public void setUp() {
@@ -121,7 +119,6 @@ public class BulkUpdateServiceTest {
         bulkRequestPayload.setBulkDetails(bulkDetails);
 
         executor = Executors.newFixedThreadPool(NUMBER_THREADS);
-        bulkUpdateTaskList = new ArrayList<>();
     }
 
     @Test(expected = Exception.class)
@@ -130,7 +127,7 @@ public class BulkUpdateServiceTest {
         when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenReturn(ccdRequest);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
         bulkUpdateService.caseUpdateFieldsRequest(bulkRequest.getCaseDetails(), searchTypeItem, "authToken",
-                submitBulkEvent, executor, bulkUpdateTaskList);
+                submitBulkEvent, executor);
     }
 
     @Test
@@ -139,7 +136,7 @@ public class BulkUpdateServiceTest {
         when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenReturn(ccdRequest);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
         bulkUpdateService.caseUpdateFieldsRequest(bulkRequest.getCaseDetails(), searchTypeItem, "authToken",
-                submitBulkEvent, executor, bulkUpdateTaskList);
+                submitBulkEvent, executor);
     }
 
     @Test
@@ -148,7 +145,7 @@ public class BulkUpdateServiceTest {
         when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenReturn(ccdRequest);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
         bulkUpdateService.caseUpdateFieldsRequest(getBulkDetailsWithValues(), searchTypeItem, "authToken",
-                submitBulkEvent, executor, bulkUpdateTaskList);
+                submitBulkEvent, executor);
     }
 
     @Test
@@ -196,7 +193,7 @@ public class BulkUpdateServiceTest {
         when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenThrow(feignError());
         when(ccdClient.retrieveBulkCases("authToken", MANCHESTER_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
-        assertEquals("[Cases updated: []]", bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()),
+        assertEquals("[]", bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()),
                 "authToken").getErrors().toString());
     }
 
