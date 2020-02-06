@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkCaseSearchResult;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.SubmitBulkEvent;
@@ -132,6 +133,19 @@ public class CcdClientTest {
         when(restTemplate.exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(CaseSearchResult.class))).thenReturn(responseEntity);
         ccdClient.retrieveCasesElasticSearch("authToken", caseDetails.getCaseTypeId(), new ArrayList<>(Arrays.asList("2420117/2019", "2420118/2019")));
         verify(restTemplate).exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(CaseSearchResult.class));
+        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
+    public void retrieveBulkCasesElasticSearch() throws IOException {
+        String jsonQuery = "{\"size\":10000,\"query\":{\"terms\":{\"data.multipleReference.keyword\":[\"2400001/2020\"],\"boost\":1.0}}}";
+        HttpEntity<String> httpEntity = new HttpEntity<>(jsonQuery, null);
+        BulkCaseSearchResult bulkCaseSearchResult = new BulkCaseSearchResult(2L, Arrays.asList(new SubmitBulkEvent(), new SubmitBulkEvent()));
+        ResponseEntity<BulkCaseSearchResult> responseEntity = new ResponseEntity<>(bulkCaseSearchResult, HttpStatus.OK);
+        when(ccdClientConfig.buildRetrieveCasesUrlElasticSearch(any())).thenReturn(uri);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(BulkCaseSearchResult.class))).thenReturn(responseEntity);
+        ccdClient.retrieveBulkCasesElasticSearch("authToken", caseDetails.getCaseTypeId(), "2400001/2020");
+        verify(restTemplate).exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(BulkCaseSearchResult.class));
         verifyNoMoreInteractions(restTemplate);
     }
 
