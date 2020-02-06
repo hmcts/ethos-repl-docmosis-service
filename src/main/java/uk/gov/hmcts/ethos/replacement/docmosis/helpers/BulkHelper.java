@@ -17,9 +17,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -249,6 +246,14 @@ public class BulkHelper {
         }
     }
 
+    public static List<String> getCaseIdsFromSearchCollection(List<SearchTypeItem> searchTypeItems) {
+        return searchTypeItems.stream()
+                .filter(key -> key.getId() != null)
+                .map(caseId -> caseId.getValue().getCaseIDS())
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
     private static List<CaseIdTypeItem> getCaseIdTypeItems(BulkDetails bulkDetails, List<String> multipleTypeItems) {
         return bulkDetails.getCaseData().getCaseIdCollection() != null ?
                 bulkDetails.getCaseData().getCaseIdCollection().stream()
@@ -304,13 +309,6 @@ public class BulkHelper {
     private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
         return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
-    }
-
-    public static String getLeadId(BulkDetails bulkDetails) {
-        List<CaseIdTypeItem> list = bulkDetails.getCaseData().getCaseIdCollection().stream()
-                .filter(key -> !key.getValue().getEthosCaseReference().equals(""))
-                .collect(Collectors.toList());
-        return !list.isEmpty() ? list.get(0).getValue().getEthosCaseReference() : "";
     }
 
     public static StringBuilder buildScheduleDocumentContent(BulkData bulkData, String accessKey) {
