@@ -316,12 +316,4 @@ public class BulkUpdateServiceTest {
         assertEquals(multipleCollection, bulkRequestPayload.getBulkDetails().getCaseData().getMultipleCollection().toString());
     }
 
-    @Test(expected = Exception.class)
-    public void bulkPreAcceptLogicException() throws IOException {
-        List<SubmitEvent> submitEvents = new ArrayList<>(Collections.singleton(submitEvent));
-        when(ccdClient.startEventForCasePreAcceptBulkSingle(anyString(), anyString(), anyString(), anyString())).thenThrow(feignError());
-        bulkRequest.setCaseDetails(getBulkDetailsCompleteWithValues(bulkRequest.getCaseDetails()));
-        bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(), submitEvents, "authToken");
-    }
-
 }

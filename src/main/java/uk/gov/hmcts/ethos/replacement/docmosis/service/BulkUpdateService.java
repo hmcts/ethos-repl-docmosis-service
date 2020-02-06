@@ -12,7 +12,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.CaseType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.MultipleType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
@@ -22,6 +21,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
+import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkPreAcceptTask;
 import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkUpdateBulkTask;
 import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkUpdateTask;
 
@@ -509,16 +509,11 @@ public class BulkUpdateService {
     }
 
     private void caseUpdatePreAcceptRequest(BulkDetails bulkDetails, SubmitEvent submitEvent, String authToken) {
-        try {
-            log.info("Current state ---> " + submitEvent.getState());
-            String caseId = String.valueOf(submitEvent.getCaseId());
-            log.info("Moving to accepted state");
-            CCDRequest returnedRequest = ccdClient.startEventForCasePreAcceptBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                    bulkDetails.getJurisdiction(), caseId);
-            submitEvent.getCaseData().setState(ACCEPTED_STATE);
-            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
-        } catch (Exception ex) {
-            throw new CaseCreationException(MESSAGE + submitEvent.getCaseId() + ex.getMessage());
-        }
+        log.info("Current state ---> " + submitEvent.getState());
+        Instant start = Instant.now();
+        ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
+        executor.execute(new BulkPreAcceptTask(bulkDetails, submitEvent, authToken, ccdClient));
+        log.info("End in time: " + Duration.between(start, Instant.now()).toMillis());
+        executor.shutdown();
     }
 }
