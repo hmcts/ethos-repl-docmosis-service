@@ -16,5 +16,7 @@ public class SubmitBulkEventSubmitEventType {
 
     private List<SubmitEvent> submitEventList;
 
+    private SubmitBulkEvent submitBulkEventToUpdate;
+
     private List<String> errors;
 }
