@@ -4,19 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
-import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.CaseCreationException;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.MultipleType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkCreationTask;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -31,7 +27,6 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 @Service("bulkCreationService")
 public class BulkCreationService {
 
-    private static final String MESSAGE = "Failed to create new case for case id : ";
     private final CcdClient ccdClient;
     private final BulkSearchService bulkSearchService;
 
@@ -46,7 +41,6 @@ public class BulkCreationService {
         if (bulkCasesPayload.getErrors().isEmpty()) {
             // 1) Retrieve cases by ethos reference
             List<SubmitEvent> submitEvents = bulkCasesPayload.getSubmitEvents();
-            log.info("SubmitEvents: " + submitEvents);
             if (!afterSubmittedCallback) {
                 // 2) Create multiple ref number
                 bulkDetails.getCaseData().setMultipleReference(bulkSearchService.generateMultipleRef(bulkDetails));
@@ -153,52 +147,6 @@ public class BulkCreationService {
         }
         executor.shutdown();
         return multipleTypeItemList;
-    }
-
-    public BulkRequestPayload updateLeadCase(BulkRequestPayload bulkRequestPayload, String authToken) {
-        if (bulkRequestPayload.getErrors().isEmpty()) {
-            List<MultipleTypeItem> multipleTypeItemList = bulkRequestPayload.getBulkDetails().getCaseData().getMultipleCollection();
-            List<MultipleTypeItem> multipleTypeItemListAux = new ArrayList<>();
-            String leadId = BulkHelper.getLeadId(bulkRequestPayload.getBulkDetails());
-            if (multipleTypeItemList != null && !multipleTypeItemList.isEmpty() && !leadId.equals("")) {
-                for (MultipleTypeItem multipleTypeItem : multipleTypeItemList) {
-                    if (multipleTypeItem.getValue().getEthosCaseReferenceM().equals(leadId)) {
-                        multipleTypeItem.getValue().setLeadClaimantM("Yes");
-                        multipleTypeItemListAux.add(0, multipleTypeItem);
-                        BulkDetails bulkDetails = bulkRequestPayload.getBulkDetails();
-                        try {
-                            String caseId = multipleTypeItem.getValue().getCaseIDM();
-                            log.info("Assigning lead: " + caseId);
-                            SubmitEvent submitEvent = ccdClient.retrieveCase(authToken,
-                                    BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(),
-                                    multipleTypeItem.getValue().getCaseIDM());
-                            submitEvent.getCaseData().setLeadClaimant("Yes");
-                            CCDRequest returnedRequest = getReturnedRequestCheckingStateForLead(bulkDetails, submitEvent, authToken, caseId);
-                            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(),
-                                    BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
-                        } catch (IOException ex) {
-                            throw new CaseCreationException(MESSAGE + bulkDetails.getCaseId() + ex.getMessage());
-                        }
-
-                    } else {
-                        multipleTypeItem.getValue().setLeadClaimantM("No");
-                        multipleTypeItemListAux.add(multipleTypeItem);
-                    }
-                }
-                bulkRequestPayload.getBulkDetails().getCaseData().setMultipleCollection(multipleTypeItemListAux);
-            }
-        }
-        return bulkRequestPayload;
-    }
-
-    private CCDRequest getReturnedRequestCheckingStateForLead(BulkDetails bulkDetails, SubmitEvent submitEvent, String authToken, String caseId) throws IOException {
-        if (submitEvent.getState().equals(PENDING_STATE) ||
-                (submitEvent.getCaseData().getStateAPI() != null && submitEvent.getCaseData().getStateAPI().equals(PENDING_STATE)) ) {
-            return ccdClient.startEventForCasePreAcceptBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                    bulkDetails.getJurisdiction(), caseId);
-        } else {
-            return ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
-        }
     }
 
 }
