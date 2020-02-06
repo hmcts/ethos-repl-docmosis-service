@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ESHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkCaseSearchResult;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.SubmitBulkEvent;
@@ -121,6 +122,20 @@ public class CcdClient {
             if (submitBulkEventAux != null) {
                 submitBulkEvents.addAll(submitBulkEventAux);
             }
+        }
+        return submitBulkEvents;
+    }
+
+    public List<SubmitBulkEvent> retrieveBulkCasesElasticSearch(String authToken, String caseTypeId, String multipleReference) throws IOException {
+        List<SubmitBulkEvent> submitBulkEvents = new ArrayList<>();
+        log.info("QUERY: " + ESHelper.getBulkSearchQuery(multipleReference));
+        HttpEntity<String> request =
+                new HttpEntity<>(ESHelper.getBulkSearchQuery(multipleReference), ccdClientConfig.buildHeaders(authToken));
+        //log.info("REQUEST: " + request);
+        String url = ccdClientConfig.buildRetrieveCasesUrlElasticSearch(caseTypeId);
+        BulkCaseSearchResult bulkCaseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, BulkCaseSearchResult.class).getBody();
+        if (bulkCaseSearchResult != null && bulkCaseSearchResult.getCases() != null) {
+            submitBulkEvents.addAll(bulkCaseSearchResult.getCases());
         }
         return submitBulkEvents;
     }
