@@ -89,8 +89,7 @@ public class DocumentGenerationServiceTest {
         submitEvent.setCaseData(new CaseData());
         List<SubmitEvent> submitEvents = Collections.singletonList(submitEvent);
         when(tornadoService.documentGeneration(anyString(), any())).thenReturn(documentInfo);
-        when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
-
+        when(ccdClient.retrieveCasesElasticSearch(anyString(), any(), any())).thenReturn(submitEvents);
         BulkDocumentInfo bulkDocumentInfo1 = documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");
         assertEquals(bulkDocumentInfo.toString(), bulkDocumentInfo1.toString());
     }
@@ -103,7 +102,7 @@ public class DocumentGenerationServiceTest {
         bulkRequest.getCaseDetails().getCaseData().setSearchCollection(null);
         List<SubmitEvent> submitEvents = Collections.singletonList(submitEvent);
         when(tornadoService.documentGeneration(anyString(), any())).thenReturn(documentInfo);
-        when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesElasticSearch(anyString(), any(), any())).thenReturn(submitEvents);
 
         BulkDocumentInfo bulkDocumentInfo1 = documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");
         assertEquals("BulkDocumentInfo(markUps=, errors=[There are not cases searched to " +
@@ -117,7 +116,7 @@ public class DocumentGenerationServiceTest {
         submitEvent.setCaseData(new CaseData());
         List<SubmitEvent> submitEvents = Collections.singletonList(submitEvent);
         when(tornadoService.documentGeneration(anyString(), any())).thenThrow(feignError());
-        when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesElasticSearch(anyString(), any(), any())).thenReturn(submitEvents);
 
         documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");
     }

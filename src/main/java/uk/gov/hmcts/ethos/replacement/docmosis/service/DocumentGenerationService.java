@@ -10,12 +10,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -48,14 +46,25 @@ public class DocumentGenerationService {
         String markUps = "";
         try {
             List<DocumentInfo> documentInfoList = new ArrayList<>();
+//            if (bulkDetails.getCaseData().getSearchCollection() != null && !bulkDetails.getCaseData().getSearchCollection().isEmpty()) {
+//                List<CaseData> caseDataResultList = filterCasesById(ccdClient.retrieveCases(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+//                        bulkDetails.getJurisdiction()), bulkDetails.getCaseData().getSearchCollection());
+//                for (CaseData caseData : caseDataResultList) {
+//                    log.info("Generating document for: " + caseData.getEthosCaseReference());
+//                    caseData.setCorrespondenceType(bulkDetails.getCaseData().getCorrespondenceType());
+//                    caseData.setCorrespondenceScotType(bulkDetails.getCaseData().getCorrespondenceScotType());
+//                    documentInfoList.add(tornadoService.documentGeneration(authToken, caseData));
+//                }
+//            }
             if (bulkDetails.getCaseData().getSearchCollection() != null && !bulkDetails.getCaseData().getSearchCollection().isEmpty()) {
-                List<CaseData> caseDataResultList = filterCasesById(ccdClient.retrieveCases(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                        bulkDetails.getJurisdiction()), bulkDetails.getCaseData().getSearchCollection());
-                for (CaseData caseData : caseDataResultList) {
-                    log.info("Generating document for: " + caseData.getEthosCaseReference());
-                    caseData.setCorrespondenceType(bulkDetails.getCaseData().getCorrespondenceType());
-                    caseData.setCorrespondenceScotType(bulkDetails.getCaseData().getCorrespondenceScotType());
-                    documentInfoList.add(tornadoService.documentGeneration(authToken, caseData));
+                List<String> caseIds = BulkHelper.getCaseIdsFromSearchCollection(bulkDetails.getCaseData().getSearchCollection());
+                List<SubmitEvent> submitEventList = ccdClient.retrieveCasesElasticSearch(authToken,
+                        BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds);
+                for (SubmitEvent submitEvent : submitEventList) {
+                    log.info("Generating document for: " + submitEvent.getCaseData().getEthosCaseReference());
+                    submitEvent.getCaseData().setCorrespondenceType(bulkDetails.getCaseData().getCorrespondenceType());
+                    submitEvent.getCaseData().setCorrespondenceScotType(bulkDetails.getCaseData().getCorrespondenceScotType());
+                    documentInfoList.add(tornadoService.documentGeneration(authToken, submitEvent.getCaseData()));
                 }
             }
             if (documentInfoList.isEmpty()) {
@@ -72,18 +81,18 @@ public class DocumentGenerationService {
         return bulkDocumentInfo;
     }
 
-    private List<CaseData> filterCasesById(List<SubmitEvent> submitEvents, List<SearchTypeItem> searchTypeItems) {
-        List<CaseData> caseDataResultList = new ArrayList<>();
-        Map<String, CaseData> submitEventsList = submitEvents.stream().collect(Collectors.toMap(s -> String.valueOf(s.getCaseId()), SubmitEvent::getCaseData));
-        for (SearchTypeItem searchTypeItem : searchTypeItems) {
-            String caseId = searchTypeItem.getValue().getCaseIDS();
-            if (submitEventsList.containsKey(caseId)) {
-                log.info("Adding submitted key: " + caseId);
-                caseDataResultList.add(submitEventsList.get(caseId));
-            }
-        }
-        return caseDataResultList;
-    }
+//    private List<CaseData> filterCasesById(List<SubmitEvent> submitEvents, List<SearchTypeItem> searchTypeItems) {
+//        List<CaseData> caseDataResultList = new ArrayList<>();
+//        Map<String, CaseData> submitEventsList = submitEvents.stream().collect(Collectors.toMap(s -> String.valueOf(s.getCaseId()), SubmitEvent::getCaseData));
+//        for (SearchTypeItem searchTypeItem : searchTypeItems) {
+//            String caseId = searchTypeItem.getValue().getCaseIDS();
+//            if (submitEventsList.containsKey(caseId)) {
+//                log.info("Adding submitted key: " + caseId);
+//                caseDataResultList.add(submitEventsList.get(caseId));
+//            }
+//        }
+//        return caseDataResultList;
+//    }
 
     public BulkDocumentInfo processBulkScheduleRequest(BulkRequest bulkRequest, String authToken) {
         BulkDocumentInfo bulkDocumentInfo = new BulkDocumentInfo();
