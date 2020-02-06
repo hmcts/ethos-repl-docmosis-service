@@ -155,6 +155,7 @@ public class BulkUpdateServiceTest {
         when(ccdClient.retrieveBulkCases("authToken", MANCHESTER_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), null)).thenReturn(submitEvent);
+        when(ccdClient.retrieveBulkCasesElasticSearch("authToken", MANCHESTER_BULK_CASE_TYPE_ID, bulkData.getMultipleReference())).thenReturn(submitBulkEventList);
         assert(bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()),
                 "authToken").getBulkDetails() != null);
         submitEvent.getCaseData().setRepCollection(null);
@@ -164,6 +165,22 @@ public class BulkUpdateServiceTest {
         when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), null)).thenReturn(submitEvent);
         assert(bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()),
                 "authToken").getBulkDetails() != null);
+    }
+
+    @Test(expected = Exception.class)
+    public void bulkUpdateLogicException() throws IOException {
+        SubmitBulkEvent submitBulkEvent = new SubmitBulkEvent();
+        BulkData bulkData = new BulkData();
+        bulkData.setMultipleReference("1111");
+        submitBulkEvent.setCaseData(bulkData);
+        List<SubmitBulkEvent> submitBulkEventList = new ArrayList<>(Collections.singletonList(submitBulkEvent));
+        BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
+        bulkCasesPayload.setSubmitEvents(new ArrayList<>(Collections.singleton(submitEvent)));
+        when(ccdClient.retrieveBulkCases("authToken", MANCHESTER_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
+        when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
+        when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), null)).thenReturn(submitEvent);
+        when(ccdClient.retrieveBulkCasesElasticSearch("authToken", MANCHESTER_BULK_CASE_TYPE_ID, bulkData.getMultipleReference())).thenThrow(feignError());
+        bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()), "authToken");
     }
 
     @Test
@@ -191,11 +208,11 @@ public class BulkUpdateServiceTest {
         when(ccdClient.retrieveBulkCases("authToken", MANCHESTER_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), null)).thenReturn(submitEvent);
-        assertEquals("[]", bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()),
+        assertEquals("[Multiple reference does not exist or it is the same as the current multiple case]", bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()),
                 "authToken").getErrors().toString());
     }
 
-        @Test
+    @Test
     public void clearUpFields() {
         BulkData bulkData = bulkUpdateService.clearUpFields(bulkRequestPayload).getBulkDetails().getCaseData();
         assertNull(bulkData.getClaimantRepV2());
