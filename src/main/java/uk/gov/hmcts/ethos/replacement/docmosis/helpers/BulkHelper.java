@@ -246,10 +246,10 @@ public class BulkHelper {
         }
     }
 
-    public static List<String> getCaseIdsFromSearchCollection(List<SearchTypeItem> searchTypeItems) {
+    public static List<String> getEthosRefNumsFromSearchCollection(List<SearchTypeItem> searchTypeItems) {
         return searchTypeItems.stream()
                 .filter(key -> key.getId() != null)
-                .map(caseId -> caseId.getValue().getCaseIDS())
+                .map(caseId -> caseId.getValue().getEthosCaseReferenceS())
                 .distinct()
                 .collect(Collectors.toList());
     }
