@@ -57,7 +57,7 @@ public class DocumentGenerationService {
 //                }
 //            }
             if (bulkDetails.getCaseData().getSearchCollection() != null && !bulkDetails.getCaseData().getSearchCollection().isEmpty()) {
-                List<String> caseIds = BulkHelper.getCaseIdsFromSearchCollection(bulkDetails.getCaseData().getSearchCollection());
+                List<String> caseIds = BulkHelper.getEthosRefNumsFromSearchCollection(bulkDetails.getCaseData().getSearchCollection());
                 List<SubmitEvent> submitEventList = ccdClient.retrieveCasesElasticSearch(authToken,
                         BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds);
                 for (SubmitEvent submitEvent : submitEventList) {
