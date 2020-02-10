@@ -140,7 +140,7 @@ public class ListingServiceTest {
                 "hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= ))], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
-        when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
@@ -163,7 +163,7 @@ public class ListingServiceTest {
                 "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         listingDetails.getCaseData().setListingVenueOfficeAber(ALL_VENUES);
-        when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
@@ -185,7 +185,7 @@ public class ListingServiceTest {
                 "respondentOthers= , hearingNotes= ))], " +
                 "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
-        when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
@@ -213,14 +213,14 @@ public class ListingServiceTest {
                 "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
-        when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
         assertEquals(result, listingDataResult.toString());
     }
 
     @Test(expected = Exception.class)
     public void processListingHearingsRequestWithException() throws IOException {
-        when(ccdClient.retrieveCases(anyString(), any(), any())).thenThrow(feignError());
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenThrow(feignError());
         listingService.processListingHearingsRequest(listingDetails, "authToken");
     }
 
@@ -277,7 +277,7 @@ public class ListingServiceTest {
         representedTypeRItem.setId("222");
         representedTypeRItem.setValue(representedTypeR);
         submitEvents.get(0).getCaseData().setRepCollection(new ArrayList<>(Collections.singleton(representedTypeRItem)));
-        when(ccdClient.retrieveCases(anyString(), any(), any())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
     }

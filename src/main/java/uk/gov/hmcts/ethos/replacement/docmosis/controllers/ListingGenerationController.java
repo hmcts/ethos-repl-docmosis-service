@@ -45,7 +45,7 @@ public class ListingGenerationController {
     }
 
     @PostMapping(value = "/listingSingleCases", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "search hearings by venue and date on a specific case.")
+    @ApiOperation(value = "search hearings by venue and date in a specific case.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = CCDCallbackResponse.class),
