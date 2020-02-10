@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.ALL_VENUES;
+
 @Slf4j
 @Component
 public class CcdClient {
@@ -97,18 +99,41 @@ public class CcdClient {
         return submitEvents;
     }
 
-    public List<SubmitEvent> retrieveCasesElasticSearch(String authToken, String caseTypeId, List<String> caseIds) throws IOException {
+    private String getListingQuery(String from, String to, String venue, String mapping) {
+        if (ALL_VENUES.equals(venue)) {
+            log.info("QUERY DATE: " + ESHelper.getListingRangeDateSearchQuery(from, to));
+            return ESHelper.getListingRangeDateSearchQuery(from, to);
+        } else {
+            log.info("QUERY DATE + VENUE: " + ESHelper.getListingVenueAndRangeDateSearchQuery(from, to, venue, mapping));
+            return ESHelper.getListingVenueAndRangeDateSearchQuery(from, to, venue, mapping);
+        }
+    }
+
+    public List<SubmitEvent> retrieveCasesVenueAndDateElasticSearch(String authToken, String caseTypeId, String dateToSearchFrom, String dateToSearchTo,
+                                                                 String venueToSearch, String venueToSearchMapping) throws IOException {
+        if (dateToSearchTo.equals(dateToSearchFrom)) {
+            return buildAndGetElasticSearchRequest(authToken, caseTypeId,
+                    getListingQuery(dateToSearchFrom, dateToSearchFrom, venueToSearch, venueToSearchMapping));
+        } else {
+            return buildAndGetElasticSearchRequest(authToken, caseTypeId,
+                    getListingQuery(dateToSearchFrom, dateToSearchTo, venueToSearch, venueToSearchMapping));
+        }
+    }
+
+    private List<SubmitEvent> buildAndGetElasticSearchRequest(String authToken, String caseTypeId, String query) throws IOException {
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        log.info("QUERY: " + ESHelper.getSearchQuery(caseIds));
-        HttpEntity<String> request =
-                new HttpEntity<>(ESHelper.getSearchQuery(caseIds), ccdClientConfig.buildHeaders(authToken));
-        //log.info("REQUEST: " + request);
+        HttpEntity<String> request = new HttpEntity<>(query, ccdClientConfig.buildHeaders(authToken));
         String url = ccdClientConfig.buildRetrieveCasesUrlElasticSearch(caseTypeId);
         CaseSearchResult caseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, CaseSearchResult.class).getBody();
         if (caseSearchResult != null && caseSearchResult.getCases() != null) {
             submitEvents.addAll(caseSearchResult.getCases());
         }
         return submitEvents;
+    }
+
+    public List<SubmitEvent> retrieveCasesElasticSearch(String authToken, String caseTypeId, List<String> caseIds) throws IOException {
+        log.info("QUERY: " + ESHelper.getSearchQuery(caseIds));
+        return buildAndGetElasticSearchRequest(authToken, caseTypeId, ESHelper.getSearchQuery(caseIds));
     }
 
     public List<SubmitBulkEvent> retrieveBulkCases(String authToken, String caseTypeId, String jurisdiction) throws IOException {
