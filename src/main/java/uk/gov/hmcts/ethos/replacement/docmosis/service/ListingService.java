@@ -15,8 +15,11 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.types.ListingType;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
@@ -63,7 +66,8 @@ public class ListingService {
 
     public ListingData processListingHearingsRequest(ListingDetails listingDetails, String authToken) {
         try {
-            List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
+            //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
+            List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
             if (submitEvents != null) {
                 List<ListingTypeItem> listingTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
@@ -80,6 +84,24 @@ public class ListingService {
             return clearListingFields(listingDetails.getCaseData());
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
+        }
+    }
+
+    private List<SubmitEvent> getListingHearingsSearch(ListingDetails listingDetails, String authToken) throws IOException {
+        ListingData listingData = listingDetails.getCaseData();
+        Map.Entry<String,String> entry = getListingVenueToSearch(listingData).entrySet().iterator().next();
+        String venueToSearchMapping = entry.getKey();
+        String venueToSearch = entry.getValue();
+        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
+        if (dateRange) {
+            String dateToSearchFrom = LocalDate.parse(listingData.getListingDateFrom(), OLD_DATE_TIME_PATTERN2).toString();
+            String dateToSearchTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2).toString();
+            return ccdClient.retrieveCasesVenueAndDateElasticSearch(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()),
+                    dateToSearchFrom, dateToSearchTo, venueToSearch, venueToSearchMapping);
+        } else {
+            String dateToSearch = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2).toString();
+            return ccdClient.retrieveCasesVenueAndDateElasticSearch(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()),
+                    dateToSearch, dateToSearch, venueToSearch, venueToSearchMapping);
         }
     }
 
@@ -114,20 +136,38 @@ public class ListingService {
         return listingTypeItems;
     }
 
-    private boolean isListingVenueValid(ListingData listingData, DateListedTypeItem dateListedTypeItem) {
+    private boolean isAllVenuesGlasgowAndAberdeen(ListingData listingData) {
+        boolean allVenuesGlasgow = !isNullOrEmpty(listingData.getListingVenueOfficeGlas()) && listingData.getListingVenueOfficeGlas().equals(ALL_VENUES);
+        boolean allVenuesAberdeen = !isNullOrEmpty(listingData.getListingVenueOfficeAber()) && listingData.getListingVenueOfficeAber().equals(ALL_VENUES);
+        return !allVenuesGlasgow && !allVenuesAberdeen;
+    }
+
+    private Map<String, String> getListingVenueToSearch(ListingData listingData) {
         boolean allLocations = listingData.getListingVenue().equals(ALL_VENUES);
         if (allLocations) {
+            return ListingHelper.createMap(ALL_VENUES, ALL_VENUES);
+        } else {
+            if (isAllVenuesGlasgowAndAberdeen(listingData)) {
+                return ListingHelper.getVenueToSearch(listingData);
+            } else {
+                return !isNullOrEmpty(listingData.getListingVenue())
+                        ? ListingHelper.createMap("listingVenue", listingData.getListingVenue())
+                        : ListingHelper.createMap("","");
+            }
+        }
+    }
+
+    private boolean isListingVenueValid(ListingData listingData, DateListedTypeItem dateListedTypeItem) {
+        Map<String, String> venueToSearchMap = getListingVenueToSearch(listingData);
+        String venueToSearch = venueToSearchMap.entrySet().iterator().next().getValue();
+        if (ALL_VENUES.equals(venueToSearch)) {
             log.info("Searching by all venues");
             return true;
         } else {
-            boolean allVenuesGlasgow = !isNullOrEmpty(listingData.getListingVenueOfficeGlas()) && listingData.getListingVenueOfficeGlas().equals(ALL_VENUES);
-            boolean allVenuesAberdeen = !isNullOrEmpty(listingData.getListingVenueOfficeAber()) && listingData.getListingVenueOfficeAber().equals(ALL_VENUES);
-            String venueToSearch, venueSearched;
-            if (!allVenuesGlasgow && !allVenuesAberdeen) {
-                venueToSearch = ListingHelper.getVenueToSearch(listingData);
+            String venueSearched;
+            if (isAllVenuesGlasgowAndAberdeen(listingData)) {
                 venueSearched = ListingHelper.getVenueFromDateListedType(dateListedTypeItem.getValue());
             } else {
-                venueToSearch = !isNullOrEmpty(listingData.getListingVenue()) ? listingData.getListingVenue() : " ";;
                 venueSearched = !isNullOrEmpty(dateListedTypeItem.getValue().getHearingVenueDay()) ? dateListedTypeItem.getValue().getHearingVenueDay() : " ";
             }
             log.info("VenueToSearch: " + venueToSearch + "   VenueSearched: " + venueSearched);
@@ -138,13 +178,13 @@ public class ListingService {
     private boolean isListingDateValid(ListingData listingData, DateListedTypeItem dateListedTypeItem) {
         boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
         String dateListed = !isNullOrEmpty(dateListedTypeItem.getValue().getListedDate()) ? dateListedTypeItem.getValue().getListedDate() : "";
-        String dateToSearch = listingData.getListingDate();
         if (dateRange) {
             String dateToSearchFrom = listingData.getListingDateFrom();
             String dateToSearchTo = listingData.getListingDateTo();
             log.info("RANGE: -> dateToSearchFrom: " + dateToSearchFrom + "   dateToSearchTo: " + dateToSearchTo + "   DateListed: " + dateListed);
             return ListingHelper.getListingDateBetween(dateToSearchFrom, dateToSearchTo, dateListed);
         } else {
+            String dateToSearch = listingData.getListingDate();
             log.info("SINGLE: -> dateToSearch: " + dateToSearch + "   DateListed: " + dateListed);
             return ListingHelper.getListingDateBetween(dateToSearch, "", dateListed);
         }

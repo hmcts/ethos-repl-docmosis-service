@@ -352,12 +352,16 @@ public class ListingHelper {
         } return " ";
     }
 
-    public static String getVenueToSearch(ListingData listingData) {
+    public static Map<String, String> createMap(String key, String value) {
+        return new HashMap<String, String>(){{put(key, value);}};
+    }
+
+    public static Map<String, String> getVenueToSearch(ListingData listingData) {
         if (!isNullOrEmpty(listingData.getListingVenueOfficeGlas())) {
-            return listingData.getListingVenueOfficeGlas();
+            return createMap("listingVenueOfficeGlas", listingData.getListingVenueOfficeGlas());
         } else if (!isNullOrEmpty(listingData.getListingVenueOfficeAber())) {
-            return listingData.getListingVenueOfficeAber();
-        } return !isNullOrEmpty(listingData.getListingVenue()) ? listingData.getListingVenue() : " ";
+            return createMap("listingVenueOfficeAber", listingData.getListingVenueOfficeAber());
+        } return !isNullOrEmpty(listingData.getListingVenue()) ? createMap("listingVenue", listingData.getListingVenue()) : createMap("","");
     }
 
     public static String getVenueFromDateListedType(DateListedType dateListedType) {
