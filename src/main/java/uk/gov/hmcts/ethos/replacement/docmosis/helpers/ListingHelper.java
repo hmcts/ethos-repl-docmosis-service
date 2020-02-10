@@ -353,7 +353,9 @@ public class ListingHelper {
     }
 
     public static Map<String, String> createMap(String key, String value) {
-        return new HashMap<String, String>(){{put(key, value);}};
+        Map<String, String> map = new HashMap<>();
+        map.put(key, value);
+        return map;
     }
 
     public static Map<String, String> getVenueToSearch(ListingData listingData) {
