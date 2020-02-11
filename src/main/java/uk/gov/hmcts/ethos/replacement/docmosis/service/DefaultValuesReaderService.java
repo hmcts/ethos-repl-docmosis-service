@@ -169,6 +169,7 @@ public class DefaultValuesReaderService {
 //                respondentChosen.ifPresent(respondentSumTypeItem -> claimantWorkAddressType.setClaimantWorkAddress(respondentSumTypeItem.getValue().getRespondentAddress()));
             }
             log.info("ClaimantWorkAddress: " + claimantWorkAddressType);
+            caseData.setClaimantWorkAddressQRespondent(null);
             caseData.setClaimantWorkAddress(claimantWorkAddressType);
         }
         return caseData;
