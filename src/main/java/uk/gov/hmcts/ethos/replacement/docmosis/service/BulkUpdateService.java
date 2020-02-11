@@ -116,26 +116,25 @@ public class BulkUpdateService {
             log.info("getSubmitEventList: " + submitBulkEventSubmitEventType.getSubmitEventList());
         } else { log.info("getSubmitEventList is empty"); }
         ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
-        String lead = "";
+        String leadId = "";
         if (!multipleTypeItems.isEmpty()) {
             log.info("Updating lead");
             multipleTypeItems.get(0).getValue().setLeadClaimantM("Yes");
-            lead = multipleTypeItems.get(0).getValue().getCaseIDM();
+            leadId = multipleTypeItems.get(0).getValue().getCaseIDM();
             try {
                 SubmitEvent submitEvent = ccdClient.retrieveCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                         bulkDetails.getJurisdiction(), multipleTypeItems.get(0).getValue().getCaseIDM());
-                if (!submitEvent.getCaseData().getLeadClaimant().equals("Yes")) {
-                    submitEvent.getCaseData().setLeadClaimant("Yes");
-                    executor.execute(new BulkUpdateTask(bulkDetails, submitEvent, authToken, ccdClient));
-                }
+                submitEvent.getCaseData().setLeadClaimant("Yes");
+                executor.execute(new BulkUpdateTask(bulkDetails, submitEvent, authToken, ccdClient));
+                log.info("Lead case updated");
             } catch (IOException e) {
                 log.error("Error processing ES retrieving lead case");
             }
         }
-        log.info("Lead: " + lead);
-        if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null) {
+        log.info("leadId: " + leadId);
+        if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null || submitBulkEventSubmitEventType.getSubmitEventList() != null) {
             log.info("getSubmitBulkEventToUpdate checking");
-            executor.execute(new BulkUpdateBulkTask(bulkDetails, authToken, ccdClient, submitBulkEventSubmitEventType));
+            executor.execute(new BulkUpdateBulkTask(bulkDetails, authToken, ccdClient, submitBulkEventSubmitEventType, leadId));
         }
         log.info("End in time: " + Duration.between(start, Instant.now()).toMillis());
         executor.shutdown();
