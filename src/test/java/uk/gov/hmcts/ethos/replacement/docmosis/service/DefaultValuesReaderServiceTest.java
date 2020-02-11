@@ -407,31 +407,25 @@ public class DefaultValuesReaderServiceTest {
     }
     @Test
     public void getCaseDataWithClaimantWorkAddress() {
-        String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, " +
-                "tribunalCorrespondenceTelephone=0141 204 0730, tribunalCorrespondenceFax=01264 785 177, " +
-                "tribunalCorrespondenceDX=DX 580003, tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, " +
-                "caseType=Single, multipleReference=null, leadClaimant=null, claimantTypeOfClaimant=null, claimantCompany=null, " +
-                "claimantIndType=null, claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, " +
-                "feeGroupReference=null, claimantWorkAddressQuestion=Yes, " +
-                "claimantWorkAddressQRespondent=DynamicFixedListType(value=DynamicValueType(code=PostCode, label=PostCode), listItems=null), " +
-                "representativeClaimantType=null, responseTypeCollection=null, responseType=null, " +
-                "respondentCollection=[RespondentSumTypeItem(id=null, value=RespondentSumType(responseStatus=null, responseToClaim=null, " +
-                "rejectionReason=null, rejectionReasonOther=null, responseOutOfTime=null, responseNotOnPrescribedForm=null, " +
-                "responseRequiredInfoAbsent=null, responseNotes=null, response_ReferredToJudge=null, responseReturnedFromJudge=null, " +
-                "respondentName=Andrew Smith, respondentACASQuestion=null, respondentACAS=null, respondentACASNo=null, " +
-                "respondentAddress=Line1, PostCode, respondentPhone1=null, respondentPhone2=null, respondentEmail=null, " +
-                "respondentContactPreference=null, responseReceivedDate=null, responseRespondentNameQuestion=null, " +
-                "responseRespondentName=null, responseCounterClaim=null))], repCollection=null, positionType=Manually Created, " +
-                "fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, " +
-                "hearingType=null, hearingCollection=null, depositType=null, judgementCollection=null, judgementDetailsCollection=null, " +
-                "costsCollection=null, jurCodesCollection=null, broughtForwardCollection=null, clerkResponsible=null, userLocation=null, " +
-                "subMultipleReference=null, addSubMultipleComment=null, documentCollection=null, referredToJudge=null, backFromJudge=null, " +
-                "additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, caseNotes=null, " +
-                "claimantWorkAddress=ClaimantWorkAddressType(claimantWorkAddress=null, claimantWorkPhoneNumber=null), " +
-                "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, " +
-                "caseSource=null, state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, " +
-                "restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, targetHearingDate=null, EQP=null, " +
-                "flag1=null, flag2=null)";
+        String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, tribunalCorrespondenceTelephone=0141 " +
+                "204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, " +
+                "ethosCaseReference=null, caseType=Single, multipleReference=null, leadClaimant=null, claimantTypeOfClaimant=null, claimantCompany=null, " +
+                "claimantIndType=null, claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, " +
+                "claimantWorkAddressQuestion=Yes, claimantWorkAddressQRespondent=null, representativeClaimantType=null, responseTypeCollection=null, responseType=null," +
+                " respondentCollection=[RespondentSumTypeItem(id=null, value=RespondentSumType(responseStatus=null, responseToClaim=null, rejectionReason=null, " +
+                "rejectionReasonOther=null, responseOutOfTime=null, responseNotOnPrescribedForm=null, responseRequiredInfoAbsent=null, responseNotes=null, " +
+                "response_ReferredToJudge=null, responseReturnedFromJudge=null, respondentName=Andrew Smith, respondentACASQuestion=null, respondentACAS=null, " +
+                "respondentACASNo=null, respondentAddress=Line1, PostCode, respondentPhone1=null, respondentPhone2=null, respondentEmail=null, " +
+                "respondentContactPreference=null, responseReceivedDate=null, responseRespondentNameQuestion=null, responseRespondentName=null, " +
+                "responseCounterClaim=null))], repCollection=null, positionType=Manually Created, fileLocation=null, fileLocationGlasgow=null, " +
+                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingType=null, hearingCollection=null, depositType=null, " +
+                "judgementCollection=null, judgementDetailsCollection=null, costsCollection=null, jurCodesCollection=null, broughtForwardCollection=null, " +
+                "clerkResponsible=null, userLocation=null, subMultipleReference=null, addSubMultipleComment=null, documentCollection=null, referredToJudge=null, " +
+                "backFromJudge=null, additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, caseNotes=null, " +
+                "claimantWorkAddress=ClaimantWorkAddressType(claimantWorkAddress=null, claimantWorkPhoneNumber=null), claimantRepresentedQuestion=null, " +
+                "bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=null, state=null, stateAPI=null, et3Received=null, " +
+                "conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, targetHearingDate=null, " +
+                "EQP=null, flag1=null, flag2=null)";
         assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow, true).toString());
     }
 
