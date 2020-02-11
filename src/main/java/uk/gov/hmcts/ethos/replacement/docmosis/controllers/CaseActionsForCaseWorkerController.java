@@ -172,6 +172,7 @@ public class CaseActionsForCaseWorkerController {
         } else {
             errors.add("The payload is empty. Please make sure you have some data on your case");
         }
+        log.info("CaseData: " + caseData);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .errors(errors)
                 .data(caseData)

@@ -140,12 +140,15 @@ public class DefaultValuesReaderService {
         log.info("Adding claimant work address if from respondent");
         if (caseData.getClaimantWorkAddressQuestion() != null && caseData.getClaimantWorkAddressQuestion().equals("Yes")) {
             ClaimantWorkAddressType claimantWorkAddressType = new ClaimantWorkAddressType();
+            log.info("RespondentQ: " + caseData.getClaimantWorkAddressQRespondent().getValue());
             String respondentName = caseData.getClaimantWorkAddressQRespondent().getValue().getCode();
+            log.info("Respondent Name: " + respondentName);
             if (caseData.getRespondentCollection() != null) {
                 Optional<RespondentSumTypeItem> respondentChosen = caseData.getRespondentCollection().stream().filter(respondentSumTypeItem ->
                         respondentSumTypeItem.getValue().getRespondentName().equals(respondentName)).findFirst();
                 respondentChosen.ifPresent(respondentSumTypeItem -> claimantWorkAddressType.setClaimantWorkAddress(respondentSumTypeItem.getValue().getRespondentAddress()));
             }
+            log.info("ClaimantWorkAddress: " + claimantWorkAddressType);
             caseData.setClaimantWorkAddress(claimantWorkAddressType);
         }
         return caseData;
