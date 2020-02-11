@@ -75,13 +75,16 @@ public class BulkUpdateService {
             log.info("multipleReferenceV2: " + multipleReferenceV2);
             if (errors.isEmpty()) {
                 // 3) Update fields to the searched cases
+                log.info("Updating fields to the searched cases");
                 SubmitBulkEventSubmitEventType submitBulkEventSubmitEventType = createEventToUpdateCasesSearched(searchTypeItemList, bulkDetails, userToken,
                         multRefComplexType.getSubmitBulkEvent(), multipleReferenceV2);
                 if (submitBulkEventSubmitEventType.getErrors() != null) {
+                    log.info("ERRRORS");
                     errors.addAll(submitBulkEventSubmitEventType.getErrors());
                 }
                 // 4) Refresh multiple collection for bulk
                 List<MultipleTypeItem> multipleTypeItemListAux = refreshMultipleCollection(bulkDetails, submitBulkEventSubmitEventType);
+                log.info("Refreshed multiple collection for bulk");
                 // 5) If still cases in the multiples then update with bulk update specific (flags...) No need if moving all cases
                 if (!multipleTypeItemListAux.isEmpty()) {
                     multipleTypeItemListAux = performOtherMultipleUpdate(bulkDetails.getCaseData(), multipleTypeItemListAux, searchTypeItemList);
@@ -102,9 +105,22 @@ public class BulkUpdateService {
     private List<MultipleTypeItem> createUpdateEventsAndAssignLead(List<MultipleTypeItem> multipleTypeItems, BulkDetails bulkDetails, String authToken,
                                                                    SubmitBulkEventSubmitEventType submitBulkEventSubmitEventType) {
         Instant start = Instant.now();
+        log.info("Sending events for updates");
+        if (submitBulkEventSubmitEventType.getSubmitBulkEvent() != null) {
+            log.info("getSubmitBulkEvent: " + submitBulkEventSubmitEventType.getSubmitBulkEvent());
+        } else { log.info("getSubmitBulkEvent is empty"); }
+        if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null) {
+            log.info("getSubmitBulkEventToUpdate: " + submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate());
+        } else { log.info("getSubmitBulkEventToUpdate is empty"); }
+        if (submitBulkEventSubmitEventType.getSubmitEventList() != null) {
+            log.info("getSubmitEventList: " + submitBulkEventSubmitEventType.getSubmitEventList());
+        } else { log.info("getSubmitEventList is empty"); }
         ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
+        String lead = "";
         if (!multipleTypeItems.isEmpty()) {
+            log.info("Updating lead");
             multipleTypeItems.get(0).getValue().setLeadClaimantM("Yes");
+            lead = multipleTypeItems.get(0).getValue().getCaseIDM();
             try {
                 SubmitEvent submitEvent = ccdClient.retrieveCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                         bulkDetails.getJurisdiction(), multipleTypeItems.get(0).getValue().getCaseIDM());
@@ -116,7 +132,9 @@ public class BulkUpdateService {
                 log.error("Error processing ES retrieving lead case");
             }
         }
+        log.info("Lead: " + lead);
         if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null) {
+            log.info("getSubmitBulkEventToUpdate checking");
             executor.execute(new BulkUpdateBulkTask(bulkDetails, authToken, ccdClient, submitBulkEventSubmitEventType));
         }
         log.info("End in time: " + Duration.between(start, Instant.now()).toMillis());
@@ -150,6 +168,8 @@ public class BulkUpdateService {
                     submitBulkEvent.setCaseData(submitBulkEventSubmitEventType.getSubmitBulkEvent().getCaseData());
                 }
                 submitBulkEventSubmitEventType.setSubmitBulkEventToUpdate(submitBulkEvent);
+            } else {
+                log.info("No multipleRefV2 no bulk yet");
             }
         } catch (Exception ex) {
             log.error("Error processing bulk update threads");
@@ -234,8 +254,11 @@ public class BulkUpdateService {
                     multRefComplexType.setExist(true);
                     multRefComplexType.setSubmitBulkEvent(submitBulkEvents.get(0));
                 } else {
+                    log.info("SubmitBulkEvent doesn't exist");
                     multRefComplexType.setExist(false);
                 }
+            } else {
+                log.info("No SubmitBulkEvent");
             }
             return multRefComplexType;
         } catch (Exception ex) {
