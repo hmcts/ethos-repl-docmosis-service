@@ -17,12 +17,15 @@ public class BulkUpdateBulkTask implements Runnable {
     private String authToken;
     private CcdClient ccdClient;
     private SubmitBulkEventSubmitEventType submitBulkEventSubmitEventType;
+    private String leadId;
 
-    public BulkUpdateBulkTask(BulkDetails bulkDetails, String authToken, CcdClient ccdClient, SubmitBulkEventSubmitEventType submitBulkEventSubmitEventType) {
+    public BulkUpdateBulkTask(BulkDetails bulkDetails, String authToken, CcdClient ccdClient,
+                              SubmitBulkEventSubmitEventType submitBulkEventSubmitEventType, String leadId) {
         this.bulkDetails = bulkDetails;
         this.authToken = authToken;
         this.ccdClient = ccdClient;
         this.submitBulkEventSubmitEventType = submitBulkEventSubmitEventType;
+        this.leadId = leadId;
     }
 
     @Override
@@ -34,16 +37,23 @@ public class BulkUpdateBulkTask implements Runnable {
             log.info("Update the single cases");
             for (SubmitEvent submitEvent : submitBulkEventSubmitEventType.getSubmitEventList()) {
                 String caseId = String.valueOf(submitEvent.getCaseId());
-                CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                        bulkDetails.getJurisdiction(), caseId);
-                ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                        bulkDetails.getJurisdiction(), returnedRequest, caseId);
+                if (!leadId.equals(caseId)) {
+                    log.info("Sending update NO LEAD");
+                    CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                            bulkDetails.getJurisdiction(), caseId);
+                    ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                            bulkDetails.getJurisdiction(), returnedRequest, caseId);
+                } else {
+                    log.info("Already updated the leadId");
+                }
             }
-            log.info("Update the bulk");
-            CCDRequest returnedRequest = ccdClient.startBulkEventForCase(authToken, bulkDetails.getCaseTypeId(),
-                    bulkDetails.getJurisdiction(), bulkCaseId);
-            ccdClient.submitBulkEventForCase(authToken, submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseData(), bulkDetails.getCaseTypeId(),
-                    bulkDetails.getJurisdiction(), returnedRequest, bulkCaseId);
+            if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null) {
+                log.info("Update the bulk");
+                CCDRequest returnedRequest = ccdClient.startBulkEventForCase(authToken, bulkDetails.getCaseTypeId(),
+                        bulkDetails.getJurisdiction(), bulkCaseId);
+                ccdClient.submitBulkEventForCase(authToken, submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseData(), bulkDetails.getCaseTypeId(),
+                        bulkDetails.getJurisdiction(), returnedRequest, bulkCaseId);
+            }
         } catch (IOException e) {
             log.error("Error processing bulk update task threads");
         }
