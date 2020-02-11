@@ -140,35 +140,12 @@ public class DefaultValuesReaderService {
         log.info("Adding claimant work address if from respondent");
         if (caseData.getClaimantWorkAddressQuestion() != null && caseData.getClaimantWorkAddressQuestion().equals("Yes")) {
             ClaimantWorkAddressType claimantWorkAddressType = new ClaimantWorkAddressType();
-            log.info("RespondentQ: " + caseData.getClaimantWorkAddressQRespondent().getValue());
             String respondentName = caseData.getClaimantWorkAddressQRespondent().getValue().getCode();
-            log.info("Respondent Name: " + respondentName);
             if (caseData.getRespondentCollection() != null) {
-                for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
-                    if (respondentSumTypeItem.getValue().getRespondentName().equals(respondentName)) {
-                        Address respondentAddress = new Address();
-                        if (respondentSumTypeItem.getValue().getRespondentAddress().getAddressLine1() != null) {
-                            respondentAddress.setAddressLine1(respondentSumTypeItem.getValue().getRespondentAddress().getAddressLine1());
-                        }
-//                        if (respondentSumTypeItem.getValue().getRespondentAddress().getAddressLine2() != null) {
-//                            respondentAddress.setAddressLine2(respondentSumTypeItem.getValue().getRespondentAddress().getAddressLine2());
-//                        }
-//                        if (respondentSumTypeItem.getValue().getRespondentAddress().getAddressLine3() != null) {
-//                            respondentAddress.setAddressLine3(respondentSumTypeItem.getValue().getRespondentAddress().getAddressLine3());
-//                        }
-                        if (respondentSumTypeItem.getValue().getRespondentAddress().getPostCode() != null) {
-                            respondentAddress.setPostCode(respondentSumTypeItem.getValue().getRespondentAddress().getPostCode());
-                        }
-                        log.info("Found: " + respondentAddress);
-                        claimantWorkAddressType.setClaimantWorkAddress(respondentAddress);
-                        break;
-                    }
-                }
-//                Optional<RespondentSumTypeItem> respondentChosen = caseData.getRespondentCollection().stream().filter(respondentSumTypeItem ->
-//                        respondentSumTypeItem.getValue().getRespondentName().equals(respondentName)).findFirst();
-//                respondentChosen.ifPresent(respondentSumTypeItem -> claimantWorkAddressType.setClaimantWorkAddress(respondentSumTypeItem.getValue().getRespondentAddress()));
+                Optional<RespondentSumTypeItem> respondentChosen = caseData.getRespondentCollection().stream().filter(respondentSumTypeItem ->
+                        respondentSumTypeItem.getValue().getRespondentName().equals(respondentName)).findFirst();
+                respondentChosen.ifPresent(respondentSumTypeItem -> claimantWorkAddressType.setClaimantWorkAddress(respondentSumTypeItem.getValue().getRespondentAddress()));
             }
-            log.info("ClaimantWorkAddress: " + claimantWorkAddressType);
             caseData.setClaimantWorkAddressQRespondent(null);
             caseData.setClaimantWorkAddress(claimantWorkAddressType);
         }
