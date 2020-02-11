@@ -138,7 +138,8 @@ public class DefaultValuesReaderService {
         caseData.setTribunalCorrespondenceEmail(defaultValues.getTribunalCorrespondenceEmail());
 
         log.info("Adding claimant work address if from respondent");
-        if (caseData.getClaimantWorkAddressQuestion() != null && caseData.getClaimantWorkAddressQuestion().equals("Yes")) {
+        if (caseData.getClaimantWorkAddressQuestion() != null && caseData.getClaimantWorkAddressQuestion().equals("Yes")
+                && caseData.getClaimantWorkAddressQRespondent() != null) {
             ClaimantWorkAddressType claimantWorkAddressType = new ClaimantWorkAddressType();
             String respondentName = caseData.getClaimantWorkAddressQRespondent().getValue().getCode();
             if (caseData.getRespondentCollection() != null) {
