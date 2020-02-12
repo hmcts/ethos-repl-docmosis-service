@@ -83,6 +83,7 @@ public class BulkCreationService {
             bulkRequest.setCaseDetails(BulkHelper.clearSearchCollection(bulkRequest.getCaseDetails()));
         }
         bulkRequestPayload.setErrors(bulkCasesPayload.getErrors());
+        bulkRequest.getCaseDetails().getCaseData().setFilterCases(null);
         bulkRequestPayload.setBulkDetails(bulkRequest.getCaseDetails());
         return bulkRequestPayload;
     }
@@ -98,7 +99,7 @@ public class BulkCreationService {
                     .distinct().collect(Collectors.toList());
             bulkCasesPayload = bulkSearchService.filterSubmitEventsElasticSearch(
                     ccdClient.retrieveCasesElasticSearch(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), unionLists),
-                    bulkDetails.getCaseData().getMultipleReference(), false);
+                    bulkDetails.getCaseData().getMultipleReference(), false, bulkDetails);
 //            List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken,
 //                    BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction());
 //            bulkCasesPayload = bulkSearchService.filterSubmitEvents(submitEvents, unionLists,

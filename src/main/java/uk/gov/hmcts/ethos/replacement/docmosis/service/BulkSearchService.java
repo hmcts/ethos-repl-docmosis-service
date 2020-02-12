@@ -178,7 +178,7 @@ public class BulkSearchService {
                 List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds);
                 if (filter) {
                     return filterSubmitEventsElasticSearch(BulkHelper.calculateLeadCase(submitEvents, caseIds),
-                            bulkDetails.getCaseData().getMultipleReference(), creationFlag);
+                            bulkDetails.getCaseData().getMultipleReference(), creationFlag, bulkDetails);
                 } else {
                     bulkCasesPayload.setSubmitEvents(BulkHelper.calculateLeadCase(submitEvents, caseIds));
                     bulkCasesPayload.setErrors(new ArrayList<>());
@@ -255,28 +255,32 @@ public class BulkSearchService {
         return bulkCasesPayload;
     }
 
-    BulkCasesPayload filterSubmitEventsElasticSearch(List<SubmitEvent> submitEvents, String multipleReference, boolean creationFlag) {
+    BulkCasesPayload filterSubmitEventsElasticSearch(List<SubmitEvent> submitEvents, String multipleReference, boolean creationFlag, BulkDetails bulkDetails) {
         log.info("Cases found ES: " + submitEvents.size());
         BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
         multipleReference = multipleReference != null ? multipleReference : "";
         List<String> alreadyTakenIds = new ArrayList<>();
         List<String> unprocessableState = new ArrayList<>();
         log.info("SubmitEvents from ES: " + submitEvents);
-//        for (SubmitEvent submitEvent : submitEvents) {
-//            CaseData caseData = submitEvent.getCaseData();
-//            if (caseData.getMultipleReference() != null && !caseData.getMultipleReference().trim().isEmpty()) {
-//                if (creationFlag) {
-//                    log.info("Creation");
-//                    alreadyTakenIds.add(caseData.getEthosCaseReference());
-//                } else if (!caseData.getMultipleReference().equals(multipleReference)) {
-//                    log.info("Update");
-//                    alreadyTakenIds.add(caseData.getEthosCaseReference());
-//                }
-//            }
-//            if (submitEvent.getState().equals(SUBMITTED_STATE)) {
-//                unprocessableState.add(submitEvent.getCaseData().getEthosCaseReference());
-//            }
-//        }
+        if (bulkDetails.getCaseData().getFilterCases() != null && bulkDetails.getCaseData().getFilterCases().equals("No")) {
+          log.info("No filtering");
+        } else {
+            for (SubmitEvent submitEvent : submitEvents) {
+                CaseData caseData = submitEvent.getCaseData();
+                if (caseData.getMultipleReference() != null && !caseData.getMultipleReference().trim().isEmpty()) {
+                    if (creationFlag) {
+                        log.info("Creation");
+                        alreadyTakenIds.add(caseData.getEthosCaseReference());
+                    } else if (!caseData.getMultipleReference().equals(multipleReference)) {
+                        log.info("Update");
+                        alreadyTakenIds.add(caseData.getEthosCaseReference());
+                    }
+                }
+                if (submitEvent.getState().equals(SUBMITTED_STATE)) {
+                    unprocessableState.add(submitEvent.getCaseData().getEthosCaseReference());
+                }
+            }
+        }
         bulkCasesPayload.setSubmitEvents(submitEvents);
         bulkCasesPayload.setErrors(checkSearchingCasesErrors(alreadyTakenIds, unprocessableState));
         return bulkCasesPayload;
