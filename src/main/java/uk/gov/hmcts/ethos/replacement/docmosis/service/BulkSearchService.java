@@ -262,21 +262,21 @@ public class BulkSearchService {
         List<String> alreadyTakenIds = new ArrayList<>();
         List<String> unprocessableState = new ArrayList<>();
         log.info("SubmitEvents from ES: " + submitEvents);
-        for (SubmitEvent submitEvent : submitEvents) {
-            CaseData caseData = submitEvent.getCaseData();
-            if (caseData.getMultipleReference() != null && !caseData.getMultipleReference().trim().isEmpty()) {
-                if (creationFlag) {
-                    log.info("Creation");
-                    alreadyTakenIds.add(caseData.getEthosCaseReference());
-                } else if (!caseData.getMultipleReference().equals(multipleReference)) {
-                    log.info("Update");
-                    alreadyTakenIds.add(caseData.getEthosCaseReference());
-                }
-            }
-            if (submitEvent.getState().equals(SUBMITTED_STATE)) {
-                unprocessableState.add(submitEvent.getCaseData().getEthosCaseReference());
-            }
-        }
+//        for (SubmitEvent submitEvent : submitEvents) {
+//            CaseData caseData = submitEvent.getCaseData();
+//            if (caseData.getMultipleReference() != null && !caseData.getMultipleReference().trim().isEmpty()) {
+//                if (creationFlag) {
+//                    log.info("Creation");
+//                    alreadyTakenIds.add(caseData.getEthosCaseReference());
+//                } else if (!caseData.getMultipleReference().equals(multipleReference)) {
+//                    log.info("Update");
+//                    alreadyTakenIds.add(caseData.getEthosCaseReference());
+//                }
+//            }
+//            if (submitEvent.getState().equals(SUBMITTED_STATE)) {
+//                unprocessableState.add(submitEvent.getCaseData().getEthosCaseReference());
+//            }
+//        }
         bulkCasesPayload.setSubmitEvents(submitEvents);
         bulkCasesPayload.setErrors(checkSearchingCasesErrors(alreadyTakenIds, unprocessableState));
         return bulkCasesPayload;
