@@ -77,7 +77,7 @@ public class SubMultipleServiceTest {
                 "subMultipleCollection=[SubMultipleTypeItem(id=null, value=SubMultipleType(subMultipleNameT=SubMultipleNew, subMultipleRefT=null))], " +
                 "subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null, " +
                 "selectAll=null, scheduleDocName=null, positionType=null, flag1=null, flag2=null, EQP=null, submissionRef=null, claimantOrg=null, " +
-                "respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null)";
+                "respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null, filterCases=null)";
         BulkRequestPayload bulkRequestPayload = subMultipleService.createSubMultipleLogic(bulkDetails);
         assertEquals(result, bulkRequestPayload.getBulkDetails().getCaseData().toString());
         assertEquals(1, bulkRequestPayload.getBulkDetails().getCaseData().getSubMultipleCollection().size());
@@ -164,7 +164,7 @@ public class SubMultipleServiceTest {
                 "subMultipleCollection=[SubMultipleTypeItem(id=1234567, value=SubMultipleType(subMultipleNameT=SubMultiple1, subMultipleRefT=1234567))], " +
                 "subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null, " +
                 "selectAll=null, scheduleDocName=null, positionType=null, flag1=null, flag2=null, EQP=null, submissionRef=null, claimantOrg=null, " +
-                "respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null)";
+                "respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null, filterCases=null)";
         MultipleType multipleType = new MultipleType();
         multipleType.setEthosCaseReferenceM("3333");
         multipleType.setSubMultipleM("1111");
@@ -232,7 +232,7 @@ public class SubMultipleServiceTest {
                 "SubMultipleTypeItem(id=1111, value=SubMultipleType(subMultipleNameT=NewSubMultipleName, subMultipleRefT=1111))], subMultipleDynamicList=null, " +
                 "searchCollectionCount=null, multipleCollectionCount=null, correspondenceType=null, correspondenceScotType=null, selectAll=null, " +
                 "scheduleDocName=null, positionType=null, flag1=null, flag2=null, EQP=null, submissionRef=null, claimantOrg=null, respondentOrg=null, " +
-                "state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null)";
+                "state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null, filterCases=null)";
         bulkDetails.getCaseData().setSubMultipleRef("1111");
         bulkDetails.getCaseData().setSubMultipleName("NewSubMultipleName");
         MultipleType multipleType = new MultipleType();
