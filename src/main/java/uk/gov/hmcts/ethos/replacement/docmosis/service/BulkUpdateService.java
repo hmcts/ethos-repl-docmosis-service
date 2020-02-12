@@ -122,15 +122,6 @@ public class BulkUpdateService {
             log.info("Updating lead");
             multipleTypeItems.get(0).getValue().setLeadClaimantM("Yes");
             leadId = multipleTypeItems.get(0).getValue().getCaseIDM();
-            //try {
-//                SubmitEvent submitEvent = ccdClient.retrieveCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-//                        bulkDetails.getJurisdiction(), multipleTypeItems.get(0).getValue().getCaseIDM());
-//                submitEvent.getCaseData().setLeadClaimant("Yes");
-                //executor.execute(new BulkUpdateTask(bulkDetails, submitEvent, authToken, ccdClient));
-               // log.info("Lead case updated");
-//            } catch (IOException e) {
-//                log.error("Error processing ES retrieving lead case");
-//            }
         }
         log.info("leadId: " + leadId);
         if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null || submitBulkEventSubmitEventType.getSubmitEventList() != null) {
