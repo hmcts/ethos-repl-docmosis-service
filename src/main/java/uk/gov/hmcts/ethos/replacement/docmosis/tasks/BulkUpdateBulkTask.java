@@ -5,10 +5,12 @@ import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.SubmitBulkEventSubmitEventType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j
 public class BulkUpdateBulkTask implements Runnable {
@@ -36,16 +38,21 @@ public class BulkUpdateBulkTask implements Runnable {
             log.info("Update the single cases");
             for (SubmitEvent submitEvent : submitBulkEventSubmitEventType.getSubmitEventList()) {
                 String caseId = String.valueOf(submitEvent.getCaseId());
-                if (leadId.equals(caseId)) {
-                    submitEvent.getCaseData().setLeadClaimant("Yes");
-                    log.info("LEAD");
+                if (!willBeUpdatedByBulkEvent(submitEvent.getCaseData().getEthosCaseReference())) {
+                    log.info("Updating single cases");
+                    if (leadId.equals(caseId)) {
+                        submitEvent.getCaseData().setLeadClaimant("Yes");
+                        log.info("LEAD");
+                    } else {
+                        log.info("NO LEAD");
+                    }
+                    CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                            bulkDetails.getJurisdiction(), caseId);
+                    ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                            bulkDetails.getJurisdiction(), returnedRequest, caseId);
                 } else {
-                    log.info("NO LEAD");
+                    log.info("It will be updated by bulk event");
                 }
-                CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                        bulkDetails.getJurisdiction(), caseId);
-                ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                        bulkDetails.getJurisdiction(), returnedRequest, caseId);
             }
             if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null) {
                 String bulkCaseId = String.valueOf(submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseId());
@@ -58,5 +65,16 @@ public class BulkUpdateBulkTask implements Runnable {
         } catch (IOException e) {
             log.error("Error processing bulk update task threads");
         }
+    }
+
+    private boolean willBeUpdatedByBulkEvent(String ethosCaseReference) {
+        if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null) {
+            Optional<CaseIdTypeItem> optionalCaseIdTypeItem = submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseData().getCaseIdCollection()
+                    .stream()
+                    .filter(submitBulkEvent -> submitBulkEvent.getValue().getEthosCaseReference().equals(ethosCaseReference))
+                    .findFirst();
+            return optionalCaseIdTypeItem.isPresent();
+        }
+        return false;
     }
 }
