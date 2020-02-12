@@ -128,5 +128,8 @@ public class BulkData {
     @JsonProperty("outcomeUpdate")
     private String outcomeUpdate;
 
+    @JsonProperty("filterCases")
+    private String filterCases;
+
 }
 
