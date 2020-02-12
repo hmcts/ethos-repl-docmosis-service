@@ -32,22 +32,23 @@ public class BulkUpdateBulkTask implements Runnable {
     public void run() {
 
         log.info("Waiting: " + Thread.currentThread().getName());
-        String bulkCaseId = String.valueOf(submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseId());
         try {
             log.info("Update the single cases");
             for (SubmitEvent submitEvent : submitBulkEventSubmitEventType.getSubmitEventList()) {
                 String caseId = String.valueOf(submitEvent.getCaseId());
-                if (!leadId.equals(caseId)) {
-                    log.info("Sending update NO LEAD");
-                    CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                            bulkDetails.getJurisdiction(), caseId);
-                    ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                            bulkDetails.getJurisdiction(), returnedRequest, caseId);
+                if (leadId.equals(caseId)) {
+                    submitEvent.getCaseData().setLeadClaimant("Yes");
+                    log.info("LEAD");
                 } else {
-                    log.info("Already updated the leadId");
+                    log.info("NO LEAD");
                 }
+                CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                        bulkDetails.getJurisdiction(), caseId);
+                ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                        bulkDetails.getJurisdiction(), returnedRequest, caseId);
             }
             if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null) {
+                String bulkCaseId = String.valueOf(submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseId());
                 log.info("Update the bulk");
                 CCDRequest returnedRequest = ccdClient.startBulkEventForCase(authToken, bulkDetails.getCaseTypeId(),
                         bulkDetails.getJurisdiction(), bulkCaseId);
