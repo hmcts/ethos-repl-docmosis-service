@@ -38,7 +38,7 @@ public class BulkUpdateBulkTask implements Runnable {
             log.info("Update the single cases");
             for (SubmitEvent submitEvent : submitBulkEventSubmitEventType.getSubmitEventList()) {
                 String caseId = String.valueOf(submitEvent.getCaseId());
-                //if (!willBeUpdatedByBulkEvent(submitEvent.getCaseData().getEthosCaseReference())) {
+                if (!willBeUpdatedByBulkEvent(submitEvent.getCaseData().getEthosCaseReference())) {
                     log.info("Updating single cases");
                     if (leadId.equals(caseId)) {
                         submitEvent.getCaseData().setLeadClaimant("Yes");
@@ -48,12 +48,11 @@ public class BulkUpdateBulkTask implements Runnable {
                     }
                     CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                             bulkDetails.getJurisdiction(), caseId);
-                    SubmitEvent submitEvent1 = ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                    ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                             bulkDetails.getJurisdiction(), returnedRequest, caseId);
-//                } else {
-//                    log.info("It will be updated by bulk event");
-//                }
-                log.info("SubmitEvent1 Response: " + submitEvent1);
+                } else {
+                    log.info("It will be updated by bulk event");
+                }
             }
             if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null) {
                 String bulkCaseId = String.valueOf(submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseId());
@@ -68,14 +67,14 @@ public class BulkUpdateBulkTask implements Runnable {
         }
     }
 
-//    private boolean willBeUpdatedByBulkEvent(String ethosCaseReference) {
-//        if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null) {
-//            Optional<CaseIdTypeItem> optionalCaseIdTypeItem = submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseData().getCaseIdCollection()
-//                    .stream()
-//                    .filter(submitBulkEvent -> submitBulkEvent.getValue().getEthosCaseReference().equals(ethosCaseReference))
-//                    .findFirst();
-//            return optionalCaseIdTypeItem.isPresent();
-//        }
-//        return false;
-//    }
+    private boolean willBeUpdatedByBulkEvent(String ethosCaseReference) {
+        if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null) {
+            Optional<CaseIdTypeItem> optionalCaseIdTypeItem = submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseData().getCaseIdCollection()
+                    .stream()
+                    .filter(submitBulkEvent -> submitBulkEvent.getValue().getEthosCaseReference().equals(ethosCaseReference))
+                    .findFirst();
+            return optionalCaseIdTypeItem.isPresent();
+        }
+        return false;
+    }
 }
