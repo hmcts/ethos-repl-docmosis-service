@@ -124,8 +124,12 @@ public class BulkUpdateService {
             leadId = multipleTypeItems.get(0).getValue().getCaseIDM();
             try {
                 log.info("Updating lead case for multipleCollection");
-                SubmitEvent submitEvent = ccdClient.retrieveCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                        bulkDetails.getJurisdiction(), multipleTypeItems.get(0).getValue().getCaseIDM());
+                SubmitEvent submitEvent = hasLeadCaseBeenUpdated(submitBulkEventSubmitEventType, leadId);
+                if (submitEvent == null) {
+                    log.info("Search lead case from CCD");
+                    submitEvent = ccdClient.retrieveCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                            bulkDetails.getJurisdiction(), leadId);
+                }
                 submitEvent.getCaseData().setLeadClaimant("Yes");
                 executor.execute(new BulkUpdateTask(bulkDetails, submitEvent, authToken, ccdClient));
                 log.info("Lead case updated");
@@ -141,6 +145,16 @@ public class BulkUpdateService {
         log.info("End in time: " + Duration.between(start, Instant.now()).toMillis());
         executor.shutdown();
         return multipleTypeItems;
+    }
+
+    private SubmitEvent hasLeadCaseBeenUpdated(SubmitBulkEventSubmitEventType submitBulkEventSubmitEventType, String leadId) {
+        if (submitBulkEventSubmitEventType.getSubmitEventList() != null) {
+            Optional<SubmitEvent> submitEventOptional = submitBulkEventSubmitEventType.getSubmitEventList().stream()
+                    .filter(submitEvent1 -> String.valueOf(submitEvent1.getCaseId()).equals(leadId))
+                    .findFirst();
+            return submitEventOptional.orElse(null);
+        }
+        return null;
     }
 
     private SubmitBulkEventSubmitEventType createEventToUpdateCasesSearched(List<SearchTypeItem> searchTypeItemList, BulkDetails bulkDetails, String userToken,
