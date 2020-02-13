@@ -167,6 +167,32 @@ public class BulkUpdateServiceTest {
                 "authToken").getBulkDetails() != null);
     }
 
+    @Test
+    public void bulkUpdateLogicSingleCasesUpdated() throws IOException {
+        SubmitBulkEvent submitBulkEvent = new SubmitBulkEvent();
+        BulkData bulkData = new BulkData();
+        bulkData.setMultipleReference("1111");
+        submitBulkEvent.setCaseData(bulkData);
+        List<SubmitBulkEvent> submitBulkEventList = new ArrayList<>(Collections.singletonList(submitBulkEvent));
+        BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
+        BulkDetails bulkDetails = getBulkDetailsCompleteWithValues(getBulkDetailsWithValues());
+        bulkDetails.getCaseData().setMultipleReferenceV2(null);
+        MultipleType multipleTypeLead = new MultipleType();
+        multipleTypeLead.setEthosCaseReferenceM("11112");
+        multipleTypeLead.setStateM(ACCEPTED_STATE);
+        multipleTypeLead.setCaseIDM("1234");
+        MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
+        multipleTypeItem.setId("1112");
+        multipleTypeItem.setValue(multipleTypeLead);
+        bulkDetails.getCaseData().getMultipleCollection().add(0, multipleTypeItem);
+        bulkCasesPayload.setSubmitEvents(new ArrayList<>(Collections.singleton(submitEvent)));
+        when(ccdClient.retrieveBulkCases("authToken", MANCHESTER_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
+        when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
+        when(ccdClient.retrieveCase("authToken", MANCHESTER_CASE_TYPE_ID, bulkDetails.getJurisdiction(), "1234")).thenReturn(submitEvent);
+        assert (bulkUpdateService.bulkUpdateLogic(bulkDetails,
+                "authToken").getBulkDetails() != null);
+    }
+
     @Test(expected = Exception.class)
     public void bulkUpdateLogicException() throws IOException {
         SubmitBulkEvent submitBulkEvent = new SubmitBulkEvent();
