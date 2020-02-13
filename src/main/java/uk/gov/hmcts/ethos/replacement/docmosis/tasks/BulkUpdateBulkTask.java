@@ -38,7 +38,6 @@ public class BulkUpdateBulkTask implements Runnable {
                 log.info("Update the bulk");
                 CCDRequest returnedRequest = ccdClient.startBulkEventForCase(authToken, bulkDetails.getCaseTypeId(),
                         bulkDetails.getJurisdiction(), bulkCaseId);
-                log.info("Setting the bulk case no to check for case states");
                 submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseData().setFilterCases("No");
                 ccdClient.submitBulkEventForCase(authToken, submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseData(), bulkDetails.getCaseTypeId(),
                         bulkDetails.getJurisdiction(), returnedRequest, bulkCaseId);
@@ -46,10 +45,7 @@ public class BulkUpdateBulkTask implements Runnable {
                 log.info("Update the single cases");
                 for (SubmitEvent submitEvent : submitBulkEventSubmitEventType.getSubmitEventList()) {
                     String caseId = String.valueOf(submitEvent.getCaseId());
-                    log.info("Updating single cases");
-                    if (leadId.equals(caseId)) {
-                        log.info("LEAD");
-                    } else {
+                    if (!leadId.equals(caseId)) {
                         CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                                 bulkDetails.getJurisdiction(), caseId);
                         ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
