@@ -28,6 +28,7 @@ public class BulkUpdateTask implements Runnable {
     public void run() {
 
         log.info("Waiting: " + Thread.currentThread().getName());
+        log.info("Running update: " + submitEvent.getCaseId());
         String caseId = String.valueOf(submitEvent.getCaseId());
         try {
             CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
