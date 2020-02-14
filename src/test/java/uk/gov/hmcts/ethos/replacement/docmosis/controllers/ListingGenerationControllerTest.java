@@ -43,8 +43,10 @@ public class ListingGenerationControllerTest {
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private static final String LISTING_HEARINGS_URL = "/listingHearings";
     private static final String GENERATE_HEARING_DOCUMENT_URL = "/generateHearingDocument";
+    private static final String GENERATE_HEARING_DOCUMENT_CONFIRMATION_URL = "/generateHearingDocumentConfirmation";
     private static final String LISTING_SINGLE_CASES_URL = "/listingSingleCases";
     private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_URL = "/generateListingsDocSingleCases";
+    private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_CONFIRMATION_URL = "/generateListingsDocSingleCasesConfirmation";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -170,6 +172,18 @@ public class ListingGenerationControllerTest {
     }
 
     @Test
+    public void generateHearingDocumentConfirmation() throws Exception {
+        mvc.perform(post(GENERATE_HEARING_DOCUMENT_CONFIRMATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void generateHearingDocumentWithErrors() throws Exception {
         when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
         mvc.perform(post(GENERATE_HEARING_DOCUMENT_URL)
@@ -238,6 +252,18 @@ public class ListingGenerationControllerTest {
         when(listingService.setCourtAddressFromCaseData(isA(CaseData.class))).thenReturn(listingData);
         when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
         mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_URL)
+                .content(requestContentSingleCase.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateListingsDocSingleCasesConfirmation() throws Exception {
+        mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_CONFIRMATION_URL)
                 .content(requestContentSingleCase.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

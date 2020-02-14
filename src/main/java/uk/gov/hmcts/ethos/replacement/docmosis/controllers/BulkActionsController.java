@@ -181,11 +181,30 @@ public class BulkActionsController {
         log.info("GENERATE BULK LETTER ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         BulkDocumentInfo bulkDocumentInfo = documentGenerationService.processBulkDocumentRequest(bulkRequest, userToken);
+        bulkRequest.getCaseDetails().getCaseData().setDocMarkUp(bulkDocumentInfo.getMarkUps());
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkDocumentInfo.getErrors())
                 .data(bulkRequest.getCaseDetails().getCaseData())
-                .confirmation_header(GENERATED_DOCUMENTS_URL + bulkDocumentInfo.getMarkUps())
+                .build());
+    }
+
+    @PostMapping(value = "/generateBulkLetterConfirmation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "generate a bulk letter confirmation.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<BulkCallbackResponse> generateBulkLetterConfirmation(
+            @RequestBody BulkRequest bulkRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("GENERATE BULK LETTER CONFIRMATION ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
+
+        return ResponseEntity.ok(BulkCallbackResponse.builder()
+                .data(bulkRequest.getCaseDetails().getCaseData())
+                .confirmation_header(GENERATED_DOCUMENTS_URL + bulkRequest.getCaseDetails().getCaseData().getDocMarkUp())
                 .build());
     }
 
@@ -405,19 +424,36 @@ public class BulkActionsController {
         BulkDocumentInfo bulkDocumentInfo = documentGenerationService.processBulkScheduleRequest(bulkRequest, userToken);
 
         if (bulkDocumentInfo.getErrors().isEmpty()) {
+            bulkRequest.getCaseDetails().getCaseData().setDocMarkUp(bulkDocumentInfo.getMarkUps());
             return ResponseEntity.ok(BulkCallbackResponse.builder()
                     .data(bulkRequest.getCaseDetails().getCaseData())
                     .significant_item(Helper.generateSignificantItem(bulkDocumentInfo.getDocumentInfo() != null ?
                             bulkDocumentInfo.getDocumentInfo() : new DocumentInfo()))
-                    .confirmation_header(GENERATED_DOCUMENTS_URL + bulkDocumentInfo.getMarkUps())
                     .build());
         } else {
             return ResponseEntity.ok(BulkCallbackResponse.builder()
                     .errors(bulkDocumentInfo.getErrors())
                     .data(bulkRequest.getCaseDetails().getCaseData())
-                    .confirmation_header(GENERATED_DOCUMENTS_URL + bulkDocumentInfo.getMarkUps())
                     .build());
         }
+    }
+
+    @PostMapping(value = "/generateBulkScheduleConfirmation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "generate a multiple schedule confirmation.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<BulkCallbackResponse> generateBulkScheduleConfirmation(
+            @RequestBody BulkRequest bulkRequest) {
+        log.info("GENERATE BULK SCHEDULE CONFIRMATION ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
+
+        return ResponseEntity.ok(BulkCallbackResponse.builder()
+                .data(bulkRequest.getCaseDetails().getCaseData())
+                .confirmation_header(GENERATED_DOCUMENTS_URL + bulkRequest.getCaseDetails().getCaseData().getDocMarkUp())
+                .build());
     }
 
     @PostMapping(value = "/preAcceptBulk", consumes = APPLICATION_JSON_VALUE)
