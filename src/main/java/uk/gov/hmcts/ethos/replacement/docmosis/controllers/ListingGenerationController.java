@@ -109,9 +109,9 @@ public class ListingGenerationController {
         if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
             listingData = listingService.setCourtAddressFromCaseData(ccdRequest.getCaseDetails().getCaseData());
             DocumentInfo documentInfo = listingService.processHearingDocument(listingData, ccdRequest.getCaseDetails().getCaseTypeId(), userToken);
+            ccdRequest.getCaseDetails().getCaseData().setDocMarkUp(documentInfo.getMarkUp());
             return ResponseEntity.ok(CCDCallbackResponse.builder()
                     .data(ccdRequest.getCaseDetails().getCaseData())
-                    .confirmation_header(GENERATED_DOCUMENT_URL + documentInfo.getMarkUp())
                     .significant_item(Helper.generateSignificantItem(documentInfo))
                     .build());
         } else {
@@ -121,6 +121,25 @@ public class ListingGenerationController {
                     .data(ccdRequest.getCaseDetails().getCaseData())
                     .build());
         }
+    }
+
+    @PostMapping(value = "/generateListingsDocSingleCasesConfirmation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "generate a listing document confirmation.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> generateListingsDocSingleCasesConfirmation(
+            @RequestBody CCDRequest ccdRequest) {
+
+        log.info("GENERATE LISTINGS DOC SINGLE CASES CONFIRMATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(ccdRequest.getCaseDetails().getCaseData())
+                .confirmation_header(GENERATED_DOCUMENT_URL + ccdRequest.getCaseDetails().getCaseData().getDocMarkUp())
+                .build());
     }
 
     @PostMapping(value = "/generateHearingDocument", consumes = APPLICATION_JSON_VALUE)
@@ -141,9 +160,9 @@ public class ListingGenerationController {
         ListingData listingData = listingRequest.getCaseDetails().getCaseData();
         if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
             DocumentInfo documentInfo = listingService.processHearingDocument(listingData, listingRequest.getCaseDetails().getCaseTypeId(), userToken);
+            listingData.setDocMarkUp(documentInfo.getMarkUp());
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .data(listingData)
-                    .confirmation_header(GENERATED_DOCUMENT_URL + documentInfo.getMarkUp())
                     .significant_item(Helper.generateSignificantItem(documentInfo))
                     .build());
         } else {
@@ -153,6 +172,25 @@ public class ListingGenerationController {
                     .data(listingData)
                     .build());
         }
+    }
+
+    @PostMapping(value = "/generateHearingDocumentConfirmation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "generate a listing document confirmation.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<ListingCallbackResponse> generateHearingDocumentConfirmation(
+            @RequestBody ListingRequest listingRequest) {
+
+        log.info("GENERATE HEARING DOCUMENT CONFIRMATION ---> " + LOG_MESSAGE + listingRequest.getCaseDetails().getCaseId());
+
+        return ResponseEntity.ok(ListingCallbackResponse.builder()
+                .data(listingRequest.getCaseDetails().getCaseData())
+                .confirmation_header(GENERATED_DOCUMENT_URL + listingRequest.getCaseDetails().getCaseData().getDocMarkUp())
+                .build());
     }
 
 }

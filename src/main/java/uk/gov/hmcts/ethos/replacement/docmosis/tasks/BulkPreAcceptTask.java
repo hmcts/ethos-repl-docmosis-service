@@ -3,11 +3,14 @@ package uk.gov.hmcts.ethos.replacement.docmosis.tasks;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CasePreAcceptType;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.ACCEPTED_STATE;
 
@@ -36,6 +39,9 @@ public class BulkPreAcceptTask implements Runnable {
                     bulkDetails.getJurisdiction(), caseId);
             log.info("Moving to accepted state");
             submitEvent.getCaseData().setState(ACCEPTED_STATE);
+            CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
+            casePreAcceptType.setDateAccepted(Helper.formatCurrentDate2(LocalDate.now()));
+            submitEvent.getCaseData().setPreAcceptCase(casePreAcceptType);
             ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                     bulkDetails.getJurisdiction(), returnedRequest, caseId);
         } catch (IOException e) {

@@ -50,6 +50,10 @@ public class Helper {
         return !isNullOrEmpty(date.toString()) ? date.format(NEW_DATE_PATTERN) : "";
     }
 
+    public static String formatCurrentDate2(LocalDate date) {
+        return !isNullOrEmpty(date.toString()) ? date.format(OLD_DATE_TIME_PATTERN2) : "";
+    }
+
     public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails) {
         StringBuilder sb = new StringBuilder();
         String templateName = getTemplateName(caseData);

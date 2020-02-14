@@ -138,7 +138,7 @@ public class ListingServiceTest {
                 "hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , " +
                 "claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , " +
                 "hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= ))], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
+                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
@@ -160,7 +160,7 @@ public class ListingServiceTest {
                 "hearingERMember= , clerkResponsible= , hearingDay=3 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 5, " +
                 "respondentOthers= , hearingNotes= ))], " +
-                "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
+                "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         listingDetails.getCaseData().setListingVenueOfficeAber(ALL_VENUES);
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
@@ -183,7 +183,7 @@ public class ListingServiceTest {
                 "hearingERMember= , clerkResponsible= , hearingDay=2 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
                 "respondentOthers= , hearingNotes= ))], " +
-                "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
+                "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetailsRange, "authToken");
@@ -210,7 +210,7 @@ public class ListingServiceTest {
                 "hearingERMember= , clerkResponsible= , hearingDay=3 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 5, " +
                 "respondentOthers= , hearingNotes= ))], " +
-                "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
+                "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         listingDetailsRange.getCaseData().setListingVenue(ALL_VENUES);
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
@@ -246,7 +246,7 @@ public class ListingServiceTest {
                 "hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName=Juan Pedro, " +
                 "claimantTown=Aberdeen, claimantRepresentative=ONG, respondent=Royal McDonal, respondentTown=Aberdeen, respondentRepresentative=ITV, " +
                 "estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, respondentOthers=Royal McDonal, hearingNotes= ))], listingVenueOfficeGlas=null, " +
-                "listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
+                "listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
         ClaimantType claimantType = new ClaimantType();
         Address address = new Address();
         address.setPostTown("Aberdeen");
@@ -291,7 +291,7 @@ public class ListingServiceTest {
                 "positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName= , " +
                 "claimantTown= , claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, " +
                 "hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= ))], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
+                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
         CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
         assertEquals(result, caseData.getPrintHearingDetails().toString());
     }
@@ -301,7 +301,7 @@ public class ListingServiceTest {
         String result = "ListingData(tribunalCorrespondenceAddress=Manchester Avenue, Manchester, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=AberdeenVenue, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
+                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
         ListingData listingData = listingService.setCourtAddressFromCaseData(caseDetails.getCaseData());
         assertEquals(result, listingData.toString());
     }
