@@ -11,9 +11,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
@@ -42,23 +39,32 @@ public class DocumentGenerationController {
     public ResponseEntity<CCDCallbackResponse> generateDocument(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
+        log.info("GENERATE LETTER ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
-        DocumentInfo documentInfo = new DocumentInfo();
-        List<String> errors = new ArrayList<>();
-        CaseData caseData = new CaseData();
-        if (ccdRequest != null && ccdRequest.getCaseDetails() != null && ccdRequest.getCaseDetails().getCaseId() != null) {
-            log.info(LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-            documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
-            caseData = ccdRequest.getCaseDetails().getCaseData();
-        } else {
-            errors.add("The payload is empty. Please make sure you have some data on your case");
-        }
+        DocumentInfo documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
+        ccdRequest.getCaseDetails().getCaseData().setDocMarkUp(documentInfo.getMarkUp());
+
         return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .errors(errors)
-                .data(caseData)
-                .confirmation_header(GENERATED_DOCUMENT_URL + documentInfo.getMarkUp())
+                .data(ccdRequest.getCaseDetails().getCaseData())
                 .significant_item(Helper.generateSignificantItem(documentInfo))
                 .build());
     }
 
+    @PostMapping(value = "/generateDocumentConfirmation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "generate a document confirmation.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> generateDocumentConfirmation(
+            @RequestBody CCDRequest ccdRequest) {
+        log.info("GENERATE LETTER CONFIRMATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(ccdRequest.getCaseDetails().getCaseData())
+                .confirmation_header(GENERATED_DOCUMENT_URL + ccdRequest.getCaseDetails().getCaseData().getDocMarkUp())
+                .build());
+    }
 }

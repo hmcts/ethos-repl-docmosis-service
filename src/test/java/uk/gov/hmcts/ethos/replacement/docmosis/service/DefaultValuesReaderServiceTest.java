@@ -382,7 +382,7 @@ public class DefaultValuesReaderServiceTest {
                 "correspondenceScotType=null, correspondenceType=null, caseNotes=null, claimantWorkAddress=null, " +
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=null, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
-                "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null)";
+                "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null)";
         assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow, true).toString());
     }
 
@@ -425,7 +425,7 @@ public class DefaultValuesReaderServiceTest {
                 "claimantWorkAddress=ClaimantWorkAddressType(claimantWorkAddress=null, claimantWorkPhoneNumber=null), claimantRepresentedQuestion=null, " +
                 "bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=null, state=null, stateAPI=null, et3Received=null, " +
                 "conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, targetHearingDate=null, " +
-                "EQP=null, flag1=null, flag2=null)";
+                "EQP=null, flag1=null, flag2=null, docMarkUp=null)";
         assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow, true).toString());
     }
 
@@ -463,7 +463,7 @@ public class DefaultValuesReaderServiceTest {
                 "tribunalCorrespondenceTelephone=0141 204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, " +
                 "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, hearingDateType=null, listingDate=null, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=null, listingCollection=null, listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null)";
+                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
         assertEquals(listingDataExpected, defaultValuesReaderService.getListingData(listingData, postDefaultValuesGlasgow).toString());
     }
 }
