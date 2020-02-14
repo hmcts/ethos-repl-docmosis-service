@@ -130,6 +130,8 @@ public class BulkData {
 
     @JsonProperty("filterCases")
     private String filterCases;
+    @JsonProperty("docMarkUp")
+    private String docMarkUp;
 
 }
 

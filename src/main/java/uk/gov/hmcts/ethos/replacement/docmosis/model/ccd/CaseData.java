@@ -150,4 +150,7 @@ public class CaseData {
     @JsonProperty("flag2")
     private String flag2;
 
+    @JsonProperty("docMarkUp")
+    private String docMarkUp;
+
 }

@@ -62,6 +62,7 @@ public class BulkActionsControllerTest {
     private static final String UPDATE_BULK_URL = "/updateBulk";
     private static final String UPDATE_BULK_CASE_URL = "/updateBulkCase";
     private static final String GENERATE_BULK_LETTER_URL = "/generateBulkLetter";
+    private static final String GENERATE_BULK_LETTER_CONFIRMATION_URL = "/generateBulkLetterConfirmation";
 
     private static final String SUB_MULTIPLE_DYNAMIC_LIST_URL = "/subMultipleDynamicList";
     private static final String FILTER_DEFAULTED_ALL_DYNAMIC_LIST_URL = "/filterDefaultedAllDynamicList";
@@ -72,6 +73,7 @@ public class BulkActionsControllerTest {
     private static final String UPDATE_SUB_MULTIPLE_URL = "/updateSubMultiple";
     private static final String DELETE_SUB_MULTIPLE_URL = "/deleteSubMultiple";
     private static final String GENERATE_BULK_SCHEDULE_URL = "/generateBulkSchedule";
+    private static final String GENERATE_BULK_SCHEDULE_CONFIRMATION_URL = "/generateBulkScheduleConfirmation";
     private static final String PRE_ACCEPT_BULK_URL = "/preAcceptBulk";
     private static final String AFTER_SUBMITTED_BULK_URL = "/afterSubmittedBulk";
 
@@ -360,6 +362,18 @@ public class BulkActionsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateBulkLetterConfirmation() throws Exception {
+        mvc.perform(post(GENERATE_BULK_LETTER_CONFIRMATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
@@ -658,6 +672,18 @@ public class BulkActionsControllerTest {
     public void generateBulkSchedule() throws Exception {
         when(documentGenerationService.processBulkScheduleRequest(isA(BulkRequest.class), isA(String.class))).thenReturn(bulkDocumentInfo);
         mvc.perform(post(GENERATE_BULK_SCHEDULE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateBulkScheduleConfirmation() throws Exception {
+        mvc.perform(post(GENERATE_BULK_SCHEDULE_CONFIRMATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
