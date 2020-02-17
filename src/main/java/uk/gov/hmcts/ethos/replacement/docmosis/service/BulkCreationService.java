@@ -60,6 +60,10 @@ public class BulkCreationService {
         } else {
             bulkRequestPayload.setBulkDetails(bulkDetails);
         }
+        if (bulkRequestPayload.getBulkDetails().getCaseData().getCaseSource() == null
+                || bulkRequestPayload.getBulkDetails().getCaseData().getCaseSource().trim().equals("")) {
+            bulkRequestPayload.getBulkDetails().getCaseData().setCaseSource(MANUALLY_CREATED_POSITION);
+        }
         bulkRequestPayload.setErrors(bulkCasesPayload.getErrors());
         return bulkRequestPayload;
     }
