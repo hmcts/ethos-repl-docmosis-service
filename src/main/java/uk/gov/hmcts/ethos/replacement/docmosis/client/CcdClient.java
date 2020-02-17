@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.ALL_VENUES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.MANUALLY_CREATED_POSITION;
 
 @Slf4j
 @Component
@@ -129,6 +130,30 @@ public class CcdClient {
             submitEvents.addAll(caseSearchResult.getCases());
         }
         return submitEvents;
+    }
+
+    private List<SubmitEvent> buildAndGetElasticSearchRequestWithRetries(String authToken, String caseTypeId, String query, int size) throws IOException {
+        HttpEntity<String> request = new HttpEntity<>(query, ccdClientConfig.buildHeaders(authToken));
+        String url = ccdClientConfig.buildRetrieveCasesUrlElasticSearch(caseTypeId);
+        CaseSearchResult caseSearchResult;
+        do {
+            log.info("Retry");
+            caseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, CaseSearchResult.class).getBody();
+        } while (caseSearchResult == null || caseSearchResult.getTotal() != size);
+        return new ArrayList<>(caseSearchResult.getCases());
+    }
+
+    public List<SubmitEvent> retrieveCasesElasticSearchForCreation(String authToken, String caseTypeId, List<String> caseIds, String caseSource) throws IOException {
+        if (caseSource.equals(MANUALLY_CREATED_POSITION)) {
+            return retrieveCasesElasticSearch(authToken, caseTypeId, caseIds);
+        } else {
+            return retrieveCasesElasticSearchWithRetries(authToken, caseTypeId, caseIds);
+        }
+    }
+
+    private List<SubmitEvent> retrieveCasesElasticSearchWithRetries(String authToken, String caseTypeId, List<String> caseIds) throws IOException {
+        log.info("QUERY WITH RETRIES: " + ESHelper.getSearchQuery(caseIds));
+        return buildAndGetElasticSearchRequestWithRetries(authToken, caseTypeId, ESHelper.getSearchQuery(caseIds), caseIds.size());
     }
 
     public List<SubmitEvent> retrieveCasesElasticSearch(String authToken, String caseTypeId, List<String> caseIds) throws IOException {
