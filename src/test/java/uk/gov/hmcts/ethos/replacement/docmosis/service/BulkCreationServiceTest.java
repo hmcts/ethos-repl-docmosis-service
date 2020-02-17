@@ -268,27 +268,13 @@ public class BulkCreationServiceTest {
     }
 
     @Test
-    public void updateBulkRequestPendingState() throws IOException {
-        submitEvent.setState(PENDING_STATE);
-        String expectedResult = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=Yes, multipleReferenceM=null, " +
-                "clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , " +
-                "positionTypeM= , feeGroupReferenceM=111122211, jurCodesCollectionM= , stateM=Pending, subMultipleM= , subMultipleTitleM= , currentPositionM= , " +
-                "claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , respondentRepOrgM= , " +
-                "claimantRepOrgM= ))]";
-        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
-        when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
-        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
-        assertEquals(expectedResult, bulkCasesPayload.getMultipleTypeItems().toString());
-    }
-
-    @Test
     public void updateBulkRequestPendingStateException() throws IOException {
         submitEvent.setState(PENDING_STATE);
         List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenThrow(feignError());
         BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
-        assertEquals("[]", bulkCasesPayload.getErrors().toString());
+        assertEquals("[The state of these cases: [1111] have not been accepted]", bulkCasesPayload.getErrors().toString());
     }
 
     @Test
