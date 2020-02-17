@@ -144,6 +144,7 @@ public class CcdClient {
                 TimeUnit.SECONDS.sleep(3);
             } catch (InterruptedException e) {
                 log.error("Error sleeping the thread");
+                Thread.currentThread().interrupt();
             }
         } while (caseSearchResult == null || caseSearchResult.getTotal() != size);
         return new ArrayList<>(caseSearchResult.getCases());
