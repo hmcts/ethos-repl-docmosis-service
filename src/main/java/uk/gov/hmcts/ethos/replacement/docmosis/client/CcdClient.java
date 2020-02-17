@@ -18,6 +18,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.ALL_VENUES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.MANUALLY_CREATED_POSITION;
@@ -139,6 +140,11 @@ public class CcdClient {
         do {
             log.info("Retry");
             caseSearchResult = restTemplate.exchange(url, HttpMethod.POST, request, CaseSearchResult.class).getBody();
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                log.error("Error sleeping the thread");
+            }
         } while (caseSearchResult == null || caseSearchResult.getTotal() != size);
         return new ArrayList<>(caseSearchResult.getCases());
     }
