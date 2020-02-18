@@ -125,6 +125,9 @@ public class DefaultValuesReaderService {
         if (caseData.getPositionType() == null) {
             caseData.setPositionType(defaultValues.getPositionType());
         }
+        if (caseData.getCaseSource() == null || caseData.getCaseSource().trim().equals("")) {
+            caseData.setCaseSource(defaultValues.getPositionType());
+        }
         if (defaultValues.getManagingOffice() != null) {
             caseData.setManagingOffice(defaultValues.getManagingOffice());
         }

@@ -24,8 +24,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SELECT_ALL_VALUE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SELECT_NONE_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 @Slf4j
 @RestController
@@ -86,6 +85,11 @@ public class BulkActionsController {
             @RequestBody BulkRequest bulkRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("CREATE BULKES ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
+
+        if (bulkRequest.getCaseDetails().getCaseData().getCaseSource() == null
+                || bulkRequest.getCaseDetails().getCaseData().getCaseSource().trim().equals("")) {
+            bulkRequest.getCaseDetails().getCaseData().setCaseSource(MANUALLY_CREATED_POSITION);
+        }
 
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
                 bulkRequest.getCaseDetails(), userToken, true, true);
