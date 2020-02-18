@@ -133,5 +133,8 @@ public class BulkData {
     @JsonProperty("docMarkUp")
     private String docMarkUp;
 
+    @JsonProperty("caseSource")
+    private String caseSource;
+
 }
 

@@ -40,6 +40,7 @@ public class BulkPreAcceptTask implements Runnable {
             log.info("Moving to accepted state");
             submitEvent.getCaseData().setState(ACCEPTED_STATE);
             CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
+            casePreAcceptType.setCaseAccepted("Yes");
             casePreAcceptType.setDateAccepted(Helper.formatCurrentDate2(LocalDate.now()));
             submitEvent.getCaseData().setPreAcceptCase(casePreAcceptType);
             ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),

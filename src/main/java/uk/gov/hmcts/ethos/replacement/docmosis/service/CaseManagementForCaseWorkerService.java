@@ -16,10 +16,13 @@ public class CaseManagementForCaseWorkerService {
         CaseData caseData = getCaseData(ccdRequest);
         if (caseData.getPreAcceptCase() != null) {
             if (caseData.getPreAcceptCase().getCaseAccepted().equals("Yes")) {
+                log.info("Accepting preAcceptCase");
                 caseData.setState(ACCEPTED_STATE);
             } else {
                 caseData.setState(REJECTED_STATE);
             }
+        } else {
+            log.info("Null PreAcceptCase");
         }
         return caseData;
     }

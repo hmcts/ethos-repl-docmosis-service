@@ -24,8 +24,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.DEFAULT_SELECT_ALL_VALUE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SUBMITTED_STATE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 @Slf4j
 @Service("bulkSearchService")
@@ -175,7 +174,8 @@ public class BulkSearchService {
             List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
             if (caseIds != null && !caseIds.isEmpty()) {
                 log.info("CaseIds: " + caseIds);
-                List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds);
+                List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearchForCreation(authToken,
+                        BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds, bulkDetails.getCaseData().getCaseSource());
                 if (filter) {
                     return filterSubmitEventsElasticSearch(BulkHelper.calculateLeadCase(submitEvents, caseIds),
                             bulkDetails.getCaseData().getMultipleReference(), creationFlag, bulkDetails);
@@ -275,7 +275,8 @@ public class BulkSearchService {
                         alreadyTakenIds.add(caseData.getEthosCaseReference());
                     }
                 }
-                if (submitEvent.getState().equals(SUBMITTED_STATE)) {
+                if ((creationFlag && submitEvent.getState().equals(SUBMITTED_STATE) )
+                        || (!creationFlag && !submitEvent.getState().equals(ACCEPTED_STATE))) {
                     unprocessableState.add(submitEvent.getCaseData().getEthosCaseReference());
                 }
             }
