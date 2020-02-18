@@ -168,7 +168,7 @@ public class CaseActionsForCaseWorkerController {
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
             caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues, true);
-            errors = eventValidationService.validateReceiptDate(ccdRequest.getCaseDetails().getCaseData().getReceiptDate());
+            errors = eventValidationService.validateReceiptDate(caseData);
             log.info("Event fields validation:: " + errors);
             if (caseData.getEthosCaseReference() == null || caseData.getEthosCaseReference().trim().equals("")) {
                 String reference = singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getCaseId());
@@ -216,7 +216,7 @@ public class CaseActionsForCaseWorkerController {
         DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
         log.info("Post Default values loaded: " + defaultValues);
         CaseData caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues, false);
-        errors = eventValidationService.validateReceiptDate(ccdRequest.getCaseDetails().getCaseData().getReceiptDate());
+        errors = eventValidationService.validateReceiptDate(caseData);
         log.info("Event fields validation: " + errors);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .errors(errors)
