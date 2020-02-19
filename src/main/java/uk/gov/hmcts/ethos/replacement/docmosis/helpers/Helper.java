@@ -8,13 +8,16 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SignificantItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -265,8 +268,8 @@ public class Helper {
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             HearingType hearingType = caseData.getHearingCollection().get(0).getValue();
             if (hearingType.getHearingDateCollection() != null && !hearingType.getHearingDateCollection().isEmpty()) {
-                sb.append("\"Hearing_date\":\"").append(nullCheck(formatLocalDate(hearingType.getHearingDateCollection().get(0).getValue().getListedDate()))).append(NEW_LINE);
-                sb.append("\"Hearing_date_time\":\"").append(nullCheck(formatLocalDateTime(hearingType.getHearingDateCollection().get(0).getValue().getListedDate()))).append(NEW_LINE);
+                sb.append("\"Hearing_date\":\"").append(nullCheck(getHearingDates(hearingType.getHearingDateCollection()))).append(NEW_LINE);
+                sb.append("\"Hearing_date_time\":\"").append(nullCheck(getHearingDatesAndTime(hearingType.getHearingDateCollection()))).append(NEW_LINE);
             } else {
                 sb.append("\"Hearing_date\":\"").append(NEW_LINE);
                 sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
@@ -280,6 +283,41 @@ public class Helper {
             sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
         }
         return sb;
+    }
+
+    private static String getHearingDates(List<DateListedTypeItem> hearingDateCollection) {
+
+        StringBuilder sb = new StringBuilder();
+
+        Iterator<DateListedTypeItem> itr = hearingDateCollection.iterator();
+
+        while (itr.hasNext()) {
+            sb.append(formatLocalDate(itr.next().getValue().getListedDate()));
+            sb.append(itr.hasNext() ? " and " : "");
+        }
+
+        return sb.toString();
+    }
+
+    private static String getHearingDatesAndTime(List<DateListedTypeItem> hearingDateCollection) {
+
+        StringBuilder sb = new StringBuilder(getHearingDates(hearingDateCollection));
+
+        Iterator<DateListedTypeItem> itr = hearingDateCollection.iterator();
+
+        LocalTime earliestTime = LocalTime.of(23,59);
+
+        while (itr.hasNext()) {
+            LocalDateTime listedDate = LocalDateTime.parse(itr.next().getValue().getListedDate());
+            LocalTime listedTime = LocalTime.of(listedDate.getHour(),listedDate.getMinute());
+            earliestTime = listedTime.isBefore(earliestTime) ? listedTime : earliestTime;
+        }
+
+        sb.append(" at ");
+
+        sb.append(earliestTime.toString());
+
+        return sb.toString();
     }
 
     static String getHearingDuration(HearingType hearingType) {
