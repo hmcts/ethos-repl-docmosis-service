@@ -293,7 +293,7 @@ public class Helper {
 
         while (itr.hasNext()) {
             sb.append(formatLocalDate(itr.next().getValue().getListedDate()));
-            sb.append(itr.hasNext() ? " and " : "");
+            sb.append(itr.hasNext() ? ", " : "");
         }
 
         return sb.toString();

@@ -102,8 +102,8 @@ public class HelperTest {
                 "\"Respondent\":\"1. Antonio Vazquez\",\n" +
                 "\"resp_others\":\"2. Juan Garcia\\n3. Mike Jordan\",\n" +
                 "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n3. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Hearing_date\":\"25 November 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
+                "\"Hearing_date\":\"25 November 2019, 14 December 2019, 28 December 2019\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019, 14 December 2019, 28 December 2019 at 10:30\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t1_2\":\"true\",\n" +
