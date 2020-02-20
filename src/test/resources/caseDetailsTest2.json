@@ -58,6 +58,7 @@
           "hearingEstLengthNum": "2",
           "hearingEstLengthNumType": "days",
           "Hearing_type": "Single",
+          "hearingNumber": "1",
           "Hearing_venue": "Manchester",
           "hearingDateCollection": [
             {
@@ -72,7 +73,8 @@
     ],
     "correspondenceType": {
       "topLevel_Documents": "EM-TRB-EGW-ENG-00027",
-      "part_2_Documents": "2.2A"
+      "part_2_Documents": "2.2A",
+      "hearingNumber": "1"
     },
     "repCollection": [
       {

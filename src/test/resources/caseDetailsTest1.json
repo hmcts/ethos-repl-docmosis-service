@@ -101,7 +101,8 @@
     },
     "correspondenceType": {
       "topLevel_Documents": "EM-TRB-EGW-ENG-00026",
-      "part_1_Documents": "1.2"
+      "part_1_Documents": "1.2",
+      "hearingNumber": "1"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
@@ -112,6 +113,7 @@
           "hearingEstLengthNum": "2",
           "hearingEstLengthNumType": "days",
           "Hearing_type": "Single",
+          "hearingNumber": "1",
           "Hearing_venue": "Manchester",
           "hearingDateCollection": [
             {
