@@ -57,6 +57,7 @@
           "hearingEstLengthNum": "2",
           "hearingEstLengthNumType": "days",
           "Hearing_type": "Single",
+          "hearingNumber": "1",
           "Hearing_venue": "Manchester",
           "hearingDateCollection": [
             {
@@ -71,7 +72,8 @@
     ],
     "correspondenceScotType": {
       "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-00043",
-      "part_2_Scot_Documents": "24"
+      "part_2_Scot_Documents": "24",
+      "hearingNumber": "1"
     },
     "repCollection": [
       {
