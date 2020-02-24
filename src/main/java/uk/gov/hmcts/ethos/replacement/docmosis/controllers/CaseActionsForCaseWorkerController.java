@@ -36,19 +36,23 @@ public class CaseActionsForCaseWorkerController {
 
     private final SingleReferenceService singleReferenceService;
 
+    private final EventValidationService eventValidationService;
+
     @Autowired
     public CaseActionsForCaseWorkerController(CaseCreationForCaseWorkerService caseCreationForCaseWorkerService,
                                               CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
                                               CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService,
                                               DefaultValuesReaderService defaultValuesReaderService,
                                               CaseManagementForCaseWorkerService caseManagementForCaseWorkerService,
-                                              SingleReferenceService singleReferenceService) {
+                                              SingleReferenceService singleReferenceService,
+                                              EventValidationService eventValidationService) {
         this.caseCreationForCaseWorkerService = caseCreationForCaseWorkerService;
         this.caseRetrievalForCaseWorkerService = caseRetrievalForCaseWorkerService;
         this.caseUpdateForCaseWorkerService = caseUpdateForCaseWorkerService;
         this.defaultValuesReaderService = defaultValuesReaderService;
         this.caseManagementForCaseWorkerService = caseManagementForCaseWorkerService;
         this.singleReferenceService = singleReferenceService;
+        this.eventValidationService = eventValidationService;
     }
 
     @PostMapping(value = "/createCase", consumes = APPLICATION_JSON_VALUE)
@@ -164,6 +168,8 @@ public class CaseActionsForCaseWorkerController {
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
             caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues, true);
+            errors = eventValidationService.validateReceiptDate(caseData);
+            log.info("Event fields validation:: " + errors);
             if (caseData.getEthosCaseReference() == null || caseData.getEthosCaseReference().trim().equals("")) {
                 String reference = singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getCaseId());
                 log.info("Reference generated: " + reference);
@@ -205,11 +211,15 @@ public class CaseActionsForCaseWorkerController {
     })
     public ResponseEntity<CCDCallbackResponse> amendCaseDetails(
             @RequestBody CCDRequest ccdRequest) {
+        List<String> errors = new ArrayList<>();
         log.info("AMEND CASE DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
         DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
         log.info("Post Default values loaded: " + defaultValues);
         CaseData caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues, false);
+        errors = eventValidationService.validateReceiptDate(caseData);
+        log.info("Event fields validation: " + errors);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .errors(errors)
                 .data(caseData)
                 .build());
     }
