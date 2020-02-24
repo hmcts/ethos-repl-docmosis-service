@@ -75,6 +75,9 @@ public class CaseActionsForCaseWorkerControllerTest {
     @MockBean
     private SingleReferenceService singleReferenceService;
 
+    @MockBean
+    private  EventValidationService eventValidationService;
+
     private MockMvc mvc;
     private JsonNode requestContent;
     private JsonNode requestContent2;
@@ -247,7 +250,7 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.errors", notNullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
