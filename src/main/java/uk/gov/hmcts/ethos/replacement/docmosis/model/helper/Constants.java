@@ -132,6 +132,7 @@ public class Constants {
     public static final String FILE_EXTENSION = ".docx";
 
     public static final String FUTURE_RECEIPT_DATE_ERROR_MESSAGE = "Receipt date should not be a date in the future";
+    public static final int TARGET_HEARING_DATE_INCREMENT = 181;
 
     public static final int MAX_ES_SIZE = 10000;
 
