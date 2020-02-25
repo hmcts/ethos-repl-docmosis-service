@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
+
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -23,9 +26,12 @@ public class DocumentGenerationController {
 
     private final DocumentGenerationService documentGenerationService;
 
+    private final EventValidationService eventValidationService;
+
     @Autowired
-    public DocumentGenerationController(DocumentGenerationService documentGenerationService) {
+    public DocumentGenerationController(DocumentGenerationService documentGenerationService, EventValidationService eventValidationService) {
         this.documentGenerationService = documentGenerationService;
+        this.eventValidationService = eventValidationService;
     }
 
     @PostMapping(value = "/generateDocument", consumes = APPLICATION_JSON_VALUE)
@@ -41,13 +47,24 @@ public class DocumentGenerationController {
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("GENERATE LETTER ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
-        DocumentInfo documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
-        ccdRequest.getCaseDetails().getCaseData().setDocMarkUp(documentInfo.getMarkUp());
+        List<String> errors = eventValidationService.validateHearingNumber(ccdRequest.getCaseDetails().getCaseData());
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(ccdRequest.getCaseDetails().getCaseData())
-                .significant_item(Helper.generateSignificantItem(documentInfo))
-                .build());
+        if (errors.isEmpty()) {
+            DocumentInfo documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
+            ccdRequest.getCaseDetails().getCaseData().setDocMarkUp(documentInfo.getMarkUp());
+
+            return ResponseEntity.ok(CCDCallbackResponse.builder()
+                    .data(ccdRequest.getCaseDetails().getCaseData())
+                    .errors(errors)
+                    .significant_item(Helper.generateSignificantItem(documentInfo))
+                    .build());
+        }
+        else {
+            return ResponseEntity.ok(CCDCallbackResponse.builder()
+                    .data(ccdRequest.getCaseDetails().getCaseData())
+                    .errors(errors)
+                    .build());
+        }
     }
 
     @PostMapping(value = "/generateDocumentConfirmation", consumes = APPLICATION_JSON_VALUE)

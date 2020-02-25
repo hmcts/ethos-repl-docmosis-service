@@ -288,7 +288,7 @@ public class Helper {
         return sb;
     }
 
-    private static String getCorrespondenceHearingNumber(CaseData caseData) {
+    public static String getCorrespondenceHearingNumber(CaseData caseData) {
         Optional<CorrespondenceType> correspondenceType = Optional.ofNullable(caseData.getCorrespondenceType());
         if (correspondenceType.isPresent()) {
             return correspondenceType.get().getHearingNumber();
@@ -302,14 +302,17 @@ public class Helper {
         }
     }
 
-    private static HearingType getHearingByNumber(List<HearingTypeItem> hearingCollection, String correspondenceHearingNumber) {
+    public static HearingType getHearingByNumber(List<HearingTypeItem> hearingCollection, String correspondenceHearingNumber) {
 
         HearingType hearingType = new HearingType();
+
         Iterator<HearingTypeItem> itr = hearingCollection.iterator();
 
         while (itr.hasNext()) {
             hearingType = itr.next().getValue();
-            if (hearingType.getHearingNumber().equals(correspondenceHearingNumber)) { break; }
+            if(hearingType.getHearingNumber() != null) {
+                if (hearingType.getHearingNumber().equals(correspondenceHearingNumber)) { break; }
+            }
         }
 
         return hearingType;

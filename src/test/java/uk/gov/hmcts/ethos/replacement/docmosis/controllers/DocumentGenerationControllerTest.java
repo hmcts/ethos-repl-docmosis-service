@@ -17,6 +17,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +48,9 @@ public class DocumentGenerationControllerTest {
     @MockBean
     private DocumentGenerationService documentGenerationService;
 
+    @MockBean
+    private EventValidationService eventValidationService;
+
     private MockMvc mvc;
     private JsonNode requestContent;
     private DocumentInfo documentInfo;
@@ -74,7 +78,7 @@ public class DocumentGenerationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.errors", notNullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
