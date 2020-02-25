@@ -14,13 +14,13 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.types.ListingType;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
