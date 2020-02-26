@@ -211,16 +211,34 @@ public class CaseActionsForCaseWorkerController {
     })
     public ResponseEntity<CCDCallbackResponse> amendCaseDetails(
             @RequestBody CCDRequest ccdRequest) {
-        List<String> errors = new ArrayList<>();
         log.info("AMEND CASE DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
         DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
         log.info("Post Default values loaded: " + defaultValues);
         CaseData caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues, false);
-        errors = eventValidationService.validateReceiptDate(caseData);
+        List<String> errors = eventValidationService.validateReceiptDate(caseData);
         log.info("Event fields validation: " + errors);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .errors(errors)
                 .data(caseData)
+                .build());
+    }
+
+    @PostMapping(value = "/addAmendET3", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "add or amend ET3 respondent details for a single case.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> addAmendET3(
+            @RequestBody CCDRequest ccdRequest) {
+        log.info("ADD AMEND ET3 ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        List<String> errors = eventValidationService.validateReturnedFromJudgeDate(ccdRequest.getCaseDetails().getCaseData());
+        log.info("Event fields validation: " + errors);
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(ccdRequest.getCaseDetails().getCaseData())
+                .errors(errors)
                 .build());
     }
 
