@@ -1165,4 +1165,24 @@ public class HelperTest {
         String expected = "EM-TRB-EGW-ENG-00029_4.2";
         assertEquals(expected, Helper.getDocumentName(caseDetails4.getCaseData()));
     }
+
+    @Test
+    public void getCorrespondenceHearingNumber() {
+        String expectedCorrespondenceHearingNumber = "2";
+
+        assertEquals(expectedCorrespondenceHearingNumber, Helper.getCorrespondenceHearingNumber(caseDetails1.getCaseData()));
+    }
+
+    @Test
+    public void getHearingByNumber() {
+        String expectedHearingNumber = "2";
+        String expectedHearing_type = "Single";
+        String expectedHearingVenue = "Manchester";
+
+        String correspondenceHearingNumber = "2";
+
+        assertEquals(expectedHearingNumber, Helper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(), correspondenceHearingNumber).getHearingNumber());
+        assertEquals(expectedHearing_type, Helper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(), correspondenceHearingNumber).getHearingType());
+        assertEquals(expectedHearingVenue, Helper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(), correspondenceHearingNumber).getHearingVenue());
+    }
 }
