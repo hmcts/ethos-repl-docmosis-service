@@ -212,11 +212,15 @@ public class CaseActionsForCaseWorkerController {
     public ResponseEntity<CCDCallbackResponse> amendCaseDetails(
             @RequestBody CCDRequest ccdRequest) {
         log.info("AMEND CASE DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
-        log.info("Post Default values loaded: " + defaultValues);
-        CaseData caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues, false);
-        List<String> errors = eventValidationService.validateReceiptDate(caseData);
+        List<String> errors = eventValidationService.validateReceiptDate(ccdRequest.getCaseDetails().getCaseData());
         log.info("Event fields validation: " + errors);
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        if (errors.isEmpty()) {
+            DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
+            log.info("Post Default values loaded: " + defaultValues);
+            caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues, false);
+        }
+
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .errors(errors)
                 .data(caseData)
