@@ -102,8 +102,8 @@ public class HelperTest {
                 "\"Respondent\":\"1. Antonio Vazquez\",\n" +
                 "\"resp_others\":\"2. Juan Garcia\\n3. Mike Jordan\",\n" +
                 "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n3. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Hearing_date\":\"25 November 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
+                "\"Hearing_date\":\"25 November 2019, 14 December 2019, 28 December 2019\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019, 14 December 2019, 28 December 2019 at 10:30\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t1_2\":\"true\",\n" +
@@ -173,7 +173,7 @@ public class HelperTest {
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t2_2A\":\"true\",\n" +
@@ -595,7 +595,7 @@ public class HelperTest {
                 "\"resp_others\":\"2. Mikey McCollier\",\n" +
                 "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 1333 Small Street, 22222 House, Liverpool, North West, L12 42R, UK\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t10_2\":\"true\",\n" +
@@ -665,7 +665,7 @@ public class HelperTest {
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t9_2\":\"true\",\n" +
@@ -797,7 +797,7 @@ public class HelperTest {
                 "\"resp_others\":\"2. Juan Garcia\",\n" +
                 "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t_Scot_7_1\":\"true\",\n" +
@@ -867,7 +867,7 @@ public class HelperTest {
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019 12:11\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t_Scot_24\":\"true\",\n" +
@@ -1164,5 +1164,25 @@ public class HelperTest {
     public void getDocumentName() {
         String expected = "EM-TRB-EGW-ENG-00029_4.2";
         assertEquals(expected, Helper.getDocumentName(caseDetails4.getCaseData()));
+    }
+
+    @Test
+    public void getCorrespondenceHearingNumber() {
+        String expectedCorrespondenceHearingNumber = "2";
+
+        assertEquals(expectedCorrespondenceHearingNumber, Helper.getCorrespondenceHearingNumber(caseDetails1.getCaseData()));
+    }
+
+    @Test
+    public void getHearingByNumber() {
+        String expectedHearingNumber = "2";
+        String expectedHearing_type = "Single";
+        String expectedHearingVenue = "Manchester";
+
+        String correspondenceHearingNumber = "2";
+
+        assertEquals(expectedHearingNumber, Helper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(), correspondenceHearingNumber).getHearingNumber());
+        assertEquals(expectedHearing_type, Helper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(), correspondenceHearingNumber).getHearingType());
+        assertEquals(expectedHearingVenue, Helper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(), correspondenceHearingNumber).getHearingVenue());
     }
 }

@@ -101,7 +101,8 @@
     },
     "correspondenceType": {
       "topLevel_Documents": "EM-TRB-EGW-ENG-00026",
-      "part_1_Documents": "1.2"
+      "part_1_Documents": "1.2",
+      "hearingNumber": "2"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
@@ -109,15 +110,88 @@
       {
         "id" : "123345",
         "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "1",
+          "Hearing_venue": "Manchester",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-01T12:11:00.000"
+              }
+            },
+            {
+              "id" : "123346",
+              "value" : {
+                "listedDate": "2019-12-02T10:30:00.000"
+              }
+            },
+            {
+              "id" : "123347",
+              "value" : {
+                "listedDate": "2019-12-03T11:15:00.000"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id" : "123346",
+        "value" : {
           "hearingEstLengthNum": "2",
           "hearingEstLengthNumType": "days",
           "Hearing_type": "Single",
+          "hearingNumber": "2",
           "Hearing_venue": "Manchester",
           "hearingDateCollection": [
             {
               "id" : "123345",
               "value" : {
                 "listedDate": "2019-11-25T12:11:00.000"
+              }
+            },
+            {
+              "id" : "123346",
+              "value" : {
+                "listedDate": "2019-12-14T10:30:00.000"
+              }
+            },
+            {
+              "id" : "123347",
+              "value" : {
+                "listedDate": "2019-12-28T11:15:00.000"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id" : "123347",
+        "value" : {
+          "hearingEstLengthNum": "3",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "3",
+          "Hearing_venue": "Manchester",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-21T12:11:00.000"
+              }
+            },
+            {
+              "id" : "123346",
+              "value" : {
+                "listedDate": "2019-12-22T10:30:00.000"
+              }
+            },
+            {
+              "id" : "123347",
+              "value" : {
+                "listedDate": "2019-12-23T11:15:00.000"
               }
             }
           ]
