@@ -81,7 +81,8 @@
     },
     "correspondenceScotType": {
       "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-00042",
-      "part_1_Scot_Documents": "7.1"
+      "part_1_Scot_Documents": "7.1",
+      "hearingNumber": "1"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
@@ -92,6 +93,7 @@
           "hearingEstLengthNum": "2",
           "hearingEstLengthNumType": "days",
           "Hearing_type": "Single",
+          "hearingNumber": "1",
           "Hearing_venue": "Manchester",
           "hearingDateCollection": [
             {
