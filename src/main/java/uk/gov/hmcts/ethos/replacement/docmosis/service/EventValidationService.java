@@ -9,8 +9,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.*;
 
@@ -42,9 +42,11 @@ public class EventValidationService {
 
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
 
-            Iterator<RespondentSumTypeItem> itr = caseData.getRespondentCollection().iterator();
+            ListIterator<RespondentSumTypeItem> itr = caseData.getRespondentCollection().listIterator();
 
             while (itr.hasNext()) {
+
+                int index = itr.nextIndex() + 1;
 
                 RespondentSumType respondentSumType = itr.next().getValue();
 
@@ -53,8 +55,10 @@ public class EventValidationService {
                     LocalDate responseReferredToJudge = LocalDate.parse(respondentSumType.getResponse_ReferredToJudge());
                     LocalDate responseReturnedFromJudge = LocalDate.parse(respondentSumType.getResponseReturnedFromJudge());
 
+                    String respondentName = respondentSumType.getRespondentName() != null ? respondentSumType.getRespondentName() : "missing name";
+
                     if (responseReturnedFromJudge.isBefore(responseReferredToJudge)) {
-                        errors.add(EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE);
+                        errors.add(EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE + " for respondent " + index + " (" + respondentName + ")");
                     }
                 }
             }
