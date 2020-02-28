@@ -31,8 +31,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
@@ -333,6 +332,14 @@ public class BulkCreationServiceTest {
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails("Yes", "Single"),
                 bulkCasesPayload, "authToken", true);
         assertNull(bulkRequestPayload.getBulkDetails().getCaseData().getMultipleReference());
+    }
+
+    @Test
+    public void bulkCreationLogicAfterSubmittedCallbackPending() {
+        bulkCasesPayload.getSubmitEvents().get(0).setState(PENDING_STATE);
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails("Yes", "Single"),
+                bulkCasesPayload, "authToken", true);
+        assertNotNull(bulkRequestPayload.getBulkDetails().getCaseData());
     }
 
     @Test

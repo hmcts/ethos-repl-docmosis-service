@@ -4,10 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import java.util.Collections;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -22,8 +22,7 @@ public class UserServiceTest {
 
     @Before
     public void setUp() {
-        userDetails = new UserDetails("123", "example@gmail.com", "Smith",
-                "John", Collections.singletonList("Worker"));
+        userDetails = HelperTest.getUserDetails();
         idamApi = authorisation -> userDetails;
         userService = new UserService(idamApi);
     }
@@ -36,10 +35,10 @@ public class UserServiceTest {
     @Test
     public void shouldCheckAllUserDetails() {
         assertEquals(userDetails, userService.getUserDetails("TOKEN"));
-        assertEquals("example@gmail.com", userService.getUserDetails("TOKEN").getEmail());
-        assertEquals("Smith", userService.getUserDetails("TOKEN").getForename());
-        assertEquals(Collections.singletonList("Worker"), userService.getUserDetails("TOKEN").getRoles());
-        assertEquals(Optional.of("John"), userService.getUserDetails("TOKEN").getSurname());
+        assertEquals("mail@mail.com", userService.getUserDetails("TOKEN").getEmail());
+        assertEquals("Mike", userService.getUserDetails("TOKEN").getFirstName());
+        assertEquals("Jordan", userService.getUserDetails("TOKEN").getLastName());
+        assertEquals(Collections.singletonList("role"), userService.getUserDetails("TOKEN").getRoles());
         assertEquals(userDetails.toString(), userService.getUserDetails("TOKEN").toString());
     }
 }
