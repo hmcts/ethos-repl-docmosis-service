@@ -10,7 +10,8 @@ services:
     environment:
       TORNADO_URL: "http://tornado:8090/rs/render"
       TORNADO_ACCESS_KEY: ""
-      IDAM_API_URL: "http://sidam-api:5000"
+      IDAM_API_URL: "http://idam-api:5000"
+      IDAM_API_JWK_URL: "http://idam-api:5000/jwks"
       CCD_DATA_STORE_API_URL: "http://ccd-data-store-api:4452"
       DOCUMENT_MANAGEMENT_URL: "http://dm-store:8080"
       DOCUMENT_MANAGEMENT_CASEWORKERROLE: "caseworker-ethos"
