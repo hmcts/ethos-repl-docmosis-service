@@ -239,4 +239,8 @@
         <notes><![CDATA[ CVE-2019-20444  ]]></notes>
         <cve>CVE-2019-20444</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-1938  ]]></notes>
+        <cve>CVE-2020-1938</cve>
+    </suppress>
 </suppressions>
