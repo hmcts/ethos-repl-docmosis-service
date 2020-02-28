@@ -12,6 +12,7 @@ public class ESHelper {
 
     private static final String ETHOS_CASE_REFERENCE_KEYWORD = "data.ethosCaseReference.keyword";
     private static final String MULTIPLE_CASE_REFERENCE_KEYWORD = "data.multipleReference.keyword";
+    private static final String LISTING_DATE_FIELD_NAME = "data.hearingCollection.value.hearingDateCollection.value.listedDate";
 
     public static String getSearchQuery(List<String> caseIds) {
         TermsQueryBuilder termsQueryBuilder = termsQuery(ETHOS_CASE_REFERENCE_KEYWORD, caseIds);
@@ -31,7 +32,7 @@ public class ESHelper {
                                                                 String venueToSearch, String venueToSearchMapping) {
         BoolQueryBuilder boolQueryBuilder = boolQuery()
                 .filter(QueryBuilders.termQuery(venueToSearchMapping, venueToSearch))
-                .filter(new RangeQueryBuilder("listedDate").from(dateToSearchFrom).to(dateToSearchTo));
+                .filter(new RangeQueryBuilder(LISTING_DATE_FIELD_NAME).gte(dateToSearchFrom).lte(dateToSearchTo));
         return new SearchSourceBuilder()
                 .size(MAX_ES_SIZE)
                 .query(boolQueryBuilder).toString();
@@ -39,7 +40,7 @@ public class ESHelper {
 
     public static String getListingRangeDateSearchQuery(String dateToSearchFrom, String dateToSearchTo) {
         BoolQueryBuilder boolQueryBuilder = boolQuery()
-                .filter(new RangeQueryBuilder("listedDate").from(dateToSearchFrom).to(dateToSearchTo));
+                .filter(new RangeQueryBuilder(LISTING_DATE_FIELD_NAME).gte(dateToSearchFrom).lte(dateToSearchTo));
         return new SearchSourceBuilder()
                 .size(MAX_ES_SIZE)
                 .query(boolQueryBuilder).toString();
