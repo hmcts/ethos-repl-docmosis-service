@@ -14,7 +14,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRI
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
-import javax.swing.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -91,7 +90,7 @@ public class Helper {
         sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts2\":\"")
                 .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
 
-        String userName = userDetails.getForename() + " " + userDetails.getSurname().orElse("");
+        String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
         sb.append("\"Today_date\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
         sb.append("\"TodayPlus28Days\":\"").append(formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);

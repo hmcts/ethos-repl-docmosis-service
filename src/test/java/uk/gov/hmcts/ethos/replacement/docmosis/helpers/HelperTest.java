@@ -12,10 +12,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceTyp
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class HelperTest {
 
@@ -51,7 +51,7 @@ public class HelperTest {
 
         caseDetailsEmpty = new CaseDetails();
         caseDetailsEmpty.setCaseData(new CaseData());
-        userDetails = new UserDetails("1", "example@hotmail.com", "Mike", "Jordan", new ArrayList<>());
+        userDetails = getUserDetails();
 
     }
 
@@ -1164,6 +1164,16 @@ public class HelperTest {
     public void getDocumentName() {
         String expected = "EM-TRB-EGW-ENG-00029_4.2";
         assertEquals(expected, Helper.getDocumentName(caseDetails4.getCaseData()));
+    }
+
+    public static UserDetails getUserDetails() {
+        UserDetails userDetails = new UserDetails();
+        userDetails.setUid("id");
+        userDetails.setEmail("mail@mail.com");
+        userDetails.setFirstName("Mike");
+        userDetails.setLastName("Jordan");
+        userDetails.setRoles(Collections.singletonList("role"));
+        return userDetails;
     }
 
     @Test

@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
@@ -57,7 +58,7 @@ public class TornadoServiceTest {
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
         listingData.setListingVenue("Glasgow");
         listingData.setListingCollection(new ArrayList<>(Collections.singleton(listingTypeItem)));
-        userDetails = new UserDetails("1", "example@hotmail.com", "Mike", "Jordan", new ArrayList<>());
+        userDetails = HelperTest.getUserDetails();
         IdamApi idamApi = authorisation -> userDetails;
         userService = new UserService(idamApi);
         tornadoService = new TornadoService(tornadoConfiguration, documentManagementService, userService);
