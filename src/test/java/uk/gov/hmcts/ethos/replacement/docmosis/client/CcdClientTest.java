@@ -165,6 +165,22 @@ public class CcdClientTest {
 
     @Test
     public void retrieveCasesVenueAndRangeDateElasticSearch() throws IOException {
+        String jsonQuery = "{\"size\":10000,\"query\":{\"bool\":{\"filter\":[{\"term\":{\"listedDate\":{\"value\":\"Manchester\",\"boost\":1.0}}},{\"range\":{\"data" +
+                ".hearingCollection.value.hearingDateCollection.value.listedDate\":{\"from\":\"2019-09-23T00:00:00.000\",\"to\":\"2019-09-24T00:00:00.000\"," +
+                "\"include_lower\":true,\"include_upper\":true,\"boost\":1.0}}}],\"adjust_pure_negative\":true,\"boost\":1.0}}}";
+        HttpEntity<String> httpEntity = new HttpEntity<>(jsonQuery, null);
+        CaseSearchResult caseSearchResult = new CaseSearchResult(2L, Arrays.asList(new SubmitEvent(), new SubmitEvent()));
+        ResponseEntity<CaseSearchResult> responseEntity = new ResponseEntity<>(caseSearchResult, HttpStatus.OK);
+        when(ccdClientConfig.buildRetrieveCasesUrlElasticSearch(any())).thenReturn(uri);
+        when(restTemplate.exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(CaseSearchResult.class))).thenReturn(responseEntity);
+        ccdClient.retrieveCasesVenueAndDateElasticSearch("authToken", caseDetails.getCaseTypeId(), "2019-09-23",
+                "2019-09-24", "Manchester", "listedDate");
+        verify(restTemplate).exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(CaseSearchResult.class));
+        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
+    public void retrieveCasesVenueAndSingleDateElasticSearch() throws IOException {
         String jsonQuery = "{\"size\":10000,\"query\":{\"bool\":{\"filter\":[{\"term\":{\"listedDate\":{\"value\":\"Manchester\",\"boost\":1.0}}}," +
                 "{\"range\":{\"data.hearingCollection.value.hearingDateCollection.value.listedDate\":{\"from\":\"2019-09-23T00:00:00.000\",\"to\":\"2019-09-24T00:00:00" +
                 ".000\",\"include_lower\":true,\"include_upper\":true,\"boost\":1.0}}}],\"adjust_pure_negative\":true,\"boost\":1.0}}}";
@@ -180,25 +196,9 @@ public class CcdClientTest {
     }
 
     @Test
-    public void retrieveCasesVenueAndSingleDateElasticSearch() throws IOException {
-        String jsonQuery = "{\"size\":10000,\"query\":{\"bool\":{\"filter\":[{\"term\":{\"listedDate\":{\"value\":\"Manchester\",\"boost\":1.0}}}," +
-                "{\"range\":{\"data.hearingCollection.value.hearingDateCollection.value.listedDate\":{\"from\":\"2019-09-23T00:00:00.000\",\"to\":\"2019-09-23T00:00:00" +
-                ".000\",\"include_lower\":true,\"include_upper\":true,\"boost\":1.0}}}],\"adjust_pure_negative\":true,\"boost\":1.0}}}";
-        HttpEntity<String> httpEntity = new HttpEntity<>(jsonQuery, null);
-        CaseSearchResult caseSearchResult = new CaseSearchResult(2L, Arrays.asList(new SubmitEvent(), new SubmitEvent()));
-        ResponseEntity<CaseSearchResult> responseEntity = new ResponseEntity<>(caseSearchResult, HttpStatus.OK);
-        when(ccdClientConfig.buildRetrieveCasesUrlElasticSearch(any())).thenReturn(uri);
-        when(restTemplate.exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(CaseSearchResult.class))).thenReturn(responseEntity);
-        ccdClient.retrieveCasesVenueAndDateElasticSearch("authToken", caseDetails.getCaseTypeId(), "2019-09-23",
-                "2019-09-23", "Manchester", "listedDate");
-        verify(restTemplate).exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(CaseSearchResult.class));
-        verifyNoMoreInteractions(restTemplate);
-    }
-
-    @Test
     public void retrieveCasesAllVenuesAndSingleDateElasticSearch() throws IOException {
         String jsonQuery = "{\"size\":10000,\"query\":{\"bool\":{\"filter\":[{\"range\":{\"data.hearingCollection.value.hearingDateCollection.value" +
-                ".listedDate\":{\"from\":\"2019-09-23T00:00:00.000\",\"to\":\"2019-09-23T00:00:00.000\",\"include_lower\":true,\"include_upper\":true,\"boost\":1" +
+                ".listedDate\":{\"from\":\"2019-09-23T00:00:00.000\",\"to\":\"2019-09-23T23:59:59.000\",\"include_lower\":true,\"include_upper\":true,\"boost\":1" +
                 ".0}}}],\"adjust_pure_negative\":true,\"boost\":1.0}}}";
         HttpEntity<String> httpEntity = new HttpEntity<>(jsonQuery, null);
         CaseSearchResult caseSearchResult = new CaseSearchResult(2L, Arrays.asList(new SubmitEvent(), new SubmitEvent()));
