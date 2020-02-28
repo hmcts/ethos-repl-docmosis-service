@@ -69,6 +69,8 @@ public class ListingService {
             //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
             List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
             if (submitEvents != null) {
+                log.info("Cases searched: " + submitEvents.size());
+                log.info("Cases info: " + submitEvents);
                 List<ListingTypeItem> listingTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null && !submitEvent.getCaseData().getHearingCollection().isEmpty()) {
@@ -80,6 +82,8 @@ public class ListingService {
                     }
                 }
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
+            } else {
+                log.info("Cases searched are 0");
             }
             return clearListingFields(listingDetails.getCaseData());
         } catch (Exception ex) {
@@ -89,7 +93,7 @@ public class ListingService {
 
     private List<SubmitEvent> getListingHearingsSearch(ListingDetails listingDetails, String authToken) throws IOException {
         ListingData listingData = listingDetails.getCaseData();
-        Map.Entry<String,String> entry = getListingVenueToSearch(listingData).entrySet().iterator().next();
+        Map.Entry<String, String> entry = getListingVenueToSearch(listingData).entrySet().iterator().next();
         String venueToSearchMapping = entry.getKey();
         String venueToSearch = entry.getValue();
         boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
@@ -151,7 +155,7 @@ public class ListingService {
                 return ListingHelper.getVenueToSearch(listingData);
             } else {
                 return !isNullOrEmpty(listingData.getListingVenue())
-                        ? ListingHelper.createMap("listingVenue", listingData.getListingVenue())
+                        ? ListingHelper.createMap("hearingVenueDay", listingData.getListingVenue())
                         : ListingHelper.createMap("","");
             }
         }

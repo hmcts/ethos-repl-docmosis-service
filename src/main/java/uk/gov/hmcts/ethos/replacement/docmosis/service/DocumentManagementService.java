@@ -48,7 +48,7 @@ public class DocumentManagementService {
             UploadResponse response = documentUploadClient.upload(
                     authToken,
                     authTokenGenerator.generate(),
-                    userService.getUserDetails(authToken).getId(),
+                    userService.getUserDetails(authToken).getUid(),
                     singletonList(file)
             );
             //log.info("Response: " + response.toString());

@@ -13,6 +13,7 @@ services:
       TORNADO_URL: "http://tornado:8083/rs/render"
       TORNADO_ACCESS_KEY: ""
       IDAM_API_URL: "http://sidam-api:5000"
+      IDAM_API_JWK_URL: "http://sidam-api:5000/jwks"
       DOCUMENT_MANAGEMENT_URL: "http://dm-store:8080"
       DOCUMENT_MANAGEMENT_CASEWORKERROLE: "caseworker-test"
       SERVICE_AUTH_PROVIDER_URL: "http://service-auth-provider-api:8080"
