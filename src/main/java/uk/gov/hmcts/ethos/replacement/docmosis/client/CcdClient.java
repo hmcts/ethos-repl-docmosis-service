@@ -115,8 +115,9 @@ public class CcdClient {
                                                                  String venueToSearch, String venueToSearchMapping) throws IOException {
         String from = LocalDate.parse(dateToSearchFrom).atStartOfDay().format(OLD_DATE_TIME_PATTERN);
         if (dateToSearchTo.equals(dateToSearchFrom)) {
+            String to = LocalDate.parse(dateToSearchFrom).atStartOfDay().plusDays(1).minusSeconds(1).format(OLD_DATE_TIME_PATTERN);
             return buildAndGetElasticSearchRequest(authToken, caseTypeId,
-                    getListingQuery(from, from, venueToSearch, venueToSearchMapping));
+                    getListingQuery(from, to, venueToSearch, venueToSearchMapping));
         } else {
             String to = LocalDate.parse(dateToSearchTo).atStartOfDay().format(OLD_DATE_TIME_PATTERN);
             return buildAndGetElasticSearchRequest(authToken, caseTypeId,
