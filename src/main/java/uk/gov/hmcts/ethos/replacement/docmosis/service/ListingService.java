@@ -70,7 +70,6 @@ public class ListingService {
             List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
             if (submitEvents != null) {
                 log.info("Cases searched: " + submitEvents.size());
-                log.info("Cases info: " + submitEvents);
                 List<ListingTypeItem> listingTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null && !submitEvent.getCaseData().getHearingCollection().isEmpty()) {
@@ -82,8 +81,6 @@ public class ListingService {
                     }
                 }
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
-            } else {
-                log.info("Cases searched are 0");
             }
             return clearListingFields(listingDetails.getCaseData());
         } catch (Exception ex) {
@@ -165,7 +162,6 @@ public class ListingService {
         Map<String, String> venueToSearchMap = getListingVenueToSearch(listingData);
         String venueToSearch = venueToSearchMap.entrySet().iterator().next().getValue();
         if (ALL_VENUES.equals(venueToSearch)) {
-            log.info("Searching by all venues");
             return true;
         } else {
             String venueSearched;
@@ -174,7 +170,6 @@ public class ListingService {
             } else {
                 venueSearched = !isNullOrEmpty(dateListedTypeItem.getValue().getHearingVenueDay()) ? dateListedTypeItem.getValue().getHearingVenueDay() : " ";
             }
-            log.info("VenueToSearch: " + venueToSearch + "   VenueSearched: " + venueSearched);
             return venueSearched.equals(venueToSearch);
         }
     }
@@ -185,11 +180,9 @@ public class ListingService {
         if (dateRange) {
             String dateToSearchFrom = listingData.getListingDateFrom();
             String dateToSearchTo = listingData.getListingDateTo();
-            log.info("RANGE: -> dateToSearchFrom: " + dateToSearchFrom + "   dateToSearchTo: " + dateToSearchTo + "   DateListed: " + dateListed);
             return ListingHelper.getListingDateBetween(dateToSearchFrom, dateToSearchTo, dateListed);
         } else {
             String dateToSearch = listingData.getListingDate();
-            log.info("SINGLE: -> dateToSearch: " + dateToSearch + "   DateListed: " + dateListed);
             return ListingHelper.getListingDateBetween(dateToSearch, "", dateListed);
         }
     }
