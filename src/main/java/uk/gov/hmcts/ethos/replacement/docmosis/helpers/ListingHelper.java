@@ -144,7 +144,7 @@ public class ListingHelper {
         }
         sb.append(getListingRangeDates(listingData));
 
-        String userName = userDetails.getForename() + " " + userDetails.getSurname().orElse("");
+        String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
 
         sb.append(getDocumentData(listingData, templateName, caseType));
@@ -360,10 +360,10 @@ public class ListingHelper {
 
     public static Map<String, String> getVenueToSearch(ListingData listingData) {
         if (!isNullOrEmpty(listingData.getListingVenueOfficeGlas())) {
-            return createMap("listingVenueOfficeGlas", listingData.getListingVenueOfficeGlas());
+            return createMap("Hearing_Glasgow", listingData.getListingVenueOfficeGlas());
         } else if (!isNullOrEmpty(listingData.getListingVenueOfficeAber())) {
-            return createMap("listingVenueOfficeAber", listingData.getListingVenueOfficeAber());
-        } return !isNullOrEmpty(listingData.getListingVenue()) ? createMap("listingVenue", listingData.getListingVenue()) : createMap("","");
+            return createMap("Hearing_Aberdeen", listingData.getListingVenueOfficeAber());
+        } return !isNullOrEmpty(listingData.getListingVenue()) ? createMap("hearingVenueDay", listingData.getListingVenue()) : createMap("","");
     }
 
     public static String getVenueFromDateListedType(DateListedType dateListedType) {

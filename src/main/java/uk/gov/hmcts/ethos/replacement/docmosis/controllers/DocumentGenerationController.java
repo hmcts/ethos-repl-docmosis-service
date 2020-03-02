@@ -6,14 +6,21 @@ import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDCallbackResponse;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
@@ -26,11 +33,15 @@ public class DocumentGenerationController {
 
     private final DocumentGenerationService documentGenerationService;
 
+    private final VerifyTokenService verifyTokenService;
+
     private final EventValidationService eventValidationService;
 
     @Autowired
-    public DocumentGenerationController(DocumentGenerationService documentGenerationService, EventValidationService eventValidationService) {
+    public DocumentGenerationController(DocumentGenerationService documentGenerationService, VerifyTokenService verifyTokenService,
+                                        EventValidationService eventValidationService) {
         this.documentGenerationService = documentGenerationService;
+        this.verifyTokenService = verifyTokenService;
         this.eventValidationService = eventValidationService;
     }
 
@@ -46,6 +57,11 @@ public class DocumentGenerationController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("GENERATE LETTER ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
 
         List<String> errors = eventValidationService.validateHearingNumber(ccdRequest.getCaseDetails().getCaseData());
 
@@ -76,8 +92,14 @@ public class DocumentGenerationController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> generateDocumentConfirmation(
-            @RequestBody CCDRequest ccdRequest) {
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
         log.info("GENERATE LETTER CONFIRMATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(ccdRequest.getCaseDetails().getCaseData())

@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.DocumentManagementException;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
@@ -21,9 +22,9 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -58,8 +59,7 @@ public class DocumentManagementServiceTest {
 
     @Test
     public void shouldUploadToDocumentManagement() throws IOException, URISyntaxException {
-        UserDetails userDetails = new UserDetails("id", "mail@mail.com",
-                "userFirstName", "userLastName", Collections.singletonList("role"));
+        UserDetails userDetails = HelperTest.getUserDetails();
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
                 .thenReturn(successfulDocumentManagementUploadResponse());
@@ -74,8 +74,7 @@ public class DocumentManagementServiceTest {
     public void uploadDocumentToDocumentManagementThrowsException() throws IOException, URISyntaxException {
         expectedException.expect(DocumentManagementException.class);
         expectedException.expectMessage("Unable to upload document document.docx to document management");
-        UserDetails userDetails = new UserDetails("id", "mail@mail.com",
-                "userFirstName", "userLastName", Collections.singletonList("role"));
+        UserDetails userDetails = HelperTest.getUserDetails();
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
                 .thenReturn(unsuccessfulDocumentManagementUploadResponse());

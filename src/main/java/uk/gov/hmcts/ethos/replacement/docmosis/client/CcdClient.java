@@ -16,12 +16,12 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.ALL_VENUES;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 @Slf4j
 @Component
@@ -48,7 +48,7 @@ public class CcdClient {
     public CCDRequest startCaseCreation(String authToken, CaseDetails caseDetails) throws IOException {
         HttpEntity<String> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
-        String uri = ccdClientConfig.buildStartCaseCreationUrl(userService.getUserDetails(authToken).getId(), caseDetails.getJurisdiction(),
+        String uri = ccdClientConfig.buildStartCaseCreationUrl(userService.getUserDetails(authToken).getUid(), caseDetails.getJurisdiction(),
                 caseDetails.getCaseTypeId());
         return restTemplate.exchange(uri, HttpMethod.GET, request, CCDRequest.class).getBody();
     }
@@ -56,7 +56,7 @@ public class CcdClient {
     public SubmitEvent submitCaseCreation(String authToken, CaseDetails caseDetails, CCDRequest req) throws IOException {
         HttpEntity<CaseDataContent> request =
                 new HttpEntity<>(caseDataBuilder.buildCaseDataContent(caseDetails.getCaseData(), req, CREATION_EVENT_SUMMARY), ccdClientConfig.buildHeaders(authToken));
-        String uri = ccdClientConfig.buildSubmitCaseCreationUrl(userService.getUserDetails(authToken).getId(), caseDetails.getJurisdiction(),
+        String uri = ccdClientConfig.buildSubmitCaseCreationUrl(userService.getUserDetails(authToken).getUid(), caseDetails.getJurisdiction(),
                 caseDetails.getCaseTypeId());
         return restTemplate.exchange(uri, HttpMethod.POST, request, SubmitEvent.class).getBody();
     }
@@ -64,7 +64,7 @@ public class CcdClient {
     public SubmitEvent retrieveCase(String authToken, String caseTypeId, String jurisdiction, String cid) throws IOException {
         HttpEntity<CCDRequest> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
-        String uri = ccdClientConfig.buildRetrieveCaseUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
+        String uri = ccdClientConfig.buildRetrieveCaseUrl(userService.getUserDetails(authToken).getUid(), jurisdiction,
                 caseTypeId, cid);
         return restTemplate.exchange(uri, HttpMethod.GET, request, SubmitEvent.class).getBody();
     }
@@ -72,13 +72,13 @@ public class CcdClient {
     private PaginatedSearchMetadata searchMetadata(String authToken, String caseTypeId, String jurisdiction) throws IOException {
         HttpEntity<CCDRequest> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
-        String uri = ccdClientConfig.buildPaginationMetadataCaseUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
+        String uri = ccdClientConfig.buildPaginationMetadataCaseUrl(userService.getUserDetails(authToken).getUid(), jurisdiction,
                 caseTypeId);
         return restTemplate.exchange(uri, HttpMethod.GET, request, PaginatedSearchMetadata.class).getBody();
     }
 
     private String getURI(String authToken, String caseTypeId, String jurisdiction, String page) {
-        return ccdClientConfig.buildRetrieveCasesUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
+        return ccdClientConfig.buildRetrieveCasesUrl(userService.getUserDetails(authToken).getUid(), jurisdiction,
                 caseTypeId, page);
     }
 
@@ -92,7 +92,7 @@ public class CcdClient {
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
         List<SubmitEvent> submitEvents = new ArrayList<>();
         for (int page = 1; page <= getTotalPagesCount(authToken, caseTypeId, jurisdiction); page++) {
-            List<SubmitEvent> submitEventAux = restTemplate.exchange(ccdClientConfig.buildRetrieveCasesUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
+            List<SubmitEvent> submitEventAux = restTemplate.exchange(ccdClientConfig.buildRetrieveCasesUrl(userService.getUserDetails(authToken).getUid(), jurisdiction,
                 caseTypeId, String.valueOf(page)), HttpMethod.GET, request, new ParameterizedTypeReference<List<SubmitEvent>>(){}).getBody();
             if (submitEventAux != null) {
                 submitEvents.addAll(submitEventAux);
@@ -113,12 +113,15 @@ public class CcdClient {
 
     public List<SubmitEvent> retrieveCasesVenueAndDateElasticSearch(String authToken, String caseTypeId, String dateToSearchFrom, String dateToSearchTo,
                                                                  String venueToSearch, String venueToSearchMapping) throws IOException {
+        String from = LocalDate.parse(dateToSearchFrom).atStartOfDay().format(OLD_DATE_TIME_PATTERN);
         if (dateToSearchTo.equals(dateToSearchFrom)) {
+            String to = LocalDate.parse(dateToSearchFrom).atStartOfDay().plusDays(1).minusSeconds(1).format(OLD_DATE_TIME_PATTERN);
             return buildAndGetElasticSearchRequest(authToken, caseTypeId,
-                    getListingQuery(dateToSearchFrom, dateToSearchFrom, venueToSearch, venueToSearchMapping));
+                    getListingQuery(from, to, venueToSearch, venueToSearchMapping));
         } else {
+            String to = LocalDate.parse(dateToSearchTo).atStartOfDay().format(OLD_DATE_TIME_PATTERN);
             return buildAndGetElasticSearchRequest(authToken, caseTypeId,
-                    getListingQuery(dateToSearchFrom, dateToSearchTo, venueToSearch, venueToSearchMapping));
+                    getListingQuery(from, to, venueToSearch, venueToSearchMapping));
         }
     }
 
@@ -200,7 +203,7 @@ public class CcdClient {
     public CCDRequest startEventForCase(String authToken, String caseTypeId, String jurisdiction, String cid) throws IOException {
         HttpEntity<String> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
-        String uri = ccdClientConfig.buildStartEventForCaseUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
+        String uri = ccdClientConfig.buildStartEventForCaseUrl(userService.getUserDetails(authToken).getUid(), jurisdiction,
                 caseTypeId, cid);
         return restTemplate.exchange(uri, HttpMethod.GET, request, CCDRequest.class).getBody();
     }
@@ -208,7 +211,7 @@ public class CcdClient {
     public CCDRequest startEventForCaseBulkSingle(String authToken, String caseTypeId, String jurisdiction, String cid) throws IOException {
         HttpEntity<String> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
-        String uri = ccdClientConfig.buildStartEventForCaseUrlBulkSingle(userService.getUserDetails(authToken).getId(), jurisdiction,
+        String uri = ccdClientConfig.buildStartEventForCaseUrlBulkSingle(userService.getUserDetails(authToken).getUid(), jurisdiction,
                 caseTypeId, cid);
         return restTemplate.exchange(uri, HttpMethod.GET, request, CCDRequest.class).getBody();
     }
@@ -216,7 +219,7 @@ public class CcdClient {
     public CCDRequest startEventForCasePreAcceptBulkSingle(String authToken, String caseTypeId, String jurisdiction, String cid) throws IOException {
         HttpEntity<String> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
-        String uri = ccdClientConfig.buildStartEventForCaseUrlPreAcceptBulkSingle(userService.getUserDetails(authToken).getId(), jurisdiction,
+        String uri = ccdClientConfig.buildStartEventForCaseUrlPreAcceptBulkSingle(userService.getUserDetails(authToken).getUid(), jurisdiction,
                 caseTypeId, cid);
         return restTemplate.exchange(uri, HttpMethod.GET, request, CCDRequest.class).getBody();
     }
@@ -224,7 +227,7 @@ public class CcdClient {
     public CCDRequest startBulkEventForCase(String authToken, String caseTypeId, String jurisdiction, String cid) throws IOException {
         HttpEntity<String> request =
                 new HttpEntity<>(ccdClientConfig.buildHeaders(authToken));
-        String uri = ccdClientConfig.buildStartEventForBulkCaseUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
+        String uri = ccdClientConfig.buildStartEventForBulkCaseUrl(userService.getUserDetails(authToken).getUid(), jurisdiction,
                 caseTypeId, cid);
         return restTemplate.exchange(uri, HttpMethod.GET, request, CCDRequest.class).getBody();
     }
@@ -233,7 +236,7 @@ public class CcdClient {
             throws IOException {
         HttpEntity<CaseDataContent> request =
                 new HttpEntity<>(caseDataBuilder.buildCaseDataContent(caseData, req, UPDATE_EVENT_SUMMARY), ccdClientConfig.buildHeaders(authToken));
-        String uri = ccdClientConfig.buildSubmitEventForCaseUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
+        String uri = ccdClientConfig.buildSubmitEventForCaseUrl(userService.getUserDetails(authToken).getUid(), jurisdiction,
                 caseTypeId, cid);
         return restTemplate.exchange(uri, HttpMethod.POST, request, SubmitEvent.class).getBody();
     }
@@ -242,7 +245,7 @@ public class CcdClient {
             throws IOException {
         HttpEntity<CaseDataContent> request =
                 new HttpEntity<>(caseDataBuilder.buildBulkDataContent(bulkData, req, UPDATE_BULK_EVENT_SUMMARY), ccdClientConfig.buildHeaders(authToken));
-        String uri = ccdClientConfig.buildSubmitEventForCaseUrl(userService.getUserDetails(authToken).getId(), jurisdiction,
+        String uri = ccdClientConfig.buildSubmitEventForCaseUrl(userService.getUserDetails(authToken).getUid(), jurisdiction,
                 caseTypeId, cid);
         return restTemplate.exchange(uri, HttpMethod.POST, request, SubmitBulkEvent.class).getBody();
     }
