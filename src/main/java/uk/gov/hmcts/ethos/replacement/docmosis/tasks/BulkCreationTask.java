@@ -39,10 +39,10 @@ public class BulkCreationTask implements Runnable {
         log.info("Current state ---> " + submitEvent.getState());
         try {
             if (submitEvent.getState().equals(PENDING_STATE)) {
-            // Moving to submitted_state
-            log.info("Moving from pending to submitted");
-                returnedRequest = ccdClient.startEventForCaseBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
-            submitEvent.getCaseData().setState(SUBMITTED_STATE);
+                // Moving to submitted_state
+                log.info("Moving from pending to submitted");
+                    returnedRequest = ccdClient.startEventForCaseBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
+                submitEvent.getCaseData().setState(SUBMITTED_STATE);
             } else {
                 // Moving to accepted_state
                 log.info("Moving to accepted state");

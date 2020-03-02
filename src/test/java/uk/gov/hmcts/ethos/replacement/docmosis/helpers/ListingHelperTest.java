@@ -29,7 +29,7 @@ public class ListingHelperTest {
     @Before
     public void setUp() throws Exception {
         listingDetails = generateListingDetails("listingDetailsTest1.json");
-        userDetails = new UserDetails("1", "example@hotmail.com", "Mike", "Jordan", new ArrayList<>());
+        userDetails = HelperTest.getUserDetails();
     }
 
     private ListingDetails generateListingDetails(String jsonFileName) throws Exception {
