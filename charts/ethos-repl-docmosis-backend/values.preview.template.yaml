@@ -1,7 +1,6 @@
 java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
-  aadIdentityName:
   environment:
     ETHOS_REPL_DB_HOST: "{{ .Release.Name }}-postgresql"
     ETHOS_REPL_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
