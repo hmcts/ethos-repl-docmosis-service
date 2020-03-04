@@ -214,7 +214,9 @@
           "respondent_contact_preference": "Post",
           "respondent_email": "Antonio@gmail.com",
           "respondent_phone1": "07577136570",
-          "respondent_phone2": "07577136570"
+          "respondent_phone2": "07577136570",
+          "response_referred_to_judge": "2019-12-22",
+          "response_returned_from_judge": "2019-12-20"
         }
       },
       {
@@ -232,7 +234,9 @@
           "respondent_contact_preference": "Post",
           "respondent_email": "JuanGarcia@gmail.com",
           "respondent_phone1": "07577136570",
-          "respondent_phone2": "07577136570"
+          "respondent_phone2": "07577136570",
+          "response_referred_to_judge": "2019-12-22",
+          "response_returned_from_judge": "2019-12-21"
         }
       },
       {
@@ -250,7 +254,9 @@
           "respondent_contact_preference": "Post",
           "respondent_email": "Antonio@gmail.com",
           "respondent_phone1": "07577136570",
-          "respondent_phone2": "07577136570"
+          "respondent_phone2": "07577136570",
+          "response_referred_to_judge": "2019-12-22",
+          "response_returned_from_judge": "2019-12-22"
         }
       }
     ],
