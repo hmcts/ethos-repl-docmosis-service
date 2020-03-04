@@ -28,6 +28,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.ALL_VENUES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.MANUALLY_CREATED_POSITION;
 
@@ -165,24 +166,26 @@ public class CcdClientTest {
 
     @Test
     public void retrieveCasesVenueAndRangeDateElasticSearch() throws IOException {
-        String jsonQuery = "{\"size\":10000,\"query\":{\"bool\":{\"filter\":[{\"term\":{\"data.hearingCollection.value.hearingDateCollection.value.hearingVenueDay\":{\"value\":\"Manchester\",\"boost\":1.0}}},{\"range\":{\"data" +
-                ".hearingCollection.value.hearingDateCollection.value.listedDate\":{\"from\":\"2019-09-23T00:00:00.000\",\"to\":\"2019-09-24T00:00:00.000\"," +
-                "\"include_lower\":true,\"include_upper\":true,\"boost\":1.0}}}],\"adjust_pure_negative\":true,\"boost\":1.0}}}";
+        String jsonQuery = "{\"size\":10000,\"query\":{\"bool\":{\"filter\":[{\"term\":{\"data.hearingCollection.value.hearingDateCollection.value" +
+                ".hearingVenueDay.keyword\":{\"value\":\"Manchester\",\"boost\":1.0}}},{\"range\":{\"data.hearingCollection.value.hearingDateCollection.value" +
+                ".listedDate\":{\"from\":\"2019-09-23T00:00:00.000\",\"to\":\"2019-09-24T00:00:00.000\",\"include_lower\":true,\"include_upper\":true,\"boost\":1" +
+                ".0}}}],\"adjust_pure_negative\":true,\"boost\":1.0}}}";
         HttpEntity<String> httpEntity = new HttpEntity<>(jsonQuery, null);
         CaseSearchResult caseSearchResult = new CaseSearchResult(2L, Arrays.asList(new SubmitEvent(), new SubmitEvent()));
         ResponseEntity<CaseSearchResult> responseEntity = new ResponseEntity<>(caseSearchResult, HttpStatus.OK);
         when(ccdClientConfig.buildRetrieveCasesUrlElasticSearch(any())).thenReturn(uri);
         when(restTemplate.exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(CaseSearchResult.class))).thenReturn(responseEntity);
         ccdClient.retrieveCasesVenueAndDateElasticSearch("authToken", caseDetails.getCaseTypeId(), "2019-09-23",
-                "2019-09-24", "Manchester", "data.hearingCollection.value.hearingDateCollection.value.hearingVenueDay");
+                "2019-09-24", "Manchester", LISTING_VENUE_FIELD_NAME);
         verify(restTemplate).exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(CaseSearchResult.class));
         verifyNoMoreInteractions(restTemplate);
     }
 
     @Test
     public void retrieveCasesVenueAndSingleDateElasticSearch() throws IOException {
-        String jsonQuery = "{\"size\":10000,\"query\":{\"bool\":{\"filter\":[{\"term\":{\"data.hearingCollection.value.hearingDateCollection.value.hearingVenueDay\":{\"value\":\"Manchester\",\"boost\":1.0}}}," +
-                "{\"range\":{\"data.hearingCollection.value.hearingDateCollection.value.listedDate\":{\"from\":\"2019-09-23T00:00:00.000\",\"to\":\"2019-09-24T00:00:00" +
+        String jsonQuery = "{\"size\":10000,\"query\":{\"bool\":{\"filter\":[{\"term\":{\"data.hearingCollection.value.hearingDateCollection.value" +
+                ".hearingVenueDay.keyword\":{\"value\":\"Manchester\",\"boost\":1.0}}},{\"range\":{\"data.hearingCollection.value.hearingDateCollection.value" +
+                ".listedDate\":{\"from\":\"2019-09-23T00:00:00.000\",\"to\":\"2019-09-24T00:00:00" +
                 ".000\",\"include_lower\":true,\"include_upper\":true,\"boost\":1.0}}}],\"adjust_pure_negative\":true,\"boost\":1.0}}}";
         HttpEntity<String> httpEntity = new HttpEntity<>(jsonQuery, null);
         CaseSearchResult caseSearchResult = new CaseSearchResult(2L, Arrays.asList(new SubmitEvent(), new SubmitEvent()));
@@ -190,7 +193,7 @@ public class CcdClientTest {
         when(ccdClientConfig.buildRetrieveCasesUrlElasticSearch(any())).thenReturn(uri);
         when(restTemplate.exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(CaseSearchResult.class))).thenReturn(responseEntity);
         ccdClient.retrieveCasesVenueAndDateElasticSearch("authToken", caseDetails.getCaseTypeId(), "2019-09-23",
-                "2019-09-24", "Manchester", "data.hearingCollection.value.hearingDateCollection.value.hearingVenueDay");
+                "2019-09-24", "Manchester", LISTING_VENUE_FIELD_NAME);
         verify(restTemplate).exchange(eq(uri), eq(HttpMethod.POST), eq(httpEntity), eq(CaseSearchResult.class));
         verifyNoMoreInteractions(restTemplate);
     }
