@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 @Slf4j
@@ -152,7 +153,7 @@ public class ListingService {
                 return ListingHelper.getVenueToSearch(listingData);
             } else {
                 return !isNullOrEmpty(listingData.getListingVenue())
-                        ? ListingHelper.createMap("hearingVenueDay", listingData.getListingVenue())
+                        ? ListingHelper.createMap(LISTING_VENUE_FIELD_NAME, listingData.getListingVenue())
                         : ListingHelper.createMap("","");
             }
         }
