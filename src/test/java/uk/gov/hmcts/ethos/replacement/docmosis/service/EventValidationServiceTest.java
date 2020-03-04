@@ -32,6 +32,7 @@ public class EventValidationServiceTest {
     private CaseDetails caseDetails1;
     private CaseDetails caseDetails2;
     private CaseDetails caseDetails3;
+    private CaseDetails caseDetails4;
 
     private CaseData caseData;
 
@@ -42,6 +43,7 @@ public class EventValidationServiceTest {
         caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
         caseDetails2 = generateCaseDetails("caseDetailsTest2.json");
         caseDetails3 = generateCaseDetails("caseDetailsTest3.json");
+        caseDetails4 = generateCaseDetails("caseDetailsTest4.json");
 
         caseData = new CaseData();
     }
@@ -108,8 +110,15 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateHearingNumberForEmptyHearings() {
+    public void shouldValidateHearingNumberMissing() {
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails3.getCaseData());
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateHearingNumberForEmptyHearings() {
+        List<String> errors = eventValidationService.validateHearingNumber(caseDetails4.getCaseData());
 
         assertEquals(1, errors.size());
         assertEquals(EMPTY_HEARING_COLLECTION_ERROR_MESSAGE, errors.get(0));

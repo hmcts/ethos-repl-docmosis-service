@@ -71,17 +71,21 @@ public class EventValidationService {
 
         List<String> errors = new ArrayList<>();
 
-        if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
+        String correspondenceHearingNumber = getCorrespondenceHearingNumber(caseData);
 
-            String correspondenceHearingNumber = getCorrespondenceHearingNumber(caseData);
-            HearingType hearingType = getHearingByNumber(caseData.getHearingCollection(), correspondenceHearingNumber);
+        if(correspondenceHearingNumber != null) {
 
-            if (hearingType.getHearingNumber() == null || !hearingType.getHearingNumber().equals(correspondenceHearingNumber)) {
-                errors.add(HEARING_NUMBER_MISMATCH_ERROR_MESSAGE);
+            if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
+
+                HearingType hearingType = getHearingByNumber(caseData.getHearingCollection(), correspondenceHearingNumber);
+
+                if (hearingType.getHearingNumber() == null || !hearingType.getHearingNumber().equals(correspondenceHearingNumber)) {
+                    errors.add(HEARING_NUMBER_MISMATCH_ERROR_MESSAGE);
+                }
             }
-        }
-        else {
-            errors.add(EMPTY_HEARING_COLLECTION_ERROR_MESSAGE);
+            else {
+                errors.add(EMPTY_HEARING_COLLECTION_ERROR_MESSAGE);
+            }
         }
 
         return errors;
