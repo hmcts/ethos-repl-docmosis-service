@@ -24,14 +24,15 @@ public class EventValidationServiceTest {
     private static final LocalDate CURRENT_RECEIPT_DATE = LocalDate.now();
     private static final LocalDate FUTURE_RECEIPT_DATE = LocalDate.now().plusDays(1);
 
-    private static final LocalDate PAST_HEARING_DATE = PAST_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
-    private static final LocalDate CURRENT_HEARING_DATE = CURRENT_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
+    private static final LocalDate PAST_TARGET_HEARING_DATE = PAST_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
+    private static final LocalDate CURRENT_TARGET_HEARING_DATE = CURRENT_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
 
     private EventValidationService eventValidationService;
 
     private CaseDetails caseDetails1;
     private CaseDetails caseDetails2;
     private CaseDetails caseDetails3;
+    private CaseDetails caseDetails4;
 
     private CaseData caseData;
 
@@ -42,73 +43,85 @@ public class EventValidationServiceTest {
         caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
         caseDetails2 = generateCaseDetails("caseDetailsTest2.json");
         caseDetails3 = generateCaseDetails("caseDetailsTest3.json");
+        caseDetails4 = generateCaseDetails("caseDetailsTest4.json");
 
         caseData = new CaseData();
     }
 
     @Test
     public void shouldValidatePastReceiptDate() {
-
         caseData.setReceiptDate(PAST_RECEIPT_DATE.toString());
 
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
 
         assertEquals(0, errors.size());
-        assertEquals(caseData.getTargetHearingDate(), PAST_HEARING_DATE.toString());
-
+        assertEquals(caseData.getTargetHearingDate(), PAST_TARGET_HEARING_DATE.toString());
     }
 
     @Test
     public void shouldValidateCurrentReceiptDate() {
-
         caseData.setReceiptDate(CURRENT_RECEIPT_DATE.toString());
 
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
 
         assertEquals(0, errors.size());
-        assertEquals(caseData.getTargetHearingDate(), CURRENT_HEARING_DATE.toString());
-
+        assertEquals(caseData.getTargetHearingDate(), CURRENT_TARGET_HEARING_DATE.toString());
     }
 
     @Test
     public void shouldValidateFutureReceiptDate() {
-
         caseData.setReceiptDate(FUTURE_RECEIPT_DATE.toString());
 
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
 
         assertEquals(1, errors.size());
         assertEquals(FUTURE_RECEIPT_DATE_ERROR_MESSAGE, errors.get(0));
+    }
 
+    @Test
+    public void shouldValidateReturnedFromJudgeDateBeforeReferredToJudgeDate() {
+        List<String> errors = eventValidationService.validateReturnedFromJudgeDate(caseDetails1.getCaseData());
+
+        assertEquals(2, errors.size());
+        assertEquals(EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE + " for respondent 1 (Antonio Vazquez)", errors.get(0));
+        assertEquals(EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE + " for respondent 2 (Juan Garcia)", errors.get(1));
+    }
+
+    @Test
+    public void shouldValidateReturnedFromJudgeDateAfterReferredToJudgeDate() {
+        List<String> errors = eventValidationService.validateReturnedFromJudgeDate(caseDetails3.getCaseData());
+
+        assertEquals(0, errors.size());
     }
 
     @Test
     public void shouldValidateHearingNumberMatching() {
-
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails1.getCaseData());
 
         assertEquals(0, errors.size());
-
     }
 
     @Test
     public void shouldValidateHearingNumberMismatch() {
-
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails2.getCaseData());
 
         assertEquals(1, errors.size());
         assertEquals(HEARING_NUMBER_MISMATCH_ERROR_MESSAGE, errors.get(0));
+    }
 
+    @Test
+    public void shouldValidateHearingNumberMissing() {
+        List<String> errors = eventValidationService.validateHearingNumber(caseDetails3.getCaseData());
+
+        assertEquals(0, errors.size());
     }
 
     @Test
     public void shouldValidateHearingNumberForEmptyHearings() {
-
-        List<String> errors = eventValidationService.validateHearingNumber(caseDetails3.getCaseData());
+        List<String> errors = eventValidationService.validateHearingNumber(caseDetails4.getCaseData());
 
         assertEquals(1, errors.size());
         assertEquals(EMPTY_HEARING_COLLECTION_ERROR_MESSAGE, errors.get(0));
-
     }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
@@ -117,4 +130,5 @@ public class EventValidationServiceTest {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, CaseDetails.class);
     }
+
 }
