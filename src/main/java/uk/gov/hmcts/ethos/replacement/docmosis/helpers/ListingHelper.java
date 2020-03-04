@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ESHelper.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatCurrentDate;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
@@ -360,10 +361,10 @@ public class ListingHelper {
 
     public static Map<String, String> getVenueToSearch(ListingData listingData) {
         if (!isNullOrEmpty(listingData.getListingVenueOfficeGlas())) {
-            return createMap("Hearing_Glasgow", listingData.getListingVenueOfficeGlas());
+            return createMap(LISTING_GLASGOW_VENUE_FIELD_NAME, listingData.getListingVenueOfficeGlas());
         } else if (!isNullOrEmpty(listingData.getListingVenueOfficeAber())) {
-            return createMap("Hearing_Aberdeen", listingData.getListingVenueOfficeAber());
-        } return !isNullOrEmpty(listingData.getListingVenue()) ? createMap("hearingVenueDay", listingData.getListingVenue()) : createMap("","");
+            return createMap(LISTING_ABERDEEN_VENUE_FIELD_NAME, listingData.getListingVenueOfficeAber());
+        } return !isNullOrEmpty(listingData.getListingVenue()) ? createMap(LISTING_VENUE_FIELD_NAME, listingData.getListingVenue()) : createMap("","");
     }
 
     public static String getVenueFromDateListedType(DateListedType dateListedType) {
