@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ESHelper.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatCurrentDate;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
@@ -27,6 +28,24 @@ public class ListingHelper {
                 return MANCHESTER_USERS_CASE_TYPE_ID;
             case LEEDS_LISTING_CASE_TYPE_ID:
                 return LEEDS_USERS_CASE_TYPE_ID;
+            case BRISTOL_LISTING_CASE_TYPE_ID:
+                return BRISTOL_USERS_CASE_TYPE_ID;
+            case LONDON_CENTRAL_LISTING_CASE_TYPE_ID:
+                return LONDON_CENTRAL_USERS_CASE_TYPE_ID;
+            case LONDON_EAST_LISTING_CASE_TYPE_ID:
+                return LONDON_EAST_USERS_CASE_TYPE_ID;
+            case LONDON_SOUTH_LISTING_CASE_TYPE_ID:
+                return LONDON_SOUTH_USERS_CASE_TYPE_ID;
+            case MIDLANDS_EAST_LISTING_CASE_TYPE_ID:
+                return MIDLANDS_EAST_USERS_CASE_TYPE_ID;
+            case MIDLANDS_WEST_LISTING_CASE_TYPE_ID:
+                return MIDLANDS_WEST_USERS_CASE_TYPE_ID;
+            case NEWCASTLE_LISTING_CASE_TYPE_ID:
+                return NEWCASTLE_USERS_CASE_TYPE_ID;
+            case WALES_LISTING_CASE_TYPE_ID:
+                return WALES_USERS_CASE_TYPE_ID;
+            case WATFORD_LISTING_CASE_TYPE_ID:
+                return WATFORD_USERS_CASE_TYPE_ID;
             default:
                 return SCOTLAND_USERS_CASE_TYPE_ID;
         }
@@ -126,7 +145,7 @@ public class ListingHelper {
         }
         sb.append(getListingRangeDates(listingData));
 
-        String userName = userDetails.getForename() + " " + userDetails.getSurname().orElse("");
+        String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
 
         sb.append(getDocumentData(listingData, templateName, caseType));
@@ -141,10 +160,10 @@ public class ListingHelper {
 
     private static StringBuilder getLogo(String caseType) {
         StringBuilder sb = new StringBuilder();
-        if (caseType.equals(MANCHESTER_LISTING_CASE_TYPE_ID)) {
-            sb.append("\"listing_logo\":\"").append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
-        } else {
+        if (caseType.equals(SCOTLAND_LISTING_CASE_TYPE_ID)) {
             sb.append("\"listing_logo\":\"").append("[userImage:").append("schmcts.png]").append(NEW_LINE);
+        } else {
+            sb.append("\"listing_logo\":\"").append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
         }
         return sb;
     }
@@ -334,12 +353,18 @@ public class ListingHelper {
         } return " ";
     }
 
-    public static String getVenueToSearch(ListingData listingData) {
+    public static Map<String, String> createMap(String key, String value) {
+        Map<String, String> map = new HashMap<>();
+        map.put(key, value);
+        return map;
+    }
+
+    public static Map<String, String> getVenueToSearch(ListingData listingData) {
         if (!isNullOrEmpty(listingData.getListingVenueOfficeGlas())) {
-            return listingData.getListingVenueOfficeGlas();
+            return createMap(LISTING_GLASGOW_VENUE_FIELD_NAME, listingData.getListingVenueOfficeGlas());
         } else if (!isNullOrEmpty(listingData.getListingVenueOfficeAber())) {
-            return listingData.getListingVenueOfficeAber();
-        } return !isNullOrEmpty(listingData.getListingVenue()) ? listingData.getListingVenue() : " ";
+            return createMap(LISTING_ABERDEEN_VENUE_FIELD_NAME, listingData.getListingVenueOfficeAber());
+        } return !isNullOrEmpty(listingData.getListingVenue()) ? createMap(LISTING_VENUE_FIELD_NAME, listingData.getListingVenue()) : createMap("","");
     }
 
     public static String getVenueFromDateListedType(DateListedType dateListedType) {

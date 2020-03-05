@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SCOTLAND_LISTING_CASE_TYPE_ID;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringRunner.class)
@@ -42,8 +43,10 @@ public class ListingGenerationControllerTest {
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private static final String LISTING_HEARINGS_URL = "/listingHearings";
     private static final String GENERATE_HEARING_DOCUMENT_URL = "/generateHearingDocument";
+    private static final String GENERATE_HEARING_DOCUMENT_CONFIRMATION_URL = "/generateHearingDocumentConfirmation";
     private static final String LISTING_SINGLE_CASES_URL = "/listingSingleCases";
     private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_URL = "/generateListingsDocSingleCases";
+    private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_CONFIRMATION_URL = "/generateListingsDocSingleCasesConfirmation";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -53,6 +56,9 @@ public class ListingGenerationControllerTest {
 
     @MockBean
     private DefaultValuesReaderService defaultValuesReaderService;
+
+    @MockBean
+    private VerifyTokenService verifyTokenService;
 
     private MockMvc mvc;
     private JsonNode requestContent;
@@ -108,6 +114,7 @@ public class ListingGenerationControllerTest {
                 .positionType("Awaiting ET3")
                 .claimantTypeOfClaimant("Individual")
                 .managingOffice("Glasgow")
+                .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("")
                 .tribunalCorrespondenceAddressLine2("")
                 .tribunalCorrespondenceAddressLine3("")
@@ -125,6 +132,7 @@ public class ListingGenerationControllerTest {
         when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN))).thenReturn(listingDetails.getCaseData());
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenReturn(defaultValues);
         when(defaultValuesReaderService.getListingData(isA(ListingData.class), isA(DefaultValues.class))).thenReturn(listingData);
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(LISTING_HEARINGS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -132,6 +140,103 @@ public class ListingGenerationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateHearingDocument() throws Exception {
+        when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GENERATE_HEARING_DOCUMENT_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateHearingDocumentConfirmation() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GENERATE_HEARING_DOCUMENT_CONFIRMATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateHearingDocumentWithErrors() throws Exception {
+        when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GENERATE_HEARING_DOCUMENT_URL)
+                .content(requestContent1.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void listingSingleCases() throws Exception {
+        when(listingService.processListingSingleCasesRequest(isA(CaseDetails.class))).thenReturn(caseData);
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(LISTING_SINGLE_CASES_URL)
+                .content(requestContentSingleCase.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateListingsDocSingleCases() throws Exception {
+        when(listingService.setCourtAddressFromCaseData(isA(CaseData.class))).thenReturn(listingData);
+        when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_URL)
+                .content(requestContentSingleCase.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateListingsDocSingleCasesConfirmation() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_CONFIRMATION_URL)
+                .content(requestContentSingleCase.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateListingsDocSingleCasesWithErrors() throws Exception {
+        when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_URL)
+                .content(requestContentSingleCase1.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
@@ -145,71 +250,12 @@ public class ListingGenerationControllerTest {
     }
 
     @Test
-    public void listingHearingsError500() throws Exception {
-        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN))).thenThrow(feignError());
-        mvc.perform(post(LISTING_HEARINGS_URL)
-                .content(requestContent.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void generateHearingDocument() throws Exception {
-        when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
-        mvc.perform(post(GENERATE_HEARING_DOCUMENT_URL)
-                .content(requestContent.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", nullValue()))
-                .andExpect(jsonPath("$.warnings", nullValue()));
-    }
-
-    @Test
-    public void generateHearingDocumentWithErrors() throws Exception {
-        when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
-        mvc.perform(post(GENERATE_HEARING_DOCUMENT_URL)
-                .content(requestContent1.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.warnings", nullValue()));
-    }
-
-    @Test
     public void generateHearingDocumentError400() throws Exception {
         mvc.perform(post(GENERATE_HEARING_DOCUMENT_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void generateHearingDocumentError500() throws Exception {
-        when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenThrow(feignError());
-        mvc.perform(post(GENERATE_HEARING_DOCUMENT_URL)
-                .content(requestContent.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void listingSingleCases() throws Exception {
-        when(listingService.processListingSingleCasesRequest(isA(CaseDetails.class))).thenReturn(caseData);
-        mvc.perform(post(LISTING_SINGLE_CASES_URL)
-                .content(requestContentSingleCase.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", nullValue()))
-                .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
     @Test
@@ -222,43 +268,6 @@ public class ListingGenerationControllerTest {
     }
 
     @Test
-    public void listingSingleCasesError500() throws Exception {
-        when(listingService.processListingSingleCasesRequest(isA(CaseDetails.class))).thenThrow(feignError());
-        mvc.perform(post(LISTING_SINGLE_CASES_URL)
-                .content(requestContentSingleCase.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void generateListingsDocSingleCases() throws Exception {
-        when(listingService.setCourtAddressFromCaseData(isA(CaseData.class))).thenReturn(listingData);
-        when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
-        mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_URL)
-                .content(requestContentSingleCase.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", nullValue()))
-                .andExpect(jsonPath("$.warnings", nullValue()));
-    }
-
-    @Test
-    public void generateListingsDocSingleCasesWithErrors() throws Exception {
-        when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
-        mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_URL)
-                .content(requestContentSingleCase1.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.warnings", nullValue()));
-    }
-
-    @Test
     public void generateListingsDocSingleCasesError400() throws Exception {
         mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_URL)
                 .content("error")
@@ -268,14 +277,108 @@ public class ListingGenerationControllerTest {
     }
 
     @Test
+    public void listingSingleCasesError500() throws Exception {
+        when(listingService.processListingSingleCasesRequest(isA(CaseDetails.class))).thenThrow(feignError());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(LISTING_SINGLE_CASES_URL)
+                .content(requestContentSingleCase.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
     public void generateListingsDocSingleCasesError500() throws Exception {
         when(listingService.setCourtAddressFromCaseData(isA(CaseData.class))).thenReturn(listingData);
         when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenThrow(feignError());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_URL)
                 .content(requestContentSingleCase.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void generateHearingDocumentError500() throws Exception {
+        when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenThrow(feignError());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GENERATE_HEARING_DOCUMENT_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void listingHearingsError500() throws Exception {
+        when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN))).thenThrow(feignError());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(LISTING_HEARINGS_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void listingHearingsForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(LISTING_HEARINGS_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void generateHearingDocumentConfirmationForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(GENERATE_HEARING_DOCUMENT_CONFIRMATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void generateHearingDocumentWithErrorsForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(GENERATE_HEARING_DOCUMENT_URL)
+                .content(requestContent1.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void listingSingleCasesForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(LISTING_SINGLE_CASES_URL)
+                .content(requestContentSingleCase.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void generateListingsDocSingleCasesForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_URL)
+                .content(requestContentSingleCase.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void generateListingsDocSingleCasesConfirmationForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_CONFIRMATION_URL)
+                .content(requestContentSingleCase.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
     }
 
 }

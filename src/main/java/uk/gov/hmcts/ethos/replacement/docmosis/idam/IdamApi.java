@@ -9,6 +9,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.*;
 
 @FeignClient(name = "idam-api", url = "${idam.api.url}")
 public interface IdamApi {
-    @RequestMapping(method = RequestMethod.GET, value = "/details")
+    @RequestMapping(method = RequestMethod.GET, value = "/o/userinfo")
     UserDetails retrieveUserDetails(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorisation);
 }

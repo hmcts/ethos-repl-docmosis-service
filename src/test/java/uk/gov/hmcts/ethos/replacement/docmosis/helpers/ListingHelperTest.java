@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
@@ -30,7 +29,7 @@ public class ListingHelperTest {
     @Before
     public void setUp() throws Exception {
         listingDetails = generateListingDetails("listingDetailsTest1.json");
-        userDetails = new UserDetails("1", "example@hotmail.com", "Mike", "Jordan", new ArrayList<>());
+        userDetails = HelperTest.getUserDetails();
     }
 
     private ListingDetails generateListingDetails(String jsonFileName) throws Exception {
@@ -454,6 +453,15 @@ public class ListingHelperTest {
         assertEquals(MANCHESTER_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID));
         assertEquals(LEEDS_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID));
         assertEquals(SCOTLAND_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId("OTHERS"));
+        assertEquals(BRISTOL_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(BRISTOL_LISTING_CASE_TYPE_ID));
+        assertEquals(LONDON_CENTRAL_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_CENTRAL_LISTING_CASE_TYPE_ID));
+        assertEquals(LONDON_EAST_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_EAST_LISTING_CASE_TYPE_ID));
+        assertEquals(LONDON_SOUTH_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_SOUTH_LISTING_CASE_TYPE_ID));
+        assertEquals(MIDLANDS_EAST_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MIDLANDS_EAST_LISTING_CASE_TYPE_ID));
+        assertEquals(MIDLANDS_WEST_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MIDLANDS_WEST_LISTING_CASE_TYPE_ID));
+        assertEquals(NEWCASTLE_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID));
+        assertEquals(WALES_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(WALES_LISTING_CASE_TYPE_ID));
+        assertEquals(WATFORD_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(WATFORD_LISTING_CASE_TYPE_ID));
     }
 
     @Test

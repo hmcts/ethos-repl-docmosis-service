@@ -50,6 +50,7 @@ public class Constants {
     public static final String ACCEPTED_STATE = "Accepted";
     public static final String REJECTED_STATE = "Rejected";
 
+    public static final String SINGLE_CASE_TYPE = "Single";
     public static final String INDIVIDUAL_TYPE_CLAIMANT = "Individual";
     public static final String MANUALLY_CREATED_POSITION = "Manually Created";
 
@@ -88,6 +89,15 @@ public class Constants {
     public static final String MANCHESTER_LISTING_CASE_TYPE_ID = "Manchester_Listings";
     public static final String SCOTLAND_LISTING_CASE_TYPE_ID = "Scotland_Listings";
     public static final String LEEDS_LISTING_CASE_TYPE_ID = "Leeds_Listings";
+    public static final String BRISTOL_LISTING_CASE_TYPE_ID = "Bristol_Listings";
+    public static final String LONDON_CENTRAL_LISTING_CASE_TYPE_ID = "LondonCentral_Listings";
+    public static final String LONDON_EAST_LISTING_CASE_TYPE_ID = "LondonEast_Listings";
+    public static final String LONDON_SOUTH_LISTING_CASE_TYPE_ID = "LondonSouth_Listings";
+    public static final String MIDLANDS_EAST_LISTING_CASE_TYPE_ID = "MidlandsEast_Listings";
+    public static final String MIDLANDS_WEST_LISTING_CASE_TYPE_ID = "MidlandsWest_Listings";
+    public static final String NEWCASTLE_LISTING_CASE_TYPE_ID = "Newcastle_Listings";
+    public static final String WALES_LISTING_CASE_TYPE_ID = "Wales_Listings";
+    public static final String WATFORD_LISTING_CASE_TYPE_ID = "Watford_Listings";
 
     public static final String IT56_TEMPLATE = "EM-TRB-SCO-ENG-00210";
     public static final String IT57_TEMPLATE = "EM-TRB-SCO-ENG-00211";
@@ -121,6 +131,14 @@ public class Constants {
 
     public static final String FILE_EXTENSION = ".docx";
 
+    public static final String FUTURE_RECEIPT_DATE_ERROR_MESSAGE = "Receipt date should not be a date in the future";
+    public static final String EMPTY_HEARING_COLLECTION_ERROR_MESSAGE = "Hearings could not be found for this case, the hearing collection is empty";
+    public static final String HEARING_NUMBER_MISMATCH_ERROR_MESSAGE = "The hearing number provided did not match with any of the hearing numbers contained within this case";
+    public static final String EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE = "Date returned from judge can not be earlier than Date referred to judge";
+
+    public static final int TARGET_HEARING_DATE_INCREMENT = 181;
+
     public static final int MAX_ES_SIZE = 10000;
 
+    public static final int NUMBER_THREADS = 250;
 }

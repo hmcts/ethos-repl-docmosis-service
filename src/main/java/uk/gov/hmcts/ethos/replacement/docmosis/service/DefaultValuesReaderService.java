@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.CaseCreationException;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantWorkAddressType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
 
@@ -106,6 +108,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getManchesterPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(1))
                 .tribunalCorrespondenceAddressLine2(values.get(2))
                 .tribunalCorrespondenceAddressLine3(values.get(3))
@@ -118,18 +121,38 @@ public class DefaultValuesReaderService {
                 .build();
     }
 
-    public CaseData getCaseData(CaseData caseData, DefaultValues defaultValues) {
+    public CaseData getCaseData(CaseData caseData, DefaultValues defaultValues, boolean creationFlag) {
         if (caseData.getPositionType() == null) {
             caseData.setPositionType(defaultValues.getPositionType());
         }
+        if (caseData.getCaseSource() == null || caseData.getCaseSource().trim().equals("")) {
+            caseData.setCaseSource(defaultValues.getPositionType());
+        }
         if (defaultValues.getManagingOffice() != null) {
             caseData.setManagingOffice(defaultValues.getManagingOffice());
+        }
+        if (creationFlag && defaultValues.getCaseType() != null) {
+            caseData.setCaseType(defaultValues.getCaseType());
         }
         caseData.setTribunalCorrespondenceAddress(getTribunalCorrespondenceAddress(defaultValues));
         caseData.setTribunalCorrespondenceTelephone(defaultValues.getTribunalCorrespondenceTelephone());
         caseData.setTribunalCorrespondenceFax(defaultValues.getTribunalCorrespondenceFax());
         caseData.setTribunalCorrespondenceDX(defaultValues.getTribunalCorrespondenceDX());
         caseData.setTribunalCorrespondenceEmail(defaultValues.getTribunalCorrespondenceEmail());
+
+        log.info("Adding claimant work address if from respondent");
+        if (caseData.getClaimantWorkAddressQuestion() != null && caseData.getClaimantWorkAddressQuestion().equals("Yes")
+                && caseData.getClaimantWorkAddressQRespondent() != null) {
+            ClaimantWorkAddressType claimantWorkAddressType = new ClaimantWorkAddressType();
+            String respondentName = caseData.getClaimantWorkAddressQRespondent().getValue().getCode();
+            if (caseData.getRespondentCollection() != null) {
+                Optional<RespondentSumTypeItem> respondentChosen = caseData.getRespondentCollection().stream().filter(respondentSumTypeItem ->
+                        respondentSumTypeItem.getValue().getRespondentName().equals(respondentName)).findFirst();
+                respondentChosen.ifPresent(respondentSumTypeItem -> claimantWorkAddressType.setClaimantWorkAddress(respondentSumTypeItem.getValue().getRespondentAddress()));
+            }
+            caseData.setClaimantWorkAddressQRespondent(null);
+            caseData.setClaimantWorkAddress(claimantWorkAddressType);
+        }
         return caseData;
     }
 
@@ -155,6 +178,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getGlasgowPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(10))
                 .tribunalCorrespondenceAddressLine2(values.get(11))
                 .tribunalCorrespondenceTown(values.get(12))
@@ -170,6 +194,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getAberdeenPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(19))
                 .tribunalCorrespondenceAddressLine2(values.get(20))
                 .tribunalCorrespondenceTown(values.get(21))
@@ -184,6 +209,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getDundeePostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(27))
                 .tribunalCorrespondenceAddressLine2(values.get(28))
                 .tribunalCorrespondenceAddressLine3(values.get(29))
@@ -199,6 +225,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getEdinburghPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(36))
                 .tribunalCorrespondenceTown(values.get(37))
                 .tribunalCorrespondencePostCode(values.get(38))
@@ -214,6 +241,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getBristolPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(43))
                 .tribunalCorrespondenceAddressLine2(values.get(44))
                 .tribunalCorrespondenceTown(values.get(45))
@@ -228,6 +256,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getLeedsPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(51))
                 .tribunalCorrespondenceAddressLine2(values.get(52))
                 .tribunalCorrespondenceAddressLine3(values.get(53))
@@ -242,6 +271,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getLondonCentralPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(59))
                 .tribunalCorrespondenceAddressLine2(values.get(60))
                 .tribunalCorrespondenceAddressLine3(values.get(61))
@@ -257,6 +287,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getLondonEastPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(68))
                 .tribunalCorrespondenceAddressLine2(values.get(69))
                 .tribunalCorrespondenceAddressLine3(values.get(70))
@@ -271,6 +302,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getLondonSouthPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(76))
                 .tribunalCorrespondenceAddressLine2(values.get(77))
                 .tribunalCorrespondenceAddressLine3(values.get(78))
@@ -286,6 +318,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getMidlandsEastPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(85))
                 .tribunalCorrespondenceAddressLine2(values.get(86))
                 .tribunalCorrespondenceTown(values.get(87))
@@ -299,6 +332,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getMidlandsWestPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(92))
                 .tribunalCorrespondenceAddressLine2(values.get(93))
                 .tribunalCorrespondenceAddressLine3(values.get(94))
@@ -313,6 +347,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getNewcastlePostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(100))
                 .tribunalCorrespondenceAddressLine2(values.get(101))
                 .tribunalCorrespondenceAddressLine3(values.get(102))
@@ -328,6 +363,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getWalesPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(109))
                 .tribunalCorrespondenceTown(values.get(110))
                 .tribunalCorrespondencePostCode(values.get(111))
@@ -341,6 +377,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getWatfordPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
+                .caseType(values.get(125))
                 .tribunalCorrespondenceAddressLine1(values.get(116))
                 .tribunalCorrespondenceAddressLine2(values.get(117))
                 .tribunalCorrespondenceAddressLine3(values.get(118))

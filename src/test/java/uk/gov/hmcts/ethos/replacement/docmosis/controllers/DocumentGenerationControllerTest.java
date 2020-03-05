@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,14 +17,16 @@ import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
+import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import javax.ws.rs.core.MediaType;
-import static org.hamcrest.Matchers.*;
+
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
@@ -38,6 +42,7 @@ public class DocumentGenerationControllerTest {
 
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private static final String GEN_DOC_URL = "/generateDocument";
+    private static final String GEN_DOC_CONFIRMATION_URL = "/generateDocumentConfirmation";
     private static final String DOC_NAME = "doc_name";
 
     @Autowired
@@ -46,17 +51,20 @@ public class DocumentGenerationControllerTest {
     @MockBean
     private DocumentGenerationService documentGenerationService;
 
+    @MockBean
+    private EventValidationService eventValidationService;
+
+    @MockBean
+    private VerifyTokenService verifyTokenService;
+
     private MockMvc mvc;
     private JsonNode requestContent;
-    private JsonNode requestContent1;
     private DocumentInfo documentInfo;
 
     private void doRequestSetUp() throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
         requestContent = objectMapper.readTree(new File(getClass()
                 .getResource("/exampleV1.json").toURI()));
-        requestContent1 = objectMapper.readTree(new File(getClass()
-                .getResource("/exampleV3.json").toURI()));
     }
 
     @Before
@@ -69,28 +77,27 @@ public class DocumentGenerationControllerTest {
     @Test
     public void generateDocumentOk() throws Exception {
         when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
-
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.errors", notNullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
     @Test
-    public void generateDocumentWithErrors() throws Exception {
-        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
-
-        mvc.perform(post(GEN_DOC_URL)
-                .content(requestContent1.toString())
+    public void generateDocumentConfirmation() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GEN_DOC_CONFIRMATION_URL)
+                .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors", nullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
@@ -106,7 +113,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void generateDocumentError500() throws Exception {
         when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenThrow(feignError());
-
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -114,5 +121,25 @@ public class DocumentGenerationControllerTest {
                 .andExpect(status().isInternalServerError());
     }
 
+    @Test
+    public void generateDocumentOkForbidden() throws Exception {
+        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(GEN_DOC_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void generateDocumentConfirmationForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(GEN_DOC_CONFIRMATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
 
 }
