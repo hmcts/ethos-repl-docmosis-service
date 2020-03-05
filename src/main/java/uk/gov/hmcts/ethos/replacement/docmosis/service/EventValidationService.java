@@ -3,8 +3,10 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.HearingType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
 
 import java.time.LocalDate;
@@ -86,6 +88,31 @@ public class EventValidationService {
             else {
                 errors.add(EMPTY_HEARING_COLLECTION_ERROR_MESSAGE);
             }
+        }
+
+        return errors;
+    }
+
+    public List<String> validateJurisdictionOutcome(CaseData caseData) {
+
+        List<String> errors = new ArrayList<>();
+
+        if (caseData.getJurCodesCollection() != null && !caseData.getJurCodesCollection().isEmpty()) {
+
+            ListIterator<JurCodesTypeItem> itr = caseData.getJurCodesCollection().listIterator();
+
+            while (itr.hasNext()) {
+                JurCodesType jurCodesType = itr.next().getValue();
+
+                if (jurCodesType.getJudgmentOutcome() == null) {
+                    errors.add(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
+                    break;
+                }
+            }
+
+        }
+        else {
+            errors.add(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
         }
 
         return errors;
