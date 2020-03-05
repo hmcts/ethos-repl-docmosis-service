@@ -19,10 +19,12 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.ListingService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.POST_DEFAULT_XLSX_FILE_PATH;
 
@@ -38,14 +40,18 @@ public class ListingGenerationController {
 
     private final DefaultValuesReaderService defaultValuesReaderService;
 
+    private final VerifyTokenService verifyTokenService;
+
     @Autowired
-    public ListingGenerationController(ListingService listingService, DefaultValuesReaderService defaultValuesReaderService) {
+    public ListingGenerationController(ListingService listingService, DefaultValuesReaderService defaultValuesReaderService,
+                                       VerifyTokenService verifyTokenService) {
         this.listingService = listingService;
         this.defaultValuesReaderService = defaultValuesReaderService;
+        this.verifyTokenService = verifyTokenService;
     }
 
     @PostMapping(value = "/listingSingleCases", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "search hearings by venue and date on a specific case.")
+    @ApiOperation(value = "search hearings by venue and date in a specific case.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = CCDCallbackResponse.class),
@@ -53,9 +59,15 @@ public class ListingGenerationController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> listingSingleCases(
-            @RequestBody CCDRequest ccdRequest) {
-
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
         log.info("LISTING SINGLE CASES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
         CaseData caseData = listingService.processListingSingleCasesRequest(ccdRequest.getCaseDetails());
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
@@ -74,8 +86,13 @@ public class ListingGenerationController {
     public ResponseEntity<ListingCallbackResponse> listingHearings(
             @RequestBody ListingRequest listingRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-
         log.info("LISTING HEARINGS ---> " + LOG_MESSAGE + listingRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
         ListingData listingData = listingService.processListingHearingsRequest(listingRequest.getCaseDetails(), userToken);
 
         String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null ?
@@ -101,17 +118,21 @@ public class ListingGenerationController {
     public ResponseEntity<CCDCallbackResponse> generateListingsDocSingleCases(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-
         log.info("GENERATE LISTINGS DOC SINGLE CASES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
 
         List<String> errors = new ArrayList<>();
         ListingData listingData = ccdRequest.getCaseDetails().getCaseData().getPrintHearingCollection();
         if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
             listingData = listingService.setCourtAddressFromCaseData(ccdRequest.getCaseDetails().getCaseData());
             DocumentInfo documentInfo = listingService.processHearingDocument(listingData, ccdRequest.getCaseDetails().getCaseTypeId(), userToken);
+            ccdRequest.getCaseDetails().getCaseData().setDocMarkUp(documentInfo.getMarkUp());
             return ResponseEntity.ok(CCDCallbackResponse.builder()
                     .data(ccdRequest.getCaseDetails().getCaseData())
-                    .confirmation_header(GENERATED_DOCUMENT_URL + documentInfo.getMarkUp())
                     .significant_item(Helper.generateSignificantItem(documentInfo))
                     .build());
         } else {
@@ -121,6 +142,30 @@ public class ListingGenerationController {
                     .data(ccdRequest.getCaseDetails().getCaseData())
                     .build());
         }
+    }
+
+    @PostMapping(value = "/generateListingsDocSingleCasesConfirmation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "generate a listing document confirmation.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> generateListingsDocSingleCasesConfirmation(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("GENERATE LISTINGS DOC SINGLE CASES CONFIRMATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(ccdRequest.getCaseDetails().getCaseData())
+                .confirmation_header(GENERATED_DOCUMENT_URL + ccdRequest.getCaseDetails().getCaseData().getDocMarkUp())
+                .build());
     }
 
     @PostMapping(value = "/generateHearingDocument", consumes = APPLICATION_JSON_VALUE)
@@ -134,16 +179,20 @@ public class ListingGenerationController {
     public ResponseEntity<ListingCallbackResponse> generateHearingDocument(
             @RequestBody ListingRequest listingRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-
         log.info("GENERATE HEARING DOCUMENT ---> " + LOG_MESSAGE + listingRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
 
         List<String> errors = new ArrayList<>();
         ListingData listingData = listingRequest.getCaseDetails().getCaseData();
         if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
             DocumentInfo documentInfo = listingService.processHearingDocument(listingData, listingRequest.getCaseDetails().getCaseTypeId(), userToken);
+            listingData.setDocMarkUp(documentInfo.getMarkUp());
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .data(listingData)
-                    .confirmation_header(GENERATED_DOCUMENT_URL + documentInfo.getMarkUp())
                     .significant_item(Helper.generateSignificantItem(documentInfo))
                     .build());
         } else {
@@ -153,6 +202,30 @@ public class ListingGenerationController {
                     .data(listingData)
                     .build());
         }
+    }
+
+    @PostMapping(value = "/generateHearingDocumentConfirmation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "generate a listing document confirmation.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<ListingCallbackResponse> generateHearingDocumentConfirmation(
+            @RequestBody ListingRequest listingRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("GENERATE HEARING DOCUMENT CONFIRMATION ---> " + LOG_MESSAGE + listingRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        return ResponseEntity.ok(ListingCallbackResponse.builder()
+                .data(listingRequest.getCaseDetails().getCaseData())
+                .confirmation_header(GENERATED_DOCUMENT_URL + listingRequest.getCaseDetails().getCaseData().getDocMarkUp())
+                .build());
     }
 
 }

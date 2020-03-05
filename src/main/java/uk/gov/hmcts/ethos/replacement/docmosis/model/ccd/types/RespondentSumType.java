@@ -39,6 +39,8 @@ public class RespondentSumType {
     private String respondentACASNo;
     @JsonProperty("respondent_address")
     private Address respondentAddress;
+    @JsonProperty("responseRespondentAddress")
+    private Address responseRespondentAddress;
     @JsonProperty("respondent_phone1")
     private String respondentPhone1;
     @JsonProperty("respondent_phone2")

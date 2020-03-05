@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
@@ -14,6 +15,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
@@ -35,19 +37,27 @@ public class CaseActionsForCaseWorkerController {
 
     private final SingleReferenceService singleReferenceService;
 
+    private final VerifyTokenService verifyTokenService;
+
+    private final EventValidationService eventValidationService;
+
     @Autowired
-    public CaseActionsForCaseWorkerController(CaseCreationForCaseWorkerService caseCreationForCaseWorkerService,
+    public CaseActionsForCaseWorkerController(VerifyTokenService verifyTokenService,
+                                              CaseCreationForCaseWorkerService caseCreationForCaseWorkerService,
                                               CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
                                               CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService,
                                               DefaultValuesReaderService defaultValuesReaderService,
                                               CaseManagementForCaseWorkerService caseManagementForCaseWorkerService,
-                                              SingleReferenceService singleReferenceService) {
+                                              SingleReferenceService singleReferenceService,
+                                              EventValidationService eventValidationService) {
+        this.verifyTokenService = verifyTokenService;
         this.caseCreationForCaseWorkerService = caseCreationForCaseWorkerService;
         this.caseRetrievalForCaseWorkerService = caseRetrievalForCaseWorkerService;
         this.caseUpdateForCaseWorkerService = caseUpdateForCaseWorkerService;
         this.defaultValuesReaderService = defaultValuesReaderService;
         this.caseManagementForCaseWorkerService = caseManagementForCaseWorkerService;
         this.singleReferenceService = singleReferenceService;
+        this.eventValidationService = eventValidationService;
     }
 
     @PostMapping(value = "/createCase", consumes = APPLICATION_JSON_VALUE)
@@ -62,6 +72,12 @@ public class CaseActionsForCaseWorkerController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("CREATE CASE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
         SubmitEvent submitEvent = caseCreationForCaseWorkerService.caseCreationRequest(ccdRequest, userToken);
         log.info("Case created correctly with case Id: " + submitEvent.getCaseId());
         return ResponseEntity.ok(CCDCallbackResponse.builder()
@@ -81,6 +97,12 @@ public class CaseActionsForCaseWorkerController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("RETRIEVE CASE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
         SubmitEvent submitEvent = caseRetrievalForCaseWorkerService.caseRetrievalRequest(ccdRequest, userToken);
         log.info("Case received correctly with id: " + submitEvent.getCaseId());
         return ResponseEntity.ok(CCDCallbackResponse.builder()
@@ -100,6 +122,12 @@ public class CaseActionsForCaseWorkerController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("RETRIEVE CASES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
         List<SubmitEvent> submitEvents = caseRetrievalForCaseWorkerService.casesRetrievalRequest(ccdRequest, userToken);
         log.info("Cases received: " + submitEvents.size());
         submitEvents.forEach(submitEvent -> System.out.println(submitEvent.getCaseId()));
@@ -120,6 +148,12 @@ public class CaseActionsForCaseWorkerController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("UPDATE CASE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
         SubmitEvent submitEvent = caseUpdateForCaseWorkerService.caseUpdateRequest(ccdRequest, userToken);
         log.info("Case updated correctly with id: " + submitEvent.getCaseId());
         return ResponseEntity.ok(CCDCallbackResponse.builder()
@@ -136,8 +170,15 @@ public class CaseActionsForCaseWorkerController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> preDefaultValues(
-            @RequestBody CCDRequest ccdRequest) {
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
         log.info("PRE DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
         DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, "", "");
         log.info("Pre Default values loaded: " + defaultValues);
         ccdRequest.getCaseDetails().getCaseData().setClaimantTypeOfClaimant(defaultValues.getClaimantTypeOfClaimant());
@@ -155,14 +196,23 @@ public class CaseActionsForCaseWorkerController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> postDefaultValues(
-            @RequestBody CCDRequest ccdRequest) {
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
         List<String> errors = new ArrayList<>();
         CaseData caseData = new CaseData();
         if (ccdRequest != null && ccdRequest.getCaseDetails() != null && ccdRequest.getCaseDetails().getCaseId() != null) {
             log.info("POST DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
-            caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
+            caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues, true);
+            errors = eventValidationService.validateReceiptDate(caseData);
+            log.info("Event fields validation:: " + errors);
             if (caseData.getEthosCaseReference() == null || caseData.getEthosCaseReference().trim().equals("")) {
                 String reference = singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getCaseId());
                 log.info("Reference generated: " + reference);
@@ -186,8 +236,15 @@ public class CaseActionsForCaseWorkerController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> preAcceptCase(
-            @RequestBody CCDRequest ccdRequest) {
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
         log.info("PRE ACCEPT CASE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
         CaseData caseData = caseManagementForCaseWorkerService.preAcceptCase(ccdRequest);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
@@ -203,13 +260,47 @@ public class CaseActionsForCaseWorkerController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> amendCaseDetails(
-            @RequestBody CCDRequest ccdRequest) {
-        log.info("AMEND CASE DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-        DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
-        log.info("Post Default values loaded: " + defaultValues);
-        CaseData caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        
+      log.info("AMEND CASE DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+      
+        List<String> errors = eventValidationService.validateReceiptDate(ccdRequest.getCaseDetails().getCaseData());
+        log.info("Event fields validation: " + errors);
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        if (errors.isEmpty()) {
+            DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
+            log.info("Post Default values loaded: " + defaultValues);
+            caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues, false);
+        }
+
         return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .errors(errors)
                 .data(caseData)
+                .build());
+    }
+
+    @PostMapping(value = "/addAmendET3", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "add or amend ET3 respondent details for a single case.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> addAmendET3(
+            @RequestBody CCDRequest ccdRequest) {
+        log.info("ADD AMEND ET3 ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        List<String> errors = eventValidationService.validateReturnedFromJudgeDate(ccdRequest.getCaseDetails().getCaseData());
+        log.info("Event fields validation: " + errors);
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(ccdRequest.getCaseDetails().getCaseData())
+                .errors(errors)
                 .build());
     }
 
@@ -222,10 +313,41 @@ public class CaseActionsForCaseWorkerController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> amendCaseState(
-            @RequestBody CCDRequest ccdRequest) {
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
         log.info("AMEND CASE STATE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         caseData.setState(ccdRequest.getCaseDetails().getState());
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .build());
+    }
+
+    @PostMapping(value = "/midRespondentAddress", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the mid dynamic fixed list with the respondent addresses.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> midRespondentAddress(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MID RESPONDENT ADDRESS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = Helper.midRespondentAddress(ccdRequest.getCaseDetails().getCaseData());
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
                 .build());

@@ -33,6 +33,16 @@
    <cpe>cpe:/a:fasterxml:jackson-databind</cpe>
  </suppress>
 
+    <suppress>
+        <notes><![CDATA[ jackson-databind-2.9.8.jar (pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.8, cpe:2.3:a:fasterxml:jackson:2.9.8:*:*:*:*:*:*:*)  ]]></notes>
+        <cve>CVE-2019-20330</cve>
+    </suppress>
+
+    <suppress>
+        <notes><![CDATA[ jackson-databind-2.9.8.jar (pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.8, cpe:2.3:a:fasterxml:jackson:2.9.8:*:*:*:*:*:*:*)  ]]></notes>
+        <cve>CVE-2020-8840</cve>
+    </suppress>
+
   <suppress>
     <notes><![CDATA[ spring-security-crypto-5.1.3.RELEASE.jar (pkg:maven/org.springframework.security/spring-security-crypto@5.1.3.RELEASE, cpe:2.3:a:pivotal_software:spring_security:5.1.3:*:*:*:*:*:*:*)  ]]></notes>
     <cve>CVE-2018-1258</cve>
@@ -209,5 +219,32 @@
         <notes><![CDATA[ CVE-2018-17244  ]]></notes>
         <cve>CVE-2018-17244</cve>
     </suppress>
-
+    <suppress>
+        <notes><![CDATA[ CVE-2019-12418  ]]></notes>
+        <cve>CVE-2019-12418</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-17563  ]]></notes>
+        <cve>CVE-2019-17563</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-5398  ]]></notes>
+        <cve>CVE-2020-5398</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-20445  ]]></notes>
+        <cve>CVE-2019-20445</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-20444  ]]></notes>
+        <cve>CVE-2019-20444</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-1938  ]]></notes>
+        <cve>CVE-2020-1938</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-10797  ]]></notes>
+        <cve>CVE-2019-10797</cve>
+    </suppress>
 </suppressions>

@@ -116,6 +116,7 @@ public class BulkHelper {
         multipleType.setFlag1M(Optional.ofNullable(caseData.getFlag1()).orElse(" "));
         multipleType.setFlag2M(Optional.ofNullable(caseData.getFlag2()).orElse(" "));
         multipleType.setEQPM(Optional.ofNullable(caseData.getEQP()).orElse(" "));
+        multipleType.setLeadClaimantM(Optional.ofNullable(caseData.getLeadClaimant()).orElse("No"));
         return multipleType;
     }
 
@@ -213,6 +214,15 @@ public class BulkHelper {
         return multipleType;
     }
 
+    public static MultipleTypeItem getMultipleTypeItemFromSubmitEvent(SubmitEvent submitEvent, String multipleReference) {
+        MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
+        multipleTypeItem.setId(String.valueOf(submitEvent.getCaseId()));
+        MultipleType multipleType = BulkHelper.getMultipleTypeFromSubmitEvent(submitEvent);
+        multipleType.setMultipleReferenceM(multipleReference);
+        multipleTypeItem.setValue(multipleType);
+        return multipleTypeItem;
+    }
+
     static String getJurCodesCollection(List<JurCodesTypeItem> jurCodesTypeItems) {
         if (jurCodesTypeItems != null) {
             return jurCodesTypeItems.stream()
@@ -234,6 +244,14 @@ public class BulkHelper {
         } else {
             return new ArrayList<>();
         }
+    }
+
+    public static List<String> getEthosRefNumsFromSearchCollection(List<SearchTypeItem> searchTypeItems) {
+        return searchTypeItems.stream()
+                .filter(key -> key.getId() != null)
+                .map(caseId -> caseId.getValue().getEthosCaseReferenceS())
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     private static List<CaseIdTypeItem> getCaseIdTypeItems(BulkDetails bulkDetails, List<String> multipleTypeItems) {
@@ -291,13 +309,6 @@ public class BulkHelper {
     private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
         return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
-    }
-
-    public static String getLeadId(BulkDetails bulkDetails) {
-        List<CaseIdTypeItem> list = bulkDetails.getCaseData().getCaseIdCollection().stream()
-                .filter(key -> !key.getValue().getEthosCaseReference().equals(""))
-                .collect(Collectors.toList());
-        return !list.isEmpty() ? list.get(0).getValue().getEthosCaseReference() : "";
     }
 
     public static StringBuilder buildScheduleDocumentContent(BulkData bulkData, String accessKey) {
@@ -415,5 +426,22 @@ public class BulkHelper {
         } else {
             return MULTIPLE_SCHEDULE_DETAILED;
         }
+    }
+
+    public static List<SubmitEvent> calculateLeadCase(List<SubmitEvent> submitEvents, List<String> caseIds) {
+        for (String caseId : caseIds) {
+            int index = submitEvents.stream()
+                    .map(submitEvent -> submitEvent.getCaseData().getEthosCaseReference())
+                    .collect(Collectors.toList())
+                    .indexOf(caseId);
+            if (index != -1) {
+                SubmitEvent submitEvent = submitEvents.get(index);
+                submitEvent.getCaseData().setLeadClaimant("Yes");
+                submitEvents.remove(index);
+                submitEvents.add(0, submitEvent);
+                return submitEvents;
+            }
+        }
+        return submitEvents;
     }
 }

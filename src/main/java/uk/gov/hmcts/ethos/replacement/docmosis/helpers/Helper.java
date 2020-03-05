@@ -2,15 +2,23 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicFixedListType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SignificantItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,6 +54,10 @@ public class Helper {
         return !isNullOrEmpty(date.toString()) ? date.format(NEW_DATE_PATTERN) : "";
     }
 
+    public static String formatCurrentDate2(LocalDate date) {
+        return !isNullOrEmpty(date.toString()) ? date.format(OLD_DATE_TIME_PATTERN2) : "";
+    }
+
     public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails) {
         StringBuilder sb = new StringBuilder();
         String templateName = getTemplateName(caseData);
@@ -78,7 +90,7 @@ public class Helper {
         sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts2\":\"")
                 .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
 
-        String userName = userDetails.getForename() + " " + userDetails.getSurname().orElse("");
+        String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
         sb.append("\"Today_date\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
         sb.append("\"TodayPlus28Days\":\"").append(formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
@@ -255,10 +267,11 @@ public class Helper {
         StringBuilder sb = new StringBuilder();
         //Currently checking collection not the HearingType
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
-            HearingType hearingType = caseData.getHearingCollection().get(0).getValue();
+            String correspondenceHearingNumber = getCorrespondenceHearingNumber(caseData);
+            HearingType hearingType = getHearingByNumber(caseData.getHearingCollection(), correspondenceHearingNumber);
             if (hearingType.getHearingDateCollection() != null && !hearingType.getHearingDateCollection().isEmpty()) {
-                sb.append("\"Hearing_date\":\"").append(nullCheck(formatLocalDate(hearingType.getHearingDateCollection().get(0).getValue().getListedDate()))).append(NEW_LINE);
-                sb.append("\"Hearing_date_time\":\"").append(nullCheck(formatLocalDateTime(hearingType.getHearingDateCollection().get(0).getValue().getListedDate()))).append(NEW_LINE);
+                sb.append("\"Hearing_date\":\"").append(nullCheck(getHearingDates(hearingType.getHearingDateCollection()))).append(NEW_LINE);
+                sb.append("\"Hearing_date_time\":\"").append(nullCheck(getHearingDatesAndTime(hearingType.getHearingDateCollection()))).append(NEW_LINE);
             } else {
                 sb.append("\"Hearing_date\":\"").append(NEW_LINE);
                 sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
@@ -272,6 +285,71 @@ public class Helper {
             sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
         }
         return sb;
+    }
+
+    public static String getCorrespondenceHearingNumber(CaseData caseData) {
+        Optional<CorrespondenceType> correspondenceType = Optional.ofNullable(caseData.getCorrespondenceType());
+        if (correspondenceType.isPresent()) {
+            return correspondenceType.get().getHearingNumber();
+        } else {
+            Optional<CorrespondenceScotType> correspondenceScotType = Optional.ofNullable(caseData.getCorrespondenceScotType());
+            if (correspondenceScotType.isPresent()) {
+                return correspondenceScotType.get().getHearingNumber();
+            } else {
+                return "";
+            }
+        }
+    }
+
+    public static HearingType getHearingByNumber(List<HearingTypeItem> hearingCollection, String correspondenceHearingNumber) {
+
+        HearingType hearingType = new HearingType();
+
+        Iterator<HearingTypeItem> itr = hearingCollection.iterator();
+
+        while (itr.hasNext()) {
+            hearingType = itr.next().getValue();
+            if(hearingType.getHearingNumber() != null) {
+                if (hearingType.getHearingNumber().equals(correspondenceHearingNumber)) { break; }
+            }
+        }
+
+        return hearingType;
+    }
+
+    private static String getHearingDates(List<DateListedTypeItem> hearingDateCollection) {
+
+        StringBuilder sb = new StringBuilder();
+
+        Iterator<DateListedTypeItem> itr = hearingDateCollection.iterator();
+
+        while (itr.hasNext()) {
+            sb.append(formatLocalDate(itr.next().getValue().getListedDate()));
+            sb.append(itr.hasNext() ? ", " : "");
+        }
+
+        return sb.toString();
+    }
+
+    private static String getHearingDatesAndTime(List<DateListedTypeItem> hearingDateCollection) {
+
+        StringBuilder sb = new StringBuilder(getHearingDates(hearingDateCollection));
+
+        Iterator<DateListedTypeItem> itr = hearingDateCollection.iterator();
+
+        LocalTime earliestTime = LocalTime.of(23,59);
+
+        while (itr.hasNext()) {
+            LocalDateTime listedDate = LocalDateTime.parse(itr.next().getValue().getListedDate());
+            LocalTime listedTime = LocalTime.of(listedDate.getHour(),listedDate.getMinute());
+            earliestTime = listedTime.isBefore(earliestTime) ? listedTime : earliestTime;
+        }
+
+        sb.append(" at ");
+
+        sb.append(earliestTime.toString());
+
+        return sb.toString();
     }
 
     static String getHearingDuration(HearingType hearingType) {
@@ -395,4 +473,33 @@ public class Helper {
                 .build();
     }
 
+    private static List<DynamicValueType> createDynamicRespondentAddressFixedList(List<RespondentSumTypeItem> respondentCollection) {
+        List<DynamicValueType> listItems = new ArrayList<>();
+        if (respondentCollection != null) {
+            for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
+                DynamicValueType dynamicValueType = new DynamicValueType();
+                RespondentSumType respondentSumType = respondentSumTypeItem.getValue();
+                dynamicValueType.setCode(respondentSumType.getRespondentName());
+                dynamicValueType.setLabel(respondentSumType.getRespondentName() + " - " + respondentSumType.getRespondentAddress().toString());
+                listItems.add(dynamicValueType);
+            }
+        }
+        return listItems;
+    }
+
+    public static CaseData midRespondentAddress(CaseData caseData) {
+        List<DynamicValueType> listItems = createDynamicRespondentAddressFixedList(caseData.getRespondentCollection());
+        if (!listItems.isEmpty()) {
+            if (caseData.getClaimantWorkAddressQRespondent() != null) {
+                caseData.getClaimantWorkAddressQRespondent().setListItems(listItems);
+            } else {
+                DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+                dynamicFixedListType.setListItems(listItems);
+                caseData.setClaimantWorkAddressQRespondent(dynamicFixedListType);
+            }
+            //Default dynamic list
+            caseData.getClaimantWorkAddressQRespondent().setValue(listItems.get(0));
+        }
+        return caseData;
+    }
 }

@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
@@ -81,11 +82,11 @@ public class BulkHelperTest {
 
     @Test
     public void getMultipleTypeListBySubmitEventList() {
-        String result = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, multipleReferenceM=1234, " +
+        String result = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=No, multipleReferenceM=1234, " +
                 "clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , respondentRepM= , fileLocM=Manchester, " +
                 "receiptDateM= , positionTypeM= , feeGroupReferenceM= , jurCodesCollectionM=AA, stateM= , subMultipleM= , subMultipleTitleM= , currentPositionM= , " +
                 "claimantAddressLine1M=Line1, claimantPostCodeM=PostCode, respondentAddressLine1M=Line1, respondentPostCodeM=PostCode, flag1M= , flag2M= , EQPM= , " +
-                "respondentRepOrgM= , claimantRepOrgM= )), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, " +
+                "respondentRepOrgM= , claimantRepOrgM= )), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=No, " +
                 "multipleReferenceM=1234, clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , respondentRepM= , " +
                 "fileLocM=Manchester, receiptDateM= , positionTypeM= , feeGroupReferenceM= , jurCodesCollectionM=AA, stateM= , subMultipleM= , subMultipleTitleM= , " +
                 "currentPositionM= , claimantAddressLine1M=Line1, claimantPostCodeM=PostCode, respondentAddressLine1M=Line1, respondentPostCodeM=PostCode, flag1M= , " +
@@ -95,14 +96,14 @@ public class BulkHelperTest {
 
     @Test
     public void getMultipleTypeListBySubmitEventListWithStates() {
-        submitEvents.get(0).setState("Submitted");
-        submitEvents.get(1).setState("Pending");
-        String result = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=null, multipleReferenceM=1234, " +
+        submitEvents.get(0).setState(SUBMITTED_STATE);
+        submitEvents.get(1).setState(PENDING_STATE);
+        String result = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, leadClaimantM=No, multipleReferenceM=1234, " +
                 "clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , respondentRepM= , fileLocM=Manchester, " +
                 "receiptDateM= , positionTypeM= , feeGroupReferenceM= , jurCodesCollectionM=AA, stateM=Submitted, subMultipleM= , subMultipleTitleM= , " +
                 "currentPositionM= , claimantAddressLine1M=Line1, claimantPostCodeM=PostCode, respondentAddressLine1M=Line1, respondentPostCodeM=PostCode, " +
                 "flag1M= , flag2M= , EQPM= , respondentRepOrgM= , claimantRepOrgM= )), MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=222, " +
-                "leadClaimantM=null, multipleReferenceM=1234, clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , " +
+                "leadClaimantM=No, multipleReferenceM=1234, clerkRespM=JuanFran, claimantSurnameM=Mike, respondentSurnameM=Andrew Smith, claimantRepM= , " +
                 "respondentRepM= , fileLocM=Manchester, receiptDateM= , positionTypeM= , feeGroupReferenceM= , jurCodesCollectionM=AA, stateM=Submitted, " +
                 "subMultipleM= , subMultipleTitleM= , currentPositionM= , claimantAddressLine1M=Line1, claimantPostCodeM=PostCode, respondentAddressLine1M=Line1, " +
                 "respondentPostCodeM=PostCode, flag1M= , flag2M= , EQPM= , respondentRepOrgM= , claimantRepOrgM= ))]";
@@ -168,7 +169,7 @@ public class BulkHelperTest {
 
     @Test
     public void getMultipleTypeFromSubmitEvent() {
-        String result = "MultipleType(caseIDM=0, ethosCaseReferenceM= , leadClaimantM=null, multipleReferenceM= , clerkRespM= , " +
+        String result = "MultipleType(caseIDM=0, ethosCaseReferenceM= , leadClaimantM=No, multipleReferenceM= , clerkRespM= , " +
                 "claimantSurnameM=Mike, respondentSurnameM=Juan Pedro, claimantRepM= , respondentRepM= , fileLocM=Manchester, " +
                 "receiptDateM= , positionTypeM= , feeGroupReferenceM=11111, jurCodesCollectionM= , stateM= , subMultipleM= , " +
                 "subMultipleTitleM= , currentPositionM= , claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , " +
@@ -336,4 +337,33 @@ public class BulkHelperTest {
                 "}\n";
         assertEquals(expected, BulkHelper.buildScheduleDocumentContent(bulkDetailsScheduleDetailed.getCaseData(), "").toString());
     }
+
+    private SubmitEvent createSubmitEvent(String ethosCaseReference) {
+        SubmitEvent submitEvent = new SubmitEvent();
+        CaseData caseData = new CaseData();
+        caseData.setEthosCaseReference(ethosCaseReference);
+        submitEvent.setCaseData(caseData);
+        return submitEvent;
+    }
+
+    @Test
+    public void calculateLeadCase() {
+        List<SubmitEvent> submitEventList = new ArrayList<>(Arrays.asList(createSubmitEvent("1"), createSubmitEvent("2"),
+                createSubmitEvent("3"), createSubmitEvent("4")));
+        List<String> caseIds = new ArrayList<>(Arrays.asList("5", "2", "3"));
+        List<SubmitEvent> submitEventListResult = BulkHelper.calculateLeadCase(submitEventList, caseIds);
+        assertEquals("[2, 1, 3, 4]", submitEventListResult.stream()
+                .map(submitEvent1 -> submitEvent1.getCaseData().getEthosCaseReference()).collect(Collectors.toList()).toString());
+    }
+
+    @Test
+    public void calculateLeadCase2() {
+        List<SubmitEvent> submitEventList = new ArrayList<>(Arrays.asList(createSubmitEvent("1"), createSubmitEvent("2"),
+                createSubmitEvent("3"), createSubmitEvent("5")));
+        List<String> caseIds = new ArrayList<>(Arrays.asList("5", "2", "3"));
+        List<SubmitEvent> submitEventListResult = BulkHelper.calculateLeadCase(submitEventList, caseIds);
+        assertEquals("[5, 1, 2, 3]", submitEventListResult.stream()
+                .map(submitEvent1 -> submitEvent1.getCaseData().getEthosCaseReference()).collect(Collectors.toList()).toString());
+    }
+
 }
