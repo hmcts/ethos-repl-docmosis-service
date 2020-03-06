@@ -247,4 +247,9 @@
         <notes><![CDATA[ CVE-2019-10797  ]]></notes>
         <cve>CVE-2019-10797</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-1935  ]]></notes>
+        <cve>CVE-2020-1935</cve>
+    </suppress>
+
 </suppressions>
