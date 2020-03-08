@@ -71,6 +71,15 @@
         }
       }
     ],
+    "jurCodesCollection": [
+      {
+        "id" : "123456",
+        "value" : {
+          "juridictionCodesList": "COM",
+          "judgmentOutcome": "Dismissed on withdrawal"
+        }
+      }
+    ],
     "correspondenceType": {
       "topLevel_Documents": "EM-TRB-EGW-ENG-00027",
       "part_2_Documents": "2.2A",
