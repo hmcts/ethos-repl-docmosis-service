@@ -198,6 +198,28 @@
         }
       }
     ],
+    "jurCodesCollection": [
+      {
+        "id" : "123456",
+        "value" : {
+          "juridictionCodesList": "COM",
+          "judgmentOutcome": "Successful at hearing"
+        }
+      },
+      {
+        "id" : "123456",
+        "value" : {
+          "juridictionCodesList": "DOD"
+        }
+      },
+      {
+        "id" : "123456",
+        "value" : {
+          "juridictionCodesList": "DAG",
+          "judgmentOutcome": "Dismissed on withdrawal"
+        }
+      }
+    ],
     "respondentCollection": [
       {
         "id" : "123345",
