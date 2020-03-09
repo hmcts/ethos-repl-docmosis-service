@@ -11,7 +11,7 @@
     "tribunalCorrespondenceDX" : "1234567",
     "tribunalCorrespondenceEmail" : "GlasgowOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
-    "claimantRepresentedQuestion" : "no",
+    "claimantRepresentedQuestion" : "yes",
     "claimant_TypeOfClaimant" : "Individual",
     "addSubMultipleComment": "Comment",
     "additionalCaseInfo": {
