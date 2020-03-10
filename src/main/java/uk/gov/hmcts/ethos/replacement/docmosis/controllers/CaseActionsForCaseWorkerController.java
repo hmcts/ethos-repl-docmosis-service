@@ -262,17 +262,16 @@ public class CaseActionsForCaseWorkerController {
     public ResponseEntity<CCDCallbackResponse> amendCaseDetails(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        
       log.info("AMEND CASE DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
         
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
-      
-        List<String> errors = eventValidationService.validateReceiptDate(ccdRequest.getCaseDetails().getCaseData());
-        log.info("Event fields validation: " + errors);
+
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        List<String> errors = eventValidationService.validateReceiptDate(caseData);
+        log.info("Event fields validation: " + errors);
         if (errors.isEmpty()) {
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
@@ -280,8 +279,8 @@ public class CaseActionsForCaseWorkerController {
         }
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .errors(errors)
                 .data(caseData)
+                .errors(errors)
                 .build());
     }
 
@@ -294,8 +293,15 @@ public class CaseActionsForCaseWorkerController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> addAmendET3(
-            @RequestBody CCDRequest ccdRequest) {
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
         log.info("ADD AMEND ET3 ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
         List<String> errors = eventValidationService.validateReturnedFromJudgeDate(ccdRequest.getCaseDetails().getCaseData());
         log.info("Event fields validation: " + errors);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
@@ -322,10 +328,21 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
+        List<String> errors = new ArrayList<>();
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        caseData.setState(ccdRequest.getCaseDetails().getState());
+
+        if(ccdRequest.getCaseDetails().getState().equals(CLOSED_STATE)) {
+            errors = eventValidationService.validateJurisdictionOutcome(caseData);
+            log.info("Event fields validation: " + errors);
+        }
+
+        if (errors.isEmpty()) {
+            caseData.setState(ccdRequest.getCaseDetails().getState());
+        }
+
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
+                .errors(errors)
                 .build());
     }
 
