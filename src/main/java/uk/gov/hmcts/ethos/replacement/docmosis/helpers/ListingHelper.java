@@ -350,6 +350,14 @@ public class ListingHelper {
             return dateListedType.getHearingRoomCM();
         } else if (!isNullOrEmpty(dateListedType.getHearingRoomCC())) {
             return dateListedType.getHearingRoomCC();
+        } else if (!isNullOrEmpty(dateListedType.getHearingRoomCrownCourt())) {
+            return dateListedType.getHearingRoomCrownCourt();
+        } else if (!isNullOrEmpty(dateListedType.getHearingRoomKendal())) {
+            return dateListedType.getHearingRoomKendal();
+        } else if (!isNullOrEmpty(dateListedType.getHearingRoomMinshullSt())) {
+            return dateListedType.getHearingRoomMinshullSt();
+        } else if (!isNullOrEmpty(dateListedType.getHearingRoomMancMagistrate())) {
+            return dateListedType.getHearingRoomMancMagistrate();
         } return " ";
     }
 

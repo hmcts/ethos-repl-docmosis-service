@@ -26,6 +26,14 @@ public class DateListedType {
     private String hearingRoomCM;
     @JsonProperty("Hearing_room_CC")
     private String hearingRoomCC;
+    @JsonProperty("hearingRoomCrownCourt")
+    private String hearingRoomCrownCourt;
+    @JsonProperty("hearingRoomKendal")
+    private String hearingRoomKendal;
+    @JsonProperty("hearingRoomMinshullSt")
+    private String hearingRoomMinshullSt;
+    @JsonProperty("hearingRoomMancMagistrate")
+    private String hearingRoomMancMagistrate;
     @JsonProperty("Hearing_Glasgow")
     private String hearingGlasgow;
     @JsonProperty("Hearing_Aberdeen")
