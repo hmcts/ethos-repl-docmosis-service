@@ -64,7 +64,7 @@ public class BulkActionsController {
     @Deprecated public ResponseEntity<BulkCallbackResponse> createBulk(
             @RequestBody BulkRequest bulkRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("CREATE BULK CHECK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
+        log.info("CREATE BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -92,7 +92,7 @@ public class BulkActionsController {
     public ResponseEntity<BulkCallbackResponse> createBulkES(
             @RequestBody BulkRequest bulkRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("CREATE BULKES ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
+        log.info("CREATE BULKES CHECK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
