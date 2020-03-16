@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
@@ -24,6 +25,8 @@ import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
@@ -77,6 +80,20 @@ public class DocumentGenerationControllerTest {
     @Test
     public void generateDocumentOk() throws Exception {
         when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GEN_DOC_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", notNullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateDocumentValidationErrors() throws Exception {
+        when(eventValidationService.validateHearingNumber(isA(CaseData.class))).thenReturn(new ArrayList<>(Collections.singletonList("Error")));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())
