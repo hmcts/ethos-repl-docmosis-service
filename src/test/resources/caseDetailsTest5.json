@@ -12,7 +12,7 @@
     "tribunalCorrespondenceDX" : "123456",
     "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
-    "claimantRepresentedQuestion" : "yes",
+    "claimantRepresentedQuestion" : "Yes",
     "claimant_TypeOfClaimant" : "Individual",
     "addSubMultipleComment": "Comment",
     "additionalCaseInfo": {
