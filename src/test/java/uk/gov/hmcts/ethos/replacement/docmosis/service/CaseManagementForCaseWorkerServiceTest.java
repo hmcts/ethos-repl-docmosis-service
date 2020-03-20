@@ -68,8 +68,11 @@ public class CaseManagementForCaseWorkerServiceTest {
         assertEquals(3, caseData.getRespondentCollection().size());
 
         assertEquals("Juan Garcia", caseData.getRespondentCollection().get(0).getValue().getRespondentName());
+        assertEquals(NO, caseData.getRespondentCollection().get(0).getValue().getResponseStruckOut());
         assertEquals("Roberto Dondini", caseData.getRespondentCollection().get(1).getValue().getRespondentName());
+        assertEquals(NO, caseData.getRespondentCollection().get(1).getValue().getResponseStruckOut());
         assertEquals("Antonio Vazquez", caseData.getRespondentCollection().get(2).getValue().getRespondentName());
+        assertEquals(YES, caseData.getRespondentCollection().get(2).getValue().getResponseStruckOut());
     }
 
     @Test

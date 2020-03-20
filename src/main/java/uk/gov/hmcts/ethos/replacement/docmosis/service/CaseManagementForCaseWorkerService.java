@@ -50,10 +50,16 @@ public class CaseManagementForCaseWorkerService {
                 RespondentSumTypeItem respondentSumTypeItem = itr.next();
                 RespondentSumType respondentSumType = respondentSumTypeItem.getValue();
 
-                if (respondentSumType.getResponseStruckOut() != null && respondentSumType.getResponseStruckOut().equals(YES)) {
-                    struckRespondent.add(respondentSumTypeItem);
+                if (respondentSumType.getResponseStruckOut() != null) {
+                    if (respondentSumType.getResponseStruckOut().equals(YES)) {
+                        struckRespondent.add(respondentSumTypeItem);
+                    }
+                    else {
+                        activeRespondent.add(respondentSumTypeItem);
+                    }
                 }
                 else{
+                    respondentSumType.setResponseStruckOut(NO);
                     activeRespondent.add(respondentSumTypeItem);
                 }
             }
