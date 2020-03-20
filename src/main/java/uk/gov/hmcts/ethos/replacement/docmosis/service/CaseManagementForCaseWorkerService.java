@@ -5,6 +5,14 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
@@ -24,6 +32,35 @@ public class CaseManagementForCaseWorkerService {
         } else {
             log.info("Null PreAcceptCase");
         }
+        return caseData;
+    }
+
+    public CaseData struckOutRespondents(CCDRequest ccdRequest) {
+        CaseData caseData = getCaseData(ccdRequest);
+
+        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+
+            List<RespondentSumTypeItem> activeRespondent = new ArrayList<RespondentSumTypeItem>();
+            List<RespondentSumTypeItem> struckRespondent = new ArrayList<RespondentSumTypeItem>();;
+
+            ListIterator<RespondentSumTypeItem> itr = caseData.getRespondentCollection().listIterator();
+
+            while (itr.hasNext()) {
+
+                RespondentSumTypeItem respondentSumTypeItem = itr.next();
+                RespondentSumType respondentSumType = respondentSumTypeItem.getValue();
+
+                if (respondentSumType.getResponseStruckOut() != null && respondentSumType.getResponseStruckOut().equals(YES)) {
+                    struckRespondent.add(respondentSumTypeItem);
+                }
+                else{
+                    activeRespondent.add(respondentSumTypeItem);
+                }
+            }
+
+            caseData.setRespondentCollection(Stream.concat(activeRespondent.stream(), struckRespondent.stream()).collect(Collectors.toList()));
+        }
+
         return caseData;
     }
 

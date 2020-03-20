@@ -270,6 +270,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void addAmendET3() throws Exception {
+        when(caseManagementForCaseWorkerService.struckOutRespondents(isA(CCDRequest.class))).thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(ADD_AMEND_ET3_URL)
                 .content(requestContent.toString())
