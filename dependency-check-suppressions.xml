@@ -331,4 +331,12 @@
         <notes><![CDATA[ CVE-2015-3627  ]]></notes>
         <cve>CVE-2015-3627</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-9356  ]]></notes>
+        <cve>CVE-2014-9356</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-8178  ]]></notes>
+        <cve>CVE-2014-8178</cve>
+    </suppress>
 </suppressions>
