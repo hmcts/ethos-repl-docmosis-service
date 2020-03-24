@@ -29,7 +29,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 
-import javax.ws.rs.core.MediaType;
+import org.springframework.http.MediaType;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
