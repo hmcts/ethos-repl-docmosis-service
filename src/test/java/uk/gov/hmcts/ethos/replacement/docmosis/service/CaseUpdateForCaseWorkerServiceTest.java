@@ -15,12 +15,11 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
-import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CaseUpdateForCaseWorkerServiceTest {
@@ -92,7 +91,7 @@ public class CaseUpdateForCaseWorkerServiceTest {
 
     @Test(expected = Exception.class)
     public void caseCreationManchesterRequestException() throws IOException {
-        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenThrow(feignError());
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenThrow(new RuntimeException());
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
         when(defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", manchesterCaseDetails.getCaseTypeId())).thenReturn(manchesterDefaultValues);
         caseUpdateForCaseWorkerService.caseUpdateRequest(manchesterCcdRequest, "authToken");

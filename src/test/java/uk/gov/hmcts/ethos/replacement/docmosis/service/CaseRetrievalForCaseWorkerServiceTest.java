@@ -45,7 +45,7 @@ public class CaseRetrievalForCaseWorkerServiceTest {
 
     @Test(expected = Exception.class)
     public void caseRetrievalRequestException() throws IOException {
-        when(ccdClient.retrieveCase(anyString(), anyString(), anyString(), any())).thenThrow(feignError());
+        when(ccdClient.retrieveCase(anyString(), anyString(), anyString(), any())).thenThrow(new RuntimeException());
         caseRetrievalForCaseWorkerService.caseRetrievalRequest(ccdRequest, "authToken");
     }
 
@@ -58,7 +58,7 @@ public class CaseRetrievalForCaseWorkerServiceTest {
 
     @Test(expected = Exception.class)
     public void casesRetrievalRequestException() throws IOException {
-        when(ccdClient.retrieveCases(anyString(), any(), any())).thenThrow(feignError());
+        when(ccdClient.retrieveCases(anyString(), any(), any())).thenThrow(new RuntimeException());
         caseRetrievalForCaseWorkerService.casesRetrievalRequest(ccdRequest, "authToken");
     }
 
