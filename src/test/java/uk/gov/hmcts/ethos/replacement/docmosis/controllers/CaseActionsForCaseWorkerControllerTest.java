@@ -20,7 +20,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 
-import javax.ws.rs.core.MediaType;
+import org.springframework.http.MediaType;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
