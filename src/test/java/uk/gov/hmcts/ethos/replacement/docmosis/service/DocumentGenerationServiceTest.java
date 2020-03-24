@@ -71,7 +71,7 @@ public class DocumentGenerationServiceTest {
 
     @Test(expected = Exception.class)
     public void processDocumentRequestException() throws IOException {
-        when(tornadoService.documentGeneration(anyString(), any())).thenThrow(feignError());
+        when(tornadoService.documentGeneration(anyString(), any())).thenThrow(new RuntimeException());
         documentGenerationService.processDocumentRequest(ccdRequest, "authToken");
     }
 
@@ -115,7 +115,7 @@ public class DocumentGenerationServiceTest {
         submitEvent.setCaseId(1);
         submitEvent.setCaseData(new CaseData());
         List<SubmitEvent> submitEvents = Collections.singletonList(submitEvent);
-        when(tornadoService.documentGeneration(anyString(), any())).thenThrow(feignError());
+        when(tornadoService.documentGeneration(anyString(), any())).thenThrow(new RuntimeException());
         when(ccdClient.retrieveCasesElasticSearch(anyString(), any(), any())).thenReturn(submitEvents);
 
         documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");
@@ -140,7 +140,7 @@ public class DocumentGenerationServiceTest {
 
     @Test(expected = Exception.class)
     public void processBulkScheduleRequestException() throws IOException {
-        when(tornadoService.scheduleGeneration(anyString(), any())).thenThrow(feignError());
+        when(tornadoService.scheduleGeneration(anyString(), any())).thenThrow(new RuntimeException());
         documentGenerationService.processBulkScheduleRequest(bulkRequest, "authToken");
     }
 }

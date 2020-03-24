@@ -220,7 +220,7 @@ public class ListingServiceTest {
 
     @Test(expected = Exception.class)
     public void processListingHearingsRequestWithException() throws IOException {
-        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenThrow(feignError());
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenThrow(new RuntimeException());
         listingService.processListingHearingsRequest(listingDetails, "authToken");
     }
 
@@ -233,7 +233,7 @@ public class ListingServiceTest {
 
     @Test(expected = Exception.class)
     public void processHearingDocumentWithException() throws IOException {
-        when(tornadoService.listingGeneration(anyString(), any(), anyString())).thenThrow(feignError());
+        when(tornadoService.listingGeneration(anyString(), any(), anyString())).thenThrow(new RuntimeException());
         listingService.processHearingDocument(listingDetails.getCaseData(), listingDetails.getCaseTypeId(), "authToken");
     }
 
