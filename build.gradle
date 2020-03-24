@@ -98,7 +98,7 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.6'
-    testCompile (group: 'org.docx4j', name: 'docx4j', version: '3.3.5') {
+    testCompile (group: 'org.docx4j', name: 'docx4j', version: '6.1.2') {
         exclude module: 'slf4j-log4j12'
     }
     testCompile 'org.projectlombok:lombok:1.18.4'
