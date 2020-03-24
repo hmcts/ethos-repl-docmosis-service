@@ -68,7 +68,7 @@ dependencies {
 
     compile('org.postgresql:postgresql')
 
-    compileOnly 'org.projectlombok:lombok:1.18.4'
+    compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.4'
 
     compile(group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger)
