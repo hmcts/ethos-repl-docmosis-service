@@ -21,7 +21,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
-import javax.ws.rs.core.MediaType;
+import org.springframework.http.MediaType;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
