@@ -123,7 +123,7 @@
           "respondent_email": "Antonio@gmail.com",
           "respondent_phone1": "07577136570",
           "respondent_phone2": "07577136570",
-          "responseStruckOut": "Yes"
+          "responseStruckOut": "No"
         }
       },
       {
@@ -142,7 +142,7 @@
           "respondent_email": "JuanGarcia@gmail.com",
           "respondent_phone1": "07577136570",
           "respondent_phone2": "07577136570",
-          "responseStruckOut": "No"
+          "responseStruckOut": "Yes"
         }
       },
       {
@@ -160,7 +160,8 @@
           "respondent_contact_preference": "Post",
           "respondent_email": "RobertoDondini@gmail.com",
           "respondent_phone1": "07577136570",
-          "respondent_phone2": "07577136570"
+          "respondent_phone2": "07577136570",
+          "responseStruckOut": "No"
         }
       }
     ],
