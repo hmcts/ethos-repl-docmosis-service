@@ -124,6 +124,29 @@ public class EventValidationServiceTest {
         assertEquals(EMPTY_HEARING_COLLECTION_ERROR_MESSAGE, errors.get(0));
     }
 
+    @Test
+    public void shouldValidateJurisdictionOutcomePresentAndMissing() {
+        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData());
+
+        assertEquals(1, errors.size());
+        assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+    }
+
+    @Test
+    public void shouldValidateJurisdictionOutcomePresent() {
+        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails2.getCaseData());
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateJurisdictionOutcomeMissing() {
+        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails3.getCaseData());
+
+        assertEquals(1, errors.size());
+        assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+    }
+
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
         String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
                 .getResource(jsonFileName)).toURI())));

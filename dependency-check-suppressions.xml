@@ -247,4 +247,108 @@
         <notes><![CDATA[ CVE-2019-10797  ]]></notes>
         <cve>CVE-2019-10797</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-1935  ]]></notes>
+        <cve>CVE-2020-1935</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2015-3631  ]]></notes>
+        <cve>CVE-2015-3631</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2015-3630  ]]></notes>
+        <cve>CVE-2015-3630</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-13139  ]]></notes>
+        <cve>CVE-2019-13139</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-13509  ]]></notes>
+        <cve>CVE-2019-13509</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-5736  ]]></notes>
+        <cve>CVE-2019-5736</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-0048  ]]></notes>
+        <cve>CVE-2014-0048</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2017-14992  ]]></notes>
+        <cve>CVE-2017-14992</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-6407  ]]></notes>
+        <cve>CVE-2014-6407</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2016-3697  ]]></notes>
+        <cve>CVE-2016-3697</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-5278  ]]></notes>
+        <cve>CVE-2014-5278</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-5277  ]]></notes>
+        <cve>CVE-2014-5277</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-9358  ]]></notes>
+        <cve>CVE-2014-9358</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-0047  ]]></notes>
+        <cve>CVE-2014-0047</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-5282  ]]></notes>
+        <cve>CVE-2014-5282</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-8179  ]]></notes>
+        <cve>CVE-2014-8179</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2016-9356  ]]></notes>
+        <cve>CVE-2016-9356</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2016-8178  ]]></notes>
+        <cve>CVE-2016-8178</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-16884  ]]></notes>
+        <cve>CVE-2019-16884</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-15752  ]]></notes>
+        <cve>CVE-2019-15752</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2015-3627  ]]></notes>
+        <cve>CVE-2015-3627</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-9356  ]]></notes>
+        <cve>CVE-2014-9356</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2014-8178  ]]></notes>
+        <cve>CVE-2014-8178</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2018-1272  ]]></notes>
+        <cve>CVE-2018-1272</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2018-1271  ]]></notes>
+        <cve>CVE-2018-1271</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2018-1270  ]]></notes>
+        <cve>CVE-2018-1270</cve>
+    </suppress>
 </suppressions>
