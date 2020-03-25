@@ -12,7 +12,7 @@
     "tribunalCorrespondenceDX" : "123456",
     "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
-    "claimantRepresentedQuestion" : "no",
+    "claimantRepresentedQuestion" : "Yes",
     "claimant_TypeOfClaimant" : "Company",
     "claimant_Company" : "Orlando LTD",
     "addSubMultipleComment": "Comment",

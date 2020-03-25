@@ -66,7 +66,7 @@ public class TornadoServiceTest {
 
     @Test(expected = Exception.class)
     public void documentGenerationError() throws IOException {
-        when(userService.getUserDetails(anyString())).thenThrow(feignError());
+        when(userService.getUserDetails(anyString())).thenThrow(new RuntimeException());
         tornadoService.documentGeneration("TOKEN", caseData);
     }
 

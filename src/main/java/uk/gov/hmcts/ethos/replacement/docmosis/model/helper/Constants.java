@@ -49,6 +49,10 @@ public class Constants {
     public static final String SUBMITTED_STATE = "Submitted";
     public static final String ACCEPTED_STATE = "Accepted";
     public static final String REJECTED_STATE = "Rejected";
+    public static final String CLOSED_STATE = "Closed";
+
+    public static final String YES = "Yes";
+    public static final String NO = "No";
 
     public static final String SINGLE_CASE_TYPE = "Single";
     public static final String INDIVIDUAL_TYPE_CLAIMANT = "Individual";
@@ -132,13 +136,14 @@ public class Constants {
     public static final String FILE_EXTENSION = ".docx";
 
     public static final String FUTURE_RECEIPT_DATE_ERROR_MESSAGE = "Receipt date should not be a date in the future";
+    public static final String EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE = "Date returned from judge can not be earlier than Date referred to judge";
     public static final String EMPTY_HEARING_COLLECTION_ERROR_MESSAGE = "Hearings could not be found for this case, the hearing collection is empty";
     public static final String HEARING_NUMBER_MISMATCH_ERROR_MESSAGE = "The hearing number provided did not match with any of the hearing numbers contained within this case";
-    public static final String EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE = "Date returned from judge can not be earlier than Date referred to judge";
+    public static final String MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE = "A Jurisdiction outcome is required before the case can be closed";
 
     public static final int TARGET_HEARING_DATE_INCREMENT = 181;
 
     public static final int MAX_ES_SIZE = 10000;
 
-    public static final int NUMBER_THREADS = 250;
+    public static final int NUMBER_THREADS = 20;
 }

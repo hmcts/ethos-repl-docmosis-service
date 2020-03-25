@@ -13,7 +13,7 @@
     "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
     "leadClaimant" : "Yes",
-    "claimantRepresentedQuestion" : "no",
+    "claimantRepresentedQuestion" : "Yes",
     "claimant_TypeOfClaimant" : "Individual",
     "preAcceptCase": {
       "caseAccepted": "Yes",
@@ -195,6 +195,28 @@
               }
             }
           ]
+        }
+      }
+    ],
+    "jurCodesCollection": [
+      {
+        "id" : "123456",
+        "value" : {
+          "juridictionCodesList": "COM",
+          "judgmentOutcome": "Successful at hearing"
+        }
+      },
+      {
+        "id" : "123456",
+        "value" : {
+          "juridictionCodesList": "DOD"
+        }
+      },
+      {
+        "id" : "123456",
+        "value" : {
+          "juridictionCodesList": "DAG",
+          "judgmentOutcome": "Dismissed on withdrawal"
         }
       }
     ],

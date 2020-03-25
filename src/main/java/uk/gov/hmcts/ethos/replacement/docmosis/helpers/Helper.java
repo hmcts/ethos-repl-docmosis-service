@@ -128,7 +128,7 @@ public class Helper {
         StringBuilder sb = new StringBuilder();
         RepresentedTypeC representedTypeC = caseData.getRepresentativeClaimantType();
         Optional<ClaimantIndType> claimantIndType = Optional.ofNullable(caseData.getClaimantIndType());
-        if (representedTypeC != null) {
+        if (representedTypeC != null && caseData.getClaimantRepresentedQuestion().equals(YES)) {
             sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(representedTypeC.getNameOfRepresentative())).append(NEW_LINE);
             if (representedTypeC.getRepresentativeAddress()!= null) {
                 sb.append(getClaimantOrRepAddressUK(representedTypeC.getRepresentativeAddress()));
