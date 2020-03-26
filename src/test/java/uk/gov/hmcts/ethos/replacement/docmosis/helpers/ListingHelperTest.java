@@ -450,18 +450,42 @@ public class ListingHelperTest {
 
     @Test
     public void getCaseTypeId() {
-        assertEquals(MANCHESTER_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID));
-        assertEquals(LEEDS_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID));
-        assertEquals(SCOTLAND_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId("OTHERS"));
-        assertEquals(BRISTOL_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(BRISTOL_LISTING_CASE_TYPE_ID));
-        assertEquals(LONDON_CENTRAL_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_CENTRAL_LISTING_CASE_TYPE_ID));
-        assertEquals(LONDON_EAST_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_EAST_LISTING_CASE_TYPE_ID));
-        assertEquals(LONDON_SOUTH_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_SOUTH_LISTING_CASE_TYPE_ID));
-        assertEquals(MIDLANDS_EAST_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MIDLANDS_EAST_LISTING_CASE_TYPE_ID));
-        assertEquals(MIDLANDS_WEST_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MIDLANDS_WEST_LISTING_CASE_TYPE_ID));
-        assertEquals(NEWCASTLE_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID));
-        assertEquals(WALES_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(WALES_LISTING_CASE_TYPE_ID));
-        assertEquals(WATFORD_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(WATFORD_LISTING_CASE_TYPE_ID));
+        assertEquals(MANCHESTER_DEV_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MANCHESTER_DEV_LISTING_CASE_TYPE_ID));
+        assertEquals(MANCHESTER_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MANCHESTER_USERS_LISTING_CASE_TYPE_ID));
+        assertEquals(MANCHESTER_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID));
+        assertEquals(LEEDS_DEV_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LEEDS_DEV_LISTING_CASE_TYPE_ID));
+        assertEquals(LEEDS_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LEEDS_USERS_LISTING_CASE_TYPE_ID));
+        assertEquals(LEEDS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID));
+        assertEquals(SCOTLAND_DEV_CASE_TYPE_ID, ListingHelper.getCaseTypeId(SCOTLAND_DEV_LISTING_CASE_TYPE_ID));
+        assertEquals(SCOTLAND_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(SCOTLAND_USERS_LISTING_CASE_TYPE_ID));
+        assertEquals(SCOTLAND_CASE_TYPE_ID, ListingHelper.getCaseTypeId("OTHERS"));
+        assertEquals(BRISTOL_DEV_CASE_TYPE_ID, ListingHelper.getCaseTypeId(BRISTOL_DEV_LISTING_CASE_TYPE_ID));
+        assertEquals(BRISTOL_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(BRISTOL_USERS_LISTING_CASE_TYPE_ID));
+        assertEquals(BRISTOL_CASE_TYPE_ID, ListingHelper.getCaseTypeId(BRISTOL_LISTING_CASE_TYPE_ID));
+        assertEquals(LONDON_CENTRAL_DEV_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_CENTRAL_DEV_LISTING_CASE_TYPE_ID));
+        assertEquals(LONDON_CENTRAL_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_CENTRAL_USERS_LISTING_CASE_TYPE_ID));
+        assertEquals(LONDON_CENTRAL_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_CENTRAL_LISTING_CASE_TYPE_ID));
+        assertEquals(LONDON_EAST_DEV_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_EAST_DEV_LISTING_CASE_TYPE_ID));
+        assertEquals(LONDON_EAST_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_EAST_USERS_LISTING_CASE_TYPE_ID));
+        assertEquals(LONDON_EAST_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_EAST_LISTING_CASE_TYPE_ID));
+        assertEquals(LONDON_SOUTH_DEV_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_SOUTH_DEV_LISTING_CASE_TYPE_ID));
+        assertEquals(LONDON_SOUTH_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_SOUTH_USERS_LISTING_CASE_TYPE_ID));
+        assertEquals(LONDON_SOUTH_CASE_TYPE_ID, ListingHelper.getCaseTypeId(LONDON_SOUTH_LISTING_CASE_TYPE_ID));
+        assertEquals(MIDLANDS_EAST_DEV_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MIDLANDS_EAST_DEV_LISTING_CASE_TYPE_ID));
+        assertEquals(MIDLANDS_EAST_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MIDLANDS_EAST_USERS_LISTING_CASE_TYPE_ID));
+        assertEquals(MIDLANDS_EAST_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MIDLANDS_EAST_LISTING_CASE_TYPE_ID));
+        assertEquals(MIDLANDS_WEST_DEV_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MIDLANDS_WEST_DEV_LISTING_CASE_TYPE_ID));
+        assertEquals(MIDLANDS_WEST_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MIDLANDS_WEST_USERS_LISTING_CASE_TYPE_ID));
+        assertEquals(MIDLANDS_WEST_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MIDLANDS_WEST_LISTING_CASE_TYPE_ID));
+        assertEquals(NEWCASTLE_DEV_CASE_TYPE_ID, ListingHelper.getCaseTypeId(NEWCASTLE_DEV_LISTING_CASE_TYPE_ID));
+        assertEquals(NEWCASTLE_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(NEWCASTLE_USERS_LISTING_CASE_TYPE_ID));
+        assertEquals(NEWCASTLE_CASE_TYPE_ID, ListingHelper.getCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID));
+        assertEquals(WALES_DEV_CASE_TYPE_ID, ListingHelper.getCaseTypeId(WALES_DEV_LISTING_CASE_TYPE_ID));
+        assertEquals(WALES_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(WALES_USERS_LISTING_CASE_TYPE_ID));
+        assertEquals(WALES_CASE_TYPE_ID, ListingHelper.getCaseTypeId(WALES_LISTING_CASE_TYPE_ID));
+        assertEquals(WATFORD_DEV_CASE_TYPE_ID, ListingHelper.getCaseTypeId(WATFORD_DEV_LISTING_CASE_TYPE_ID));
+        assertEquals(WATFORD_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(WATFORD_USERS_LISTING_CASE_TYPE_ID));
+        assertEquals(WATFORD_CASE_TYPE_ID, ListingHelper.getCaseTypeId(WATFORD_LISTING_CASE_TYPE_ID));
     }
 
     @Test

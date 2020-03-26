@@ -120,7 +120,7 @@ public class MultipleReferenceServiceTest {
         when(multipleRefManchesterRepository.findTopByOrderByIdDesc()).thenReturn(previousReferenceManchester);
         when(multipleRefManchesterRepository.save(isA(MultipleReferenceManchester.class))).thenReturn(referenceManchester);
         String manchesterRef = MANCHESTER_OFFICE_NUMBER + "00012";
-        assertEquals(multipleReferenceService.createReference(MANCHESTER_BULK_CASE_TYPE_ID, caseId), manchesterRef);
+        assertEquals(multipleReferenceService.createReference(MANCHESTER_DEV_BULK_CASE_TYPE_ID, caseId), manchesterRef);
     }
 
     @Test
@@ -128,7 +128,7 @@ public class MultipleReferenceServiceTest {
         when(multipleRefManchesterRepository.findTopByOrderByIdDesc()).thenReturn(previousMaxReferenceManchester);
         when(multipleRefManchesterRepository.save(isA(MultipleReferenceManchester.class))).thenReturn(maxReferenceManchester);
         String manchesterRef = MANCHESTER_OFFICE_NUMBER + "00001";
-        assertEquals(multipleReferenceService.createReference(MANCHESTER_BULK_CASE_TYPE_ID, caseId), manchesterRef);
+        assertEquals(multipleReferenceService.createReference(MANCHESTER_DEV_BULK_CASE_TYPE_ID, caseId), manchesterRef);
     }
 
     @Test
@@ -136,7 +136,7 @@ public class MultipleReferenceServiceTest {
         maxReferenceManchester.setRef(DEFAULT_INIT_REF);
         when(multipleRefManchesterRepository.save(isA(MultipleReferenceManchester.class))).thenReturn(maxReferenceManchester);
         String manchesterRef = MANCHESTER_OFFICE_NUMBER + DEFAULT_INIT_REF;
-        assertEquals(multipleReferenceService.createReference(MANCHESTER_BULK_CASE_TYPE_ID, caseId), manchesterRef);
+        assertEquals(multipleReferenceService.createReference(MANCHESTER_DEV_BULK_CASE_TYPE_ID, caseId), manchesterRef);
     }
 
     @Test
@@ -144,7 +144,7 @@ public class MultipleReferenceServiceTest {
         when(multipleRefScotlandRepository.findTopByOrderByIdDesc()).thenReturn(previousReferenceScotland);
         when(multipleRefScotlandRepository.save(isA(MultipleReferenceScotland.class))).thenReturn(referenceScotland);
         String scotlandRef = GLASGOW_OFFICE_NUMBER + "00015";
-        assertEquals(multipleReferenceService.createReference(SCOTLAND_BULK_CASE_TYPE_ID, caseId), scotlandRef);
+        assertEquals(multipleReferenceService.createReference(SCOTLAND_DEV_BULK_CASE_TYPE_ID, caseId), scotlandRef);
     }
 
     @Test
@@ -152,7 +152,7 @@ public class MultipleReferenceServiceTest {
         when(multipleRefLeedsRepository.findTopByOrderByIdDesc()).thenReturn(referenceLeeds);
         when(multipleRefLeedsRepository.save(isA(MultipleReferenceLeeds.class))).thenReturn(referenceLeeds);
         String leedsRef = LEEDS_OFFICE_NUMBER + "00005";
-        assertEquals(multipleReferenceService.createReference(LEEDS_USERS_BULK_CASE_TYPE_ID, caseId), leedsRef);
+        assertEquals(multipleReferenceService.createReference(LEEDS_BULK_CASE_TYPE_ID, caseId), leedsRef);
     }
 
     @Test
@@ -160,7 +160,7 @@ public class MultipleReferenceServiceTest {
         when(multipleRefMidlandsWestRepository.findTopByOrderByIdDesc()).thenReturn(referenceMidlandsWest);
         when(multipleRefMidlandsWestRepository.save(isA(MultipleReferenceMidlandsWest.class))).thenReturn(referenceMidlandsWest);
         String midlandsWestRef = MIDLANDS_WEST_OFFICE_NUMBER + "00008";
-        assertEquals(multipleReferenceService.createReference(MIDLANDS_WEST_USERS_BULK_CASE_TYPE_ID, caseId), midlandsWestRef);
+        assertEquals(multipleReferenceService.createReference(MIDLANDS_WEST_BULK_CASE_TYPE_ID, caseId), midlandsWestRef);
     }
 
     @Test
@@ -168,7 +168,7 @@ public class MultipleReferenceServiceTest {
         when(multipleRefMidlandsEastRepository.findTopByOrderByIdDesc()).thenReturn(referenceMidlandsEast);
         when(multipleRefMidlandsEastRepository.save(isA(MultipleReferenceMidlandsEast.class))).thenReturn(referenceMidlandsEast);
         String midlandsEastRef = MIDLANDS_EAST_OFFICE_NUMBER + "00009";
-        assertEquals(multipleReferenceService.createReference(MIDLANDS_EAST_USERS_BULK_CASE_TYPE_ID, caseId), midlandsEastRef);
+        assertEquals(multipleReferenceService.createReference(MIDLANDS_EAST_BULK_CASE_TYPE_ID, caseId), midlandsEastRef);
     }
 
     @Test
@@ -176,7 +176,7 @@ public class MultipleReferenceServiceTest {
         when(multipleRefBristolRepository.findTopByOrderByIdDesc()).thenReturn(referenceBristol);
         when(multipleRefBristolRepository.save(isA(MultipleReferenceBristol.class))).thenReturn(referenceBristol);
         String bristolRef = BRISTOL_OFFICE_NUMBER + "00010";
-        assertEquals(multipleReferenceService.createReference(BRISTOL_USERS_BULK_CASE_TYPE_ID, caseId), bristolRef);
+        assertEquals(multipleReferenceService.createReference(BRISTOL_BULK_CASE_TYPE_ID, caseId), bristolRef);
     }
 
     @Test
@@ -184,7 +184,7 @@ public class MultipleReferenceServiceTest {
         when(multipleRefWalesRepository.findTopByOrderByIdDesc()).thenReturn(referenceWales);
         when(multipleRefWalesRepository.save(isA(MultipleReferenceWales.class))).thenReturn(referenceWales);
         String walesRef = WALES_OFFICE_NUMBER + "00011";
-        assertEquals(multipleReferenceService.createReference(WALES_USERS_BULK_CASE_TYPE_ID, caseId), walesRef);
+        assertEquals(multipleReferenceService.createReference(WALES_BULK_CASE_TYPE_ID, caseId), walesRef);
     }
 
     @Test
@@ -192,7 +192,7 @@ public class MultipleReferenceServiceTest {
         when(multipleRefNewcastleRepository.findTopByOrderByIdDesc()).thenReturn(referenceNewcastle);
         when(multipleRefNewcastleRepository.save(isA(MultipleReferenceNewcastle.class))).thenReturn(referenceNewcastle);
         String newcastleRef = NEWCASTLE_OFFICE_NUMBER + "00012";
-        assertEquals(multipleReferenceService.createReference(NEWCASTLE_USERS_BULK_CASE_TYPE_ID, caseId), newcastleRef);
+        assertEquals(multipleReferenceService.createReference(NEWCASTLE_BULK_CASE_TYPE_ID, caseId), newcastleRef);
     }
 
     @Test
@@ -200,7 +200,7 @@ public class MultipleReferenceServiceTest {
         when(multipleRefWatfordRepository.findTopByOrderByIdDesc()).thenReturn(referenceWatford);
         when(multipleRefWatfordRepository.save(isA(MultipleReferenceWatford.class))).thenReturn(referenceWatford);
         String watfordRef = WATFORD_OFFICE_NUMBER + "00013";
-        assertEquals(multipleReferenceService.createReference(WATFORD_USERS_BULK_CASE_TYPE_ID, caseId), watfordRef);
+        assertEquals(multipleReferenceService.createReference(WATFORD_BULK_CASE_TYPE_ID, caseId), watfordRef);
     }
 
     @Test
@@ -208,7 +208,7 @@ public class MultipleReferenceServiceTest {
         when(multipleRefLondonCentralRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonCentral);
         when(multipleRefLondonCentralRepository.save(isA(MultipleReferenceLondonCentral.class))).thenReturn(referenceLondonCentral);
         String londonCentralRef = LONDON_CENTRAL_OFFICE_NUMBER + "00014";
-        assertEquals(multipleReferenceService.createReference(LONDON_CENTRAL_USERS_BULK_CASE_TYPE_ID, caseId), londonCentralRef);
+        assertEquals(multipleReferenceService.createReference(LONDON_CENTRAL_BULK_CASE_TYPE_ID, caseId), londonCentralRef);
     }
 
     @Test
@@ -216,7 +216,7 @@ public class MultipleReferenceServiceTest {
         when(multipleRefLondonSouthRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonSouth);
         when(multipleRefLondonSouthRepository.save(isA(MultipleReferenceLondonSouth.class))).thenReturn(referenceLondonSouth);
         String londonSouthRef = LONDON_SOUTH_OFFICE_NUMBER + "00015";
-        assertEquals(multipleReferenceService.createReference(LONDON_SOUTH_USERS_BULK_CASE_TYPE_ID, caseId), londonSouthRef);
+        assertEquals(multipleReferenceService.createReference(LONDON_SOUTH_BULK_CASE_TYPE_ID, caseId), londonSouthRef);
     }
 
     @Test
@@ -224,7 +224,7 @@ public class MultipleReferenceServiceTest {
         when(multipleRefLondonEastRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonEast);
         when(multipleRefLondonEastRepository.save(isA(MultipleReferenceLondonEast.class))).thenReturn(referenceLondonEast);
         String londonEastRef = LONDON_EAST_OFFICE_NUMBER + "00016";
-        assertEquals(multipleReferenceService.createReference(LONDON_EAST_USERS_BULK_CASE_TYPE_ID, caseId), londonEastRef);
+        assertEquals(multipleReferenceService.createReference(LONDON_EAST_BULK_CASE_TYPE_ID, caseId), londonEastRef);
     }
 
 }

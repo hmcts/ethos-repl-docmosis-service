@@ -46,7 +46,7 @@ public class CaseUpdateForCaseWorkerServiceTest {
         manchesterCaseDetails = new CaseDetails();
         manchesterCaseDetails.setCaseData(new CaseData());
         manchesterCaseDetails.setCaseId("123456");
-        manchesterCaseDetails.setCaseTypeId(MANCHESTER_CASE_TYPE_ID);
+        manchesterCaseDetails.setCaseTypeId(MANCHESTER_DEV_CASE_TYPE_ID);
         manchesterCaseDetails.setJurisdiction("TRIBUNALS");
         manchesterCcdRequest.setCaseDetails(manchesterCaseDetails);
 
@@ -54,7 +54,7 @@ public class CaseUpdateForCaseWorkerServiceTest {
         glasgowCaseDetails = new CaseDetails();
         glasgowCaseDetails.setCaseData(new CaseData());
         glasgowCaseDetails.setCaseId("123456");
-        glasgowCaseDetails.setCaseTypeId(SCOTLAND_CASE_TYPE_ID);
+        glasgowCaseDetails.setCaseTypeId(SCOTLAND_DEV_CASE_TYPE_ID);
         glasgowCaseDetails.setJurisdiction("TRIBUNALS");
         glasgowCcdRequest.setCaseDetails(glasgowCaseDetails);
 

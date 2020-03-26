@@ -37,7 +37,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         caseData.setPreAcceptCase(casePreAcceptType);
         manchesterCaseDetails.setCaseData(caseData);
         manchesterCaseDetails.setCaseId("123456");
-        manchesterCaseDetails.setCaseTypeId(MANCHESTER_CASE_TYPE_ID);
+        manchesterCaseDetails.setCaseTypeId(MANCHESTER_DEV_CASE_TYPE_ID);
         manchesterCaseDetails.setJurisdiction("TRIBUNALS");
         manchesterCcdRequest.setCaseDetails(manchesterCaseDetails);
 
