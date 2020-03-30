@@ -51,7 +51,7 @@ public class SingleReferenceService {
     public synchronized String createReference(String caseTypeId, String caseId) {
         String currentYear = String.valueOf(LocalDate.now().getYear());
         switch (caseTypeId) {
-            case MANCHESTER_DEV_CASE_TYPE_ID
+            case MANCHESTER_DEV_CASE_TYPE_ID:
             case MANCHESTER_USERS_CASE_TYPE_ID:
             case MANCHESTER_CASE_TYPE_ID:
                 return getManchesterOfficeReference(caseId, currentYear);
