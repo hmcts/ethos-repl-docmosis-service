@@ -1,6 +1,6 @@
 capacity = "2"
 tornado_url = "https://docmosis.perftest.platform.hmcts.net/rs/render"
-idam_api_url = "http://idam-api-perftest.service.core-compute-perftest.internal"
+idam_api_url = "https://idam-api.perftest.platform.hmcts.net"
 ccd_data_store_api_url = "http://ccd-data-store-api-perftest.service.core-compute-perftest.internal"
 dm_url = "http://dm-store-perftest.service.core-compute-perftest.internal"
 s2s_url = "http://rpe-service-auth-provider-perftest.service.core-compute-perftest.internal"
