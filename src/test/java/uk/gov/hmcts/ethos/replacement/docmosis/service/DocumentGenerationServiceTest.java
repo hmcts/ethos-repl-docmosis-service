@@ -24,8 +24,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.MANCHESTER_BULK_CASE_TYPE_ID;
-import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.MANCHESTER_DEV_BULK_CASE_TYPE_ID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DocumentGenerationServiceTest {
@@ -57,7 +56,7 @@ public class DocumentGenerationServiceTest {
         searchTypeItem.setValue(searchType);
         bulkData.setSearchCollection(new ArrayList<>(Collections.singletonList(searchTypeItem)));
         bulkDetails.setCaseData(bulkData);
-        bulkDetails.setCaseTypeId(MANCHESTER_BULK_CASE_TYPE_ID);
+        bulkDetails.setCaseTypeId(MANCHESTER_DEV_BULK_CASE_TYPE_ID);
         bulkRequest.setCaseDetails(bulkDetails);
         documentGenerationService = new DocumentGenerationService(tornadoService, ccdClient);
         documentInfo = DocumentInfo.builder().description("resources/exampleV1.json").build();

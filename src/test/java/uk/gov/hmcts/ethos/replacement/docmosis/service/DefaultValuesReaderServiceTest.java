@@ -87,18 +87,18 @@ public class DefaultValuesReaderServiceTest {
     @Before
     public void setUp() {
         listingData = getListingDataSetUp();
-        manchesterCaseDetails = getCaseDetails(MANCHESTER_CASE_TYPE_ID);
-        glasgowCaseDetails = getCaseDetails(SCOTLAND_CASE_TYPE_ID);
-        bristolCaseDetails = getCaseDetails(BRISTOL_USERS_CASE_TYPE_ID);
-        leedsCaseDetails = getCaseDetails(LEEDS_USERS_CASE_TYPE_ID);
-        londonCentralCaseDetails = getCaseDetails(LONDON_CENTRAL_USERS_CASE_TYPE_ID);
-        londonEastCaseDetails = getCaseDetails(LONDON_EAST_USERS_CASE_TYPE_ID);
-        londonSouthCaseDetails = getCaseDetails(LONDON_SOUTH_USERS_CASE_TYPE_ID);
-        midlandsEastCaseDetails = getCaseDetails(MIDLANDS_EAST_USERS_CASE_TYPE_ID);
-        midlandsWestCaseDetails = getCaseDetails(MIDLANDS_WEST_USERS_CASE_TYPE_ID);
-        newcastleCaseDetails = getCaseDetails(NEWCASTLE_USERS_CASE_TYPE_ID);
-        walesCaseDetails = getCaseDetails(WALES_USERS_CASE_TYPE_ID);
-        watfordCaseDetails = getCaseDetails(WATFORD_USERS_CASE_TYPE_ID);
+        manchesterCaseDetails = getCaseDetails(MANCHESTER_DEV_CASE_TYPE_ID);
+        glasgowCaseDetails = getCaseDetails(SCOTLAND_DEV_CASE_TYPE_ID);
+        bristolCaseDetails = getCaseDetails(BRISTOL_CASE_TYPE_ID);
+        leedsCaseDetails = getCaseDetails(LEEDS_CASE_TYPE_ID);
+        londonCentralCaseDetails = getCaseDetails(LONDON_CENTRAL_CASE_TYPE_ID);
+        londonEastCaseDetails = getCaseDetails(LONDON_EAST_CASE_TYPE_ID);
+        londonSouthCaseDetails = getCaseDetails(LONDON_SOUTH_CASE_TYPE_ID);
+        midlandsEastCaseDetails = getCaseDetails(MIDLANDS_EAST_CASE_TYPE_ID);
+        midlandsWestCaseDetails = getCaseDetails(MIDLANDS_WEST_CASE_TYPE_ID);
+        newcastleCaseDetails = getCaseDetails(NEWCASTLE_CASE_TYPE_ID);
+        walesCaseDetails = getCaseDetails(WALES_CASE_TYPE_ID);
+        watfordCaseDetails = getCaseDetails(WATFORD_CASE_TYPE_ID);
         preDefaultValues = DefaultValues.builder().claimantTypeOfClaimant(INDIVIDUAL_TYPE_CLAIMANT).build();
         postDefaultValuesManchester = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)

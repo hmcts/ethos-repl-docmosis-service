@@ -51,29 +51,49 @@ public class SingleReferenceService {
     public synchronized String createReference(String caseTypeId, String caseId) {
         String currentYear = String.valueOf(LocalDate.now().getYear());
         switch (caseTypeId) {
-            case MANCHESTER_CASE_TYPE_ID:
+            case MANCHESTER_DEV_CASE_TYPE_ID:
             case MANCHESTER_USERS_CASE_TYPE_ID:
+            case MANCHESTER_CASE_TYPE_ID:
                 return getManchesterOfficeReference(caseId, currentYear);
-            case SCOTLAND_CASE_TYPE_ID:
+            case SCOTLAND_DEV_CASE_TYPE_ID:
             case SCOTLAND_USERS_CASE_TYPE_ID:
+            case SCOTLAND_CASE_TYPE_ID:
                 return getGlasgowOfficeReference(caseId, currentYear);
+            case MIDLANDS_WEST_DEV_CASE_TYPE_ID:
             case MIDLANDS_WEST_USERS_CASE_TYPE_ID:
+            case MIDLANDS_WEST_CASE_TYPE_ID:
                 return getMidlandsWestOfficeReference(caseId, currentYear);
+            case MIDLANDS_EAST_DEV_CASE_TYPE_ID:
             case MIDLANDS_EAST_USERS_CASE_TYPE_ID:
+            case MIDLANDS_EAST_CASE_TYPE_ID:
                 return getMidlandsEastOfficeReference(caseId, currentYear);
+            case BRISTOL_DEV_CASE_TYPE_ID:
             case BRISTOL_USERS_CASE_TYPE_ID:
+            case BRISTOL_CASE_TYPE_ID:
                 return getBristolOfficeReference(caseId, currentYear);
+            case WALES_DEV_CASE_TYPE_ID:
             case WALES_USERS_CASE_TYPE_ID:
+            case WALES_CASE_TYPE_ID:
                 return getWalesOfficeReference(caseId, currentYear);
+            case NEWCASTLE_DEV_CASE_TYPE_ID:
             case NEWCASTLE_USERS_CASE_TYPE_ID:
+            case NEWCASTLE_CASE_TYPE_ID:
                 return getNewcastleOfficeReference(caseId, currentYear);
+            case WATFORD_DEV_CASE_TYPE_ID:
             case WATFORD_USERS_CASE_TYPE_ID:
+            case WATFORD_CASE_TYPE_ID:
                 return getWatfordOfficeReference(caseId, currentYear);
+            case LONDON_CENTRAL_DEV_CASE_TYPE_ID:
             case LONDON_CENTRAL_USERS_CASE_TYPE_ID:
+            case LONDON_CENTRAL_CASE_TYPE_ID:
                 return getLondonCentralOfficeReference(caseId, currentYear);
+            case LONDON_SOUTH_DEV_CASE_TYPE_ID:
             case LONDON_SOUTH_USERS_CASE_TYPE_ID:
+            case LONDON_SOUTH_CASE_TYPE_ID:
                 return getLondonSouthOfficeReference(caseId, currentYear);
+            case LONDON_EAST_DEV_CASE_TYPE_ID:
             case LONDON_EAST_USERS_CASE_TYPE_ID:
+            case LONDON_EAST_CASE_TYPE_ID:
                 return getLondonEastOfficeReference(caseId, currentYear);
         }
         return getLeedsOfficeReference(caseId, currentYear);

@@ -48,29 +48,49 @@ public class MultipleReferenceService {
 
     public synchronized String createReference(String caseTypeId, String caseId) {
         switch (caseTypeId) {
-            case MANCHESTER_BULK_CASE_TYPE_ID:
+            case MANCHESTER_DEV_BULK_CASE_TYPE_ID:
             case MANCHESTER_USERS_BULK_CASE_TYPE_ID:
+            case MANCHESTER_BULK_CASE_TYPE_ID:
                 return getManchesterOfficeReference(caseId);
-            case SCOTLAND_BULK_CASE_TYPE_ID:
+            case SCOTLAND_DEV_BULK_CASE_TYPE_ID:
             case SCOTLAND_USERS_BULK_CASE_TYPE_ID:
+            case SCOTLAND_BULK_CASE_TYPE_ID:
                 return getGlasgowOfficeReference(caseId);
+            case MIDLANDS_WEST_DEV_BULK_CASE_TYPE_ID:
             case MIDLANDS_WEST_USERS_BULK_CASE_TYPE_ID:
+            case MIDLANDS_WEST_BULK_CASE_TYPE_ID:
                 return getMidlandsWestOfficeReference(caseId);
+            case MIDLANDS_EAST_DEV_BULK_CASE_TYPE_ID:
             case MIDLANDS_EAST_USERS_BULK_CASE_TYPE_ID:
+            case MIDLANDS_EAST_BULK_CASE_TYPE_ID:
                 return getMidlandsEastOfficeReference(caseId);
+            case BRISTOL_DEV_BULK_CASE_TYPE_ID:
             case BRISTOL_USERS_BULK_CASE_TYPE_ID:
+            case BRISTOL_BULK_CASE_TYPE_ID:
                 return getBristolOfficeReference(caseId);
+            case WALES_DEV_BULK_CASE_TYPE_ID:
             case WALES_USERS_BULK_CASE_TYPE_ID:
+            case WALES_BULK_CASE_TYPE_ID:
                 return getWalesOfficeReference(caseId);
+            case NEWCASTLE_DEV_BULK_CASE_TYPE_ID:
             case NEWCASTLE_USERS_BULK_CASE_TYPE_ID:
+            case NEWCASTLE_BULK_CASE_TYPE_ID:
                 return getNewcastleOfficeReference(caseId);
+            case WATFORD_DEV_BULK_CASE_TYPE_ID:
             case WATFORD_USERS_BULK_CASE_TYPE_ID:
+            case WATFORD_BULK_CASE_TYPE_ID:
                 return getWatfordOfficeReference(caseId);
+            case LONDON_CENTRAL_DEV_BULK_CASE_TYPE_ID:
             case LONDON_CENTRAL_USERS_BULK_CASE_TYPE_ID:
+            case LONDON_CENTRAL_BULK_CASE_TYPE_ID:
                 return getLondonCentralOfficeReference(caseId);
+            case LONDON_SOUTH_DEV_BULK_CASE_TYPE_ID:
             case LONDON_SOUTH_USERS_BULK_CASE_TYPE_ID:
+            case LONDON_SOUTH_BULK_CASE_TYPE_ID:
                 return getLondonSouthOfficeReference(caseId);
+            case LONDON_EAST_DEV_BULK_CASE_TYPE_ID:
             case LONDON_EAST_USERS_BULK_CASE_TYPE_ID:
+            case LONDON_EAST_BULK_CASE_TYPE_ID:
                 return getLondonEastOfficeReference(caseId);
         }
         return getLeedsOfficeReference(caseId);
