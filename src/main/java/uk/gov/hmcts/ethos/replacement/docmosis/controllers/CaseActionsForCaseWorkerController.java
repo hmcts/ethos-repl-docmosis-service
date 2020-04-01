@@ -103,7 +103,8 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        SubmitEvent submitEvent = caseRetrievalForCaseWorkerService.caseRetrievalRequest(ccdRequest, userToken);
+        SubmitEvent submitEvent = caseRetrievalForCaseWorkerService.caseRetrievalRequest(userToken, ccdRequest.getCaseDetails().getCaseTypeId(),
+                ccdRequest.getCaseDetails().getJurisdiction(),"1550576532211563");
         log.info("Case received correctly with id: " + submitEvent.getCaseId());
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(ccdRequest.getCaseDetails().getCaseData())
@@ -198,6 +199,7 @@ public class CaseActionsForCaseWorkerController {
     public ResponseEntity<CCDCallbackResponse> postDefaultValues(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
+        log.info("POST DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -213,11 +215,7 @@ public class CaseActionsForCaseWorkerController {
             caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues, true);
             errors = eventValidationService.validateReceiptDate(caseData);
             log.info("Event fields validation:: " + errors);
-            if (caseData.getEthosCaseReference() == null || caseData.getEthosCaseReference().trim().equals("")) {
-                String reference = singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getCaseId());
-                log.info("Reference generated: " + reference);
-                caseData.setEthosCaseReference(reference);
-            }
+            generateEthosCaseReference(caseData, ccdRequest);
         } else {
             errors.add("The payload is empty. Please make sure you have some data on your case");
         }
@@ -403,10 +401,95 @@ public class CaseActionsForCaseWorkerController {
                 .build());
     }
 
+    @PostMapping(value = "/midRespondentECC", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the mid dynamic list with the respondent names.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> midRespondentECC(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MID RESPONDENT ECC ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+        List<String> errors = new ArrayList<>();
+        CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(), userToken, errors, MID_EVENT_CALLBACK);
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .errors(errors)
+                .build());
+    }
+
+    @PostMapping(value = "/createECC", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "create a new Employer Contract Claim.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> createECC(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("CREATE ECC ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+        List<String> errors = new ArrayList<>();
+        CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(), userToken, errors, ABOUT_TO_SUBMIT_EVENT_CALLBACK);
+        generateEthosCaseReference(caseData, ccdRequest);
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .errors(errors)
+                .build());
+    }
+
+    @PostMapping(value = "/linkOriginalCaseECC", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "send an update to the original case with the new ECC reference created to link it.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> linkOriginalCaseECC(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("LINK ORIGINAL CASE ECC ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+        List<String> errors = new ArrayList<>();
+        CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(), userToken, errors, SUBMITTED_CALLBACK);
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .errors(errors)
+                .build());
+    }
+
     private DefaultValues getPostDefaultValues(CaseDetails caseDetails) {
         String caseTypeId = caseDetails.getCaseTypeId();
         String managingOffice = caseDetails.getCaseData().getManagingOffice() != null ? caseDetails.getCaseData().getManagingOffice() : "";
         return defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, managingOffice, caseTypeId);
+    }
+
+    private void generateEthosCaseReference(CaseData caseData, CCDRequest ccdRequest) {
+        if (caseData.getEthosCaseReference() == null || caseData.getEthosCaseReference().trim().equals("")) {
+            String reference = singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(),
+                    ccdRequest.getCaseDetails().getCaseId());
+            log.info("Reference generated: " + reference);
+            caseData.setEthosCaseReference(reference);
+        }
     }
 
 }

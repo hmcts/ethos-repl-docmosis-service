@@ -153,4 +153,11 @@ public class CaseData {
     @JsonProperty("docMarkUp")
     private String docMarkUp;
 
+    @JsonProperty("caseRefECC")
+    private String caseRefECC;
+    @JsonProperty("respondentECC")
+    private DynamicFixedListType respondentECC;
+    @JsonProperty("ccdID")
+    private String ccdID;
+
 }

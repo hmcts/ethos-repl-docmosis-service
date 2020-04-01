@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicValueType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SignificantItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
@@ -145,7 +142,7 @@ public class Helper {
             }
         } else {
             Optional<String> claimantTypeOfClaimant = Optional.ofNullable(caseData.getClaimantTypeOfClaimant());
-            if (claimantTypeOfClaimant.isPresent() && caseData.getClaimantTypeOfClaimant().equals("Company")) {
+            if (claimantTypeOfClaimant.isPresent() && caseData.getClaimantTypeOfClaimant().equals(COMPANY_TYPE_CLAIMANT)) {
                 sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(caseData.getClaimantCompany())).append(NEW_LINE);
                 sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantCompany())).append(NEW_LINE);
                 sb.append("\"Claimant\":\"").append(nullCheck(caseData.getClaimantCompany())).append(NEW_LINE);
@@ -503,5 +500,36 @@ public class Helper {
             caseData.getClaimantWorkAddressQRespondent().setValue(listItems.get(0));
         }
         return caseData;
+    }
+
+    private static List<DynamicValueType> createDynamicRespondentNameList(List<RespondentSumTypeItem> respondentCollection) {
+        List<DynamicValueType> listItems = new ArrayList<>();
+        if (respondentCollection != null) {
+            for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
+                RespondentSumType respondentSumType = respondentSumTypeItem.getValue();
+                if (respondentSumType.getResponseStruckOut() == null || respondentSumType.getResponseStruckOut().equals(NO)) {
+                    DynamicValueType dynamicValueType = new DynamicValueType();
+                    dynamicValueType.setCode(respondentSumType.getRespondentName());
+                    dynamicValueType.setLabel(respondentSumType.getRespondentName());
+                    listItems.add(dynamicValueType);
+                }
+            }
+        }
+        return listItems;
+    }
+
+    public static void midRespondentECC(CaseData caseData, CaseData originalCaseData) {
+        List<DynamicValueType> listItems = createDynamicRespondentNameList(originalCaseData.getRespondentCollection());
+        if (!listItems.isEmpty()) {
+            if (caseData.getRespondentECC() != null) {
+                caseData.getRespondentECC().setListItems(listItems);
+            } else {
+                DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+                dynamicFixedListType.setListItems(listItems);
+                caseData.setRespondentECC(dynamicFixedListType);
+            }
+            //Default dynamic list
+            caseData.getRespondentECC().setValue(listItems.get(0));
+        }
     }
 }

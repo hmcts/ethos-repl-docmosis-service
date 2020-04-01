@@ -100,7 +100,9 @@ public class Constants {
     public static final String NO = "No";
 
     public static final String SINGLE_CASE_TYPE = "Single";
+    public static final String MULTIPLE_CASE_TYPE = "Multiple";
     public static final String INDIVIDUAL_TYPE_CLAIMANT = "Individual";
+    public static final String COMPANY_TYPE_CLAIMANT = "Company";
     public static final String MANUALLY_CREATED_POSITION = "Manually Created";
 
     public static final String CREATION_EVENT_TRIGGER_ID = "initiateCase";
@@ -216,5 +218,9 @@ public class Constants {
 
     public static final int MAX_ES_SIZE = 10000;
 
-    public static final int NUMBER_THREADS = 20;
+    public static final String MID_EVENT_CALLBACK = "Mid Event Callback";
+    public static final String ABOUT_TO_SUBMIT_EVENT_CALLBACK = "About to Submit Callback";
+    public static final String SUBMITTED_CALLBACK = "Submitted Callback";
+
+    public static final int NUMBER_THREADS = 10;
 }
