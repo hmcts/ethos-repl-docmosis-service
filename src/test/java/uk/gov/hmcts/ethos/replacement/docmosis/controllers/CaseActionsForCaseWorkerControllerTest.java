@@ -270,20 +270,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
-    public void amendRespondentDetails() throws Exception {
-        when(caseManagementForCaseWorkerService.struckOutRespondents(isA(CCDRequest.class))).thenReturn(submitEvent.getCaseData());
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(AMEND_RESPONDENT_DETAILS_URL)
-                .content(requestContent2.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", nullValue()))
-                .andExpect(jsonPath("$.warnings", nullValue()));
-    }
-
-    @Test
     public void addAmendET3() throws Exception {
         when(caseManagementForCaseWorkerService.struckOutRespondents(isA(CCDRequest.class))).thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
@@ -409,15 +395,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
-    public void amendRespondentDetailsError400() throws Exception {
-        mvc.perform(post(AMEND_RESPONDENT_DETAILS_URL)
-                .content("error")
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     public void addAmendET3Error400() throws Exception {
         mvc.perform(post(ADD_AMEND_ET3_URL)
                 .content("error")
@@ -533,17 +510,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
-    public void amendRespondentDetailsError500() throws Exception {
-        when(caseManagementForCaseWorkerService.struckOutRespondents(isA(CCDRequest.class))).thenThrow(feignError());
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(AMEND_RESPONDENT_DETAILS_URL)
-                .content(requestContent.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
     public void addAmendET3Error500() throws Exception {
         when(caseManagementForCaseWorkerService.struckOutRespondents(isA(CCDRequest.class))).thenThrow(feignError());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
@@ -628,16 +594,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void amendCaseDetailsForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
-                .content(requestContent2.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    public void amendRespondentDetailsForbidden() throws Exception {
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(AMEND_RESPONDENT_DETAILS_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

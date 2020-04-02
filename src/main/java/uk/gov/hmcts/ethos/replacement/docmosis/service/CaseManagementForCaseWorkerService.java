@@ -20,6 +20,15 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 @Service("caseManagementForCaseWorkerService")
 public class CaseManagementForCaseWorkerService {
 
+    public void struckOutDefaults(CaseData caseData) {
+        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+            ListIterator<RespondentSumTypeItem> itr = caseData.getRespondentCollection().listIterator();
+            while (itr.hasNext()) {
+                itr.next().getValue().setResponseStruckOut(NO);
+            }
+        }
+    }
+
     public CaseData preAcceptCase(CCDRequest ccdRequest) {
         CaseData caseData = getCaseData(ccdRequest);
         if (caseData.getPreAcceptCase() != null) {

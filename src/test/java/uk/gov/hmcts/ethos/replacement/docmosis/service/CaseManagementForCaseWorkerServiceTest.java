@@ -62,6 +62,34 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    public void struckOutDefaultsYEStoNO() {
+        CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
+
+        caseManagementForCaseWorkerService.struckOutDefaults(caseData);
+
+        assertEquals(3, caseData.getRespondentCollection().size());
+
+        assertEquals("Antonio Vazquez", caseData.getRespondentCollection().get(0).getValue().getRespondentName());
+        assertEquals(NO, caseData.getRespondentCollection().get(0).getValue().getResponseStruckOut());
+        assertEquals("Juan Garcia", caseData.getRespondentCollection().get(1).getValue().getRespondentName());
+        assertEquals(NO, caseData.getRespondentCollection().get(1).getValue().getResponseStruckOut());
+        assertEquals("Roberto Dondini", caseData.getRespondentCollection().get(2).getValue().getRespondentName());
+        assertEquals(NO, caseData.getRespondentCollection().get(2).getValue().getResponseStruckOut());
+    }
+
+    @Test
+    public void struckOutDefaultsUnchanged() {
+        CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
+
+        caseManagementForCaseWorkerService.struckOutDefaults(caseData);
+
+        assertEquals(1, caseData.getRespondentCollection().size());
+
+        assertEquals("Antonio Vazquez", caseData.getRespondentCollection().get(0).getValue().getRespondentName());
+        assertEquals(NO, caseData.getRespondentCollection().get(0).getValue().getResponseStruckOut());
+    }
+
+    @Test
     public void struckOutRespondentFirstToLast() {
         CaseData caseData = caseManagementForCaseWorkerService.struckOutRespondents(scotlandCcdRequest1);
 
