@@ -49,8 +49,8 @@ public class CaseManagementForCaseWorkerService {
 
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
 
-            List<RespondentSumTypeItem> activeRespondent = new ArrayList<RespondentSumTypeItem>();
-            List<RespondentSumTypeItem> struckRespondent = new ArrayList<RespondentSumTypeItem>();;
+            List<RespondentSumTypeItem> activeRespondent = new ArrayList<>();
+            List<RespondentSumTypeItem> struckRespondent = new ArrayList<>();
 
             ListIterator<RespondentSumTypeItem> itr = caseData.getRespondentCollection().listIterator();
 

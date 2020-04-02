@@ -305,10 +305,9 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        List<String> errors = new ArrayList<>();
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
 
-        errors = eventValidationService.validateReturnedFromJudgeDate(caseData);
+        List<String> errors = eventValidationService.validateReturnedFromJudgeDate(caseData);
         log.info("Event fields validation: " + errors);
 
         if (errors.isEmpty()) {
