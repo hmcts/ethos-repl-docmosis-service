@@ -287,6 +287,31 @@ public class CaseActionsForCaseWorkerController {
                 .build());
     }
 
+    @PostMapping(value = "/amendRespondentDetails", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "amend respondent details for a single case.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> amendRespondentDetails(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("AMEND RESPONDENT DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .build());
+    }
+
     @PostMapping(value = "/addAmendET3", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "add or amend ET3 respondent details for a single case.")
     @ApiResponses(value = {
