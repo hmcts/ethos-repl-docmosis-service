@@ -14,7 +14,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.UUID;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
@@ -214,7 +214,9 @@ public class CaseActionsForCaseWorkerController {
             errors = eventValidationService.validateReceiptDate(caseData);
             log.info("Event fields validation:: " + errors);
             if (caseData.getEthosCaseReference() == null || caseData.getEthosCaseReference().trim().equals("")) {
-                String reference = singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getCaseId());
+                //String reference = singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getCaseId());
+                UUID uuid = UUID.randomUUID();
+                String reference = uuid.toString();
                 log.info("Reference generated: " + reference);
                 caseData.setEthosCaseReference(reference);
             }
