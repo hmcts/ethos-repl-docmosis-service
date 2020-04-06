@@ -42,7 +42,7 @@ public class EventValidationService {
 
         List<String> errors = new ArrayList<>();
 
-        if(getActiveRespondents(caseData).size() < 1) {
+        if(getActiveRespondents(caseData).isEmpty()) {
             errors.add(EMPTY_RESPONDENT_COLLECTION_ERROR_MESSAGE);
         }
 
