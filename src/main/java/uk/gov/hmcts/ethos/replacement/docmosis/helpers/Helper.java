@@ -12,7 +12,14 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.DateListedTypeIte
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceScotType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.HearingType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeR;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,7 +32,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.FILE_EXTENSION;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.NEW_DATE_PATTERN;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.NEW_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.NEW_LINE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.NEW_TIME_PATTERN;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.NO;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.YES;
 
 @Slf4j
 public class Helper {
@@ -504,4 +520,19 @@ public class Helper {
         }
         return caseData;
     }
+
+    public static List<RespondentSumTypeItem> getActiveRespondents(CaseData caseData) {
+
+        List<RespondentSumTypeItem> activeRespondents = new ArrayList<>();
+
+        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+            activeRespondents = caseData.getRespondentCollection()
+                    .stream()
+                    .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
+                    .collect(Collectors.toList());
+        }
+
+        return activeRespondents;
+    }
+
 }

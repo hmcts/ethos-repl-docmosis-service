@@ -330,14 +330,20 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
+        List<String> errors;
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
 
-        List<String> errors = eventValidationService.validateReturnedFromJudgeDate(caseData);
-        log.info("Event fields validation: " + errors);
+        errors = eventValidationService.validateActiveRespondents(caseData);
 
-        if (errors.isEmpty()) {
-            caseData = caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
+        if(errors.isEmpty()) {
+            errors = eventValidationService.validateReturnedFromJudgeDate(caseData);
+
+            if (errors.isEmpty()) {
+                caseData = caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
+            }
         }
+
+        log.info("Event fields validation: " + errors);
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)

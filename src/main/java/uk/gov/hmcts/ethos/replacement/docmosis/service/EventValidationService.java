@@ -38,6 +38,17 @@ public class EventValidationService {
         return errors;
     }
 
+    public List<String> validateActiveRespondents(CaseData caseData) {
+
+        List<String> errors = new ArrayList<>();
+
+        if(getActiveRespondents(caseData).size() < 1) {
+            errors.add(EMPTY_RESPONDENT_COLLECTION_ERROR_MESSAGE);
+        }
+
+        return errors;
+    }
+
     public List<String> validateReturnedFromJudgeDate(CaseData caseData) {
 
         List<String> errors = new ArrayList<>();
