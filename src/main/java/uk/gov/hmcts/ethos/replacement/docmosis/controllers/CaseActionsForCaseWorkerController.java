@@ -214,9 +214,7 @@ public class CaseActionsForCaseWorkerController {
             errors = eventValidationService.validateReceiptDate(caseData);
             log.info("Event fields validation:: " + errors);
             if (caseData.getEthosCaseReference() == null || caseData.getEthosCaseReference().trim().equals("")) {
-                //String reference = singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getCaseId());
-                UUID uuid = UUID.randomUUID();
-                String reference = uuid.toString();
+                String reference = UUID.randomUUID().toString();
                 log.info("Reference generated: " + reference);
                 caseData.setEthosCaseReference(reference);
             }
