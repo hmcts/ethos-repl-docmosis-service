@@ -35,8 +35,6 @@ public class CaseActionsForCaseWorkerController {
 
     private final DefaultValuesReaderService defaultValuesReaderService;
 
-    private final SingleReferenceService singleReferenceService;
-
     private final VerifyTokenService verifyTokenService;
 
     private final EventValidationService eventValidationService;
@@ -48,7 +46,6 @@ public class CaseActionsForCaseWorkerController {
                                               CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService,
                                               DefaultValuesReaderService defaultValuesReaderService,
                                               CaseManagementForCaseWorkerService caseManagementForCaseWorkerService,
-                                              SingleReferenceService singleReferenceService,
                                               EventValidationService eventValidationService) {
         this.verifyTokenService = verifyTokenService;
         this.caseCreationForCaseWorkerService = caseCreationForCaseWorkerService;
@@ -56,7 +53,6 @@ public class CaseActionsForCaseWorkerController {
         this.caseUpdateForCaseWorkerService = caseUpdateForCaseWorkerService;
         this.defaultValuesReaderService = defaultValuesReaderService;
         this.caseManagementForCaseWorkerService = caseManagementForCaseWorkerService;
-        this.singleReferenceService = singleReferenceService;
         this.eventValidationService = eventValidationService;
     }
 
