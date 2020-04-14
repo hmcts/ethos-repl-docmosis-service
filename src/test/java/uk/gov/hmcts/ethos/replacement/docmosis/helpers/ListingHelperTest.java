@@ -547,7 +547,7 @@ public class ListingHelperTest {
 
         CaseData caseDataRule50 = new CaseData();
         RestrictedReportingType restrictedReportingType = new RestrictedReportingType();
-        restrictedReportingType.setRule503b("Yes");
+        restrictedReportingType.setRule503b(YES);
         caseDataRule50.setRestrictedReporting(restrictedReportingType);
         ListingData listingDataPublic = listingDetails.getCaseData();
         listingDataPublic.setHearingDocETCL(HEARING_ETCL_PUBLIC);
@@ -661,14 +661,14 @@ public class ListingHelperTest {
         ListingData listingData = new ListingData();
         listingData.setHearingDocType(HEARING_DOC_ETCL);
         listingData.setHearingDocETCL(HEARING_ETCL_STAFF);
-        listingData.setRoomOrNoRoom("No");
+        listingData.setRoomOrNoRoom(NO);
         assertEquals(STAFF_CASE_CAUSE_LIST_TEMPLATE, ListingHelper.getListingDocName(listingData));
-        listingData.setRoomOrNoRoom("Yes");
+        listingData.setRoomOrNoRoom(YES);
         assertEquals(STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE, ListingHelper.getListingDocName(listingData));
         listingData.setHearingDocETCL(HEARING_ETCL_PUBLIC);
-        listingData.setRoomOrNoRoom("No");
+        listingData.setRoomOrNoRoom(NO);
         assertEquals(PUBLIC_CASE_CAUSE_LIST_TEMPLATE, ListingHelper.getListingDocName(listingData));
-        listingData.setRoomOrNoRoom("Yes");
+        listingData.setRoomOrNoRoom(YES);
         assertEquals(PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE, ListingHelper.getListingDocName(listingData));
         listingData.setHearingDocETCL(HEARING_ETCL_PRESS_LIST);
         listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);

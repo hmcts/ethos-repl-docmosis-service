@@ -116,7 +116,7 @@ public class BulkHelper {
         multipleType.setFlag1M(Optional.ofNullable(caseData.getFlag1()).orElse(" "));
         multipleType.setFlag2M(Optional.ofNullable(caseData.getFlag2()).orElse(" "));
         multipleType.setEQPM(Optional.ofNullable(caseData.getEQP()).orElse(" "));
-        multipleType.setLeadClaimantM(Optional.ofNullable(caseData.getLeadClaimant()).orElse("No"));
+        multipleType.setLeadClaimantM(Optional.ofNullable(caseData.getLeadClaimant()).orElse(NO));
         return multipleType;
     }
 
@@ -480,7 +480,7 @@ public class BulkHelper {
                     .indexOf(caseId);
             if (index != -1) {
                 SubmitEvent submitEvent = submitEvents.get(index);
-                submitEvent.getCaseData().setLeadClaimant("Yes");
+                submitEvent.getCaseData().setLeadClaimant(YES);
                 submitEvents.remove(index);
                 submitEvents.add(0, submitEvent);
                 return submitEvents;

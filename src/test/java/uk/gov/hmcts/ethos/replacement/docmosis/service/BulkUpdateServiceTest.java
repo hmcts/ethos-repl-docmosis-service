@@ -82,7 +82,7 @@ public class BulkUpdateServiceTest {
 
         CaseData caseData = new CaseData();
         caseData.setMultipleReference("2222");
-        caseData.setCaseType("Multiple");
+        caseData.setCaseType(MULTIPLE_CASE_TYPE);
         caseData.setEthosCaseReference("111");
         ClaimantIndType claimantIndType = new ClaimantIndType();
         claimantIndType.setClaimantLastName("JuanPedro");

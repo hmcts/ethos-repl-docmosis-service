@@ -105,7 +105,7 @@ public class BulkUpdateService {
         ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
         String leadId = "";
         if (!multipleTypeItems.isEmpty()) {
-            multipleTypeItems.get(0).getValue().setLeadClaimantM("Yes");
+            multipleTypeItems.get(0).getValue().setLeadClaimantM(YES);
             leadId = multipleTypeItems.get(0).getValue().getCaseIDM();
             log.info("Updating lead case for multipleCollection: " + leadId);
             try {
@@ -114,7 +114,7 @@ public class BulkUpdateService {
                     submitEvent = ccdClient.retrieveCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                             bulkDetails.getJurisdiction(), leadId);
                 }
-                submitEvent.getCaseData().setLeadClaimant("Yes");
+                submitEvent.getCaseData().setLeadClaimant(YES);
                 executor.execute(new BulkUpdateTask(bulkDetails, submitEvent, authToken, ccdClient));
             } catch (IOException e) {
                 log.error("Error processing ES retrieving lead case");
@@ -349,7 +349,7 @@ public class BulkUpdateService {
                     representedTypeC = new RepresentedTypeC();
                     representedTypeC.setNameOfRepresentative(claimantRepNewValue);
                     submitEvent.getCaseData().setRepresentativeClaimantType(representedTypeC);
-                    submitEvent.getCaseData().setClaimantRepresentedQuestion("Yes");
+                    submitEvent.getCaseData().setClaimantRepresentedQuestion(YES);
                 }
                 submitEvent.getCaseData().setRepresentativeClaimantType(representedTypeC);
             }
@@ -420,11 +420,11 @@ public class BulkUpdateService {
                 multipleTypeItem.setId(String.valueOf(submitEvent.getCaseId()));
                 multipleTypeItem.setValue(BulkHelper.getMultipleTypeFromSubmitEvent(submitEvent));
                 if (bulkData1.getMultipleCollection() != null) {
-                    multipleTypeItem.getValue().setLeadClaimantM("No");
+                    multipleTypeItem.getValue().setLeadClaimantM(NO);
                     bulkData1.getMultipleCollection().add(multipleTypeItem);
                 } else {
                     isThisCaseLead = true;
-                    multipleTypeItem.getValue().setLeadClaimantM("Yes");
+                    multipleTypeItem.getValue().setLeadClaimantM(YES);
                     bulkData1.setMultipleCollection(new ArrayList<>(Collections.singletonList(multipleTypeItem)));
                 }
                 //Updating the caseIdCollection for the new Multiple
@@ -445,9 +445,9 @@ public class BulkUpdateService {
                 submitBulkEvent.setCaseData(bulkData1);
             }
             if (isThisCaseLead) {
-                submitEvent.getCaseData().setLeadClaimant("Yes");
+                submitEvent.getCaseData().setLeadClaimant(YES);
             } else {
-                submitEvent.getCaseData().setLeadClaimant("No");
+                submitEvent.getCaseData().setLeadClaimant(NO);
             }
             //Update the value to return
             submitBulkEventSubmitEventType.setSubmitBulkEvent(submitBulkEvent);

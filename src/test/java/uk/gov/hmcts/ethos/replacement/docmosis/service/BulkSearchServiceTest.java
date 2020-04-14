@@ -37,6 +37,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.YES;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class BulkSearchServiceTest {
@@ -145,7 +146,7 @@ public class BulkSearchServiceTest {
                 "claimantOrg=null, respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null, " +
                 "filterCases=null, docMarkUp=null, caseSource=Manually Created))";
         bulkDetails.getCaseData().setRespondentRep("JuanPedro");
-        bulkDetails.getCaseData().setSelectAll("Yes");
+        bulkDetails.getCaseData().setSelectAll(YES);
         BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(bulkDetails, false);
         assertEquals(result, bulkRequestPayload.getBulkDetails().toString());
     }
@@ -321,7 +322,7 @@ public class BulkSearchServiceTest {
         bulkData.setCaseIdCollection(new ArrayList<>(Collections.singletonList(caseIdTypeItem)));
         MultipleType multipleType = new MultipleType();
         multipleType.setEthosCaseReferenceM("281231");
-        multipleType.setLeadClaimantM("Yes");
+        multipleType.setLeadClaimantM(YES);
         MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
         multipleTypeItem.setValue(multipleType);
         multipleTypeItem.setId("22222");

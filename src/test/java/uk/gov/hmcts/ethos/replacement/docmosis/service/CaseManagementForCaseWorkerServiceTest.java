@@ -5,27 +5,50 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicFixedListType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CasePreAcceptType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CaseManagementForCaseWorkerServiceTest {
 
     @InjectMocks
     private CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
+    private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private CCDRequest manchesterCcdRequest;
     private CCDRequest scotlandCcdRequest1;
     private CCDRequest scotlandCcdRequest3;
+    private SubmitEvent submitEvent;
+    @MockBean
+    private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
+    @MockBean
+    private CcdClient ccdClient;
 
     @Before
     public void setUp() throws Exception {
@@ -33,8 +56,10 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseDetails manchesterCaseDetails = new CaseDetails();
         CaseData caseData = new CaseData();
         CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
-        casePreAcceptType.setCaseAccepted("Yes");
+        casePreAcceptType.setCaseAccepted(YES);
         caseData.setPreAcceptCase(casePreAcceptType);
+        caseData.setCaseRefECC("11111");
+        caseData.setRespondentECC(createRespondentECC());
         manchesterCaseDetails.setCaseData(caseData);
         manchesterCaseDetails.setCaseId("123456");
         manchesterCaseDetails.setCaseTypeId(MANCHESTER_DEV_CASE_TYPE_ID);
@@ -48,6 +73,14 @@ public class CaseManagementForCaseWorkerServiceTest {
         scotlandCcdRequest3 = new CCDRequest();
         CaseDetails caseDetailsScot3 = generateCaseDetails("caseDetailsScotTest3.json");
         scotlandCcdRequest3.setCaseDetails(caseDetailsScot3);
+
+        submitEvent = new SubmitEvent();
+        CaseData submitCaseData = new CaseData();
+        submitCaseData.setRespondentCollection(createRespondentCollection(true));
+        submitCaseData.setClaimantIndType(createClaimantIndType());
+        submitEvent.setCaseId(123);
+        submitEvent.setCaseData(submitCaseData);
+        caseManagementForCaseWorkerService = new CaseManagementForCaseWorkerService(caseRetrievalForCaseWorkerService, ccdClient);
     }
 
     @Test
@@ -57,7 +90,7 @@ public class CaseManagementForCaseWorkerServiceTest {
 
     @Test
     public void preAcceptCaseRejected() {
-        manchesterCcdRequest.getCaseDetails().getCaseData().getPreAcceptCase().setCaseAccepted("No");
+        manchesterCcdRequest.getCaseDetails().getCaseData().getPreAcceptCase().setCaseAccepted(NO);
         assertEquals(REJECTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
     }
 
@@ -117,6 +150,108 @@ public class CaseManagementForCaseWorkerServiceTest {
                 .getResource(jsonFileName)).toURI())));
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, CaseDetails.class);
+    }
+
+    @Test
+    public void midRespondentECC() {
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        assertEquals(1, caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), MID_EVENT_CALLBACK).getRespondentECC().getListItems().size());
+    }
+
+    @Test
+    public void midRespondentECCWithStruckOut() {
+        CaseData caseData = new CaseData();
+        caseData.setRespondentCollection(createRespondentCollection(false));
+        submitEvent.setCaseData(caseData);
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        assertEquals(2, caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), MID_EVENT_CALLBACK).getRespondentECC().getListItems().size());
+    }
+
+    @Test
+    public void midRespondentECCEmpty() {
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(null);
+        List<String> errors = new ArrayList<>();
+        caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN, errors, MID_EVENT_CALLBACK);
+        assertEquals("[No ECC case reference found]", errors.toString());
+    }
+
+    @Test
+    public void midRespondentECCWithNoRespondentECC() {
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        manchesterCcdRequest.getCaseDetails().getCaseData().setRespondentECC(null);
+        assertEquals(1, caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), MID_EVENT_CALLBACK).getRespondentECC().getListItems().size());
+    }
+
+    @Test
+    public void createECC() {
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        assertEquals("123", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), ABOUT_TO_SUBMIT_EVENT_CALLBACK).getCcdID());
+    }
+
+    @Test
+    public void linkOriginalCaseECC() {
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        assertEquals("11111", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), SUBMITTED_CALLBACK).getCaseRefECC());
+    }
+
+    @Test(expected = Exception.class)
+    public void linkOriginalCaseECCException() throws IOException {
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenThrow(feignError());
+        caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), SUBMITTED_CALLBACK);
+    }
+
+    private List<RespondentSumTypeItem> createRespondentCollection(boolean single) {
+        RespondentSumTypeItem respondentSumTypeItem1 = createRespondentSumType("RespondentName1", false);
+        RespondentSumTypeItem respondentSumTypeItem2 = createRespondentSumType("RespondentName2", false);
+        RespondentSumTypeItem respondentSumTypeItem3 = createRespondentSumType("RespondentName3", true);
+        if (single) {
+            return new ArrayList<>(Collections.singletonList(respondentSumTypeItem1));
+        } else {
+            return new ArrayList<>(Arrays.asList(respondentSumTypeItem1, respondentSumTypeItem2, respondentSumTypeItem3));
+        }
+    }
+
+    private RespondentSumTypeItem createRespondentSumType(String respondentName, boolean struckOut) {
+        RespondentSumType respondentSumType = new RespondentSumType();
+        respondentSumType.setRespondentName(respondentName);
+        if (struckOut) {
+            respondentSumType.setResponseStruckOut(YES);
+        }
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setId("111");
+        respondentSumTypeItem.setValue(respondentSumType);
+        return respondentSumTypeItem;
+    }
+
+    private ClaimantIndType createClaimantIndType() {
+        ClaimantIndType claimantIndType = new ClaimantIndType();
+        claimantIndType.setClaimantLastName("ClaimantSurname");
+        claimantIndType.setClaimantFirstNames("ClaimantName");
+        claimantIndType.setClaimantTitle("Mr");
+        return claimantIndType;
+    }
+
+    private DynamicFixedListType createRespondentECC() {
+        DynamicFixedListType respondentECC = new DynamicFixedListType();
+        DynamicValueType dynamicValueType = new DynamicValueType();
+        dynamicValueType.setCode("RespondentName1");
+        dynamicValueType.setLabel("RespondentName1");
+        respondentECC.setValue(dynamicValueType);
+        return respondentECC;
     }
 
 }
