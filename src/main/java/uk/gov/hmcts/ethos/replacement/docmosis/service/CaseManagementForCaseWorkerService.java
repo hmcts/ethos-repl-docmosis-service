@@ -206,6 +206,9 @@ public class CaseManagementForCaseWorkerService {
 
     private void sendUpdateSingleCaseECC(String authToken, CaseDetails currentCaseDetails, CaseData originalCaseData, String caseIdToLink) {
         try {
+            log.info("CurrentCaseDetails: " + currentCaseDetails);
+            log.info("OriginalCaseData: " + originalCaseData);
+            log.info("caseIdToLink: " + caseIdToLink);
             originalCaseData.setCcdID(currentCaseDetails.getCaseId());
             originalCaseData.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());
             CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, currentCaseDetails.getCaseTypeId(),
