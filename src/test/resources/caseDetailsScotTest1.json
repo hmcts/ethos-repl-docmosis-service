@@ -122,7 +122,8 @@
           "respondent_contact_preference": "Post",
           "respondent_email": "Antonio@gmail.com",
           "respondent_phone1": "07577136570",
-          "respondent_phone2": "07577136570"
+          "respondent_phone2": "07577136570",
+          "responseStruckOut": "No"
         }
       },
       {
@@ -140,7 +141,27 @@
           "respondent_contact_preference": "Post",
           "respondent_email": "JuanGarcia@gmail.com",
           "respondent_phone1": "07577136570",
-          "respondent_phone2": "07577136570"
+          "respondent_phone2": "07577136570",
+          "responseStruckOut": "Yes"
+        }
+      },
+      {
+        "id" : "1233456789",
+        "value" : {
+          "respondent_address": {
+            "AddressLine1": "13 Small Street",
+            "AddressLine2": "26 House",
+            "Country": "UK",
+            "County": "North West",
+            "PostCode": "SC13 4ED",
+            "PostTown": "Scotland"
+          },
+          "respondent_name": "Roberto Dondini",
+          "respondent_contact_preference": "Post",
+          "respondent_email": "RobertoDondini@gmail.com",
+          "respondent_phone1": "07577136570",
+          "respondent_phone2": "07577136570",
+          "responseStruckOut": "No"
         }
       }
     ],

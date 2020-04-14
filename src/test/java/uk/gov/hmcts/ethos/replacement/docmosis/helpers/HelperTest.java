@@ -6,6 +6,7 @@ import org.junit.Test;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceType;
 
@@ -13,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
@@ -794,8 +796,8 @@ public class HelperTest {
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M12 42R\",\n" +
                 "\"Respondent\":\"1. Antonio Vazquez\",\n" +
-                "\"resp_others\":\"2. Juan Garcia\",\n" +
-                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\",\n" +
+                "\"resp_others\":\"2. Roberto Dondini\",\n" +
+                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 13 Small Street, 26 House, Scotland, North West, SC13 4ED, UK\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
                 "\"Hearing_venue\":\"Manchester\",\n" +
@@ -1195,4 +1197,32 @@ public class HelperTest {
         assertEquals(expectedHearing_type, Helper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(), correspondenceHearingNumber).getHearingType());
         assertEquals(expectedHearingVenue, Helper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(), correspondenceHearingNumber).getHearingVenue());
     }
+
+    @Test
+    public void getActiveRespondentsAllFound() {
+        int activeRespondentsFound = 3;
+
+        List<RespondentSumTypeItem> activeRespondents = Helper.getActiveRespondents(caseDetails1.getCaseData());
+
+        assertEquals(activeRespondentsFound, activeRespondents.size());
+    }
+
+    @Test
+    public void getActiveRespondentsSomeFound() {
+        int activeRespondentsFound = 2;
+
+        List<RespondentSumTypeItem> activeRespondents = Helper.getActiveRespondents(caseDetailsScot1.getCaseData());
+
+        assertEquals(activeRespondentsFound, activeRespondents.size());
+    }
+
+    @Test
+    public void getActiveRespondentsNoneFound() {
+        int activeRespondentsFound = 0;
+
+        List<RespondentSumTypeItem> activeRespondents = Helper.getActiveRespondents(caseDetailsScot2.getCaseData());
+
+        assertEquals(activeRespondentsFound, activeRespondents.size());
+    }
+
 }

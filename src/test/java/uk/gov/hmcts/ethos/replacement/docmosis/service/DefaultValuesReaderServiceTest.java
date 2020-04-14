@@ -414,8 +414,9 @@ public class DefaultValuesReaderServiceTest {
                 "claimantWorkAddressQuestion=Yes, claimantWorkAddressQRespondent=null, representativeClaimantType=null, responseTypeCollection=null, responseType=null," +
                 " respondentCollection=[RespondentSumTypeItem(id=null, value=RespondentSumType(responseStatus=null, responseToClaim=null, rejectionReason=null, " +
                 "rejectionReasonOther=null, responseOutOfTime=null, responseNotOnPrescribedForm=null, responseRequiredInfoAbsent=null, responseNotes=null, " +
-                "response_ReferredToJudge=null, responseReturnedFromJudge=null, respondentName=Andrew Smith, respondentACASQuestion=null, respondentACAS=null, " +
-                "respondentACASNo=null, respondentAddress=Line1, PostCode, respondentPhone1=null, respondentPhone2=null, respondentEmail=null, respondentContactPreference=null, " +
+                "response_ReferredToJudge=null, responseReturnedFromJudge=null, respondentName=Andrew Smith, respondentACASQuestion=null, respondentACAS=null, respondentACASNo=null, " +
+                "respondentAddress=Line1, PostCode, respondentPhone1=null, respondentPhone2=null, respondentEmail=null, respondentContactPreference=null, " +
+                "responseStruckOut=null, responseStruckOutDate=null, responseStruckOutChairman=null, responseStruckOutReason=null, " +
                 "responseRespondentAddress=null, responseRespondentPhone1=null, responseRespondentPhone2=null, responseRespondentEmail=null, responseRespondentContactPreference=null, " +
                 "responseReceivedDate=null, responseRespondentNameQuestion=null, responseRespondentName=null, " +
                 "responseCounterClaim=null))], repCollection=null, positionType=Manually Created, fileLocation=null, fileLocationGlasgow=null, " +

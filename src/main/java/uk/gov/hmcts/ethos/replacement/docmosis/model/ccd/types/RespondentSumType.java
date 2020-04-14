@@ -47,6 +47,14 @@ public class RespondentSumType {
     private String respondentEmail;
     @JsonProperty("respondent_contact_preference")
     private String respondentContactPreference;
+    @JsonProperty("responseStruckOut")
+    private String responseStruckOut;
+    @JsonProperty("responseStruckOutDate")
+    private String responseStruckOutDate;
+    @JsonProperty("responseStruckOutChairman")
+    private String responseStruckOutChairman;
+    @JsonProperty("responseStruckOutReason")
+    private String responseStruckOutReason;
     @JsonProperty("responseRespondentAddress")
     private Address responseRespondentAddress;
     @JsonProperty("responseRespondentPhone1")

@@ -440,6 +440,7 @@ public class ListingHelper {
             List<String> respOthers = caseData.getRespondentCollection()
                     .stream()
                     .skip(1)
+                    .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
                     .map(respondentSumTypeItem -> respondentSumTypeItem.getValue().getRespondentName())
                     .collect(Collectors.toList());
             return String.join("\\n", respOthers);
