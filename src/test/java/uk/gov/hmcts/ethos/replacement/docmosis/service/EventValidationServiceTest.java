@@ -79,6 +79,21 @@ public class EventValidationServiceTest {
     }
 
     @Test
+    public void shouldValidateActiveRespondentsAllFound() {
+        List<String> errors = eventValidationService.validateActiveRespondents(caseDetails1.getCaseData());
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateActiveRespondentsNoneFound() {
+        List<String> errors = eventValidationService.validateActiveRespondents(caseDetails2.getCaseData());
+
+        assertEquals(1, errors.size());
+        assertEquals(EMPTY_RESPONDENT_COLLECTION_ERROR_MESSAGE, errors.get(0));
+    }
+
+    @Test
     public void shouldValidateReturnedFromJudgeDateBeforeReferredToJudgeDate() {
         List<String> errors = eventValidationService.validateReturnedFromJudgeDate(caseDetails1.getCaseData());
 
