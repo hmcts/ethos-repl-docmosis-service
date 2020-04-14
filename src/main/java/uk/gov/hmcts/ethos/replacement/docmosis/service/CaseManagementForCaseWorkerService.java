@@ -158,7 +158,6 @@ public class CaseManagementForCaseWorkerService {
         caseData.setClaimantTypeOfClaimant(COMPANY_TYPE_CLAIMANT);
         caseData.setClaimantCompany(respondentSumType.getRespondentName());
         caseData.setClaimantWorkAddressQuestion(YES);
-        caseData.setReceiptDate(respondentSumType.getResponseReceivedDate());
     }
 
     private void populateRespondentCollectionDetails(CaseData caseData, ClaimantIndType originalClaimantIndType) {
