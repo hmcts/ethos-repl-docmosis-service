@@ -205,7 +205,7 @@ public class CaseActionsForCaseWorkerController {
             log.error("Invalid Token {}", userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
-
+        log.info("CaseData: " + ccdRequest.getCaseDetails().getCaseData());
         List<String> errors = new ArrayList<>();
         CaseData caseData = new CaseData();
         if (ccdRequest.getCaseDetails() != null && ccdRequest.getCaseDetails().getCaseId() != null) {
@@ -218,10 +218,13 @@ public class CaseActionsForCaseWorkerController {
                 log.info("Post Default values loaded: " + defaultValues);
                 caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues, true);
                 generateEthosCaseReference(caseData, ccdRequest);
+            } else {
+                log.info("Errors payload");
             }
         } else {
             errors.add("The payload is empty. Please make sure you have some data on your case");
         }
+        log.info("CaseData: " + caseData);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
                 .errors(errors)
@@ -446,7 +449,7 @@ public class CaseActionsForCaseWorkerController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("CREATE ECC ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-
+        log.info("CaseData: " + ccdRequest.getCaseDetails().getCaseData());
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
@@ -454,6 +457,7 @@ public class CaseActionsForCaseWorkerController {
         List<String> errors = new ArrayList<>();
         CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(), userToken, errors, ABOUT_TO_SUBMIT_EVENT_CALLBACK);
         generateEthosCaseReference(caseData, ccdRequest);
+        log.info("CaseData: " + caseData);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
                 .errors(errors)
@@ -472,13 +476,14 @@ public class CaseActionsForCaseWorkerController {
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("LINK ORIGINAL CASE ECC ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-
+        log.info("CaseData: " + ccdRequest.getCaseDetails().getCaseData());
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
         List<String> errors = new ArrayList<>();
         CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(), userToken, errors, SUBMITTED_CALLBACK);
+        log.info("CaseData: " + caseData);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
                 .errors(errors)
