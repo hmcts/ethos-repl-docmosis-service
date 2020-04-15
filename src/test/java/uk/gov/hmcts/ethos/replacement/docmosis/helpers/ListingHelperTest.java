@@ -91,7 +91,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown\",\n" +
                 "\"claimant_representative\":\"Rep\",\n" +
                 "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"\",\n" +
+                "\"resp_others\":\"Mark Taylor\\nTony Jones\\nSteve Thomas\",\n" +
                 "\"respondent_town\":\"respondentTown\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 2\",\n" +
@@ -126,7 +126,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown1\",\n" +
                 "\"claimant_representative\":\"Rep2\",\n" +
                 "\"Respondent\":\"sdf2\",\n" +
-                "\"resp_others\":\"\",\n" +
+                "\"resp_others\":\"Mark Taylor\\nTony Jones\",\n" +
                 "\"respondent_town\":\"respondentTown1\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 2\",\n" +
@@ -164,7 +164,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown2\",\n" +
                 "\"claimant_representative\":\"Rep\",\n" +
                 "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"\",\n" +
+                "\"resp_others\":\"Mark Taylor\",\n" +
                 "\"respondent_town\":\"respondentTown2\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 4\",\n" +
@@ -328,7 +328,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown\",\n" +
                 "\"claimant_representative\":\"Rep\",\n" +
                 "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"\",\n" +
+                "\"resp_others\":\"Mark Taylor\\nTony Jones\\nSteve Thomas\",\n" +
                 "\"respondent_town\":\"respondentTown\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 2\",\n" +
@@ -363,7 +363,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown1\",\n" +
                 "\"claimant_representative\":\"Rep2\",\n" +
                 "\"Respondent\":\"sdf2\",\n" +
-                "\"resp_others\":\"\",\n" +
+                "\"resp_others\":\"Mark Taylor\\nTony Jones\",\n" +
                 "\"respondent_town\":\"respondentTown1\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 2\",\n" +
@@ -398,7 +398,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown2\",\n" +
                 "\"claimant_representative\":\"Rep\",\n" +
                 "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"\",\n" +
+                "\"resp_others\":\"Mark Taylor\",\n" +
                 "\"respondent_town\":\"respondentTown2\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 4\",\n" +
@@ -681,5 +681,41 @@ public class ListingHelperTest {
         assertEquals(IT57_TEMPLATE, ListingHelper.getListingDocName(listingData));
         listingData.setHearingDocType("");
         assertEquals("No document found", ListingHelper.getListingDocName(listingData));
+    }
+
+    @Test
+    public void getRespondentOthersWithLineBreaksForMultipleRespondents() {
+        String expected = "Mark Taylor\\nTony Jones\\nSteve Thomas";
+
+        String actual = ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(0).getValue());
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getRespondentOthersWithLineBreaksForTwoRespondents() {
+        String expected = "Mark Taylor\\nTony Jones";
+
+        String actual = ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(1).getValue());
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getRespondentOthersWithLineBreaksForSingleRespondent() {
+        String expected = "Mark Taylor";
+
+        String actual = ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(2).getValue());
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getRespondentOthersWithLineBreaksForNoRespondents() {
+        String expected = "";
+
+        String actual = ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(3).getValue());
+
+        assertEquals(expected, actual);
     }
 }
