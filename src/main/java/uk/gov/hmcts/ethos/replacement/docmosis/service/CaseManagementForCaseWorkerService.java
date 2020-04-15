@@ -201,14 +201,13 @@ public class CaseManagementForCaseWorkerService {
         caseData.setCaseSource(originalCaseData.getCaseSource());
         caseData.setCounterClaim(originalCaseData.getEthosCaseReference());
         caseData.setCcdID(originalId);
+        caseData.setManagingOffice(originalCaseData.getManagingOffice() != null ? originalCaseData.getManagingOffice() : "");
+        caseData.setAllocatedOffice(originalCaseData.getAllocatedOffice() != null ? originalCaseData.getAllocatedOffice() : "");
         caseData.setState(ACCEPTED_STATE);
     }
 
     private void sendUpdateSingleCaseECC(String authToken, CaseDetails currentCaseDetails, CaseData originalCaseData, String caseIdToLink) {
         try {
-            log.info("CurrentCaseDetails: " + currentCaseDetails);
-            log.info("OriginalCaseData: " + originalCaseData);
-            log.info("caseIdToLink: " + caseIdToLink);
             originalCaseData.setCcdID(currentCaseDetails.getCaseId());
             originalCaseData.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());
             CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, currentCaseDetails.getCaseTypeId(),
