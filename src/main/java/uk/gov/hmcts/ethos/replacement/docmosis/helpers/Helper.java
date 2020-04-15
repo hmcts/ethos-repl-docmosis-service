@@ -258,7 +258,7 @@ public class Helper {
         List<String> respOthers = caseData.getRespondentCollection()
                 .stream()
                 .skip(1)
-                .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
+                .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
                 .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". " + respondentSumTypeItem.getValue().getRespondentName())
                 .collect(Collectors.toList());
         sb.append("\"resp_others\":\"").append(String.join("\\n", respOthers)).append(NEW_LINE);
@@ -271,7 +271,7 @@ public class Helper {
         int size = caseData.getRespondentCollection().size();
         List<String> respAddressList = caseData.getRespondentCollection()
                 .stream()
-                .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
+                .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
                 .map(respondentSumTypeItem -> (size > 1 ? atomicInteger.getAndIncrement() + ". " : "")
                         + respondentSumTypeItem.getValue().getRespondentAddress().toString())
                 .collect(Collectors.toList());
@@ -526,7 +526,7 @@ public class Helper {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             activeRespondents = caseData.getRespondentCollection()
                     .stream()
-                    .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
+                    .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
                     .collect(Collectors.toList());
         }
 
