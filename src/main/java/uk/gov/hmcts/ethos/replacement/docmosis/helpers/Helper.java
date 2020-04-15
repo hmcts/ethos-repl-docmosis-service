@@ -74,12 +74,19 @@ public class Helper {
 
         // Building the document data
         sb.append("\"data\":{\n");
+        log.info("CaseData: " + caseData);
         sb.append(getClaimantData(caseData));
+        log.info("ClaimantDone");
         sb.append(getRespondentData(caseData));
+        log.info("RespondentDone");
         sb.append(getHearingData(caseData));
+        log.info("HearingDataDone");
         sb.append(getCorrespondenceData(caseData));
+        log.info("CorrespondenceDataDone");
         sb.append(getCorrespondenceScotData(caseData));
+        log.info("CorrespondenceScot");
         sb.append(getCourtData(caseData));
+        log.info("CourtDone");
 
         sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts\":\"")
                 .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
@@ -93,7 +100,7 @@ public class Helper {
                 .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
         sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts2\":\"")
                 .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
-
+log.info("Checking other");
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
         sb.append("\"Today_date\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
@@ -102,7 +109,7 @@ public class Helper {
 
         sb.append("}\n");
         sb.append("}\n");
-
+log.info("Ends!!!");
         return sb;
     }
 
