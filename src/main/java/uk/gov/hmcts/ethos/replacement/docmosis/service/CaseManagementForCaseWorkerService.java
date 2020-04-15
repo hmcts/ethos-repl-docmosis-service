@@ -141,7 +141,7 @@ public class CaseManagementForCaseWorkerService {
         }
         populatePreAcceptCaseDetails(caseData);
         populateJurCodesCollection(caseData);
-        populateRespondentCollectionDetails(caseData, originalCaseData.getClaimantIndType());
+        populateRespondentCollectionDetails(caseData, originalCaseData.getClaimantIndType(), originalCaseData.getClaimantType());
         populateTribunalCorrespondenceDetails(caseData, originalCaseData);
         populateCaseDataDetails(caseData, originalCaseData, originalId);
     }
@@ -160,11 +160,12 @@ public class CaseManagementForCaseWorkerService {
         caseData.setClaimantWorkAddressQuestion(YES);
     }
 
-    private void populateRespondentCollectionDetails(CaseData caseData, ClaimantIndType originalClaimantIndType) {
+    private void populateRespondentCollectionDetails(CaseData caseData, ClaimantIndType originalClaimantIndType, ClaimantType originalClaimantType) {
         RespondentSumType respondentSumType = new RespondentSumType();
         respondentSumType.setRespondentName(originalClaimantIndType.claimantFullName());
         respondentSumType.setRespondentACASNo(EMPLOYER_CONTRACT_CLAIM_CODE);
         respondentSumType.setRespondentACASQuestion(NO);
+        respondentSumType.setRespondentAddress(originalClaimantType.getClaimantAddressUK());
 
         RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
         respondentSumTypeItem.setValue(respondentSumType);
