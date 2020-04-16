@@ -28,8 +28,8 @@ public class ListingType {
     private String hearingEEMember;
     @JsonProperty("hearingERMember")
     private String hearingERMember;
-    @JsonProperty("clerkResponsible")
-    private String clerkResponsible;
+    @JsonProperty("hearingClerk")
+    private String hearingClerk;
     @JsonProperty("hearingDay")
     private String hearingDay;
     @JsonProperty("claimantName")

@@ -148,7 +148,7 @@ public class ListingServiceTest {
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
                 "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , " +
-                "hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , " +
+                "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , " +
                 "claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , " +
                 "hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= ))], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
@@ -165,12 +165,12 @@ public class ListingServiceTest {
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[" +
                 "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
                 "respondentOthers= , hearingNotes= )), " +
                 "ListingTypeItem(id=124, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue2, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=3 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , hearingClerk=Clerk1, hearingDay=3 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 5, " +
                 "respondentOthers= , hearingNotes= ))], " +
                 "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
@@ -188,12 +188,12 @@ public class ListingServiceTest {
                 "listingDateTo=2019-12-12, listingVenue=Aberdeen, listingCollection=" +
                 "[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
                 "respondentOthers= , hearingNotes= )), " +
                 "ListingTypeItem(id=124, value=ListingType(causeListDate=10 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=2 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , hearingClerk=Clerk, hearingDay=2 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
                 "respondentOthers= , hearingNotes= ))], " +
                 "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
@@ -210,17 +210,17 @@ public class ListingServiceTest {
                 "listingDateTo=2019-12-12, listingVenue=All, listingCollection=" +
                 "[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
                 "respondentOthers= , hearingNotes= )), " +
                 "ListingTypeItem(id=124, value=ListingType(causeListDate=10 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=2 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , hearingClerk=Clerk, hearingDay=2 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, " +
                 "respondentOthers= , hearingNotes= )), " +
                 "ListingTypeItem(id=124, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue2, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
-                "hearingERMember= , clerkResponsible= , hearingDay=3 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
+                "hearingERMember= , hearingClerk=Clerk1, hearingDay=3 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
                 "respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 5, " +
                 "respondentOthers= , hearingNotes= ))], " +
                 "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
@@ -256,7 +256,7 @@ public class ListingServiceTest {
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
                 "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , " +
-                "hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName=Juan Pedro, " +
+                "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=Juan Pedro, " +
                 "claimantTown=Aberdeen, claimantRepresentative=ONG, respondent=Royal McDonal, respondentTown=Aberdeen, respondentRepresentative=ITV, " +
                 "estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, respondentOthers=Royal McDonal, hearingNotes= ))], listingVenueOfficeGlas=null, " +
                 "listingVenueOfficeAber=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
@@ -302,7 +302,7 @@ public class ListingServiceTest {
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
                 "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , " +
-                "positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , hearingDay=1 of 3, claimantName= , " +
+                "positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName= , " +
                 "claimantTown= , claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, " +
                 "hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= ))], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
