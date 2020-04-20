@@ -117,7 +117,7 @@ public class CaseManagementForCaseWorkerService {
                     sendUpdateSingleCaseECC(authToken, caseDetails, submitEvent.getCaseData(), String.valueOf(submitEvent.getCaseId()));
             }
         } else {
-            errors.add("No ECC case reference found");
+            errors.add("Case Reference Number not found");
         }
         return currentCaseData;
     }
@@ -158,6 +158,7 @@ public class CaseManagementForCaseWorkerService {
         caseData.setClaimantTypeOfClaimant(COMPANY_TYPE_CLAIMANT);
         caseData.setClaimantCompany(respondentSumType.getRespondentName());
         caseData.setClaimantWorkAddressQuestion(YES);
+        caseData.setReceiptDate(respondentSumType.getResponseReceivedDate());
     }
 
     private void populateRespondentCollectionDetails(CaseData caseData, ClaimantIndType originalClaimantIndType, ClaimantType originalClaimantType) {
@@ -198,7 +199,7 @@ public class CaseManagementForCaseWorkerService {
 
     private void populateCaseDataDetails(CaseData caseData, CaseData originalCaseData, String originalId) {
         caseData.setFeeGroupReference(originalCaseData.getFeeGroupReference());
-        caseData.setCaseType(originalCaseData.getCaseType());
+        caseData.setCaseType(SINGLE_CASE_TYPE);
         caseData.setCaseSource(originalCaseData.getCaseSource());
         caseData.setCounterClaim(originalCaseData.getEthosCaseReference());
         caseData.setCcdID(originalId);

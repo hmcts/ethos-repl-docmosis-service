@@ -452,13 +452,10 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        List<String> errors = eventValidationService.validateReceiptDate(caseData);
-        log.info("Event fields validation: " + errors);
-        if (errors.isEmpty()) {
-            caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(), userToken, errors, ABOUT_TO_SUBMIT_EVENT_CALLBACK);
-            generateEthosCaseReference(caseData, ccdRequest);
-        }
+        List<String> errors = new ArrayList<>();
+        CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(), userToken, errors, ABOUT_TO_SUBMIT_EVENT_CALLBACK);
+        generateEthosCaseReference(caseData, ccdRequest);
+
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
                 .errors(errors)
