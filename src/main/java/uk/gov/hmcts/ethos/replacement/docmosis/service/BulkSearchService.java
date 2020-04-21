@@ -124,7 +124,7 @@ public class BulkSearchService {
         bulkData.setClaimantRep(null);
         bulkData.setRespondentRep(null);
         bulkData.setMidSearchCollection(null);
-        bulkData.setSelectAll("No");
+        bulkData.setSelectAll(NO);
         bulkData.setClaimantOrg(null);
         bulkData.setRespondentOrg(null);
         bulkData.setPositionType(null);
@@ -261,7 +261,7 @@ public class BulkSearchService {
         multipleReference = multipleReference != null ? multipleReference : "";
         List<String> alreadyTakenIds = new ArrayList<>();
         List<String> unprocessableState = new ArrayList<>();
-        if (bulkDetails.getCaseData().getFilterCases() != null && bulkDetails.getCaseData().getFilterCases().equals("No")) {
+        if (bulkDetails.getCaseData().getFilterCases() != null && bulkDetails.getCaseData().getFilterCases().equals(NO)) {
             log.info("No filtering");
         } else {
             for (SubmitEvent submitEvent : submitEvents) {

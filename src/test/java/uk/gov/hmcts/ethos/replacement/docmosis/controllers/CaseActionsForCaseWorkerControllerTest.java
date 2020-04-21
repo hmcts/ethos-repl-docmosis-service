@@ -16,6 +16,7 @@ import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
@@ -55,6 +56,9 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String ADD_AMEND_ET3_URL = "/addAmendET3";
     private static final String AMEND_CASE_STATE_URL = "/amendCaseState";
     private static final String MID_RESPONDENT_ADDRESS_URL = "/midRespondentAddress";
+    private static final String MID_RESPONDENT_ECC_URL = "/midRespondentECC";
+    private static final String CREATE_ECC_URL = "/createECC";
+    private static final String LINK_ORIGINAL_CASE_ECC_URL = "/linkOriginalCaseECC";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -139,7 +143,8 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void retrieveCase() throws Exception {
-        when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(submitEvent);
+        when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(eq(AUTH_TOKEN), isA(String.class), isA(String.class), isA(String.class)))
+                .thenReturn(submitEvent);
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(RETRIEVE_CASE_URL)
                 .content(requestContent.toString())
@@ -337,6 +342,51 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void midRespondentECC() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(caseManagementForCaseWorkerService.createECC(isA(CaseDetails.class), eq(AUTH_TOKEN), isA(List.class), isA(String.class)))
+                .thenReturn(new CaseData());
+        mvc.perform(post(MID_RESPONDENT_ECC_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void createECC() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(caseManagementForCaseWorkerService.createECC(isA(CaseDetails.class), eq(AUTH_TOKEN), isA(List.class), isA(String.class)))
+                .thenReturn(new CaseData());
+        mvc.perform(post(CREATE_ECC_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void linkOriginalCaseECC() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(caseManagementForCaseWorkerService.createECC(isA(CaseDetails.class), eq(AUTH_TOKEN), isA(List.class), isA(String.class)))
+                .thenReturn(new CaseData());
+        mvc.perform(post(LINK_ORIGINAL_CASE_ECC_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void createCaseError400() throws Exception {
         mvc.perform(post(CREATION_CASE_URL)
                 .content("error")
@@ -445,6 +495,33 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void midRespondentECCError400() throws Exception {
+        mvc.perform(post(MID_RESPONDENT_ECC_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void createECCError400() throws Exception {
+        mvc.perform(post(CREATE_ECC_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void linkOriginalCaseECCError400() throws Exception {
+        mvc.perform(post(LINK_ORIGINAL_CASE_ECC_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void createCaseError500() throws Exception {
         when(caseCreationForCaseWorkerService.caseCreationRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenThrow(feignError());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
@@ -457,7 +534,8 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void retrieveCaseError500() throws Exception {
-        when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenThrow(feignError());
+        when(caseRetrievalForCaseWorkerService.caseRetrievalRequest(eq(AUTH_TOKEN), isA(String.class), isA(String.class), isA(String.class)))
+                .thenThrow(feignError());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(RETRIEVE_CASE_URL)
                 .content(requestContent.toString())
@@ -679,6 +757,36 @@ public class CaseActionsForCaseWorkerControllerTest {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(MID_RESPONDENT_ADDRESS_URL)
                 .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void midRespondentECCForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(MID_RESPONDENT_ECC_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void createECCForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(CREATE_ECC_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void linkOriginalCaseECCForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(LINK_ORIGINAL_CASE_ECC_URL)
+                .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
