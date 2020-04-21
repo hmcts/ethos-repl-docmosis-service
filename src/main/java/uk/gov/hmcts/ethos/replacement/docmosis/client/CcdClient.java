@@ -153,8 +153,8 @@ public class CcdClient {
         return new ArrayList<>(caseSearchResult.getCases());
     }
 
-    public List<SubmitEvent> retrieveCasesElasticSearchForCreation(String authToken, String caseTypeId, List<String> caseIds, String caseSource) throws IOException {
-        if (caseSource.equals(MANUALLY_CREATED_POSITION)) {
+    public List<SubmitEvent> retrieveCasesElasticSearchForCreation(String authToken, String caseTypeId, List<String> caseIds, String multipleSource) throws IOException {
+        if (multipleSource.equals(MANUALLY_CREATED_POSITION)) {
             return retrieveCasesElasticSearch(authToken, caseTypeId, caseIds);
         } else {
             return retrieveCasesElasticSearchWithRetries(authToken, caseTypeId, caseIds);

@@ -152,6 +152,12 @@ public class CaseData {
 
     @JsonProperty("docMarkUp")
     private String docMarkUp;
+    @JsonProperty("caseRefNumberCount")
+    private String caseRefNumberCount;
+    @JsonProperty("startCaseRefNumber")
+    private String startCaseRefNumber;
+    @JsonProperty("multipleRefNumber")
+    private String multipleRefNumber;
 
     @JsonProperty("caseRefECC")
     private String caseRefECC;

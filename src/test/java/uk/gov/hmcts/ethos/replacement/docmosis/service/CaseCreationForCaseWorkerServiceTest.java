@@ -8,6 +8,8 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
+import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 
 import java.io.IOException;
@@ -26,12 +28,22 @@ public class CaseCreationForCaseWorkerServiceTest {
     private CcdClient ccdClient;
     private CCDRequest ccdRequest;
     private SubmitEvent submitEvent;
+    @Mock
+    private SingleReferenceService singleReferenceService;
+    @Mock
+    private MultipleReferenceService multipleReferenceService;
 
     @Before
     public void setUp() {
         ccdRequest = new CCDRequest();
+        CaseDetails caseDetails = new CaseDetails();
+        CaseData caseData = new CaseData();
+        caseData.setCaseRefNumberCount("2");
+        caseDetails.setCaseData(caseData);
+        caseDetails.setCaseTypeId("Manchester");
+        ccdRequest.setCaseDetails(caseDetails);
         submitEvent = new SubmitEvent();
-        caseCreationForCaseWorkerService = new CaseCreationForCaseWorkerService(ccdClient);
+        caseCreationForCaseWorkerService = new CaseCreationForCaseWorkerService(ccdClient, singleReferenceService, multipleReferenceService);
     }
 
     @Test(expected = Exception.class)
@@ -47,5 +59,15 @@ public class CaseCreationForCaseWorkerServiceTest {
         when(ccdClient.submitCaseCreation(anyString(), any(), any())).thenReturn(submitEvent);
         SubmitEvent submitEvent1 = caseCreationForCaseWorkerService.caseCreationRequest(ccdRequest, "authToken");
         assertEquals(submitEvent1, submitEvent);
+    }
+
+    @Test
+    public void generateCaseRefNumbers() {
+        when(singleReferenceService.createReference("Manchester",2)).thenReturn("2100001/2019");
+        when(multipleReferenceService.createReference("Manchester",1)).thenReturn("2100005");
+        CaseData caseData = caseCreationForCaseWorkerService.generateCaseRefNumbers(ccdRequest);
+        assertEquals(caseData.getStartCaseRefNumber(),"2100001/2019");
+        assertEquals(caseData.getCaseRefNumberCount(),"2");
+        assertEquals(caseData.getMultipleRefNumber(),"2100005");
     }
 }

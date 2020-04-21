@@ -60,7 +60,8 @@ public class DefaultValuesReaderServiceTest {
 
     private CaseDetails getCaseDetails(String caseTypeId) {
         CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseData(new CaseData());
+        CaseData caseData = new CaseData();
+        caseDetails.setCaseData(caseData);
         caseDetails.setCaseId("123456");
         caseDetails.setCaseTypeId(caseTypeId);
         caseDetails.setJurisdiction("TRIBUNALS");
@@ -370,7 +371,7 @@ public class DefaultValuesReaderServiceTest {
     public void getCaseData() {
         String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, " +
                 "tribunalCorrespondenceTelephone=0141 204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, " +
-                "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=Single, " +
+                "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=null, " +
                 "multipleReference=null, leadClaimant=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, responseTypeCollection=null, responseType=null, " +
@@ -382,8 +383,18 @@ public class DefaultValuesReaderServiceTest {
                 "correspondenceScotType=null, correspondenceType=null, caseNotes=null, claimantWorkAddress=null, " +
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
-                "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefECC=null, respondentECC=null, ccdID=null)";
+                "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
+                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null)";
         assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow, true).toString());
+    }
+
+    @Test
+    public void getCaseDataWithPositionTypeAndCaseSource() {
+        caseData.setPositionType(MANUALLY_CREATED_POSITION);
+        caseData.setCaseSource(ET1_ONLINE_CASE_SOURCE);
+        CaseData caseDataResult = defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow, true);
+        assertEquals(MANUALLY_CREATED_POSITION, caseDataResult.getPositionType());
+        assertEquals(ET1_ONLINE_CASE_SOURCE, caseDataResult.getCaseSource());
     }
 
     private CaseData getCaseDataWithClaimantWorkAddress(CaseData caseData) {
@@ -409,7 +420,7 @@ public class DefaultValuesReaderServiceTest {
     public void getCaseDataWithClaimantWorkAddress() {
         String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, tribunalCorrespondenceTelephone=0141 " +
                 "204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, " +
-                "ethosCaseReference=null, caseType=Single, multipleReference=null, leadClaimant=null, claimantTypeOfClaimant=null, claimantCompany=null, " +
+                "ethosCaseReference=null, caseType=null, multipleReference=null, leadClaimant=null, claimantTypeOfClaimant=null, claimantCompany=null, " +
                 "claimantIndType=null, claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, " +
                 "claimantWorkAddressQuestion=Yes, claimantWorkAddressQRespondent=null, representativeClaimantType=null, responseTypeCollection=null, responseType=null," +
                 " respondentCollection=[RespondentSumTypeItem(id=null, value=RespondentSumType(responseStatus=null, responseToClaim=null, rejectionReason=null, " +
@@ -427,7 +438,8 @@ public class DefaultValuesReaderServiceTest {
                 "claimantWorkAddress=ClaimantWorkAddressType(claimantWorkAddress=null, claimantWorkPhoneNumber=null), claimantRepresentedQuestion=null, " +
                 "bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, state=null, stateAPI=null, et3Received=null, " +
                 "conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, targetHearingDate=null, " +
-                "EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefECC=null, respondentECC=null, ccdID=null)";
+                "EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, " +
+                "ccdID=null)";
         assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow, true).toString());
     }
 

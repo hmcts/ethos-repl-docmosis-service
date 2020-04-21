@@ -9,10 +9,4 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Table(name = "singleReferenceLondonSouth")
 public class SingleReferenceLondonSouth extends SingleReference {
-
-    public SingleReferenceLondonSouth(String caseId, String previousRef, String previousYear, String currentYear) {
-        this.caseId = caseId;
-        this.year = currentYear;
-        this.ref = generateRefNumber(previousRef, previousYear, currentYear);
-    }
 }
