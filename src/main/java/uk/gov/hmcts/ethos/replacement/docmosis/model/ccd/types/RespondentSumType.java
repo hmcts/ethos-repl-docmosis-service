@@ -73,5 +73,4 @@ public class RespondentSumType {
     private String responseRespondentName;
     @JsonProperty("responseCounterClaim")
     private String responseCounterClaim;
-
 }

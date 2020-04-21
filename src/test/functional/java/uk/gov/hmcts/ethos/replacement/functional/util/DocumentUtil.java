@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatLocalDate;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatLocalDateTime;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.FILE_EXTENSION;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 public class DocumentUtil {
 
@@ -104,7 +103,7 @@ public class DocumentUtil {
                 sb.append("\"claimant_full_name\": \"" + claimantIndType.claimantFullName()).append(NEW_LINE);
                 sb.append("\"Claimant\": \"" + claimantIndType.claimantFullName()).append(NEW_LINE);
                 //sb.append("\"claimant_email_address\": \"").append(NEW_LINE);
-            } else if (typeOfClaimant.equalsIgnoreCase("Company")) {
+            } else if (typeOfClaimant.equalsIgnoreCase(COMPANY_TYPE_CLAIMANT)) {
                 sb.append("\"claimant_full_name\": \"" + caseData.getClaimantCompany()).append(NEW_LINE);
                 sb.append("\"Claimant\": \"" + caseData.getClaimantCompany()).append(NEW_LINE);
                 //sb.append("\"claimant_email_address\": \"").append(NEW_LINE);

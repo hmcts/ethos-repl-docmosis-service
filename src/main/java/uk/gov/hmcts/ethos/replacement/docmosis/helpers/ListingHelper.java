@@ -127,9 +127,9 @@ public class ListingHelper {
 
     private static ListingType getClaimantRespondentDetails(ListingType listingType, ListingData listingData, CaseData caseData) {
         boolean rule50b = caseData.getRestrictedReporting() != null && caseData.getRestrictedReporting().getRule503b() != null &&
-                caseData.getRestrictedReporting().getRule503b().equals("Yes");
+                caseData.getRestrictedReporting().getRule503b().equals(YES);
         boolean rule50d = caseData.getRestrictedReporting() != null && caseData.getRestrictedReporting().getImposed() != null &&
-                caseData.getRestrictedReporting().getImposed().equals("Yes");
+                caseData.getRestrictedReporting().getImposed().equals(YES);
         boolean isPublicType = listingData.getHearingDocType() != null && listingData.getHearingDocType().equals(HEARING_DOC_ETCL) &&
                 listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC);
         boolean isPressListType = listingData.getHearingDocType() != null && listingData.getHearingDocType().equals(HEARING_DOC_ETCL) &&
@@ -328,16 +328,16 @@ public class ListingHelper {
     public static String getListingDocName(ListingData listingData) {
         String roomOrNoRoom = !isNullOrEmpty(listingData.getRoomOrNoRoom()) ? listingData.getRoomOrNoRoom() : "";
         if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF) &&
-                roomOrNoRoom.equals("No")) {
+                roomOrNoRoom.equals(NO)) {
             return STAFF_CASE_CAUSE_LIST_TEMPLATE;
         } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF) &&
-                roomOrNoRoom.equals("Yes")) {
+                roomOrNoRoom.equals(YES)) {
             return STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE;
         } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC) &&
-                roomOrNoRoom.equals("No")) {
+                roomOrNoRoom.equals(NO)) {
             return PUBLIC_CASE_CAUSE_LIST_TEMPLATE;
         } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC) &&
-                roomOrNoRoom.equals("Yes")) {
+                roomOrNoRoom.equals(YES)) {
             return PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE;
         } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && listingData.getHearingDocETCL().equals(HEARING_ETCL_PRESS_LIST) &&
                 listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {

@@ -69,7 +69,7 @@ public class BulkCreationService {
         ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
         for (SubmitEvent submitEvent : submitEvents) {
             executor.execute(new BulkCreationTask(bulkDetails, submitEvent, userToken,
-                    bulkDetails.getCaseData().getMultipleReference(), "Multiple", ccdClient));
+                    bulkDetails.getCaseData().getMultipleReference(), MULTIPLE_CASE_TYPE, ccdClient));
         }
         executor.shutdown();
         log.info("End in time: " + Duration.between(start, Instant.now()).toMillis());
@@ -131,19 +131,19 @@ public class BulkCreationService {
         for (SubmitEvent submitEvent : allSubmitEventsWithLead) {
             String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
             if (!submitEvent.getCaseData().getEthosCaseReference().equals(leadId)) {
-                submitEvent.getCaseData().setLeadClaimant("No");
+                submitEvent.getCaseData().setLeadClaimant(NO);
             }
             log.info("State SubmitEvent: " + submitEvent.getState());
             if (caseIds.contains(ethosCaseRef) && !multipleCaseIds.contains(ethosCaseRef)) {
                 multipleTypeItemList.add(BulkHelper.getMultipleTypeItemFromSubmitEvent(submitEvent, bulkDetails.getCaseData().getMultipleReference()));
                 executor.execute(new BulkCreationTask(bulkDetails, submitEvent, authToken,
-                        bulkDetails.getCaseData().getMultipleReference(), "Multiple", ccdClient));
+                        bulkDetails.getCaseData().getMultipleReference(), MULTIPLE_CASE_TYPE, ccdClient));
             } else if (!caseIds.contains(ethosCaseRef) && multipleCaseIds.contains(ethosCaseRef)) {
-                executor.execute(new BulkCreationTask(bulkDetails, submitEvent, authToken, " ", "Single", ccdClient));
+                executor.execute(new BulkCreationTask(bulkDetails, submitEvent, authToken, " ", SINGLE_CASE_TYPE, ccdClient));
             } else {
                 multipleTypeItemList.add(BulkHelper.getMultipleTypeItemFromSubmitEvent(submitEvent, bulkDetails.getCaseData().getMultipleReference()));
                 executor.execute(new BulkCreationTask(bulkDetails, submitEvent, authToken,
-                        bulkDetails.getCaseData().getMultipleReference(), "Multiple", ccdClient));
+                        bulkDetails.getCaseData().getMultipleReference(), MULTIPLE_CASE_TYPE, ccdClient));
             }
         }
         executor.shutdown();

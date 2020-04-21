@@ -21,13 +21,11 @@ public class CaseRetrievalForCaseWorkerService {
         this.ccdClient = ccdClient;
     }
 
-    public SubmitEvent caseRetrievalRequest(CCDRequest ccdRequest, String authToken) {
-        CaseDetails caseDetails = ccdRequest.getCaseDetails();
-        log.info("EventId: " + ccdRequest.getEventId());
+    public SubmitEvent caseRetrievalRequest(String authToken, String caseTypeId, String jurisdiction, String caseId) {
         try {
-            return ccdClient.retrieveCase(authToken, caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), "1550576532211563");
+            return ccdClient.retrieveCase(authToken, caseTypeId, jurisdiction, caseId);
         } catch (Exception ex) {
-            throw new CaseCreationException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
+            throw new CaseCreationException(MESSAGE + caseId + ex.getMessage());
         }
     }
 
@@ -38,6 +36,14 @@ public class CaseRetrievalForCaseWorkerService {
             return ccdClient.retrieveCases(authToken, caseDetails.getCaseTypeId(), caseDetails.getJurisdiction());
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
+        }
+    }
+
+    public List<SubmitEvent> casesRetrievalESRequest(String currentCaseId, String authToken, String caseTypeId, List<String> caseIds) {
+        try {
+            return ccdClient.retrieveCasesElasticSearch(authToken, caseTypeId, caseIds);
+        } catch (Exception ex) {
+            throw new CaseCreationException(MESSAGE + currentCaseId + ex.getMessage());
         }
     }
 

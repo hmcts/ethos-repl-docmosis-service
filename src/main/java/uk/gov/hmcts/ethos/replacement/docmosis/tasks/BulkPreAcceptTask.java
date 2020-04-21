@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.YES;
 
 @Slf4j
 public class BulkPreAcceptTask implements Runnable {
@@ -40,7 +41,7 @@ public class BulkPreAcceptTask implements Runnable {
             log.info("Moving to accepted state");
             submitEvent.getCaseData().setState(ACCEPTED_STATE);
             CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
-            casePreAcceptType.setCaseAccepted("Yes");
+            casePreAcceptType.setCaseAccepted(YES);
             casePreAcceptType.setDateAccepted(Helper.formatCurrentDate2(LocalDate.now()));
             submitEvent.getCaseData().setPreAcceptCase(casePreAcceptType);
             ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
