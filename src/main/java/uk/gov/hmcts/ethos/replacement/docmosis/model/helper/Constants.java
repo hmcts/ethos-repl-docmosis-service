@@ -66,28 +66,29 @@ public class Constants {
     public static final String WATFORD_USERS_CASE_TYPE_ID = "Watford_User";
 
     public static final String MANCHESTER_BULK_CASE_TYPE_ID = "Manchester_Multiples";
-    public static final String MANCHESTER_CASE_TYPE_ID = "Manchester";
     public static final String SCOTLAND_BULK_CASE_TYPE_ID = "Scotland_Multiples";
-    public static final String SCOTLAND_CASE_TYPE_ID = "Scotland";
     public static final String BRISTOL_BULK_CASE_TYPE_ID = "Bristol_Multiples";
-    public static final String BRISTOL_CASE_TYPE_ID = "Bristol";
     public static final String LEEDS_BULK_CASE_TYPE_ID = "Leeds_Multiples";
-    public static final String LEEDS_CASE_TYPE_ID = "Leeds";
     public static final String LONDON_CENTRAL_BULK_CASE_TYPE_ID = "LondonCentral_Multiples";
-    public static final String LONDON_CENTRAL_CASE_TYPE_ID = "LondonCentral";
     public static final String LONDON_EAST_BULK_CASE_TYPE_ID = "LondonEast_Multiples";
-    public static final String LONDON_EAST_CASE_TYPE_ID = "LondonEast";
     public static final String LONDON_SOUTH_BULK_CASE_TYPE_ID = "LondonSouth_Multiples";
-    public static final String LONDON_SOUTH_CASE_TYPE_ID = "LondonSouth";
     public static final String MIDLANDS_EAST_BULK_CASE_TYPE_ID = "MidlandsEast_Multiples";
-    public static final String MIDLANDS_EAST_CASE_TYPE_ID = "MidlandsEast";
     public static final String MIDLANDS_WEST_BULK_CASE_TYPE_ID = "MidlandsWest_Multiples";
-    public static final String MIDLANDS_WEST_CASE_TYPE_ID = "MidlandsWest";
     public static final String NEWCASTLE_BULK_CASE_TYPE_ID = "Newcastle_Multiples";
-    public static final String NEWCASTLE_CASE_TYPE_ID = "Newcastle";
     public static final String WALES_BULK_CASE_TYPE_ID = "Wales_Multiples";
-    public static final String WALES_CASE_TYPE_ID = "Wales";
     public static final String WATFORD_BULK_CASE_TYPE_ID = "Watford_Multiples";
+
+    public static final String MANCHESTER_CASE_TYPE_ID = "Manchester";
+    public static final String SCOTLAND_CASE_TYPE_ID = "Scotland";
+    public static final String BRISTOL_CASE_TYPE_ID = "Bristol";
+    public static final String LEEDS_CASE_TYPE_ID = "Leeds";
+    public static final String LONDON_CENTRAL_CASE_TYPE_ID = "LondonCentral";
+    public static final String LONDON_EAST_CASE_TYPE_ID = "LondonEast";
+    public static final String LONDON_SOUTH_CASE_TYPE_ID = "LondonSouth";
+    public static final String MIDLANDS_EAST_CASE_TYPE_ID = "MidlandsEast";
+    public static final String MIDLANDS_WEST_CASE_TYPE_ID = "MidlandsWest";
+    public static final String NEWCASTLE_CASE_TYPE_ID = "Newcastle";
+    public static final String WALES_CASE_TYPE_ID = "Wales";
     public static final String WATFORD_CASE_TYPE_ID = "Watford";
 
     public static final String PENDING_STATE = "Pending";
@@ -104,6 +105,7 @@ public class Constants {
     public static final String INDIVIDUAL_TYPE_CLAIMANT = "Individual";
     public static final String COMPANY_TYPE_CLAIMANT = "Company";
     public static final String MANUALLY_CREATED_POSITION = "Manually Created";
+    public static final String ET1_ONLINE_CASE_SOURCE = "ET1 Online";
 
     public static final String CREATION_EVENT_TRIGGER_ID = "initiateCase";
     public static final String UPDATE_EVENT_TRIGGER_ID = "amendCaseDetails";
@@ -128,10 +130,6 @@ public class Constants {
     public static final String LONDON_EAST_OFFICE_NUMBER = "32";
     public static final String WATFORD_OFFICE_NUMBER = "33";
     public static final String GLASGOW_OFFICE_NUMBER = "41";
-
-    public static final String DEFAULT_INIT_REF = "20000";
-    public static final int DEFAULT_INIT_SUB_REF = 1;
-    public static final String DEFAULT_MAX_REF = "99999";
 
     public static final String DEFAULT_SELECT_ALL_VALUE = "999999";
     public static final String SELECT_ALL_VALUE = "Select All";

@@ -8,8 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
-
 @MappedSuperclass
 @Data
 @NoArgsConstructor
@@ -19,14 +17,6 @@ public class SubMultipleReference {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    protected String multipleRef;
-    protected int ref;
-
-    int generateRefNumber(int previousRef) {
-        if (previousRef == 0) {
-            return DEFAULT_INIT_SUB_REF;
-        } else {
-            return previousRef + 1;
-        }
-    }
+    protected int multref;
+    protected int submultref;
 }

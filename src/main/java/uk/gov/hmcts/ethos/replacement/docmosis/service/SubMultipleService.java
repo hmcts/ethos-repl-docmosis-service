@@ -30,7 +30,7 @@ public class SubMultipleService {
 
     private String generateSubMultipleRef(BulkDetails bulkDetails) {
         if (bulkDetails.getCaseData().getSubMultipleRef() == null || bulkDetails.getCaseData().getSubMultipleRef().trim().equals("")) {
-            return subMultipleReferenceService.createReference(bulkDetails.getCaseTypeId(), bulkDetails.getCaseData().getMultipleReference());
+            return subMultipleReferenceService.createReference(bulkDetails.getCaseTypeId(), bulkDetails.getCaseData().getMultipleReference(), 1);
         } else {
             return bulkDetails.getCaseData().getSubMultipleRef();
         }

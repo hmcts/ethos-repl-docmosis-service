@@ -141,7 +141,8 @@ public class BulkSearchService {
 
     public String generateMultipleRef(BulkDetails bulkDetails) {
         if (bulkDetails.getCaseData().getMultipleReference() == null || bulkDetails.getCaseData().getMultipleReference().trim().equals("")) {
-            return multipleReferenceService.createReference(bulkDetails.getCaseTypeId(), bulkDetails.getCaseId());
+            log.info("Case Type:" + bulkDetails.getCaseTypeId());
+            return multipleReferenceService.createReference(bulkDetails.getCaseTypeId(), 1);
         } else {
             return bulkDetails.getCaseData().getMultipleReference();
         }
@@ -175,7 +176,7 @@ public class BulkSearchService {
             if (caseIds != null && !caseIds.isEmpty()) {
                 log.info("CaseIds: " + caseIds);
                 List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearchForCreation(authToken,
-                        BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds, bulkDetails.getCaseData().getCaseSource());
+                        BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds, bulkDetails.getCaseData().getMultipleSource());
                 if (filter) {
                     return filterSubmitEventsElasticSearch(BulkHelper.calculateLeadCase(submitEvents, caseIds),
                             bulkDetails.getCaseData().getMultipleReference(), creationFlag, bulkDetails);
@@ -275,7 +276,7 @@ public class BulkSearchService {
                         alreadyTakenIds.add(caseData.getEthosCaseReference());
                     }
                 }
-                if ((creationFlag && submitEvent.getState().equals(SUBMITTED_STATE) )
+                if ((creationFlag && submitEvent.getState().equals(SUBMITTED_STATE) && !submitEvent.getCaseData().getCaseSource().equals(ET1_ONLINE_CASE_SOURCE))
                         || (!creationFlag && !submitEvent.getState().equals(ACCEPTED_STATE))) {
                     unprocessableState.add(submitEvent.getCaseData().getEthosCaseReference());
                 }

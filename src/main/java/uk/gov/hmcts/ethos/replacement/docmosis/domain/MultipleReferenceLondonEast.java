@@ -9,9 +9,4 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Table(name = "multipleReferenceLondonEast")
 public class MultipleReferenceLondonEast extends MultipleReference {
-
-    public MultipleReferenceLondonEast(String caseId, String previousRef) {
-        this.caseId = caseId;
-        this.ref = generateRefNumber(previousRef);
-    }
 }

@@ -152,7 +152,7 @@ public class DefaultValuesReaderService {
         if (defaultValues.getManagingOffice() != null) {
             caseData.setManagingOffice(defaultValues.getManagingOffice());
         }
-        if (creationFlag && defaultValues.getCaseType() != null) {
+        if (creationFlag && caseData.getCaseType() != null) {
             caseData.setCaseType(defaultValues.getCaseType());
         }
         caseData.setTribunalCorrespondenceAddress(getTribunalCorrespondenceAddress(defaultValues));

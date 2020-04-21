@@ -99,9 +99,9 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        if (bulkRequest.getCaseDetails().getCaseData().getCaseSource() == null
-                || bulkRequest.getCaseDetails().getCaseData().getCaseSource().trim().equals("")) {
-            bulkRequest.getCaseDetails().getCaseData().setCaseSource(MANUALLY_CREATED_POSITION);
+        if (bulkRequest.getCaseDetails().getCaseData().getMultipleSource() == null
+                || bulkRequest.getCaseDetails().getCaseData().getMultipleSource().trim().equals("")) {
+            bulkRequest.getCaseDetails().getCaseData().setMultipleSource(MANUALLY_CREATED_POSITION);
         }
 
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
@@ -133,11 +133,13 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
-                bulkRequest.getCaseDetails(), userToken, true, false);
-        //BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken, false);
-
-        bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, true);
+        if (bulkRequest.getCaseDetails().getCaseData().getMultipleSource() != null
+                && !bulkRequest.getCaseDetails().getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
+            BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
+                    bulkRequest.getCaseDetails(), userToken, true, false);
+            //BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken, false);
+            bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, true);
+        }
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .data(bulkRequest.getCaseDetails().getCaseData())

@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ethos.replacement.docmosis.domain.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.*;
 
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
@@ -46,179 +45,69 @@ public class SubMultipleReferenceService {
         this.subMultipleRefLondonEastRepository = subMultipleRefLondonEastRepository;
     }
 
-    public synchronized String createReference(String caseTypeId, String multipleReference) {
-        String multipleRef = multipleReference.substring(2);
+    public synchronized String createReference(String caseTypeId, String multipleReference, int numberCases) {
         switch (caseTypeId) {
             case MANCHESTER_DEV_BULK_CASE_TYPE_ID:
             case MANCHESTER_USERS_BULK_CASE_TYPE_ID:
             case MANCHESTER_BULK_CASE_TYPE_ID:
-                return getManchesterOfficeReference(multipleRef);
+                return generateOfficeReference(subMultipleRefManchesterRepository, numberCases, multipleReference,
+                        MANCHESTER_CASE_TYPE_ID);
             case SCOTLAND_DEV_BULK_CASE_TYPE_ID:
             case SCOTLAND_USERS_BULK_CASE_TYPE_ID:
             case SCOTLAND_BULK_CASE_TYPE_ID:
-                return getGlasgowOfficeReference(multipleRef);
+                return generateOfficeReference(subMultipleRefScotlandRepository, numberCases, multipleReference,
+                        SCOTLAND_CASE_TYPE_ID);
             case MIDLANDS_WEST_DEV_BULK_CASE_TYPE_ID:
             case MIDLANDS_WEST_USERS_BULK_CASE_TYPE_ID:
             case MIDLANDS_WEST_BULK_CASE_TYPE_ID:
-                return getMidlandsWestOfficeReference(multipleRef);
+                return generateOfficeReference(subMultipleRefMidlandsWestRepository, numberCases, multipleReference,
+                        MIDLANDS_WEST_CASE_TYPE_ID);
             case MIDLANDS_EAST_DEV_BULK_CASE_TYPE_ID:
             case MIDLANDS_EAST_USERS_BULK_CASE_TYPE_ID:
             case MIDLANDS_EAST_BULK_CASE_TYPE_ID:
-                return getMidlandsEastOfficeReference(multipleRef);
+                return generateOfficeReference(subMultipleRefMidlandsEastRepository, numberCases, multipleReference,
+                        MIDLANDS_EAST_CASE_TYPE_ID);
             case BRISTOL_DEV_BULK_CASE_TYPE_ID:
             case BRISTOL_USERS_BULK_CASE_TYPE_ID:
             case BRISTOL_BULK_CASE_TYPE_ID:
-                return getBristolOfficeReference(multipleRef);
+                return generateOfficeReference(subMultipleRefBristolRepository, numberCases, multipleReference,
+                        BRISTOL_CASE_TYPE_ID);
             case WALES_DEV_BULK_CASE_TYPE_ID:
             case WALES_USERS_BULK_CASE_TYPE_ID:
             case WALES_BULK_CASE_TYPE_ID:
-                return getWalesOfficeReference(multipleRef);
+                return generateOfficeReference(subMultipleRefWalesRepository, numberCases, multipleReference,
+                        WALES_CASE_TYPE_ID);
             case NEWCASTLE_DEV_BULK_CASE_TYPE_ID:
             case NEWCASTLE_USERS_BULK_CASE_TYPE_ID:
             case NEWCASTLE_BULK_CASE_TYPE_ID:
-                return getNewcastleOfficeReference(multipleRef);
+                return generateOfficeReference(subMultipleRefNewcastleRepository, numberCases, multipleReference,
+                        NEWCASTLE_CASE_TYPE_ID);
             case WATFORD_DEV_BULK_CASE_TYPE_ID:
             case WATFORD_USERS_BULK_CASE_TYPE_ID:
             case WATFORD_BULK_CASE_TYPE_ID:
-                return getWatfordOfficeReference(multipleRef);
+                return generateOfficeReference(subMultipleRefWatfordRepository, numberCases, multipleReference,
+                        WATFORD_CASE_TYPE_ID);
             case LONDON_CENTRAL_DEV_BULK_CASE_TYPE_ID:
             case LONDON_CENTRAL_USERS_BULK_CASE_TYPE_ID:
             case LONDON_CENTRAL_BULK_CASE_TYPE_ID:
-                return getLondonCentralOfficeReference(multipleRef);
+                return generateOfficeReference(subMultipleRefLondonCentralRepository, numberCases, multipleReference,
+                        LONDON_CENTRAL_CASE_TYPE_ID);
             case LONDON_SOUTH_DEV_BULK_CASE_TYPE_ID:
             case LONDON_SOUTH_USERS_BULK_CASE_TYPE_ID:
             case LONDON_SOUTH_BULK_CASE_TYPE_ID:
-                return getLondonSouthOfficeReference(multipleRef);
+                return generateOfficeReference(subMultipleRefLondonSouthRepository, numberCases, multipleReference,
+                        LONDON_SOUTH_CASE_TYPE_ID);
             case LONDON_EAST_DEV_BULK_CASE_TYPE_ID:
             case LONDON_EAST_USERS_BULK_CASE_TYPE_ID:
             case LONDON_EAST_BULK_CASE_TYPE_ID:
-                return getLondonEastOfficeReference(multipleRef);
+                return generateOfficeReference(subMultipleRefLondonEastRepository, numberCases, multipleReference,
+                        LONDON_EAST_CASE_TYPE_ID);
         }
-        return getLeedsOfficeReference(multipleRef);
+        return generateOfficeReference(subMultipleRefLeedsRepository, numberCases, multipleReference, LEEDS_CASE_TYPE_ID);
     }
 
-    private synchronized PreviousRefObject getPreviousReference(SubMultipleRefRepository referenceRepository, String multipleRef) {
-        SubMultipleReference reference = referenceRepository.findTopByMultipleRefOrderByRefDesc(multipleRef);
-        PreviousRefObject previousRefObject = new PreviousRefObject();
-        if (reference != null) {
-            log.info("Previous REF: " + reference.toString());
-            previousRefObject.setPreviousRef(String.valueOf(reference.getRef()));
-        } else {
-            log.info("No elements in DB yet");
-            previousRefObject.setPreviousRef("0");
-        }
-        return previousRefObject;
+    private String generateOfficeReference(SubMultipleRefRepository referenceRepository, int numberCases, String multipleRef, String officeName) {
+        return referenceRepository.ethosSubMultipleCaseRefGen(Integer.parseInt(multipleRef), numberCases, officeName);
     }
 
-    private String generateSubMultipleReference(String officeNumber, String multipleRef, int subMultipleRef) {
-        return officeNumber + multipleRef + "/" + subMultipleRef;
-    }
-
-    private synchronized String getManchesterOfficeReference(String multipleRef) {
-        log.info("Manchester Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefManchesterRepository, multipleRef);
-        log.info("PreviousRefObject: " + previousRefObject.toString());
-        SubMultipleReferenceManchester subMultipleReferenceManchester = new SubMultipleReferenceManchester(multipleRef, previousRefObject.getPreviousRef());
-        SubMultipleReferenceManchester subMultipleReferenceManchesterDB = subMultipleRefManchesterRepository.save(subMultipleReferenceManchester);
-        return generateSubMultipleReference(MANCHESTER_OFFICE_NUMBER, multipleRef, subMultipleReferenceManchesterDB.getRef());
-    }
-
-    private synchronized String getGlasgowOfficeReference(String multipleRef) {
-        log.info("Scotland Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefScotlandRepository, multipleRef);
-        log.info("PreviousRefObject: " + previousRefObject.toString());
-        SubMultipleReferenceScotland subMultipleReferenceScotland = new SubMultipleReferenceScotland(multipleRef, previousRefObject.getPreviousRef());
-        SubMultipleReferenceScotland subMultipleReferenceScotlandDB = subMultipleRefScotlandRepository.save(subMultipleReferenceScotland);
-        return generateSubMultipleReference(GLASGOW_OFFICE_NUMBER, multipleRef, subMultipleReferenceScotlandDB.getRef());
-    }
-
-    private synchronized String getLeedsOfficeReference(String multipleRef) {
-        log.info("Leeds Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefLeedsRepository, multipleRef);
-        log.info("PreviousRefObject: " + previousRefObject.toString());
-        SubMultipleReferenceLeeds subMultipleReferenceLeeds = new SubMultipleReferenceLeeds(multipleRef, previousRefObject.getPreviousRef());
-        SubMultipleReferenceLeeds subMultipleReferenceLeedsDB = subMultipleRefLeedsRepository.save(subMultipleReferenceLeeds);
-        return generateSubMultipleReference(LEEDS_OFFICE_NUMBER, multipleRef, subMultipleReferenceLeedsDB.getRef());
-    }
-
-    private synchronized String getMidlandsWestOfficeReference(String multipleRef) {
-        log.info("Midlands West Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefMidlandsWestRepository, multipleRef);
-        log.info("PreviousRefObject: " + previousRefObject.toString());
-        SubMultipleReferenceMidlandsWest subMultipleReferenceMidlandsWest = new SubMultipleReferenceMidlandsWest(multipleRef, previousRefObject.getPreviousRef());
-        SubMultipleReferenceMidlandsWest subMultipleReferenceMidlandsWestDB = subMultipleRefMidlandsWestRepository.save(subMultipleReferenceMidlandsWest);
-        return generateSubMultipleReference(MIDLANDS_WEST_OFFICE_NUMBER, multipleRef, subMultipleReferenceMidlandsWestDB.getRef());
-    }
-
-    private synchronized String getMidlandsEastOfficeReference(String multipleRef) {
-        log.info("Midlands East Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefMidlandsEastRepository, multipleRef);
-        log.info("PreviousRefObject: " + previousRefObject.toString());
-        SubMultipleReferenceMidlandsEast subMultipleReferenceMidlandsEast = new SubMultipleReferenceMidlandsEast(multipleRef, previousRefObject.getPreviousRef());
-        SubMultipleReferenceMidlandsEast subMultipleReferenceMidlandsEastDB = subMultipleRefMidlandsEastRepository.save(subMultipleReferenceMidlandsEast);
-        return generateSubMultipleReference(MIDLANDS_EAST_OFFICE_NUMBER, multipleRef, subMultipleReferenceMidlandsEastDB.getRef());
-    }
-
-    private synchronized String getBristolOfficeReference(String multipleRef) {
-        log.info("Bristol Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefBristolRepository, multipleRef);
-        log.info("PreviousRefObject: " + previousRefObject.toString());
-        SubMultipleReferenceBristol subMultipleReferenceBristol = new SubMultipleReferenceBristol(multipleRef, previousRefObject.getPreviousRef());
-        SubMultipleReferenceBristol subMultipleReferenceBristolDB = subMultipleRefBristolRepository.save(subMultipleReferenceBristol);
-        return generateSubMultipleReference(BRISTOL_OFFICE_NUMBER, multipleRef, subMultipleReferenceBristolDB.getRef());
-    }
-
-    private synchronized String getWalesOfficeReference(String multipleRef) {
-        log.info("Wales Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefWalesRepository, multipleRef);
-        log.info("PreviousRefObject: " + previousRefObject.toString());
-        SubMultipleReferenceWales subMultipleReferenceWales = new SubMultipleReferenceWales(multipleRef, previousRefObject.getPreviousRef());
-        SubMultipleReferenceWales subMultipleReferenceWalesDB = subMultipleRefWalesRepository.save(subMultipleReferenceWales);
-        return generateSubMultipleReference(WALES_OFFICE_NUMBER, multipleRef, subMultipleReferenceWalesDB.getRef());
-    }
-
-    private synchronized String getNewcastleOfficeReference(String multipleRef) {
-        log.info("Newcastle Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefNewcastleRepository, multipleRef);
-        log.info("PreviousRefObject: " + previousRefObject.toString());
-        SubMultipleReferenceNewcastle subMultipleReferenceNewcastle = new SubMultipleReferenceNewcastle(multipleRef, previousRefObject.getPreviousRef());
-        SubMultipleReferenceNewcastle subMultipleReferenceNewcastleDB = subMultipleRefNewcastleRepository.save(subMultipleReferenceNewcastle);
-        return generateSubMultipleReference(NEWCASTLE_OFFICE_NUMBER, multipleRef, subMultipleReferenceNewcastleDB.getRef());
-    }
-
-    private synchronized String getWatfordOfficeReference(String multipleRef) {
-        log.info("Watford Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefWatfordRepository, multipleRef);
-        log.info("PreviousRefObject: " + previousRefObject.toString());
-        SubMultipleReferenceWatford subMultipleReferenceWatford = new SubMultipleReferenceWatford(multipleRef, previousRefObject.getPreviousRef());
-        SubMultipleReferenceWatford subMultipleReferenceWatfordDB = subMultipleRefWatfordRepository.save(subMultipleReferenceWatford);
-        return generateSubMultipleReference(WATFORD_OFFICE_NUMBER, multipleRef, subMultipleReferenceWatfordDB.getRef());
-    }
-
-    private synchronized String getLondonCentralOfficeReference(String multipleRef) {
-        log.info("London Central Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefLondonCentralRepository, multipleRef);
-        log.info("PreviousRefObject: " + previousRefObject.toString());
-        SubMultipleReferenceLondonCentral subMultipleReferenceLondonCentral = new SubMultipleReferenceLondonCentral(multipleRef, previousRefObject.getPreviousRef());
-        SubMultipleReferenceLondonCentral subMultipleReferenceLondonCentralDB = subMultipleRefLondonCentralRepository.save(subMultipleReferenceLondonCentral);
-        return generateSubMultipleReference(LONDON_CENTRAL_OFFICE_NUMBER, multipleRef, subMultipleReferenceLondonCentralDB.getRef());
-    }
-
-    private synchronized String getLondonSouthOfficeReference(String multipleRef) {
-        log.info("London South Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefLondonSouthRepository, multipleRef);
-        log.info("PreviousRefObject: " + previousRefObject.toString());
-        SubMultipleReferenceLondonSouth subMultipleReferenceLondonSouth = new SubMultipleReferenceLondonSouth(multipleRef, previousRefObject.getPreviousRef());
-        SubMultipleReferenceLondonSouth subMultipleReferenceLondonSouthDB = subMultipleRefLondonSouthRepository.save(subMultipleReferenceLondonSouth);
-        return generateSubMultipleReference(LONDON_SOUTH_OFFICE_NUMBER, multipleRef, subMultipleReferenceLondonSouthDB.getRef());
-    }
-
-    private synchronized String getLondonEastOfficeReference(String multipleRef) {
-        log.info("London East Multiple CASE TYPE");
-        PreviousRefObject previousRefObject = getPreviousReference(subMultipleRefLondonEastRepository, multipleRef);
-        log.info("PreviousRefObject: " + previousRefObject.toString());
-        SubMultipleReferenceLondonEast subMultipleReferenceLondonEast = new SubMultipleReferenceLondonEast(multipleRef, previousRefObject.getPreviousRef());
-        SubMultipleReferenceLondonEast subMultipleReferenceLondonEastDB = subMultipleRefLondonEastRepository.save(subMultipleReferenceLondonEast);
-        return generateSubMultipleReference(LONDON_EAST_OFFICE_NUMBER, multipleRef, subMultipleReferenceLondonEastDB.getRef());
-    }
 }
