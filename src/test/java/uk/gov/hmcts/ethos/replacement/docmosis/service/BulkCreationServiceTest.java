@@ -59,7 +59,7 @@ public class BulkCreationServiceTest {
         BulkDetails bulkDetails = new BulkDetails();
         bulkDetails.setJurisdiction("TRIBUNALS");
         bulkDetails.setCaseTypeId("Manchester_V3");
-        bulkData.setCaseSource(MANUALLY_CREATED_POSITION);
+        bulkData.setMultipleSource(MANUALLY_CREATED_POSITION);
         bulkData.setFeeGroupReference("111111");
         bulkData.setClaimantSurname("Fernandez");
         bulkData.setRespondentSurname("Mr Respondent");
@@ -319,7 +319,7 @@ public class BulkCreationServiceTest {
                 "respondentRepOrgM= , claimantRepOrgM= ))], subMultipleCollection=null, subMultipleDynamicList=null, searchCollectionCount=null, " +
                 "multipleCollectionCount=3, correspondenceType=null, correspondenceScotType=null, selectAll=null, scheduleDocName=null, positionType=null, flag1=null, " +
                 "flag2=null, EQP=null, submissionRef=null, claimantOrg=null, respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, " +
-                "jurCodesDynamicList=null, outcomeUpdate=null, filterCases=null, docMarkUp=null, caseSource=Manually Created))";
+                "jurCodesDynamicList=null, outcomeUpdate=null, filterCases=null, docMarkUp=null, multipleSource=Manually Created))";
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails(YES, "Single"),
                 bulkCasesPayload, "authToken", false);
         assertEquals(result, bulkRequestPayload.getBulkDetails().toString());
@@ -366,7 +366,7 @@ public class BulkCreationServiceTest {
                 "subMultipleDynamicList=null, searchCollectionCount=null, multipleCollectionCount=1, correspondenceType=null, correspondenceScotType=null, " +
                 "selectAll=null, scheduleDocName=null, positionType=null, flag1=null, flag2=null, EQP=null, submissionRef=null, claimantOrg=null, " +
                 "respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null, " +
-                "filterCases=null, docMarkUp=null, caseSource=Manually Created))";
+                "filterCases=null, docMarkUp=null, multipleSource=Manually Created))";
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, "authToken");
         assertEquals(result, bulkRequestPayload.getBulkDetails().toString());
     }

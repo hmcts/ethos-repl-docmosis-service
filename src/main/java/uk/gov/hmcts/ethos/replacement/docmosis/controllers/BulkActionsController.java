@@ -99,9 +99,9 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        if (bulkRequest.getCaseDetails().getCaseData().getCaseSource() == null
-                || bulkRequest.getCaseDetails().getCaseData().getCaseSource().trim().equals("")) {
-            bulkRequest.getCaseDetails().getCaseData().setCaseSource(MANUALLY_CREATED_POSITION);
+        if (bulkRequest.getCaseDetails().getCaseData().getMultipleSource() == null
+                || bulkRequest.getCaseDetails().getCaseData().getMultipleSource().trim().equals("")) {
+            bulkRequest.getCaseDetails().getCaseData().setMultipleSource(MANUALLY_CREATED_POSITION);
         }
 
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
