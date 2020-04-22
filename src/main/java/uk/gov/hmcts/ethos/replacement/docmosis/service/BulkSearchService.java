@@ -175,7 +175,7 @@ public class BulkSearchService {
             if (caseIds != null && !caseIds.isEmpty()) {
                 log.info("CaseIds: " + caseIds);
                 List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearchForCreation(authToken,
-                        BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds, bulkDetails.getCaseData().getCaseSource());
+                        BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds, bulkDetails.getCaseData().getMultipleSource());
                 if (filter) {
                     return filterSubmitEventsElasticSearch(BulkHelper.calculateLeadCase(submitEvents, caseIds),
                             bulkDetails.getCaseData().getMultipleReference(), creationFlag, bulkDetails);
