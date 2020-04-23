@@ -109,7 +109,7 @@ dependencies {
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.2.6.RELEASE'
     testCompile group: 'com.warrenstrange', name: 'googleauth', version: '1.5.0'
 
-    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '2.2.1'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '2.2.2'
     testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.2.1'
     testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.2.1'
     testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.2.1'
