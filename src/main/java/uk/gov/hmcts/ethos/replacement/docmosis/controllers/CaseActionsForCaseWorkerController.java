@@ -409,6 +409,34 @@ public class CaseActionsForCaseWorkerController {
                 .build());
     }
 
+    @PostMapping(value = "/jurisdictionValidation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "validates jurisdiction entries to prevent duplicates.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> jurisdictionValidation(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("JURISDICTION VALIDATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData =  ccdRequest.getCaseDetails().getCaseData();
+        List<String> errors = eventValidationService.validateJurisdictionCodes(caseData);
+        log.info("Event fields validation: " + errors);
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .errors(errors)
+                .build());
+    }
+
     @PostMapping(value = "/midRespondentECC", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "populates the mid dynamic list with the respondent names.")
     @ApiResponses(value = {
