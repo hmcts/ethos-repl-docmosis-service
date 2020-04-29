@@ -17,5 +17,5 @@ public class MultipleReference {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    protected int counter;
+    protected Integer counter;
 }
