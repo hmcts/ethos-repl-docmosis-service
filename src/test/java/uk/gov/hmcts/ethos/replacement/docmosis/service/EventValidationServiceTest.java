@@ -140,6 +140,28 @@ public class EventValidationServiceTest {
     }
 
     @Test
+    public void shouldValidateJurisdictionCodesWithDuplicatesCodes() {
+        List<String> errors = eventValidationService.validateJurisdictionCodes(caseDetails1.getCaseData());
+
+        assertEquals(1, errors.size());
+        assertEquals(DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE + " \"COM\" in Jurisdiction 3 - \"DOD\" in Jurisdiction 5 ", errors.get(0));
+    }
+
+    @Test
+    public void shouldValidateJurisdictionCodesWithUniqueCodes() {
+        List<String> errors = eventValidationService.validateJurisdictionCodes(caseDetails2.getCaseData());
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateJurisdictionCodesWithEmptyCodes() {
+        List<String> errors = eventValidationService.validateJurisdictionCodes(caseDetails3.getCaseData());
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
     public void shouldValidateJurisdictionOutcomePresentAndMissing() {
         List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData());
 
