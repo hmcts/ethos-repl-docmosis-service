@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION fn_ethosSubMultipleCaseRefGen ( p_multref INT, p_numo
 --				
 -- Create date: 14-APR-2020
 -- Description:	Function to generate Ethos case reference numbers for submultiple cases
--- VERSION	:	14-MAR-2020		1.0  - Initial
+-- VERSION	:	14-APR-2020		1.0  - Initial
+--        	:	29-APR-2020		1.1  - replaced RIGHT (CONCAT ( '00000', p_multref) ,5) with p_multref to prevent truncation
 -- =============================================
 
   DECLARE c_submultref integer;
@@ -32,7 +33,7 @@ BEGIN
     
     INSERT INTO subMultipleReferenceManchester VALUES  (p_multref, p_numofcases);
 
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     c_submultref = 1;
 
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);  
@@ -43,7 +44,7 @@ BEGIN
     
     c_submultref = c_submultref + 1;
     
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);
     
@@ -65,7 +66,7 @@ BEGIN
     
     INSERT INTO subMultipleReferenceScotland VALUES  (p_multref, p_numofcases);
 
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     c_submultref = 1;
 
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);  
@@ -76,7 +77,7 @@ BEGIN
     
     c_submultref = c_submultref + 1;
     
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);
     
@@ -98,7 +99,7 @@ BEGIN
     
     INSERT INTO subMultipleReferenceBristol VALUES  (p_multref, p_numofcases);
 
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     c_submultref = 1;
 
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);  
@@ -109,7 +110,7 @@ BEGIN
     
     c_submultref = c_submultref + 1;
     
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);
     
@@ -133,7 +134,7 @@ BEGIN
     
     INSERT INTO subMultipleReferenceLeeds VALUES  (p_multref, p_numofcases);
 
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     c_submultref = 1;
 
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);  
@@ -144,7 +145,7 @@ BEGIN
     
     c_submultref = c_submultref + 1;
     
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);
     
@@ -168,7 +169,7 @@ BEGIN
     
     INSERT INTO subMultipleReferenceLondonCentral VALUES  (p_multref, p_numofcases);
 
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     c_submultref = 1;
 
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);  
@@ -179,7 +180,7 @@ BEGIN
     
     c_submultref = c_submultref + 1;
     
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);
     
@@ -202,7 +203,7 @@ BEGIN
     
     INSERT INTO subMultipleReferenceLondonEast VALUES  (p_multref, p_numofcases);
 
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     c_submultref = 1;
 
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);  
@@ -213,7 +214,7 @@ BEGIN
     
     c_submultref = c_submultref + 1;
     
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);
     
@@ -236,7 +237,7 @@ BEGIN
     
     INSERT INTO subMultipleReferenceLondonSouth VALUES  (p_multref, p_numofcases);
 
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     c_submultref = 1;
 
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);  
@@ -247,7 +248,7 @@ BEGIN
     
     c_submultref = c_submultref + 1;
     
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);
     
@@ -270,7 +271,7 @@ BEGIN
     
     INSERT INTO subMultipleReferenceMidlandsEast VALUES  (p_multref, p_numofcases);
 
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     c_submultref = 1;
 
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);  
@@ -281,7 +282,7 @@ BEGIN
     
     c_submultref = c_submultref + 1;
     
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);
     
@@ -305,7 +306,7 @@ BEGIN
     
     INSERT INTO subMultipleReferenceMidlandsWest VALUES  (p_multref, p_numofcases);
 
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     c_submultref = 1;
 
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);  
@@ -316,7 +317,7 @@ BEGIN
     
     c_submultref = c_submultref + 1;
     
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);
     
@@ -339,7 +340,7 @@ BEGIN
     
     INSERT INTO subMultipleReferenceNewcastle VALUES  (p_multref, p_numofcases);
 
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     c_submultref = 1;
 
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);  
@@ -350,7 +351,7 @@ BEGIN
     
     c_submultref = c_submultref + 1;
     
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);
     
@@ -374,7 +375,7 @@ BEGIN
     
     INSERT INTO subMultipleReferenceWales VALUES  (p_multref, p_numofcases);
 
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     c_submultref = 1;
 
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);  
@@ -385,7 +386,7 @@ BEGIN
     
     c_submultref = c_submultref + 1;
     
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);
     
@@ -408,7 +409,7 @@ BEGIN
     
     INSERT INTO subMultipleReferenceWatford VALUES  (p_multref, p_numofcases);
 
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     c_submultref = 1;
 
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);  
@@ -419,7 +420,7 @@ BEGIN
     
     c_submultref = c_submultref + 1;
     
-    c_multrefstr = RIGHT (CONCAT ( '00000', p_multref) ,5);
+    c_multrefstr = p_multref;
     
     c_submultrefstr = CONCAT(c_multrefstr,'/', c_submultref::text);
     
