@@ -427,8 +427,10 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
+        CaseData caseData = caseCreationForCaseWorkerService.generateCaseRefNumbers(ccdRequest);
+
         return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseCreationForCaseWorkerService.generateCaseRefNumbers(ccdRequest))
+                .data(caseData)
                 .build());
     }
 
