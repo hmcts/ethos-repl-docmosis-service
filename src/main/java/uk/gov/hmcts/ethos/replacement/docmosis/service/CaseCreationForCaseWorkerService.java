@@ -48,8 +48,6 @@ public class CaseCreationForCaseWorkerService {
             caseData.setStartCaseRefNumber(singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(),
                     Integer.parseInt(caseData.getCaseRefNumberCount())));
             caseData.setMultipleRefNumber(multipleReferenceService.createReference(BulkHelper.getBulkCaseTypeId(ccdRequest.getCaseDetails().getCaseTypeId()), 1));
-            log.info("StartCaseRefNumber: " + caseData.getStartCaseRefNumber());
-            log.info("MultipleRefNumber: " + caseData.getMultipleRefNumber());
         }
         return caseData;
     }
