@@ -142,7 +142,7 @@ public class DefaultValuesReaderService {
                 .build();
     }
 
-    public CaseData getCaseData(CaseData caseData, DefaultValues defaultValues, boolean creationFlag) {
+    public CaseData getCaseData(CaseData caseData, DefaultValues defaultValues) {
         if (caseData.getPositionType() == null) {
             caseData.setPositionType(defaultValues.getPositionType());
         }
@@ -152,7 +152,7 @@ public class DefaultValuesReaderService {
         if (defaultValues.getManagingOffice() != null) {
             caseData.setManagingOffice(defaultValues.getManagingOffice());
         }
-        if (creationFlag && caseData.getCaseType() != null) {
+        if (caseData.getCaseType() == null) {
             caseData.setCaseType(defaultValues.getCaseType());
         }
         caseData.setTribunalCorrespondenceAddress(getTribunalCorrespondenceAddress(defaultValues));

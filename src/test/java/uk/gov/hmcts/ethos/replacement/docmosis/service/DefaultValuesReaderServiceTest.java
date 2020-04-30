@@ -371,7 +371,7 @@ public class DefaultValuesReaderServiceTest {
     public void getCaseData() {
         String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, " +
                 "tribunalCorrespondenceTelephone=0141 204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, " +
-                "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=null, " +
+                "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=Single, " +
                 "multipleReference=null, leadClaimant=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, responseTypeCollection=null, responseType=null, " +
@@ -385,14 +385,14 @@ public class DefaultValuesReaderServiceTest {
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
                 "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null)";
-        assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow, true).toString());
+        assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow).toString());
     }
 
     @Test
     public void getCaseDataWithPositionTypeAndCaseSource() {
         caseData.setPositionType(MANUALLY_CREATED_POSITION);
         caseData.setCaseSource(ET1_ONLINE_CASE_SOURCE);
-        CaseData caseDataResult = defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow, true);
+        CaseData caseDataResult = defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
         assertEquals(MANUALLY_CREATED_POSITION, caseDataResult.getPositionType());
         assertEquals(ET1_ONLINE_CASE_SOURCE, caseDataResult.getCaseSource());
     }
@@ -420,7 +420,7 @@ public class DefaultValuesReaderServiceTest {
     public void getCaseDataWithClaimantWorkAddress() {
         String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, tribunalCorrespondenceTelephone=0141 " +
                 "204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, " +
-                "ethosCaseReference=null, caseType=null, multipleReference=null, leadClaimant=null, claimantTypeOfClaimant=null, claimantCompany=null, " +
+                "ethosCaseReference=null, caseType=Single, multipleReference=null, leadClaimant=null, claimantTypeOfClaimant=null, claimantCompany=null, " +
                 "claimantIndType=null, claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, " +
                 "claimantWorkAddressQuestion=Yes, claimantWorkAddressQRespondent=null, representativeClaimantType=null, responseTypeCollection=null, responseType=null," +
                 " respondentCollection=[RespondentSumTypeItem(id=null, value=RespondentSumType(responseStatus=null, responseToClaim=null, rejectionReason=null, " +
@@ -440,7 +440,7 @@ public class DefaultValuesReaderServiceTest {
                 "conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, targetHearingDate=null, " +
                 "EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, " +
                 "ccdID=null)";
-        assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow, true).toString());
+        assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow).toString());
     }
 
     @Test
