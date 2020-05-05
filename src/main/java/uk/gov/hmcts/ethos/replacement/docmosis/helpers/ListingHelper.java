@@ -308,7 +308,7 @@ public class ListingHelper {
     }
 
     public static String getRespondentOthersWithLineBreaks(ListingType listingType) {
-        return nullCheck(listingType.getRespondentOthers()).replaceAll(", ", "\\\\n");
+        return nullCheck(listingType.getRespondentOthers()).replace(", ", "\\n");
     }
 
     private static StringBuilder getCourtListingData(ListingData listingData) {
