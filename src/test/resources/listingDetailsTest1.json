@@ -39,7 +39,8 @@
           "respondentRepresentative": "Org",
           "Hearing_panel": "Panel",
           "Hearing_notes": "Notes1",
-          "estHearingLength": "12 Days"
+          "estHearingLength": "12 Days",
+          "resp_others": "Mark Taylor, Tony Jones, Steve Thomas"
         },
         "id": "97087d19-795a-4886-8cdb-06489b8b2ef5"
       },
@@ -65,7 +66,8 @@
           "respondentTown": "respondentTown1",
           "respondentRepresentative": "Org2",
           "Hearing_notes": "Notes2",
-          "estHearingLength": "12 Days"
+          "estHearingLength": "12 Days",
+          "resp_others": "Mark Taylor, Tony Jones"
         },
         "id": "97087d19-795a-4886-8cdb-06489b8b2ef7"
       },
@@ -91,7 +93,8 @@
           "respondentTown": "respondentTown2",
           "respondentRepresentative": "Org",
           "Hearing_notes": "Notes3",
-          "estHearingLength": "12 Minutes"
+          "estHearingLength": "12 Minutes",
+          "resp_others": "Mark Taylor"
         },
         "id": "f4ef21b6-df93-4835-972b-ddcb6ac4992e"
       },

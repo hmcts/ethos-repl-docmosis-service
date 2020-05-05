@@ -296,7 +296,7 @@ public class ListingHelper {
         sb.append("\"claimant_town\":\"").append(nullCheck(listingType.getClaimantTown())).append(NEW_LINE);
         sb.append("\"claimant_representative\":\"").append(nullCheck(listingType.getClaimantRepresentative())).append(NEW_LINE);
         sb.append("\"Respondent\":\"").append(nullCheck(listingType.getRespondent())).append(NEW_LINE);
-        sb.append("\"resp_others\":\"").append(nullCheck(listingType.getRespondentOthers())).append(NEW_LINE);
+        sb.append("\"resp_others\":\"").append(nullCheck(getRespondentOthersWithLineBreaks(listingType))).append(NEW_LINE);
         sb.append("\"respondent_town\":\"").append(nullCheck(listingType.getRespondentTown())).append(NEW_LINE);
         sb.append("\"Hearing_location\":\"").append(nullCheck(listingType.getCauseListVenue())).append(NEW_LINE);
         sb.append("\"Hearing_room\":\"").append(nullCheck(listingType.getHearingRoom())).append(NEW_LINE);
@@ -305,6 +305,10 @@ public class ListingHelper {
         sb.append("\"Hearing_notes\":\"").append(nullCheck(listingType.getHearingNotes())).append(NEW_LINE);
         sb.append("\"respondent_representative\":\"").append(nullCheck(listingType.getRespondentRepresentative())).append("\"}");
         return sb;
+    }
+
+    public static String getRespondentOthersWithLineBreaks(ListingType listingType) {
+        return nullCheck(listingType.getRespondentOthers()).replaceAll(", ", "\\\\n");
     }
 
     private static StringBuilder getCourtListingData(ListingData listingData) {
@@ -443,7 +447,7 @@ public class ListingHelper {
                     .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
                     .map(respondentSumTypeItem -> respondentSumTypeItem.getValue().getRespondentName())
                     .collect(Collectors.toList());
-            return String.join("\\n", respOthers);
+            return String.join(", ", respOthers);
         } return " ";
     }
 
