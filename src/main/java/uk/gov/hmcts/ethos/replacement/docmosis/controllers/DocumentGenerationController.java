@@ -22,6 +22,7 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 @Slf4j
 @RestController
@@ -68,6 +69,12 @@ public class DocumentGenerationController {
         if (errors.isEmpty()) {
             DocumentInfo documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
             ccdRequest.getCaseDetails().getCaseData().setDocMarkUp(documentInfo.getMarkUp());
+
+            if(ccdRequest.getCaseDetails().getCaseTypeId().equals(SCOTLAND_CASE_TYPE_ID)) {
+                ccdRequest.getCaseDetails().getCaseData().setCorrespondenceScotType(null);
+            } else {
+                ccdRequest.getCaseDetails().getCaseData().setCorrespondenceType(null);
+            }
 
             return ResponseEntity.ok(CCDCallbackResponse.builder()
                     .data(ccdRequest.getCaseDetails().getCaseData())
