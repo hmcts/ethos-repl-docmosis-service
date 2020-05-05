@@ -73,10 +73,17 @@
     ],
     "jurCodesCollection": [
       {
-        "id" : "123456",
+        "id" : "1234561",
         "value" : {
           "juridictionCodesList": "COM",
           "judgmentOutcome": "Dismissed on withdrawal"
+        }
+      },
+      {
+        "id" : "1234562",
+        "value" : {
+          "juridictionCodesList": "DOD",
+          "judgmentOutcome": "Input in error"
         }
       }
     ],
