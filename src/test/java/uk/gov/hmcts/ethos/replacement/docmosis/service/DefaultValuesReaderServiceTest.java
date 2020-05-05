@@ -60,7 +60,8 @@ public class DefaultValuesReaderServiceTest {
 
     private CaseDetails getCaseDetails(String caseTypeId) {
         CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseData(new CaseData());
+        CaseData caseData = new CaseData();
+        caseDetails.setCaseData(caseData);
         caseDetails.setCaseId("123456");
         caseDetails.setCaseTypeId(caseTypeId);
         caseDetails.setJurisdiction("TRIBUNALS");
@@ -382,8 +383,18 @@ public class DefaultValuesReaderServiceTest {
                 "correspondenceScotType=null, correspondenceType=null, caseNotes=null, claimantWorkAddress=null, " +
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
-                "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefECC=null, respondentECC=null, ccdID=null)";
-        assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow, true).toString());
+                "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
+                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null)";
+        assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow).toString());
+    }
+
+    @Test
+    public void getCaseDataWithPositionTypeAndCaseSource() {
+        caseData.setPositionType(MANUALLY_CREATED_POSITION);
+        caseData.setCaseSource(ET1_ONLINE_CASE_SOURCE);
+        CaseData caseDataResult = defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
+        assertEquals(MANUALLY_CREATED_POSITION, caseDataResult.getPositionType());
+        assertEquals(ET1_ONLINE_CASE_SOURCE, caseDataResult.getCaseSource());
     }
 
     private CaseData getCaseDataWithClaimantWorkAddress(CaseData caseData) {
@@ -427,8 +438,9 @@ public class DefaultValuesReaderServiceTest {
                 "claimantWorkAddress=ClaimantWorkAddressType(claimantWorkAddress=null, claimantWorkPhoneNumber=null), claimantRepresentedQuestion=null, " +
                 "bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, state=null, stateAPI=null, et3Received=null, " +
                 "conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, targetHearingDate=null, " +
-                "EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefECC=null, respondentECC=null, ccdID=null)";
-        assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow, true).toString());
+                "EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, " +
+                "ccdID=null)";
+        assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow).toString());
     }
 
     @Test

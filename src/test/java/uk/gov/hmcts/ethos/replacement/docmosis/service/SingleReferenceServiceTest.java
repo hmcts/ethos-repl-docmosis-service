@@ -6,13 +6,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ethos.replacement.docmosis.domain.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.*;
 
 import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
@@ -46,205 +44,115 @@ public class SingleReferenceServiceTest {
     @Mock
     private SingleRefLondonEastRepository singleRefLondonEastRepository;
 
-    private SingleReferenceManchester referenceManchester;
-    private SingleReferenceManchester previousReferenceManchester;
-    private SingleReferenceManchester previousMaxReferenceManchester;
-    private SingleReferenceManchester maxReferenceManchester;
-    private SingleReferenceScotland previousReferenceScotland;
-    private SingleReferenceScotland referenceScotland;
-    private SingleReferenceLeeds referenceLeeds;
-    private SingleReferenceMidlandsWest referenceMidlandsWest;
-    private SingleReferenceMidlandsEast referenceMidlandsEast;
-    private SingleReferenceBristol referenceBristol;
-    private SingleReferenceWales referenceWales;
-    private SingleReferenceNewcastle referenceNewcastle;
-    private SingleReferenceWatford referenceWatford;
-    private SingleReferenceLondonCentral referenceLondonCentral;
-    private SingleReferenceLondonSouth referenceLondonSouth;
-    private SingleReferenceLondonEast referenceLondonEast;
-    private String caseId;
     private String currentYear;
 
     @Before
     public void setUp() {
-        caseId = "1232132";
         currentYear = String.valueOf(LocalDate.now().getYear());
-        previousReferenceManchester = new SingleReferenceManchester();
-        previousReferenceManchester.setRef("00011");
-        previousReferenceManchester.setCaseId(caseId);
-        previousReferenceManchester.setYear(currentYear);
-        referenceManchester = new SingleReferenceManchester();
-        referenceManchester.setRef("00012");
-        referenceManchester.setCaseId(caseId);
-        referenceManchester.setYear(currentYear);
-        previousReferenceScotland = new SingleReferenceScotland();
-        previousReferenceScotland.setRef("00014");
-        previousReferenceScotland.setCaseId(caseId);
-        previousReferenceScotland.setYear(currentYear);
-        referenceScotland = new SingleReferenceScotland();
-        referenceScotland.setRef("00015");
-        referenceScotland.setCaseId(caseId);
-        referenceScotland.setYear(currentYear);
-        previousMaxReferenceManchester = new SingleReferenceManchester();
-        previousMaxReferenceManchester.setRef(DEFAULT_MAX_REF);
-        previousMaxReferenceManchester.setCaseId(caseId);
-        previousMaxReferenceManchester.setYear(currentYear);
-        maxReferenceManchester = new SingleReferenceManchester();
-        maxReferenceManchester.setRef("00001");
-        maxReferenceManchester.setCaseId(caseId);
-        maxReferenceManchester.setYear(currentYear);
-        referenceLeeds = new SingleReferenceLeeds();
-        referenceLeeds.setRef("00005");
-        referenceLeeds.setCaseId(caseId);
-        referenceLeeds.setYear(currentYear);
-        referenceMidlandsWest = new SingleReferenceMidlandsWest();
-        referenceMidlandsWest.setRef("00008");
-        referenceMidlandsWest.setCaseId(caseId);
-        referenceMidlandsWest.setYear(currentYear);
-        referenceMidlandsEast = new SingleReferenceMidlandsEast();
-        referenceMidlandsEast.setRef("00009");
-        referenceMidlandsEast.setCaseId(caseId);
-        referenceMidlandsEast.setYear(currentYear);
-        referenceBristol = new SingleReferenceBristol();
-        referenceBristol.setRef("00010");
-        referenceBristol.setCaseId(caseId);
-        referenceBristol.setYear(currentYear);
-        referenceWales = new SingleReferenceWales();
-        referenceWales.setRef("00011");
-        referenceWales.setCaseId(caseId);
-        referenceWales.setYear(currentYear);
-        referenceNewcastle = new SingleReferenceNewcastle();
-        referenceNewcastle.setRef("00012");
-        referenceNewcastle.setCaseId(caseId);
-        referenceNewcastle.setYear(currentYear);
-        referenceWatford = new SingleReferenceWatford();
-        referenceWatford.setRef("00013");
-        referenceWatford.setCaseId(caseId);
-        referenceWatford.setYear(currentYear);
-        referenceLondonCentral = new SingleReferenceLondonCentral();
-        referenceLondonCentral.setRef("00014");
-        referenceLondonCentral.setCaseId(caseId);
-        referenceLondonCentral.setYear(currentYear);
-        referenceLondonSouth = new SingleReferenceLondonSouth();
-        referenceLondonSouth.setRef("00015");
-        referenceLondonSouth.setCaseId(caseId);
-        referenceLondonSouth.setYear(currentYear);
-        referenceLondonEast = new SingleReferenceLondonEast();
-        referenceLondonEast.setRef("00016");
-        referenceLondonEast.setCaseId(caseId);
-        referenceLondonEast.setYear(currentYear);
     }
 
     @Test
     public void createManchesterReference() {
-        when(singleRefManchesterRepository.findTopByOrderByIdDesc()).thenReturn(previousReferenceManchester);
-        when(singleRefManchesterRepository.save(isA(SingleReferenceManchester.class))).thenReturn(referenceManchester);
+        when(singleRefManchesterRepository.ethosCaseRefGen(1, Integer.parseInt(currentYear),
+                MANCHESTER_CASE_TYPE_ID)).thenReturn("00012/" + currentYear);
         String manchesterRef = MANCHESTER_OFFICE_NUMBER + "00012/" + currentYear;
-        assertEquals(singleReferenceService.createReference(MANCHESTER_DEV_CASE_TYPE_ID, caseId), manchesterRef);
+        assertEquals(singleReferenceService.createReference(MANCHESTER_DEV_CASE_TYPE_ID, 1), manchesterRef);
     }
 
     @Test
-    public void createManchesterReferenceMaxPreviousRef() {
-        when(singleRefManchesterRepository.findTopByOrderByIdDesc()).thenReturn(previousMaxReferenceManchester);
-        when(singleRefManchesterRepository.save(isA(SingleReferenceManchester.class))).thenReturn(maxReferenceManchester);
-        String manchesterRef = MANCHESTER_OFFICE_NUMBER + "00001/" + currentYear;
-        assertEquals(singleReferenceService.createReference(MANCHESTER_DEV_CASE_TYPE_ID, caseId), manchesterRef);
-    }
-
-    @Test
-    public void createManchesterReferenceWithNotPreviousReference() {
-        maxReferenceManchester.setRef(DEFAULT_INIT_REF);
-        when(singleRefManchesterRepository.save(isA(SingleReferenceManchester.class))).thenReturn(maxReferenceManchester);
-        String manchesterRef = MANCHESTER_OFFICE_NUMBER + DEFAULT_INIT_REF + "/" + currentYear;
-        assertEquals(singleReferenceService.createReference(MANCHESTER_DEV_CASE_TYPE_ID, caseId), manchesterRef);
+    public void createManchesterReferenceMultipleCases() {
+        when(singleRefManchesterRepository.ethosCaseRefGen(2, Integer.parseInt(currentYear),
+                MANCHESTER_CASE_TYPE_ID)).thenReturn("00012/" + currentYear);
+        String manchesterRef = MANCHESTER_OFFICE_NUMBER + "00012/" + currentYear;
+        assertEquals(singleReferenceService.createReference(MANCHESTER_DEV_CASE_TYPE_ID, 2), manchesterRef);
     }
 
     @Test
     public void createScotlandReference() {
-        when(singleRefScotlandRepository.findTopByOrderByIdDesc()).thenReturn(previousReferenceScotland);
-        when(singleRefScotlandRepository.save(isA(SingleReferenceScotland.class))).thenReturn(referenceScotland);
-        String scotlandRef = GLASGOW_OFFICE_NUMBER + "00015/" + currentYear;
-        assertEquals(singleReferenceService.createReference(SCOTLAND_DEV_CASE_TYPE_ID, caseId), scotlandRef);
+        when(singleRefScotlandRepository.ethosCaseRefGen(1, Integer.parseInt(currentYear),
+                SCOTLAND_CASE_TYPE_ID)).thenReturn("00012/" + currentYear);
+        String scotlandRef = GLASGOW_OFFICE_NUMBER + "00012/" + currentYear;
+        assertEquals(singleReferenceService.createReference(SCOTLAND_DEV_CASE_TYPE_ID, 1), scotlandRef);
     }
 
     @Test
     public void createLeedsReference() {
-        when(singleRefLeedsRepository.findTopByOrderByIdDesc()).thenReturn(referenceLeeds);
-        when(singleRefLeedsRepository.save(isA(SingleReferenceLeeds.class))).thenReturn(referenceLeeds);
-        String leedsRef = LEEDS_OFFICE_NUMBER + "00005/" + currentYear;
-        assertEquals(singleReferenceService.createReference(LEEDS_CASE_TYPE_ID, caseId), leedsRef);
+        when(singleRefLeedsRepository.ethosCaseRefGen(1, Integer.parseInt(currentYear),
+                LEEDS_CASE_TYPE_ID)).thenReturn("00006/" + currentYear);
+        String leedsRef = LEEDS_OFFICE_NUMBER + "00006/" + currentYear;
+        assertEquals(singleReferenceService.createReference(LEEDS_CASE_TYPE_ID, 1), leedsRef);
     }
 
     @Test
     public void createMidlandsWestReference() {
-        when(singleRefMidlandsWestRepository.findTopByOrderByIdDesc()).thenReturn(referenceMidlandsWest);
-        when(singleRefMidlandsWestRepository.save(isA(SingleReferenceMidlandsWest.class))).thenReturn(referenceMidlandsWest);
-        String midlandsWestRef = MIDLANDS_WEST_OFFICE_NUMBER + "00008/" + currentYear;
-        assertEquals(singleReferenceService.createReference(MIDLANDS_WEST_CASE_TYPE_ID, caseId), midlandsWestRef);
+        when(singleRefMidlandsWestRepository.ethosCaseRefGen(1, Integer.parseInt(currentYear),
+                MIDLANDS_WEST_CASE_TYPE_ID)).thenReturn("00009/" + currentYear);
+        String midlandsWestRef = MIDLANDS_WEST_OFFICE_NUMBER + "00009/" + currentYear;
+        assertEquals(singleReferenceService.createReference(MIDLANDS_WEST_CASE_TYPE_ID, 1), midlandsWestRef);
     }
 
     @Test
     public void createMidlandsEastReference() {
-        when(singleRefMidlandsEastRepository.findTopByOrderByIdDesc()).thenReturn(referenceMidlandsEast);
-        when(singleRefMidlandsEastRepository.save(isA(SingleReferenceMidlandsEast.class))).thenReturn(referenceMidlandsEast);
-        String midlandsEastRef = MIDLANDS_EAST_OFFICE_NUMBER + "00009/" + currentYear;
-        assertEquals(singleReferenceService.createReference(MIDLANDS_EAST_CASE_TYPE_ID, caseId), midlandsEastRef);
+        when(singleRefMidlandsEastRepository.ethosCaseRefGen(1, Integer.parseInt(currentYear),
+                MIDLANDS_EAST_CASE_TYPE_ID)).thenReturn("00010/" + currentYear);
+        String midlandsEastRef = MIDLANDS_EAST_OFFICE_NUMBER + "00010/" + currentYear;
+        assertEquals(singleReferenceService.createReference(MIDLANDS_EAST_CASE_TYPE_ID, 1), midlandsEastRef);
     }
 
     @Test
     public void createBristolReference() {
-        when(singleRefBristolRepository.findTopByOrderByIdDesc()).thenReturn(referenceBristol);
-        when(singleRefBristolRepository.save(isA(SingleReferenceBristol.class))).thenReturn(referenceBristol);
-        String bristolRef = BRISTOL_OFFICE_NUMBER + "00010/" + currentYear;
-        assertEquals(singleReferenceService.createReference(BRISTOL_CASE_TYPE_ID, caseId), bristolRef);
+        when(singleRefBristolRepository.ethosCaseRefGen(1, Integer.parseInt(currentYear),
+                BRISTOL_CASE_TYPE_ID)).thenReturn("00011/" + currentYear);
+        String bristolRef = BRISTOL_OFFICE_NUMBER + "00011/" + currentYear;
+        assertEquals(singleReferenceService.createReference(BRISTOL_CASE_TYPE_ID, 1), bristolRef);
     }
 
     @Test
     public void createWalesReference() {
-        when(singleRefWalesRepository.findTopByOrderByIdDesc()).thenReturn(referenceWales);
-        when(singleRefWalesRepository.save(isA(SingleReferenceWales.class))).thenReturn(referenceWales);
-        String walesRef = WALES_OFFICE_NUMBER + "00011/" + currentYear;
-        assertEquals(singleReferenceService.createReference(WALES_CASE_TYPE_ID, caseId), walesRef);
+        when(singleRefWalesRepository.ethosCaseRefGen(1, Integer.parseInt(currentYear),
+                WALES_CASE_TYPE_ID)).thenReturn("00012/" + currentYear);
+        String walesRef = WALES_OFFICE_NUMBER + "00012/" + currentYear;
+        assertEquals(singleReferenceService.createReference(WALES_CASE_TYPE_ID, 1), walesRef);
     }
 
     @Test
     public void createNewcastleReference() {
-        when(singleRefNewcastleRepository.findTopByOrderByIdDesc()).thenReturn(referenceNewcastle);
-        when(singleRefNewcastleRepository.save(isA(SingleReferenceNewcastle.class))).thenReturn(referenceNewcastle);
-        String newcastleRef = NEWCASTLE_OFFICE_NUMBER + "00012/" + currentYear;
-        assertEquals(singleReferenceService.createReference(NEWCASTLE_CASE_TYPE_ID, caseId), newcastleRef);
+        when(singleRefNewcastleRepository.ethosCaseRefGen(1, Integer.parseInt(currentYear),
+                NEWCASTLE_CASE_TYPE_ID)).thenReturn("00013/" + currentYear);
+        String newcastleRef = NEWCASTLE_OFFICE_NUMBER + "00013/" + currentYear;
+        assertEquals(singleReferenceService.createReference(NEWCASTLE_CASE_TYPE_ID, 1), newcastleRef);
     }
 
     @Test
     public void createWatfordReference() {
-        when(singleRefWatfordRepository.findTopByOrderByIdDesc()).thenReturn(referenceWatford);
-        when(singleRefWatfordRepository.save(isA(SingleReferenceWatford.class))).thenReturn(referenceWatford);
-        String watfordRef = WATFORD_OFFICE_NUMBER + "00013/" + currentYear;
-        assertEquals(singleReferenceService.createReference(WATFORD_CASE_TYPE_ID, caseId), watfordRef);
+        when(singleRefWatfordRepository.ethosCaseRefGen(1, Integer.parseInt(currentYear),
+                WATFORD_CASE_TYPE_ID)).thenReturn("00014/" + currentYear);
+        String watfordRef = WATFORD_OFFICE_NUMBER + "00014/" + currentYear;
+        assertEquals(singleReferenceService.createReference(WATFORD_CASE_TYPE_ID, 1), watfordRef);
     }
 
     @Test
     public void createLondonCentralReference() {
-        when(singleRefLondonCentralRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonCentral);
-        when(singleRefLondonCentralRepository.save(isA(SingleReferenceLondonCentral.class))).thenReturn(referenceLondonCentral);
-        String londonCentralRef = LONDON_CENTRAL_OFFICE_NUMBER + "00014/" + currentYear;
-        assertEquals(singleReferenceService.createReference(LONDON_CENTRAL_CASE_TYPE_ID, caseId), londonCentralRef);
+        when(singleRefLondonCentralRepository.ethosCaseRefGen(1, Integer.parseInt(currentYear),
+                LONDON_CENTRAL_CASE_TYPE_ID)).thenReturn("00015/" + currentYear);
+        String londonCentralRef = LONDON_CENTRAL_OFFICE_NUMBER + "00015/" + currentYear;
+        assertEquals(singleReferenceService.createReference(LONDON_CENTRAL_CASE_TYPE_ID, 1), londonCentralRef);
     }
 
     @Test
     public void createLondonSouthReference() {
-        when(singleRefLondonSouthRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonSouth);
-        when(singleRefLondonSouthRepository.save(isA(SingleReferenceLondonSouth.class))).thenReturn(referenceLondonSouth);
-        String londonSouthRef = LONDON_SOUTH_OFFICE_NUMBER + "00015/" + currentYear;
-        assertEquals(singleReferenceService.createReference(LONDON_SOUTH_CASE_TYPE_ID, caseId), londonSouthRef);
+        when(singleRefLondonSouthRepository.ethosCaseRefGen(1, Integer.parseInt(currentYear),
+                LONDON_SOUTH_CASE_TYPE_ID)).thenReturn("00016/" + currentYear);
+        String londonSouthRef = LONDON_SOUTH_OFFICE_NUMBER + "00016/" + currentYear;
+        assertEquals(singleReferenceService.createReference(LONDON_SOUTH_CASE_TYPE_ID, 1), londonSouthRef);
     }
 
     @Test
     public void createLondonEastReference() {
-        when(singleRefLondonEastRepository.findTopByOrderByIdDesc()).thenReturn(referenceLondonEast);
-        when(singleRefLondonEastRepository.save(isA(SingleReferenceLondonEast.class))).thenReturn(referenceLondonEast);
-        String londonEastRef = LONDON_EAST_OFFICE_NUMBER + "00016/" + currentYear;
-        assertEquals(singleReferenceService.createReference(LONDON_EAST_CASE_TYPE_ID, caseId), londonEastRef);
+        when(singleRefLondonEastRepository.ethosCaseRefGen(1, Integer.parseInt(currentYear),
+                LONDON_EAST_CASE_TYPE_ID)).thenReturn("00017/" + currentYear);
+        String londonEastRef = LONDON_EAST_OFFICE_NUMBER + "00017/" + currentYear;
+        assertEquals(singleReferenceService.createReference(LONDON_EAST_CASE_TYPE_ID, 1), londonEastRef);
     }
 
 }

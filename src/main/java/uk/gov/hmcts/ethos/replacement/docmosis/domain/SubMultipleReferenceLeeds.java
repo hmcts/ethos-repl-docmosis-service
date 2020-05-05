@@ -9,9 +9,4 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Table(name = "subMultipleReferenceLeeds")
 public class SubMultipleReferenceLeeds extends SubMultipleReference {
-
-    public SubMultipleReferenceLeeds(String multipleRef, String previousRef) {
-        this.multipleRef = multipleRef;
-        this.ref = generateRefNumber(Integer.parseInt(previousRef));
-    }
 }

@@ -212,6 +212,82 @@ public class BulkHelperTest {
     }
 
     @Test
+    public void getBulkCaseTypeId() {
+        String caseId = MANCHESTER_DEV_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(MANCHESTER_DEV_CASE_TYPE_ID));
+        caseId = MANCHESTER_USERS_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(MANCHESTER_USERS_CASE_TYPE_ID));
+        caseId = SCOTLAND_DEV_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(SCOTLAND_DEV_CASE_TYPE_ID));
+        caseId = SCOTLAND_USERS_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(SCOTLAND_USERS_CASE_TYPE_ID));
+        caseId = SCOTLAND_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(SCOTLAND_CASE_TYPE_ID));
+        caseId = MANCHESTER_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(MANCHESTER_CASE_TYPE_ID));
+        caseId = BRISTOL_DEV_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(BRISTOL_DEV_CASE_TYPE_ID));
+        caseId = BRISTOL_USERS_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(BRISTOL_USERS_CASE_TYPE_ID));
+        caseId = BRISTOL_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(BRISTOL_CASE_TYPE_ID));
+        caseId = LEEDS_DEV_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(LEEDS_DEV_CASE_TYPE_ID));
+        caseId = LEEDS_USERS_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(LEEDS_USERS_CASE_TYPE_ID));
+        caseId = LEEDS_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(LEEDS_CASE_TYPE_ID));
+        caseId = LONDON_CENTRAL_DEV_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(LONDON_CENTRAL_DEV_CASE_TYPE_ID));
+        caseId = LONDON_CENTRAL_USERS_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(LONDON_CENTRAL_USERS_CASE_TYPE_ID));
+        caseId = LONDON_CENTRAL_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(LONDON_CENTRAL_CASE_TYPE_ID));
+        caseId = LONDON_EAST_DEV_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(LONDON_EAST_DEV_CASE_TYPE_ID));
+        caseId = LONDON_EAST_USERS_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(LONDON_EAST_USERS_CASE_TYPE_ID));
+        caseId = LONDON_EAST_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(LONDON_EAST_CASE_TYPE_ID));
+        caseId = LONDON_SOUTH_DEV_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(LONDON_SOUTH_DEV_CASE_TYPE_ID));
+        caseId = LONDON_SOUTH_USERS_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(LONDON_SOUTH_USERS_CASE_TYPE_ID));
+        caseId = LONDON_SOUTH_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(LONDON_SOUTH_CASE_TYPE_ID));
+        caseId = MIDLANDS_EAST_DEV_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(MIDLANDS_EAST_DEV_CASE_TYPE_ID));
+        caseId = MIDLANDS_EAST_USERS_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(MIDLANDS_EAST_USERS_CASE_TYPE_ID));
+        caseId = MIDLANDS_EAST_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(MIDLANDS_EAST_CASE_TYPE_ID));
+        caseId = MIDLANDS_WEST_DEV_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(MIDLANDS_WEST_DEV_CASE_TYPE_ID));
+        caseId = MIDLANDS_WEST_USERS_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(MIDLANDS_WEST_USERS_CASE_TYPE_ID));
+        caseId = MIDLANDS_WEST_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(MIDLANDS_WEST_CASE_TYPE_ID));
+        caseId = NEWCASTLE_DEV_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(NEWCASTLE_DEV_CASE_TYPE_ID));
+        caseId = NEWCASTLE_USERS_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(NEWCASTLE_USERS_CASE_TYPE_ID));
+        caseId = NEWCASTLE_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(NEWCASTLE_CASE_TYPE_ID));
+        caseId = WALES_DEV_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(WALES_DEV_CASE_TYPE_ID));
+        caseId = WALES_USERS_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(WALES_USERS_CASE_TYPE_ID));
+        caseId = WALES_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(WALES_CASE_TYPE_ID));
+        caseId = WATFORD_DEV_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(WATFORD_DEV_CASE_TYPE_ID));
+        caseId = WATFORD_USERS_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(WATFORD_USERS_CASE_TYPE_ID));
+        caseId = WATFORD_BULK_CASE_TYPE_ID;
+        assertEquals(caseId, BulkHelper.getBulkCaseTypeId(WATFORD_CASE_TYPE_ID));
+    }
+
+    @Test
     public void getMultipleTypeFromSubmitEvent() {
         String result = "MultipleType(caseIDM=0, ethosCaseReferenceM= , leadClaimantM=No, multipleReferenceM= , clerkRespM= , " +
                 "claimantSurnameM=Mike, respondentSurnameM=Juan Pedro, claimantRepM= , respondentRepM= , fileLocM=Manchester, " +

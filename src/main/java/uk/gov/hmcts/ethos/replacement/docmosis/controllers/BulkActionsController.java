@@ -133,11 +133,13 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
-                bulkRequest.getCaseDetails(), userToken, true, false);
-        //BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken, false);
-
-        bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, true);
+        if (bulkRequest.getCaseDetails().getCaseData().getMultipleSource() != null
+                && !bulkRequest.getCaseDetails().getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
+            BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
+                    bulkRequest.getCaseDetails(), userToken, true, false);
+            //BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken, false);
+            bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, true);
+        }
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .data(bulkRequest.getCaseDetails().getCaseData())

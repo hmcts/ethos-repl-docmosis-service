@@ -141,7 +141,8 @@ public class BulkSearchService {
 
     public String generateMultipleRef(BulkDetails bulkDetails) {
         if (bulkDetails.getCaseData().getMultipleReference() == null || bulkDetails.getCaseData().getMultipleReference().trim().equals("")) {
-            return multipleReferenceService.createReference(bulkDetails.getCaseTypeId(), bulkDetails.getCaseId());
+            log.info("Case Type:" + bulkDetails.getCaseTypeId());
+            return multipleReferenceService.createReference(bulkDetails.getCaseTypeId(), 1);
         } else {
             return bulkDetails.getCaseData().getMultipleReference();
         }
@@ -266,7 +267,9 @@ public class BulkSearchService {
         } else {
             for (SubmitEvent submitEvent : submitEvents) {
                 CaseData caseData = submitEvent.getCaseData();
-                if (caseData.getMultipleReference() != null && !caseData.getMultipleReference().trim().isEmpty()) {
+                if (caseData.getMultipleReference() != null
+                        && !caseData.getMultipleReference().trim().isEmpty()
+                        && !bulkDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
                     if (creationFlag) {
                         log.info("Creation");
                         alreadyTakenIds.add(caseData.getEthosCaseReference());
@@ -275,7 +278,8 @@ public class BulkSearchService {
                         alreadyTakenIds.add(caseData.getEthosCaseReference());
                     }
                 }
-                if ((creationFlag && submitEvent.getState().equals(SUBMITTED_STATE) )
+                if ((creationFlag && submitEvent.getState().equals(SUBMITTED_STATE)
+                        && !bulkDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE))
                         || (!creationFlag && !submitEvent.getState().equals(ACCEPTED_STATE))) {
                     unprocessableState.add(submitEvent.getCaseData().getEthosCaseReference());
                 }

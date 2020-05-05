@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,7 +22,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 
-import org.springframework.http.MediaType;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -56,6 +56,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String ADD_AMEND_ET3_URL = "/addAmendET3";
     private static final String AMEND_CASE_STATE_URL = "/amendCaseState";
     private static final String MID_RESPONDENT_ADDRESS_URL = "/midRespondentAddress";
+    private static final String GENERATE_CASE_REF_NUMBERS_URL = "/generateCaseRefNumbers";
     private static final String MID_RESPONDENT_ECC_URL = "/midRespondentECC";
     private static final String CREATE_ECC_URL = "/createECC";
     private static final String LINK_ORIGINAL_CASE_ECC_URL = "/linkOriginalCaseECC";
@@ -202,8 +203,8 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void postDefaultValuesFromET1WithPositionTypeDefined() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenReturn(defaultValues);
-        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class), (isA(Boolean.class)))).thenReturn(submitEvent.getCaseData());
-        when(singleReferenceService.createReference(isA(String.class), isA(String.class))).thenReturn("5100001/2019");
+        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
+        when(singleReferenceService.createReference(isA(String.class), isA(Integer.class))).thenReturn("5100001/2019");
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
@@ -218,8 +219,8 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void postDefaultValues() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenReturn(defaultValues);
-        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class), (isA(Boolean.class)))).thenReturn(submitEvent.getCaseData());
-        when(singleReferenceService.createReference(isA(String.class), isA(String.class))).thenReturn("5100001/2019");
+        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
+        when(singleReferenceService.createReference(isA(String.class), isA(Integer.class))).thenReturn("5100001/2019");
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent2.toString())
@@ -262,7 +263,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void amendCaseDetails() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenReturn(defaultValues);
-        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class), (isA(Boolean.class)))).thenReturn(submitEvent.getCaseData());
+        when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
                 .content(requestContent2.toString())
@@ -332,6 +333,20 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void midRespondentAddressPopulated() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MID_RESPONDENT_ADDRESS_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateCaseRefNumbers() throws Exception {
+        when(caseCreationForCaseWorkerService.generateCaseRefNumbers(isA(CCDRequest.class))).thenReturn(submitEvent.getCaseData());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GENERATE_CASE_REF_NUMBERS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -631,6 +646,16 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
     }
+    @Test
+    public void generateCaseRefNumbersError500() throws Exception {
+        when(caseCreationForCaseWorkerService.generateCaseRefNumbers(isA(CCDRequest.class))).thenThrow(feignError());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GENERATE_CASE_REF_NUMBERS_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
 
     @Test
     public void createCaseErrorForbidden() throws Exception {
@@ -756,6 +781,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void midRespondentAddressPopulatedForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(MID_RESPONDENT_ADDRESS_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void generateCaseRefNumbersForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(GENERATE_CASE_REF_NUMBERS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

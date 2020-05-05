@@ -299,6 +299,7 @@ public class BulkSearchServiceTest {
 
     private CaseData getCaseData() {
         CaseData caseData = new CaseData();
+        caseData.setCaseSource(MANUALLY_CREATED_POSITION);
         caseData.setFeeGroupReference("111122211");
         caseData.setEthosCaseReference("1111");
         caseData.setMultipleReference("123456");
