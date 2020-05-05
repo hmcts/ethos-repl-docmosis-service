@@ -112,7 +112,7 @@ public class ListingHelper {
         listingType.setHearingJudgeName(!isNullOrEmpty(dateListedType.getHearingJudgeName()) ? dateListedType.getHearingJudgeName() : " ");
         listingType.setHearingEEMember(!isNullOrEmpty(hearingType.getHearingEEMember()) ? hearingType.getHearingEEMember() : " ");
         listingType.setHearingERMember(!isNullOrEmpty(hearingType.getHearingERMember()) ? hearingType.getHearingERMember() : " ");
-        listingType.setClerkResponsible(!isNullOrEmpty(caseData.getClerkResponsible()) ? caseData.getClerkResponsible() : " ");
+        listingType.setHearingClerk(!isNullOrEmpty(dateListedType.getHearingClerk()) ? dateListedType.getHearingClerk() : " ");
         listingType.setHearingPanel(!isNullOrEmpty(hearingType.getHearingSitAlone()) ? hearingType.getHearingSitAlone() : " ");
 
         listingType.setCauseListVenue(getVenueFromDateListedType(dateListedType));
@@ -291,7 +291,7 @@ public class ListingHelper {
         sb.append("\"Hearing_date_time\":\"").append(nullCheck(listingType.getCauseListDate())).append(" at ").append(nullCheck(listingType.getCauseListTime())).append(NEW_LINE);
         sb.append("\"Hearing_time\":\"").append(nullCheck(listingType.getCauseListTime())).append(NEW_LINE);
         sb.append("\"Hearing_duration\":\"").append(nullCheck(listingType.getEstHearingLength())).append(NEW_LINE);
-        sb.append("\"Hearing_clerk\":\"").append(nullCheck(listingType.getClerkResponsible())).append(NEW_LINE);
+        sb.append("\"Hearing_clerk\":\"").append(nullCheck(listingType.getHearingClerk())).append(NEW_LINE);
         sb.append("\"Claimant\":\"").append(nullCheck(listingType.getClaimantName())).append(NEW_LINE);
         sb.append("\"claimant_town\":\"").append(nullCheck(listingType.getClaimantTown())).append(NEW_LINE);
         sb.append("\"claimant_representative\":\"").append(nullCheck(listingType.getClaimantRepresentative())).append(NEW_LINE);
