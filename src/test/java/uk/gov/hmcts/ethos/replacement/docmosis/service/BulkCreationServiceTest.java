@@ -108,6 +108,7 @@ public class BulkCreationServiceTest {
         CaseData caseData = new CaseData();
         caseData.setFeeGroupReference("111122211");
         caseData.setEthosCaseReference(ethosCaseRef);
+        caseData.setCaseSource(MANUALLY_CREATED_POSITION);
         ClaimantIndType claimantIndType = new ClaimantIndType();
         claimantIndType.setClaimantLastName("Fernandez");
         caseData.setClaimantIndType(claimantIndType);

@@ -3,12 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+import javax.persistence.*;
 
 @MappedSuperclass
 @Data
@@ -19,14 +14,7 @@ public class SubMultipleReference {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    protected String multipleRef;
-    protected int ref;
-
-    int generateRefNumber(int previousRef) {
-        if (previousRef == 0) {
-            return DEFAULT_INIT_SUB_REF;
-        } else {
-            return previousRef + 1;
-        }
-    }
+    @Column(nullable = false)
+    protected Integer multref;
+    protected Integer submultref;
 }
