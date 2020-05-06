@@ -28,7 +28,7 @@
           "hearingJudgeName": "Ms AM Aspden",
           "hearingEEMember": " ",
           "hearingERMember": " ",
-          "clerkResponsible": "Anne Fox",
+          "hearingClerk": "Anne Fox",
           "Hearing_room": "Tribunal 2",
           "hearingDay": "1 of 3",
           "claimantName": "Mr s sdfs",
@@ -39,7 +39,8 @@
           "respondentRepresentative": "Org",
           "Hearing_panel": "Panel",
           "Hearing_notes": "Notes1",
-          "estHearingLength": "12 Days"
+          "estHearingLength": "12 Days",
+          "resp_others": "Mark Taylor, Tony Jones, Steve Thomas"
         },
         "id": "97087d19-795a-4886-8cdb-06489b8b2ef5"
       },
@@ -55,7 +56,7 @@
           "hearingJudgeName": "Ms AM Judge",
           "hearingEEMember": " ",
           "hearingERMember": " ",
-          "clerkResponsible": "Andrew Pearl",
+          "hearingClerk": "Andrew Pearl",
           "Hearing_room": "Tribunal 2",
           "hearingDay": "2 of 3",
           "claimantName": "Mr s sdfs",
@@ -65,7 +66,8 @@
           "respondentTown": "respondentTown1",
           "respondentRepresentative": "Org2",
           "Hearing_notes": "Notes2",
-          "estHearingLength": "12 Days"
+          "estHearingLength": "12 Days",
+          "resp_others": "Mark Taylor, Tony Jones"
         },
         "id": "97087d19-795a-4886-8cdb-06489b8b2ef7"
       },
@@ -81,7 +83,7 @@
           "hearingJudgeName": "Judge For Tribunal4",
           "hearingEEMember": " ",
           "hearingERMember": " ",
-          "clerkResponsible": "Anne Fox",
+          "hearingClerk": "Anne Fox",
           "Hearing_room": "Tribunal 4",
           "hearingDay": "2 of 3",
           "claimantName": "Mr s sdfs",
@@ -91,7 +93,8 @@
           "respondentTown": "respondentTown2",
           "respondentRepresentative": "Org",
           "Hearing_notes": "Notes3",
-          "estHearingLength": "12 Minutes"
+          "estHearingLength": "12 Minutes",
+          "resp_others": "Mark Taylor"
         },
         "id": "f4ef21b6-df93-4835-972b-ddcb6ac4992e"
       },
@@ -107,7 +110,7 @@
           "hearingJudgeName": "Another Judge",
           "hearingEEMember": " ",
           "hearingERMember": " ",
-          "clerkResponsible": "Juan Fox",
+          "hearingClerk": "Juan Fox",
           "Hearing_room": "Tribunal 4",
           "hearingDay": "2 of 3",
           "claimantName": "Mr s Dominguez",

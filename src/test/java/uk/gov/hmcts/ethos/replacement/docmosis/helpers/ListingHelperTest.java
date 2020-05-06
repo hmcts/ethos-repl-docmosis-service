@@ -91,7 +91,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown\",\n" +
                 "\"claimant_representative\":\"Rep\",\n" +
                 "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"\",\n" +
+                "\"resp_others\":\"Mark Taylor\\nTony Jones\\nSteve Thomas\",\n" +
                 "\"respondent_town\":\"respondentTown\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 2\",\n" +
@@ -126,7 +126,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown1\",\n" +
                 "\"claimant_representative\":\"Rep2\",\n" +
                 "\"Respondent\":\"sdf2\",\n" +
-                "\"resp_others\":\"\",\n" +
+                "\"resp_others\":\"Mark Taylor\\nTony Jones\",\n" +
                 "\"respondent_town\":\"respondentTown1\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 2\",\n" +
@@ -164,7 +164,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown2\",\n" +
                 "\"claimant_representative\":\"Rep\",\n" +
                 "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"\",\n" +
+                "\"resp_others\":\"Mark Taylor\",\n" +
                 "\"respondent_town\":\"respondentTown2\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 4\",\n" +
@@ -328,7 +328,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown\",\n" +
                 "\"claimant_representative\":\"Rep\",\n" +
                 "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"\",\n" +
+                "\"resp_others\":\"Mark Taylor\\nTony Jones\\nSteve Thomas\",\n" +
                 "\"respondent_town\":\"respondentTown\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 2\",\n" +
@@ -363,7 +363,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown1\",\n" +
                 "\"claimant_representative\":\"Rep2\",\n" +
                 "\"Respondent\":\"sdf2\",\n" +
-                "\"resp_others\":\"\",\n" +
+                "\"resp_others\":\"Mark Taylor\\nTony Jones\",\n" +
                 "\"respondent_town\":\"respondentTown1\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 2\",\n" +
@@ -398,7 +398,7 @@ public class ListingHelperTest {
                 "\"claimant_town\":\"claimantTown2\",\n" +
                 "\"claimant_representative\":\"Rep\",\n" +
                 "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"\",\n" +
+                "\"resp_others\":\"Mark Taylor\",\n" +
                 "\"respondent_town\":\"respondentTown2\",\n" +
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Hearing_room\":\"Tribunal 4\",\n" +
@@ -514,7 +514,7 @@ public class ListingHelperTest {
         hearingType.setHearingEstLengthNum("2");
         hearingType.setHearingEstLengthNumType("hours");
         String expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Edinburgh, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
@@ -523,7 +523,7 @@ public class ListingHelperTest {
         dateListedType.setHearingEdinburgh(null);
         dateListedType.setHearingDundee("Dundee");
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Dundee, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 5, respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
@@ -532,7 +532,7 @@ public class ListingHelperTest {
         dateListedType.setHearingDundee(null);
         dateListedType.setHearingGlasgow("Glasgow");
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Glasgow, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 6, respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
@@ -540,7 +540,7 @@ public class ListingHelperTest {
         dateListedType.setHearingRoomCambeltown("Tribunal 7");
         dateListedType.setHearingGlasgow(null);
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Other, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 7, respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
@@ -552,14 +552,14 @@ public class ListingHelperTest {
         ListingData listingDataPublic = listingDetails.getCaseData();
         listingDataPublic.setHearingDocETCL(HEARING_ETCL_PUBLIC);
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Other, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName= , claimantTown= , claimantRepresentative= , respondent= , respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal 7, respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDataPublic, caseDataRule50, hearingType, dateListedType, 1, 3).toString());
         ListingData listingDataPressList = listingDetails.getCaseData();
         listingDataPressList.setHearingDocETCL(HEARING_ETCL_PRESS_LIST);
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Other, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Order made pursuant to Rule 50, claimantTown= , claimantRepresentative= , " +
                 "respondent=Order made pursuant to Rule 50, respondentTown= , respondentRepresentative= , estHearingLength=2 hours, " +
                 "hearingPanel= , hearingRoom=Tribunal 7, respondentOthers= , hearingNotes= )";
@@ -572,7 +572,7 @@ public class ListingHelperTest {
 
         dateListedType.setHearingRoomM("Tribunal M");
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Manchester, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal M, respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
@@ -580,7 +580,7 @@ public class ListingHelperTest {
 
         dateListedType.setHearingRoomL("Tribunal L");
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Manchester, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal L, respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
@@ -588,7 +588,7 @@ public class ListingHelperTest {
 
         dateListedType.setHearingRoomCM("Tribunal CM");
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Manchester, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal CM, respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
@@ -596,7 +596,7 @@ public class ListingHelperTest {
 
         dateListedType.setHearingRoomCC("Tribunal CC");
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Manchester, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal CC, respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
@@ -604,7 +604,7 @@ public class ListingHelperTest {
 
         dateListedType.setHearingRoomCrownCourt("Tribunal Crown Court");
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Manchester, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal Crown Court, respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
@@ -612,7 +612,7 @@ public class ListingHelperTest {
 
         dateListedType.setHearingRoomKendal("Tribunal Kendal");
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Manchester, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal Kendal, respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
@@ -620,7 +620,7 @@ public class ListingHelperTest {
 
         dateListedType.setHearingRoomMinshullSt("Tribunal Minshull St");
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Manchester, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal Minshull St, respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
@@ -628,7 +628,7 @@ public class ListingHelperTest {
 
         dateListedType.setHearingRoomMancMagistrate("Tribunal Manc Magistrate");
         expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=Manchester, elmoCaseReference=null, " +
-                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , clerkResponsible= , " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal Manc Magistrate, respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
@@ -681,5 +681,41 @@ public class ListingHelperTest {
         assertEquals(IT57_TEMPLATE, ListingHelper.getListingDocName(listingData));
         listingData.setHearingDocType("");
         assertEquals("No document found", ListingHelper.getListingDocName(listingData));
+    }
+
+    @Test
+    public void getRespondentOthersWithLineBreaksForMultipleRespondents() {
+        String expected = "Mark Taylor\\nTony Jones\\nSteve Thomas";
+
+        String actual = ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(0).getValue());
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getRespondentOthersWithLineBreaksForTwoRespondents() {
+        String expected = "Mark Taylor\\nTony Jones";
+
+        String actual = ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(1).getValue());
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getRespondentOthersWithLineBreaksForSingleRespondent() {
+        String expected = "Mark Taylor";
+
+        String actual = ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(2).getValue());
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getRespondentOthersWithLineBreaksForNoRespondents() {
+        String expected = "";
+
+        String actual = ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(3).getValue());
+
+        assertEquals(expected, actual);
     }
 }

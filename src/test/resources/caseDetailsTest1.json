@@ -200,23 +200,37 @@
     ],
     "jurCodesCollection": [
       {
-        "id" : "123456",
+        "id" : "1234561",
         "value" : {
           "juridictionCodesList": "COM",
           "judgmentOutcome": "Successful at hearing"
         }
       },
       {
-        "id" : "123456",
+        "id" : "1234562",
         "value" : {
           "juridictionCodesList": "DOD"
         }
       },
       {
-        "id" : "123456",
+        "id" : "1234563",
         "value" : {
-          "juridictionCodesList": "DAG",
+          "juridictionCodesList": "COM",
           "judgmentOutcome": "Dismissed on withdrawal"
+        }
+      },
+      {
+        "id" : "1234564",
+        "value" : {
+          "juridictionCodesList": "DDA",
+          "judgmentOutcome": "Successful at hearing"
+        }
+      },
+      {
+        "id" : "1234565",
+        "value" : {
+          "juridictionCodesList": "DOD",
+          "judgmentOutcome": "Input in error"
         }
       }
     ],
