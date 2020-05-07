@@ -3,9 +3,11 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
-import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.CaseCreationException;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 
 import java.util.List;
 

@@ -1,19 +1,18 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.tasks;
 
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CasePreAcceptType;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 
 import java.io.IOException;
 import java.time.LocalDate;
 
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.ACCEPTED_STATE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 public class BulkPreAcceptTask implements Runnable {
@@ -36,15 +35,15 @@ public class BulkPreAcceptTask implements Runnable {
         log.info("Waiting: " + Thread.currentThread().getName());
         String caseId = String.valueOf(submitEvent.getCaseId());
         try {
-            CCDRequest returnedRequest = ccdClient.startEventForCasePreAcceptBulkSingle(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+            CCDRequest returnedRequest = ccdClient.startEventForCasePreAcceptBulkSingle(authToken, UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                     bulkDetails.getJurisdiction(), caseId);
             log.info("Moving to accepted state");
             submitEvent.getCaseData().setState(ACCEPTED_STATE);
             CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
             casePreAcceptType.setCaseAccepted(YES);
-            casePreAcceptType.setDateAccepted(Helper.formatCurrentDate2(LocalDate.now()));
+            casePreAcceptType.setDateAccepted(UtilHelper.formatCurrentDate2(LocalDate.now()));
             submitEvent.getCaseData().setPreAcceptCase(casePreAcceptType);
-            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                     bulkDetails.getJurisdiction(), returnedRequest, caseId);
         } catch (IOException e) {
             log.error("Error processing bulk pre accept threads");

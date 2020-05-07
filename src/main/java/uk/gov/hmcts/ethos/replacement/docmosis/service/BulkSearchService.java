@@ -3,19 +3,20 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
-import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.CaseCreationException;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.model.bulk.BulkData;
+import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
+import uk.gov.hmcts.ecm.common.model.bulk.items.MidSearchTypeItem;
+import uk.gov.hmcts.ecm.common.model.bulk.items.MultipleTypeItem;
+import uk.gov.hmcts.ecm.common.model.bulk.items.SearchTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ecm.common.model.helper.BulkCasesPayload;
+import uk.gov.hmcts.ecm.common.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MidSearchTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 @Service("bulkSearchService")
@@ -153,7 +154,7 @@ public class BulkSearchService {
             BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
             List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
             if (caseIds != null && !caseIds.isEmpty()) {
-                List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                         bulkDetails.getJurisdiction());
                 return filterSubmitEvents(BulkHelper.calculateLeadCase(submitEvents, caseIds), caseIds,
                         bulkDetails.getCaseData().getMultipleReference(), true, checkErrors);
@@ -176,7 +177,7 @@ public class BulkSearchService {
             if (caseIds != null && !caseIds.isEmpty()) {
                 log.info("CaseIds: " + caseIds);
                 List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearchForCreation(authToken,
-                        BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds, bulkDetails.getCaseData().getMultipleSource());
+                        UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds, bulkDetails.getCaseData().getMultipleSource());
                 if (filter) {
                     return filterSubmitEventsElasticSearch(BulkHelper.calculateLeadCase(submitEvents, caseIds),
                             bulkDetails.getCaseData().getMultipleReference(), creationFlag, bulkDetails);
@@ -203,7 +204,7 @@ public class BulkSearchService {
             if (caseIds != null && !caseIds.isEmpty()) {
 //                return filterPreAcceptCases(ccdClient.retrieveCases(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
 //                        bulkDetails.getJurisdiction()), caseIds);
-                return ccdClient.retrieveCasesElasticSearch(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds);
+                return ccdClient.retrieveCasesElasticSearch(authToken, UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), caseIds);
             } else {
                 return new ArrayList<>();
             }
