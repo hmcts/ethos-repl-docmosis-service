@@ -6,25 +6,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.DateListedType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.HearingType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeC;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeR;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingDetails;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.model.ccd.*;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,11 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.ALL_VENUES;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.MANCHESTER_LISTING_CASE_TYPE_ID;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.NO;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ListingServiceTest {

@@ -9,7 +9,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleReferenceServiceTest {

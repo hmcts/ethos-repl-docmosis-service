@@ -1,22 +1,19 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicFixedListType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.DynamicValueType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.*;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantIndType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.ClaimantType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceScotType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.HearingType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeC;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeR;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
+import uk.gov.hmcts.ecm.common.model.ccd.Address;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ecm.common.model.ccd.SignificantItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,39 +25,10 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 public class Helper {
-
-    public static String formatLocalDate(String date) {
-        return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_DATE_TIME_PATTERN).format(NEW_DATE_PATTERN) : "";
-    }
-
-    public static String listingFormatLocalDate(String date) {
-        return !isNullOrEmpty(date) ? LocalDate.parse(date, OLD_DATE_TIME_PATTERN2).format(NEW_DATE_PATTERN) : "";
-    }
-
-    public static String formatLocalDateTime(String date) {
-        return !isNullOrEmpty(date) ? LocalDateTime.parse(date, OLD_DATE_TIME_PATTERN).format(NEW_DATE_TIME_PATTERN) : "";
-    }
-
-    static String formatLocalTime(String date) {
-        return !isNullOrEmpty(date) ? LocalDateTime.parse(date, OLD_DATE_TIME_PATTERN).format(NEW_TIME_PATTERN) : "";
-    }
-
-    static String formatCurrentDatePlusDays(LocalDate date, long days) {
-        return !isNullOrEmpty(date.toString()) ? date.plusDays(days).format(NEW_DATE_PATTERN) : "";
-    }
-
-    static String formatCurrentDate(LocalDate date) {
-        return !isNullOrEmpty(date.toString()) ? date.format(NEW_DATE_PATTERN) : "";
-    }
-
-    public static String formatCurrentDate2(LocalDate date) {
-        return !isNullOrEmpty(date.toString()) ? date.format(OLD_DATE_TIME_PATTERN2) : "";
-    }
 
     public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails) {
         StringBuilder sb = new StringBuilder();
@@ -96,8 +64,8 @@ public class Helper {
 
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
-        sb.append("\"Today_date\":\"").append(formatCurrentDate(LocalDate.now())).append(NEW_LINE);
-        sb.append("\"TodayPlus28Days\":\"").append(formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
+        sb.append("\"Today_date\":\"").append(UtilHelper.formatCurrentDate(LocalDate.now())).append(NEW_LINE);
+        sb.append("\"TodayPlus28Days\":\"").append(UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
         sb.append("\"Case_No\":\"").append(nullCheck(caseData.getEthosCaseReference())).append(NEW_LINE);
 
         sb.append("}\n");
@@ -334,7 +302,7 @@ public class Helper {
         Iterator<DateListedTypeItem> itr = hearingDateCollection.iterator();
 
         while (itr.hasNext()) {
-            sb.append(formatLocalDate(itr.next().getValue().getListedDate()));
+            sb.append(UtilHelper.formatLocalDate(itr.next().getValue().getListedDate()));
             sb.append(itr.hasNext() ? ", " : "");
         }
 
