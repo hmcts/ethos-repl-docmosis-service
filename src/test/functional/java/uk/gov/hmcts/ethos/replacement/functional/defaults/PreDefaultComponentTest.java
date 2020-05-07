@@ -5,10 +5,13 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.functional.ComponentTest;
 import uk.gov.hmcts.ethos.replacement.functional.util.Constants;
 import uk.gov.hmcts.ethos.replacement.functional.util.ResponseUtil;
@@ -17,7 +20,7 @@ import uk.gov.hmcts.ethos.replacement.functional.util.TestUtil;
 import java.io.IOException;
 import java.net.URL;
 
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
