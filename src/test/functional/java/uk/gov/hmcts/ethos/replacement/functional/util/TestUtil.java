@@ -19,8 +19,8 @@ import org.json.JSONException;
 import org.junit.Assert;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
