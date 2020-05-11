@@ -359,4 +359,8 @@
         <notes><![CDATA[ CVE-2020-9488  ]]></notes>
         <cve>CVE-2020-9488</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-10683  ]]></notes>
+        <cve>CVE-2020-10683</cve>
+    </suppress>
 </suppressions>
