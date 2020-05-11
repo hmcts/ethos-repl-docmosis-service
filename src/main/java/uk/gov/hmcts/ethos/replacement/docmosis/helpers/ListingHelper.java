@@ -1,23 +1,23 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.DateListedType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.HearingType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.items.ListingTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.types.ListingType;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ESHelper.*;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatCurrentDate;
+import static uk.gov.hmcts.ecm.common.helpers.ESHelper.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
 
 @Slf4j
 public class ListingHelper {
@@ -104,8 +104,8 @@ public class ListingHelper {
 
         listingType.setElmoCaseReference(caseData.getEthosCaseReference());
         String listedDate = dateListedType.getListedDate();
-        listingType.setCauseListDate(!isNullOrEmpty(listedDate) ? Helper.formatLocalDate(listedDate) : " ");
-        listingType.setCauseListTime(!isNullOrEmpty(listedDate) ? Helper.formatLocalTime(listedDate) : " ");
+        listingType.setCauseListDate(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalDate(listedDate) : " ");
+        listingType.setCauseListTime(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalTime(listedDate) : " ");
         listingType.setJurisdictionCodesList(BulkHelper.getJurCodesCollection(caseData.getJurCodesCollection()));
         listingType.setHearingType(!isNullOrEmpty(hearingType.getHearingType()) ? hearingType.getHearingType() : " ");
         listingType.setPositionType(!isNullOrEmpty(caseData.getPositionType()) ? caseData.getPositionType() : " ");
@@ -199,7 +199,7 @@ public class ListingHelper {
         sb.append(getDocumentData(listingData, templateName, caseType));
 
         sb.append("\"case_total\":\"").append(getCaseTotal(listingData.getListingCollection())).append(NEW_LINE);
-        sb.append("\"Today_date\":\"").append(formatCurrentDate(LocalDate.now())).append("\"\n");
+        sb.append("\"Today_date\":\"").append(UtilHelper.formatCurrentDate(LocalDate.now())).append("\"\n");
         sb.append("}\n");
         sb.append("}\n");
 
@@ -230,8 +230,8 @@ public class ListingHelper {
     private static StringBuilder getListingRangeDates(ListingData listingData) {
         StringBuilder sb = new StringBuilder();
         if (listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
-            sb.append("\"Listed_date_from\":\"").append(Helper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
-            sb.append("\"Listed_date_to\":\"").append(Helper.listingFormatLocalDate(listingData.getListingDateTo())).append(NEW_LINE);
+            sb.append("\"Listed_date_from\":\"").append(UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
+            sb.append("\"Listed_date_to\":\"").append(UtilHelper.listingFormatLocalDate(listingData.getListingDateTo())).append(NEW_LINE);
         }
         return sb;
     }

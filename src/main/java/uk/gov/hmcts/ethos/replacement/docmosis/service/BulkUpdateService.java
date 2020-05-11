@@ -3,24 +3,25 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ethos.replacement.docmosis.client.CcdClient;
-import uk.gov.hmcts.ethos.replacement.docmosis.exceptions.CaseCreationException;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.model.bulk.*;
+import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
+import uk.gov.hmcts.ecm.common.model.bulk.items.MultipleTypeItem;
+import uk.gov.hmcts.ecm.common.model.bulk.items.SearchTypeItem;
+import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
+import uk.gov.hmcts.ecm.common.model.bulk.types.MultipleType;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ecm.common.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.*;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.CaseIdTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.MultipleTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.items.SearchTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.CaseType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.types.MultipleType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.JurCodesType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeC;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RepresentedTypeR;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkPreAcceptTask;
 import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkUpdateBulkTask;
 import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkUpdateTask;
@@ -37,7 +38,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 @Service("bulkUpdateService")
@@ -111,7 +112,7 @@ public class BulkUpdateService {
             try {
                 SubmitEvent submitEvent = hasLeadCaseBeenUpdated(submitBulkEventSubmitEventType, leadId);
                 if (submitEvent == null) {
-                    submitEvent = ccdClient.retrieveCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                    submitEvent = ccdClient.retrieveCase(authToken, UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                             bulkDetails.getJurisdiction(), leadId);
                 }
                 submitEvent.getCaseData().setLeadClaimant(YES);
@@ -280,7 +281,7 @@ public class BulkUpdateService {
             String EQPNewValue = bulkData.getEQPUpdate();
             String jurCodeSelected = bulkData.getJurCodesDynamicList().getValue().getCode();
             String outcomeNewValue = bulkData.getOutcomeUpdate();
-            SubmitEvent submitEvent = ccdClient.retrieveCase(authToken, BulkHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
+            SubmitEvent submitEvent = ccdClient.retrieveCase(authToken, UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             boolean updated = false;
             boolean multipleReferenceUpdated = false;
             if (!isNullOrEmpty(respondentNameNewValue)) {

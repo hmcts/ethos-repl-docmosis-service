@@ -10,22 +10,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.ecm.common.model.bulk.BulkCallbackResponse;
+import uk.gov.hmcts.ecm.common.model.bulk.BulkDocumentInfo;
+import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
+import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.helper.BulkCasesPayload;
+import uk.gov.hmcts.ecm.common.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkCallbackResponse;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkDocumentInfo;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CCDCallbackResponse;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkCasesPayload;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 @RestController

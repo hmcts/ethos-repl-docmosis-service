@@ -3,12 +3,13 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceScotType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -126,8 +127,8 @@ public class HelperTest {
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -196,8 +197,8 @@ public class HelperTest {
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -265,8 +266,8 @@ public class HelperTest {
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -335,8 +336,8 @@ public class HelperTest {
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -406,8 +407,8 @@ public class HelperTest {
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -477,8 +478,8 @@ public class HelperTest {
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -548,8 +549,8 @@ public class HelperTest {
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -618,8 +619,8 @@ public class HelperTest {
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -688,8 +689,8 @@ public class HelperTest {
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -750,8 +751,8 @@ public class HelperTest {
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
@@ -820,8 +821,8 @@ public class HelperTest {
                 "\"iScot7_1_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot7_1_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -890,8 +891,8 @@ public class HelperTest {
                 "\"iScot24_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot24_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -959,8 +960,8 @@ public class HelperTest {
                 "\"iScot34_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot34_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
@@ -1093,8 +1094,8 @@ public class HelperTest {
                 "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
@@ -1155,8 +1156,8 @@ public class HelperTest {
                 "\"iScot"+ part +"_schmcts1\":\"[userImage:schmcts.png]\",\n" +
                 "\"iScot"+ part +"_schmcts2\":\"[userImage:schmcts.png]\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + Helper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";

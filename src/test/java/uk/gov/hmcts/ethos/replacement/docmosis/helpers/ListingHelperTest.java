@@ -3,13 +3,14 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingDetails;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,7 +20,7 @@ import java.util.Collections;
 import java.util.Objects;
 
 import static org.junit.Assert.*;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 public class ListingHelperTest {
 
@@ -209,7 +210,7 @@ public class ListingHelperTest {
                 "\"respondent_representative\":\"Organization\"}]\n" +
                 "}],\n" +
                 "\"case_total\":\"1\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\"\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
                 "}\n" +
                 "}\n";
         assertEquals(expected, ListingHelper.buildListingDocumentContent(listingDetails.getCaseData(), "", PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE, userDetails, MANCHESTER_LISTING_CASE_TYPE_ID).toString());
@@ -238,7 +239,7 @@ public class ListingHelperTest {
                 "\"Hearing_location\":\"Manchester\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"case_total\":\"1\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\"\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
                 "}\n" +
                 "}\n";
         assertEquals(expected, ListingHelper.buildListingDocumentContent(listingDetails.getCaseData(), "", "", userDetails, MANCHESTER_LISTING_CASE_TYPE_ID).toString());
@@ -269,7 +270,7 @@ public class ListingHelperTest {
                 "\"Listed_date_to\":\"1 March 2020\",\n" +
                 "\"Clerk\":\"Mike Jordan\",\n" +
                 "\"case_total\":\"1\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\"\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
                 "}\n" +
                 "}\n";
         listingDetails.getCaseData().setHearingDateType(RANGE_HEARING_DATE_TYPE);
@@ -442,7 +443,7 @@ public class ListingHelperTest {
                 "\"Hearing_notes\":\"Notes4\",\n" +
                 "\"respondent_representative\":\"Organization\"}],\n" +
                 "\"case_total\":\"1\",\n" +
-                "\"Today_date\":\"" + Helper.formatCurrentDate(LocalDate.now()) + "\"\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
                 "}\n" +
                 "}\n";
         assertEquals(expected, ListingHelper.buildListingDocumentContent(listingDetails.getCaseData(), "", PUBLIC_CASE_CAUSE_LIST_TEMPLATE, userDetails, MANCHESTER_LISTING_CASE_TYPE_ID).toString());
