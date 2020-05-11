@@ -4,16 +4,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import uk.gov.hmcts.ecm.common.model.bulk.BulkData;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
-import uk.gov.hmcts.ethos.replacement.docmosis.idam.models.UserDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.DocumentInfo;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.ListingData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.items.ListingTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.listing.types.ListingType;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,8 +22,7 @@ import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
-import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 public class TornadoServiceTest {
 

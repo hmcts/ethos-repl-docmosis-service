@@ -11,7 +11,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.bulk.BulkRequest;
+import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
 import uk.gov.hmcts.ethos.replacement.functional.ComponentTest;
 import uk.gov.hmcts.ethos.replacement.functional.util.Constants;
 import uk.gov.hmcts.ethos.replacement.functional.util.TestUtil;

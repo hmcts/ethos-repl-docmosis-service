@@ -3,31 +3,18 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.JurCodesTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.HearingType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.JurCodesType;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
+import java.util.*;
 
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRespondents;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getCorrespondenceHearingNumber;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getHearingByNumber;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.EMPTY_HEARING_COLLECTION_ERROR_MESSAGE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.EMPTY_RESPONDENT_COLLECTION_ERROR_MESSAGE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.FUTURE_RECEIPT_DATE_ERROR_MESSAGE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.HEARING_NUMBER_MISMATCH_ERROR_MESSAGE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.*;
 
 @Slf4j
 @Service("eventValidationService")

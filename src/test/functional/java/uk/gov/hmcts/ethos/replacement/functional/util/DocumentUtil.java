@@ -1,10 +1,11 @@
 package uk.gov.hmcts.ethos.replacement.functional.util;
 
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.Address;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseData;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.CaseDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.model.ccd.types.*;
+
+import uk.gov.hmcts.ecm.common.model.ccd.Address;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,9 +16,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatLocalDate;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.formatLocalDateTime;
-import static uk.gov.hmcts.ethos.replacement.docmosis.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.helpers.UtilHelper.formatLocalDate;
+import static uk.gov.hmcts.ecm.common.helpers.UtilHelper.formatLocalDateTime;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 public class DocumentUtil {
 
