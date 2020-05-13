@@ -9,10 +9,6 @@ import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.reference.ReferenceSubmitEvent;
 import uk.gov.hmcts.ecm.common.model.reference.types.ClerkType;
 import uk.gov.hmcts.ecm.common.model.reference.types.JudgeType;
@@ -25,8 +21,9 @@ import java.util.List;
 @Service("referenceService")
 public class ReferenceService {
 
-    private static final String MESSAGE = "Failed to retrieve reference data for case id : ";
+    private static final String CASES_SEARCHED = "Cases searched: ";
     public static final String GOTHAM_REF_DATA_CASE_TYPE_ID = "Gotham_RefData";
+    private static final String MESSAGE = "Failed to retrieve reference data for case id : ";
 
     private final CcdClient ccdClient;
 
@@ -40,7 +37,7 @@ public class ReferenceService {
         try {
             List<ReferenceSubmitEvent> referenceSubmitEvents = ccdClient.retrieveReferenceDataCases(authToken, GOTHAM_REF_DATA_CASE_TYPE_ID, caseDetails.getJurisdiction());
             if (referenceSubmitEvents != null) {
-                log.info("Cases searched: " + referenceSubmitEvents.size());
+                log.info(CASES_SEARCHED + referenceSubmitEvents.size());
                 List<DynamicValueType> venuesListItems = createDynamicVenueNameFixedList(referenceSubmitEvents);
                 bindDynamicVenueNameFixedList(caseData, venuesListItems);
             }
@@ -55,15 +52,11 @@ public class ReferenceService {
         try {
             List<ReferenceSubmitEvent> referenceSubmitEvents = ccdClient.retrieveReferenceDataCases(authToken, GOTHAM_REF_DATA_CASE_TYPE_ID, caseDetails.getJurisdiction());
             if (referenceSubmitEvents != null) {
-                log.info("Cases searched: " + referenceSubmitEvents.size());
+                log.info(CASES_SEARCHED + referenceSubmitEvents.size());
 
                 List<DynamicValueType> venuesListItems = createDynamicVenueNameFixedList(referenceSubmitEvents);
                 List<DynamicValueType> clerksListItems = createDynamicClerkNameFixedList(referenceSubmitEvents);
                 List<DynamicValueType> judgesListItems = createDynamicJudgeNameFixedList(referenceSubmitEvents);
-
-//                if (!venuesListItems.isEmpty()) { caseData.setHearingVenue(bindDynamicGenericFixedList(venuesListItems)); }
-//                if (!clerksListItems.isEmpty()) { caseData.setHearingClerk(bindDynamicGenericFixedList(clerksListItems)); }
-//                if (!judgesListItems.isEmpty()) { caseData.setHearingJudge(bindDynamicGenericFixedList(judgesListItems)); }
 
                 // temp store venue name in room name
                 if (!venuesListItems.isEmpty()) { caseData.setHearingRoom(bindDynamicGenericFixedList(venuesListItems)); }
@@ -165,47 +158,6 @@ public class ReferenceService {
                 caseData.setHearingJudge(dynamicFixedListType);
             }
         }
-    }
-
-    public CaseData fetchHearingJudgeNameRefDataForComplexType(CaseDetails caseDetails, String authToken) {
-        CaseData caseData = caseDetails.getCaseData();
-        try {
-            List<ReferenceSubmitEvent> referenceSubmitEvents = ccdClient.retrieveReferenceDataCases(authToken, GOTHAM_REF_DATA_CASE_TYPE_ID, caseDetails.getJurisdiction());
-            if (referenceSubmitEvents != null) {
-                log.info("Cases searched: " + referenceSubmitEvents.size());
-                List<DynamicValueType> listItems = createDynamicJudgeNameFixedList(referenceSubmitEvents);
-                if (!listItems.isEmpty()) {
-                    if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
-                        List<HearingTypeItem> hearingCollection =  caseData.getHearingCollection();
-                        for (HearingTypeItem hearingTypeItem : hearingCollection) {
-                            HearingType hearingType = hearingTypeItem.getValue();
-                            if (hearingType.getHearingDateCollection() != null && !hearingType.getHearingDateCollection().isEmpty()) {
-                                List<DateListedTypeItem> hearingDateCollection = hearingType.getHearingDateCollection();
-                                for (DateListedTypeItem dateListedTypeItem : hearingDateCollection) {
-                                    bindDynamicJudgeNameFixedListForComplexType(dateListedTypeItem.getValue(), listItems);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return caseData;
-        } catch (Exception ex) {
-            throw new CaseRetrievalException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
-        }
-    }
-
-    private void bindDynamicJudgeNameFixedListForComplexType(DateListedType dateListedType, List<DynamicValueType> listItems) {
-        if (dateListedType.getHearingJudgeName() != null) {
-            //dateListedType.getHearingJudgeName().setListItems(listItems);
-        } else {
-            DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
-            dynamicFixedListType.setValue(listItems.get(0));
-            dynamicFixedListType.setListItems(listItems);
-            //dateListedType.setHearingJudgeName(dynamicFixedListType);
-        }
-        //Default dynamic list
-        //dateListedType.getHearingJudgeName().setValue(listItems.get(3));
     }
 
 }
