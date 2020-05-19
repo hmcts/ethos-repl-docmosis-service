@@ -337,7 +337,7 @@ public class CaseActionsForCaseWorkerController {
         errors = eventValidationService.validateActiveRespondents(caseData);
 
         if(errors.isEmpty()) {
-            errors = eventValidationService.validateReturnedFromJudgeDate(caseData);
+            errors = eventValidationService.validateET3ResponseFields(caseData);
 
             if (errors.isEmpty()) {
                 caseData = caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
