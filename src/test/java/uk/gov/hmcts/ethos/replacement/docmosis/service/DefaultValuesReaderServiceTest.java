@@ -384,7 +384,14 @@ public class DefaultValuesReaderServiceTest {
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
-                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null)";
+                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, " +
+                "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, hearingEstLengthNum=null, hearingEstLengthNumType=null, " +
+                "hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, " +
+                "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, " +
+                "Postponed_by=null, hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, hearingPartHeard=null, " +
+                "hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, " +
+                "attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, " +
+                "hearingTimingDuration=null)";
         assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow).toString());
     }
 
@@ -439,7 +446,12 @@ public class DefaultValuesReaderServiceTest {
                 "bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, state=null, stateAPI=null, et3Received=null, " +
                 "conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, targetHearingDate=null, " +
                 "EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, " +
-                "ccdID=null)";
+                "ccdID=null, hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, hearingEstLengthNum=null, " +
+                "hearingEstLengthNumType=null, hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, " +
+                "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, " +
+                "Postponed_by=null, hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, hearingPartHeard=null, hearingReservedJudgement=null, " +
+                "attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, hearingTimingStart=null, " +
+                "hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, hearingTimingDuration=null)";
         assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow).toString());
     }
 

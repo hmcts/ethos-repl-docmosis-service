@@ -88,7 +88,17 @@
       "response_status": "Status",
       "responseToClaim": "No"
     },
-    "userLocation": "Liverpool"
+    "userLocation": "Liverpool",
+    "hearingNumbers" : "1",
+    "hearingTypes" : "Preliminary Hearing",
+    "hearingPublicPrivate" : "Public",
+    "hearingVenue" : "Crown Court",
+    "hearingEstLengthNum" : "1",
+    "hearingEstLengthNumType" : "Days",
+    "hearingSitAlone" : "Sit Alone",
+    "Hearing_stage" : "Stage 1",
+    "listedDate" : "2019-11-25T12:11:00.000",
+    "Hearing_notes" : "Test hearing 1"
   },
   "id": "123456789",
   "jurisdiction": "English",

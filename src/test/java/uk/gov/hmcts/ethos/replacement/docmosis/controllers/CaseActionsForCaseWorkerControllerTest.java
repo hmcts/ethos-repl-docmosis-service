@@ -54,6 +54,9 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String AMEND_CASE_DETAILS_URL = "/amendCaseDetails";
     private static final String AMEND_RESPONDENT_DETAILS_URL = "/amendRespondentDetails";
     private static final String ADD_AMEND_ET3_URL = "/addAmendET3";
+    private static final String ADD_HEARING_URL = "/addHearing";
+    private static final String HEARING_ITEM_DATA_URL = "/hearingItemData";
+    private static final String AMEND_HEARING_URL = "/amendHearing";
     private static final String AMEND_CASE_STATE_URL = "/amendCaseState";
     private static final String MID_RESPONDENT_ADDRESS_URL = "/midRespondentAddress";
     private static final String JURISDICTION_VALIDATION_URL = "/jurisdictionValidation";
@@ -305,6 +308,48 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void addHearing() throws Exception {
+        when(caseManagementForCaseWorkerService.addNewHearingItem(isA(CCDRequest.class))).thenReturn(submitEvent.getCaseData());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(ADD_HEARING_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void hearingItemData() throws Exception {
+        when(caseManagementForCaseWorkerService.fetchHearingItemData(isA(CCDRequest.class))).thenReturn(submitEvent.getCaseData());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(HEARING_ITEM_DATA_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void amendHearing() throws Exception {
+        when(caseManagementForCaseWorkerService.amendHearingItemDetails(isA(CCDRequest.class))).thenReturn(submitEvent.getCaseData());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(AMEND_HEARING_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void amendCaseState() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(AMEND_CASE_STATE_URL)
@@ -506,6 +551,33 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void addHearingError400() throws Exception {
+        mvc.perform(post(ADD_HEARING_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void hearingItemDataError400() throws Exception {
+        mvc.perform(post(HEARING_ITEM_DATA_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void amendHearingError400() throws Exception {
+        mvc.perform(post(AMEND_HEARING_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void amendCaseStateError400() throws Exception {
         mvc.perform(post(AMEND_CASE_STATE_URL)
                 .content("error")
@@ -669,6 +741,40 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
     }
+
+    @Test
+    public void addHearingError500() throws Exception {
+        when(caseManagementForCaseWorkerService.addNewHearingItem(isA(CCDRequest.class))).thenThrow(feignError());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(ADD_HEARING_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void hearingItemDataError500() throws Exception {
+        when(caseManagementForCaseWorkerService.fetchHearingItemData(isA(CCDRequest.class))).thenThrow(feignError());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(HEARING_ITEM_DATA_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void amendHearingError500() throws Exception {
+        when(caseManagementForCaseWorkerService.amendHearingItemDetails(isA(CCDRequest.class))).thenThrow(feignError());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(AMEND_HEARING_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
     @Test
     public void generateCaseRefNumbersError500() throws Exception {
         when(caseCreationForCaseWorkerService.generateCaseRefNumbers(isA(CCDRequest.class))).thenThrow(feignError());
@@ -775,6 +881,36 @@ public class CaseActionsForCaseWorkerControllerTest {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(ADD_AMEND_ET3_URL)
                 .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void addHearingForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(ADD_HEARING_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void hearingItemDataForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(HEARING_ITEM_DATA_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void amendHearingForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(AMEND_HEARING_URL)
+                .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
