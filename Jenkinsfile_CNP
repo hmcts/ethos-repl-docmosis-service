@@ -7,7 +7,6 @@ def product = "ethos"
 def component = "repl-docmosis-backend"
 
 withPipeline(type, product, component) {
-  installCharts()
   enableAksStagingDeployment()
   onMaster {
     disableLegacyDeployment()
