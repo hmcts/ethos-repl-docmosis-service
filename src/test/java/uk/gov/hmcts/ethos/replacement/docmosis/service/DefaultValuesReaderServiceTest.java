@@ -489,7 +489,7 @@ public class DefaultValuesReaderServiceTest {
                 "tribunalCorrespondenceTelephone=0141 204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, " +
                 "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, hearingDateType=null, listingDate=null, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=null, listingCollection=null, listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null)";
+                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null)";
         assertEquals(listingDataExpected, defaultValuesReaderService.getListingData(listingData, postDefaultValuesGlasgow).toString());
     }
 }
