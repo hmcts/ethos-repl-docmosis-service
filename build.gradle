@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.2.7.RELEASE'
+        springBootVersion = '2.3.0.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -44,8 +44,8 @@ dependencyCheck {
 
 group = 'uk.gov.hmcts.ethos.replacement'
 //version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 repositories {
     mavenCentral()
@@ -88,7 +88,6 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.logging
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging
 
-    compile group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: '0.0.5'
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.0.4'
     compile group: 'org.springframework.retry', name: 'spring-retry'
 
@@ -105,7 +104,9 @@ dependencies {
     testCompile group: 'com.warrenstrange', name: 'googleauth', version: '1.5.0'
 
     testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '2.2.5'
-    testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.2.5'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.2.5', {
+        exclude module: 'jaxb-osgi'
+    }
     testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.2.5'
     testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.2.5'
 }
