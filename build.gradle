@@ -30,6 +30,96 @@ apply plugin: 'org.owasp.dependencycheck'
 apply plugin: 'jacoco'
 apply plugin: 'net.serenity-bdd.aggregator'
 
+group = 'uk.gov.hmcts.ethos.replacement'
+version = '0.0.1'
+
+allprojects {
+    sourceCompatibility = '11.0'
+    targetCompatibility = '11.0'
+}
+
+jacocoTestReport {
+    executionData(test)
+    reports {
+        xml.enabled = true
+        csv.enabled = false
+        xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.0
+            }
+        }
+    }
+}
+
+def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis/model/**',
+                       '**/uk/gov/hmcts/reform/ethos/replacement/docmosis/CaseOrchestrationApplication'
+]
+
+sonarqube {
+    properties {
+        property "sonar.exclusions", sonarExclusions.join(', ')
+        property "sonar.projectKey", "ethos-repl-docmosis-service"
+        property "sonar.dynamicAnalysis", "reuseReports"
+        property "sonar.dependencyCheck.reportPath", "${project.buildDir}/reports/dependency-check-report.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
+    }
+}
+
+project.tasks['sonarqube'].dependsOn jacocoTestReport
+
+sourceSets {
+    test {
+        java.srcDir 'src/test/java'
+    }
+    functional {
+        java.srcDir 'src/test/functional/java'
+        resources.srcDir 'src/test/functional/resources'
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+}
+
+configurations {
+    functionalCompile.extendsFrom testCompile
+    functionalRuntime.extendsFrom testRuntime
+}
+
+test {
+    exclude '**/*ComponentTest*'
+}
+
+task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verification') {
+    testClassesDirs = sourceSets.functional.output.classesDirs
+    classpath = sourceSets.functional.runtimeClasspath
+
+    useJUnit {
+        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
+    }
+    systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
+}
+
+task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
+    testClassesDirs = sourceSets.functional.output.classesDirs
+    classpath = sourceSets.functional.runtimeClasspath
+
+    useJUnit {
+        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
+    }
+
+    systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
+    //systemProperty('tags', 'FunctionalTest')
+
+    maxHeapSize = '1G'
+    finalizedBy aggregate
+}
+
 // https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
 dependencyCheck {
     // Specifies if the build should be failed if a CVSS score above a specified level is identified.
@@ -41,11 +131,6 @@ dependencyCheck {
         assemblyEnabled = false
     }
 }
-
-group = 'uk.gov.hmcts.ethos.replacement'
-//version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 11
-targetCompatibility = 11
 
 repositories {
     mavenCentral()
@@ -111,89 +196,16 @@ dependencies {
     testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.2.5'
 }
 
-jar {
-    archiveName 'ethos-repl-docmosis-service.jar'
-}
+bootJar {
+    getArchiveFileName().set(provider {
+        'ethos-repl-docmosis-service.jar'
+    })
 
-def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
-                       '**/uk/gov/hmcts/ethos/replacement/docmosis/model/**',
-                       '**/uk/gov/hmcts/reform/ethos/replacement/docmosis/CaseOrchestrationApplication'
-]
-
-sonarqube {
-    println "echo sonarqube"
-    properties {
-        property "sonar.exclusions", sonarExclusions.join(', ')
-        property "sonar.projectKey", "ethos-repl-docmosis-service"
-        property "sonar.dynamicAnalysis", "reuseReports"
-        property "sonar.dependencyCheck.reportPath", "${project.buildDir}/reports/dependency-check-report.xml"
-        property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
+    manifest {
+        attributes('Implementation-Version': project.version.toString())
     }
 }
 
-project.tasks['sonarqube'].dependsOn jacocoTestReport
-
-sourceSets {
-    test {
-        java.srcDir 'src/test/java'
-    }
-    functional {
-        java.srcDir 'src/test/functional/java'
-        resources.srcDir 'src/test/functional/resources'
-        compileClasspath += main.output + test.output
-        runtimeClasspath += main.output + test.output
-    }
-}
-
-configurations {
-    functionalCompile.extendsFrom testCompile
-    functionalRuntime.extendsFrom testRuntime
-}
-
-test {
-    exclude '**/*ComponentTest*'
-}
-
-task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verification') {
-    testClassesDirs = sourceSets.functional.output.classesDirs
-    classpath = sourceSets.functional.runtimeClasspath
-
-    useJUnit {
-        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
-    }
-    systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
-}
-
-task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
-    testClassesDirs = sourceSets.functional.output.classesDirs
-    classpath = sourceSets.functional.runtimeClasspath
-
-    useJUnit {
-        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.SmokeTest'
-    }
-
-    systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
-    //systemProperty('tags', 'FunctionalTest')
-
-    maxHeapSize = '1G'
-    finalizedBy aggregate
-}
-
-jacocoTestReport {
-    executionData(test)
-    reports {
-        xml.enabled = true
-        csv.enabled = false
-        xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
-    }
-}
-
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.0
-            }
-        }
-    }
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
 }
