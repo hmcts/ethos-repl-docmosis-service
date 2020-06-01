@@ -158,13 +158,6 @@ public class BulkUpdateServiceTest {
         when(ccdClient.retrieveBulkCasesElasticSearch("authToken", MANCHESTER_DEV_BULK_CASE_TYPE_ID, bulkData.getMultipleReference())).thenReturn(submitBulkEventList);
         assert(bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()),
                 "authToken").getBulkDetails() != null);
-        submitEvent.getCaseData().setRepCollection(null);
-        submitEvent.getCaseData().setClaimantIndType(null);
-        submitEvent.getCaseData().setRespondentCollection(null);
-        when(ccdClient.retrieveCase("authToken", MANCHESTER_DEV_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
-        when(ccdClient.retrieveCase("authToken", MANCHESTER_DEV_CASE_TYPE_ID, bulkDetails.getJurisdiction(), null)).thenReturn(submitEvent);
-        assert(bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()),
-                "authToken").getBulkDetails() != null);
     }
 
     @Test

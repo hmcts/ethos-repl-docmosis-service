@@ -11,7 +11,7 @@ import com.nimbusds.jose.jwk.SecretJWK;
 import com.nimbusds.jose.proc.JWSVerifierFactory;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

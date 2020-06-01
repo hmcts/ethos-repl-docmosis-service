@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.2.7.RELEASE'
+        springBootVersion = '2.3.0.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -30,88 +30,31 @@ apply plugin: 'org.owasp.dependencycheck'
 apply plugin: 'jacoco'
 apply plugin: 'net.serenity-bdd.aggregator'
 
-// https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
-dependencyCheck {
-    // Specifies if the build should be failed if a CVSS score above a specified level is identified.
-    // range of 0-10 fails the build, anything greater and it doesn't fail the build
-    failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
-    suppressionFile = 'dependency-check-suppressions.xml'
-    analyzers {
-        // Disable scanning of .NET related binaries
-        assemblyEnabled = false
-    }
-}
-
 group = 'uk.gov.hmcts.ethos.replacement'
-//version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+version = '0.0.1'
 
-repositories {
-    mavenCentral()
-    jcenter()
-    maven { url "https://dl.bintray.com/hmcts/hmcts-maven" }
-    maven { url "http://repo.maven.apache.org/maven2" }
-    maven { url 'https://repo.spring.io/libs-milestone' }
+allprojects {
+    sourceCompatibility = '11.0'
+    targetCompatibility = '11.0'
 }
 
-def versions = [
-        springfoxSwagger: '2.9.2',
-        logging: '5.1.0'
-]
-
-dependencies {
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile("org.springframework.boot:spring-boot-starter-actuator")
-    compile("org.springframework.boot:spring-boot-configuration-processor")
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-
-    compile('org.postgresql:postgresql')
-
-    compileOnly 'org.projectlombok:lombok:1.18.4'
-    annotationProcessor 'org.projectlombok:lombok:1.18.4'
-
-    compile(group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger)
-    compile (group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger)
-
-    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
-    compile group: 'uk.gov.hmcts.reform', name: 'document-management-client', version: '6.0.0'
-
-    compile group: 'uk.gov.hmcts.reform', name: 'ecm-common', version: '0.0.18'
-
-    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.0.2.RELEASE'
-    compile group: 'io.github.openfeign', name: 'feign-httpclient', version: '10.0.1'
-    compile group: 'io.github.openfeign', name: 'feign-core', version: '9.5.1'
-
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
-
-    compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.logging
-    compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging
-
-    compile group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: '0.0.5'
-    compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.0.4'
-    compile group: 'org.springframework.retry', name: 'spring-retry'
-
-    compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.16'
-
-    testCompile (group: 'org.docx4j', name: 'docx4j', version: '6.1.2') {
-        exclude module: 'slf4j-log4j12'
+jacocoTestReport {
+    executionData(test)
+    reports {
+        xml.enabled = true
+        csv.enabled = false
+        xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
     }
-    testCompile 'org.projectlombok:lombok:1.18.12'
-    testCompile group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
-    testCompile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
-    testCompile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.2.7.RELEASE'
-    testCompile group: 'com.warrenstrange', name: 'googleauth', version: '1.5.0'
-
-    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '2.2.5'
-    testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.2.5'
-    testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.2.5'
-    testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.2.5'
 }
 
-jar {
-    archiveName 'ethos-repl-docmosis-service.jar'
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.0
+            }
+        }
+    }
 }
 
 def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
@@ -120,7 +63,6 @@ def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
 ]
 
 sonarqube {
-    println "echo sonarqube"
     properties {
         property "sonar.exclusions", sonarExclusions.join(', ')
         property "sonar.projectKey", "ethos-repl-docmosis-service"
@@ -178,21 +120,92 @@ task functional(type: Test, description: 'Runs the functional tests.', group: 'V
     finalizedBy aggregate
 }
 
-jacocoTestReport {
-    executionData(test)
-    reports {
-        xml.enabled = true
-        csv.enabled = false
-        xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+// https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
+dependencyCheck {
+    // Specifies if the build should be failed if a CVSS score above a specified level is identified.
+    // range of 0-10 fails the build, anything greater and it doesn't fail the build
+    failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
+    suppressionFile = 'dependency-check-suppressions.xml'
+    analyzers {
+        // Disable scanning of .NET related binaries
+        assemblyEnabled = false
     }
 }
 
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.0
-            }
-        }
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url "https://dl.bintray.com/hmcts/hmcts-maven" }
+    maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url 'https://repo.spring.io/libs-milestone' }
+}
+
+def versions = [
+        springfoxSwagger: '2.9.2',
+        logging: '5.1.0'
+]
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.boot:spring-boot-configuration-processor")
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+
+    compile('org.postgresql:postgresql')
+
+    compileOnly 'org.projectlombok:lombok:1.18.4'
+    annotationProcessor 'org.projectlombok:lombok:1.18.4'
+
+    compile(group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger)
+    compile (group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger)
+
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
+    compile group: 'uk.gov.hmcts.reform', name: 'document-management-client', version: '6.0.0'
+
+    compile group: 'uk.gov.hmcts.reform', name: 'ecm-common', version: '0.0.18'
+
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.0.2.RELEASE'
+    compile group: 'io.github.openfeign', name: 'feign-httpclient', version: '10.0.1'
+    compile group: 'io.github.openfeign', name: 'feign-core', version: '9.5.1'
+
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+
+    compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.logging
+    compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging
+
+    compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.0.4'
+    compile group: 'org.springframework.retry', name: 'spring-retry'
+
+    compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.16'
+
+    testCompile (group: 'org.docx4j', name: 'docx4j', version: '6.1.2') {
+        exclude module: 'slf4j-log4j12'
     }
+    testCompile 'org.projectlombok:lombok:1.18.12'
+    testCompile group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
+    testCompile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    testCompile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.2.7.RELEASE'
+    testCompile group: 'com.warrenstrange', name: 'googleauth', version: '1.5.0'
+
+    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '2.2.5'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.2.5', {
+        exclude module: 'jaxb-osgi'
+    }
+    testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.2.5'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.2.5'
+}
+
+bootJar {
+    getArchiveFileName().set(provider {
+        'ethos-repl-docmosis-service.jar'
+    })
+
+    manifest {
+        attributes('Implementation-Version': project.version.toString())
+    }
+}
+
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
 }
