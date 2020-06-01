@@ -27,6 +27,10 @@ public class EventValidationServiceTest {
     private static final LocalDate PAST_TARGET_HEARING_DATE = PAST_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
     private static final LocalDate CURRENT_TARGET_HEARING_DATE = CURRENT_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
 
+    private static final LocalDate PAST_RESPONSE_RECEIVED_DATE = LocalDate.now().minusDays(1);
+    private static final LocalDate CURRENT_RESPONSE_RECEIVED_DATE = LocalDate.now();
+    private static final LocalDate FUTURE_RESPONSE_RECEIVED_DATE = LocalDate.now().plusDays(1);
+
     private EventValidationService eventValidationService;
 
     private CaseDetails caseDetails1;
@@ -95,16 +99,38 @@ public class EventValidationServiceTest {
 
     @Test
     public void shouldValidateReturnedFromJudgeDateBeforeReferredToJudgeDate() {
-        List<String> errors = eventValidationService.validateReturnedFromJudgeDate(caseDetails1.getCaseData());
+        List<String> errors = eventValidationService.validateET3ResponseFields(caseDetails1.getCaseData());
 
-        assertEquals(2, errors.size());
+        assertEquals(1, errors.size());
         assertEquals(EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE + " for respondent 1 (Antonio Vazquez)", errors.get(0));
-        assertEquals(EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE + " for respondent 2 (Juan Garcia)", errors.get(1));
     }
 
     @Test
-    public void shouldValidateReturnedFromJudgeDateAfterReferredToJudgeDate() {
-        List<String> errors = eventValidationService.validateReturnedFromJudgeDate(caseDetails3.getCaseData());
+    public void shouldValidateReturnedFromJudgeDateAndReferredToJudgeDateAreMissingDate() {
+        List<String> errors = eventValidationService.validateET3ResponseFields(caseDetails3.getCaseData());
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateResponseReceivedDateIsFutureDate() {
+        CaseData caseData = caseDetails1.getCaseData();
+
+        caseData.getRespondentCollection().get(0).getValue().setResponseReceivedDate(PAST_RESPONSE_RECEIVED_DATE.toString());
+        caseData.getRespondentCollection().get(1).getValue().setResponseReceivedDate(CURRENT_RESPONSE_RECEIVED_DATE.toString());
+        caseData.getRespondentCollection().get(2).getValue().setResponseReceivedDate(FUTURE_RESPONSE_RECEIVED_DATE.toString());
+
+        List<String> errors = eventValidationService.validateET3ResponseFields(caseData);
+
+        assertEquals(2, errors.size());
+        assertEquals(FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE + " for respondent 3 (Mike Jordan)", errors.get(1));
+    }
+
+    @Test
+    public void shouldValidateResponseReceivedDateForMissingDate() {
+        CaseData caseData = caseDetails3.getCaseData();
+
+        List<String> errors = eventValidationService.validateET3ResponseFields(caseData);
 
         assertEquals(0, errors.size());
     }
