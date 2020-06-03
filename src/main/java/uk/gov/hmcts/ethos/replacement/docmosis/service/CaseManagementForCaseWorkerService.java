@@ -57,7 +57,7 @@ public class CaseManagementForCaseWorkerService {
     private static final String JURISDICTION_CODE_ECC = "BOC";
     private static final String EMPLOYER_CONTRACT_CLAIM_CODE = "ECC";
     private static final String MESSAGE = "Failed to link ECC case for case id : ";
-    private static final String CASE_NOT_FOUND_MESSAGE = "Case Reference Number not found";
+    private static final String CASE_NOT_FOUND_MESSAGE = "Case Reference Number not found.";
     private static final String WRONG_CASE_STATE_MESSAGE = "An Employment Counterclaim Case can only be raised against a case that has a state of Accepted.";
     private static final String ET3_RESPONSE_NOT_FOUND_MESSAGE = "An Employment Counterclaim Case can only be raised against a case that has an ET3 response.";
 

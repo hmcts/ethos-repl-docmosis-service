@@ -366,7 +366,7 @@ public class CaseManagementForCaseWorkerServiceTest {
                 .thenReturn(null);
         List<String> errors = new ArrayList<>();
         caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN, errors, MID_EVENT_CALLBACK);
-        assertEquals("[Case Reference Number not found]", errors.toString());
+        assertEquals("[Case Reference Number not found.]", errors.toString());
     }
 
     @Test
