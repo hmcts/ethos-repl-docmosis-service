@@ -131,7 +131,7 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestAberdeen() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=null, listingDate=null, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
                 "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , " +
                 "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , " +
@@ -147,7 +147,7 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestAberdeenWithALL() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=null, listingDate=null, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[" +
                 "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
@@ -171,8 +171,8 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestRange() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Range, listingDate=null, listingDateFrom=2019-12-09, " +
-                "listingDateTo=2019-12-12, listingVenue=Aberdeen, listingCollection=" +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=null, listingDate=null, listingDateFrom=null, " +
+                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=" +
                 "[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
                 "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
@@ -194,8 +194,8 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestRangeAndAllVenues() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Range, listingDate=null, listingDateFrom=2019-12-09, " +
-                "listingDateTo=2019-12-12, listingVenue=All, listingCollection=" +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=null, listingDate=null, listingDateFrom=null, " +
+                "listingDateTo=null, listingVenue=All, listingCollection=" +
                 "[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
                 "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
@@ -242,7 +242,7 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestWithAdditionalInfo() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=null, listingDate=null, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
                 "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , " +
                 "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=Juan Pedro, " +
@@ -289,7 +289,7 @@ public class ListingServiceTest {
     @Test
     public void processListingSingleCasesRequest() {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=null, listingDate=null, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
                 "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , " +
                 "positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName= , " +

@@ -5,16 +5,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
+import uk.gov.hmcts.ecm.common.exceptions.CaseRetrievalException;
 import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.BroughtForwardDatesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.BroughtForwardDatesType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 
@@ -26,7 +31,9 @@ import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 
 @Slf4j
 @Service("listingService")
@@ -34,6 +41,7 @@ public class ListingService {
 
     private final TornadoService tornadoService;
     private final CcdClient ccdClient;
+    private static final String BROUGHT_FORWARD_REPORT = "Brought Forward Report";
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
     @Autowired
@@ -92,6 +100,38 @@ public class ListingService {
         }
     }
 
+    public ListingData generateReportData(ListingDetails listingDetails, String authToken) {
+        if (listingDetails.getCaseData().getReportType().equals(BROUGHT_FORWARD_REPORT)) {
+            return processBroughtForwardDatesRequest(listingDetails, authToken);
+        }
+        return listingDetails.getCaseData();
+    }
+
+    private ListingData processBroughtForwardDatesRequest(ListingDetails listingDetails, String authToken) {
+        try {
+            List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
+            //List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
+            if (submitEvents != null) {
+                log.info("Cases searched: " + submitEvents.size());
+                List<BFDateTypeItem> bFDateTypeItems = new ArrayList<>();
+                for (SubmitEvent submitEvent : submitEvents) {
+                    if (submitEvent.getCaseData().getBroughtForwardCollection() != null && !submitEvent.getCaseData().getBroughtForwardCollection().isEmpty()) {
+                        for (BroughtForwardDatesTypeItem broughtForwardDatesTypeItem : submitEvent.getCaseData().getBroughtForwardCollection()) {
+                            BFDateTypeItem bFDateTypeItem = getBFDateTypeItem(broughtForwardDatesTypeItem, listingDetails.getCaseData(), submitEvent.getCaseData());
+                            if (bFDateTypeItem.getValue() != null) {
+                                bFDateTypeItems.add(bFDateTypeItem);
+                            }
+                        }
+                    }
+                }
+                listingDetails.getCaseData().setBfDateCollection(bFDateTypeItems);
+            }
+            return clearListingFields(listingDetails.getCaseData());
+        } catch (Exception ex) {
+            throw new CaseRetrievalException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
+        }
+    }
+
     private List<SubmitEvent> getListingHearingsSearch(ListingDetails listingDetails, String authToken) throws IOException {
         ListingData listingData = listingDetails.getCaseData();
         Map.Entry<String, String> entry = getListingVenueToSearch(listingData).entrySet().iterator().next();
@@ -115,11 +155,13 @@ public class ListingService {
         listingData.setListingVenueOfficeGlas(null);
         boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
         if (dateRange) {
-            listingData.setListingDate(null);
-        } else {
             listingData.setListingDateFrom(null);
             listingData.setListingDateTo(null);
+        } else {
+            listingData.setListingDate(null);
         }
+        listingData.setHearingDateType(null);
+        listingData.setClerkResponsible(null);
         return listingData;
     }
 
@@ -139,6 +181,25 @@ public class ListingService {
             }
         }
         return listingTypeItems;
+    }
+
+    private BFDateTypeItem getBFDateTypeItem(BroughtForwardDatesTypeItem broughtForwardDatesTypeItem, ListingData listingData, CaseData caseData) {
+        BFDateTypeItem bFDateTypeItem = new BFDateTypeItem();
+        BroughtForwardDatesType broughtForwardDatesType = broughtForwardDatesTypeItem.getValue();
+        if (!isNullOrEmpty(broughtForwardDatesType.getBroughtForwardDate()) && isNullOrEmpty(broughtForwardDatesType.getBroughtForwardDateCleared())) {
+            boolean matchingDateIsValid = validateMatchingDate(listingData, broughtForwardDatesType.getBroughtForwardDate());
+            boolean clerkResponsibleIsValid = validateClerkResponsible(listingData, caseData);
+            if (matchingDateIsValid && clerkResponsibleIsValid) {
+                BFDateType bFDateType = new BFDateType();
+                bFDateType.setCaseReference(caseData.getEthosCaseReference());
+                bFDateType.setBroughtForwardDate(broughtForwardDatesType.getBroughtForwardDate());
+                bFDateType.setBroughtForwardDateReason(broughtForwardDatesType.getBroughtForwardDateReason());
+                bFDateType.setBroughtForwardDateCleared(broughtForwardDatesType.getBroughtForwardDateCleared());
+                bFDateTypeItem.setId(String.valueOf(broughtForwardDatesTypeItem.getId()));
+                bFDateTypeItem.setValue(bFDateType);
+            }
+        }
+        return bFDateTypeItem;
     }
 
     private boolean isAllVenuesGlasgowAndAberdeen(ListingData listingData) {
@@ -189,6 +250,28 @@ public class ListingService {
             String dateToSearch = listingData.getListingDate();
             return ListingHelper.getListingDateBetween(dateToSearch, "", dateListed);
         }
+    }
+
+    private boolean validateMatchingDate(ListingData listingData, String matchingDate) {
+        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
+        if (!dateRange) {
+            String dateToSearch = listingData.getListingDate();
+            return ListingHelper.getMatchingDateBetween(dateToSearch, "", matchingDate, false);
+        } else {
+            String dateToSearchFrom = listingData.getListingDateFrom();
+            String dateToSearchTo = listingData.getListingDateTo();
+            return ListingHelper.getMatchingDateBetween(dateToSearchFrom, dateToSearchTo, matchingDate, true);
+        }
+    }
+
+    private boolean validateClerkResponsible(ListingData listingData, CaseData caseData) {
+        if (listingData.getClerkResponsible() != null) {
+            if (caseData.getClerkResponsible() != null) {
+                return listingData.getClerkResponsible().equals(caseData.getClerkResponsible());
+            }
+            return false;
+        }
+        return true;
     }
 
     public DocumentInfo processHearingDocument(ListingData listingData, String caseTypeId, String authToken) {
