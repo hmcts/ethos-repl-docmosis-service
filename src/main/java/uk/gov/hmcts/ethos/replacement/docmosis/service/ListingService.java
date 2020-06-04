@@ -32,6 +32,7 @@ import java.util.Map;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 
@@ -41,7 +42,6 @@ public class ListingService {
 
     private final TornadoService tornadoService;
     private final CcdClient ccdClient;
-    private static final String BROUGHT_FORWARD_REPORT = "Brought Forward Report";
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
     @Autowired
@@ -101,16 +101,18 @@ public class ListingService {
     }
 
     public ListingData generateReportData(ListingDetails listingDetails, String authToken) {
-        if (listingDetails.getCaseData().getReportType().equals(BROUGHT_FORWARD_REPORT)) {
-            return processBroughtForwardDatesRequest(listingDetails, authToken);
+        switch (listingDetails.getCaseData().getReportType()) {
+            case BROUGHT_FORWARD_REPORT:
+                return processBroughtForwardDatesRequest(listingDetails, authToken);
+            default:
+                return listingDetails.getCaseData();
         }
-        return listingDetails.getCaseData();
     }
 
     private ListingData processBroughtForwardDatesRequest(ListingDetails listingDetails, String authToken) {
         try {
             List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
-            //List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
+            //List<SubmitEvent> submitEvents = getGenericReportSearch(listingDetails, authToken);
             if (submitEvents != null) {
                 log.info("Cases searched: " + submitEvents.size());
                 List<BFDateTypeItem> bFDateTypeItems = new ArrayList<>();
@@ -147,6 +149,21 @@ public class ListingService {
             String dateToSearch = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2).toString();
             return ccdClient.retrieveCasesVenueAndDateElasticSearch(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()),
                     dateToSearch, dateToSearch, venueToSearch, venueToSearchMapping);
+        }
+    }
+
+    private List<SubmitEvent> getGenericReportSearch(ListingDetails listingDetails, String authToken) throws IOException {
+        ListingData listingData = listingDetails.getCaseData();
+        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
+        if (!dateRange) {
+            String dateToSearch = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2).toString();
+            return ccdClient.retrieveCasesGenericReportElasticSearch(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()),
+                    dateToSearch, dateToSearch, listingData.getReportType());
+        } else {
+            String dateToSearchFrom = LocalDate.parse(listingData.getListingDateFrom(), OLD_DATE_TIME_PATTERN2).toString();
+            String dateToSearchTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2).toString();
+            return ccdClient.retrieveCasesGenericReportElasticSearch(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()),
+                    dateToSearchFrom, dateToSearchTo, listingData.getReportType());
         }
     }
 
