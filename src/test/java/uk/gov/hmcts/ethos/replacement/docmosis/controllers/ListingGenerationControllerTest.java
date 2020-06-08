@@ -53,6 +53,7 @@ public class ListingGenerationControllerTest {
     private static final String LISTING_SINGLE_CASES_URL = "/listingSingleCases";
     private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_URL = "/generateListingsDocSingleCases";
     private static final String GENERATE_LISTINGS_DOC_SINGLE_CASES_CONFIRMATION_URL = "/generateListingsDocSingleCasesConfirmation";
+    private static final String GENERATE_REPORT_URL = "/generateReport";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -247,6 +248,20 @@ public class ListingGenerationControllerTest {
     }
 
     @Test
+    public void generateReport() throws Exception {
+        when(listingService.generateReportData(isA(ListingDetails.class), eq(AUTH_TOKEN))).thenReturn(listingDetails.getCaseData());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GENERATE_REPORT_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void listingHearingsError400() throws Exception {
         mvc.perform(post(LISTING_HEARINGS_URL)
                 .content("error")
@@ -276,6 +291,15 @@ public class ListingGenerationControllerTest {
     @Test
     public void generateListingsDocSingleCasesError400() throws Exception {
         mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void generateReportError400() throws Exception {
+        mvc.perform(post(GENERATE_REPORT_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -321,6 +345,17 @@ public class ListingGenerationControllerTest {
         when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN))).thenThrow(feignError());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(LISTING_HEARINGS_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void generateReportError500() throws Exception {
+        when(listingService.generateReportData(isA(ListingDetails.class), eq(AUTH_TOKEN))).thenThrow(feignError());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GENERATE_REPORT_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -382,6 +417,16 @@ public class ListingGenerationControllerTest {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_CONFIRMATION_URL)
                 .content(requestContentSingleCase.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void generateReportForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(GENERATE_REPORT_URL)
+                .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());

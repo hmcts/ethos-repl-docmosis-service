@@ -658,6 +658,33 @@ public class ListingHelperTest {
     }
 
     @Test
+    public void getMatchingDateBetween() {
+        String dateToSearchFrom = "2020-01-11";
+        String dateToSearchTo = "2020-01-20";
+        String dateToSearch = "2020-01-15";
+        boolean isBetween = ListingHelper.getMatchingDateBetween(dateToSearchFrom, dateToSearchTo, dateToSearch, true);
+        assertTrue(isBetween);
+
+        dateToSearchFrom = "2020-01-11";
+        dateToSearchTo = "2020-01-20";
+        dateToSearch = "2020-01-25";
+        isBetween = ListingHelper.getMatchingDateBetween(dateToSearchFrom, dateToSearchTo, dateToSearch, true);
+        assertFalse(isBetween);
+
+        dateToSearchFrom = "2020-01-11";
+        dateToSearchTo = "";
+        dateToSearch = "2020-01-11";
+        boolean isEqual = ListingHelper.getMatchingDateBetween(dateToSearchFrom, dateToSearchTo, dateToSearch, false);
+        assertTrue(isEqual);
+
+        dateToSearchFrom = "2020-01-11";
+        dateToSearchTo = "";
+        dateToSearch = "2020-01-12";
+        isEqual = ListingHelper.getMatchingDateBetween(dateToSearchFrom, dateToSearchTo, dateToSearch, false);
+        assertFalse(isEqual);
+    }
+
+    @Test
     public void getListingDocName() {
         ListingData listingData = new ListingData();
         listingData.setHearingDocType(HEARING_DOC_ETCL);
