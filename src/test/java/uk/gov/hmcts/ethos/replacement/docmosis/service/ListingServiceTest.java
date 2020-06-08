@@ -407,4 +407,10 @@ public class ListingServiceTest {
         listingDetailsRange.getCaseData().setClerkResponsible("Steve Jones");
     }
 
+    @Test(expected = Exception.class)
+    public void generateReportDataWithException() throws IOException {
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenThrow(new RuntimeException());
+        listingService.generateReportData(listingDetails, "authToken");
+    }
+
 }
