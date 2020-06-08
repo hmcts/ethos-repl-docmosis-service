@@ -101,19 +101,18 @@ public class ListingService {
     }
 
     public ListingData generateReportData(ListingDetails listingDetails, String authToken) {
-        switch (listingDetails.getCaseData().getReportType()) {
-            case BROUGHT_FORWARD_REPORT:
-                return processBroughtForwardDatesRequest(listingDetails, authToken);
-            default:
-                return listingDetails.getCaseData();
+        if (listingDetails.getCaseData().getReportType().equals(BROUGHT_FORWARD_REPORT)) {
+            return processBroughtForwardDatesRequest(listingDetails, authToken);
+        } else {
+            return listingDetails.getCaseData();
         }
     }
 
     private ListingData processBroughtForwardDatesRequest(ListingDetails listingDetails, String authToken) {
         try {
-            List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
-            //List<SubmitEvent> submitEvents = getGenericReportSearch(listingDetails, authToken);
-            if (submitEvents != null) {
+            //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
+            List<SubmitEvent> submitEvents = getGenericReportSearch(listingDetails, authToken);
+            if (submitEvents != null || !submitEvents.isEmpty()) {
                 log.info("Cases searched: " + submitEvents.size());
                 List<BFDateTypeItem> bFDateTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
