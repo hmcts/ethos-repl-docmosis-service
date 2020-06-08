@@ -54,9 +54,12 @@ public class CaseManagementForCaseWorkerService {
 
     private final CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     private final CcdClient ccdClient;
-    private static final String MESSAGE = "Failed to link ECC case for case id : ";
     private static final String JURISDICTION_CODE_ECC = "BOC";
     private static final String EMPLOYER_CONTRACT_CLAIM_CODE = "ECC";
+    private static final String MESSAGE = "Failed to link ECC case for case id : ";
+    private static final String CASE_NOT_FOUND_MESSAGE = "Case Reference Number not found.";
+    private static final String WRONG_CASE_STATE_MESSAGE = "An Employment Counterclaim Case can only be raised against a case that has a state of Accepted.";
+    private static final String ET3_RESPONSE_NOT_FOUND_MESSAGE = "An Employment Counterclaim Case can only be raised against a case that has an ET3 response.";
 
     @Autowired
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService, CcdClient ccdClient) {
@@ -353,19 +356,21 @@ public class CaseManagementForCaseWorkerService {
         List<SubmitEvent> submitEvents = getCasesES(caseDetails, authToken);
         if (submitEvents != null && !submitEvents.isEmpty()) {
             SubmitEvent submitEvent = submitEvents.get(0);
-            switch (callback) {
-                case MID_EVENT_CALLBACK:
-                    Helper.midRespondentECC(currentCaseData, submitEvent.getCaseData());
-                    break;
-                case ABOUT_TO_SUBMIT_EVENT_CALLBACK:
-                    createECCLogic(currentCaseData, submitEvent.getCaseData(), String.valueOf(submitEvent.getCaseId()));
-                    currentCaseData.setRespondentECC(null);
-                    break;
-                default:
-                    sendUpdateSingleCaseECC(authToken, caseDetails, submitEvent.getCaseData(), String.valueOf(submitEvent.getCaseId()));
+            if(validCaseForECC(submitEvent, errors)) {
+                switch (callback) {
+                    case MID_EVENT_CALLBACK:
+                        Helper.midRespondentECC(currentCaseData, submitEvent.getCaseData());
+                        break;
+                    case ABOUT_TO_SUBMIT_EVENT_CALLBACK:
+                        createECCLogic(currentCaseData, submitEvent.getCaseData(), String.valueOf(submitEvent.getCaseId()));
+                        currentCaseData.setRespondentECC(null);
+                        break;
+                    default:
+                        sendUpdateSingleCaseECC(authToken, caseDetails, submitEvent.getCaseData(), String.valueOf(submitEvent.getCaseId()));
+                }
             }
         } else {
-            errors.add("Case Reference Number not found");
+            errors.add(CASE_NOT_FOUND_MESSAGE);
         }
         return currentCaseData;
     }
@@ -375,6 +380,19 @@ public class CaseManagementForCaseWorkerService {
 //                caseDetails.getCaseTypeId(), caseDetails.getJurisdiction(), "1584620660814572")));
         return caseRetrievalForCaseWorkerService.casesRetrievalESRequest(caseDetails.getCaseId(), authToken,
                 caseDetails.getCaseTypeId(), new ArrayList<>(Collections.singleton(caseDetails.getCaseData().getCaseRefECC())));
+    }
+
+    private boolean validCaseForECC(SubmitEvent submitEvent, List<String> errors) {
+        boolean validCaseForECC = true;
+        if(!submitEvent.getState().equals(ACCEPTED_STATE)) {
+            errors.add(WRONG_CASE_STATE_MESSAGE);
+            validCaseForECC = false;
+        }
+        if(submitEvent.getCaseData().getEt3Received() == null || submitEvent.getCaseData().getEt3Received().equals(NO)) {
+            errors.add(ET3_RESPONSE_NOT_FOUND_MESSAGE);
+            validCaseForECC = false;
+        }
+        return validCaseForECC;
     }
 
     private void createECCLogic(CaseData caseData, CaseData originalCaseData, String originalId) {

@@ -53,9 +53,9 @@ public class CaseManagementForCaseWorkerServiceTest {
     @InjectMocks
     private CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
-    private CCDRequest manchesterCcdRequest;
     private CCDRequest scotlandCcdRequest1;
     private CCDRequest scotlandCcdRequest3;
+    private CCDRequest manchesterCcdRequest;
     private SubmitEvent submitEvent;
     @MockBean
     private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
@@ -64,6 +64,14 @@ public class CaseManagementForCaseWorkerServiceTest {
 
     @Before
     public void setUp() throws Exception {
+        scotlandCcdRequest1 = new CCDRequest();
+        CaseDetails caseDetailsScot1 = generateCaseDetails("caseDetailsScotTest1.json");
+        scotlandCcdRequest1.setCaseDetails(caseDetailsScot1);
+
+        scotlandCcdRequest3 = new CCDRequest();
+        CaseDetails caseDetailsScot3 = generateCaseDetails("caseDetailsScotTest3.json");
+        scotlandCcdRequest3.setCaseDetails(caseDetailsScot3);
+
         manchesterCcdRequest = new CCDRequest();
         CaseDetails manchesterCaseDetails = new CaseDetails();
         CaseData caseData = new CaseData();
@@ -77,14 +85,6 @@ public class CaseManagementForCaseWorkerServiceTest {
         manchesterCaseDetails.setCaseTypeId(MANCHESTER_DEV_CASE_TYPE_ID);
         manchesterCaseDetails.setJurisdiction("TRIBUNALS");
         manchesterCcdRequest.setCaseDetails(manchesterCaseDetails);
-
-        scotlandCcdRequest1 = new CCDRequest();
-        CaseDetails caseDetailsScot1 = generateCaseDetails("caseDetailsScotTest1.json");
-        scotlandCcdRequest1.setCaseDetails(caseDetailsScot1);
-
-        scotlandCcdRequest3 = new CCDRequest();
-        CaseDetails caseDetailsScot3 = generateCaseDetails("caseDetailsScotTest3.json");
-        scotlandCcdRequest3.setCaseDetails(caseDetailsScot3);
 
         submitEvent = new SubmitEvent();
         CaseData submitCaseData = new CaseData();
@@ -100,8 +100,11 @@ public class CaseManagementForCaseWorkerServiceTest {
         address.setPostCode("L1 122");
         claimantType.setClaimantAddressUK(address);
         submitCaseData.setClaimantType(claimantType);
+        submitCaseData.setEt3Received("Yes");
+        submitEvent.setState("Accepted");
         submitEvent.setCaseId(123);
         submitEvent.setCaseData(submitCaseData);
+
         caseManagementForCaseWorkerService = new CaseManagementForCaseWorkerService(caseRetrievalForCaseWorkerService, ccdClient);
     }
 
@@ -349,6 +352,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void midRespondentECCWithStruckOut() {
         CaseData caseData = new CaseData();
         caseData.setRespondentCollection(createRespondentCollection(false));
+        caseData.setEt3Received("Yes");
         submitEvent.setCaseData(caseData);
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
@@ -362,7 +366,7 @@ public class CaseManagementForCaseWorkerServiceTest {
                 .thenReturn(null);
         List<String> errors = new ArrayList<>();
         caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN, errors, MID_EVENT_CALLBACK);
-        assertEquals("[Case Reference Number not found]", errors.toString());
+        assertEquals("[Case Reference Number not found.]", errors.toString());
     }
 
     @Test
@@ -397,6 +401,20 @@ public class CaseManagementForCaseWorkerServiceTest {
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenThrow(feignError());
         caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
                 new ArrayList<>(), SUBMITTED_CALLBACK);
+    }
+
+    @Test
+    public void createECCFromClosedCaseWithoutET3() {
+        submitEvent.setState("Closed");
+        submitEvent.getCaseData().setEt3Received("No");
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        List<String> errors = new ArrayList<>();
+        CaseData caseData = caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN, errors, MID_EVENT_CALLBACK);
+        assertNull(caseData.getRespondentECC().getListItems());
+        assertEquals(2, errors.size());
+        submitEvent.setState("Accepted");
+        submitEvent.getCaseData().setEt3Received("Yes");
     }
 
     private List<RespondentSumTypeItem> createRespondentCollection(boolean single) {
