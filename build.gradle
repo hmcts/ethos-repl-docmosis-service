@@ -173,7 +173,7 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.logging
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging
 
-    compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.0.4'
+    compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.1.0'
     compile group: 'org.springframework.retry', name: 'spring-retry'
 
     compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.19'
