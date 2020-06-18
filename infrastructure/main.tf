@@ -54,6 +54,7 @@ module "repl-docmosis-backend" {
     ETHOS_REPL_DB_USER_NAME            = module.db.user_name
     ETHOS_REPL_DB_NAME                 = module.db.postgresql_database
     ETHOS_REPL_DB_CONN_OPTIONS         = local.db_connection_options
+    CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING = data.azurerm_key_vault_secret.create_updates_queue_send_conn_str.value
   }
 }
 
