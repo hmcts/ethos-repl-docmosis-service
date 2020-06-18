@@ -11,6 +11,10 @@ output "vaultUri" {
   value = local.vaultUri
 }
 
+output "sharedVaultUri" {
+  value = local.sharedVaultUri
+}
+
 output "tornado_url" {
   value = var.tornado_url
 }

@@ -17,6 +17,7 @@ locals {
   previewSharedVaultName = "${var.product}-shared-aat"
   nonPreviewSharedVaultName = "${var.product}-shared-${var.env}"
   sharedVaultName = var.env == "preview" ? local.previewSharedVaultName : local.nonPreviewSharedVaultName
+  sharedVaultUri = data.azurerm_key_vault.ethos_shared_key_vault.vault_uri
   previewSharedRG = "${var.product}-aat"
   nonPreviewSharedRG = "${var.product}-${var.env}"
   sharedResourceGroup = var.env == "preview" ? local.previewSharedRG : local.nonPreviewSharedRG
