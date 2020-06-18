@@ -2,7 +2,7 @@ spring:
   cloud:
     propertiesvolume:
       prefixed: false
-      paths: /mnt/secrets/ethos
+      paths: /mnt/secrets/ethos,/mnt/secrets/ethos-shared
       aliases:
         AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key
         tornado-access-key: TORNADO_ACCESS_KEY
