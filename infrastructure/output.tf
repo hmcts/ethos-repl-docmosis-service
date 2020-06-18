@@ -11,6 +11,10 @@ output "vaultUri" {
   value = local.vaultUri
 }
 
+output "sharedVaultName" {
+  value = local.sharedVaultName
+}
+
 output "sharedVaultUri" {
   value = local.sharedVaultUri
 }
