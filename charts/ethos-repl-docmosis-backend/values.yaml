@@ -10,6 +10,7 @@ java:
         - tornado-access-key
         - ethos-repl-service-s2s-secret
         - repl-docmosis-backend-POSTGRES-PASS
+        - create-updates-queue-send-connection-string
   aadIdentityName: ethos
   environment:
     SERVER_PORT: 8081

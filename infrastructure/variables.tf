@@ -1,15 +1,15 @@
 variable "product" {
-  type    = "string"
+  type    = string
   default = "ethos"
 }
 
 variable "location" {
-  type    = "string"
+  type    = string
   default = "UK South"
 }
 
 variable "env" {
-  type = "string"
+  type = string
 }
 
 variable "tornado_url" {
@@ -17,7 +17,7 @@ variable "tornado_url" {
 }
 
 variable "subscription" {
-  type = "string"
+  type = string
 }
 
 variable "ilbIp"{}
@@ -25,7 +25,7 @@ variable "ilbIp"{}
 variable "tenant_id" {}
 
 variable "jenkins_AAD_objectId" {
-  type                        = "string"
+  type                        = string
   description                 = "(Required) The Azure AD object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies."
 }
 
@@ -43,7 +43,7 @@ variable "common_tags" {
 
 variable "autoheal" {
   description = "Enabling Proactive Auto Heal for Webapps"
-  type        = "string"
+  type        = string
   default     = "True"
 }
 
@@ -72,11 +72,11 @@ variable "ccd_gateway_url" {
 }
 
 variable "component" {
-  type = "string"
+  type = string
 }
 
 variable "location_api" {
-  type    = "string"
+  type    = string
   default = "UK South"
 }
 
@@ -85,7 +85,7 @@ variable "managed_identity_object_id" {
 }
 
 variable "appinsights_location" {
-  type        = "string"
+  type        = string
   default     = "West Europe"
   description = "Location for Application Insights"
 }
