@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+  <logger name="c.m.a.servicebus.primitives" level="ERROR"/>
+  <logger name="c.m.azure.servicebus.primitives" level="ERROR"/>
+  <logger name="com.microsoft.azure.servicebus.primitives" level="ERROR"/>
+</included>
