@@ -470,4 +470,15 @@ public class ListingHelper {
         }
     }
 
+    public static boolean getMatchingDateBetween(String dateToSearchFrom, String dateToSearchTo, String dateToSearch, boolean dateRange) {
+        LocalDate localDate = LocalDate.parse(dateToSearch, OLD_DATE_TIME_PATTERN2);
+        LocalDate localDateFrom = LocalDate.parse(dateToSearchFrom, OLD_DATE_TIME_PATTERN2);
+        if (!dateRange) {
+            return localDateFrom.isEqual(localDate);
+        } else {
+            LocalDate localDateTo = LocalDate.parse(dateToSearchTo, OLD_DATE_TIME_PATTERN2);
+            return (!localDate.isBefore(localDateFrom)) && (!localDate.isAfter(localDateTo));
+        }
+    }
+
 }
