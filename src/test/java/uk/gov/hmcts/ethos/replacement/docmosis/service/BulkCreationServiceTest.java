@@ -23,6 +23,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ecm.common.model.helper.BulkRequestPayload;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
+import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.BulkCreationService.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class BulkCreationServiceTest {
@@ -46,6 +49,11 @@ public class BulkCreationServiceTest {
     private MultipleReferenceService multipleReferenceService;
     @Mock
     private BulkSearchService bulkSearchService;
+    @Mock
+    private CreateUpdatesBusSender createUpdatesBusSender;
+    @Mock
+    private UserService userService;
+
     private BulkRequest bulkRequest;
     private BulkRequest bulkRequest1;
     private SubmitEvent submitEvent;
@@ -139,7 +147,7 @@ public class BulkCreationServiceTest {
         submitEvent3.setState("Accepted");
         submitEvent3.setCaseData(getCaseData("1122"));
         bulkSearchService = new BulkSearchService(ccdClient, multipleReferenceService);
-        bulkCreationService = new BulkCreationService(ccdClient, bulkSearchService);
+        bulkCreationService = new BulkCreationService(ccdClient, bulkSearchService, createUpdatesBusSender, userService);
 
         bulkCasesPayload = new BulkCasesPayload();
         bulkCasesPayload.setAlreadyTakenIds(new ArrayList<>());
@@ -322,14 +330,22 @@ public class BulkCreationServiceTest {
                 "flag2=null, EQP=null, submissionRef=null, claimantOrg=null, respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, " +
                 "jurCodesDynamicList=null, outcomeUpdate=null, filterCases=null, docMarkUp=null, multipleSource=Manually Created))";
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails(YES, "Single"),
-                bulkCasesPayload, "authToken", false);
+                bulkCasesPayload, "authToken", BULK_CREATION_STEP);
         assertEquals(result, bulkRequestPayload.getBulkDetails().toString());
     }
 
     @Test
     public void bulkCreationLogicAfterSubmittedCallback() {
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails(YES, "Single"),
-                bulkCasesPayload, "authToken", true);
+                bulkCasesPayload, "authToken", UPDATE_SINGLES_STEP);
+        assertNull(bulkRequestPayload.getBulkDetails().getCaseData().getMultipleReference());
+    }
+
+    @Test
+    public void bulkCreationLogicAfterSubmittedPQCallback() {
+        when(userService.getUserDetails("authToken")).thenReturn(HelperTest.getUserDetails());
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails(YES, "Single"),
+                bulkCasesPayload, "authToken", UPDATE_SINGLES_PQ_STEP);
         assertNull(bulkRequestPayload.getBulkDetails().getCaseData().getMultipleReference());
     }
 
@@ -337,7 +353,7 @@ public class BulkCreationServiceTest {
     public void bulkCreationLogicAfterSubmittedCallbackPending() {
         bulkCasesPayload.getSubmitEvents().get(0).setState(PENDING_STATE);
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails(YES, "Single"),
-                bulkCasesPayload, "authToken", true);
+                bulkCasesPayload, "authToken", UPDATE_SINGLES_STEP);
         assertNotNull(bulkRequestPayload.getBulkDetails().getCaseData());
     }
 
@@ -345,7 +361,7 @@ public class BulkCreationServiceTest {
     public void bulkCreationLogicWithErrors() {
         bulkCasesPayload.setErrors(new ArrayList<>(Collections.singleton("Errors")));
         BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(getBulkDetails(YES, "Single"),
-                bulkCasesPayload, "authToken", true);
+                bulkCasesPayload, "authToken", UPDATE_SINGLES_STEP);
         assertEquals("[Errors]", bulkRequestPayload.getErrors().toString());
     }
 

@@ -26,6 +26,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.BulkCreationService.*;
 
 @Slf4j
 @RestController
@@ -73,7 +74,7 @@ public class BulkActionsController {
 
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken, true);
 
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, false);
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, BULK_CREATION_STEP);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -107,7 +108,7 @@ public class BulkActionsController {
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
                 bulkRequest.getCaseDetails(), userToken, true, true);
 
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, false);
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, BULK_CREATION_STEP);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -138,12 +139,47 @@ public class BulkActionsController {
             BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
                     bulkRequest.getCaseDetails(), userToken, true, false);
             //BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken, false);
-            bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, true);
+            bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, UPDATE_SINGLES_STEP);
         }
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .data(bulkRequest.getCaseDetails().getCaseData())
                 .confirmation_header("Updates are being processed...")
+                .build());
+    }
+
+    @PostMapping(value = "/afterSubmittedBulkPQ", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "display the bulk info.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<BulkCallbackResponse> afterSubmittedBulkPQ(
+            @RequestBody BulkRequest bulkRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("AFTER SUBMITTED BULK PERSISTENT Q ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+
+        if (bulkRequest.getCaseDetails().getCaseData().getMultipleSource() != null
+                && !bulkRequest.getCaseDetails().getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
+            BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
+                    bulkRequest.getCaseDetails(), userToken, true, false);
+            //BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken, false);
+            bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, UPDATE_SINGLES_PQ_STEP);
+        }
+
+        return ResponseEntity.ok(BulkCallbackResponse.builder()
+                .errors(bulkRequestPayload.getErrors())
+                .data(bulkRequest.getCaseDetails().getCaseData())
+                .confirmation_header("Updates are being processed using Persistent queue...")
                 .build());
     }
 
