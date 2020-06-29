@@ -53,6 +53,31 @@ public class ListingGenerationController {
         this.verifyTokenService = verifyTokenService;
     }
 
+    @PostMapping(value = "/listingCaseCreation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "handles logic related to the creation of listing cases.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<ListingCallbackResponse> listingCaseCreation(
+            @RequestBody ListingRequest listingRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("LISTING CASE CREATION ---> " + LOG_MESSAGE + listingRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        ListingData listingData = listingService.listingCaseCreation(listingRequest.getCaseDetails());
+
+        return ResponseEntity.ok(ListingCallbackResponse.builder()
+                .data(listingData)
+                .build());
+    }
+
     @PostMapping(value = "/listingSingleCases", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "search hearings by venue and date in a specific case.")
     @ApiResponses(value = {

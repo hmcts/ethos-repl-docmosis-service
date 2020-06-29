@@ -42,12 +42,30 @@ public class ListingService {
 
     private final TornadoService tornadoService;
     private final CcdClient ccdClient;
+    private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
     @Autowired
     public ListingService(TornadoService tornadoService, CcdClient ccdClient) {
         this.tornadoService = tornadoService;
         this.ccdClient = ccdClient;
+    }
+
+    public ListingData listingCaseCreation(ListingDetails listingDetails) {
+
+        ListingData listingData = listingDetails.getCaseData();
+
+        if (listingData.getHearingDocType() != null) {
+            listingData.setDocumentName(listingData.getHearingDocType());
+        }
+        else if (listingData.getReportType() != null) {
+            listingData.setDocumentName(listingData.getReportType());
+        }
+        else {
+            listingData.setDocumentName(MISSING_DOCUMENT_NAME);
+        }
+
+        return listingData;
     }
 
     public CaseData processListingSingleCasesRequest(CaseDetails caseDetails) {
