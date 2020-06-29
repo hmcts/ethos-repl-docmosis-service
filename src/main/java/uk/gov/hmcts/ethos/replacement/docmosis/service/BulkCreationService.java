@@ -11,7 +11,10 @@ import uk.gov.hmcts.ecm.common.model.bulk.items.MultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ecm.common.model.helper.BulkRequestPayload;
+import uk.gov.hmcts.ecm.common.model.servicebus.CreateUpdatesDto;
+import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.CreationDataModel;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkCreationTask;
 
 import java.time.Duration;
@@ -29,21 +32,30 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 @Service("bulkCreationService")
 public class BulkCreationService {
 
+    public static final String BULK_CREATION_STEP = "BulkCreation";
+    public static final String UPDATE_SINGLES_STEP = "UpdateSingles";
+    public static final String UPDATE_SINGLES_PQ_STEP = "UpdateSinglesPQ";
+
     private final CcdClient ccdClient;
     private final BulkSearchService bulkSearchService;
+    private final CreateUpdatesBusSender createUpdatesBusSender;
+    private final UserService userService;
 
     @Autowired
-    public BulkCreationService(CcdClient ccdClient, BulkSearchService bulkSearchService) {
+    public BulkCreationService(CcdClient ccdClient, BulkSearchService bulkSearchService,
+                               CreateUpdatesBusSender createUpdatesBusSender, UserService userService) {
         this.ccdClient = ccdClient;
         this.bulkSearchService = bulkSearchService;
+        this.createUpdatesBusSender = createUpdatesBusSender;
+        this.userService = userService;
     }
 
-    public BulkRequestPayload bulkCreationLogic(BulkDetails bulkDetails, BulkCasesPayload bulkCasesPayload, String userToken, boolean afterSubmittedCallback) {
+    public BulkRequestPayload bulkCreationLogic(BulkDetails bulkDetails, BulkCasesPayload bulkCasesPayload, String userToken, String action) {
         BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
         if (bulkCasesPayload.getErrors().isEmpty()) {
             // 1) Retrieve cases by ethos reference
             List<SubmitEvent> submitEvents = bulkCasesPayload.getSubmitEvents();
-            if (!afterSubmittedCallback) {
+            if (action.equals(BULK_CREATION_STEP)) {
                 // 2) Create multiple ref number
                 bulkDetails.getCaseData().setMultipleReference(bulkSearchService.generateMultipleRef(bulkDetails));
                 // 3) Add list of cases to the multiple bulk case collection
@@ -54,16 +66,50 @@ public class BulkCreationService {
                 } else {
                     bulkRequestPayload.setBulkDetails(BulkHelper.setMultipleCollection(bulkDetails, bulkDetails.getCaseData().getMultipleCollection()));
                 }
-            } else {
+            } else if (action.equals(UPDATE_SINGLES_STEP)){
                 // 4) Create an event to update multiple reference field to all cases
                 createCaseEventsToUpdateMultipleRef(submitEvents, bulkDetails, userToken);
                 bulkRequestPayload.setBulkDetails(bulkDetails);
+            } else {
+                // 4) Create an event to update multiple reference field to all cases using PERSISTENT QUEUE
+
+                List<String> ethosCaseRefCollection = BulkHelper.getCaseIds(bulkDetails);
+                log.info("ETHOS CASE REF COLLECTION: " + ethosCaseRefCollection);
+                if (!ethosCaseRefCollection.isEmpty()) {
+                    CreateUpdatesDto createUpdatesDto = getCreateUpdatesDto(bulkDetails, ethosCaseRefCollection, userToken);
+                    CreationDataModel creationDataModel = getCreationDataModel(ethosCaseRefCollection, bulkDetails.getCaseData().getMultipleReference());
+                    createUpdatesBusSender.sendUpdatesToQueue(
+                            createUpdatesDto,
+                            creationDataModel,
+                            bulkCasesPayload.getErrors());
+                } else {
+                    log.info("EMPTY CASE REF COLLECTION");
+                }
+                bulkRequestPayload.setBulkDetails(bulkDetails);
+
             }
         } else {
             bulkRequestPayload.setBulkDetails(bulkDetails);
         }
         bulkRequestPayload.setErrors(bulkCasesPayload.getErrors());
         return bulkRequestPayload;
+    }
+
+    private CreateUpdatesDto getCreateUpdatesDto(BulkDetails bulkDetails, List<String> ethosCaseRefCollection, String userToken) {
+        return CreateUpdatesDto.builder()
+                .caseTypeId(bulkDetails.getCaseTypeId())
+                .jurisdiction(bulkDetails.getJurisdiction())
+                .multipleRef(bulkDetails.getCaseData().getMultipleReference())
+                .username(userService.getUserDetails(userToken).getEmail())
+                .ethosCaseRefCollection(ethosCaseRefCollection)
+                .build();
+    }
+
+    private CreationDataModel getCreationDataModel(List<String> ethosCaseRefCollection, String multipleRef) {
+        return CreationDataModel.builder()
+                .lead(ethosCaseRefCollection.get(0))
+                .multipleRef(multipleRef)
+                .build();
     }
 
     private void createCaseEventsToUpdateMultipleRef(List<SubmitEvent> submitEvents, BulkDetails bulkDetails, String userToken) {
