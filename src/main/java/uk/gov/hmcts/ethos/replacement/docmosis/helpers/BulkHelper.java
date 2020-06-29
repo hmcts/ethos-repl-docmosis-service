@@ -204,7 +204,7 @@ public class BulkHelper {
     public static List<String> getCaseIds(BulkDetails bulkDetails) {
         if (bulkDetails.getCaseData().getCaseIdCollection() != null && !bulkDetails.getCaseData().getCaseIdCollection().isEmpty()) {
             return bulkDetails.getCaseData().getCaseIdCollection().stream()
-                    .filter(key -> key.getId() != null)
+                    .filter(key -> key.getId() != null && !key.getId().equals("null"))
                     .map(caseId -> caseId.getValue().getEthosCaseReference())
                     .distinct()
                     .collect(Collectors.toList());
