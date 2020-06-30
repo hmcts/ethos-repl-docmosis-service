@@ -35,6 +35,9 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 
@@ -44,9 +47,6 @@ public class ListingService {
 
     private final TornadoService tornadoService;
     private final CcdClient ccdClient;
-    private static final String HEARING_STATUS_SETTLED = "Settled";
-    private static final String HEARING_STATUS_WITHDRAWN = "Withdrawn";
-    private static final String HEARING_STATUS_POSTPONED = "Postponed";
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
     @Autowired
