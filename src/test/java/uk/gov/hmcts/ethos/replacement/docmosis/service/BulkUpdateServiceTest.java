@@ -27,6 +27,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ecm.common.model.helper.BulkRequestPayload;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
+import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,6 +49,10 @@ public class BulkUpdateServiceTest {
     private BulkUpdateService bulkUpdateService;
     @Mock
     private CcdClient ccdClient;
+    @Mock
+    private UserService userService;
+    @Mock
+    private CreateUpdatesBusSender createUpdatesBusSender;
 
     private CCDRequest ccdRequest;
     private BulkRequest bulkRequest;
@@ -110,7 +116,7 @@ public class BulkUpdateServiceTest {
         submitBulkEvent.setCaseId(1111);
         submitBulkEvent.setCaseData(bulkData);
 
-        bulkUpdateService = new BulkUpdateService(ccdClient);
+        bulkUpdateService = new BulkUpdateService(ccdClient, userService, createUpdatesBusSender);
 
         bulkRequestPayload = new BulkRequestPayload();
         bulkRequestPayload.setBulkDetails(bulkDetails);
@@ -302,6 +308,7 @@ public class BulkUpdateServiceTest {
         CaseType caseType = new CaseType();
         caseType.setEthosCaseReference("2221");
         CaseIdTypeItem caseIdTypeItem = new CaseIdTypeItem();
+        caseIdTypeItem.setId("2221");
         caseIdTypeItem.setValue(caseType);
         bulkData.setCaseIdCollection(new ArrayList<>(Collections.singletonList(caseIdTypeItem)));
         MultipleType multipleType = new MultipleType();
@@ -318,7 +325,7 @@ public class BulkUpdateServiceTest {
 
     @Test
     public void bulkPreAcceptLogicEmptyCases() {
-        List<String> errors = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(), new ArrayList<>(), "authToken").getErrors();
+        List<String> errors = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(), new ArrayList<>(), "authToken", false).getErrors();
         assertEquals("[No cases on the multiple case: 2300001/2019]", errors.toString());
     }
 
@@ -326,7 +333,36 @@ public class BulkUpdateServiceTest {
     public void bulkPreAcceptLogic() {
         List<SubmitEvent> submitEvents = new ArrayList<>(Collections.singleton(submitEvent));
         bulkRequest.setCaseDetails(getBulkDetailsCompleteWithValues(bulkRequest.getCaseDetails()));
-        BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(), submitEvents, "authToken");
+        BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(), submitEvents, "authToken", false);
+        String multipleCollection = "[MultipleTypeItem(id=1111, value=MultipleType(caseIDM=null, ethosCaseReferenceM=11111, leadClaimantM=null, " +
+                "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, " +
+                "fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=Accepted, " +
+                "subMultipleM=12, subMultipleTitleM=null, currentPositionM=null, claimantAddressLine1M=null, claimantPostCodeM=null, " +
+                "respondentAddressLine1M=null, respondentPostCodeM=null, flag1M=null, flag2M=null, EQPM=null, respondentRepOrgM=null, claimantRepOrgM=null))]";
+        assertEquals(multipleCollection, bulkRequestPayload.getBulkDetails().getCaseData().getMultipleCollection().toString());
+    }
+
+    @Test
+    public void bulkPreAcceptPQLogic() {
+        when(userService.getUserDetails("authToken")).thenReturn(HelperTest.getUserDetails());
+        List<SubmitEvent> submitEvents = new ArrayList<>(Collections.singleton(submitEvent));
+        bulkRequest.setCaseDetails(getBulkDetailsCompleteWithValues(bulkRequest.getCaseDetails()));
+        BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(), submitEvents, "authToken", true);
+        String multipleCollection = "[MultipleTypeItem(id=1111, value=MultipleType(caseIDM=null, ethosCaseReferenceM=11111, leadClaimantM=null, " +
+                "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, " +
+                "fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=Accepted, " +
+                "subMultipleM=12, subMultipleTitleM=null, currentPositionM=null, claimantAddressLine1M=null, claimantPostCodeM=null, " +
+                "respondentAddressLine1M=null, respondentPostCodeM=null, flag1M=null, flag2M=null, EQPM=null, respondentRepOrgM=null, claimantRepOrgM=null))]";
+        assertEquals(multipleCollection, bulkRequestPayload.getBulkDetails().getCaseData().getMultipleCollection().toString());
+    }
+
+    @Test
+    public void bulkPreAcceptPQLogicEmptyCases() {
+        when(userService.getUserDetails("authToken")).thenReturn(HelperTest.getUserDetails());
+        List<SubmitEvent> submitEvents = new ArrayList<>(Collections.singleton(submitEvent));
+        bulkRequest.setCaseDetails(getBulkDetailsCompleteWithValues(bulkRequest.getCaseDetails()));
+        bulkRequest.getCaseDetails().getCaseData().setCaseIdCollection(new ArrayList<>());
+        BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(), submitEvents, "authToken", true);
         String multipleCollection = "[MultipleTypeItem(id=1111, value=MultipleType(caseIDM=null, ethosCaseReferenceM=11111, leadClaimantM=null, " +
                 "multipleReferenceM=null, clerkRespM=null, claimantSurnameM=null, respondentSurnameM=null, claimantRepM=null, respondentRepM=null, " +
                 "fileLocM=null, receiptDateM=null, positionTypeM=null, feeGroupReferenceM=null, jurCodesCollectionM=null, stateM=Accepted, " +
