@@ -29,7 +29,7 @@ public class CreateUpdatesBusSender {
         this.serviceBusSender = serviceBusSender;
     }
 
-    public void sendUpdatesToQueue(CreateUpdatesDto createUpdatesDto, DataModelParent dataModelParent, List<String> errors) {
+    public void sendUpdatesToQueue(CreateUpdatesDto createUpdatesDto, DataModelParent dataModelParent, List<String> errors, String updateSize) {
         log.info("Started sending messages to create-updates queue");
 
         AtomicInteger successCount = new AtomicInteger(0);
@@ -38,7 +38,8 @@ public class CreateUpdatesBusSender {
                 CreateUpdatesHelper.getCreateUpdatesMessagesCollection(
                         createUpdatesDto,
                         dataModelParent,
-                        CHUNK_MESSAGE_SIZE);
+                        CHUNK_MESSAGE_SIZE,
+                        updateSize);
 
         createUpdatesMsgList
                 .forEach(msg -> {

@@ -514,13 +514,15 @@ public class BulkUpdateService {
             if (!isPersistentQ) {
                 sendPreAcceptUpdates(bulkDetails, submitEventList, userToken);
             } else {
+                List<String> ethosCaseRefCollection = BulkHelper.getCaseIds(bulkDetails);
                 PersistentQHelper.sendUpdatesPersistentQ(bulkDetails,
                         userService.getUserDetails(userToken).getEmail(),
-                        BulkHelper.getCaseIds(bulkDetails),
+                        ethosCaseRefCollection,
                         PersistentQHelper.getPreAcceptDataModel(),
                         errors,
                         bulkDetails.getCaseData().getMultipleReference(),
-                        createUpdatesBusSender);
+                        createUpdatesBusSender,
+                        String.valueOf(ethosCaseRefCollection.size()));
             }
 
             bulkRequestPayload.setBulkDetails(bulkDetails);

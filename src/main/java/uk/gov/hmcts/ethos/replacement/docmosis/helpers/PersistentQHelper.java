@@ -44,8 +44,8 @@ public class PersistentQHelper {
 
     public static void sendUpdatesPersistentQ(BulkDetails bulkDetails, String username, List<String> ethosCaseRefCollection,
                                               DataModelParent dataModelParent, List<String> errors, String multipleRef,
-                                              CreateUpdatesBusSender createUpdatesBusSender) {
-        log.info("ETHOS CASE REF COLLECTION: " + ethosCaseRefCollection);
+                                              CreateUpdatesBusSender createUpdatesBusSender, String updateSize) {
+        log.info("Case Ref collection: " + ethosCaseRefCollection);
         if (!ethosCaseRefCollection.isEmpty()) {
             CreateUpdatesDto createUpdatesDto = PersistentQHelper.getCreateUpdatesDto(bulkDetails,
                     ethosCaseRefCollection, username, multipleRef);
@@ -53,9 +53,10 @@ public class PersistentQHelper {
             createUpdatesBusSender.sendUpdatesToQueue(
                     createUpdatesDto,
                     dataModelParent,
-                    errors);
+                    errors,
+                    updateSize);
         } else {
-            log.info("EMPTY CASE REF COLLECTION");
+            log.info("Case Ref collection is empty");
         }
     }
 }

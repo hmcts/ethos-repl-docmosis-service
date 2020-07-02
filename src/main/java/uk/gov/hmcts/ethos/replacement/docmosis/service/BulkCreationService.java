@@ -84,7 +84,8 @@ public class BulkCreationService {
                                     bulkDetails.getCaseData().getMultipleReference()),
                             bulkCasesPayload.getErrors(),
                             bulkDetails.getCaseData().getMultipleReference(),
-                            createUpdatesBusSender);
+                            createUpdatesBusSender,
+                            String.valueOf(ethosCaseRefCollection.size()));
 
                 } else {
                     log.info("EMPTY CASE REF COLLECTION");
@@ -174,6 +175,7 @@ public class BulkCreationService {
             log.info("State SubmitEvent: " + submitEvent.getState());
 
             if (!isPersistentQ) {
+                log.info("Is not persistent queue");
                 ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
                 if (!caseIds.contains(ethosCaseRef) && multipleCaseIds.contains(ethosCaseRef)) {
                     executor.execute(new BulkCreationTask(bulkDetails, submitEvent, authToken, " ", SINGLE_CASE_TYPE, ccdClient));
@@ -185,6 +187,9 @@ public class BulkCreationService {
                 executor.shutdown();
 
             } else {
+                log.info("MultipleCaseIds: " + multipleCaseIds);
+                log.info("CaseIds: " + caseIds);
+                log.info("EthosCaseRef: " + ethosCaseRef);
                 if (!caseIds.contains(ethosCaseRef) && multipleCaseIds.contains(ethosCaseRef)) {
                     detachCasesList.add(ethosCaseRef);
                 } else {
@@ -196,16 +201,20 @@ public class BulkCreationService {
 
         if (isPersistentQ) {
 
+            log.info("DetachCaseList: " + detachCasesList);
+            log.info("AttachCaseList: " + attachCasesList);
+            String updateSize = String.valueOf(detachCasesList.size() + attachCasesList.size());
+            log.info("UpdateSize: " + updateSize);
             String username = userService.getUserDetails(authToken).getEmail();
 
-            //For detaching cases will send multipleRef + xxx as multipleRef has to be different for the persistent queue
             PersistentQHelper.sendUpdatesPersistentQ(bulkDetails,
                     username,
                     detachCasesList,
                     PersistentQHelper.getDetachDataModel(),
                     new ArrayList<>(),
-                    bulkDetails.getCaseData().getMultipleReference()+"xxx",
-                    createUpdatesBusSender);
+                    bulkDetails.getCaseData().getMultipleReference(),
+                    createUpdatesBusSender,
+                    updateSize);
 
             PersistentQHelper.sendUpdatesPersistentQ(bulkDetails,
                     username,
@@ -214,7 +223,8 @@ public class BulkCreationService {
                             bulkDetails.getCaseData().getMultipleReference()),
                     new ArrayList<>(),
                     bulkDetails.getCaseData().getMultipleReference(),
-                    createUpdatesBusSender);
+                    createUpdatesBusSender,
+                    updateSize);
         }
 
         return multipleTypeItemList;
