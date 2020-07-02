@@ -47,6 +47,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignErro
 public class ListingGenerationControllerTest {
 
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
+    private static final String LISTING_CASE_CREATION_URL = "/listingCaseCreation";
     private static final String LISTING_HEARINGS_URL = "/listingHearings";
     private static final String GENERATE_HEARING_DOCUMENT_URL = "/generateHearingDocument";
     private static final String GENERATE_HEARING_DOCUMENT_CONFIRMATION_URL = "/generateHearingDocumentConfirmation";
@@ -132,6 +133,20 @@ public class ListingGenerationControllerTest {
                 .tribunalCorrespondenceDX("123456")
                 .tribunalCorrespondenceEmail("manchester@gmail.com")
                 .build();
+    }
+
+    @Test
+    public void listingCaseCreation() throws Exception {
+        when(listingService.listingCaseCreation(isA(ListingDetails.class))).thenReturn(listingData);
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(LISTING_CASE_CREATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
     @Test
@@ -262,6 +277,15 @@ public class ListingGenerationControllerTest {
     }
 
     @Test
+    public void listingCaseCreationError400() throws Exception {
+        mvc.perform(post(LISTING_CASE_CREATION_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void listingHearingsError400() throws Exception {
         mvc.perform(post(LISTING_HEARINGS_URL)
                 .content("error")
@@ -304,6 +328,17 @@ public class ListingGenerationControllerTest {
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void listingCaseCreationError500() throws Exception {
+        when(listingService.listingCaseCreation(isA(ListingDetails.class))).thenThrow(feignError());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(LISTING_CASE_CREATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
@@ -360,6 +395,16 @@ public class ListingGenerationControllerTest {
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void listingCaseCreationForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(LISTING_CASE_CREATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
     }
 
     @Test
