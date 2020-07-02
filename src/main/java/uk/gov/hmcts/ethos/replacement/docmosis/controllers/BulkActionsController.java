@@ -148,41 +148,6 @@ public class BulkActionsController {
                 .build());
     }
 
-    @PostMapping(value = "/afterSubmittedBulkPQ", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "display the bulk info.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<BulkCallbackResponse> afterSubmittedBulkPQ(
-            @RequestBody BulkRequest bulkRequest,
-            @RequestHeader(value = "Authorization") String userToken) {
-        log.info("AFTER SUBMITTED BULK PERSISTENT Q ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
-
-        if (bulkRequest.getCaseDetails().getCaseData().getMultipleSource() != null
-                && !bulkRequest.getCaseDetails().getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
-            BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
-                    bulkRequest.getCaseDetails(), userToken, true, false);
-            //BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken, false);
-            bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, UPDATE_SINGLES_PQ_STEP);
-        }
-
-        return ResponseEntity.ok(BulkCallbackResponse.builder()
-                .errors(bulkRequestPayload.getErrors())
-                .data(bulkRequest.getCaseDetails().getCaseData())
-                .confirmation_header("Updates are being processed using Persistent queue...")
-                .build());
-    }
-
     @PostMapping(value = "/updateBulk", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "updates cases in a bulk case. Update cases in searchCollection by given fields.")
     @ApiResponses(value = {
@@ -229,7 +194,7 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, userToken);
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, userToken, false);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -627,11 +592,13 @@ public class BulkActionsController {
 
         List<SubmitEvent> submitEvents = bulkSearchService.retrievalCasesForPreAcceptRequest(bulkRequest.getCaseDetails(), userToken);
 
-        BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(), submitEvents, userToken);
+        BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(),
+                submitEvents, userToken, false);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
                 .data(bulkRequestPayload.getBulkDetails().getCaseData())
                 .build());
     }
+
 }
