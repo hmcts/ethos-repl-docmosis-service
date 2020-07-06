@@ -378,8 +378,10 @@ public class ListingServiceTest {
                 "hearingPanel= , hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= ))], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
                 "reportType=Brought Forward Report, documentName=null)";
+        caseDetails.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection().get(2).getValue().setHearingStatus("Settled");
         CaseData caseData = listingService.processListingSingleCasesRequest(caseDetails);
         assertEquals(result, caseData.getPrintHearingDetails().toString());
+        caseDetails.getCaseData().getHearingCollection().get(0).getValue().getHearingDateCollection().get(2).getValue().setHearingStatus(null);
     }
 
     @Test
