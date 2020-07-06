@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ecm.common.helpers.CreateUpdatesHelper;
 import uk.gov.hmcts.ecm.common.model.servicebus.CreateUpdatesDto;
 import uk.gov.hmcts.ecm.common.model.servicebus.CreateUpdatesMsg;
-import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.CreationDataModel;
+import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.DataModelParent;
 import uk.gov.hmcts.ecm.common.servicebus.ServiceBusSender;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class CreateUpdatesBusSender {
         this.serviceBusSender = serviceBusSender;
     }
 
-    public void sendUpdatesToQueue(CreateUpdatesDto createUpdatesDto, CreationDataModel creationDataModel, List<String> errors) {
+    public void sendUpdatesToQueue(CreateUpdatesDto createUpdatesDto, DataModelParent dataModelParent, List<String> errors, String updateSize) {
         log.info("Started sending messages to create-updates queue");
 
         AtomicInteger successCount = new AtomicInteger(0);
@@ -37,8 +37,9 @@ public class CreateUpdatesBusSender {
         List<CreateUpdatesMsg> createUpdatesMsgList =
                 CreateUpdatesHelper.getCreateUpdatesMessagesCollection(
                         createUpdatesDto,
-                        creationDataModel,
-                        CHUNK_MESSAGE_SIZE);
+                        dataModelParent,
+                        CHUNK_MESSAGE_SIZE,
+                        updateSize);
 
         createUpdatesMsgList
                 .forEach(msg -> {

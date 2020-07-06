@@ -247,7 +247,7 @@ public class BulkCreationServiceTest {
                 "claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , respondentRepOrgM= , " +
                 "claimantRepOrgM= ))]";
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
-        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest1, "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest1, "authToken", false);
         assertEquals(expectedResult, bulkCasesPayload.getMultipleTypeItems().toString());
     }
 
@@ -260,7 +260,7 @@ public class BulkCreationServiceTest {
                 "claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , respondentRepOrgM= , " +
                 "claimantRepOrgM= ))]";
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
-        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken", false);
         assertEquals(expectedResult, bulkCasesPayload.getMultipleTypeItems().toString());
     }
 
@@ -269,7 +269,7 @@ public class BulkCreationServiceTest {
         submitEvent.getCaseData().setMultipleReference("111111111");
         List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
-        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken", false);
         assertNull(bulkCasesPayload.getMultipleTypeItems());
     }
 
@@ -279,7 +279,7 @@ public class BulkCreationServiceTest {
         List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenThrow(new RuntimeException());
-        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken", false);
         assertEquals("[The state of these cases: [1111] have not been accepted]", bulkCasesPayload.getErrors().toString());
     }
 
@@ -292,14 +292,14 @@ public class BulkCreationServiceTest {
                 "stateM=Accepted, subMultipleM= , subMultipleTitleM= , currentPositionM= , claimantAddressLine1M= , claimantPostCodeM= , " +
                 "respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , respondentRepOrgM= , claimantRepOrgM= ))]";
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
-        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken", false);
         assertEquals(expectedResult, bulkCasesPayload.getMultipleTypeItems().toString());
     }
 
     @Test
     public void updateBulkRequestException() throws IOException {
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenThrow(new RuntimeException());
-        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken");
+        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken", false);
         assertEquals("[]", bulkCasesPayload.getErrors().toString());
     }
 
@@ -384,7 +384,7 @@ public class BulkCreationServiceTest {
                 "selectAll=null, scheduleDocName=null, positionType=null, flag1=null, flag2=null, EQP=null, submissionRef=null, claimantOrg=null, " +
                 "respondentOrg=null, state=null, flag1Update=null, flag2Update=null, EQPUpdate=null, jurCodesDynamicList=null, outcomeUpdate=null, " +
                 "filterCases=null, docMarkUp=null, multipleSource=Manually Created))";
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, "authToken");
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, "authToken", false);
         assertEquals(result, bulkRequestPayload.getBulkDetails().toString());
     }
 
@@ -410,6 +410,20 @@ public class BulkCreationServiceTest {
     public void retrievalCasesForPreAcceptRequestException() throws IOException {
         when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), any())).thenThrow(new RuntimeException());
         bulkSearchService.retrievalCasesForPreAcceptRequest(getBulkDetails(YES, "Single"), "authToken");
+    }
+
+    @Test
+    public void updateBulkRequestPQ() throws IOException {
+        when(userService.getUserDetails("authToken")).thenReturn(HelperTest.getUserDetails());
+        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
+        String expectedResult = "[MultipleTypeItem(id=0, value=MultipleType(caseIDM=0, ethosCaseReferenceM=1111, leadClaimantM=Yes, multipleReferenceM=null, " +
+                "clerkRespM= , claimantSurnameM=Fernandez, respondentSurnameM=Mr Respondent, claimantRepM= , respondentRepM= , fileLocM= , receiptDateM= , " +
+                "positionTypeM= , feeGroupReferenceM=111122211, jurCodesCollectionM= , stateM=Accepted, subMultipleM= , subMultipleTitleM= , currentPositionM= , " +
+                "claimantAddressLine1M= , claimantPostCodeM= , respondentAddressLine1M= , respondentPostCodeM= , flag1M= , flag2M= , EQPM= , respondentRepOrgM= , " +
+                "claimantRepOrgM= ))]";
+        when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), anyList())).thenReturn(submitEventList);
+        BulkCasesPayload bulkCasesPayload = bulkCreationService.updateBulkRequest(bulkRequest, "authToken", true);
+        assertEquals(expectedResult, bulkCasesPayload.getMultipleTypeItems().toString());
     }
 
 }

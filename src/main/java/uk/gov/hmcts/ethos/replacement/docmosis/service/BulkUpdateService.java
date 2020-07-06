@@ -22,6 +22,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkPreAcceptTask;
 import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkUpdateBulkTask;
 import uk.gov.hmcts.ethos.replacement.docmosis.tasks.BulkUpdateTask;
@@ -46,10 +48,14 @@ public class BulkUpdateService {
 
     private static final String MESSAGE = "Failed to update case for case id : ";
     private final CcdClient ccdClient;
+    private final UserService userService;
+    private final CreateUpdatesBusSender createUpdatesBusSender;
 
     @Autowired
-    public BulkUpdateService(CcdClient ccdClient) {
+    public BulkUpdateService(CcdClient ccdClient, UserService userService, CreateUpdatesBusSender createUpdatesBusSender) {
         this.ccdClient = ccdClient;
+        this.userService = userService;
+        this.createUpdatesBusSender = createUpdatesBusSender;
     }
 
     public BulkRequestPayload bulkUpdateLogic(BulkDetails bulkDetails, String userToken) {
@@ -486,10 +492,12 @@ public class BulkUpdateService {
         return multipleTypeItemsAux;
     }
 
-    public BulkRequestPayload bulkPreAcceptLogic(BulkDetails bulkDetails, List<SubmitEvent> submitEventList, String userToken) {
+    public BulkRequestPayload bulkPreAcceptLogic(BulkDetails bulkDetails, List<SubmitEvent> submitEventList,
+                                                 String userToken, boolean isPersistentQ) {
         List<String> errors = new ArrayList<>();
         BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
         if (!submitEventList.isEmpty()) {
+
             // 1) Update list of cases to the multiple bulk case collection
             List<MultipleTypeItem> multipleTypeItemList = new ArrayList<>();
             for (MultipleTypeItem multipleTypeItem : bulkDetails.getCaseData().getMultipleCollection()) {
@@ -501,14 +509,22 @@ public class BulkUpdateService {
                 multipleTypeItemList.add(multipleTypeItem);
             }
             bulkDetails.getCaseData().setMultipleCollection(multipleTypeItemList);
+
             // 2) Create an event to update state of the cases
-            for (SubmitEvent submitEvent : submitEventList) {
-                if (submitEvent.getState().equals(SUBMITTED_STATE)) {
-                    caseUpdatePreAcceptRequest(bulkDetails, submitEvent, userToken);
-                } else {
-                    log.info("The case is already accepted");
-                }
+            if (!isPersistentQ) {
+                sendPreAcceptUpdates(bulkDetails, submitEventList, userToken);
+            } else {
+                List<String> ethosCaseRefCollection = BulkHelper.getCaseIds(bulkDetails);
+                PersistentQHelper.sendUpdatesPersistentQ(bulkDetails,
+                        userService.getUserDetails(userToken).getEmail(),
+                        ethosCaseRefCollection,
+                        PersistentQHelper.getPreAcceptDataModel(),
+                        errors,
+                        bulkDetails.getCaseData().getMultipleReference(),
+                        createUpdatesBusSender,
+                        String.valueOf(ethosCaseRefCollection.size()));
             }
+
             bulkRequestPayload.setBulkDetails(bulkDetails);
         } else {
             errors.add("No cases on the multiple case: " + bulkDetails.getCaseId());
@@ -520,12 +536,23 @@ public class BulkUpdateService {
         return bulkRequestPayload;
     }
 
-    private void caseUpdatePreAcceptRequest(BulkDetails bulkDetails, SubmitEvent submitEvent, String authToken) {
+    private void sendPreAcceptUpdates(BulkDetails bulkDetails, List<SubmitEvent> submitEventList, String userToken) {
+        for (SubmitEvent submitEvent : submitEventList) {
+            if (submitEvent.getState().equals(SUBMITTED_STATE)) {
+                caseUpdatePreAcceptRequest(bulkDetails, submitEvent, userToken);
+            } else {
+                log.info("The case is already accepted");
+            }
+        }
+    }
+
+    private void caseUpdatePreAcceptRequest(BulkDetails bulkDetails, SubmitEvent submitEvent, String userToken) {
         log.info("Current state ---> " + submitEvent.getState());
         Instant start = Instant.now();
         ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
-        executor.execute(new BulkPreAcceptTask(bulkDetails, submitEvent, authToken, ccdClient));
+        executor.execute(new BulkPreAcceptTask(bulkDetails, submitEvent, userToken, ccdClient));
         log.info("End in time: " + Duration.between(start, Instant.now()).toMillis());
         executor.shutdown();
     }
+
 }
