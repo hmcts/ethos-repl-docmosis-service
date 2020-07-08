@@ -121,7 +121,7 @@ public class CaseManagementForCaseWorkerService {
 
         StringBuilder flagsImageName = new StringBuilder();
 
-        // check image name NOT CounterClaim
+        // check Image Name NOT Counter Claim
         if(isNullOrEmpty(caseData.getCounterClaim())) {
             flagsImageName.append("0000000");
         }
@@ -144,42 +144,42 @@ public class CaseManagementForCaseWorkerService {
 
         flagsImageName.append(".png");
 
-        // set flagsImageName NOT CounterClaim
+        // set Image Name NOT CounterClaim
         caseData.setCounterClaim(flagsImageName.toString());
 
         return caseData;
     }
 
     // one
-    private Boolean sensitiveCase(CaseData caseData) {
+    private boolean sensitiveCase(CaseData caseData) {
         if (caseData.getAdditionalCaseInfoType() != null) {
             if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getAdditionalSensitive())) {
-                return caseData.getAdditionalCaseInfoType().getAdditionalSensitive().equals(YES) ? true : false;
+                return caseData.getAdditionalCaseInfoType().getAdditionalSensitive().equals(YES);
             } else { return  false; }
         } else { return  false; }
     }
 
     // two
-    private Boolean rule503dApplies(CaseData caseData) {
+    private boolean rule503dApplies(CaseData caseData) {
         if (caseData.getRestrictedReporting() != null) {
             if (!isNullOrEmpty(caseData.getRestrictedReporting().getImposed())) {
-                return caseData.getRestrictedReporting().getImposed().equals(YES) ? true : false;
+                return caseData.getRestrictedReporting().getImposed().equals(YES);
             } else { return false; }
         }
         else { return false; }
     }
 
     // three
-    private Boolean rule503bApplies(CaseData caseData) {
+    private boolean rule503bApplies(CaseData caseData) {
         if (caseData.getRestrictedReporting() != null) {
             if (!isNullOrEmpty(caseData.getRestrictedReporting().getRule503b())) {
-                return caseData.getRestrictedReporting().getRule503b().equals(YES) ? true : false;
+                return caseData.getRestrictedReporting().getRule503b().equals(YES);
             } else { return false; }
         } else { return false; }
     }
 
     // four
-    private Boolean reservedJudgement(CaseData caseData) {
+    private boolean reservedJudgement(CaseData caseData) {
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
                 if (hearingTypeItem.getValue().getHearingDateCollection() != null && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty()) {
@@ -193,24 +193,24 @@ public class CaseManagementForCaseWorkerService {
     }
 
     // five
-    private Boolean counterClaimMade(CaseData caseData) {
-        return !isNullOrEmpty(caseData.getCounterClaim()) ? true : false;
+    private boolean counterClaimMade(CaseData caseData) {
+        return !isNullOrEmpty(caseData.getCounterClaim());
     }
 
     // six
-    private Boolean liveAppeal(CaseData caseData) {
+    private boolean liveAppeal(CaseData caseData) {
         if (caseData.getAdditionalCaseInfoType() != null) {
             if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal())) {
-                return caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal().equals(YES) ? true : false;
+                return caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal().equals(YES);
             } else { return false; }
         } else { return false; }
     }
 
-    // seven
-    private Boolean lastFlag(CaseData caseData) {
+    // seven - use  Last Flag field NOT Live Appeal field
+    private boolean lastFlag(CaseData caseData) {
         if (caseData.getAdditionalCaseInfoType() != null) {
             if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal())) {
-                return caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal().equals(YES) ? true : false;
+                return caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal().equals(YES);
             } else { return false; }
         } else { return false; }
     }
