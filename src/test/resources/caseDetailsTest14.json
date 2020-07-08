@@ -1,0 +1,318 @@
+{
+  "case_data": {
+    "tribunalCorrespondenceAddress": {
+      "AddressLine1": "Manchester Employment Tribunal,",
+      "AddressLine2": "Alexandra House,",
+      "AddressLine3": "14-22 The Parsonage,",
+      "PostCode": "M3 2JA",
+      "PostTown": "Manchester,"
+    },
+    "tribunalCorrespondenceTelephone" : "03577131270",
+    "tribunalCorrespondenceFax" : "07577126570",
+    "tribunalCorrespondenceDX" : "123456",
+    "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
+    "ethosCaseReference" : "123456",
+    "leadClaimant" : "Yes",
+    "claimantRepresentedQuestion" : "Yes",
+    "claimant_TypeOfClaimant" : "Individual",
+    "preAcceptCase": {
+      "caseAccepted": "Yes",
+      "dateAccepted": "25/02/2020",
+      "rejectReason": [],
+      "caseReferred": "No",
+      "caseEJReferredDate": "",
+      "caseJudge": "Judge",
+      "caseReferredDate": "None"
+    },
+    "depositType": {
+      "Deposit_amount": "£25",
+      "deposit_covers": "No",
+      "deposit_due": "£25",
+      "deposit_time_ext": "No",
+      "deposit_refund": "",
+      "deposit_refund_date": "25/02/2020",
+      "depositNotes": "None"
+    },
+    "addSubMultipleComment": "Comment",
+    "additionalCaseInfo": {
+      "additional_sensitive": "No",
+      "additional_live_appeal": "No",
+      "additional_ind_expert": "No"
+    },
+    "counterClaim": "",
+    "restrictedReporting": {
+      "requestedBy": "Requester",
+      "imposed": "No",
+      "rule503b": "No"
+
+    },
+    "backFromJudge": "backFromJudge",
+    "representativeClaimantType": {
+      "resp_rep_name" : "RepresentativeNameClaimant",
+      "name_of_organisation": "RepresentativeOrganisation",
+      "name_of_representative": "RepresentativeNameClaimant",
+      "representative_address": {
+        "AddressLine1": "56 Block C",
+        "AddressLine2": "Ellesmere Street",
+        "Country": "UK",
+        "County": "Lancashire",
+        "PostCode": "M3 KJR",
+        "PostTown": "Manchester"
+      },
+      "representative_dx": "222222222",
+      "representative_email_address": "example@gmail.com",
+      "representative_mobile_number": "07577136570",
+      "representative_phone_number": "07577136570",
+      "representative_preference": "Post",
+      "representative_reference": "1111111"
+    },
+    "repCollection" : [
+    ],
+    "caseNotes": "Example of Case Note",
+    "caseType": "Single",
+    "claimantType": {
+      "claimant_addressUK": {
+        "AddressLine1": "34",
+        "AddressLine2": "Low Street",
+        "Country": "UK",
+        "County": "Lancashire",
+        "PostCode": "M3 6gw",
+        "PostTown": "Manchester"
+      },
+      "claimant_contact_preference": "Post",
+      "claimant_email_address": "anton@gmail.com",
+      "claimant_mobile_number": "07577136570",
+      "claimant_phone_number": "07577136570"
+    },
+    "claimantIndType": {
+      "claimant_date_of_birth": "1990-02-25",
+      "claimant_first_names": "Anton Juliet",
+      "claimant_gender": "Male",
+      "claimant_last_name": "Rodriguez",
+      "claimant_title1": "Mr"
+    },
+    "claimantWorkAddress": {
+      "claimant_work_address": {
+        "AddressLine1": "34",
+        "AddressLine2": "Low Street",
+        "Country": "UK",
+        "County": "Lancashire",
+        "PostCode": "M3 6gw",
+        "PostTown": "Manchester"
+      },
+      "claimant_work_phone_number": "07577136570"
+    },
+    "correspondenceType": {
+      "topLevel_Documents": "EM-TRB-EGW-ENG-00026",
+      "part_1_Documents": "1.2",
+      "hearingNumber": "2"
+    },
+    "clerkResponsible": "Juan Diego",
+    "feeGroupReference": "12212121",
+    "hearingCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "1",
+          "Hearing_venue": "Manchester",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-01T12:11:00.000",
+                "Hearing_reserved_judgement": "No"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id" : "123346",
+        "value" : {
+          "hearingEstLengthNum": "2",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "2",
+          "Hearing_venue": "Manchester",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-25T12:11:00.000",
+                "Hearing_reserved_judgement": "No"
+              }
+            },
+            {
+              "id" : "123346",
+              "value" : {
+                "listedDate": "2019-12-14T10:30:00.000",
+                "Hearing_reserved_judgement": "No"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id" : "123347",
+        "value" : {
+          "hearingEstLengthNum": "3",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "3",
+          "Hearing_venue": "Manchester",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-21T12:11:00.000",
+                "Hearing_reserved_judgement": "No"
+              }
+            },
+            {
+              "id" : "123346",
+              "value" : {
+                "listedDate": "2019-12-22T10:30:00.000",
+                "Hearing_reserved_judgement": "No"
+              }
+            },
+            {
+              "id" : "123347",
+              "value" : {
+                "listedDate": "2019-12-23T11:15:00.000",
+                "Hearing_reserved_judgement": "No"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "jurCodesCollection": [
+      {
+        "id" : "1234561",
+        "value" : {
+          "juridictionCodesList": "COM",
+          "judgmentOutcome": "Successful at hearing"
+        }
+      },
+      {
+        "id" : "1234562",
+        "value" : {
+          "juridictionCodesList": "DOD"
+        }
+      },
+      {
+        "id" : "1234563",
+        "value" : {
+          "juridictionCodesList": "COM",
+          "judgmentOutcome": "Dismissed on withdrawal"
+        }
+      },
+      {
+        "id" : "1234564",
+        "value" : {
+          "juridictionCodesList": "DDA",
+          "judgmentOutcome": "Successful at hearing"
+        }
+      },
+      {
+        "id" : "1234565",
+        "value" : {
+          "juridictionCodesList": "DOD",
+          "judgmentOutcome": "Input in error"
+        }
+      }
+    ],
+    "respondentCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "respondent_address": {
+            "AddressLine1": "11 Small Street",
+            "AddressLine2": "22 House",
+            "Country": "UK",
+            "County": "North West",
+            "PostCode": "M12 42R",
+            "PostTown": "Manchester"
+          },
+          "respondent_name": "Antonio Vazquez",
+          "respondent_contact_preference": "Post",
+          "respondent_email": "Antonio@gmail.com",
+          "respondent_phone1": "07577136570",
+          "respondent_phone2": "07577136570",
+          "response_referred_to_judge": "2019-12-22",
+          "response_returned_from_judge": "2019-12-21",
+          "responseStruckOut": "No"
+        }
+      },
+      {
+        "id" : "123345678",
+        "value" : {
+          "respondent_address": {
+            "AddressLine1": "12 Small Street",
+            "AddressLine2": "24 House",
+            "Country": "UK",
+            "County": "North West",
+            "PostCode": "M12 4ED",
+            "PostTown": "Manchester"
+          },
+          "respondent_name": "Juan Garcia",
+          "respondent_contact_preference": "Post",
+          "respondent_email": "JuanGarcia@gmail.com",
+          "respondent_phone1": "07577136570",
+          "respondent_phone2": "07577136570",
+          "response_referred_to_judge": "2019-12-22",
+          "response_returned_from_judge": "2019-12-22",
+          "responseStruckOut": "No"
+        }
+      },
+      {
+        "id" : "12332245",
+        "value" : {
+          "respondent_address": {
+            "AddressLine1": "11 Small Street",
+            "AddressLine2": "22 House",
+            "Country": "UK",
+            "County": "North West",
+            "PostCode": "M12 42R",
+            "PostTown": "Manchester"
+          },
+          "respondent_name": "Mike Jordan",
+          "respondent_contact_preference": "Post",
+          "respondent_email": "Antonio@gmail.com",
+          "respondent_phone1": "07577136570",
+          "respondent_phone2": "07577136570",
+          "response_referred_to_judge": "2019-12-22",
+          "response_returned_from_judge": "2019-12-23",
+          "responseStruckOut": "No"
+        }
+      }
+    ],
+    "locationType": "Manchester",
+    "multipleReference": "No",
+    "multipleType": "No",
+    "positionType": "First",
+    "receiptDate": "2019-03-12",
+    "responseReceived": "none",
+    "responseType": {
+      "responseReceivedDate" : "23/12/2019",
+      "responseRespondentName" : "RespondentName",
+      "response_received": "Yes",
+      "response_referred_to_judge": "Yes",
+      "responseRequiredInfoAbsent": "Yes",
+      "response_returned_from_judge": "Yes",
+      "response_status": "Status",
+      "rejection_reason" : "none",
+      "rejection_reason_other" : "none",
+      "responseNotes" : "notes",
+      "responseToClaim": "No"
+    },
+    "userLocation": "Liverpool",
+    "stateAPI": "test"
+  },
+  "id": "123456789",
+  "jurisdiction": "English",
+  "state": "UK"
+}

@@ -55,6 +55,12 @@ public class CaseManagementForCaseWorkerServiceTest {
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private CCDRequest scotlandCcdRequest1;
     private CCDRequest scotlandCcdRequest3;
+    private CCDRequest ccdRequest10;
+    private CCDRequest ccdRequest11;
+    private CCDRequest ccdRequest12;
+    private CCDRequest ccdRequest13;
+    private CCDRequest ccdRequest14;
+    private CCDRequest ccdRequest15;
     private CCDRequest manchesterCcdRequest;
     private SubmitEvent submitEvent;
     @MockBean
@@ -71,6 +77,30 @@ public class CaseManagementForCaseWorkerServiceTest {
         scotlandCcdRequest3 = new CCDRequest();
         CaseDetails caseDetailsScot3 = generateCaseDetails("caseDetailsScotTest3.json");
         scotlandCcdRequest3.setCaseDetails(caseDetailsScot3);
+
+        ccdRequest10 = new CCDRequest();
+        CaseDetails caseDetails10 = generateCaseDetails("caseDetailsTest10.json");
+        ccdRequest10.setCaseDetails(caseDetails10);
+
+        ccdRequest11 = new CCDRequest();
+        CaseDetails caseDetails11 = generateCaseDetails("caseDetailsTest11.json");
+        ccdRequest11.setCaseDetails(caseDetails11);
+
+        ccdRequest12 = new CCDRequest();
+        CaseDetails caseDetails12 = generateCaseDetails("caseDetailsTest12.json");
+        ccdRequest12.setCaseDetails(caseDetails12);
+
+        ccdRequest13 = new CCDRequest();
+        CaseDetails caseDetails13 = generateCaseDetails("caseDetailsTest13.json");
+        ccdRequest13.setCaseDetails(caseDetails13);
+
+        ccdRequest14 = new CCDRequest();
+        CaseDetails caseDetails14 = generateCaseDetails("caseDetailsTest14.json");
+        ccdRequest14.setCaseDetails(caseDetails14);
+
+        ccdRequest15 = new CCDRequest();
+        CaseDetails caseDetails15 = generateCaseDetails("caseDetailsTest15.json");
+        ccdRequest15.setCaseDetails(caseDetails15);
 
         manchesterCcdRequest = new CCDRequest();
         CaseDetails manchesterCaseDetails = new CaseDetails();
@@ -169,6 +199,75 @@ public class CaseManagementForCaseWorkerServiceTest {
 
         assertEquals("Antonio Vazquez", caseData.getRespondentCollection().get(0).getValue().getRespondentName());
     }
+
+    // ..........................................................................................
+
+    @Test
+    public void buildFlagsImageNameForNullImageName() {
+        CaseData caseData = manchesterCcdRequest.getCaseDetails().getCaseData();
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
+        assertEquals("0000000.png", caseData.getStateAPI());
+        // use Image Name field NOT State API field in assertEquals
+    }
+
+    @Test
+    public void buildFlagsImageNameForEmptyImageName() {
+        // use Image Name field NOT State API field in Test10.json
+        CaseData caseData = ccdRequest10.getCaseDetails().getCaseData();
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
+        assertEquals("0000000.png", caseData.getStateAPI());
+        // use Image Name field NOT State API field in assertEquals
+    }
+
+    @Test
+    public void buildFlagsImageNameForNullFlagsTypes() {
+        // use Image Name field NOT State API field in Test11.json
+        CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
+        assertEquals("0000000.png", caseData.getStateAPI());
+        // use Image Name field NOT State API field in assertEquals
+    }
+
+    @Test
+    public void buildFlagsImageNameForNullFlagsFields() {
+        // use Image Name field NOT State API field in Test12.json
+        CaseData caseData = ccdRequest12.getCaseDetails().getCaseData();
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
+        assertEquals("0000000.png", caseData.getStateAPI());
+        // use Image Name field NOT State API field in assertEquals
+    }
+
+    @Test
+    public void buildFlagsImageNameForEmptyFlagsFields() {
+        // use Image Name field NOT State API field in Test13.json
+        // use Last Flag field NOT additional_ind_expert field in Test13.json
+        CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
+        assertEquals("0000000.png", caseData.getStateAPI());
+        // use Image Name field NOT State API field in assertEquals
+    }
+
+    @Test
+    public void buildFlagsImageNameForFalseFlagsFields() {
+        // use Image Name field NOT State API field in Test14.json
+        // use Last Flag field NOT additional_ind_expert field in Test14.json
+        CaseData caseData = ccdRequest14.getCaseDetails().getCaseData();
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
+        assertEquals("0000000.png", caseData.getStateAPI());
+        // use Image Name field NOT State API field in assertEquals
+    }
+
+    @Test
+    public void buildFlagsImageNameForTrueFlagsFields() {
+        // use Image Name field NOT State API field in Test15.json
+        // use Last Flag field NOT additional_ind_expert field in Test15.json
+        CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
+        assertEquals("1111111.png", caseData.getStateAPI());
+        // use Image Name field NOT State API field in assertEquals
+    }
+
+    // ..........................................................................................\
 
     @Test
     public void addNewHearingItemForExistingHearingCollection() {

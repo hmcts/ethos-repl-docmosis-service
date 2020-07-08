@@ -117,12 +117,12 @@ public class CaseManagementForCaseWorkerService {
         return caseData;
     }
 
-    public CaseData prepareFlagsImageName(CaseData caseData) {
+    public CaseData buildFlagsImageName(CaseData caseData) {
 
         StringBuilder flagsImageName = new StringBuilder();
 
-        // check Image Name NOT Counter Claim
-        if(isNullOrEmpty(caseData.getCounterClaim())) {
+        // check Image Name NOT State API
+        if(isNullOrEmpty(caseData.getStateAPI() )) {
             flagsImageName.append("0000000");
         }
         else {
@@ -144,8 +144,8 @@ public class CaseManagementForCaseWorkerService {
 
         flagsImageName.append(".png");
 
-        // set Image Name NOT CounterClaim
-        caseData.setCounterClaim(flagsImageName.toString());
+        // set Image Name NOT State API
+        caseData.setStateAPI(flagsImageName.toString());
 
         return caseData;
     }
@@ -184,9 +184,11 @@ public class CaseManagementForCaseWorkerService {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
                 if (hearingTypeItem.getValue().getHearingDateCollection() != null && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty()) {
                     for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        if (dateListedTypeItem.getValue().getHearingReservedJudgement().equals(YES)) { return true; }
+                        if (!isNullOrEmpty(dateListedTypeItem.getValue().getHearingReservedJudgement())) {
+                            if (dateListedTypeItem.getValue().getHearingReservedJudgement().equals(YES)) { return true; }
+                        }
                     }
-                } else { return false; }
+                }
             }
         } else { return false; }
         return false;
@@ -206,11 +208,11 @@ public class CaseManagementForCaseWorkerService {
         } else { return false; }
     }
 
-    // seven - use  Last Flag field NOT Live Appeal field
+    // seven - use Last Flag field NOT additionalIndExpert field
     private boolean lastFlag(CaseData caseData) {
         if (caseData.getAdditionalCaseInfoType() != null) {
-            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal())) {
-                return caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal().equals(YES);
+            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getAdditionalIndExpert())) {
+                return caseData.getAdditionalCaseInfoType().getAdditionalIndExpert().equals(YES);
             } else { return false; }
         } else { return false; }
     }
