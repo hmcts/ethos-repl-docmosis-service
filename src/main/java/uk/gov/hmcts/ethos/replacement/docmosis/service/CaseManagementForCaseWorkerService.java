@@ -35,6 +35,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
@@ -114,6 +115,104 @@ public class CaseManagementForCaseWorkerService {
             caseData.setRespondentCollection(Stream.concat(activeRespondent.stream(), struckRespondent.stream()).collect(Collectors.toList()));
         }
         return caseData;
+    }
+
+    public CaseData prepareFlagsImageName(CaseData caseData) {
+
+        StringBuilder flagsImageName = new StringBuilder();
+
+        // check image name NOT CounterClaim
+        if(isNullOrEmpty(caseData.getCounterClaim())) {
+            flagsImageName.append("0000000");
+        }
+        else {
+            //one
+            flagsImageName.append(sensitiveCase(caseData) ? "1" : "0");
+            //two
+            flagsImageName.append(rule503dApplies(caseData) ? "1" : "0");
+            //three
+            flagsImageName.append(rule503bApplies(caseData) ? "1" : "0");
+            //four
+            flagsImageName.append(reservedJudgement(caseData) ? "1" : "0");
+            //five
+            flagsImageName.append(counterClaimMade(caseData) ? "1" : "0");
+            //six
+            flagsImageName.append(liveAppeal(caseData) ? "1" : "0");
+            //seven
+            flagsImageName.append(lastFlag(caseData) ? "1" : "0");
+        }
+
+        flagsImageName.append(".png");
+
+        // set flagsImageName NOT CounterClaim
+        caseData.setCounterClaim(flagsImageName.toString());
+
+        return caseData;
+    }
+
+    // one
+    private Boolean sensitiveCase(CaseData caseData) {
+        if (caseData.getAdditionalCaseInfoType() != null) {
+            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getAdditionalSensitive())) {
+                return caseData.getAdditionalCaseInfoType().getAdditionalSensitive().equals(YES) ? true : false;
+            } else { return  false; }
+        } else { return  false; }
+    }
+
+    // two
+    private Boolean rule503dApplies(CaseData caseData) {
+        if (caseData.getRestrictedReporting() != null) {
+            if (!isNullOrEmpty(caseData.getRestrictedReporting().getImposed())) {
+                return caseData.getRestrictedReporting().getImposed().equals(YES) ? true : false;
+            } else { return false; }
+        }
+        else { return false; }
+    }
+
+    // three
+    private Boolean rule503bApplies(CaseData caseData) {
+        if (caseData.getRestrictedReporting() != null) {
+            if (!isNullOrEmpty(caseData.getRestrictedReporting().getRule503b())) {
+                return caseData.getRestrictedReporting().getRule503b().equals(YES) ? true : false;
+            } else { return false; }
+        } else { return false; }
+    }
+
+    // four
+    private Boolean reservedJudgement(CaseData caseData) {
+        if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
+            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+                if (hearingTypeItem.getValue().getHearingDateCollection() != null && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty()) {
+                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                        if (dateListedTypeItem.getValue().getHearingReservedJudgement().equals(YES)) { return true; }
+                    }
+                } else { return false; }
+            }
+        } else { return false; }
+        return false;
+    }
+
+    // five
+    private Boolean counterClaimMade(CaseData caseData) {
+        return !isNullOrEmpty(caseData.getCounterClaim()) ? true : false;
+    }
+
+    // six
+    private Boolean liveAppeal(CaseData caseData) {
+        if (caseData.getAdditionalCaseInfoType() != null) {
+            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal())) {
+                return caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal().equals(YES) ? true : false;
+            } else { return false; }
+        } else { return false; }
+    }
+
+    // seven
+    private Boolean lastFlag(CaseData caseData) {
+        if (caseData.getAdditionalCaseInfoType() != null) {
+            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal())) {
+                return caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal().equals(YES) ? true : false;
+            } else { return false; }
+        } else { return false; }
     }
 
     public CaseData addNewHearingItem(CCDRequest ccdRequest) {
