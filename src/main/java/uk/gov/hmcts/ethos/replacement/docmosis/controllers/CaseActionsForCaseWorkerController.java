@@ -215,6 +215,7 @@ public class CaseActionsForCaseWorkerController {
             errors = eventValidationService.validateReceiptDate(ccdRequest.getCaseDetails().getCaseData());
             log.info("Event fields validation:: " + errors);
             if (errors.isEmpty()) {
+                caseManagementForCaseWorkerService.buildFlagsImageFileName(ccdRequest.getCaseDetails().getCaseData());
                 caseManagementForCaseWorkerService.struckOutDefaults(ccdRequest.getCaseDetails().getCaseData());
                 log.info("POST DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
                 DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
@@ -280,7 +281,7 @@ public class CaseActionsForCaseWorkerController {
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
             caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
-            caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+            caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
         }
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
@@ -368,10 +369,10 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(ccdRequest.getCaseDetails().getCaseData());
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(ccdRequest.getCaseDetails().getCaseData());
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
+                .data(ccdRequest.getCaseDetails().getCaseData())
                 .build());
     }
 
@@ -394,7 +395,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)

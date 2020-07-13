@@ -203,49 +203,49 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void buildFlagsImageFileNameForNullImageName() {
         CaseData caseData = manchesterCcdRequest.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
         assertEquals("0000000.png", caseData.getFlagsImageFileName());
     }
 
     @Test
     public void buildFlagsImageFileNameForEmptyImageName() {
         CaseData caseData = ccdRequest10.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
         assertEquals("0000000.png", caseData.getFlagsImageFileName());
     }
 
     @Test
     public void buildFlagsImageFileNameForNullFlagsTypes() {
         CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
         assertEquals("0000000.png", caseData.getFlagsImageFileName());
     }
 
     @Test
     public void buildFlagsImageFileNameForNullFlagsFields() {
         CaseData caseData = ccdRequest12.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
         assertEquals("0000000.png", caseData.getFlagsImageFileName());
     }
 
     @Test
     public void buildFlagsImageFileNameForEmptyFlagsFields() {
         CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
         assertEquals("0000000.png", caseData.getFlagsImageFileName());
     }
 
     @Test
     public void buildFlagsImageFileNameForFalseFlagsFields() {
         CaseData caseData = ccdRequest14.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
         assertEquals("0000000.png", caseData.getFlagsImageFileName());
     }
 
     @Test
     public void buildFlagsImageFileNameForTrueFlagsFields() {
         CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
         assertEquals("1111111.png", caseData.getFlagsImageFileName());
     }
 

@@ -121,7 +121,7 @@ public class CaseManagementForCaseWorkerService {
         return caseData;
     }
 
-    public CaseData buildFlagsImageFileName(CaseData caseData) {
+    public void buildFlagsImageFileName(CaseData caseData) {
         StringBuilder flagsImageFileName = new StringBuilder();
         if(isNullOrEmpty(caseData.getFlagsImageFileName() )) {
             flagsImageFileName.append(DEFAULT_FLAGS_IMAGE_FILE_NAME);
@@ -137,7 +137,6 @@ public class CaseManagementForCaseWorkerService {
             flagsImageFileName.append(IMAGE_FILE_EXTENSION);
         }
         caseData.setFlagsImageFileName(flagsImageFileName.toString());
-        return caseData;
     }
 
     private boolean sensitiveCase(CaseData caseData) {
