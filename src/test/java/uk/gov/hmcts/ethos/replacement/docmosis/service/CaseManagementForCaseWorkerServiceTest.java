@@ -139,17 +139,6 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    public void preAcceptCaseAccepted() {
-        assertEquals(ACCEPTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
-    }
-
-    @Test
-    public void preAcceptCaseRejected() {
-        manchesterCcdRequest.getCaseDetails().getCaseData().getPreAcceptCase().setCaseAccepted(NO);
-        assertEquals(REJECTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
-    }
-
-    @Test
     public void struckOutDefaultsYEStoNO() {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
 
@@ -178,6 +167,17 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    public void preAcceptCaseAccepted() {
+        assertEquals(ACCEPTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
+    }
+
+    @Test
+    public void preAcceptCaseRejected() {
+        manchesterCcdRequest.getCaseDetails().getCaseData().getPreAcceptCase().setCaseAccepted(NO);
+        assertEquals(REJECTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
+    }
+
+    @Test
     public void struckOutRespondentFirstToLast() {
         CaseData caseData = caseManagementForCaseWorkerService.struckOutRespondents(scotlandCcdRequest1);
 
@@ -200,74 +200,54 @@ public class CaseManagementForCaseWorkerServiceTest {
         assertEquals("Antonio Vazquez", caseData.getRespondentCollection().get(0).getValue().getRespondentName());
     }
 
-    // ..........................................................................................
-
     @Test
-    public void buildFlagsImageNameForNullImageName() {
+    public void buildFlagsImageFileNameForNullImageName() {
         CaseData caseData = manchesterCcdRequest.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
-        assertEquals("0000000.png", caseData.getStateAPI());
-        // use Image Name field NOT State API field in assertEquals
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        assertEquals("0000000.png", caseData.getFlagsImageFileName());
     }
 
     @Test
-    public void buildFlagsImageNameForEmptyImageName() {
-        // use Image Name field NOT State API field in Test10.json
+    public void buildFlagsImageFileNameForEmptyImageName() {
         CaseData caseData = ccdRequest10.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
-        assertEquals("0000000.png", caseData.getStateAPI());
-        // use Image Name field NOT State API field in assertEquals
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        assertEquals("0000000.png", caseData.getFlagsImageFileName());
     }
 
     @Test
-    public void buildFlagsImageNameForNullFlagsTypes() {
-        // use Image Name field NOT State API field in Test11.json
+    public void buildFlagsImageFileNameForNullFlagsTypes() {
         CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
-        assertEquals("0000000.png", caseData.getStateAPI());
-        // use Image Name field NOT State API field in assertEquals
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        assertEquals("0000000.png", caseData.getFlagsImageFileName());
     }
 
     @Test
-    public void buildFlagsImageNameForNullFlagsFields() {
-        // use Image Name field NOT State API field in Test12.json
+    public void buildFlagsImageFileNameForNullFlagsFields() {
         CaseData caseData = ccdRequest12.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
-        assertEquals("0000000.png", caseData.getStateAPI());
-        // use Image Name field NOT State API field in assertEquals
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        assertEquals("0000000.png", caseData.getFlagsImageFileName());
     }
 
     @Test
-    public void buildFlagsImageNameForEmptyFlagsFields() {
-        // use Image Name field NOT State API field in Test13.json
-        // use Last Flag field NOT additional_ind_expert field in Test13.json
+    public void buildFlagsImageFileNameForEmptyFlagsFields() {
         CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
-        assertEquals("0000000.png", caseData.getStateAPI());
-        // use Image Name field NOT State API field in assertEquals
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        assertEquals("0000000.png", caseData.getFlagsImageFileName());
     }
 
     @Test
-    public void buildFlagsImageNameForFalseFlagsFields() {
-        // use Image Name field NOT State API field in Test14.json
-        // use Last Flag field NOT additional_ind_expert field in Test14.json
+    public void buildFlagsImageFileNameForFalseFlagsFields() {
         CaseData caseData = ccdRequest14.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
-        assertEquals("0000000.png", caseData.getStateAPI());
-        // use Image Name field NOT State API field in assertEquals
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        assertEquals("0000000.png", caseData.getFlagsImageFileName());
     }
 
     @Test
-    public void buildFlagsImageNameForTrueFlagsFields() {
-        // use Image Name field NOT State API field in Test15.json
-        // use Last Flag field NOT additional_ind_expert field in Test15.json
+    public void buildFlagsImageFileNameForTrueFlagsFields() {
         CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
-        assertEquals("1111111.png", caseData.getStateAPI());
-        // use Image Name field NOT State API field in assertEquals
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        assertEquals("1111111.png", caseData.getFlagsImageFileName());
     }
-
-    // ..........................................................................................\
 
     @Test
     public void addNewHearingItemForExistingHearingCollection() {

@@ -39,11 +39,15 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_EXTENSION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ONE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ZERO;
 
 @Slf4j
 @Service("caseManagementForCaseWorkerService")
@@ -117,40 +121,25 @@ public class CaseManagementForCaseWorkerService {
         return caseData;
     }
 
-    public CaseData buildFlagsImageName(CaseData caseData) {
-
-        StringBuilder flagsImageName = new StringBuilder();
-
-        // check Image Name NOT State API
-        if(isNullOrEmpty(caseData.getStateAPI() )) {
-            flagsImageName.append("0000000");
+    public CaseData buildFlagsImageFileName(CaseData caseData) {
+        StringBuilder flagsImageFileName = new StringBuilder();
+        if(isNullOrEmpty(caseData.getFlagsImageFileName() )) {
+            flagsImageFileName.append(DEFAULT_FLAGS_IMAGE_FILE_NAME);
         }
         else {
-            //one
-            flagsImageName.append(sensitiveCase(caseData) ? "1" : "0");
-            //two
-            flagsImageName.append(rule503dApplies(caseData) ? "1" : "0");
-            //three
-            flagsImageName.append(rule503bApplies(caseData) ? "1" : "0");
-            //four
-            flagsImageName.append(reservedJudgement(caseData) ? "1" : "0");
-            //five
-            flagsImageName.append(counterClaimMade(caseData) ? "1" : "0");
-            //six
-            flagsImageName.append(liveAppeal(caseData) ? "1" : "0");
-            //seven
-            flagsImageName.append(lastFlag(caseData) ? "1" : "0");
+            flagsImageFileName.append(sensitiveCase(caseData) ? ONE : ZERO);
+            flagsImageFileName.append(rule503dApplies(caseData) ? ONE : ZERO);
+            flagsImageFileName.append(rule503bApplies(caseData) ? ONE : ZERO);
+            flagsImageFileName.append(reservedJudgement(caseData) ? ONE : ZERO);
+            flagsImageFileName.append(counterClaimMade(caseData) ? ONE : ZERO);
+            flagsImageFileName.append(liveAppeal(caseData) ? ONE : ZERO);
+            flagsImageFileName.append(doNotPostpone(caseData) ? ONE : ZERO);
+            flagsImageFileName.append(IMAGE_FILE_EXTENSION);
         }
-
-        flagsImageName.append(".png");
-
-        // set Image Name NOT State API
-        caseData.setStateAPI(flagsImageName.toString());
-
+        caseData.setFlagsImageFileName(flagsImageFileName.toString());
         return caseData;
     }
 
-    // one
     private boolean sensitiveCase(CaseData caseData) {
         if (caseData.getAdditionalCaseInfoType() != null) {
             if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getAdditionalSensitive())) {
@@ -159,7 +148,6 @@ public class CaseManagementForCaseWorkerService {
         } else { return  false; }
     }
 
-    // two
     private boolean rule503dApplies(CaseData caseData) {
         if (caseData.getRestrictedReporting() != null) {
             if (!isNullOrEmpty(caseData.getRestrictedReporting().getImposed())) {
@@ -169,7 +157,6 @@ public class CaseManagementForCaseWorkerService {
         else { return false; }
     }
 
-    // three
     private boolean rule503bApplies(CaseData caseData) {
         if (caseData.getRestrictedReporting() != null) {
             if (!isNullOrEmpty(caseData.getRestrictedReporting().getRule503b())) {
@@ -178,7 +165,6 @@ public class CaseManagementForCaseWorkerService {
         } else { return false; }
     }
 
-    // four
     private boolean reservedJudgement(CaseData caseData) {
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
@@ -194,12 +180,10 @@ public class CaseManagementForCaseWorkerService {
         return false;
     }
 
-    // five
     private boolean counterClaimMade(CaseData caseData) {
         return !isNullOrEmpty(caseData.getCounterClaim());
     }
 
-    // six
     private boolean liveAppeal(CaseData caseData) {
         if (caseData.getAdditionalCaseInfoType() != null) {
             if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal())) {
@@ -208,11 +192,10 @@ public class CaseManagementForCaseWorkerService {
         } else { return false; }
     }
 
-    // seven - use Last Flag field NOT additionalIndExpert field
-    private boolean lastFlag(CaseData caseData) {
+    private boolean doNotPostpone(CaseData caseData) {
         if (caseData.getAdditionalCaseInfoType() != null) {
-            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getAdditionalIndExpert())) {
-                return caseData.getAdditionalCaseInfoType().getAdditionalIndExpert().equals(YES);
+            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getDoNotPostpone() )) {
+                return caseData.getAdditionalCaseInfoType().getDoNotPostpone().equals(YES);
             } else { return false; }
         } else { return false; }
     }

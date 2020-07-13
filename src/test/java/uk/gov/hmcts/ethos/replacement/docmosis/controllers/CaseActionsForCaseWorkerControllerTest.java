@@ -270,7 +270,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void amendCaseDetails() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenReturn(defaultValues);
         when(defaultValuesReaderService.getCaseData(isA(CaseData.class), isA(DefaultValues.class))).thenReturn(submitEvent.getCaseData());
-        when(caseManagementForCaseWorkerService.buildFlagsImageName(isA(CaseData.class))).thenReturn(submitEvent.getCaseData());
+        when(caseManagementForCaseWorkerService.buildFlagsImageFileName(isA(CaseData.class))).thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
                 .content(requestContent2.toString())
@@ -312,7 +312,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void updateHearing() throws Exception {
-        when(caseManagementForCaseWorkerService.buildFlagsImageName(isA(CaseData.class))).thenReturn(submitEvent.getCaseData());
+        when(caseManagementForCaseWorkerService.buildFlagsImageFileName(isA(CaseData.class))).thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(UPDATE_HEARING_URL)
                 .content(requestContent.toString())
@@ -326,7 +326,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void restrictedCases() throws Exception {
-        when(caseManagementForCaseWorkerService.buildFlagsImageName(isA(CaseData.class))).thenReturn(submitEvent.getCaseData());
+        when(caseManagementForCaseWorkerService.buildFlagsImageFileName(isA(CaseData.class))).thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(RESTRICTED_CASES_URL)
                 .content(requestContent.toString())
@@ -793,7 +793,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void updateHearingError500() throws Exception {
-        when(caseManagementForCaseWorkerService.buildFlagsImageName(isA(CaseData.class))).thenThrow(feignError());
+        when(caseManagementForCaseWorkerService.buildFlagsImageFileName(isA(CaseData.class))).thenThrow(feignError());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(UPDATE_HEARING_URL)
                 .content(requestContent.toString())
@@ -804,7 +804,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void restrictedCasesError500() throws Exception {
-        when(caseManagementForCaseWorkerService.buildFlagsImageName(isA(CaseData.class))).thenThrow(feignError());
+        when(caseManagementForCaseWorkerService.buildFlagsImageFileName(isA(CaseData.class))).thenThrow(feignError());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(RESTRICTED_CASES_URL)
                 .content(requestContent.toString())

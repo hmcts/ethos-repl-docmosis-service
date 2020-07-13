@@ -280,7 +280,7 @@ public class CaseActionsForCaseWorkerController {
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
             caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
-            caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
+            caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
         }
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
@@ -368,7 +368,7 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = caseManagementForCaseWorkerService.buildFlagsImageName(ccdRequest.getCaseDetails().getCaseData());
+        CaseData caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(ccdRequest.getCaseDetails().getCaseData());
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
@@ -394,7 +394,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        caseData = caseManagementForCaseWorkerService.buildFlagsImageName(caseData);
+        caseData = caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
