@@ -188,7 +188,7 @@ dependencies {
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.3.1.RELEASE'
     testCompile group: 'com.warrenstrange', name: 'googleauth', version: '1.5.0'
 
-    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '2.2.10'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '2.2.11'
     testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.2.10', {
         exclude module: 'jaxb-osgi'
     }
