@@ -493,6 +493,7 @@ public class CaseManagementForCaseWorkerService {
         populateRespondentCollectionDetails(caseData, originalCaseData.getClaimantIndType(), originalCaseData.getClaimantType());
         populateTribunalCorrespondenceDetails(caseData, originalCaseData);
         populateCaseDataDetails(caseData, originalCaseData, originalId);
+        buildFlagsImageFileName(caseData);
     }
 
     private void populateClaimantDetails(CaseData caseData, RespondentSumType respondentSumType) {
@@ -561,6 +562,7 @@ public class CaseManagementForCaseWorkerService {
         try {
             originalCaseData.setCcdID(currentCaseDetails.getCaseId());
             originalCaseData.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());
+            buildFlagsImageFileName(originalCaseData);
             CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, currentCaseDetails.getCaseTypeId(),
                     currentCaseDetails.getJurisdiction(), caseIdToLink);
             ccdClient.submitEventForCase(authToken, originalCaseData, currentCaseDetails.getCaseTypeId(),
