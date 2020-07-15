@@ -137,7 +137,7 @@ public class ReferenceServiceTest {
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=null, allocatedOffice=null, caseSource=null, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
-                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, " +
+                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
                 "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, " +
                 "hearingVenue=DynamicFixedListType(value=DynamicValueType(code=Venue1, label=Venue1), listItems=[DynamicValueType(code=Venue1, label=Venue1), " +
                 "DynamicValueType(code=Venue2, label=Venue2), DynamicValueType(code=Venue3, label=Venue3)]), hearingEstLengthNum=null, hearingEstLengthNumType=null, " +
@@ -169,7 +169,7 @@ public class ReferenceServiceTest {
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=null, allocatedOffice=null, caseSource=null, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
-                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, " +
+                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
                 "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, hearingEstLengthNum=null, hearingEstLengthNumType=null, " +
                 "hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, " +
                 "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, " +
@@ -199,7 +199,7 @@ public class ReferenceServiceTest {
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=null, allocatedOffice=null, caseSource=null, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
-                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, " +
+                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
                 "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, hearingEstLengthNum=null, hearingEstLengthNumType=null, " +
                 "hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, " +
                 "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, " +
@@ -230,7 +230,7 @@ public class ReferenceServiceTest {
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=null, allocatedOffice=null, caseSource=null, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
-                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, " +
+                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
                 "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, " +
                 "hearingVenue=DynamicFixedListType(value=DynamicValueType(code=Venue1, label=Venue1), listItems=[DynamicValueType(code=Venue1, label=Venue1), " +
                 "DynamicValueType(code=Venue2, label=Venue2), DynamicValueType(code=Venue3, label=Venue3)]), hearingEstLengthNum=null, hearingEstLengthNumType=null, " +
@@ -267,7 +267,7 @@ public class ReferenceServiceTest {
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=null, allocatedOffice=null, caseSource=null, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
-                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, " +
+                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
                 "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, hearingEstLengthNum=null, " +
                 "hearingEstLengthNumType=null, hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, " +
                 "hearingActions=null, hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, hearingDateSelection=null, " +
@@ -301,7 +301,7 @@ public class ReferenceServiceTest {
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=null, allocatedOffice=null, caseSource=null, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
-                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, " +
+                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
                 "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, " +
                 "hearingVenue=DynamicFixedListType(value=DynamicValueType(code=Venue1, label=Venue1), listItems=[DynamicValueType(code=Venue1, label=Venue1), " +
                 "DynamicValueType(code=Venue2, label=Venue2), DynamicValueType(code=Venue3, label=Venue3)]), hearingEstLengthNum=null, hearingEstLengthNumType=null, " +
@@ -336,7 +336,7 @@ public class ReferenceServiceTest {
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=null, allocatedOffice=null, caseSource=null, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
-                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, " +
+                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
                 "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, " +
                 "hearingVenue=DynamicFixedListType(value=DynamicValueType(code=Venue1, label=Venue1), listItems=[DynamicValueType(code=Venue1, label=Venue1), " +
                 "DynamicValueType(code=Venue2, label=Venue2), DynamicValueType(code=Venue3, label=Venue3)]), hearingEstLengthNum=null, hearingEstLengthNumType=null, " +
@@ -372,7 +372,7 @@ public class ReferenceServiceTest {
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=null, allocatedOffice=null, caseSource=null, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
-                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, " +
+                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
                 "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, " +
                 "hearingVenue=null, hearingEstLengthNum=null, hearingEstLengthNumType=null, " +
                 "hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, " +

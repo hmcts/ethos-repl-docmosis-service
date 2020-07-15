@@ -40,7 +40,15 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVE
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DO_NOT_POSTPONE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_EMP_CONT_CLAIM;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_LIVE_APPEAL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_REPORTING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_RESERVED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_RULE_503B;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_SENSITIVE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_EXTENSION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_PRECEDING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ONE;
@@ -122,20 +130,53 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public void buildFlagsImageFileName(CaseData caseData) {
+        StringBuilder flagsImageAltText = new StringBuilder();
         StringBuilder flagsImageFileName = new StringBuilder();
         if(isNullOrEmpty(caseData.getFlagsImageFileName() )) {
             flagsImageFileName.append(DEFAULT_FLAGS_IMAGE_FILE_NAME);
         }
         else {
-            flagsImageFileName.append(sensitiveCase(caseData) ? ONE : ZERO);
-            flagsImageFileName.append(rule503dApplies(caseData) ? ONE : ZERO);
-            flagsImageFileName.append(rule503bApplies(caseData) ? ONE : ZERO);
-            flagsImageFileName.append(reservedJudgement(caseData) ? ONE : ZERO);
-            flagsImageFileName.append(counterClaimMade(caseData) ? ONE : ZERO);
-            flagsImageFileName.append(liveAppeal(caseData) ? ONE : ZERO);
-            flagsImageFileName.append(doNotPostpone(caseData) ? ONE : ZERO);
+            boolean flaggedRequired;
+            flagsImageFileName.append(IMAGE_FILE_PRECEDING);
+
+            flaggedRequired = sensitiveCase(caseData);
+            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
+            flagsImageAltText.append(flaggedRequired ? FLAG_SENSITIVE : "");
+            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
+
+            flaggedRequired = rule503dApplies(caseData);
+            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
+            flagsImageAltText.append(flaggedRequired ? FLAG_REPORTING : "");
+            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
+
+            flaggedRequired = rule503bApplies(caseData);
+            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
+            flagsImageAltText.append(flaggedRequired ? FLAG_RULE_503B : "");
+            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
+
+            flaggedRequired = reservedJudgement(caseData);
+            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
+            flagsImageAltText.append(flaggedRequired ? FLAG_RESERVED : "");
+            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
+
+            flaggedRequired = counterClaimMade(caseData);
+            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
+            flagsImageAltText.append(flaggedRequired ? FLAG_EMP_CONT_CLAIM : "");
+            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
+
+            flaggedRequired = liveAppeal(caseData);
+            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
+            flagsImageAltText.append(flaggedRequired ? FLAG_LIVE_APPEAL : "");
+            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
+
+            flaggedRequired = doNotPostpone(caseData);
+            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
+            flagsImageAltText.append(flaggedRequired ? FLAG_DO_NOT_POSTPONE : "");
+            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
+
             flagsImageFileName.append(IMAGE_FILE_EXTENSION);
         }
+        caseData.setFlagsImageAltText(flagsImageAltText.toString());
         caseData.setFlagsImageFileName(flagsImageFileName.toString());
     }
 

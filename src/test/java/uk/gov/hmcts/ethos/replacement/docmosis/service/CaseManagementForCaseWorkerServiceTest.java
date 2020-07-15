@@ -204,49 +204,56 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void buildFlagsImageFileNameForNullImageName() {
         CaseData caseData = manchesterCcdRequest.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
-        assertEquals("0000000.png", caseData.getFlagsImageFileName());
+        assertEquals("", caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
     public void buildFlagsImageFileNameForEmptyImageName() {
         CaseData caseData = ccdRequest10.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
-        assertEquals("0000000.png", caseData.getFlagsImageFileName());
+        assertEquals("", caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
     public void buildFlagsImageFileNameForNullFlagsTypes() {
         CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
-        assertEquals("0000000.png", caseData.getFlagsImageFileName());
+        assertEquals("", caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
     public void buildFlagsImageFileNameForNullFlagsFields() {
         CaseData caseData = ccdRequest12.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
-        assertEquals("0000000.png", caseData.getFlagsImageFileName());
+        assertEquals("", caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
     public void buildFlagsImageFileNameForEmptyFlagsFields() {
         CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
-        assertEquals("0000000.png", caseData.getFlagsImageFileName());
+        assertEquals("", caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
     public void buildFlagsImageFileNameForFalseFlagsFields() {
         CaseData caseData = ccdRequest14.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
-        assertEquals("0000000.png", caseData.getFlagsImageFileName());
+        assertEquals("", caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
     public void buildFlagsImageFileNameForTrueFlagsFields() {
         CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
-        assertEquals("1111111.png", caseData.getFlagsImageFileName());
+        assertEquals("SENSITIVE - REPORTING - RULE 50(3)b - RESERVED - EMP CONT CLAIM - LIVE APPEAL - DO NOT POSTPONE", caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-1111111.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
