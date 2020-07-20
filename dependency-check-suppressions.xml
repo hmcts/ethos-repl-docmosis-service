@@ -375,4 +375,12 @@
         <notes><![CDATA[ CVE-2019-14900  ]]></notes>
         <cve>CVE-2019-14900</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-13934  ]]></notes>
+        <cve>CVE-2020-13934</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-13935  ]]></notes>
+        <cve>CVE-2020-13935</cve>
+    </suppress>
 </suppressions>
