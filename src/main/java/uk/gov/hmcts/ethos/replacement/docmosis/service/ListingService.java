@@ -199,7 +199,6 @@ public class ListingService {
         } else {
             listingData.setListingDate(null);
         }
-        listingData.setHearingDateType(null);
         listingData.setClerkResponsible(null);
         return listingData;
     }
