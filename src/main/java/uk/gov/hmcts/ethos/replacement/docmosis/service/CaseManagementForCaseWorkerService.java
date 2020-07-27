@@ -61,6 +61,14 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.ZERO;
 @Service("caseManagementForCaseWorkerService")
 public class CaseManagementForCaseWorkerService {
 
+    private static final String COLOR_ORANGE = "Orange";
+    private static final String COLOR_TURQUOISE = "Turquoise";
+    private static final String COLOR_RED = "Red";
+    private static final String COLOR_PURPLE = "Purple";
+    private static final String COLOR_BLUE = "Blue";
+    private static final String COLOR_GREEN = "Green";
+    private static final String COLOR_BLACK = "Black";
+
     private static final String EDIT_HEARING = "Edit hearing";
     private static final String DELETE_HEARING = "Delete hearing";
     private static final String ADD_NEW_HEARING_DATE = "Add a new hearing date";
@@ -130,54 +138,63 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public void buildFlagsImageFileName(CaseData caseData) {
-        StringBuilder flagsImageAltText = new StringBuilder();
         StringBuilder flagsImageFileName = new StringBuilder();
-        if(isNullOrEmpty(caseData.getFlagsImageFileName() )) {
+        StringBuilder flagsImageAltText = new StringBuilder();
+        if(isNullOrEmpty(caseData.getFlagsImageFileName())) {
             flagsImageFileName.append(DEFAULT_FLAGS_IMAGE_FILE_NAME);
         }
         else {
-            boolean flaggedRequired;
             flagsImageFileName.append(IMAGE_FILE_PRECEDING);
-
-            flaggedRequired = sensitiveCase(caseData);
-            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
-            flagsImageAltText.append(flaggedRequired ? FLAG_SENSITIVE : "");
-            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
-
-            flaggedRequired = rule503dApplies(caseData);
-            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
-            flagsImageAltText.append(flaggedRequired ? FLAG_REPORTING : "");
-            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
-
-            flaggedRequired = rule503bApplies(caseData);
-            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
-            flagsImageAltText.append(flaggedRequired ? FLAG_RULE_503B : "");
-            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
-
-            flaggedRequired = reservedJudgement(caseData);
-            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
-            flagsImageAltText.append(flaggedRequired ? FLAG_RESERVED : "");
-            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
-
-            flaggedRequired = counterClaimMade(caseData);
-            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
-            flagsImageAltText.append(flaggedRequired ? FLAG_EMP_CONT_CLAIM : "");
-            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
-
-            flaggedRequired = liveAppeal(caseData);
-            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
-            flagsImageAltText.append(flaggedRequired ? FLAG_LIVE_APPEAL : "");
-            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
-
-            flaggedRequired = doNotPostpone(caseData);
-            flagsImageAltText.append(flaggedRequired && flagsImageAltText.length() > 0 ? " - " : "");
-            flagsImageAltText.append(flaggedRequired ? FLAG_DO_NOT_POSTPONE : "");
-            flagsImageFileName.append(flaggedRequired ? ONE : ZERO);
-
+            setFlagImageFor(FLAG_SENSITIVE, flagsImageFileName, flagsImageAltText, caseData);
+            setFlagImageFor(FLAG_REPORTING, flagsImageFileName, flagsImageAltText, caseData);
+            setFlagImageFor(FLAG_RULE_503B, flagsImageFileName, flagsImageAltText, caseData);
+            setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
+            setFlagImageFor(FLAG_EMP_CONT_CLAIM, flagsImageFileName, flagsImageAltText, caseData);
+            setFlagImageFor(FLAG_LIVE_APPEAL, flagsImageFileName, flagsImageAltText, caseData);
+            setFlagImageFor(FLAG_DO_NOT_POSTPONE, flagsImageFileName, flagsImageAltText, caseData);
             flagsImageFileName.append(IMAGE_FILE_EXTENSION);
         }
         caseData.setFlagsImageAltText(flagsImageAltText.toString());
         caseData.setFlagsImageFileName(flagsImageFileName.toString());
+    }
+
+    private void setFlagImageFor(String flagName, StringBuilder flagsImageFileName, StringBuilder flagsImageAltText, CaseData caseData) {
+        boolean flagRequired;
+        String flagColor;
+
+        switch (flagName) {
+            case FLAG_SENSITIVE:
+                flagRequired = sensitiveCase(caseData);
+                flagColor = COLOR_ORANGE;
+                break;
+            case FLAG_REPORTING:
+                flagRequired = rule503dApplies(caseData);
+                flagColor = COLOR_TURQUOISE;
+                break;
+            case FLAG_RULE_503B:
+                flagRequired = rule503bApplies(caseData);
+                flagColor = COLOR_RED;
+                break;
+            case FLAG_RESERVED:
+                flagRequired = reservedJudgement(caseData);
+                flagColor = COLOR_PURPLE;
+                break;
+            case FLAG_EMP_CONT_CLAIM:
+                flagRequired = counterClaimMade(caseData);
+                flagColor = COLOR_BLUE;
+                break;
+            case FLAG_LIVE_APPEAL:
+                flagRequired = liveAppeal(caseData);
+                flagColor = COLOR_GREEN;
+                break;
+            default: FLAG_DO_NOT_POSTPONE:
+            flagRequired = doNotPostpone(caseData);
+                flagColor = COLOR_BLACK;
+        }
+
+        flagsImageFileName.append(flagRequired ? ONE : ZERO);
+        flagsImageAltText.append(flagRequired && flagsImageAltText.length() > 0 ? " - " : "");
+        flagsImageAltText.append(flagRequired ? "<font color='" + flagColor + "'>" + flagName + "</font>" : "");
     }
 
     private boolean sensitiveCase(CaseData caseData) {

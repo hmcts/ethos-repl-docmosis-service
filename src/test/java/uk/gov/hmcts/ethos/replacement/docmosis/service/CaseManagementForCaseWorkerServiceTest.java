@@ -252,7 +252,14 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void buildFlagsImageFileNameForTrueFlagsFields() {
         CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
-        assertEquals("SENSITIVE - REPORTING - RULE 50(3)b - RESERVED - EMP CONT CLAIM - LIVE APPEAL - DO NOT POSTPONE", caseData.getFlagsImageAltText());
+        String expected = "<font color='Orange'>SENSITIVE</font> - " +
+                "<font color='Turquoise'>REPORTING</font> - " +
+                "<font color='Red'>RULE 50(3)b</font> - " +
+                "<font color='Purple'>RESERVED</font> - " +
+                "<font color='Blue'>EMP CONT CLAIM</font> - " +
+                "<font color='Green'>LIVE APPEAL</font> - " +
+                "<font color='Black'>DO NOT POSTPONE</font>";
+        assertEquals(expected, caseData.getFlagsImageAltText());
         assertEquals("EMP-TRIB-1111111.jpg", caseData.getFlagsImageFileName());
     }
 
