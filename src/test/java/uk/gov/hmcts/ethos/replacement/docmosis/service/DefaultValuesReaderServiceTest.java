@@ -377,14 +377,14 @@ public class DefaultValuesReaderServiceTest {
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, responseTypeCollection=null, responseType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=Manually Created, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingType=null, hearingCollection=null, " +
-                "depositType=null, judgementCollection=null, judgementDetailsCollection=null, costsCollection=null, jurCodesCollection=null, " +
+                "depositCollection=null, judgementCollection=null, judgementDetailsCollection=null, costsCollection=null, jurCodesCollection=null, " +
                 "broughtForwardCollection=null, clerkResponsible=null, userLocation=null, subMultipleReference=null, " +
                 "addSubMultipleComment=null, documentCollection=null, referredToJudge=null, backFromJudge=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, caseNotes=null, claimantWorkAddress=null, " +
                 "claimantRepresentedQuestion=null, bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, " +
                 "state=null, stateAPI=null, et3Received=null, conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
-                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, " +
+                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
                 "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, hearingEstLengthNum=null, hearingEstLengthNumType=null, " +
                 "hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, " +
                 "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, " +
@@ -438,7 +438,7 @@ public class DefaultValuesReaderServiceTest {
                 "responseRespondentAddress=null, responseRespondentPhone1=null, responseRespondentPhone2=null, responseRespondentEmail=null, responseRespondentContactPreference=null, " +
                 "responseReceivedDate=null, responseRespondentNameQuestion=null, responseRespondentName=null, " +
                 "responseCounterClaim=null))], repCollection=null, positionType=Manually Created, fileLocation=null, fileLocationGlasgow=null, " +
-                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingType=null, hearingCollection=null, depositType=null, " +
+                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingType=null, hearingCollection=null, depositCollection=null, " +
                 "judgementCollection=null, judgementDetailsCollection=null, costsCollection=null, jurCodesCollection=null, broughtForwardCollection=null, " +
                 "clerkResponsible=null, userLocation=null, subMultipleReference=null, addSubMultipleComment=null, documentCollection=null, referredToJudge=null, " +
                 "backFromJudge=null, additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, caseNotes=null, " +
@@ -446,7 +446,7 @@ public class DefaultValuesReaderServiceTest {
                 "bulkCaseReferenceNumber=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, state=null, stateAPI=null, et3Received=null, " +
                 "conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, targetHearingDate=null, " +
                 "EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, " +
-                "ccdID=null, hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, hearingEstLengthNum=null, " +
+                "ccdID=null, flagsImageFileName=null, flagsImageAltText=null, hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, hearingEstLengthNum=null, " +
                 "hearingEstLengthNumType=null, hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, " +
                 "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, " +
                 "Postponed_by=null, hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, hearingPartHeard=null, hearingReservedJudgement=null, " +
