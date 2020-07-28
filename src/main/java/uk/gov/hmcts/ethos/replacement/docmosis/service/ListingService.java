@@ -15,6 +15,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.BroughtForwardDatesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.BroughtForwardDatesType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
@@ -26,6 +27,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +35,9 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 
@@ -194,7 +199,6 @@ public class ListingService {
         } else {
             listingData.setListingDate(null);
         }
-        listingData.setHearingDateType(null);
         listingData.setClerkResponsible(null);
         return listingData;
     }
@@ -206,7 +210,8 @@ public class ListingService {
             DateListedTypeItem dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
             boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
             boolean isListingDateValid = isListingDateValid(listingData, dateListedTypeItem);
-            if (isListingDateValid && isListingVenueValid) {
+            boolean isListingStatusValid = isListingStatusValid(dateListedTypeItem);
+            if (isListingDateValid && isListingVenueValid && isListingStatusValid) {
                 ListingTypeItem listingTypeItem = new ListingTypeItem();
                 ListingType listingType = ListingHelper.getListingTypeFromCaseData(listingData, caseData, hearingTypeItem.getValue(), dateListedTypeItem.getValue(), i, hearingDateCollectionSize);
                 listingTypeItem.setId(String.valueOf(dateListedTypeItem.getId()));
@@ -283,6 +288,18 @@ public class ListingService {
         } else {
             String dateToSearch = listingData.getListingDate();
             return ListingHelper.getListingDateBetween(dateToSearch, "", dateListed);
+        }
+    }
+
+    private boolean isListingStatusValid(DateListedTypeItem dateListedTypeItem) {
+        DateListedType dateListedType = dateListedTypeItem.getValue();
+
+        if (dateListedType.getHearingStatus() != null) {
+            List<String> invalidHearingStatuses = Arrays.asList(HEARING_STATUS_SETTLED, HEARING_STATUS_WITHDRAWN, HEARING_STATUS_POSTPONED);
+            return invalidHearingStatuses.stream().noneMatch(str -> str.equals(dateListedType.getHearingStatus()));
+        }
+        else {
+            return true;
         }
     }
 

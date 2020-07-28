@@ -149,10 +149,15 @@
         "respondent_phone1": "07577136570",
         "respondent_phone2": "07577136570"
       },
-      "depositType": {
-        "Deposit_amount": "32",
-        "deposit_due": "123"
-      },
+      "depositType": [
+        {
+          "id" : "1234565",
+          "value" : {
+            "Deposit_amount": "32",
+            "deposit_due": "123"
+          }
+        }
+      ],
       "claimantWorkAddress": {
         "claimant_work_phone_number": "077777777"
       },
