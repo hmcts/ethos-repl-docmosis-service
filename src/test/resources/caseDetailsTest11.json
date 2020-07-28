@@ -24,15 +24,20 @@
       "caseJudge": "Judge",
       "caseReferredDate": "None"
     },
-    "depositType": {
-      "Deposit_amount": "£25",
-      "deposit_covers": "No",
-      "deposit_due": "£25",
-      "deposit_time_ext": "No",
-      "deposit_refund": "",
-      "deposit_refund_date": "25/02/2020",
-      "depositNotes": "None"
-    },
+    "depositType": [
+      {
+        "id" : "1234565",
+        "value" : {
+          "Deposit_amount": "£25",
+          "deposit_covers": "No",
+          "deposit_due": "£25",
+          "deposit_time_ext": "No",
+          "deposit_refund": "",
+          "deposit_refund_date": "25/02/2020",
+          "depositNotes": "None"
+        }
+      }
+    ],
     "addSubMultipleComment": "Comment",
     "backFromJudge": "backFromJudge",
     "representativeClaimantType": {
