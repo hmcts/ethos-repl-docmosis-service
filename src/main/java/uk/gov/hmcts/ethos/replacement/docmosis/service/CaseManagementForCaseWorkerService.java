@@ -35,9 +35,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
@@ -47,6 +49,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 @Slf4j
 @Service("caseManagementForCaseWorkerService")
 public class CaseManagementForCaseWorkerService {
+
+    private static final String MISSING_CLAIMANT = "Missing claimant";
 
     private static final String EDIT_HEARING = "Edit hearing";
     private static final String DELETE_HEARING = "Delete hearing";
@@ -65,6 +69,23 @@ public class CaseManagementForCaseWorkerService {
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService, CcdClient ccdClient) {
         this.caseRetrievalForCaseWorkerService = caseRetrievalForCaseWorkerService;
         this.ccdClient = ccdClient;
+    }
+
+    public void caseDataDefaults(CaseData caseData) {
+        claimantDefaults(caseData);
+    }
+
+    private void claimantDefaults(CaseData caseData) {
+        String claimantTypeOfClaimant = caseData.getClaimantTypeOfClaimant();
+        if (!isNullOrEmpty(claimantTypeOfClaimant)) {
+            if(claimantTypeOfClaimant.equals(INDIVIDUAL_TYPE_CLAIMANT)) {
+                caseData.setClaimant(caseData.getClaimantIndType().getClaimantFirstNames() + " " + caseData.getClaimantIndType().getClaimantLastName());
+            } else {
+                caseData.setClaimant(caseData.getClaimantCompany());
+            }
+        } else {
+            caseData.setClaimant(MISSING_CLAIMANT);
+        }
     }
 
     public void struckOutDefaults(CaseData caseData) {

@@ -54,6 +54,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     private CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private CCDRequest scotlandCcdRequest1;
+    private CCDRequest scotlandCcdRequest2;
     private CCDRequest scotlandCcdRequest3;
     private CCDRequest manchesterCcdRequest;
     private SubmitEvent submitEvent;
@@ -67,6 +68,10 @@ public class CaseManagementForCaseWorkerServiceTest {
         scotlandCcdRequest1 = new CCDRequest();
         CaseDetails caseDetailsScot1 = generateCaseDetails("caseDetailsScotTest1.json");
         scotlandCcdRequest1.setCaseDetails(caseDetailsScot1);
+
+        scotlandCcdRequest2 = new CCDRequest();
+        CaseDetails caseDetailsScot2 = generateCaseDetails("caseDetailsScotTest2.json");
+        scotlandCcdRequest2.setCaseDetails(caseDetailsScot2);
 
         scotlandCcdRequest3 = new CCDRequest();
         CaseDetails caseDetailsScot3 = generateCaseDetails("caseDetailsScotTest3.json");
@@ -106,6 +111,28 @@ public class CaseManagementForCaseWorkerServiceTest {
         submitEvent.setCaseData(submitCaseData);
 
         caseManagementForCaseWorkerService = new CaseManagementForCaseWorkerService(caseRetrievalForCaseWorkerService, ccdClient);
+    }
+
+    @Test
+    public void caseDataDefaultsIndividualClaimant() {
+        CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.caseDataDefaults(caseData);
+        assertEquals("Anton Juliet Rodriguez", caseData.getClaimant());
+    }
+
+    @Test
+    public void caseDataDefaultsCompanyClaimant() {
+        CaseData caseData = scotlandCcdRequest2.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.caseDataDefaults(caseData);
+        assertEquals("Orlando LTD", caseData.getClaimant());
+    }
+
+    @Test
+    public void caseDataDefaultsMissingClaimant() {
+        CaseData caseData = scotlandCcdRequest2.getCaseDetails().getCaseData();
+        caseData.setClaimantTypeOfClaimant(null);
+        caseManagementForCaseWorkerService.caseDataDefaults(caseData);
+        assertEquals("Missing claimant", caseData.getClaimant());
     }
 
     @Test
