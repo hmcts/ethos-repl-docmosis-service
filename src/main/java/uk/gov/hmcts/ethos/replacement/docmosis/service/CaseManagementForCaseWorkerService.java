@@ -68,6 +68,7 @@ public class CaseManagementForCaseWorkerService {
     private static final String COLOR_BLUE = "Blue";
     private static final String COLOR_GREEN = "Green";
     private static final String COLOR_BLACK = "Black";
+    private static final String COLOR_WHITE = "White";
 
     private static final String EDIT_HEARING = "Edit hearing";
     private static final String DELETE_HEARING = "Delete hearing";
@@ -187,9 +188,13 @@ public class CaseManagementForCaseWorkerService {
                 flagRequired = liveAppeal(caseData);
                 flagColor = COLOR_GREEN;
                 break;
-            default: FLAG_DO_NOT_POSTPONE:
-            flagRequired = doNotPostpone(caseData);
+            case FLAG_DO_NOT_POSTPONE:
+                flagRequired = doNotPostpone(caseData);
                 flagColor = COLOR_BLACK;
+                break;
+            default:
+                flagRequired = false;
+                flagColor = COLOR_WHITE;
         }
 
         flagsImageFileName.append(flagRequired ? ONE : ZERO);
@@ -227,8 +232,9 @@ public class CaseManagementForCaseWorkerService {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
                 if (hearingTypeItem.getValue().getHearingDateCollection() != null && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty()) {
                     for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        if (!isNullOrEmpty(dateListedTypeItem.getValue().getHearingReservedJudgement())) {
-                            if (dateListedTypeItem.getValue().getHearingReservedJudgement().equals(YES)) { return true; }
+                        String hearingReservedJudgement = dateListedTypeItem.getValue().getHearingReservedJudgement();
+                        if (!isNullOrEmpty(hearingReservedJudgement) && hearingReservedJudgement.equals(YES))  {
+                            return true;
                         }
                     }
                 }
