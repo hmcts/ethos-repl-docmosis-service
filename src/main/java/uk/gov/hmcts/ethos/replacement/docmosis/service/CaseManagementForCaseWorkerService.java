@@ -39,7 +39,6 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DO_NOT_POSTPONE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_EMP_CONT_CLAIM;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_LIVE_APPEAL;
@@ -141,20 +140,17 @@ public class CaseManagementForCaseWorkerService {
     public void buildFlagsImageFileName(CaseData caseData) {
         StringBuilder flagsImageFileName = new StringBuilder();
         StringBuilder flagsImageAltText = new StringBuilder();
-        if(isNullOrEmpty(caseData.getFlagsImageFileName())) {
-            flagsImageFileName.append(DEFAULT_FLAGS_IMAGE_FILE_NAME);
-        }
-        else {
-            flagsImageFileName.append(IMAGE_FILE_PRECEDING);
-            setFlagImageFor(FLAG_SENSITIVE, flagsImageFileName, flagsImageAltText, caseData);
-            setFlagImageFor(FLAG_REPORTING, flagsImageFileName, flagsImageAltText, caseData);
-            setFlagImageFor(FLAG_RULE_503B, flagsImageFileName, flagsImageAltText, caseData);
-            setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
-            setFlagImageFor(FLAG_EMP_CONT_CLAIM, flagsImageFileName, flagsImageAltText, caseData);
-            setFlagImageFor(FLAG_LIVE_APPEAL, flagsImageFileName, flagsImageAltText, caseData);
-            setFlagImageFor(FLAG_DO_NOT_POSTPONE, flagsImageFileName, flagsImageAltText, caseData);
-            flagsImageFileName.append(IMAGE_FILE_EXTENSION);
-        }
+
+        flagsImageFileName.append(IMAGE_FILE_PRECEDING);
+        setFlagImageFor(FLAG_SENSITIVE, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_REPORTING, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_RULE_503B, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_EMP_CONT_CLAIM, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_LIVE_APPEAL, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_DO_NOT_POSTPONE, flagsImageFileName, flagsImageAltText, caseData);
+        flagsImageFileName.append(IMAGE_FILE_EXTENSION);
+
         caseData.setFlagsImageAltText(flagsImageAltText.toString());
         caseData.setFlagsImageFileName(flagsImageFileName.toString());
     }
