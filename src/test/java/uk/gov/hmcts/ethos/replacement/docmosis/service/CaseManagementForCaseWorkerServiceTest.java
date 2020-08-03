@@ -56,6 +56,12 @@ public class CaseManagementForCaseWorkerServiceTest {
     private CCDRequest scotlandCcdRequest1;
     private CCDRequest scotlandCcdRequest2;
     private CCDRequest scotlandCcdRequest3;
+    private CCDRequest ccdRequest10;
+    private CCDRequest ccdRequest11;
+    private CCDRequest ccdRequest12;
+    private CCDRequest ccdRequest13;
+    private CCDRequest ccdRequest14;
+    private CCDRequest ccdRequest15;
     private CCDRequest manchesterCcdRequest;
     private SubmitEvent submitEvent;
     @MockBean
@@ -76,6 +82,30 @@ public class CaseManagementForCaseWorkerServiceTest {
         scotlandCcdRequest3 = new CCDRequest();
         CaseDetails caseDetailsScot3 = generateCaseDetails("caseDetailsScotTest3.json");
         scotlandCcdRequest3.setCaseDetails(caseDetailsScot3);
+
+        ccdRequest10 = new CCDRequest();
+        CaseDetails caseDetails10 = generateCaseDetails("caseDetailsTest10.json");
+        ccdRequest10.setCaseDetails(caseDetails10);
+
+        ccdRequest11 = new CCDRequest();
+        CaseDetails caseDetails11 = generateCaseDetails("caseDetailsTest11.json");
+        ccdRequest11.setCaseDetails(caseDetails11);
+
+        ccdRequest12 = new CCDRequest();
+        CaseDetails caseDetails12 = generateCaseDetails("caseDetailsTest12.json");
+        ccdRequest12.setCaseDetails(caseDetails12);
+
+        ccdRequest13 = new CCDRequest();
+        CaseDetails caseDetails13 = generateCaseDetails("caseDetailsTest13.json");
+        ccdRequest13.setCaseDetails(caseDetails13);
+
+        ccdRequest14 = new CCDRequest();
+        CaseDetails caseDetails14 = generateCaseDetails("caseDetailsTest14.json");
+        ccdRequest14.setCaseDetails(caseDetails14);
+
+        ccdRequest15 = new CCDRequest();
+        CaseDetails caseDetails15 = generateCaseDetails("caseDetailsTest15.json");
+        ccdRequest15.setCaseDetails(caseDetails15);
 
         manchesterCcdRequest = new CCDRequest();
         CaseDetails manchesterCaseDetails = new CaseDetails();
@@ -150,17 +180,6 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    public void preAcceptCaseAccepted() {
-        assertEquals(ACCEPTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
-    }
-
-    @Test
-    public void preAcceptCaseRejected() {
-        manchesterCcdRequest.getCaseDetails().getCaseData().getPreAcceptCase().setCaseAccepted(NO);
-        assertEquals(REJECTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
-    }
-
-    @Test
     public void struckOutDefaultsYEStoNO() {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
 
@@ -189,6 +208,17 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    public void preAcceptCaseAccepted() {
+        assertEquals(ACCEPTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
+    }
+
+    @Test
+    public void preAcceptCaseRejected() {
+        manchesterCcdRequest.getCaseDetails().getCaseData().getPreAcceptCase().setCaseAccepted(NO);
+        assertEquals(REJECTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
+    }
+
+    @Test
     public void struckOutRespondentFirstToLast() {
         CaseData caseData = caseManagementForCaseWorkerService.struckOutRespondents(scotlandCcdRequest1);
 
@@ -209,6 +239,69 @@ public class CaseManagementForCaseWorkerServiceTest {
         assertEquals(1, caseData.getRespondentCollection().size());
 
         assertEquals("Antonio Vazquez", caseData.getRespondentCollection().get(0).getValue().getRespondentName());
+    }
+
+    @Test
+    public void buildFlagsImageFileNameForNullImageName() {
+        CaseData caseData = manchesterCcdRequest.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        assertEquals("", caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
+    }
+
+    @Test
+    public void buildFlagsImageFileNameForEmptyImageName() {
+        CaseData caseData = ccdRequest10.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        assertEquals("", caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
+    }
+
+    @Test
+    public void buildFlagsImageFileNameForNullFlagsTypes() {
+        CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        assertEquals("", caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
+    }
+
+    @Test
+    public void buildFlagsImageFileNameForNullFlagsFields() {
+        CaseData caseData = ccdRequest12.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        assertEquals("", caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
+    }
+
+    @Test
+    public void buildFlagsImageFileNameForEmptyFlagsFields() {
+        CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        assertEquals("", caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
+    }
+
+    @Test
+    public void buildFlagsImageFileNameForFalseFlagsFields() {
+        CaseData caseData = ccdRequest14.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        assertEquals("", caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
+    }
+
+    @Test
+    public void buildFlagsImageFileNameForTrueFlagsFields() {
+        CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        String expected = "<font color='Orange'>SENSITIVE</font> - " +
+                "<font color='Turquoise'>REPORTING</font> - " +
+                "<font color='Red'>RULE 50(3)b</font> - " +
+                "<font color='Purple'>RESERVED</font> - " +
+                "<font color='Blue'>EMP CONT CLAIM</font> - " +
+                "<font color='Green'>LIVE APPEAL</font> - " +
+                "<font color='Black'>DO NOT POSTPONE</font>";
+        assertEquals(expected, caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-1111111.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test

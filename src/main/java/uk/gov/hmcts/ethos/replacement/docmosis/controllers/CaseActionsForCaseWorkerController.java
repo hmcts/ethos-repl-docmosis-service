@@ -215,6 +215,7 @@ public class CaseActionsForCaseWorkerController {
             errors = eventValidationService.validateReceiptDate(ccdRequest.getCaseDetails().getCaseData());
             log.info("Event fields validation:: " + errors);
             if (errors.isEmpty()) {
+                caseManagementForCaseWorkerService.buildFlagsImageFileName(ccdRequest.getCaseDetails().getCaseData());
                 caseManagementForCaseWorkerService.caseDataDefaults(ccdRequest.getCaseDetails().getCaseData());
                 caseManagementForCaseWorkerService.struckOutDefaults(ccdRequest.getCaseDetails().getCaseData());
                 log.info("POST DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
@@ -281,6 +282,7 @@ public class CaseActionsForCaseWorkerController {
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
             caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
+            caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
         }
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
@@ -344,20 +346,68 @@ public class CaseActionsForCaseWorkerController {
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
 
         errors = eventValidationService.validateActiveRespondents(caseData);
-
         if(errors.isEmpty()) {
             errors = eventValidationService.validateET3ResponseFields(caseData);
-
             if (errors.isEmpty()) {
                 caseData = caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
             }
         }
-
         log.info("Event fields validation: " + errors);
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
                 .errors(errors)
+                .build());
+    }
+
+    @PostMapping(value = "/updateHearing", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "update hearing details for a single case.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> updateHearing(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("UPDATE HEARING ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(ccdRequest.getCaseDetails().getCaseData());
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(ccdRequest.getCaseDetails().getCaseData())
+                .build());
+    }
+
+    @PostMapping(value = "/restrictedCases", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "change restricted reporting for a single case.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> restrictedCases(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("RESTRICTED CASES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
                 .build());
     }
 
