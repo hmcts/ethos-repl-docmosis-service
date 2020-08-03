@@ -114,25 +114,39 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    public void caseDataDefaultsIndividualClaimant() {
+    public void caseDataDefaultsClaimantIndividual() {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.caseDataDefaults(caseData);
         assertEquals("Anton Juliet Rodriguez", caseData.getClaimant());
     }
 
     @Test
-    public void caseDataDefaultsCompanyClaimant() {
+    public void caseDataDefaultsClaimantCompany() {
         CaseData caseData = scotlandCcdRequest2.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.caseDataDefaults(caseData);
         assertEquals("Orlando LTD", caseData.getClaimant());
     }
 
     @Test
-    public void caseDataDefaultsMissingClaimant() {
+    public void caseDataDefaultsClaimantMissing() {
         CaseData caseData = scotlandCcdRequest2.getCaseDetails().getCaseData();
         caseData.setClaimantTypeOfClaimant(null);
         caseManagementForCaseWorkerService.caseDataDefaults(caseData);
         assertEquals("Missing claimant", caseData.getClaimant());
+    }
+
+    @Test
+    public void caseDataDefaultsRespondentAvailable() {
+        CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.caseDataDefaults(caseData);
+        assertEquals("Antonio Vazquez", caseData.getRespondent());
+    }
+
+    @Test
+    public void caseDataDefaultsRespondentMissing() {
+        CaseData caseData = scotlandCcdRequest2.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.caseDataDefaults(caseData);
+        assertEquals("Missing respondent", caseData.getRespondent());
     }
 
     @Test

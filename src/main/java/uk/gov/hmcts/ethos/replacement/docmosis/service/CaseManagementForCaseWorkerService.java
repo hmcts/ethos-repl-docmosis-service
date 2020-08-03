@@ -46,11 +46,14 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
+
 @Slf4j
 @Service("caseManagementForCaseWorkerService")
 public class CaseManagementForCaseWorkerService {
 
     private static final String MISSING_CLAIMANT = "Missing claimant";
+    private static final String MISSING_RESPONDENT = "Missing respondent";
 
     private static final String EDIT_HEARING = "Edit hearing";
     private static final String DELETE_HEARING = "Delete hearing";
@@ -72,19 +75,33 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public void caseDataDefaults(CaseData caseData) {
+
         claimantDefaults(caseData);
+        respondentDefaults(caseData);
     }
 
     private void claimantDefaults(CaseData caseData) {
         String claimantTypeOfClaimant = caseData.getClaimantTypeOfClaimant();
         if (!isNullOrEmpty(claimantTypeOfClaimant)) {
             if(claimantTypeOfClaimant.equals(INDIVIDUAL_TYPE_CLAIMANT)) {
-                caseData.setClaimant(caseData.getClaimantIndType().getClaimantFirstNames() + " " + caseData.getClaimantIndType().getClaimantLastName());
+                String claimantFirstNames = nullCheck(caseData.getClaimantIndType().getClaimantFirstNames());
+                String claimantLastName = nullCheck(caseData.getClaimantIndType().getClaimantLastName());
+                caseData.setClaimant(claimantFirstNames + " " + claimantLastName);
             } else {
-                caseData.setClaimant(caseData.getClaimantCompany());
+                caseData.setClaimant(nullCheck(caseData.getClaimantCompany()));
             }
         } else {
             caseData.setClaimant(MISSING_CLAIMANT);
+        }
+    }
+
+    private void respondentDefaults (CaseData caseData) {
+        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+            RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+            caseData.setRespondent(nullCheck(respondentSumType.getRespondentName()));
+        }
+        else {
+            caseData.setRespondent(MISSING_RESPONDENT);
         }
     }
 
@@ -133,6 +150,7 @@ public class CaseManagementForCaseWorkerService {
                 }
             }
             caseData.setRespondentCollection(Stream.concat(activeRespondent.stream(), struckRespondent.stream()).collect(Collectors.toList()));
+            respondentDefaults(caseData);
         }
         return caseData;
     }

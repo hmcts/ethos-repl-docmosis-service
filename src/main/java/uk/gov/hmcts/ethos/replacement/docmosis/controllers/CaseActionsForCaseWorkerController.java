@@ -215,6 +215,7 @@ public class CaseActionsForCaseWorkerController {
             errors = eventValidationService.validateReceiptDate(ccdRequest.getCaseDetails().getCaseData());
             log.info("Event fields validation:: " + errors);
             if (errors.isEmpty()) {
+                caseManagementForCaseWorkerService.caseDataDefaults(ccdRequest.getCaseDetails().getCaseData());
                 caseManagementForCaseWorkerService.struckOutDefaults(ccdRequest.getCaseDetails().getCaseData());
                 log.info("POST DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
                 DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
@@ -306,10 +307,18 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        List<String> errors = eventValidationService.validateActiveRespondents(caseData);
+
+        if(errors.isEmpty()) {
+            caseData = caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
+        }
+
+        log.info("Event fields validation: " + errors);
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
+                .errors(errors)
                 .build());
     }
 
