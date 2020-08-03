@@ -39,6 +39,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DO_NOT_POSTPONE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_EMP_CONT_CLAIM;
@@ -98,6 +99,8 @@ public class CaseManagementForCaseWorkerService {
 
         claimantDefaults(caseData);
         respondentDefaults(caseData);
+        struckOutDefaults(caseData);
+        flagsImageFileNameDefaults(caseData);
     }
 
     private void claimantDefaults(CaseData caseData) {
@@ -125,12 +128,18 @@ public class CaseManagementForCaseWorkerService {
         }
     }
 
-    public void struckOutDefaults(CaseData caseData) {
+    private void struckOutDefaults(CaseData caseData) {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             ListIterator<RespondentSumTypeItem> itr = caseData.getRespondentCollection().listIterator();
             while (itr.hasNext()) {
                 itr.next().getValue().setResponseStruckOut(NO);
             }
+        }
+    }
+
+    private void flagsImageFileNameDefaults(CaseData caseData) {
+        if(isNullOrEmpty(caseData.getFlagsImageFileName())) {
+            caseData.setFlagsImageFileName(DEFAULT_FLAGS_IMAGE_FILE_NAME);
         }
     }
 

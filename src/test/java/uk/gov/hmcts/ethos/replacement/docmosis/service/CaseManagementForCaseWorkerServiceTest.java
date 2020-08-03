@@ -180,10 +180,10 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    public void struckOutDefaultsYEStoNO() {
+    public void caseDataDefaultsStruckOutYESandNulltoNO() {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
 
-        caseManagementForCaseWorkerService.struckOutDefaults(caseData);
+        caseManagementForCaseWorkerService.caseDataDefaults(caseData);
 
         assertEquals(3, caseData.getRespondentCollection().size());
 
@@ -196,15 +196,31 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    public void struckOutDefaultsUnchanged() {
+    public void caseDataDefaultsStruckOutUnchanged() {
         CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
 
-        caseManagementForCaseWorkerService.struckOutDefaults(caseData);
+        caseManagementForCaseWorkerService.caseDataDefaults(caseData);
 
         assertEquals(1, caseData.getRespondentCollection().size());
 
         assertEquals("Antonio Vazquez", caseData.getRespondentCollection().get(0).getValue().getRespondentName());
         assertEquals(NO, caseData.getRespondentCollection().get(0).getValue().getResponseStruckOut());
+    }
+
+    @Test
+    public void caseDataDefaultsFlagsImageFileNameNull() {
+        CaseData caseData = manchesterCcdRequest.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.caseDataDefaults(caseData);
+        assertNull(caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
+    }
+
+    @Test
+    public void caseDataDefaultsFlagsImageFileNameEmpty() {
+        CaseData caseData = ccdRequest10.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.caseDataDefaults(caseData);
+        assertNull(caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -239,22 +255,6 @@ public class CaseManagementForCaseWorkerServiceTest {
         assertEquals(1, caseData.getRespondentCollection().size());
 
         assertEquals("Antonio Vazquez", caseData.getRespondentCollection().get(0).getValue().getRespondentName());
-    }
-
-    @Test
-    public void buildFlagsImageFileNameForNullImageName() {
-        CaseData caseData = manchesterCcdRequest.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
-        assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
-    }
-
-    @Test
-    public void buildFlagsImageFileNameForEmptyImageName() {
-        CaseData caseData = ccdRequest10.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
-        assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test

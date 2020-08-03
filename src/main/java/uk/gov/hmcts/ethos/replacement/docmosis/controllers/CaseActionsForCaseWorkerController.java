@@ -215,9 +215,7 @@ public class CaseActionsForCaseWorkerController {
             errors = eventValidationService.validateReceiptDate(ccdRequest.getCaseDetails().getCaseData());
             log.info("Event fields validation:: " + errors);
             if (errors.isEmpty()) {
-                caseManagementForCaseWorkerService.buildFlagsImageFileName(ccdRequest.getCaseDetails().getCaseData());
                 caseManagementForCaseWorkerService.caseDataDefaults(ccdRequest.getCaseDetails().getCaseData());
-                caseManagementForCaseWorkerService.struckOutDefaults(ccdRequest.getCaseDetails().getCaseData());
                 log.info("POST DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
                 DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
                 log.info("Post Default values loaded: " + defaultValues);
