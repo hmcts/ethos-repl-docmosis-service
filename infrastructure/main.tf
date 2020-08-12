@@ -126,7 +126,7 @@ data "azurerm_key_vault" "ethos_key_vault" {
   resource_group_name = local.vaultGroupName
 }
 
-resource "azurerm_key_vault_secret" "ethos-repl-service-s2s-secret" {
+resource "azurerm_key_vault_secret" "ethos_repl_service_s2s_secret" {
   name         = "ethos-repl-service-s2s-secret"
   value        = data.azurerm_key_vault_secret.microservicekey_ethos_repl_service.value
   key_vault_id = data.azurerm_key_vault.ethos_key_vault.id
