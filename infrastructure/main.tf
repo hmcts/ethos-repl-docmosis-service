@@ -22,6 +22,9 @@ locals {
   nonPreviewSharedRG = "${var.product}-${var.env}"
   sharedResourceGroup = var.env == "preview" ? local.previewSharedRG : local.nonPreviewSharedRG
 
+  localEnv = var.env == "preview" ? "aat" : var.env
+  s2sRG  = "rpe-service-auth-provider-${local.localEnv}"
+
 }
 
 module "repl-docmosis-backend" {
@@ -40,7 +43,7 @@ module "repl-docmosis-backend" {
     WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = var.autoheal
     TORNADO_URL                        = var.tornado_url
     TORNADO_ACCESS_KEY                 = data.azurerm_key_vault_secret.tornado_access_key.value
-    ETHOS_S2S_SECRET_KEY               = data.azurerm_key_vault_secret.ethos-repl-service-s2s-secret.value
+    ETHOS_S2S_SECRET_KEY               = data.azurerm_key_vault_secret.microservicekey_ethos_repl_service.value
     IDAM_API_URL                       = var.idam_api_url
     IDAM_API_JWK_URL                   = "${var.idam_api_url}/jwks"
     CCD_DATA_STORE_API_URL             = var.ccd_data_store_api_url
@@ -123,8 +126,19 @@ data "azurerm_key_vault" "ethos_key_vault" {
   resource_group_name = local.vaultGroupName
 }
 
-data "azurerm_key_vault_secret" "ethos-repl-service-s2s-secret" {
-  name = "ethos-repl-service-s2s-secret"
+data "azurerm_key_vault" "s2s_key_vault" {
+  name                = "s2s-${local.localEnv}"
+  resource_group_name = local.s2sRG
+}
+
+data "azurerm_key_vault_secret" "microservicekey_ethos_repl_service" {
+  name = "microservicekey-ethos-repl-service"
+  key_vault_id = data.azurerm_key_vault.s2s_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "ethos-repl-service-s2s-secret" {
+  name         = "ethos-repl-service-s2s-secret"
+  value        = data.azurerm_key_vault_secret.microservicekey_ethos_repl_service.value
   key_vault_id = data.azurerm_key_vault.ethos_key_vault.id
 }
 
