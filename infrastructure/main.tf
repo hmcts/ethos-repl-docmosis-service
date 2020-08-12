@@ -43,7 +43,7 @@ module "repl-docmosis-backend" {
     WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = var.autoheal
     TORNADO_URL                        = var.tornado_url
     TORNADO_ACCESS_KEY                 = data.azurerm_key_vault_secret.tornado_access_key.value
-    ETHOS_S2S_SECRET_KEY               = data.azurerm_key_vault_secret.microservicekey_ethos_repl_service.value
+    ETHOS_REPL_SERVICE_S2S_SECRET      = data.azurerm_key_vault_secret.microservicekey_ethos_repl_service.value
     IDAM_API_URL                       = var.idam_api_url
     IDAM_API_JWK_URL                   = "${var.idam_api_url}/jwks"
     CCD_DATA_STORE_API_URL             = var.ccd_data_store_api_url
