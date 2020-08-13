@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
@@ -44,6 +45,32 @@ public class DocumentGenerationController {
         this.documentGenerationService = documentGenerationService;
         this.verifyTokenService = verifyTokenService;
         this.eventValidationService = eventValidationService;
+    }
+
+    @PostMapping(value = "/midAddressLabels", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the address labels list with the user selected addresses.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> midAddressLabels(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MID ADDRESS LABELS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        caseData = documentGenerationService.midAddressLabels(caseData);
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .build());
     }
 
     @PostMapping(value = "/generateDocument", consumes = APPLICATION_JSON_VALUE)

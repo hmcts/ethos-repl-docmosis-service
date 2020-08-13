@@ -10,11 +10,17 @@ import uk.gov.hmcts.ecm.common.model.bulk.BulkData;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsSelectionType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +38,71 @@ public class DocumentGenerationService {
     public DocumentGenerationService(TornadoService tornadoService, CcdClient ccdClient) {
         this.tornadoService = tornadoService;
         this.ccdClient = ccdClient;
+    }
+
+    public CaseData midAddressLabels(CaseData caseData) {
+        log.info("WE ARE OFF ===============>");
+
+        String templateName = Helper.getTemplateName(caseData);
+        if (templateName.equals("EM-TRB-LBL-ENG-00000")) {
+            String ewSection = Helper.getSectionName(caseData);
+            String sectionName = ewSection.equals("") ? Helper.getScotSectionName(caseData) : ewSection;
+            caseData.setAddressLabelCollection(new ArrayList<>());
+            if (sectionName.equals("0.1")) {
+                switch (sectionName) {
+                    case "0.1":
+                        customiseAddressLabels(caseData);
+                        break;
+                    case "0.2":
+                        allAddressLabels(caseData);
+                        break;
+                    default:
+                        return caseData;
+                }
+            }
+        }
+
+        return caseData;
+    }
+
+    private CaseData customiseAddressLabels(CaseData caseData) {
+        if(caseData.getAddressLabelsSelectionType() != null) {
+            AddressLabelsSelectionType addressLabelsSelection = caseData.getAddressLabelsSelectionType();
+            String printClaimantLabel = addressLabelsSelection.getClaimantAddressLabel();
+            String printClaimantRepLabel = addressLabelsSelection.getClaimantRepAddressLabel();
+            String printRespondentsLabels = addressLabelsSelection.getRespondentsAddressLabel();
+            String printRespondentsRepsLabels = addressLabelsSelection.getRespondentsRepsAddressLabel();
+
+            caseData.getAddressLabelCollection().add(getClaimantAddressLabel(caseData, printClaimantLabel));
+        }
+
+        return caseData;
+    }
+
+    private CaseData allAddressLabels(CaseData caseData) {
+        // ...
+        return caseData;
+    }
+
+    private AddressLabelTypeItem getClaimantAddressLabel(CaseData caseData, String printClaimantLabel) {
+        AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
+        AddressLabelType addressLabelType = new AddressLabelType();
+
+        addressLabelType.setPrintLabel(printClaimantLabel);
+        addressLabelType.setFullName("mark taylor");
+        addressLabelType.setFullAddress("10 Brook Close");
+        addressLabelType.setLabelEntityName01("");
+        addressLabelType.setLabelEntityName02("");
+        addressLabelType.setLabelEntityAddress(new Address());
+        addressLabelType.setLabelEntityTelephone("");
+        addressLabelType.setLabelEntityFax("");
+        addressLabelType.setLabelEntityReference("");
+        addressLabelType.setLabelCaseReference("");
+
+        addressLabelTypeItem.setId("1");
+        addressLabelTypeItem.setValue(addressLabelType);
+
+        return addressLabelTypeItem;
     }
 
     public DocumentInfo processDocumentRequest(CCDRequest ccdRequest, String authToken) {

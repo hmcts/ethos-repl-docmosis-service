@@ -340,7 +340,7 @@ public class Helper {
         return getTemplateName(caseData) + "_" + sectionName;
     }
 
-    private static String getTemplateName(CaseData caseData) {
+    public static String getTemplateName(CaseData caseData) {
         Optional<CorrespondenceType> correspondenceType = Optional.ofNullable(caseData.getCorrespondenceType());
         if (correspondenceType.isPresent()) {
             return correspondenceType.get().getTopLevelDocuments();
@@ -354,10 +354,11 @@ public class Helper {
         }
     }
 
-    private static String getSectionName(CaseData caseData) {
+    public static String getSectionName(CaseData caseData) {
         Optional<CorrespondenceType> correspondenceType = Optional.ofNullable(caseData.getCorrespondenceType());
         if (correspondenceType.isPresent()) {
             CorrespondenceType correspondence = correspondenceType.get();
+            if (correspondence.getPart0Documents() != null) return correspondence.getPart0Documents();
             if (correspondence.getPart1Documents() != null) return correspondence.getPart1Documents();
             if (correspondence.getPart2Documents() != null) return correspondence.getPart2Documents();
             if (correspondence.getPart3Documents() != null) return correspondence.getPart3Documents();
@@ -380,10 +381,11 @@ public class Helper {
         return "";
     }
 
-    private static String getScotSectionName(CaseData caseData) {
+    public static String getScotSectionName(CaseData caseData) {
         Optional<CorrespondenceScotType> correspondenceScotTypeOptional = Optional.ofNullable(caseData.getCorrespondenceScotType());
         if (correspondenceScotTypeOptional.isPresent()) {
             CorrespondenceScotType correspondenceScotType = correspondenceScotTypeOptional.get();
+            if (correspondenceScotType.getPart0ScotDocuments() != null) return correspondenceScotType.getPart0ScotDocuments();
             if (correspondenceScotType.getPart1ScotDocuments() != null) return correspondenceScotType.getPart1ScotDocuments();
             if (correspondenceScotType.getPart2ScotDocuments() != null) return correspondenceScotType.getPart2ScotDocuments();
             if (correspondenceScotType.getPart3ScotDocuments() != null) return correspondenceScotType.getPart3ScotDocuments();
