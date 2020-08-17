@@ -73,6 +73,32 @@ public class DocumentGenerationController {
                 .build());
     }
 
+    @PostMapping(value = "/midSelectedAddressLabels", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the address labels list with the user selected addresses to be printed.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> midSelectedAddressLabels(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MID SELECTED ADDRESS LABELS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        caseData = documentGenerationService.midSelectedAddressLabels(caseData);
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .build());
+    }
+
     @PostMapping(value = "/generateDocument", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "generate a document.")
     @ApiResponses(value = {

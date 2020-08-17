@@ -17,22 +17,29 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsAttributesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsSelectionType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRespondents;
 
 @Slf4j
 @Service("documentGenerationService")
@@ -74,8 +81,8 @@ public class DocumentGenerationService {
         String templateName = Helper.getTemplateName(caseData);
         if (templateName.equals(ADDRESS_LABELS_TEMPLATE)) {
             String ewSection = Helper.getSectionName(caseData);
-            String sectionName = ewSection.equals("") ? Helper.getScotSectionName(caseData) : ewSection;
             caseData.setAddressLabelCollection(new ArrayList<>());
+            String sectionName = ewSection.equals("") ? Helper.getScotSectionName(caseData) : ewSection;
             switch (sectionName) {
                 case CUSTOMISE_SELECTED_ADDRESSES:
                     customiseSelectedAddresses(caseData);
@@ -117,6 +124,13 @@ public class DocumentGenerationService {
                     return caseData;
             }
         }
+        return caseData;
+    }
+
+    public CaseData midSelectedAddressLabels(CaseData caseData) {
+        caseData.setAddressLabelsAttributesType(new AddressLabelsAttributesType());
+        List<AddressLabelTypeItem> selectedAddressLabels = Helper.getSelectedAddressLabels(caseData);
+        caseData.getAddressLabelsAttributesType().setNumberOfSelectedLabels(String.valueOf(selectedAddressLabels.size()));
         return caseData;
     }
 
@@ -207,89 +221,85 @@ public class DocumentGenerationService {
     private CaseData customiseSelectedAddresses(CaseData caseData) {
         if(caseData.getAddressLabelsSelectionType() != null) {
             AddressLabelsSelectionType addressLabelsSelection = caseData.getAddressLabelsSelectionType();
+
             String printClaimantLabel = addressLabelsSelection.getClaimantAddressLabel();
             String printClaimantRepLabel = addressLabelsSelection.getClaimantRepAddressLabel();
             String printRespondentsLabels = addressLabelsSelection.getRespondentsAddressLabel();
             String printRespondentsRepsLabels = addressLabelsSelection.getRespondentsRepsAddressLabel();
 
-            caseData.getAddressLabelCollection().add(getClaimantAddressLabel(caseData, printClaimantLabel));
-
-            if (caseData.getRepresentativeClaimantType() != null && caseData.getClaimantRepresentedQuestion().equals(YES)) {
-                caseData.getAddressLabelCollection().add(getClaimantRepAddressLabel(caseData, printClaimantRepLabel));
-            }
-
-            //...
+            getClaimantAddressLabel(caseData, printClaimantLabel);
+            getClaimantRepAddressLabel(caseData, printClaimantRepLabel);
+            getRespondentsAddressLabels(caseData, printRespondentsLabels);
+            getRespondentsRepsAddressLabels(caseData, printRespondentsRepsLabels);
         }
         return caseData;
     }
 
     private CaseData allAvailableAddresses(CaseData caseData) {
-        caseData.getAddressLabelCollection().add(getClaimantAddressLabel(caseData, YES));
-
-        if (caseData.getRepresentativeClaimantType() != null && caseData.getClaimantRepresentedQuestion().equals(YES)) {
-            caseData.getAddressLabelCollection().add(getClaimantRepAddressLabel(caseData, YES));
-        }
-
-        //...
+        getClaimantAddressLabel(caseData, YES);
+        getClaimantRepAddressLabel(caseData, YES);
+        getRespondentsAddressLabels(caseData, YES);
+        getRespondentsRepsAddressLabels(caseData, YES);
         return caseData;
     }
 
     private CaseData claimantAddress(CaseData caseData) {
-        caseData.getAddressLabelCollection().add(getClaimantAddressLabel(caseData, YES));
+        getClaimantAddressLabel(caseData, YES);
         return caseData;
     }
 
     private CaseData claimantRepAddress(CaseData caseData) {
-        if (caseData.getRepresentativeClaimantType() != null && caseData.getClaimantRepresentedQuestion().equals(YES)) {
-            caseData.getAddressLabelCollection().add(getClaimantRepAddressLabel(caseData, YES));
-        }
+        getClaimantRepAddressLabel(caseData, YES);
         return caseData;
     }
 
     private CaseData claimantAndClaimantRepAddresses(CaseData caseData) {
-        caseData.getAddressLabelCollection().add(getClaimantAddressLabel(caseData, YES));
-        if (caseData.getRepresentativeClaimantType() != null && caseData.getClaimantRepresentedQuestion().equals(YES)) {
-            caseData.getAddressLabelCollection().add(getClaimantRepAddressLabel(caseData, YES));
-        }
+        getClaimantAddressLabel(caseData, YES);
+        getClaimantRepAddressLabel(caseData, YES);
         return caseData;
     }
 
     private CaseData respondentsAddresses(CaseData caseData) {
-        //...
+        getRespondentsAddressLabels(caseData, YES);
         return caseData;
     }
 
     private CaseData respondentsRepsAddresses(CaseData caseData) {
-        //...
+        getRespondentsRepsAddressLabels(caseData, YES);
         return caseData;
     }
 
     private CaseData respondentsAndRespondentsRepsAddresses(CaseData caseData) {
-        //...
+        getRespondentsAddressLabels(caseData, YES);
+        getRespondentsRepsAddressLabels(caseData, YES);
         return caseData;
     }
 
     private CaseData claimantAndRespondentsAddresses(CaseData caseData) {
-        //...
+        getClaimantAddressLabel(caseData, YES);
+        getRespondentsAddressLabels(caseData, YES);
         return caseData;
     }
 
     private CaseData claimantRepAndRespondentsRepsAddresses(CaseData caseData) {
-        //...
+        getClaimantRepAddressLabel(caseData, YES);
+        getRespondentsRepsAddressLabels(caseData, YES);
         return caseData;
     }
 
     private CaseData claimantAndRespondentsRepsAddresses(CaseData caseData) {
-        //...
+        getClaimantAddressLabel(caseData, YES);
+        getRespondentsRepsAddressLabels(caseData, YES);
         return caseData;
     }
 
     private CaseData claimantRepAndRespondentsAddresses(CaseData caseData) {
-        //...
+        getClaimantRepAddressLabel(caseData, YES);
+        getRespondentsAddressLabels(caseData, YES);
         return caseData;
     }
 
-    private AddressLabelTypeItem getClaimantAddressLabel(CaseData caseData, String printClaimantLabel) {
+    private void getClaimantAddressLabel(CaseData caseData, String printClaimantLabel) {
         AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
         AddressLabelType addressLabelType = new AddressLabelType();
 
@@ -303,106 +313,149 @@ public class DocumentGenerationService {
             if (claimantIndType.isPresent()) {
                 addressLabelType.setFullName(CLAIMANT + Helper.nullCheck(claimantIndType.get().claimantFullName()));
                 addressLabelType.setLabelEntityName01(Helper.nullCheck(claimantIndType.get().claimantFullName()));
+                addressLabelType.setLabelEntityName02("");
             }
         } else {
             addressLabelType.setFullName(CLAIMANT + Helper.nullCheck(caseData.getClaimantCompany()));
+            addressLabelType.setLabelEntityName01("");
             addressLabelType.setLabelEntityName02((Helper.nullCheck(caseData.getClaimantCompany())));
         }
 
         if (claimantType.isPresent()) {
-            if(claimantType.get().getClaimantAddressUK() != null) {
-                addressLabelType.setFullAddress(getFullAddressOneLine(claimantType.get().getClaimantAddressUK()).toString());
-                addressLabelType.setLabelEntityAddress(claimantType.get().getClaimantAddressUK());
-            } else {
-                addressLabelType.setFullAddress("");
-                addressLabelType.setLabelEntityAddress(new Address());
-            }
-
-            if (!isNullOrEmpty(Helper.nullCheck(claimantType.get().getClaimantPhoneNumber()))) {
-                addressLabelType.setLabelEntityTelephone(TEL + Helper.nullCheck(claimantType.get().getClaimantPhoneNumber()));
-            } else {
-                addressLabelType.setLabelEntityTelephone("");
-            }
+            getEntityAddress(addressLabelType, claimantType.get().getClaimantAddressUK());
+            getEntityTelephone(addressLabelType, claimantType.get().getClaimantPhoneNumber());
+            getEntityFax(addressLabelType, claimantType.get().getClaimantMobileNumber());
         } else {
             addressLabelType.setFullAddress("");
             addressLabelType.setLabelEntityAddress(new Address());
             addressLabelType.setLabelEntityTelephone("");
+            addressLabelType.setLabelEntityFax("");
         }
 
-        addressLabelType.setLabelEntityFax("");
         addressLabelType.setLabelEntityReference("");
         addressLabelType.setLabelCaseReference(caseData.getEthosCaseReference());
 
-        addressLabelTypeItem.setId("1");
+        addressLabelTypeItem.setId(String.valueOf(caseData.getAddressLabelCollection().size()));
         addressLabelTypeItem.setValue(addressLabelType);
 
-        return addressLabelTypeItem;
+        caseData.getAddressLabelCollection().add(addressLabelTypeItem);
     }
 
-    private AddressLabelTypeItem getClaimantRepAddressLabel(CaseData caseData, String printClaimantRepLabel) {
-        AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
-        AddressLabelType addressLabelType = new AddressLabelType();
+    private void getClaimantRepAddressLabel(CaseData caseData, String printClaimantRepLabel) {
+        if (caseData.getRepresentativeClaimantType() != null && caseData.getClaimantRepresentedQuestion().equals(YES)) {
 
-        RepresentedTypeC representedTypeC = caseData.getRepresentativeClaimantType();
+            AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
+            AddressLabelType addressLabelType = new AddressLabelType();
 
-        addressLabelType.setPrintLabel(printClaimantRepLabel);
+            RepresentedTypeC representedTypeC = caseData.getRepresentativeClaimantType();
 
-        addressLabelType.setFullName(CLAIMANT_REP + Helper.nullCheck(representedTypeC.getNameOfRepresentative()));
-        addressLabelType.setLabelEntityName01(Helper.nullCheck(representedTypeC.getNameOfRepresentative()));
-        addressLabelType.setLabelEntityName02(Helper.nullCheck(representedTypeC.getNameOfOrganisation()));
+            addressLabelType.setPrintLabel(printClaimantRepLabel);
 
-        if (representedTypeC.getRepresentativeAddress() != null) {
-            addressLabelType.setFullAddress(getFullAddressOneLine(representedTypeC.getRepresentativeAddress()).toString());
-            addressLabelType.setLabelEntityAddress(representedTypeC.getRepresentativeAddress());
+            addressLabelType.setFullName(CLAIMANT_REP + Helper.nullCheck(representedTypeC.getNameOfRepresentative()));
+            addressLabelType.setLabelEntityName01(Helper.nullCheck(representedTypeC.getNameOfRepresentative()));
+            addressLabelType.setLabelEntityName02(Helper.nullCheck(representedTypeC.getNameOfOrganisation()));
+            getEntityAddress(addressLabelType, representedTypeC.getRepresentativeAddress());
+            getEntityTelephone(addressLabelType, representedTypeC.getRepresentativePhoneNumber());
+            getEntityFax(addressLabelType, representedTypeC.getRepresentativeMobileNumber());
+
+            if (!isNullOrEmpty(Helper.nullCheck(representedTypeC.getRepresentativeReference()))) {
+                addressLabelType.setLabelEntityReference(REF + Helper.nullCheck(representedTypeC.getRepresentativeReference()));
+            } else {
+                addressLabelType.setLabelEntityReference("");
+            }
+
+            addressLabelType.setLabelCaseReference(caseData.getEthosCaseReference());
+
+            addressLabelTypeItem.setId(String.valueOf(caseData.getAddressLabelCollection().size()));
+            addressLabelTypeItem.setValue(addressLabelType);
+
+            caseData.getAddressLabelCollection().add(addressLabelTypeItem);
+        }
+    }
+
+    private void getRespondentsAddressLabels(CaseData caseData, String printRespondentsLabels) {
+        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+            List<RespondentSumTypeItem> activeRespondents = getActiveRespondents(caseData);
+            if(!activeRespondents.isEmpty()) {
+                ListIterator<RespondentSumTypeItem> itr = activeRespondents.listIterator();
+                while (itr.hasNext()) {
+
+                    AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
+                    AddressLabelType addressLabelType = new AddressLabelType();
+
+                    RespondentSumType respondentSumType = itr.next().getValue();
+
+                    addressLabelType.setPrintLabel(printRespondentsLabels);
+                    addressLabelType.setFullName(RESPONDENT + Helper.nullCheck(respondentSumType.getRespondentName()));
+                    addressLabelType.setLabelEntityName01(Helper.nullCheck(respondentSumType.getRespondentName()));
+                    addressLabelType.setLabelEntityName02("");
+                    getEntityAddress(addressLabelType, respondentSumType.getRespondentAddress());
+                    getEntityTelephone(addressLabelType, respondentSumType.getRespondentPhone1());
+                    getEntityFax(addressLabelType, respondentSumType.getRespondentPhone2());
+                    addressLabelType.setLabelEntityReference("");
+                    addressLabelType.setLabelCaseReference(caseData.getEthosCaseReference());
+
+                    addressLabelTypeItem.setId(String.valueOf(caseData.getAddressLabelCollection().size()));
+                    addressLabelTypeItem.setValue(addressLabelType);
+
+                    caseData.getAddressLabelCollection().add(addressLabelTypeItem);
+                }
+            }
+        }
+    }
+
+    private void getRespondentsRepsAddressLabels(CaseData caseData, String printRespondentsRepsLabels) {
+        if (caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty()) {
+            ListIterator<RepresentedTypeRItem> itr = caseData.getRepCollection().listIterator();
+            while (itr.hasNext()) {
+
+                AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
+                AddressLabelType addressLabelType = new AddressLabelType();
+
+                RepresentedTypeR representedTypeR = itr.next().getValue();
+
+                addressLabelType.setPrintLabel(printRespondentsRepsLabels);
+                addressLabelType.setFullName(RESPONDENT_REP + Helper.nullCheck(representedTypeR.getNameOfRepresentative()));
+                addressLabelType.setLabelEntityName01(Helper.nullCheck(representedTypeR.getNameOfRepresentative()));
+                addressLabelType.setLabelEntityName02(Helper.nullCheck(representedTypeR.getNameOfOrganisation()));
+                getEntityAddress(addressLabelType, representedTypeR.getRepresentativeAddress());
+                getEntityTelephone(addressLabelType, representedTypeR.getRepresentativePhoneNumber());
+                getEntityFax(addressLabelType, representedTypeR.getRepresentativeMobileNumber());
+                addressLabelType.setLabelEntityReference(representedTypeR.getRepresentativeReference());
+                addressLabelType.setLabelCaseReference(caseData.getEthosCaseReference());
+
+                addressLabelTypeItem.setId(String.valueOf(caseData.getAddressLabelCollection().size()));
+                addressLabelTypeItem.setValue(addressLabelType);
+
+                caseData.getAddressLabelCollection().add(addressLabelTypeItem);
+            }
+        }
+    }
+
+    private void getEntityAddress(AddressLabelType addressLabelType, Address entityAddress) {
+        if (entityAddress != null) {
+            addressLabelType.setFullAddress(getFullAddressOneLine(entityAddress).toString());
+            addressLabelType.setLabelEntityAddress(entityAddress);
         } else {
             addressLabelType.setFullAddress("");
             addressLabelType.setLabelEntityAddress(new Address());
         }
+    }
 
-        if (!isNullOrEmpty(Helper.nullCheck(representedTypeC.getRepresentativePhoneNumber()))) {
-            addressLabelType.setLabelEntityTelephone(TEL + Helper.nullCheck(representedTypeC.getRepresentativePhoneNumber()));
+    private void getEntityTelephone(AddressLabelType addressLabelType, String telephone) {
+        if (!isNullOrEmpty(Helper.nullCheck(telephone))) {
+            addressLabelType.setLabelEntityTelephone(TEL + Helper.nullCheck(telephone));
         } else {
             addressLabelType.setLabelEntityTelephone("");
         }
+    }
 
-        addressLabelType.setLabelEntityFax("");
-
-        if (!isNullOrEmpty(Helper.nullCheck(representedTypeC.getRepresentativeReference()))) {
-            addressLabelType.setLabelEntityReference(REF + Helper.nullCheck(representedTypeC.getRepresentativeReference()));
+    private void getEntityFax(AddressLabelType addressLabelType, String fax) {
+        if (!isNullOrEmpty(Helper.nullCheck(fax))) {
+            addressLabelType.setLabelEntityFax(TEL + Helper.nullCheck(fax));
         } else {
-            addressLabelType.setLabelEntityReference("");
+            addressLabelType.setLabelEntityFax("");
         }
-
-        addressLabelType.setLabelCaseReference(caseData.getEthosCaseReference());
-
-        addressLabelTypeItem.setId("2");
-        addressLabelTypeItem.setValue(addressLabelType);
-
-        return addressLabelTypeItem;
-    }
-
-    private AddressLabelTypeItem getRespondentsAddressLabels(CaseData caseData, String printRespondentsLabels) {
-        AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
-        AddressLabelType addressLabelType = new AddressLabelType();
-
-        // ...
-
-        addressLabelTypeItem.setId("3");
-        addressLabelTypeItem.setValue(addressLabelType);
-
-        return addressLabelTypeItem;
-    }
-
-    private AddressLabelTypeItem getRespondentsRepsAddressLabels(CaseData caseData, String printRespondentsLabels) {
-        AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
-        AddressLabelType addressLabelType = new AddressLabelType();
-
-        // ...
-
-        addressLabelTypeItem.setId("4");
-        addressLabelTypeItem.setValue(addressLabelType);
-
-        return addressLabelTypeItem;
     }
 
     private StringBuilder getFullAddressOneLine(Address address) {

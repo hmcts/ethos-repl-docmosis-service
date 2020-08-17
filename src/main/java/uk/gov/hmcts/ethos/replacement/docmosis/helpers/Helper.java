@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SignificantItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
@@ -497,6 +498,19 @@ public class Helper {
         return activeRespondents;
     }
 
+    public static List<AddressLabelTypeItem> getSelectedAddressLabels(CaseData caseData) {
+
+        List<AddressLabelTypeItem> selectedAddressLabels = new ArrayList<>();
+
+        if (caseData.getAddressLabelCollection() != null && !caseData.getAddressLabelCollection().isEmpty()) {
+            selectedAddressLabels = caseData.getAddressLabelCollection()
+                    .stream()
+                    .filter(addressLabelTypeItem -> addressLabelTypeItem.getValue().getPrintLabel() != null && addressLabelTypeItem.getValue().getPrintLabel().equals(YES))
+                    .collect(Collectors.toList());
+        }
+
+        return selectedAddressLabels;
+    }
 
     private static List<DynamicValueType> createDynamicRespondentNameList(List<RespondentSumTypeItem> respondentCollection) {
         List<DynamicValueType> listItems = new ArrayList<>();
