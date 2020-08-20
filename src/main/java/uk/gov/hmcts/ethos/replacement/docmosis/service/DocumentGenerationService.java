@@ -50,6 +50,8 @@ public class DocumentGenerationService {
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
     private static final String ADDRESS_LABELS_TEMPLATE = "EM-TRB-LBL-ENG-00000";
+    private static final String ADDRESS_LABELS_EMPTY_ERROR = "You need to select at least one address label before printing";
+    private static final String ADDRESS_LABELS_COPIES_ERROR = "You need to use a whole number for the number of copies field";
 
     private static final String CUSTOMISE_SELECTED_ADDRESSES = "0.1";
     private static final String ALL_AVAILABLE_ADDRESSES = "0.2";
@@ -132,6 +134,18 @@ public class DocumentGenerationService {
         List<AddressLabelTypeItem> selectedAddressLabels = Helper.getSelectedAddressLabels(caseData);
         caseData.getAddressLabelsAttributesType().setNumberOfSelectedLabels(String.valueOf(selectedAddressLabels.size()));
         return caseData;
+    }
+
+    public List<String> midValidateAddressLabels(CaseData caseData) {
+        List<String> errors = new ArrayList<>();
+        List<AddressLabelTypeItem> selectedAddressLabels = Helper.getSelectedAddressLabels(caseData);
+        if (selectedAddressLabels == null || selectedAddressLabels.isEmpty()) {
+            errors.add(ADDRESS_LABELS_EMPTY_ERROR);
+        }
+        if (caseData.getAddressLabelsAttributesType().getNumberOfCopies().contains(".")) {
+            errors.add(ADDRESS_LABELS_COPIES_ERROR);
+        }
+        return errors;
     }
 
     public DocumentInfo processDocumentRequest(CCDRequest ccdRequest, String authToken) {
