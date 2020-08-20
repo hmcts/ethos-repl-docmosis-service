@@ -14,7 +14,15 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,14 +30,23 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 public class Helper {
+
+    private static final String ADDRESS_LABELS_TEMPLATE = "EM-TRB-LBL-ENG-00000";
+    private static final int ADDRESS_LABELS_PAGE_SIZE = 14;
 
     public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails) {
         StringBuilder sb = new StringBuilder();
@@ -49,6 +66,10 @@ public class Helper {
         sb.append(getCorrespondenceData(caseData));
         sb.append(getCorrespondenceScotData(caseData));
         sb.append(getCourtData(caseData));
+
+        if (templateName.equals(ADDRESS_LABELS_TEMPLATE)) {
+            sb.append(getAddressLabelsData(caseData));
+        }
 
         sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts\":\"")
                 .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
@@ -441,6 +462,69 @@ public class Helper {
         return sb;
     }
 
+    private static StringBuilder getAddressLabelsData(CaseData caseData) {
+        int numberOfCopies = Integer.parseInt(caseData.getAddressLabelsAttributesType().getNumberOfCopies());
+        int startingLabel = Integer.parseInt(caseData.getAddressLabelsAttributesType().getStartingLabel());
+        String showTelFax = caseData.getAddressLabelsAttributesType().getShowTelFax();
+
+        List<AddressLabelTypeItem> selectedAddressLabelCollection = getSelectedAddressLabels(caseData);
+        List<AddressLabelTypeItem> copiedAddressLabelCollection = getCopiedAddressLabels(selectedAddressLabelCollection, numberOfCopies);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"address_labels_page\":[\n");
+
+        boolean startingLabelAboveOne = true;
+
+        for (int i = 0; i < copiedAddressLabelCollection.size(); i++) {
+            int pageLabelNumber = i + 1;
+
+            if (startingLabel > 1) {
+                pageLabelNumber += startingLabel - 1;
+            }
+
+            if (pageLabelNumber > ADDRESS_LABELS_PAGE_SIZE) {
+                int numberOfFullLabelPages = pageLabelNumber / ADDRESS_LABELS_PAGE_SIZE;
+                pageLabelNumber = pageLabelNumber % ADDRESS_LABELS_PAGE_SIZE == 0 ? ADDRESS_LABELS_PAGE_SIZE : pageLabelNumber - (numberOfFullLabelPages * ADDRESS_LABELS_PAGE_SIZE);
+            }
+
+            if (pageLabelNumber == 1 || startingLabelAboveOne) {
+                startingLabelAboveOne = false;
+                sb.append("{");
+            }
+
+            String templateLabelNumber = (pageLabelNumber < 10) ? "0" + pageLabelNumber : String.valueOf(pageLabelNumber) ;
+            sb.append(getAddressLabel(copiedAddressLabelCollection.get(i).getValue(), templateLabelNumber, showTelFax));
+
+            if (pageLabelNumber == ADDRESS_LABELS_PAGE_SIZE || i == copiedAddressLabelCollection.size() - 1) {
+                sb.append("}");
+            }
+
+            if (i != copiedAddressLabelCollection.size() - 1) {
+                sb.append(",\n");
+            }
+        }
+        sb.append("],\n");
+        return sb;
+    }
+
+    private static StringBuilder getAddressLabel(AddressLabelType addressLabelType, String labelNumber, String showTelFax) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"Label_").append(labelNumber).append("_Entity_Name_01\":\"").append(nullCheck(addressLabelType.getLabelEntityName01())).append(NEW_LINE);
+        sb.append("\"Label_").append(labelNumber).append("_Entity_Name_02\":\"").append(nullCheck(addressLabelType.getLabelEntityName02())).append(NEW_LINE);
+        sb.append("\"Label_").append(labelNumber).append("_Address_Line_01\":\"").append(nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine1())).append(NEW_LINE);
+        sb.append("\"Label_").append(labelNumber).append("_Address_Line_02\":\"").append(nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine2())).append(NEW_LINE);
+        sb.append("\"Label_").append(labelNumber).append("_Address_Line_03\":\"").append(nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine3())).append(NEW_LINE);
+        sb.append("\"Label_").append(labelNumber).append("_Address_Line_04\":\"").append(nullCheck(addressLabelType.getLabelEntityAddress().getPostTown())).append(NEW_LINE);
+        sb.append("\"Label_").append(labelNumber).append("_Address_Line_05\":\"").append(nullCheck(addressLabelType.getLabelEntityAddress().getCounty()) + " " + nullCheck(addressLabelType.getLabelEntityAddress().getPostCode())).append(NEW_LINE);
+        if (showTelFax.equals(YES)) {
+            sb.append("\"Label_").append(labelNumber).append("_Telephone\":\"").append(nullCheck(addressLabelType.getLabelEntityTelephone())).append(NEW_LINE);
+            sb.append("\"Label_").append(labelNumber).append("_Fax\":\"").append(nullCheck(addressLabelType.getLabelEntityFax())).append(NEW_LINE);
+        }
+        sb.append("\"Label_").append(labelNumber).append("_Entity_Reference\":\"").append(nullCheck(addressLabelType.getLabelEntityReference())).append(NEW_LINE);
+        sb.append("\"Label_").append(labelNumber).append("_Case_Reference\":\"").append(nullCheck(addressLabelType.getLabelCaseReference())).append("\"");
+        return sb;
+    }
+
     public static String nullCheck(String value) {
         return Optional.ofNullable(value).orElse("");
     }
@@ -510,6 +594,27 @@ public class Helper {
         }
 
         return selectedAddressLabels;
+    }
+
+    private static List<AddressLabelTypeItem> getCopiedAddressLabels(List<AddressLabelTypeItem> selectedAddressLabels, int numberOfCopies) {
+
+        List<AddressLabelTypeItem> copiedAddressLabels = new ArrayList<>();
+        if (!selectedAddressLabels.isEmpty() && numberOfCopies > 1) {
+            ListIterator<AddressLabelTypeItem> itr = selectedAddressLabels.listIterator();
+            while (itr.hasNext()) {
+                AddressLabelType addressLabelType = itr.next().getValue();
+                for (int i = 0; i < numberOfCopies; i++) {
+                    AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
+                    addressLabelTypeItem.setId(String.valueOf(copiedAddressLabels.size()));
+                    addressLabelTypeItem.setValue(addressLabelType);
+                    copiedAddressLabels.add(addressLabelTypeItem);
+                }
+            }
+        } else {
+            return selectedAddressLabels;
+        }
+
+        return copiedAddressLabels;
     }
 
     private static List<DynamicValueType> createDynamicRespondentNameList(List<RespondentSumTypeItem> respondentCollection) {
