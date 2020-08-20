@@ -332,7 +332,7 @@ public class DocumentGenerationService {
             addressLabelType.setLabelEntityFax("");
         }
 
-        addressLabelType.setLabelEntityReference("");
+        addressLabelType.setLabelEntityReference(REF);
         addressLabelType.setLabelCaseReference(caseData.getEthosCaseReference());
 
         addressLabelTypeItem.setId(String.valueOf(caseData.getAddressLabelCollection().size()));
@@ -361,7 +361,7 @@ public class DocumentGenerationService {
             if (!isNullOrEmpty(Helper.nullCheck(representedTypeC.getRepresentativeReference()))) {
                 addressLabelType.setLabelEntityReference(REF + Helper.nullCheck(representedTypeC.getRepresentativeReference()));
             } else {
-                addressLabelType.setLabelEntityReference("");
+                addressLabelType.setLabelEntityReference(REF);
             }
 
             addressLabelType.setLabelCaseReference(caseData.getEthosCaseReference());
@@ -392,7 +392,7 @@ public class DocumentGenerationService {
                     getEntityAddress(addressLabelType, respondentSumType.getRespondentAddress());
                     getEntityTelephone(addressLabelType, respondentSumType.getRespondentPhone1());
                     getEntityFax(addressLabelType, respondentSumType.getRespondentPhone2());
-                    addressLabelType.setLabelEntityReference("");
+                    addressLabelType.setLabelEntityReference(REF);
                     addressLabelType.setLabelCaseReference(caseData.getEthosCaseReference());
 
                     addressLabelTypeItem.setId(String.valueOf(caseData.getAddressLabelCollection().size()));
@@ -415,13 +415,20 @@ public class DocumentGenerationService {
                 RepresentedTypeR representedTypeR = itr.next().getValue();
 
                 addressLabelType.setPrintLabel(printRespondentsRepsLabels);
+
                 addressLabelType.setFullName(RESPONDENT_REP + Helper.nullCheck(representedTypeR.getNameOfRepresentative()));
                 addressLabelType.setLabelEntityName01(Helper.nullCheck(representedTypeR.getNameOfRepresentative()));
                 addressLabelType.setLabelEntityName02(Helper.nullCheck(representedTypeR.getNameOfOrganisation()));
                 getEntityAddress(addressLabelType, representedTypeR.getRepresentativeAddress());
                 getEntityTelephone(addressLabelType, representedTypeR.getRepresentativePhoneNumber());
                 getEntityFax(addressLabelType, representedTypeR.getRepresentativeMobileNumber());
-                addressLabelType.setLabelEntityReference(representedTypeR.getRepresentativeReference());
+
+                if (!isNullOrEmpty(Helper.nullCheck(representedTypeR.getRepresentativeReference()))) {
+                    addressLabelType.setLabelEntityReference(REF + Helper.nullCheck(representedTypeR.getRepresentativeReference()));
+                } else {
+                    addressLabelType.setLabelEntityReference(REF);
+                }
+
                 addressLabelType.setLabelCaseReference(caseData.getEthosCaseReference());
 
                 addressLabelTypeItem.setId(String.valueOf(caseData.getAddressLabelCollection().size()));
@@ -451,10 +458,17 @@ public class DocumentGenerationService {
     }
 
     private void getEntityFax(AddressLabelType addressLabelType, String fax) {
-        if (!isNullOrEmpty(Helper.nullCheck(fax))) {
-            addressLabelType.setLabelEntityFax(TEL + Helper.nullCheck(fax));
-        } else {
+        if (isNullOrEmpty(addressLabelType.getLabelEntityTelephone())) {
+            if (!isNullOrEmpty(Helper.nullCheck(fax))) {
+                addressLabelType.setLabelEntityTelephone (TEL + Helper.nullCheck(fax));
+            }
             addressLabelType.setLabelEntityFax("");
+        } else {
+            if (!isNullOrEmpty(Helper.nullCheck(fax))) {
+                addressLabelType.setLabelEntityFax(TEL + Helper.nullCheck(fax));
+            } else {
+                addressLabelType.setLabelEntityFax("");
+            }
         }
     }
 

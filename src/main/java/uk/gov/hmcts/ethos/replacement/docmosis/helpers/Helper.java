@@ -520,8 +520,8 @@ public class Helper {
             sb.append("\"Label_").append(labelNumber).append("_Telephone\":\"").append(nullCheck(addressLabelType.getLabelEntityTelephone())).append(NEW_LINE);
             sb.append("\"Label_").append(labelNumber).append("_Fax\":\"").append(nullCheck(addressLabelType.getLabelEntityFax())).append(NEW_LINE);
         }
-        sb.append("\"Label_").append(labelNumber).append("_Entity_Reference\":\"").append(nullCheck(addressLabelType.getLabelEntityReference())).append(NEW_LINE);
-        sb.append("\"Label_").append(labelNumber).append("_Case_Reference\":\"").append(nullCheck(addressLabelType.getLabelCaseReference())).append("\"");
+        sb.append("\"lbl_").append(labelNumber).append("_Eef\":\"").append(nullCheck(addressLabelType.getLabelEntityReference())).append(NEW_LINE);
+        sb.append("\"lbl_").append(labelNumber).append("_Cef\":\"").append(nullCheck(addressLabelType.getLabelCaseReference())).append("\"");
         return sb;
     }
 
