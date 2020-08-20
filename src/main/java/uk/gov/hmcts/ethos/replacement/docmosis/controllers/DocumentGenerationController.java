@@ -19,19 +19,20 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 
 @Slf4j
 @RestController
 public class DocumentGenerationController {
 
     private static final String LOG_MESSAGE = "received notification request for case reference :    ";
-
     private static final String GENERATED_DOCUMENT_URL = "Please download the document from : ";
+
+    private static final String ADDRESS_LABELS_EMPTY_ERROR = "No addresses were found for you selection";
 
     private final DocumentGenerationService documentGenerationService;
 
@@ -65,11 +66,18 @@ public class DocumentGenerationController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
+        List<String> errors = new ArrayList<>();
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         caseData = documentGenerationService.midAddressLabels(caseData);
 
+        if (caseData.getAddressLabelCollection() != null && caseData.getAddressLabelCollection().isEmpty()) {
+            errors.add(ADDRESS_LABELS_EMPTY_ERROR);
+            log.info("Event fields validation: " + errors);
+        }
+
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
+                .errors(errors)
                 .build());
     }
 
@@ -152,11 +160,7 @@ public class DocumentGenerationController {
             DocumentInfo documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
             ccdRequest.getCaseDetails().getCaseData().setDocMarkUp(documentInfo.getMarkUp());
 
-            if(ccdRequest.getCaseDetails().getCaseTypeId().equals(SCOTLAND_CASE_TYPE_ID)) {
-                ccdRequest.getCaseDetails().getCaseData().setCorrespondenceScotType(null);
-            } else {
-                ccdRequest.getCaseDetails().getCaseData().setCorrespondenceType(null);
-            }
+            documentGenerationService.clearUserChoices(ccdRequest.getCaseDetails());
 
             return ResponseEntity.ok(CCDCallbackResponse.builder()
                     .data(ccdRequest.getCaseDetails().getCaseData())

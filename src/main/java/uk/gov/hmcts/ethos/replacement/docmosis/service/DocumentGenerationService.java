@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRespondents;
 
@@ -50,7 +51,7 @@ public class DocumentGenerationService {
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
     private static final String ADDRESS_LABELS_TEMPLATE = "EM-TRB-LBL-ENG-00000";
-    private static final String ADDRESS_LABELS_EMPTY_ERROR = "You need to select at least one address label before printing";
+    private static final String ADDRESS_LABELS_SELECT_ERROR = "You need to select at least one address label before printing";
     private static final String ADDRESS_LABELS_COPIES_ERROR = "You need to use a whole number for the number of copies field";
 
     private static final String CUSTOMISE_SELECTED_ADDRESSES = "0.1";
@@ -125,6 +126,8 @@ public class DocumentGenerationService {
                 default:
                     return caseData;
             }
+        } else {
+            caseData.setAddressLabelCollection(null);
         }
         return caseData;
     }
@@ -140,12 +143,26 @@ public class DocumentGenerationService {
         List<String> errors = new ArrayList<>();
         List<AddressLabelTypeItem> selectedAddressLabels = Helper.getSelectedAddressLabels(caseData);
         if (selectedAddressLabels == null || selectedAddressLabels.isEmpty()) {
-            errors.add(ADDRESS_LABELS_EMPTY_ERROR);
+            errors.add(ADDRESS_LABELS_SELECT_ERROR);
         }
         if (caseData.getAddressLabelsAttributesType().getNumberOfCopies().contains(".")) {
             errors.add(ADDRESS_LABELS_COPIES_ERROR);
         }
         return errors;
+    }
+
+    public void clearUserChoices(CaseDetails caseDetails) {
+        CaseData caseData = caseDetails.getCaseData();
+
+        if(caseDetails.getCaseTypeId().equals(SCOTLAND_CASE_TYPE_ID)) {
+            caseData.setCorrespondenceScotType(null);
+        } else {
+            caseData.setCorrespondenceType(null);
+        }
+
+        caseData.setAddressLabelsSelectionType(null);
+        caseData.setAddressLabelCollection(null);
+        caseData.setAddressLabelsAttributesType(null);
     }
 
     public DocumentInfo processDocumentRequest(CCDRequest ccdRequest, String authToken) {
@@ -235,16 +252,25 @@ public class DocumentGenerationService {
     private CaseData customiseSelectedAddresses(CaseData caseData) {
         if(caseData.getAddressLabelsSelectionType() != null) {
             AddressLabelsSelectionType addressLabelsSelection = caseData.getAddressLabelsSelectionType();
+            if (addressLabelsSelection.getClaimantAddressLabel() != null &&
+                    addressLabelsSelection.getClaimantRepAddressLabel() != null &&
+                    addressLabelsSelection.getRespondentsAddressLabel() != null &&
+                    addressLabelsSelection.getRespondentsRepsAddressLabel() != null) {
 
-            String printClaimantLabel = addressLabelsSelection.getClaimantAddressLabel();
-            String printClaimantRepLabel = addressLabelsSelection.getClaimantRepAddressLabel();
-            String printRespondentsLabels = addressLabelsSelection.getRespondentsAddressLabel();
-            String printRespondentsRepsLabels = addressLabelsSelection.getRespondentsRepsAddressLabel();
+                String printClaimantLabel = addressLabelsSelection.getClaimantAddressLabel();
+                String printClaimantRepLabel = addressLabelsSelection.getClaimantRepAddressLabel();
+                String printRespondentsLabels = addressLabelsSelection.getRespondentsAddressLabel();
+                String printRespondentsRepsLabels = addressLabelsSelection.getRespondentsRepsAddressLabel();
 
-            getClaimantAddressLabel(caseData, printClaimantLabel);
-            getClaimantRepAddressLabel(caseData, printClaimantRepLabel);
-            getRespondentsAddressLabels(caseData, printRespondentsLabels);
-            getRespondentsRepsAddressLabels(caseData, printRespondentsRepsLabels);
+                getClaimantAddressLabel(caseData, printClaimantLabel);
+                getClaimantRepAddressLabel(caseData, printClaimantRepLabel);
+                getRespondentsAddressLabels(caseData, printRespondentsLabels);
+                getRespondentsRepsAddressLabels(caseData, printRespondentsRepsLabels);
+            } else {
+                caseData.setAddressLabelCollection(null);
+            }
+        } else {
+            caseData.setAddressLabelCollection(null);
         }
         return caseData;
     }

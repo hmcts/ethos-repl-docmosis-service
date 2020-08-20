@@ -590,6 +590,7 @@ public class Helper {
             selectedAddressLabels = caseData.getAddressLabelCollection()
                     .stream()
                     .filter(addressLabelTypeItem -> addressLabelTypeItem.getValue().getPrintLabel() != null && addressLabelTypeItem.getValue().getPrintLabel().equals(YES))
+                    .filter(addressLabelTypeItem -> addressLabelTypeItem.getValue().getFullName() != null || addressLabelTypeItem.getValue().getFullAddress() != null)
                     .collect(Collectors.toList());
         }
 
