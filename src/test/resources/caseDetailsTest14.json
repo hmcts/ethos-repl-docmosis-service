@@ -112,6 +112,12 @@
       "part_1_Documents": "0.2",
       "hearingNumber": "2"
     },
+    "addressLabelsAttributesType": {
+      "numberOfSelectedLabels": "6",
+      "numberOfCopies": "2",
+      "startingLabel": "1",
+      "showTelFax": "Yes"
+    },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
     "hearingCollection": [
@@ -292,6 +298,146 @@
           "response_referred_to_judge": "2019-12-22",
           "response_returned_from_judge": "2019-12-23",
           "responseStruckOut": "No"
+        }
+      }
+    ],
+    "addressLabelCollection": [
+      {
+        "id" : "123451",
+        "value" : {
+          "printLabel" : "Yes",
+          "fullName": "Full Name 01",
+          "fullAddress": "Full Address 01",
+          "labelEntityName01": "Claimant Name",
+          "labelEntityName02": "",
+          "labelEntityAddress": {
+            "AddressLine1": "11 Block A",
+            "AddressLine2": "Ellesmere Street",
+            "AddressLine3": "Address Line 3",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M1 KJR",
+            "PostTown": "Manchester"
+          },
+          "labelEntityTelephone": "07577 136511",
+          "labelEntityFax": "07577 136712",
+          "labelEntityReference": "",
+          "labelCaseReference": "1850011/2020"
+        }
+      },
+      {
+        "id" : "123452",
+        "value" : {
+          "printLabel" : "Yes",
+          "fullName": "Full Name 02",
+          "fullAddress": "Full Address 02",
+          "labelEntityName01": "Claimant Rep",
+          "labelEntityName02": "Claimant Org",
+          "labelEntityAddress": {
+            "AddressLine1": "22 Block B",
+            "AddressLine2": "Ellesmere Street",
+            "AddressLine3": "Address Line 3",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M2 KJR",
+            "PostTown": "Manchester"
+          },
+          "labelEntityTelephone": "07577 136521",
+          "labelEntityFax": "07577 136722",
+          "labelEntityReference": "OSCA/222/ABC",
+          "labelCaseReference": "1850022/2020"
+        }
+      },
+      {
+        "id" : "123453",
+        "value" : {
+          "printLabel" : "Yes",
+          "fullName": "Full Name 03",
+          "fullAddress": "Full Address 03",
+          "labelEntityName01": "Respondent One",
+          "labelEntityName02": "",
+          "labelEntityAddress": {
+            "AddressLine1": "33 Block C",
+            "AddressLine2": "Ellesmere Street",
+            "AddressLine3": "Address Line 3",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M3 KJR",
+            "PostTown": "Manchester"
+          },
+          "labelEntityTelephone": "07577 136531",
+          "labelEntityFax": "07577 136732",
+          "labelEntityReference": "",
+          "labelCaseReference": "1850033/2020"
+        }
+      },
+      {
+        "id" : "123454",
+        "value" : {
+          "printLabel" : "Yes",
+          "fullName": "Full Name 04",
+          "fullAddress": "Full Address 04",
+          "labelEntityName01": "Respondent Two",
+          "labelEntityName02": "",
+          "labelEntityAddress": {
+            "AddressLine1": "44 Block D",
+            "AddressLine2": "Ellesmere Street",
+            "AddressLine3": "Address Line 3",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M4 KJR",
+            "PostTown": "Manchester"
+          },
+          "labelEntityTelephone": "07577 136541",
+          "labelEntityFax": "07577 136742",
+          "labelEntityReference": "",
+          "labelCaseReference": "1850044/2020"
+        }
+      },
+      {
+        "id" : "123455",
+        "value" : {
+          "printLabel" : "Yes",
+          "fullName": "Full Name 05",
+          "fullAddress": "Full Address 05",
+          "labelEntityName01": "Respondent three",
+          "labelEntityName02": "",
+          "labelEntityAddress": {
+            "AddressLine1": "55 Block E",
+            "AddressLine2": "Ellesmere Street",
+            "AddressLine3": "Address Line 3",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M5 KJR",
+            "PostTown": "Manchester"
+          },
+          "labelEntityTelephone": "07577 136551",
+          "labelEntityFax": "07577 136752",
+          "labelEntityReference": "",
+          "labelCaseReference": "1850055/2020"
+        }
+      },
+      {
+        "id" : "123456",
+        "value" : {
+          "printLabel" : "Yes",
+          "fullName": "Full Name 06",
+          "fullAddress": "Full Address 06",
+          "labelEntityName01": "Respondent Rep",
+          "labelEntityName02": "",
+          "labelEntityAddress": {
+            "AddressLine1": "66 Block F",
+            "AddressLine2": "Ellesmere Street",
+            "AddressLine3": "Address Line 3",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M6 KJR",
+            "PostTown": "Manchester"
+          },
+          "labelEntityTelephone": "07577 136561",
+          "labelEntityFax": "07577 136762",
+          "labelEntityReference": "OSCA/666/ABC",
+          "labelCaseReference": "1850066/2020"
         }
       }
     ],
