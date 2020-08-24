@@ -22,6 +22,9 @@ locals {
   nonPreviewSharedRG = "${var.product}-${var.env}"
   sharedResourceGroup = var.env == "preview" ? local.previewSharedRG : local.nonPreviewSharedRG
 
+  localEnv = var.env == "preview" ? "aat" : var.env
+  s2sRG  = "rpe-service-auth-provider-${local.localEnv}"
+
 }
 
 module "repl-docmosis-backend" {
@@ -40,7 +43,7 @@ module "repl-docmosis-backend" {
     WEBSITE_PROACTIVE_AUTOHEAL_ENABLED = var.autoheal
     TORNADO_URL                        = var.tornado_url
     TORNADO_ACCESS_KEY                 = data.azurerm_key_vault_secret.tornado_access_key.value
-    ETHOS_S2S_SECRET_KEY               = data.azurerm_key_vault_secret.ethos-repl-service-s2s-secret.value
+    ETHOS_REPL_SERVICE_S2S_SECRET      = data.azurerm_key_vault_secret.microservicekey_ethos_repl_service.value
     IDAM_API_URL                       = var.idam_api_url
     IDAM_API_JWK_URL                   = "${var.idam_api_url}/jwks"
     CCD_DATA_STORE_API_URL             = var.ccd_data_store_api_url
@@ -57,20 +60,6 @@ module "repl-docmosis-backend" {
     ETHOS_REPL_DB_CONN_OPTIONS         = local.db_connection_options
     CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING = data.azurerm_key_vault_secret.create_updates_queue_send_conn_str.value
   }
-}
-
-module "db" {
-  source             = "git@github.com:hmcts/cnp-module-postgres?ref=master"
-  product            = "${var.product}-postgres-db"
-  location           = var.location_api
-  env                = var.env
-  database_name      = "ethos"
-  postgresql_user    = "ethos"
-  postgresql_version = "10"
-  sku_name           = "GP_Gen5_2"
-  sku_tier           = "GeneralPurpose"
-  common_tags        = var.common_tags
-  subscription       = var.subscription
 }
 
 resource "azurerm_key_vault_secret" "AZURE_APPINSGHTS_KEY" {
@@ -123,27 +112,15 @@ data "azurerm_key_vault" "ethos_key_vault" {
   resource_group_name = local.vaultGroupName
 }
 
-data "azurerm_key_vault_secret" "ethos-repl-service-s2s-secret" {
-  name = "ethos-repl-service-s2s-secret"
+resource "azurerm_key_vault_secret" "ethos_repl_service_s2s_secret" {
+  name         = "ethos-repl-service-s2s-secret"
+  value        = data.azurerm_key_vault_secret.microservicekey_ethos_repl_service.value
   key_vault_id = data.azurerm_key_vault.ethos_key_vault.id
 }
 
 data "azurerm_key_vault_secret" "tornado_access_key" {
   name = "tornado-access-key"
   key_vault_id = data.azurerm_key_vault.ethos_key_vault.id
-}
-
-module "key-vault" {
-  source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
-  product                 = var.product
-  env                     = var.env
-  tenant_id               = var.tenant_id
-  object_id               = var.jenkins_AAD_objectId
-  resource_group_name     = local.vaultGroupName
-  # dcd_group_ethos_v2 group object ID
-  product_group_object_id = "414c132d-5160-42b3-bbff-43a2e1daafcf"
-  common_tags             = var.common_tags
-  managed_identity_object_id = var.managed_identity_object_id
 }
 
 # SHARED KEY VAULT DATA
@@ -155,4 +132,15 @@ data "azurerm_key_vault" "ethos_shared_key_vault" {
 data "azurerm_key_vault_secret" "create_updates_queue_send_conn_str" {
   name = "create-updates-queue-send-connection-string"
   key_vault_id = data.azurerm_key_vault.ethos_shared_key_vault.id
+}
+
+# S2S KEY VAULT DATA
+data "azurerm_key_vault" "s2s_key_vault" {
+  name                = "s2s-${local.localEnv}"
+  resource_group_name = local.s2sRG
+}
+
+data "azurerm_key_vault_secret" "microservicekey_ethos_repl_service" {
+  name = "microservicekey-ethos-repl-service"
+  key_vault_id = data.azurerm_key_vault.s2s_key_vault.id
 }

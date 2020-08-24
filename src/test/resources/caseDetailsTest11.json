@@ -1,28 +1,44 @@
 {
   "case_data": {
     "tribunalCorrespondenceAddress": {
-      "AddressLine1": "Eagle Building,",
-      "AddressLine2": "215 Bothwell Street,",
-      "PostCode": "G2 7TS",
-      "PostTown": "Glasgow,"
+      "AddressLine1": "Manchester Employment Tribunal,",
+      "AddressLine2": "Alexandra House,",
+      "AddressLine3": "14-22 The Parsonage,",
+      "PostCode": "M3 2JA",
+      "PostTown": "Manchester,"
     },
-    "tribunalCorrespondenceTelephone" : "03577123270",
-    "tribunalCorrespondenceFax" : "07127126570",
-    "tribunalCorrespondenceDX" : "1234567",
-    "tribunalCorrespondenceEmail" : "GlasgowOfficeET@hmcts.gov.uk",
+    "tribunalCorrespondenceTelephone" : "03577131270",
+    "tribunalCorrespondenceFax" : "07577126570",
+    "tribunalCorrespondenceDX" : "123456",
+    "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
     "ethosCaseReference" : "123456",
+    "leadClaimant" : "Yes",
     "claimantRepresentedQuestion" : "Yes",
     "claimant_TypeOfClaimant" : "Individual",
-    "addSubMultipleComment": "Comment",
-    "additionalCaseInfo": {
-      "additional_accepted1": "additional_accepted1",
-      "additional_accepted2": "additional_accepted2",
-      "additional_conciliation_track": "additional_conciliation_track",
-      "additional_emp_claim_made": "additional_emp_claim_made",
-      "additional_ind_expert": "additional_ind_expert",
-      "additional_live_appeal": "additional_live_appeal",
-      "additional_sensitive": "string"
+    "preAcceptCase": {
+      "caseAccepted": "Yes",
+      "dateAccepted": "25/02/2020",
+      "rejectReason": [],
+      "caseReferred": "No",
+      "caseEJReferredDate": "",
+      "caseJudge": "Judge",
+      "caseReferredDate": "None"
     },
+    "depositType": [
+      {
+        "id" : "1234565",
+        "value" : {
+          "Deposit_amount": "£25",
+          "deposit_covers": "No",
+          "deposit_due": "£25",
+          "deposit_time_ext": "No",
+          "deposit_refund": "",
+          "deposit_refund_date": "25/02/2020",
+          "depositNotes": "None"
+        }
+      }
+    ],
+    "addSubMultipleComment": "Comment",
     "backFromJudge": "backFromJudge",
     "representativeClaimantType": {
       "resp_rep_name" : "RepresentativeNameClaimant",
@@ -79,33 +95,46 @@
       },
       "claimant_work_phone_number": "07577136570"
     },
-    "correspondenceScotType": {
-      "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-00042",
-      "part_1_Scot_Documents": "7.1",
-      "hearingNumber": "1"
+    "correspondenceType": {
+      "topLevel_Documents": "EM-TRB-EGW-ENG-00026",
+      "part_1_Documents": "1.2",
+      "hearingNumber": "2"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
-    "hearingCollection": [
+    "jurCodesCollection": [
       {
-        "id" : "123345",
+        "id" : "1234561",
         "value" : {
-          "hearingEstLengthNum": "2",
-          "hearingEstLengthNumType": "days",
-          "Hearing_type": "Single",
-          "hearingNumber": "1",
-          "Hearing_venue": "Manchester",
-          "hearingSitAlone" : "Full Panel",
-          "hearingERMember" : "J Lee",
-          "hearingEEMember" : "L Hill",
-          "hearingDateCollection": [
-            {
-              "id" : "123345",
-              "value" : {
-                "listedDate": "2019-11-25T12:11:00.000"
-              }
-            }
-          ]
+          "juridictionCodesList": "COM",
+          "judgmentOutcome": "Successful at hearing"
+        }
+      },
+      {
+        "id" : "1234562",
+        "value" : {
+          "juridictionCodesList": "DOD"
+        }
+      },
+      {
+        "id" : "1234563",
+        "value" : {
+          "juridictionCodesList": "COM",
+          "judgmentOutcome": "Dismissed on withdrawal"
+        }
+      },
+      {
+        "id" : "1234564",
+        "value" : {
+          "juridictionCodesList": "DDA",
+          "judgmentOutcome": "Successful at hearing"
+        }
+      },
+      {
+        "id" : "1234565",
+        "value" : {
+          "juridictionCodesList": "DOD",
+          "judgmentOutcome": "Input in error"
         }
       }
     ],
@@ -126,6 +155,8 @@
           "respondent_email": "Antonio@gmail.com",
           "respondent_phone1": "07577136570",
           "respondent_phone2": "07577136570",
+          "response_referred_to_judge": "2019-12-22",
+          "response_returned_from_judge": "2019-12-21",
           "responseStruckOut": "No"
         }
       },
@@ -145,26 +176,30 @@
           "respondent_email": "JuanGarcia@gmail.com",
           "respondent_phone1": "07577136570",
           "respondent_phone2": "07577136570",
-          "responseStruckOut": "Yes"
+          "response_referred_to_judge": "2019-12-22",
+          "response_returned_from_judge": "2019-12-22",
+          "responseStruckOut": "No"
         }
       },
       {
-        "id" : "1233456789",
+        "id" : "12332245",
         "value" : {
           "respondent_address": {
-            "AddressLine1": "13 Small Street",
-            "AddressLine2": "26 House",
+            "AddressLine1": "11 Small Street",
+            "AddressLine2": "22 House",
             "Country": "UK",
             "County": "North West",
-            "PostCode": "SC13 4ED",
-            "PostTown": "Scotland"
+            "PostCode": "M12 42R",
+            "PostTown": "Manchester"
           },
-          "respondent_name": "Roberto Dondini",
+          "respondent_name": "Mike Jordan",
           "respondent_contact_preference": "Post",
-          "respondent_email": "RobertoDondini@gmail.com",
+          "respondent_email": "Antonio@gmail.com",
           "respondent_phone1": "07577136570",
           "respondent_phone2": "07577136570",
-          "responseStruckOut": null
+          "response_referred_to_judge": "2019-12-22",
+          "response_returned_from_judge": "2019-12-23",
+          "responseStruckOut": "No"
         }
       }
     ],
@@ -188,22 +223,7 @@
       "responseToClaim": "No"
     },
     "userLocation": "Liverpool",
-    "hearingNumbers" : "2",
-    "hearingTypes" : "Preliminary Hearing",
-    "hearingPublicPrivate" : "Public",
-    "hearingVenue" : "Crown Court",
-    "hearingEstLengthNum" : "1",
-    "hearingEstLengthNumType" : "Days",
-    "hearingSitAlone" : "Full Panel",
-    "Hearing_stage" : "Stage 1",
-    "listedDate" : "2019-11-25T12:11:00.000",
-    "Hearing_notes" : "Test hearing 2",
-    "hearingSelection" : "1",
-    "hearingActions" : "Edit hearing",
-    "hearingERMember" : "A Morgan",
-    "hearingEEMember" : "S Jones",
-    "hearingDatesRequireAmending" : null,
-    "hearingDateSelection" : null
+    "flagsImageFileName": "1000001.png"
   },
   "id": "123456789",
   "jurisdiction": "English",

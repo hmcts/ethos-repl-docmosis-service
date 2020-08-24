@@ -35,18 +35,46 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DO_NOT_POSTPONE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_EMP_CONT_CLAIM;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_LIVE_APPEAL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_REPORTING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_RESERVED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_RULE_503B;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_SENSITIVE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_EXTENSION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_PRECEDING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ONE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ZERO;
+
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
 @Service("caseManagementForCaseWorkerService")
 public class CaseManagementForCaseWorkerService {
+
+    private static final String MISSING_CLAIMANT = "Missing claimant";
+    private static final String MISSING_RESPONDENT = "Missing respondent";
+
+    private static final String COLOR_ORANGE = "Orange";
+    private static final String COLOR_TURQUOISE = "Turquoise";
+    private static final String COLOR_RED = "Red";
+    private static final String COLOR_PURPLE = "Purple";
+    private static final String COLOR_BLUE = "Blue";
+    private static final String COLOR_GREEN = "Green";
+    private static final String COLOR_BLACK = "Black";
+    private static final String COLOR_WHITE = "White";
 
     private static final String EDIT_HEARING = "Edit hearing";
     private static final String DELETE_HEARING = "Delete hearing";
@@ -67,12 +95,51 @@ public class CaseManagementForCaseWorkerService {
         this.ccdClient = ccdClient;
     }
 
-    public void struckOutDefaults(CaseData caseData) {
+    public void caseDataDefaults(CaseData caseData) {
+
+        claimantDefaults(caseData);
+        respondentDefaults(caseData);
+        struckOutDefaults(caseData);
+        flagsImageFileNameDefaults(caseData);
+    }
+
+    private void claimantDefaults(CaseData caseData) {
+        String claimantTypeOfClaimant = caseData.getClaimantTypeOfClaimant();
+        if (!isNullOrEmpty(claimantTypeOfClaimant)) {
+            if(claimantTypeOfClaimant.equals(INDIVIDUAL_TYPE_CLAIMANT)) {
+                String claimantFirstNames = nullCheck(caseData.getClaimantIndType().getClaimantFirstNames());
+                String claimantLastName = nullCheck(caseData.getClaimantIndType().getClaimantLastName());
+                caseData.setClaimant(claimantFirstNames + " " + claimantLastName);
+            } else {
+                caseData.setClaimant(nullCheck(caseData.getClaimantCompany()));
+            }
+        } else {
+            caseData.setClaimant(MISSING_CLAIMANT);
+        }
+    }
+
+    private void respondentDefaults (CaseData caseData) {
+        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+            RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+            caseData.setRespondent(nullCheck(respondentSumType.getRespondentName()));
+        }
+        else {
+            caseData.setRespondent(MISSING_RESPONDENT);
+        }
+    }
+
+    private void struckOutDefaults(CaseData caseData) {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             ListIterator<RespondentSumTypeItem> itr = caseData.getRespondentCollection().listIterator();
             while (itr.hasNext()) {
                 itr.next().getValue().setResponseStruckOut(NO);
             }
+        }
+    }
+
+    private void flagsImageFileNameDefaults(CaseData caseData) {
+        if(isNullOrEmpty(caseData.getFlagsImageFileName())) {
+            caseData.setFlagsImageFileName(DEFAULT_FLAGS_IMAGE_FILE_NAME);
         }
     }
 
@@ -112,8 +179,131 @@ public class CaseManagementForCaseWorkerService {
                 }
             }
             caseData.setRespondentCollection(Stream.concat(activeRespondent.stream(), struckRespondent.stream()).collect(Collectors.toList()));
+            respondentDefaults(caseData);
         }
         return caseData;
+    }
+
+    public void buildFlagsImageFileName(CaseData caseData) {
+        StringBuilder flagsImageFileName = new StringBuilder();
+        StringBuilder flagsImageAltText = new StringBuilder();
+
+        flagsImageFileName.append(IMAGE_FILE_PRECEDING);
+        setFlagImageFor(FLAG_SENSITIVE, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_REPORTING, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_RULE_503B, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_EMP_CONT_CLAIM, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_LIVE_APPEAL, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_DO_NOT_POSTPONE, flagsImageFileName, flagsImageAltText, caseData);
+        flagsImageFileName.append(IMAGE_FILE_EXTENSION);
+
+        caseData.setFlagsImageAltText(flagsImageAltText.toString());
+        caseData.setFlagsImageFileName(flagsImageFileName.toString());
+    }
+
+    private void setFlagImageFor(String flagName, StringBuilder flagsImageFileName, StringBuilder flagsImageAltText, CaseData caseData) {
+        boolean flagRequired;
+        String flagColor;
+
+        switch (flagName) {
+            case FLAG_SENSITIVE:
+                flagRequired = sensitiveCase(caseData);
+                flagColor = COLOR_ORANGE;
+                break;
+            case FLAG_REPORTING:
+                flagRequired = rule503dApplies(caseData);
+                flagColor = COLOR_TURQUOISE;
+                break;
+            case FLAG_RULE_503B:
+                flagRequired = rule503bApplies(caseData);
+                flagColor = COLOR_RED;
+                break;
+            case FLAG_RESERVED:
+                flagRequired = reservedJudgement(caseData);
+                flagColor = COLOR_PURPLE;
+                break;
+            case FLAG_EMP_CONT_CLAIM:
+                flagRequired = counterClaimMade(caseData);
+                flagColor = COLOR_BLUE;
+                break;
+            case FLAG_LIVE_APPEAL:
+                flagRequired = liveAppeal(caseData);
+                flagColor = COLOR_GREEN;
+                break;
+            case FLAG_DO_NOT_POSTPONE:
+                flagRequired = doNotPostpone(caseData);
+                flagColor = COLOR_BLACK;
+                break;
+            default:
+                flagRequired = false;
+                flagColor = COLOR_WHITE;
+        }
+
+        flagsImageFileName.append(flagRequired ? ONE : ZERO);
+        flagsImageAltText.append(flagRequired && flagsImageAltText.length() > 0 ? " - " : "");
+        flagsImageAltText.append(flagRequired ? "<font color='" + flagColor + "'>" + flagName + "</font>" : "");
+    }
+
+    private boolean sensitiveCase(CaseData caseData) {
+        if (caseData.getAdditionalCaseInfoType() != null) {
+            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getAdditionalSensitive())) {
+                return caseData.getAdditionalCaseInfoType().getAdditionalSensitive().equals(YES);
+            } else { return  false; }
+        } else { return  false; }
+    }
+
+    private boolean rule503dApplies(CaseData caseData) {
+        if (caseData.getRestrictedReporting() != null) {
+            if (!isNullOrEmpty(caseData.getRestrictedReporting().getImposed())) {
+                return caseData.getRestrictedReporting().getImposed().equals(YES);
+            } else { return false; }
+        }
+        else { return false; }
+    }
+
+    private boolean rule503bApplies(CaseData caseData) {
+        if (caseData.getRestrictedReporting() != null) {
+            if (!isNullOrEmpty(caseData.getRestrictedReporting().getRule503b())) {
+                return caseData.getRestrictedReporting().getRule503b().equals(YES);
+            } else { return false; }
+        } else { return false; }
+    }
+
+    private boolean reservedJudgement(CaseData caseData) {
+        if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
+            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+                if (hearingTypeItem.getValue().getHearingDateCollection() != null && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty()) {
+                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                        String hearingReservedJudgement = dateListedTypeItem.getValue().getHearingReservedJudgement();
+                        if (!isNullOrEmpty(hearingReservedJudgement) && hearingReservedJudgement.equals(YES))  {
+                            return true;
+                        }
+                    }
+                }
+            }
+        } else { return false; }
+        return false;
+    }
+
+    private boolean counterClaimMade(CaseData caseData) {
+        return !isNullOrEmpty(caseData.getCounterClaim());
+    }
+
+    private boolean liveAppeal(CaseData caseData) {
+        if (caseData.getAdditionalCaseInfoType() != null) {
+            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal())) {
+                return caseData.getAdditionalCaseInfoType().getAdditionalLiveAppeal().equals(YES);
+            } else { return false; }
+        } else { return false; }
+    }
+
+    private boolean doNotPostpone(CaseData caseData) {
+        if (caseData.getAdditionalCaseInfoType() != null) {
+            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getDoNotPostpone() )) {
+                return caseData.getAdditionalCaseInfoType().getDoNotPostpone().equals(YES);
+            } else { return false; }
+        } else { return false; }
     }
 
     public CaseData addNewHearingItem(CCDRequest ccdRequest) {
@@ -410,6 +600,7 @@ public class CaseManagementForCaseWorkerService {
         populateRespondentCollectionDetails(caseData, originalCaseData.getClaimantIndType(), originalCaseData.getClaimantType());
         populateTribunalCorrespondenceDetails(caseData, originalCaseData);
         populateCaseDataDetails(caseData, originalCaseData, originalId);
+        buildFlagsImageFileName(caseData);
     }
 
     private void populateClaimantDetails(CaseData caseData, RespondentSumType respondentSumType) {
@@ -478,6 +669,7 @@ public class CaseManagementForCaseWorkerService {
         try {
             originalCaseData.setCcdID(currentCaseDetails.getCaseId());
             originalCaseData.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());
+            buildFlagsImageFileName(originalCaseData);
             CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, currentCaseDetails.getCaseTypeId(),
                     currentCaseDetails.getJurisdiction(), caseIdToLink);
             ccdClient.submitEventForCase(authToken, originalCaseData, currentCaseDetails.getCaseTypeId(),
