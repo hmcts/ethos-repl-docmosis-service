@@ -6,6 +6,6 @@ spring:
       aliases:
         AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key
         tornado-access-key: TORNADO_ACCESS_KEY
-        ethos-repl-service-s2s-secret: ETHOS_S2S_SECRET_KEY
+        ethos-repl-service-s2s-secret: ETHOS_REPL_SERVICE_S2S_SECRET
         repl-docmosis-backend-POSTGRES-PASS: ETHOS_REPL_DB_PASSWORD
         create-updates-queue-send-connection-string: CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING
