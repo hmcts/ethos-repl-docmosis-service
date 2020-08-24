@@ -64,7 +64,29 @@
       "representative_preference": "Post",
       "representative_reference": "1111111"
     },
-    "repCollection" : [
+    "repCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "resp_rep_name" : "RepresentativeNameRespondent",
+          "name_of_organisation": "RepresentativeOrganisation",
+          "name_of_representative": "RepresentativeNameRespondent",
+          "representative_address": {
+            "AddressLine1": "56 Block C",
+            "AddressLine2": "Ellesmere Street",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M3 KJR",
+            "PostTown": "Manchester"
+          },
+          "representative_dx": "222222222",
+          "representative_email_address": "example@gmail.com",
+          "representative_mobile_number": "07577136570",
+          "representative_phone_number": "07577136570",
+          "representative_preference": "Post",
+          "representative_reference": "1111111"
+        }
+      }
     ],
     "caseNotes": "Example of Case Note",
     "caseType": "Single",
@@ -101,8 +123,8 @@
       "claimant_work_phone_number": "07577136570"
     },
     "correspondenceType": {
-      "topLevel_Documents": "EM-TRB-EGW-ENG-00026",
-      "part_1_Documents": "1.2",
+      "topLevel_Documents": "EM-TRB-LBL-ENG-00000",
+      "part_1_Documents": "0.2",
       "hearingNumber": "2"
     },
     "clerkResponsible": "Juan Diego",

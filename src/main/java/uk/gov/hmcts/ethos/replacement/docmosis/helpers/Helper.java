@@ -42,6 +42,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 @Slf4j
 public class Helper {
 
@@ -511,17 +513,93 @@ public class Helper {
         StringBuilder sb = new StringBuilder();
         sb.append("\"Label_").append(labelNumber).append("_Entity_Name_01\":\"").append(nullCheck(addressLabelType.getLabelEntityName01())).append(NEW_LINE);
         sb.append("\"Label_").append(labelNumber).append("_Entity_Name_02\":\"").append(nullCheck(addressLabelType.getLabelEntityName02())).append(NEW_LINE);
-        sb.append("\"Label_").append(labelNumber).append("_Address_Line_01\":\"").append(nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine1())).append(NEW_LINE);
-        sb.append("\"Label_").append(labelNumber).append("_Address_Line_02\":\"").append(nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine2())).append(NEW_LINE);
-        sb.append("\"Label_").append(labelNumber).append("_Address_Line_03\":\"").append(nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine3())).append(NEW_LINE);
-        sb.append("\"Label_").append(labelNumber).append("_Address_Line_04\":\"").append(nullCheck(addressLabelType.getLabelEntityAddress().getPostTown())).append(NEW_LINE);
-        sb.append("\"Label_").append(labelNumber).append("_Address_Line_05\":\"").append(nullCheck(addressLabelType.getLabelEntityAddress().getCounty()) + " " + nullCheck(addressLabelType.getLabelEntityAddress().getPostCode())).append(NEW_LINE);
-        if (showTelFax.equals(YES)) {
-            sb.append("\"Label_").append(labelNumber).append("_Telephone\":\"").append(nullCheck(addressLabelType.getLabelEntityTelephone())).append(NEW_LINE);
-            sb.append("\"Label_").append(labelNumber).append("_Fax\":\"").append(nullCheck(addressLabelType.getLabelEntityFax())).append(NEW_LINE);
-        }
+        sb.append(getAddressLines(addressLabelType, labelNumber));
+        sb.append(getTelFaxLine(addressLabelType, labelNumber, showTelFax));
         sb.append("\"lbl_").append(labelNumber).append("_Eef\":\"").append(nullCheck(addressLabelType.getLabelEntityReference())).append(NEW_LINE);
         sb.append("\"lbl_").append(labelNumber).append("_Cef\":\"").append(nullCheck(addressLabelType.getLabelCaseReference())).append("\"");
+        return sb;
+    }
+
+    private static StringBuilder getAddressLines(AddressLabelType addressLabelType, String labelNumber) {
+        StringBuilder sb = new StringBuilder();
+
+        int lineNum = 0;
+        String addressLine = "";
+
+        if (!isNullOrEmpty(nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine1()))) {
+            lineNum++;
+            addressLine = nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine1());
+            sb.append(getAddressLine(addressLine, labelNumber, lineNum));
+        }
+
+        if (!isNullOrEmpty(nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine2()))) {
+            lineNum++;
+            addressLine = nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine2());
+            sb.append(getAddressLine(addressLine, labelNumber, lineNum));
+        }
+
+        if (!isNullOrEmpty(nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine3()))) {
+            lineNum++;
+            addressLine = nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine3());
+            sb.append(getAddressLine(addressLine, labelNumber, lineNum));
+        }
+
+        if (!isNullOrEmpty(nullCheck(addressLabelType.getLabelEntityAddress().getPostTown()))) {
+            lineNum++;
+            addressLine = nullCheck(addressLabelType.getLabelEntityAddress().getPostTown());
+            sb.append(getAddressLine(addressLine, labelNumber, lineNum));
+        }
+
+        if (!isNullOrEmpty(nullCheck(addressLabelType.getLabelEntityAddress().getCounty()))) {
+            lineNum++;
+            addressLine = nullCheck(addressLabelType.getLabelEntityAddress().getCounty());
+            if (lineNum < 5) {
+                sb.append(getAddressLine(addressLine, labelNumber, lineNum));
+            }
+        }
+
+        if (!isNullOrEmpty(nullCheck(addressLabelType.getLabelEntityAddress().getPostCode()))) {
+            if (lineNum < 5) {
+                lineNum++;
+                addressLine = nullCheck(addressLabelType.getLabelEntityAddress().getPostCode());
+            } else {
+                addressLine += " " + nullCheck(addressLabelType.getLabelEntityAddress().getPostCode());
+            }
+            sb.append(getAddressLine(addressLine, labelNumber, lineNum));
+        }
+        return sb;
+    }
+
+    private static StringBuilder getAddressLine(String addressLine, String labelNumber, int lineNum) {
+        StringBuilder sb = new StringBuilder();
+        String lineNumber = "0" + lineNum;
+        sb.append("\"Label_").append(labelNumber).append("_Address_Line_").append(lineNumber).append("\":\"").append(addressLine).append(NEW_LINE);
+        return sb;
+    }
+
+    private static StringBuilder getTelFaxLine(AddressLabelType addressLabelType, String labelNumber, String showTelFax) {
+        StringBuilder sb = new StringBuilder();
+        if (showTelFax.equals(YES)) {
+            String tel = "";
+            String fax = "";
+
+            if (!isNullOrEmpty(addressLabelType.getLabelEntityTelephone())) {
+                tel = addressLabelType.getLabelEntityTelephone();
+            }
+
+            if (isNullOrEmpty(tel)) {
+                if (!isNullOrEmpty(addressLabelType.getLabelEntityFax())) {
+                    tel = addressLabelType.getLabelEntityFax();
+                }
+            } else {
+                if (!isNullOrEmpty(addressLabelType.getLabelEntityFax())) {
+                    fax = addressLabelType.getLabelEntityFax();
+                }
+            }
+
+            sb.append("\"Label_").append(labelNumber).append("_Telephone\":\"").append(tel).append(NEW_LINE);
+            sb.append("\"Label_").append(labelNumber).append("_Fax\":\"").append(fax).append(NEW_LINE);
+        }
         return sb;
     }
 

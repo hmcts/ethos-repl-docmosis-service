@@ -141,8 +141,7 @@ public class DocumentGenerationService {
 
     public List<String> midValidateAddressLabels(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        List<AddressLabelTypeItem> selectedAddressLabels = Helper.getSelectedAddressLabels(caseData);
-        if (selectedAddressLabels == null || selectedAddressLabels.isEmpty()) {
+        if (Integer.parseInt(caseData.getAddressLabelsAttributesType().getNumberOfSelectedLabels()) == 0) {
             errors.add(ADDRESS_LABELS_SELECT_ERROR);
         }
         if (caseData.getAddressLabelsAttributesType().getNumberOfCopies().contains(".")) {
@@ -498,17 +497,10 @@ public class DocumentGenerationService {
     }
 
     private void getEntityFax(AddressLabelType addressLabelType, String fax) {
-        if (isNullOrEmpty(addressLabelType.getLabelEntityTelephone())) {
-            if (!isNullOrEmpty(Helper.nullCheck(fax))) {
-                addressLabelType.setLabelEntityTelephone (TEL + Helper.nullCheck(fax));
-            }
-            addressLabelType.setLabelEntityFax("");
+        if (!isNullOrEmpty(Helper.nullCheck(fax))) {
+            addressLabelType.setLabelEntityFax(TEL + Helper.nullCheck(fax));
         } else {
-            if (!isNullOrEmpty(Helper.nullCheck(fax))) {
-                addressLabelType.setLabelEntityFax(TEL + Helper.nullCheck(fax));
-            } else {
-                addressLabelType.setLabelEntityFax("");
-            }
+            addressLabelType.setLabelEntityFax("");
         }
     }
 

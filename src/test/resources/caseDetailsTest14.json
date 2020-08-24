@@ -56,14 +56,6 @@
       "resp_rep_name" : "RepresentativeNameClaimant",
       "name_of_organisation": "RepresentativeOrganisation",
       "name_of_representative": "RepresentativeNameClaimant",
-      "representative_address": {
-        "AddressLine1": "56 Block C",
-        "AddressLine2": "Ellesmere Street",
-        "Country": "UK",
-        "County": "Lancashire",
-        "PostCode": "M3 KJR",
-        "PostTown": "Manchester"
-      },
       "representative_dx": "222222222",
       "representative_email_address": "example@gmail.com",
       "representative_mobile_number": "07577136570",
@@ -71,24 +63,32 @@
       "representative_preference": "Post",
       "representative_reference": "1111111"
     },
-    "repCollection" : [
+    "repCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "resp_rep_name" : "RepresentativeNameRespondent",
+          "name_of_organisation": "RepresentativeOrganisation",
+          "name_of_representative": "RepresentativeNameRespondent",
+          "representative_address": {
+            "AddressLine1": "56 Block C",
+            "AddressLine2": "Ellesmere Street",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M3 KJR",
+            "PostTown": "Manchester"
+          },
+          "representative_dx": "222222222",
+          "representative_email_address": "example@gmail.com",
+          "representative_mobile_number": "07577136570",
+          "representative_phone_number": "07577136570",
+          "representative_preference": "Post",
+          "representative_reference": "1111111"
+        }
+      }
     ],
     "caseNotes": "Example of Case Note",
     "caseType": "Single",
-    "claimantType": {
-      "claimant_addressUK": {
-        "AddressLine1": "34",
-        "AddressLine2": "Low Street",
-        "Country": "UK",
-        "County": "Lancashire",
-        "PostCode": "M3 6gw",
-        "PostTown": "Manchester"
-      },
-      "claimant_contact_preference": "Post",
-      "claimant_email_address": "anton@gmail.com",
-      "claimant_mobile_number": "07577136570",
-      "claimant_phone_number": "07577136570"
-    },
     "claimantIndType": {
       "claimant_date_of_birth": "1990-02-25",
       "claimant_first_names": "Anton Juliet",
@@ -108,8 +108,8 @@
       "claimant_work_phone_number": "07577136570"
     },
     "correspondenceType": {
-      "topLevel_Documents": "EM-TRB-EGW-ENG-00026",
-      "part_1_Documents": "1.2",
+      "topLevel_Documents": "EM-TRB-LBL-ENG-00000",
+      "part_1_Documents": "0.2",
       "hearingNumber": "2"
     },
     "clerkResponsible": "Juan Diego",

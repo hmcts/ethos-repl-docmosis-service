@@ -698,6 +698,76 @@ public class HelperTest {
     }
 
     @Test
+    public void buildDocumentContent101() {
+        String expected = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"EM-TRB-EGW-ENG-00034.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
+                "\"data\":{\n" +
+                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 KJR\",\n" +
+                "\"claimant_reference\":\"1111111\",\n" +
+                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
+                "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"22 House\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"North West\",\n" +
+                "\"respondent_or_rep_postCode\":\"M12 42R\",\n" +
+                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_addressLine2\":\"22 House\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"North West\",\n" +
+                "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
+                "\"Hearing_date\":\"25 November 2019\",\n" +
+                "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
+                "\"Hearing_venue\":\"Manchester\",\n" +
+                "\"Hearing_duration\":\"2 days\",\n" +
+                "\"t9_2\":\"true\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
+                "\"Court_town\":\"Manchester,\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"i9_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i9_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i9_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
+                "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Case_No\":\"123456\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails9.getCaseData(), "", userDetails).toString());
+    }
+
+    @Test
     public void buildDocumentWithNotContent() {
         String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
