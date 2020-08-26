@@ -37,8 +37,29 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_COPIES_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_SELECT_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_AVAILABLE_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_ADDRESS;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_AND_CLAIMANT_REP_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_AND_RESPONDENTS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_AND_RESPONDENTS_REPS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_REP;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_REP_ADDRESS;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_REP_AND_RESPONDENTS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_REP_AND_RESPONDENTS_REPS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CUSTOMISE_SELECTED_ADDRESSES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.REF;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_AND_RESPONDENTS_REPS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_REPS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_REP;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRespondents;
 
@@ -50,29 +71,29 @@ public class DocumentGenerationService {
     private final CcdClient ccdClient;
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
-    private static final String ADDRESS_LABELS_TEMPLATE = "EM-TRB-LBL-ENG-00000";
-    private static final String ADDRESS_LABELS_SELECT_ERROR = "You need to select at least one address label before printing";
-    private static final String ADDRESS_LABELS_COPIES_ERROR = "You need to use a whole number for the number of copies field";
-
-    private static final String CUSTOMISE_SELECTED_ADDRESSES = "0.1";
-    private static final String ALL_AVAILABLE_ADDRESSES = "0.2";
-    private static final String CLAIMANT_ADDRESS = "0.3";
-    private static final String CLAIMANT_REP_ADDRESS = "0.4";
-    private static final String CLAIMANT_AND_CLAIMANT_REP_ADDRESSES = "0.5";
-    private static final String RESPONDENTS_ADDRESSES = "0.6";
-    private static final String RESPONDENTS_REPS_ADDRESSES = "0.7";
-    private static final String RESPONDENTS_AND_RESPONDENTS_REPS_ADDRESSES = "0.8";
-    private static final String CLAIMANT_AND_RESPONDENTS_ADDRESSES = "0.9";
-    private static final String CLAIMANT_REP_AND_RESPONDENTS_REPS_ADDRESSES = "0.10";
-    private static final String CLAIMANT_AND_RESPONDENTS_REPS_ADDRESSES = "0.11";
-    private static final String CLAIMANT_REP_AND_RESPONDENTS_ADDRESSES = "0.12";
-
-    private static final String CLAIMANT = "CLAIMANT : ";
-    private static final String CLAIMANT_REP = "CLAIMANT REP : ";
-    private static final String RESPONDENT = "RESPONDENT : ";
-    private static final String RESPONDENT_REP = "RESPONDENT REP : ";
-    private static final String TEL = "Tel: ";
-    private static final String REF = "Ref: ";
+//    private static final String ADDRESS_LABELS_TEMPLATE = "EM-TRB-LBL-ENG-00000";
+//    private static final String ADDRESS_LABELS_SELECT_ERROR = "You need to select at least one address label before printing";
+//    private static final String ADDRESS_LABELS_COPIES_ERROR = "You need to use a whole number for the number of copies field";
+//
+//    private static final String CUSTOMISE_SELECTED_ADDRESSES = "0.1";
+//    private static final String ALL_AVAILABLE_ADDRESSES = "0.2";
+//    private static final String CLAIMANT_ADDRESS = "0.3";
+//    private static final String CLAIMANT_REP_ADDRESS = "0.4";
+//    private static final String CLAIMANT_AND_CLAIMANT_REP_ADDRESSES = "0.5";
+//    private static final String RESPONDENTS_ADDRESSES = "0.6";
+//    private static final String RESPONDENTS_REPS_ADDRESSES = "0.7";
+//    private static final String RESPONDENTS_AND_RESPONDENTS_REPS_ADDRESSES = "0.8";
+//    private static final String CLAIMANT_AND_RESPONDENTS_ADDRESSES = "0.9";
+//    private static final String CLAIMANT_REP_AND_RESPONDENTS_REPS_ADDRESSES = "0.10";
+//    private static final String CLAIMANT_AND_RESPONDENTS_REPS_ADDRESSES = "0.11";
+//    private static final String CLAIMANT_REP_AND_RESPONDENTS_ADDRESSES = "0.12";
+//
+//    private static final String CLAIMANT = "CLAIMANT : ";
+//    private static final String CLAIMANT_REP = "CLAIMANT REP : ";
+//    private static final String RESPONDENT = "RESPONDENT : ";
+//    private static final String RESPONDENT_REP = "RESPONDENT REP : ";
+//    private static final String TEL = "Tel: ";
+//    private static final String REF = "Ref: ";
 
     @Autowired
     public DocumentGenerationService(TornadoService tornadoService, CcdClient ccdClient) {

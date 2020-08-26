@@ -35,20 +35,20 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_PAGE_SIZE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LABEL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LBL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 @Slf4j
 public class Helper {
-
-    private static final String ADDRESS_LABELS_TEMPLATE = "EM-TRB-LBL-ENG-00000";
-    private static final int ADDRESS_LABELS_PAGE_SIZE = 14;
 
     public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails) {
         StringBuilder sb = new StringBuilder();
@@ -62,15 +62,16 @@ public class Helper {
 
         // Building the document data
         sb.append("\"data\":{\n");
-        sb.append(getClaimantData(caseData));
-        sb.append(getRespondentData(caseData));
-        sb.append(getHearingData(caseData));
-        sb.append(getCorrespondenceData(caseData));
-        sb.append(getCorrespondenceScotData(caseData));
-        sb.append(getCourtData(caseData));
 
         if (templateName.equals(ADDRESS_LABELS_TEMPLATE)) {
             sb.append(getAddressLabelsData(caseData));
+        } else {
+            sb.append(getClaimantData(caseData));
+            sb.append(getRespondentData(caseData));
+            sb.append(getHearingData(caseData));
+            sb.append(getCorrespondenceData(caseData));
+            sb.append(getCorrespondenceScotData(caseData));
+            sb.append(getCourtData(caseData));
         }
 
         sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts\":\"")
@@ -511,12 +512,12 @@ public class Helper {
 
     private static StringBuilder getAddressLabel(AddressLabelType addressLabelType, String labelNumber, String showTelFax) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\"Label_").append(labelNumber).append("_Entity_Name_01\":\"").append(nullCheck(addressLabelType.getLabelEntityName01())).append(NEW_LINE);
-        sb.append("\"Label_").append(labelNumber).append("_Entity_Name_02\":\"").append(nullCheck(addressLabelType.getLabelEntityName02())).append(NEW_LINE);
+        sb.append("\"").append(LABEL).append(labelNumber).append("_Entity_Name_01\":\"").append(nullCheck(addressLabelType.getLabelEntityName01())).append(NEW_LINE);
+        sb.append("\"").append(LABEL).append(labelNumber).append("_Entity_Name_02\":\"").append(nullCheck(addressLabelType.getLabelEntityName02())).append(NEW_LINE);
         sb.append(getAddressLines(addressLabelType, labelNumber));
         sb.append(getTelFaxLine(addressLabelType, labelNumber, showTelFax));
-        sb.append("\"lbl_").append(labelNumber).append("_Eef\":\"").append(nullCheck(addressLabelType.getLabelEntityReference())).append(NEW_LINE);
-        sb.append("\"lbl_").append(labelNumber).append("_Cef\":\"").append(nullCheck(addressLabelType.getLabelCaseReference())).append("\"");
+        sb.append("\"").append(LBL).append(labelNumber).append("_Eef\":\"").append(nullCheck(addressLabelType.getLabelEntityReference())).append(NEW_LINE);
+        sb.append("\"").append(LBL).append(labelNumber).append("_Cef\":\"").append(nullCheck(addressLabelType.getLabelCaseReference())).append("\"");
         return sb;
     }
 
@@ -573,7 +574,7 @@ public class Helper {
     private static StringBuilder getAddressLine(String addressLine, String labelNumber, int lineNum) {
         StringBuilder sb = new StringBuilder();
         String lineNumber = "0" + lineNum;
-        sb.append("\"Label_").append(labelNumber).append("_Address_Line_").append(lineNumber).append("\":\"").append(addressLine).append(NEW_LINE);
+        sb.append("\"").append(LABEL).append(labelNumber).append("_Address_Line_").append(lineNumber).append("\":\"").append(addressLine).append(NEW_LINE);
         return sb;
     }
 
@@ -597,8 +598,8 @@ public class Helper {
                 }
             }
 
-            sb.append("\"Label_").append(labelNumber).append("_Telephone\":\"").append(tel).append(NEW_LINE);
-            sb.append("\"Label_").append(labelNumber).append("_Fax\":\"").append(fax).append(NEW_LINE);
+            sb.append("\"").append(LABEL).append(labelNumber).append("_Telephone\":\"").append(tel).append(NEW_LINE);
+            sb.append("\"").append(LABEL).append(labelNumber).append("_Fax\":\"").append(fax).append(NEW_LINE);
         }
         return sb;
     }

@@ -102,10 +102,10 @@ public class DocumentGenerationServiceTest {
     }
 
     @Test
-    public void midAddressLabelsCustomiseSelectedAddressesNoAddressLabelsSelectionType() {
+    public void midAddressLabelsCustomiseSelectedAddresses() {
         CaseData caseData = caseDetails10.getCaseData();
         documentGenerationService.midAddressLabels(caseData);
-        assertNull(caseData.getAddressLabelCollection());
+        assertEquals(5, caseData.getAddressLabelCollection().size());
     }
 
     @Test

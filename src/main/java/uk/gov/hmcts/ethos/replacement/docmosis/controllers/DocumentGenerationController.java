@@ -25,6 +25,8 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_EMPTY_ERROR;
+
 @Slf4j
 @RestController
 public class DocumentGenerationController {
@@ -32,12 +34,8 @@ public class DocumentGenerationController {
     private static final String LOG_MESSAGE = "received notification request for case reference :    ";
     private static final String GENERATED_DOCUMENT_URL = "Please download the document from : ";
 
-    private static final String ADDRESS_LABELS_EMPTY_ERROR = "No addresses were found for you selection";
-
     private final DocumentGenerationService documentGenerationService;
-
     private final VerifyTokenService verifyTokenService;
-
     private final EventValidationService eventValidationService;
 
     @Autowired

@@ -714,54 +714,6 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-LBL-ENG-00000.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n" +
-                "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
-                "\"claimant_or_rep_addressLine3\":\"\",\n" +
-                "\"claimant_or_rep_town\":\"Manchester\",\n" +
-                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
-                "\"claimant_or_rep_postCode\":\"M3 KJR\",\n" +
-                "\"claimant_reference\":\"1111111\",\n" +
-                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"claimant_addressLine1\":\"34\",\n" +
-                "\"claimant_addressLine2\":\"Low Street\",\n" +
-                "\"claimant_addressLine3\":\"\",\n" +
-                "\"claimant_town\":\"Manchester\",\n" +
-                "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 6gw\",\n" +
-                "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n" +
-                "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n" +
-                "\"respondent_or_rep_addressLine2\":\"22 House\",\n" +
-                "\"respondent_or_rep_addressLine3\":\"\",\n" +
-                "\"respondent_or_rep_town\":\"Manchester\",\n" +
-                "\"respondent_or_rep_county\":\"North West\",\n" +
-                "\"respondent_or_rep_postCode\":\"M12 42R\",\n" +
-                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
-                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
-                "\"respondent_addressLine2\":\"22 House\",\n" +
-                "\"respondent_addressLine3\":\"\",\n" +
-                "\"respondent_town\":\"Manchester\",\n" +
-                "\"respondent_county\":\"North West\",\n" +
-                "\"respondent_postCode\":\"M12 42R\",\n" +
-                "\"Respondent\":\"1. Antonio Vazquez\",\n" +
-                "\"resp_others\":\"2. Juan Garcia\\n3. Mike Jordan\",\n" +
-                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n3. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Hearing_date\":\"\",\n" +
-                "\"Hearing_date_time\":\"\",\n" +
-                "\"Hearing_venue\":\"\",\n" +
-                "\"Hearing_duration\":\"\",\n" +
-                "\"t0_1\":\"true\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
-                "\"Court_town\":\"Manchester,\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"address_labels_page\":[\n" +
                 "],\n" +
                 "\"i0_1_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
@@ -786,55 +738,6 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-LBL-ENG-00000.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n" +
-                "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
-                "\"claimant_or_rep_addressLine3\":\"\",\n" +
-                "\"claimant_or_rep_town\":\"Manchester\",\n" +
-                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
-                "\"claimant_or_rep_postCode\":\"M3 KJR\",\n" +
-                "\"claimant_reference\":\"1111111\",\n" +
-                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"claimant_addressLine1\":\"34\",\n" +
-                "\"claimant_addressLine2\":\"Low Street\",\n" +
-                "\"claimant_addressLine3\":\"\",\n" +
-                "\"claimant_town\":\"Manchester\",\n" +
-                "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 6gw\",\n" +
-                "\"respondent_or_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_or_rep_addressLine1\":\"56 Block C\",\n" +
-                "\"respondent_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
-                "\"respondent_or_rep_addressLine3\":\"\",\n" +
-                "\"respondent_or_rep_town\":\"Manchester\",\n" +
-                "\"respondent_or_rep_county\":\"Lancashire\",\n" +
-                "\"respondent_or_rep_postCode\":\"M3 KJR\",\n" +
-                "\"respondent_reference\":\"1111111\",\n" +
-                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
-                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
-                "\"respondent_addressLine2\":\"22 House\",\n" +
-                "\"respondent_addressLine3\":\"\",\n" +
-                "\"respondent_town\":\"Manchester\",\n" +
-                "\"respondent_county\":\"North West\",\n" +
-                "\"respondent_postCode\":\"M12 42R\",\n" +
-                "\"Respondent\":\"1. Antonio Vazquez\",\n" +
-                "\"resp_others\":\"2. Juan Garcia\\n3. Mike Jordan\",\n" +
-                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n3. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Hearing_date\":\"25 November 2019, 14 December 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019, 14 December 2019 at 10:30\",\n" +
-                "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"Hearing_duration\":\"2 days\",\n" +
-                "\"t0_2\":\"true\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
-                "\"Court_town\":\"Manchester,\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"address_labels_page\":[\n" +
                 "{" +
                 "\"Label_01_Entity_Name_01\":\"Claimant Name\",\n" +
@@ -883,53 +786,6 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-LBL-ENG-00000.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_or_rep_full_name\":\"Orlando LTD\",\n" +
-                "\"claimant_full_name\":\"Orlando LTD\",\n" +
-                "\"Claimant\":\"Orlando LTD\",\n" +
-                "\"claimant_or_rep_addressLine1\":\"34\",\n" +
-                "\"claimant_or_rep_addressLine2\":\"Low Street\",\n" +
-                "\"claimant_or_rep_addressLine3\":\"\",\n" +
-                "\"claimant_or_rep_town\":\"Manchester\",\n" +
-                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
-                "\"claimant_or_rep_postCode\":\"M3 6gw\",\n" +
-                "\"claimant_addressLine1\":\"34\",\n" +
-                "\"claimant_addressLine2\":\"Low Street\",\n" +
-                "\"claimant_addressLine3\":\"\",\n" +
-                "\"claimant_town\":\"Manchester\",\n" +
-                "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 6gw\",\n" +
-                "\"respondent_or_rep_full_name\":\"\",\n" +
-                "\"respondent_or_rep_addressLine1\":\"\",\n" +
-                "\"respondent_or_rep_addressLine2\":\"\",\n" +
-                "\"respondent_or_rep_addressLine3\":\"\",\n" +
-                "\"respondent_or_rep_town\":\"\",\n" +
-                "\"respondent_or_rep_county\":\"\",\n" +
-                "\"respondent_or_rep_postCode\":\"\",\n" +
-                "\"respondent_full_name\":\"\",\n" +
-                "\"respondent_addressLine1\":\"\",\n" +
-                "\"respondent_addressLine2\":\"\",\n" +
-                "\"respondent_addressLine3\":\"\",\n" +
-                "\"respondent_town\":\"\",\n" +
-                "\"respondent_county\":\"\",\n" +
-                "\"respondent_postCode\":\"\",\n" +
-                "\"Respondent\":\"\",\n" +
-                "\"resp_others\":\"\",\n" +
-                "\"resp_address\":\"\",\n" +
-                "\"Hearing_date\":\"25 November 2019, 14 December 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019, 14 December 2019 at 10:30\",\n" +
-                "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"Hearing_duration\":\"2 days\",\n" +
-                "\"t0_2\":\"true\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
-                "\"Court_town\":\"Manchester,\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"address_labels_page\":[\n" +
                 "{" +
                 "\"Label_01_Entity_Name_01\":\"\",\n" +
@@ -970,55 +826,6 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-LBL-ENG-00000.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_or_rep_addressLine1\":\"\",\n" +
-                "\"claimant_or_rep_addressLine2\":\"\",\n" +
-                "\"claimant_or_rep_addressLine3\":\"\",\n" +
-                "\"claimant_or_rep_town\":\"\",\n" +
-                "\"claimant_or_rep_county\":\"\",\n" +
-                "\"claimant_or_rep_postCode\":\"\",\n" +
-                "\"claimant_reference\":\"1111111\",\n" +
-                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"claimant_addressLine1\":\"\",\n" +
-                "\"claimant_addressLine2\":\"\",\n" +
-                "\"claimant_addressLine3\":\"\",\n" +
-                "\"claimant_town\":\"\",\n" +
-                "\"claimant_county\":\"\",\n" +
-                "\"claimant_postCode\":\"\",\n" +
-                "\"respondent_or_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_or_rep_addressLine1\":\"56 Block C\",\n" +
-                "\"respondent_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
-                "\"respondent_or_rep_addressLine3\":\"\",\n" +
-                "\"respondent_or_rep_town\":\"Manchester\",\n" +
-                "\"respondent_or_rep_county\":\"Lancashire\",\n" +
-                "\"respondent_or_rep_postCode\":\"M3 KJR\",\n" +
-                "\"respondent_reference\":\"1111111\",\n" +
-                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
-                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
-                "\"respondent_addressLine2\":\"22 House\",\n" +
-                "\"respondent_addressLine3\":\"\",\n" +
-                "\"respondent_town\":\"Manchester\",\n" +
-                "\"respondent_county\":\"North West\",\n" +
-                "\"respondent_postCode\":\"M12 42R\",\n" +
-                "\"Respondent\":\"1. Antonio Vazquez\",\n" +
-                "\"resp_others\":\"2. Juan Garcia\\n3. Mike Jordan\",\n" +
-                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n3. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Hearing_date\":\"25 November 2019, 14 December 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019, 14 December 2019 at 10:30\",\n" +
-                "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"Hearing_duration\":\"2 days\",\n" +
-                "\"t0_2\":\"true\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
-                "\"Court_town\":\"Manchester,\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"address_labels_page\":[\n" +
                 "{" +
                 "\"Label_01_Entity_Name_01\":\"Claimant Name\",\n" +
@@ -1177,55 +984,6 @@ public class HelperTest {
                 "\"templateName\":\"EM-TRB-LBL-ENG-00000.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
-                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_or_rep_addressLine1\":\"\",\n" +
-                "\"claimant_or_rep_addressLine2\":\"\",\n" +
-                "\"claimant_or_rep_addressLine3\":\"\",\n" +
-                "\"claimant_or_rep_town\":\"\",\n" +
-                "\"claimant_or_rep_county\":\"\",\n" +
-                "\"claimant_or_rep_postCode\":\"\",\n" +
-                "\"claimant_reference\":\"\",\n" +
-                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"claimant_addressLine1\":\"34\",\n" +
-                "\"claimant_addressLine2\":\"Low Street\",\n" +
-                "\"claimant_addressLine3\":\"\",\n" +
-                "\"claimant_town\":\"Manchester\",\n" +
-                "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 6gw\",\n" +
-                "\"respondent_or_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_or_rep_addressLine1\":\"56 Block C\",\n" +
-                "\"respondent_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
-                "\"respondent_or_rep_addressLine3\":\"\",\n" +
-                "\"respondent_or_rep_town\":\"Manchester\",\n" +
-                "\"respondent_or_rep_county\":\"Lancashire\",\n" +
-                "\"respondent_or_rep_postCode\":\"M3 KJR\",\n" +
-                "\"respondent_reference\":\"1111111\",\n" +
-                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
-                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
-                "\"respondent_addressLine2\":\"22 House\",\n" +
-                "\"respondent_addressLine3\":\"\",\n" +
-                "\"respondent_town\":\"Manchester\",\n" +
-                "\"respondent_county\":\"North West\",\n" +
-                "\"respondent_postCode\":\"M12 42R\",\n" +
-                "\"Respondent\":\"1. Antonio Vazquez\",\n" +
-                "\"resp_others\":\"2. Juan Garcia\\n3. Mike Jordan\",\n" +
-                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n3. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Hearing_date\":\"\",\n" +
-                "\"Hearing_date_time\":\"\",\n" +
-                "\"Hearing_venue\":\"Manchester\",\n" +
-                "\"Hearing_duration\":\"2 days\",\n" +
-                "\"t0_2\":\"true\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
-                "\"Court_town\":\"Manchester,\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
                 "\"address_labels_page\":[\n" +
                 "{" +
                 "\"Label_13_Entity_Name_01\":\"Claimant Name\",\n" +

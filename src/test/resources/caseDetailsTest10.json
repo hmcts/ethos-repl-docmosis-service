@@ -100,6 +100,12 @@
       "part_1_Documents": "0.1",
       "hearingNumber": "2"
     },
+    "addressLabelsSelectionType": {
+      "claimantAddressLabel": "Yes",
+      "claimantRepAddressLabel": "Yes",
+      "respondentsAddressLabel": "Yes",
+      "respondentsRepsAddressLabel": "Yes"
+    },
     "addressLabelsAttributesType": {
       "numberOfSelectedLabels": "1",
       "numberOfCopies": "1",
