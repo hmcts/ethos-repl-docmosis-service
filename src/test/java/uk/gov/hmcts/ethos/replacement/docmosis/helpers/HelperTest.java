@@ -711,7 +711,7 @@ public class HelperTest {
     public void buildDocumentContent10() {
         String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-LBL-ENG-00000.docx\",\n" +
+                "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"address_labels_page\":[\n" +
@@ -735,7 +735,7 @@ public class HelperTest {
     public void buildDocumentContent12() {
         String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-LBL-ENG-00000.docx\",\n" +
+                "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"address_labels_page\":[\n" +
@@ -783,7 +783,7 @@ public class HelperTest {
     public void buildDocumentContent13() {
         String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-LBL-ENG-00000.docx\",\n" +
+                "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"address_labels_page\":[\n" +
@@ -823,7 +823,7 @@ public class HelperTest {
     public void buildDocumentContent14() {
         String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-LBL-ENG-00000.docx\",\n" +
+                "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"address_labels_page\":[\n" +
@@ -981,7 +981,7 @@ public class HelperTest {
     public void buildDocumentContent15() {
         String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-LBL-ENG-00000.docx\",\n" +
+                "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
                 "\"data\":{\n" +
                 "\"address_labels_page\":[\n" +

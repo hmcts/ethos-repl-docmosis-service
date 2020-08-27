@@ -71,30 +71,6 @@ public class DocumentGenerationService {
     private final CcdClient ccdClient;
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
-//    private static final String ADDRESS_LABELS_TEMPLATE = "EM-TRB-LBL-ENG-00000";
-//    private static final String ADDRESS_LABELS_SELECT_ERROR = "You need to select at least one address label before printing";
-//    private static final String ADDRESS_LABELS_COPIES_ERROR = "You need to use a whole number for the number of copies field";
-//
-//    private static final String CUSTOMISE_SELECTED_ADDRESSES = "0.1";
-//    private static final String ALL_AVAILABLE_ADDRESSES = "0.2";
-//    private static final String CLAIMANT_ADDRESS = "0.3";
-//    private static final String CLAIMANT_REP_ADDRESS = "0.4";
-//    private static final String CLAIMANT_AND_CLAIMANT_REP_ADDRESSES = "0.5";
-//    private static final String RESPONDENTS_ADDRESSES = "0.6";
-//    private static final String RESPONDENTS_REPS_ADDRESSES = "0.7";
-//    private static final String RESPONDENTS_AND_RESPONDENTS_REPS_ADDRESSES = "0.8";
-//    private static final String CLAIMANT_AND_RESPONDENTS_ADDRESSES = "0.9";
-//    private static final String CLAIMANT_REP_AND_RESPONDENTS_REPS_ADDRESSES = "0.10";
-//    private static final String CLAIMANT_AND_RESPONDENTS_REPS_ADDRESSES = "0.11";
-//    private static final String CLAIMANT_REP_AND_RESPONDENTS_ADDRESSES = "0.12";
-//
-//    private static final String CLAIMANT = "CLAIMANT : ";
-//    private static final String CLAIMANT_REP = "CLAIMANT REP : ";
-//    private static final String RESPONDENT = "RESPONDENT : ";
-//    private static final String RESPONDENT_REP = "RESPONDENT REP : ";
-//    private static final String TEL = "Tel: ";
-//    private static final String REF = "Ref: ";
-
     @Autowired
     public DocumentGenerationService(TornadoService tornadoService, CcdClient ccdClient) {
         this.tornadoService = tornadoService;
@@ -103,10 +79,12 @@ public class DocumentGenerationService {
 
     public CaseData midAddressLabels(CaseData caseData) {
         String templateName = Helper.getTemplateName(caseData);
+        log.info("midAddressLabels - templateName : " + templateName);
         if (templateName.equals(ADDRESS_LABELS_TEMPLATE)) {
             String ewSection = Helper.getSectionName(caseData);
             caseData.setAddressLabelCollection(new ArrayList<>());
             String sectionName = ewSection.equals("") ? Helper.getScotSectionName(caseData) : ewSection;
+            log.info("midAddressLabels - sectionName : " + sectionName);
             switch (sectionName) {
                 case CUSTOMISE_SELECTED_ADDRESSES:
                     customiseSelectedAddresses(caseData);
