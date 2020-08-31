@@ -193,7 +193,7 @@ dependencies {
         exclude module: 'jaxb-osgi'
     }
     testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.2.10'
-    testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.2.10'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.3.2'
 }
 
 bootJar {
