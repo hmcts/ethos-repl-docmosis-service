@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.document.domain.UploadResponse;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
 
 import java.net.URI;
+import java.util.Objects;
 
 import static java.util.Collections.singletonList;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
@@ -98,8 +99,8 @@ public class DocumentManagementService {
         if (HttpStatus.OK.equals(response.getStatusCode())) {
             return UploadedDocument.builder()
                     .content(response.getBody())
-                    .name(response.getHeaders().get("originalfilename").get(0))
-                    .contentType(response.getHeaders().get(HttpHeaders.CONTENT_TYPE).get(0))
+                    .name(Objects.requireNonNull(response.getHeaders().get("originalfilename")).get(0))
+                    .contentType(Objects.requireNonNull(response.getHeaders().get(HttpHeaders.CONTENT_TYPE)).get(0))
                     .build();
         } else {
             throw new IllegalStateException("Cannot download document that is stored in CCD got " +
