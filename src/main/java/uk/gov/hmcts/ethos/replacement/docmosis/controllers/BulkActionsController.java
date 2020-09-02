@@ -26,7 +26,8 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.BulkCreationService.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.BulkCreationService.BULK_CREATION_STEP;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.BulkCreationService.UPDATE_SINGLES_STEP;
 
 @Slf4j
 @RestController
@@ -103,6 +104,13 @@ public class BulkActionsController {
         if (bulkRequest.getCaseDetails().getCaseData().getMultipleSource() == null
                 || bulkRequest.getCaseDetails().getCaseData().getMultipleSource().trim().equals("")) {
             bulkRequest.getCaseDetails().getCaseData().setMultipleSource(MANUALLY_CREATED_POSITION);
+        }
+
+        //IF IT IS NOT ET ONLINE OR MIGRATION THEN SET THE STATE AS PENDING AS IT WILL NEED UPDATE SINGLES
+        if (!bulkRequest.getCaseDetails().getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
+            bulkRequest.getCaseDetails().getCaseData().setState(UPDATING_STATE);
+        } else {
+            bulkRequest.getCaseDetails().getCaseData().setState(OPEN_STATE);
         }
 
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(

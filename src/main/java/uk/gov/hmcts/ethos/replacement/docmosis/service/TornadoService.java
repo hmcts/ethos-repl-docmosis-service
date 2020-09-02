@@ -8,12 +8,11 @@ import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.*;
 
 import java.io.*;
 import java.net.ConnectException;
@@ -21,8 +20,12 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.TreeMap;
 
 import static java.net.HttpURLConnection.HTTP_OK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService.APPLICATION_DOCX_VALUE;
 
 @Slf4j
 @Service("tornadoService")
@@ -102,7 +105,8 @@ public class TornadoService {
     }
 
     private DocumentInfo createDocument(String authToken, HttpURLConnection conn, String documentName) throws IOException {
-        URI documentSelfPath = documentManagementService.uploadDocument(authToken, getBytesFromInputStream(conn.getInputStream()));
+        URI documentSelfPath = documentManagementService.uploadDocument(authToken, getBytesFromInputStream(conn.getInputStream()),
+                OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE);
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
         return generateDocumentInfo(documentName,
                 documentSelfPath,
@@ -195,6 +199,49 @@ public class TornadoService {
         StringBuilder sb = BulkHelper.buildScheduleDocumentContent(bulkData, tornadoConfiguration.getAccessKey());
         //log.info("Sending request: " + sb.toString());
         // send the instruction in UTF-8 encoding so that most character sets are available
+        OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
+        os.write(sb.toString());
+        os.flush();
+    }
+
+    public DocumentInfo scheduleMultipleGeneration(String authToken, MultipleData multipleData, TreeMap<String, Object> multipleObjectsFiltered,
+                                            List<SubmitEvent> submitEventList) throws IOException {
+        HttpURLConnection conn = null;
+        DocumentInfo documentInfo = new DocumentInfo();
+        try {
+            conn = createConnection();
+            log.info("Connected");
+            buildScheduleMultipleInstruction(conn, multipleData, multipleObjectsFiltered, submitEventList);
+            int status = conn.getResponseCode();
+            if (status == HTTP_OK) {
+                log.info("HTTP_OK");
+                documentInfo = createDocument(authToken, conn, BulkHelper.getScheduleDocName(multipleData.getScheduleDocName()));
+            } else {
+                log.error("message:" + conn.getResponseMessage());
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                String msg;
+                while ((msg = errorReader.readLine()) != null) {
+                    log.error(msg);
+                }
+            }
+        } catch (ConnectException e) {
+            log.error("Unable to connect to Docmosis: " + e.getMessage());
+            log.error("If you have a proxy, you will need the Proxy aware example code.");
+            System.exit(2);
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+        return documentInfo;
+    }
+
+    private void buildScheduleMultipleInstruction(HttpURLConnection conn, MultipleData multipleData,
+                                                  TreeMap<String, Object> multipleObjectsFiltered,
+                                                  List<SubmitEvent> submitEventList) throws IOException {
+        StringBuilder sb = MultiplesScheduleHelper.buildScheduleDocumentContent(multipleData,
+                tornadoConfiguration.getAccessKey(), multipleObjectsFiltered, submitEventList);
+        //log.info("Sending request: " + sb.toString());
         OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
         os.write(sb.toString());
         os.flush();
