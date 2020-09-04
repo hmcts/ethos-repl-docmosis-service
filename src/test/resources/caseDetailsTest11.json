@@ -96,9 +96,20 @@
       "claimant_work_phone_number": "07577136570"
     },
     "correspondenceType": {
-      "topLevel_Documents": "EM-TRB-EGW-ENG-00026",
-      "part_1_Documents": "1.2",
+      "topLevel_Documents": "EM-TRB-LET-ENG-00544",
+      "part_0_Documents": "0.1",
       "hearingNumber": "2"
+    },
+    "addressLabelsSelectionType": {
+      "claimantAddressLabel": "Yes",
+      "claimantRepAddressLabel": "No",
+      "respondentsAddressLabel": ""
+    },
+    "addressLabelsAttributesType": {
+      "numberOfSelectedLabels": "0",
+      "numberOfCopies": "1.1",
+      "startingLabel": "1",
+      "showTelFax": "Yes"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",

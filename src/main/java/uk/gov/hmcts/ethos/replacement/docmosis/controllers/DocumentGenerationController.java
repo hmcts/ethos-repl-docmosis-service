@@ -12,30 +12,30 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_EMPTY_ERROR;
 
 @Slf4j
 @RestController
 public class DocumentGenerationController {
 
     private static final String LOG_MESSAGE = "received notification request for case reference :    ";
-
     private static final String GENERATED_DOCUMENT_URL = "Please download the document from : ";
 
     private final DocumentGenerationService documentGenerationService;
-
     private final VerifyTokenService verifyTokenService;
-
     private final EventValidationService eventValidationService;
 
     @Autowired
@@ -44,6 +44,94 @@ public class DocumentGenerationController {
         this.documentGenerationService = documentGenerationService;
         this.verifyTokenService = verifyTokenService;
         this.eventValidationService = eventValidationService;
+    }
+
+    @PostMapping(value = "/midAddressLabels", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the address labels list with the user selected addresses.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> midAddressLabels(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MID ADDRESS LABELS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors = new ArrayList<>();
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        caseData = documentGenerationService.midAddressLabels(caseData);
+
+        if (caseData.getAddressLabelCollection() != null && caseData.getAddressLabelCollection().isEmpty()) {
+            errors.add(ADDRESS_LABELS_EMPTY_ERROR);
+            log.info("Event fields validation: " + errors);
+        }
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .errors(errors)
+                .build());
+    }
+
+    @PostMapping(value = "/midSelectedAddressLabels", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the address labels list with the user selected addresses to be printed.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> midSelectedAddressLabels(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MID SELECTED ADDRESS LABELS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        caseData = documentGenerationService.midSelectedAddressLabels(caseData);
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .build());
+    }
+
+    @PostMapping(value = "/midValidateAddressLabels", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "validates the address labels collection and print attributes before printing.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> midValidateAddressLabels(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MID VALIDATE ADDRESS LABELS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors;
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        errors = documentGenerationService.midValidateAddressLabels(caseData);
+        log.info("Event fields validation: " + errors);
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseData)
+                .errors(errors)
+                .build());
     }
 
     @PostMapping(value = "/generateDocument", consumes = APPLICATION_JSON_VALUE)
@@ -70,11 +158,7 @@ public class DocumentGenerationController {
             DocumentInfo documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
             ccdRequest.getCaseDetails().getCaseData().setDocMarkUp(documentInfo.getMarkUp());
 
-            if(ccdRequest.getCaseDetails().getCaseTypeId().equals(SCOTLAND_CASE_TYPE_ID)) {
-                ccdRequest.getCaseDetails().getCaseData().setCorrespondenceScotType(null);
-            } else {
-                ccdRequest.getCaseDetails().getCaseData().setCorrespondenceType(null);
-            }
+            documentGenerationService.clearUserChoices(ccdRequest.getCaseDetails());
 
             return ResponseEntity.ok(CCDCallbackResponse.builder()
                     .data(ccdRequest.getCaseDetails().getCaseData())

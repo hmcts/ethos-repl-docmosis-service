@@ -31,6 +31,11 @@ public class HelperTest {
     private CaseDetails caseDetails7;
     private CaseDetails caseDetails8;
     private CaseDetails caseDetails9;
+    private CaseDetails caseDetails10;
+    private CaseDetails caseDetails12;
+    private CaseDetails caseDetails13;
+    private CaseDetails caseDetails14;
+    private CaseDetails caseDetails15;
     private CaseDetails caseDetailsEmpty;
     private CaseDetails caseDetailsScot1;
     private CaseDetails caseDetailsScot2;
@@ -48,6 +53,11 @@ public class HelperTest {
         caseDetails7 = generateCaseDetails("caseDetailsTest7.json");
         caseDetails8 = generateCaseDetails("caseDetailsTest8.json");
         caseDetails9 = generateCaseDetails("caseDetailsTest9.json");
+        caseDetails10 = generateCaseDetails("caseDetailsTest10.json");
+        caseDetails12 = generateCaseDetails("caseDetailsTest12.json");
+        caseDetails13 = generateCaseDetails("caseDetailsTest13.json");
+        caseDetails14 = generateCaseDetails("caseDetailsTest14.json");
+        caseDetails15 = generateCaseDetails("caseDetailsTest15.json");
         caseDetailsScot1 = generateCaseDetails("caseDetailsScotTest1.json");
         caseDetailsScot2 = generateCaseDetails("caseDetailsScotTest2.json");
         caseDetailsScot3 = generateCaseDetails("caseDetailsScotTest3.json");
@@ -695,6 +705,504 @@ public class HelperTest {
                 "}\n" +
                 "}\n";
         assertEquals(expected, Helper.buildDocumentContent(caseDetails9.getCaseData(), "", userDetails).toString());
+    }
+
+    @Test
+    public void buildDocumentContent10() {
+        String expected = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
+                "\"data\":{\n" +
+                "\"address_labels_page\":[\n" +
+                "],\n" +
+                "\"i0_1_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i0_1_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i0_1_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
+                "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Case_No\":\"123456\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails10.getCaseData(), "", userDetails).toString());
+    }
+
+    @Test
+    public void buildDocumentContent12() {
+        String expected = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
+                "\"data\":{\n" +
+                "\"address_labels_page\":[\n" +
+                "{" +
+                "\"Label_01_Entity_Name_01\":\"Claimant Name\",\n" +
+                "\"Label_01_Entity_Name_02\":\"\",\n" +
+                "\"Label_01_Address_Line_01\":\"11 Block A\",\n" +
+                "\"Label_01_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_01_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_01_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_01_Address_Line_05\":\"Lancashire M1 KJR\",\n" +
+                "\"Label_01_Telephone\":\"07577 136511\",\n" +
+                "\"Label_01_Fax\":\"\",\n" +
+                "\"lbl_01_Eef\":\"\",\n" +
+                "\"lbl_01_Cef\":\"1850011/2020\",\n" +
+                "\"Label_02_Entity_Name_01\":\"Claimant Rep\",\n" +
+                "\"Label_02_Entity_Name_02\":\"Claimant Org\",\n" +
+                "\"Label_02_Address_Line_01\":\"22 Block B\",\n" +
+                "\"Label_02_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_02_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_02_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_02_Address_Line_05\":\"Lancashire M2 KJR\",\n" +
+                "\"Label_02_Telephone\":\"07577 136722\",\n" +
+                "\"Label_02_Fax\":\"\",\n" +
+                "\"lbl_02_Eef\":\"OSCA/222/ABC\",\n" +
+                "\"lbl_02_Cef\":\"1850022/2020\"" +
+                "}" +
+                "],\n" +
+                "\"i0_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i0_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i0_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
+                "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Case_No\":\"123456\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails12.getCaseData(), "", userDetails).toString());
+    }
+
+    @Test
+    public void buildDocumentContent13() {
+        String expected = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
+                "\"data\":{\n" +
+                "\"address_labels_page\":[\n" +
+                "{" +
+                "\"Label_01_Entity_Name_01\":\"\",\n" +
+                "\"Label_01_Entity_Name_02\":\"Claimant Org\",\n" +
+                "\"Label_01_Address_Line_01\":\"11 Block A\",\n" +
+                "\"Label_01_Address_Line_02\":\"M1 KJR\",\n" +
+                "\"lbl_01_Eef\":\"\",\n" +
+                "\"lbl_01_Cef\":\"1850011/2020\",\n" +
+                "\"Label_02_Entity_Name_01\":\"Claimant Rep\",\n" +
+                "\"Label_02_Entity_Name_02\":\"Claimant Org\",\n" +
+                "\"Label_02_Address_Line_01\":\"22 Block B\",\n" +
+                "\"Label_02_Address_Line_02\":\"Address Line 3\",\n" +
+                "\"Label_02_Address_Line_03\":\"Lancashire\",\n" +
+                "\"Label_02_Address_Line_04\":\"M2 KJR\",\n" +
+                "\"lbl_02_Eef\":\"OSCA/222/ABC\",\n" +
+                "\"lbl_02_Cef\":\"1850022/2020\"" +
+                "}" +
+                "],\n" +
+                "\"i0_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i0_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i0_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
+                "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Case_No\":\"123456\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails13.getCaseData(), "", userDetails).toString());
+    }
+
+    @Test
+    public void buildDocumentContent14() {
+        String expected = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
+                "\"data\":{\n" +
+                "\"address_labels_page\":[\n" +
+                "{" +
+                "\"Label_01_Entity_Name_01\":\"Claimant Name\",\n" +
+                "\"Label_01_Entity_Name_02\":\"\",\n" +
+                "\"Label_01_Address_Line_01\":\"11 Block A\",\n" +
+                "\"Label_01_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_01_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_01_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_01_Address_Line_05\":\"Lancashire M1 KJR\",\n" +
+                "\"Label_01_Telephone\":\"07577 136511\",\n" +
+                "\"Label_01_Fax\":\"07577 136712\",\n" +
+                "\"lbl_01_Eef\":\"\",\n" +
+                "\"lbl_01_Cef\":\"1850011/2020\",\n" +
+                "\"Label_02_Entity_Name_01\":\"Claimant Name\",\n" +
+                "\"Label_02_Entity_Name_02\":\"\",\n" +
+                "\"Label_02_Address_Line_01\":\"11 Block A\",\n" +
+                "\"Label_02_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_02_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_02_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_02_Address_Line_05\":\"Lancashire M1 KJR\",\n" +
+                "\"Label_02_Telephone\":\"07577 136511\",\n" +
+                "\"Label_02_Fax\":\"07577 136712\",\n" +
+                "\"lbl_02_Eef\":\"\",\n" +
+                "\"lbl_02_Cef\":\"1850011/2020\",\n" +
+                "\"Label_03_Entity_Name_01\":\"Claimant Rep\",\n" +
+                "\"Label_03_Entity_Name_02\":\"Claimant Org\",\n" +
+                "\"Label_03_Address_Line_01\":\"22 Block B\",\n" +
+                "\"Label_03_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_03_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_03_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_03_Address_Line_05\":\"Lancashire M2 KJR\",\n" +
+                "\"Label_03_Telephone\":\"07577 136521\",\n" +
+                "\"Label_03_Fax\":\"07577 136722\",\n" +
+                "\"lbl_03_Eef\":\"OSCA/222/ABC\",\n" +
+                "\"lbl_03_Cef\":\"1850022/2020\",\n" +
+                "\"Label_04_Entity_Name_01\":\"Claimant Rep\",\n" +
+                "\"Label_04_Entity_Name_02\":\"Claimant Org\",\n" +
+                "\"Label_04_Address_Line_01\":\"22 Block B\",\n" +
+                "\"Label_04_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_04_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_04_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_04_Address_Line_05\":\"Lancashire M2 KJR\",\n" +
+                "\"Label_04_Telephone\":\"07577 136521\",\n" +
+                "\"Label_04_Fax\":\"07577 136722\",\n" +
+                "\"lbl_04_Eef\":\"OSCA/222/ABC\",\n" +
+                "\"lbl_04_Cef\":\"1850022/2020\",\n" +
+                "\"Label_05_Entity_Name_01\":\"Respondent One\",\n" +
+                "\"Label_05_Entity_Name_02\":\"\",\n" +
+                "\"Label_05_Address_Line_01\":\"33 Block C\",\n" +
+                "\"Label_05_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_05_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_05_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_05_Address_Line_05\":\"Lancashire M3 KJR\",\n" +
+                "\"Label_05_Telephone\":\"07577 136531\",\n" +
+                "\"Label_05_Fax\":\"07577 136732\",\n" +
+                "\"lbl_05_Eef\":\"\",\n" +
+                "\"lbl_05_Cef\":\"1850033/2020\",\n" +
+                "\"Label_06_Entity_Name_01\":\"Respondent One\",\n" +
+                "\"Label_06_Entity_Name_02\":\"\",\n" +
+                "\"Label_06_Address_Line_01\":\"33 Block C\",\n" +
+                "\"Label_06_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_06_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_06_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_06_Address_Line_05\":\"Lancashire M3 KJR\",\n" +
+                "\"Label_06_Telephone\":\"07577 136531\",\n" +
+                "\"Label_06_Fax\":\"07577 136732\",\n" +
+                "\"lbl_06_Eef\":\"\",\n" +
+                "\"lbl_06_Cef\":\"1850033/2020\",\n" +
+                "\"Label_07_Entity_Name_01\":\"Respondent Two\",\n" +
+                "\"Label_07_Entity_Name_02\":\"\",\n" +
+                "\"Label_07_Address_Line_01\":\"44 Block D\",\n" +
+                "\"Label_07_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_07_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_07_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_07_Address_Line_05\":\"Lancashire M4 KJR\",\n" +
+                "\"Label_07_Telephone\":\"07577 136541\",\n" +
+                "\"Label_07_Fax\":\"07577 136742\",\n" +
+                "\"lbl_07_Eef\":\"\",\n" +
+                "\"lbl_07_Cef\":\"1850044/2020\",\n" +
+                "\"Label_08_Entity_Name_01\":\"Respondent Two\",\n" +
+                "\"Label_08_Entity_Name_02\":\"\",\n" +
+                "\"Label_08_Address_Line_01\":\"44 Block D\",\n" +
+                "\"Label_08_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_08_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_08_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_08_Address_Line_05\":\"Lancashire M4 KJR\",\n" +
+                "\"Label_08_Telephone\":\"07577 136541\",\n" +
+                "\"Label_08_Fax\":\"07577 136742\",\n" +
+                "\"lbl_08_Eef\":\"\",\n" +
+                "\"lbl_08_Cef\":\"1850044/2020\",\n" +
+                "\"Label_09_Entity_Name_01\":\"Respondent three\",\n" +
+                "\"Label_09_Entity_Name_02\":\"\",\n" +
+                "\"Label_09_Address_Line_01\":\"55 Block E\",\n" +
+                "\"Label_09_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_09_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_09_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_09_Address_Line_05\":\"Lancashire M5 KJR\",\n" +
+                "\"Label_09_Telephone\":\"07577 136551\",\n" +
+                "\"Label_09_Fax\":\"07577 136752\",\n" +
+                "\"lbl_09_Eef\":\"\",\n" +
+                "\"lbl_09_Cef\":\"1850055/2020\",\n" +
+                "\"Label_10_Entity_Name_01\":\"Respondent three\",\n" +
+                "\"Label_10_Entity_Name_02\":\"\",\n" +
+                "\"Label_10_Address_Line_01\":\"55 Block E\",\n" +
+                "\"Label_10_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_10_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_10_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_10_Address_Line_05\":\"Lancashire M5 KJR\",\n" +
+                "\"Label_10_Telephone\":\"07577 136551\",\n" +
+                "\"Label_10_Fax\":\"07577 136752\",\n" +
+                "\"lbl_10_Eef\":\"\",\n" +
+                "\"lbl_10_Cef\":\"1850055/2020\",\n" +
+                "\"Label_11_Entity_Name_01\":\"Respondent Rep\",\n" +
+                "\"Label_11_Entity_Name_02\":\"\",\n" +
+                "\"Label_11_Address_Line_01\":\"66 Block F\",\n" +
+                "\"Label_11_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_11_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_11_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_11_Address_Line_05\":\"Lancashire M6 KJR\",\n" +
+                "\"Label_11_Telephone\":\"07577 136561\",\n" +
+                "\"Label_11_Fax\":\"07577 136762\",\n" +
+                "\"lbl_11_Eef\":\"OSCA/666/ABC\",\n" +
+                "\"lbl_11_Cef\":\"1850066/2020\",\n" +
+                "\"Label_12_Entity_Name_01\":\"Respondent Rep\",\n" +
+                "\"Label_12_Entity_Name_02\":\"\",\n" +
+                "\"Label_12_Address_Line_01\":\"66 Block F\",\n" +
+                "\"Label_12_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_12_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_12_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_12_Address_Line_05\":\"Lancashire M6 KJR\",\n" +
+                "\"Label_12_Telephone\":\"07577 136561\",\n" +
+                "\"Label_12_Fax\":\"07577 136762\",\n" +
+                "\"lbl_12_Eef\":\"OSCA/666/ABC\",\n" +
+                "\"lbl_12_Cef\":\"1850066/2020\"" +
+                "}" +
+                "],\n" +
+                "\"i0_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i0_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i0_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
+                "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Case_No\":\"123456\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails14.getCaseData(), "", userDetails).toString());
+    }
+
+    @Test
+    public void buildDocumentContent15() {
+        String expected = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"EM-TRB-LET-ENG-00544.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
+                "\"data\":{\n" +
+                "\"address_labels_page\":[\n" +
+                "{" +
+                "\"Label_13_Entity_Name_01\":\"Claimant Name\",\n" +
+                "\"Label_13_Entity_Name_02\":\"\",\n" +
+                "\"Label_13_Address_Line_01\":\"11 Block A\",\n" +
+                "\"Label_13_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_13_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_13_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_13_Address_Line_05\":\"Lancashire M1 KJR\",\n" +
+                "\"Label_13_Telephone\":\"07577 136511\",\n" +
+                "\"Label_13_Fax\":\"07577 136712\",\n" +
+                "\"lbl_13_Eef\":\"\",\n" +
+                "\"lbl_13_Cef\":\"1850011/2020\",\n" +
+                "\"Label_14_Entity_Name_01\":\"Claimant Name\",\n" +
+                "\"Label_14_Entity_Name_02\":\"\",\n" +
+                "\"Label_14_Address_Line_01\":\"11 Block A\",\n" +
+                "\"Label_14_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_14_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_14_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_14_Address_Line_05\":\"Lancashire M1 KJR\",\n" +
+                "\"Label_14_Telephone\":\"07577 136511\",\n" +
+                "\"Label_14_Fax\":\"07577 136712\",\n" +
+                "\"lbl_14_Eef\":\"\",\n" +
+                "\"lbl_14_Cef\":\"1850011/2020\"" +
+                "},\n" +
+                "{" +
+                "\"Label_01_Entity_Name_01\":\"Claimant Name\",\n" +
+                "\"Label_01_Entity_Name_02\":\"\",\n" +
+                "\"Label_01_Address_Line_01\":\"11 Block A\",\n" +
+                "\"Label_01_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_01_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_01_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_01_Address_Line_05\":\"Lancashire M1 KJR\",\n" +
+                "\"Label_01_Telephone\":\"07577 136511\",\n" +
+                "\"Label_01_Fax\":\"07577 136712\",\n" +
+                "\"lbl_01_Eef\":\"\",\n" +
+                "\"lbl_01_Cef\":\"1850011/2020\",\n" +
+                "\"Label_02_Entity_Name_01\":\"Claimant Rep\",\n" +
+                "\"Label_02_Entity_Name_02\":\"Claimant Org\",\n" +
+                "\"Label_02_Address_Line_01\":\"22 Block B\",\n" +
+                "\"Label_02_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_02_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_02_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_02_Address_Line_05\":\"Lancashire M2 KJR\",\n" +
+                "\"Label_02_Telephone\":\"07577 136521\",\n" +
+                "\"Label_02_Fax\":\"07577 136722\",\n" +
+                "\"lbl_02_Eef\":\"OSCA/222/ABC\",\n" +
+                "\"lbl_02_Cef\":\"1850022/2020\",\n" +
+                "\"Label_03_Entity_Name_01\":\"Claimant Rep\",\n" +
+                "\"Label_03_Entity_Name_02\":\"Claimant Org\",\n" +
+                "\"Label_03_Address_Line_01\":\"22 Block B\",\n" +
+                "\"Label_03_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_03_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_03_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_03_Address_Line_05\":\"Lancashire M2 KJR\",\n" +
+                "\"Label_03_Telephone\":\"07577 136521\",\n" +
+                "\"Label_03_Fax\":\"07577 136722\",\n" +
+                "\"lbl_03_Eef\":\"OSCA/222/ABC\",\n" +
+                "\"lbl_03_Cef\":\"1850022/2020\",\n" +
+                "\"Label_04_Entity_Name_01\":\"Claimant Rep\",\n" +
+                "\"Label_04_Entity_Name_02\":\"Claimant Org\",\n" +
+                "\"Label_04_Address_Line_01\":\"22 Block B\",\n" +
+                "\"Label_04_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_04_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_04_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_04_Address_Line_05\":\"Lancashire M2 KJR\",\n" +
+                "\"Label_04_Telephone\":\"07577 136521\",\n" +
+                "\"Label_04_Fax\":\"07577 136722\",\n" +
+                "\"lbl_04_Eef\":\"OSCA/222/ABC\",\n" +
+                "\"lbl_04_Cef\":\"1850022/2020\",\n" +
+                "\"Label_05_Entity_Name_01\":\"Respondent One\",\n" +
+                "\"Label_05_Entity_Name_02\":\"\",\n" +
+                "\"Label_05_Address_Line_01\":\"33 Block C\",\n" +
+                "\"Label_05_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_05_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_05_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_05_Address_Line_05\":\"Lancashire M3 KJR\",\n" +
+                "\"Label_05_Telephone\":\"07577 136531\",\n" +
+                "\"Label_05_Fax\":\"07577 136732\",\n" +
+                "\"lbl_05_Eef\":\"\",\n" +
+                "\"lbl_05_Cef\":\"1850033/2020\",\n" +
+                "\"Label_06_Entity_Name_01\":\"Respondent One\",\n" +
+                "\"Label_06_Entity_Name_02\":\"\",\n" +
+                "\"Label_06_Address_Line_01\":\"33 Block C\",\n" +
+                "\"Label_06_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_06_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_06_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_06_Address_Line_05\":\"Lancashire M3 KJR\",\n" +
+                "\"Label_06_Telephone\":\"07577 136531\",\n" +
+                "\"Label_06_Fax\":\"07577 136732\",\n" +
+                "\"lbl_06_Eef\":\"\",\n" +
+                "\"lbl_06_Cef\":\"1850033/2020\",\n" +
+                "\"Label_07_Entity_Name_01\":\"Respondent One\",\n" +
+                "\"Label_07_Entity_Name_02\":\"\",\n" +
+                "\"Label_07_Address_Line_01\":\"33 Block C\",\n" +
+                "\"Label_07_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_07_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_07_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_07_Address_Line_05\":\"Lancashire M3 KJR\",\n" +
+                "\"Label_07_Telephone\":\"07577 136531\",\n" +
+                "\"Label_07_Fax\":\"07577 136732\",\n" +
+                "\"lbl_07_Eef\":\"\",\n" +
+                "\"lbl_07_Cef\":\"1850033/2020\",\n" +
+                "\"Label_08_Entity_Name_01\":\"Respondent Two\",\n" +
+                "\"Label_08_Entity_Name_02\":\"\",\n" +
+                "\"Label_08_Address_Line_01\":\"44 Block D\",\n" +
+                "\"Label_08_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_08_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_08_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_08_Address_Line_05\":\"Lancashire M4 KJR\",\n" +
+                "\"Label_08_Telephone\":\"07577 136541\",\n" +
+                "\"Label_08_Fax\":\"07577 136742\",\n" +
+                "\"lbl_08_Eef\":\"\",\n" +
+                "\"lbl_08_Cef\":\"1850044/2020\",\n" +
+                "\"Label_09_Entity_Name_01\":\"Respondent Two\",\n" +
+                "\"Label_09_Entity_Name_02\":\"\",\n" +
+                "\"Label_09_Address_Line_01\":\"44 Block D\",\n" +
+                "\"Label_09_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_09_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_09_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_09_Address_Line_05\":\"Lancashire M4 KJR\",\n" +
+                "\"Label_09_Telephone\":\"07577 136541\",\n" +
+                "\"Label_09_Fax\":\"07577 136742\",\n" +
+                "\"lbl_09_Eef\":\"\",\n" +
+                "\"lbl_09_Cef\":\"1850044/2020\",\n" +
+                "\"Label_10_Entity_Name_01\":\"Respondent Two\",\n" +
+                "\"Label_10_Entity_Name_02\":\"\",\n" +
+                "\"Label_10_Address_Line_01\":\"44 Block D\",\n" +
+                "\"Label_10_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_10_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_10_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_10_Address_Line_05\":\"Lancashire M4 KJR\",\n" +
+                "\"Label_10_Telephone\":\"07577 136541\",\n" +
+                "\"Label_10_Fax\":\"07577 136742\",\n" +
+                "\"lbl_10_Eef\":\"\",\n" +
+                "\"lbl_10_Cef\":\"1850044/2020\",\n" +
+                "\"Label_11_Entity_Name_01\":\"Respondent three\",\n" +
+                "\"Label_11_Entity_Name_02\":\"\",\n" +
+                "\"Label_11_Address_Line_01\":\"55 Block E\",\n" +
+                "\"Label_11_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_11_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_11_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_11_Address_Line_05\":\"Lancashire M5 KJR\",\n" +
+                "\"Label_11_Telephone\":\"07577 136551\",\n" +
+                "\"Label_11_Fax\":\"07577 136752\",\n" +
+                "\"lbl_11_Eef\":\"\",\n" +
+                "\"lbl_11_Cef\":\"1850055/2020\",\n" +
+                "\"Label_12_Entity_Name_01\":\"Respondent three\",\n" +
+                "\"Label_12_Entity_Name_02\":\"\",\n" +
+                "\"Label_12_Address_Line_01\":\"55 Block E\",\n" +
+                "\"Label_12_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_12_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_12_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_12_Address_Line_05\":\"Lancashire M5 KJR\",\n" +
+                "\"Label_12_Telephone\":\"07577 136551\",\n" +
+                "\"Label_12_Fax\":\"07577 136752\",\n" +
+                "\"lbl_12_Eef\":\"\",\n" +
+                "\"lbl_12_Cef\":\"1850055/2020\",\n" +
+                "\"Label_13_Entity_Name_01\":\"Respondent three\",\n" +
+                "\"Label_13_Entity_Name_02\":\"\",\n" +
+                "\"Label_13_Address_Line_01\":\"55 Block E\",\n" +
+                "\"Label_13_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_13_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_13_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_13_Address_Line_05\":\"Lancashire M5 KJR\",\n" +
+                "\"Label_13_Telephone\":\"07577 136551\",\n" +
+                "\"Label_13_Fax\":\"07577 136752\",\n" +
+                "\"lbl_13_Eef\":\"\",\n" +
+                "\"lbl_13_Cef\":\"1850055/2020\",\n" +
+                "\"Label_14_Entity_Name_01\":\"Respondent Rep\",\n" +
+                "\"Label_14_Entity_Name_02\":\"\",\n" +
+                "\"Label_14_Address_Line_01\":\"66 Block F\",\n" +
+                "\"Label_14_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_14_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_14_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_14_Address_Line_05\":\"Lancashire M6 KJR\",\n" +
+                "\"Label_14_Telephone\":\"07577 136561\",\n" +
+                "\"Label_14_Fax\":\"07577 136762\",\n" +
+                "\"lbl_14_Eef\":\"OSCA/666/ABC\",\n" +
+                "\"lbl_14_Cef\":\"1850066/2020\"" +
+                "},\n" +
+                "{" +
+                "\"Label_01_Entity_Name_01\":\"Respondent Rep\",\n" +
+                "\"Label_01_Entity_Name_02\":\"\",\n" +
+                "\"Label_01_Address_Line_01\":\"66 Block F\",\n" +
+                "\"Label_01_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_01_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_01_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_01_Address_Line_05\":\"Lancashire M6 KJR\",\n" +
+                "\"Label_01_Telephone\":\"07577 136561\",\n" +
+                "\"Label_01_Fax\":\"07577 136762\",\n" +
+                "\"lbl_01_Eef\":\"OSCA/666/ABC\",\n" +
+                "\"lbl_01_Cef\":\"1850066/2020\",\n" +
+                "\"Label_02_Entity_Name_01\":\"Respondent Rep\",\n" +
+                "\"Label_02_Entity_Name_02\":\"\",\n" +
+                "\"Label_02_Address_Line_01\":\"66 Block F\",\n" +
+                "\"Label_02_Address_Line_02\":\"Ellesmere Street\",\n" +
+                "\"Label_02_Address_Line_03\":\"Address Line 3\",\n" +
+                "\"Label_02_Address_Line_04\":\"Manchester\",\n" +
+                "\"Label_02_Address_Line_05\":\"Lancashire M6 KJR\",\n" +
+                "\"Label_02_Telephone\":\"07577 136561\",\n" +
+                "\"Label_02_Fax\":\"07577 136762\",\n" +
+                "\"lbl_02_Eef\":\"OSCA/666/ABC\",\n" +
+                "\"lbl_02_Cef\":\"1850066/2020\"" +
+                "}" +
+                "],\n" +
+                "\"i0_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i0_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i0_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
+                "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Case_No\":\"123456\",\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails15.getCaseData(), "", userDetails).toString());
     }
 
     @Test

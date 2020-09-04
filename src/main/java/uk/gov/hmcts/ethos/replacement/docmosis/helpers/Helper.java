@@ -9,11 +9,20 @@ import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SignificantItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,11 +30,22 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_PAGE_SIZE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LABEL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LBL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 public class Helper {
@@ -42,12 +62,17 @@ public class Helper {
 
         // Building the document data
         sb.append("\"data\":{\n");
-        sb.append(getClaimantData(caseData));
-        sb.append(getRespondentData(caseData));
-        sb.append(getHearingData(caseData));
-        sb.append(getCorrespondenceData(caseData));
-        sb.append(getCorrespondenceScotData(caseData));
-        sb.append(getCourtData(caseData));
+
+        if (templateName.equals(ADDRESS_LABELS_TEMPLATE)) {
+            sb.append(getAddressLabelsData(caseData));
+        } else {
+            sb.append(getClaimantData(caseData));
+            sb.append(getRespondentData(caseData));
+            sb.append(getHearingData(caseData));
+            sb.append(getCorrespondenceData(caseData));
+            sb.append(getCorrespondenceScotData(caseData));
+            sb.append(getCourtData(caseData));
+        }
 
         sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts\":\"")
                 .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
@@ -340,7 +365,7 @@ public class Helper {
         return getTemplateName(caseData) + "_" + sectionName;
     }
 
-    private static String getTemplateName(CaseData caseData) {
+    public static String getTemplateName(CaseData caseData) {
         Optional<CorrespondenceType> correspondenceType = Optional.ofNullable(caseData.getCorrespondenceType());
         if (correspondenceType.isPresent()) {
             return correspondenceType.get().getTopLevelDocuments();
@@ -354,10 +379,11 @@ public class Helper {
         }
     }
 
-    private static String getSectionName(CaseData caseData) {
+    public static String getSectionName(CaseData caseData) {
         Optional<CorrespondenceType> correspondenceType = Optional.ofNullable(caseData.getCorrespondenceType());
         if (correspondenceType.isPresent()) {
             CorrespondenceType correspondence = correspondenceType.get();
+            if (correspondence.getPart0Documents() != null) return correspondence.getPart0Documents();
             if (correspondence.getPart1Documents() != null) return correspondence.getPart1Documents();
             if (correspondence.getPart2Documents() != null) return correspondence.getPart2Documents();
             if (correspondence.getPart3Documents() != null) return correspondence.getPart3Documents();
@@ -380,10 +406,11 @@ public class Helper {
         return "";
     }
 
-    private static String getScotSectionName(CaseData caseData) {
+    public static String getScotSectionName(CaseData caseData) {
         Optional<CorrespondenceScotType> correspondenceScotTypeOptional = Optional.ofNullable(caseData.getCorrespondenceScotType());
         if (correspondenceScotTypeOptional.isPresent()) {
             CorrespondenceScotType correspondenceScotType = correspondenceScotTypeOptional.get();
+            if (correspondenceScotType.getPart0ScotDocuments() != null) return correspondenceScotType.getPart0ScotDocuments();
             if (correspondenceScotType.getPart1ScotDocuments() != null) return correspondenceScotType.getPart1ScotDocuments();
             if (correspondenceScotType.getPart2ScotDocuments() != null) return correspondenceScotType.getPart2ScotDocuments();
             if (correspondenceScotType.getPart3ScotDocuments() != null) return correspondenceScotType.getPart3ScotDocuments();
@@ -435,6 +462,145 @@ public class Helper {
         sb.append("\"Court_fax\":\"").append(nullCheck(caseData.getTribunalCorrespondenceFax())).append(NEW_LINE);
         sb.append("\"Court_DX\":\"").append(nullCheck(caseData.getTribunalCorrespondenceDX())).append(NEW_LINE);
         sb.append("\"Court_Email\":\"").append(nullCheck(caseData.getTribunalCorrespondenceEmail())).append(NEW_LINE);
+        return sb;
+    }
+
+    private static StringBuilder getAddressLabelsData(CaseData caseData) {
+        int numberOfCopies = Integer.parseInt(caseData.getAddressLabelsAttributesType().getNumberOfCopies());
+        int startingLabel = Integer.parseInt(caseData.getAddressLabelsAttributesType().getStartingLabel());
+        String showTelFax = caseData.getAddressLabelsAttributesType().getShowTelFax();
+
+        List<AddressLabelTypeItem> selectedAddressLabelCollection = getSelectedAddressLabels(caseData);
+        List<AddressLabelTypeItem> copiedAddressLabelCollection = getCopiedAddressLabels(selectedAddressLabelCollection, numberOfCopies);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"address_labels_page\":[\n");
+
+        boolean startingLabelAboveOne = true;
+
+        for (int i = 0; i < copiedAddressLabelCollection.size(); i++) {
+            int pageLabelNumber = i + 1;
+
+            if (startingLabel > 1) {
+                pageLabelNumber += startingLabel - 1;
+            }
+
+            if (pageLabelNumber > ADDRESS_LABELS_PAGE_SIZE) {
+                int numberOfFullLabelPages = pageLabelNumber / ADDRESS_LABELS_PAGE_SIZE;
+                pageLabelNumber = pageLabelNumber % ADDRESS_LABELS_PAGE_SIZE == 0 ? ADDRESS_LABELS_PAGE_SIZE : pageLabelNumber - (numberOfFullLabelPages * ADDRESS_LABELS_PAGE_SIZE);
+            }
+
+            if (pageLabelNumber == 1 || startingLabelAboveOne) {
+                startingLabelAboveOne = false;
+                sb.append("{");
+            }
+
+            String templateLabelNumber = (pageLabelNumber < 10) ? "0" + pageLabelNumber : String.valueOf(pageLabelNumber) ;
+            sb.append(getAddressLabel(copiedAddressLabelCollection.get(i).getValue(), templateLabelNumber, showTelFax));
+
+            if (pageLabelNumber == ADDRESS_LABELS_PAGE_SIZE || i == copiedAddressLabelCollection.size() - 1) {
+                sb.append("}");
+            }
+
+            if (i != copiedAddressLabelCollection.size() - 1) {
+                sb.append(",\n");
+            }
+        }
+        sb.append("],\n");
+        return sb;
+    }
+
+    private static StringBuilder getAddressLabel(AddressLabelType addressLabelType, String labelNumber, String showTelFax) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"").append(LABEL).append(labelNumber).append("_Entity_Name_01\":\"").append(nullCheck(addressLabelType.getLabelEntityName01())).append(NEW_LINE);
+        sb.append("\"").append(LABEL).append(labelNumber).append("_Entity_Name_02\":\"").append(nullCheck(addressLabelType.getLabelEntityName02())).append(NEW_LINE);
+        sb.append(getAddressLines(addressLabelType, labelNumber));
+        sb.append(getTelFaxLine(addressLabelType, labelNumber, showTelFax));
+        sb.append("\"").append(LBL).append(labelNumber).append("_Eef\":\"").append(nullCheck(addressLabelType.getLabelEntityReference())).append(NEW_LINE);
+        sb.append("\"").append(LBL).append(labelNumber).append("_Cef\":\"").append(nullCheck(addressLabelType.getLabelCaseReference())).append("\"");
+        return sb;
+    }
+
+    private static StringBuilder getAddressLines(AddressLabelType addressLabelType, String labelNumber) {
+        StringBuilder sb = new StringBuilder();
+
+        int lineNum = 0;
+        String addressLine = "";
+
+        if (!isNullOrEmpty(nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine1()))) {
+            lineNum++;
+            addressLine = nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine1());
+            sb.append(getAddressLine(addressLine, labelNumber, lineNum));
+        }
+
+        if (!isNullOrEmpty(nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine2()))) {
+            lineNum++;
+            addressLine = nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine2());
+            sb.append(getAddressLine(addressLine, labelNumber, lineNum));
+        }
+
+        if (!isNullOrEmpty(nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine3()))) {
+            lineNum++;
+            addressLine = nullCheck(addressLabelType.getLabelEntityAddress().getAddressLine3());
+            sb.append(getAddressLine(addressLine, labelNumber, lineNum));
+        }
+
+        if (!isNullOrEmpty(nullCheck(addressLabelType.getLabelEntityAddress().getPostTown()))) {
+            lineNum++;
+            addressLine = nullCheck(addressLabelType.getLabelEntityAddress().getPostTown());
+            sb.append(getAddressLine(addressLine, labelNumber, lineNum));
+        }
+
+        if (!isNullOrEmpty(nullCheck(addressLabelType.getLabelEntityAddress().getCounty()))) {
+            lineNum++;
+            addressLine = nullCheck(addressLabelType.getLabelEntityAddress().getCounty());
+            if (lineNum < 5) {
+                sb.append(getAddressLine(addressLine, labelNumber, lineNum));
+            }
+        }
+
+        if (!isNullOrEmpty(nullCheck(addressLabelType.getLabelEntityAddress().getPostCode()))) {
+            if (lineNum < 5) {
+                lineNum++;
+                addressLine = nullCheck(addressLabelType.getLabelEntityAddress().getPostCode());
+            } else {
+                addressLine += " " + nullCheck(addressLabelType.getLabelEntityAddress().getPostCode());
+            }
+            sb.append(getAddressLine(addressLine, labelNumber, lineNum));
+        }
+        return sb;
+    }
+
+    private static StringBuilder getAddressLine(String addressLine, String labelNumber, int lineNum) {
+        StringBuilder sb = new StringBuilder();
+        String lineNumber = "0" + lineNum;
+        sb.append("\"").append(LABEL).append(labelNumber).append("_Address_Line_").append(lineNumber).append("\":\"").append(addressLine).append(NEW_LINE);
+        return sb;
+    }
+
+    private static StringBuilder getTelFaxLine(AddressLabelType addressLabelType, String labelNumber, String showTelFax) {
+        StringBuilder sb = new StringBuilder();
+        if (showTelFax.equals(YES)) {
+            String tel = "";
+            String fax = "";
+
+            if (!isNullOrEmpty(addressLabelType.getLabelEntityTelephone())) {
+                tel = addressLabelType.getLabelEntityTelephone();
+            }
+
+            if (isNullOrEmpty(tel)) {
+                if (!isNullOrEmpty(addressLabelType.getLabelEntityFax())) {
+                    tel = addressLabelType.getLabelEntityFax();
+                }
+            } else {
+                if (!isNullOrEmpty(addressLabelType.getLabelEntityFax())) {
+                    fax = addressLabelType.getLabelEntityFax();
+                }
+            }
+
+            sb.append("\"").append(LABEL).append(labelNumber).append("_Telephone\":\"").append(tel).append(NEW_LINE);
+            sb.append("\"").append(LABEL).append(labelNumber).append("_Fax\":\"").append(fax).append(NEW_LINE);
+        }
         return sb;
     }
 
@@ -495,6 +661,41 @@ public class Helper {
         return activeRespondents;
     }
 
+    public static List<AddressLabelTypeItem> getSelectedAddressLabels(CaseData caseData) {
+
+        List<AddressLabelTypeItem> selectedAddressLabels = new ArrayList<>();
+
+        if (caseData.getAddressLabelCollection() != null && !caseData.getAddressLabelCollection().isEmpty()) {
+            selectedAddressLabels = caseData.getAddressLabelCollection()
+                    .stream()
+                    .filter(addressLabelTypeItem -> addressLabelTypeItem.getValue().getPrintLabel() != null && addressLabelTypeItem.getValue().getPrintLabel().equals(YES))
+                    .filter(addressLabelTypeItem -> addressLabelTypeItem.getValue().getFullName() != null || addressLabelTypeItem.getValue().getFullAddress() != null)
+                    .collect(Collectors.toList());
+        }
+
+        return selectedAddressLabels;
+    }
+
+    private static List<AddressLabelTypeItem> getCopiedAddressLabels(List<AddressLabelTypeItem> selectedAddressLabels, int numberOfCopies) {
+
+        List<AddressLabelTypeItem> copiedAddressLabels = new ArrayList<>();
+        if (!selectedAddressLabels.isEmpty() && numberOfCopies > 1) {
+            ListIterator<AddressLabelTypeItem> itr = selectedAddressLabels.listIterator();
+            while (itr.hasNext()) {
+                AddressLabelType addressLabelType = itr.next().getValue();
+                for (int i = 0; i < numberOfCopies; i++) {
+                    AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
+                    addressLabelTypeItem.setId(String.valueOf(copiedAddressLabels.size()));
+                    addressLabelTypeItem.setValue(addressLabelType);
+                    copiedAddressLabels.add(addressLabelTypeItem);
+                }
+            }
+        } else {
+            return selectedAddressLabels;
+        }
+
+        return copiedAddressLabels;
+    }
 
     private static List<DynamicValueType> createDynamicRespondentNameList(List<RespondentSumTypeItem> respondentCollection) {
         List<DynamicValueType> listItems = new ArrayList<>();
