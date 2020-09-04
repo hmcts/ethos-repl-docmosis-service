@@ -41,6 +41,8 @@ public class DocumentManagementService {
 
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
+    @Value("${document_management.url}")
+    private String ccdDMStoreBaseUrl;
 
     @Autowired
     public DocumentManagementService(DocumentUploadClientApi documentUploadClient, AuthTokenGenerator authTokenGenerator,
@@ -107,7 +109,7 @@ public class DocumentManagementService {
     }
 
     private String getDownloadUrl(String urlString) {
-        String path = urlString.replace(ccdGatewayBaseUrl, "");
+        String path = urlString.replace(ccdDMStoreBaseUrl, "");
         if (path.startsWith("/")) {
             return path;
         }

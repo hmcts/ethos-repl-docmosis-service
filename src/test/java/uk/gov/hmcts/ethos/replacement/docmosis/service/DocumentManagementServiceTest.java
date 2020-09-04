@@ -63,12 +63,12 @@ public class DocumentManagementServiceTest {
     @Before
     public void setUp() {
         file = createTestFile();
-        markup = "<a target=\"_blank\" href=\"https://gateway-ccd:8080/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary\">Document</a>";
+        markup = "<a target=\"_blank\" href=\"null/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary\">Document</a>";
         when(authTokenGenerator.generate()).thenReturn("authString");
         responseEntity = MultipleUtil.getResponseOK();
         UserDetails userDetails = HelperTest.getUserDetails();
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
-        ReflectionTestUtils.setField(documentManagementService, "ccdGatewayBaseUrl", "https://gateway-ccd:8080");
+        ReflectionTestUtils.setField(documentManagementService, "ccdDMStoreBaseUrl", "http://dm-store:8080");
     }
 
     @Test
@@ -109,7 +109,7 @@ public class DocumentManagementServiceTest {
                 .thenReturn(responseEntity);
 
         UploadedDocument uploadedDocument = documentManagementService.downloadFile("authString",
-                "https://gateway-ccd:8080/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary");
+                "http://dm-store:8080/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary");
         assertEquals(uploadedDocument.getName(), "fileName");
         assertEquals(uploadedDocument.getContentType(), "xslx");
 
