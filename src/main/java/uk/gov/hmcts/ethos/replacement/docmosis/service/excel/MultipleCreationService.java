@@ -67,7 +67,7 @@ public class MultipleCreationService {
         if (multipleData.getMultipleReference() == null
                 || multipleData.getMultipleReference().trim().equals("")) {
 
-            log.info("Case Type:" + multipleDetails.getCaseTypeId());
+            log.info("Case Type: " + multipleDetails.getCaseTypeId());
             return multipleReferenceService.createReference(multipleDetails.getCaseTypeId()+"s", 1);
 
         } else {

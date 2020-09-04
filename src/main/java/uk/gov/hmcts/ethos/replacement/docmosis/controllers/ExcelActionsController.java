@@ -83,6 +83,34 @@ public class ExcelActionsController {
                 .build());
     }
 
+    @PostMapping(value = "/amendMultiple", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Update the state of the multiple")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = MultipleCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<MultipleCallbackResponse> amendMultiple(
+            @RequestBody MultipleRequest multipleRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("AMEND MULTIPLE EXCEL ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
+
+        log.info("State of MULTIPLE: " + multipleDetails.getCaseData().getState());
+        log.info("State of MULTIPLE: " + multipleDetails.getState());
+
+        return ResponseEntity.ok(MultipleCallbackResponse.builder()
+                .data(multipleDetails.getCaseData())
+                .build());
+    }
+
     @PostMapping(value = "/preAcceptBulkExcel", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Accept a bulk of cases.")
     @ApiResponses(value = {

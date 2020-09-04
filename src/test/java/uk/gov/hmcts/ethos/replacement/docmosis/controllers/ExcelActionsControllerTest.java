@@ -42,6 +42,7 @@ public class ExcelActionsControllerTest {
 
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private static final String CREATE_BULK_EXCEL_URL = "/createBulkExcel";
+    private static final String AMEND_MULTIPLE_EXCEL_URL = "/amendMultiple";
     private static final String PRE_ACCEPT_BULK_EXCEL_URL = "/preAcceptBulkExcel";
     private static final String UPDATE_BULK_CASE_EXCEL_URL = "/updateBulkCaseExcel";
     private static final String UPDATE_BULK_EXCEL_URL = "/updateBulkExcel";
@@ -97,6 +98,19 @@ public class ExcelActionsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void amendMultipleExcel() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(AMEND_MULTIPLE_EXCEL_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
@@ -169,6 +183,15 @@ public class ExcelActionsControllerTest {
     @Test
     public void createBulkExcelError400() throws Exception {
         mvc.perform(post(CREATE_BULK_EXCEL_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void amendMultipleExcelError400() throws Exception {
+        mvc.perform(post(AMEND_MULTIPLE_EXCEL_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -279,6 +302,16 @@ public class ExcelActionsControllerTest {
     public void createBulkExcelForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(CREATE_BULK_EXCEL_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void amendMultipleExcelForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(AMEND_MULTIPLE_EXCEL_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
