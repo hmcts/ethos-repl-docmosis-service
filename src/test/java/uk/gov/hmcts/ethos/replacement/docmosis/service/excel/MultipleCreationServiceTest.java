@@ -11,6 +11,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.MultipleReferenceService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
@@ -30,6 +31,8 @@ public class MultipleCreationServiceTest {
     private ExcelDocManagementService excelDocManagementService;
     @Mock
     private UserService userService;
+    @Mock
+    private MultipleReferenceService multipleReferenceService;
     @InjectMocks
     private MultipleCreationService multipleCreationService;
 
@@ -49,6 +52,20 @@ public class MultipleCreationServiceTest {
 
     @Test
     public void bulkCreationLogic() {
+        multipleCreationService.bulkCreationLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(excelDocManagementService, times(1)).generateAndUploadExcel(ethosCaseRefCollection,
+                userToken,
+                multipleDetails.getCaseData());
+        verifyNoMoreInteractions(excelDocManagementService);
+        verify(userService).getUserDetails(userToken);
+        verifyNoMoreInteractions(userService);
+    }
+
+    @Test
+    public void bulkCreationLogicWithMultipleReference() {
+        multipleDetails.getCaseData().setMultipleReference("2100001");
         multipleCreationService.bulkCreationLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());

@@ -7,6 +7,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.MultipleReferenceService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
@@ -21,17 +22,24 @@ public class MultipleCreationService {
     private final CreateUpdatesBusSender createUpdatesBusSender;
     private final UserService userService;
     private final ExcelDocManagementService excelDocManagementService;
+    private final MultipleReferenceService multipleReferenceService;
 
     @Autowired
     public MultipleCreationService(CreateUpdatesBusSender createUpdatesBusSender,
                                    UserService userService,
-                                   ExcelDocManagementService excelDocManagementService) {
+                                   ExcelDocManagementService excelDocManagementService,
+                                   MultipleReferenceService multipleReferenceService) {
         this.createUpdatesBusSender = createUpdatesBusSender;
         this.userService = userService;
         this.excelDocManagementService = excelDocManagementService;
+        this.multipleReferenceService = multipleReferenceService;
     }
 
     public void bulkCreationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
+
+        log.info("Create multiple reference number");
+
+        multipleDetails.getCaseData().setMultipleReference(generateMultipleRef(multipleDetails));
 
         log.info("Add data to the multiple");
 
@@ -48,6 +56,23 @@ public class MultipleCreationService {
             log.info("Send updates to single cases");
 
             sendUpdatesToSingles(userToken, multipleDetails, errors, ethosCaseRefCollection);
+
+        }
+    }
+
+    private String generateMultipleRef(MultipleDetails multipleDetails) {
+
+        MultipleData multipleData = multipleDetails.getCaseData();
+
+        if (multipleData.getMultipleReference() == null
+                || multipleData.getMultipleReference().trim().equals("")) {
+
+            log.info("Case Type:" + multipleDetails.getCaseTypeId());
+            return multipleReferenceService.createReference(multipleDetails.getCaseTypeId()+"s", 1);
+
+        } else {
+
+            return multipleData.getMultipleReference();
 
         }
     }

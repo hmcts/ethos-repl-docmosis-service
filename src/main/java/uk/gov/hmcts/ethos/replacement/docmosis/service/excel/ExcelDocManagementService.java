@@ -25,8 +25,8 @@ public class ExcelDocManagementService {
     public static final String APPLICATION_EXCEL_VALUE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     public static final String FILE_NAME = "MyFirstExcel.xlsx";
 
-    @Value("${document_management.url}")
-    private String ccdDMStoreBaseUrl;
+    @Value("${ccd_gateway_base_url}")
+    private String ccdGatewayBaseUrl;
 
     private final DocumentManagementService documentManagementService;
     private final ExcelCreationService excelCreationService;
@@ -70,9 +70,9 @@ public class ExcelDocManagementService {
         DocumentType documentType = new DocumentType();
         documentType.setShortDescription("Excel for: " + multipleData.getMultipleReference());
         UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
-        uploadedDocumentType.setDocumentBinaryUrl(ccdDMStoreBaseUrl + documentSelfPath.getRawPath() + "/binary");
+        uploadedDocumentType.setDocumentBinaryUrl(ccdGatewayBaseUrl + documentSelfPath.getRawPath() + "/binary");
         uploadedDocumentType.setDocumentFilename(FILE_NAME);
-        uploadedDocumentType.setDocumentUrl(ccdDMStoreBaseUrl + documentSelfPath.getRawPath());
+        uploadedDocumentType.setDocumentUrl(ccdGatewayBaseUrl + documentSelfPath.getRawPath());
         documentType.setUploadedDocument(uploadedDocumentType);
 
         documentTypeItem.setId(LocalDate.now().toString());
