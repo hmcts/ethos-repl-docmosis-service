@@ -95,7 +95,7 @@ public class MultipleCreationService {
     private void addStateToMultiple(MultipleData multipleData) {
 
         if (!multipleData.getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
-                || !multipleData.getCaseIdCollection().isEmpty()) {
+                && !multipleData.getCaseIdCollection().isEmpty()) {
 
             multipleData.setState(UPDATING_STATE);
 
