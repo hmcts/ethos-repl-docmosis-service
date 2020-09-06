@@ -27,6 +27,9 @@ public class MultipleUtil {
 
     public static final String TESTING_FILE_NAME = "MyFirstExcel.xlsx";
     public static final String TESTING_FILE_NAME_ERROR = "MyFirstExcelError.xlsx";
+    public static final String TESTING_FILE_NAME_WITH_TWO = "MyFirstExcel2.xlsx";
+    public static final String TESTING_FILE_NAME_WRONG_COLUMN_ROW = "MyFirstExcelWrongColumnRow.xlsx";
+    public static final String TESTING_FILE_NAME_EMPTY = "MyFirstExcelEmpty.xlsx";
 
     public static TreeMap<String, Object> getMultipleObjectsAll() {
         TreeMap<String, Object> multipleObjectTreeMap = new TreeMap<>();

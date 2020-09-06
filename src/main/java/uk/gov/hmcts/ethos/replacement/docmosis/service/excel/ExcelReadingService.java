@@ -36,26 +36,38 @@ public class ExcelReadingService {
 
         try {
 
-            InputStream excelInputStream =
-                    excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl);
+            Sheet datatypeSheet = checkExcelErrors(userToken, documentBinaryUrl, errors);
 
-            Workbook workbook = new XSSFWorkbook(excelInputStream);
+            if (errors.isEmpty()) {
 
-            Sheet datatypeSheet = workbook.getSheet(SHEET_NAME);
+                populateMultipleObjects(multipleObjects, datatypeSheet, multipleData, filter);
 
-            if (datatypeSheet == null) {
-
-                errors.add(ERROR_SHEET_NAME_NOT_FOUND);
-                return null;
             }
-
-            populateMultipleObjects(multipleObjects, datatypeSheet, multipleData, filter);
 
         } catch (IOException e) {
             log.error("Error reading the Excel");
         }
 
         return multipleObjects;
+
+    }
+
+    public Sheet checkExcelErrors(String userToken, String documentBinaryUrl, List<String> errors) throws IOException {
+
+        InputStream excelInputStream =
+                excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl);
+
+        Workbook workbook = new XSSFWorkbook(excelInputStream);
+
+        Sheet datatypeSheet = workbook.getSheet(SHEET_NAME);
+
+        if (datatypeSheet == null) {
+
+            errors.add(ERROR_SHEET_NAME_NOT_FOUND);
+
+        }
+
+        return datatypeSheet;
 
     }
 

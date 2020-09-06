@@ -38,6 +38,7 @@ public class ExcelActionsController {
     private final MultipleAmendCaseIdsService multipleAmendCaseIdsService;
     private final MultipleUpdateService multipleUpdateService;
     private final MultipleScheduleService multipleScheduleService;
+    private final MultipleUploadService multipleUploadService;
 
     @Autowired
     public ExcelActionsController(VerifyTokenService verifyTokenService,
@@ -45,13 +46,15 @@ public class ExcelActionsController {
                                   MultiplePreAcceptService multiplePreAcceptService,
                                   MultipleAmendCaseIdsService multipleAmendCaseIdsService,
                                   MultipleUpdateService multipleUpdateService,
-                                  MultipleScheduleService multipleScheduleService) {
+                                  MultipleScheduleService multipleScheduleService,
+                                  MultipleUploadService multipleUploadService) {
         this.verifyTokenService = verifyTokenService;
         this.multipleCreationService = multipleCreationService;
         this.multiplePreAcceptService = multiplePreAcceptService;
         this.multipleAmendCaseIdsService = multipleAmendCaseIdsService;
         this.multipleUpdateService = multipleUpdateService;
         this.multipleScheduleService = multipleScheduleService;
+        this.multipleUploadService = multipleUploadService;
     }
 
     @PostMapping(value = "/createBulkExcel", consumes = APPLICATION_JSON_VALUE)
@@ -103,10 +106,36 @@ public class ExcelActionsController {
 
         MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
 
-        log.info("State of MULTIPLE: " + multipleDetails.getCaseData().getState());
-        log.info("State of MULTIPLE: " + multipleDetails.getState());
+        return ResponseEntity.ok(MultipleCallbackResponse.builder()
+                .data(multipleDetails.getCaseData())
+                .build());
+    }
+
+    @PostMapping(value = "/uploadMultipleExcel", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Check errors uploading an excel to the multiple")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = MultipleCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<MultipleCallbackResponse> uploadMultipleExcel(
+            @RequestBody MultipleRequest multipleRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("UPLOAD MULTIPLE EXCEL ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors = new ArrayList<>();
+        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
+
+        multipleUploadService.bulkUploadLogic(userToken, multipleDetails, errors);
 
         return ResponseEntity.ok(MultipleCallbackResponse.builder()
+                .errors(errors)
                 .data(multipleDetails.getCaseData())
                 .build());
     }

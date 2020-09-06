@@ -45,6 +45,10 @@ public class MultipleCreationService {
 
         addDataToMultiple(multipleDetails.getCaseData());
 
+        log.info("Add state to the multiple");
+
+        addStateToMultiple(multipleDetails.getCaseData());
+
         List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleDetails.getCaseData());
 
         log.info("Create the EXCEL");
@@ -83,15 +87,22 @@ public class MultipleCreationService {
                 || multipleData.getMultipleSource().trim().equals("")) {
 
             multipleData.setMultipleSource(MANUALLY_CREATED_POSITION);
+
+        }
+
+    }
+
+    private void addStateToMultiple(MultipleData multipleData) {
+
+        if (!multipleData.getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
+                || !multipleData.getCaseIdCollection().isEmpty()) {
+
             multipleData.setState(UPDATING_STATE);
 
         } else {
 
-            if (multipleData.getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
+            multipleData.setState(OPEN_STATE);
 
-                multipleData.setState(OPEN_STATE);
-
-            }
         }
     }
 

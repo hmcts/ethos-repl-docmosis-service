@@ -5,11 +5,16 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
+
 @Slf4j
 public class MultiplesHelper {
+
+    public static List<String> HEADERS = new ArrayList<>(Arrays.asList(HEADER_1, HEADER_2, HEADER_3, HEADER_4, HEADER_5));
 
     public static List<String> getCaseIds(MultipleData multipleData) {
 
