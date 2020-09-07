@@ -6,9 +6,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 
 import java.io.IOException;
 import java.net.URI;
@@ -28,6 +31,8 @@ public class ExcelDocManagementServiceTest {
     private DocumentManagementService documentManagementService;
     @Mock
     private ExcelCreationService excelCreationService;
+    @Mock
+    private UserService userService;
     @InjectMocks
     private ExcelDocManagementService excelDocManagementService;
 
@@ -39,6 +44,8 @@ public class ExcelDocManagementServiceTest {
     public void setUp() {
         multipleDetails = new MultipleDetails();
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
+        UserDetails userDetails = HelperTest.getUserDetails();
+        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         userToken = "authString";
         bytes = "Bytes to return".getBytes();
     }

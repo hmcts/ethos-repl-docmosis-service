@@ -23,9 +23,13 @@ public class MultipleUploadService {
 
     private final ExcelReadingService excelReadingService;
 
+    private final ExcelDocManagementService excelDocManagementService;
+
     @Autowired
-    public MultipleUploadService(ExcelReadingService excelReadingService) {
+    public MultipleUploadService(ExcelReadingService excelReadingService,
+                                 ExcelDocManagementService excelDocManagementService) {
         this.excelReadingService = excelReadingService;
+        this.excelDocManagementService = excelDocManagementService;
 
     }
 
@@ -44,6 +48,14 @@ public class MultipleUploadService {
                     datatypeSheet,
                     multipleDetails.getCaseData(),
                     errors);
+
+            log.info("Update the document information");
+            log.info("File name uploaded: " + multipleDetails.getCaseData().getCaseImporterFile().getUploadedDocument().getDocumentFilename());
+
+            multipleDetails.getCaseData().setCaseImporterFile(
+                    excelDocManagementService.populateCaseImporterFile(
+                            userToken,
+                            multipleDetails.getCaseData().getCaseImporterFile().getUploadedDocument()));
 
         } catch (IOException e) {
 

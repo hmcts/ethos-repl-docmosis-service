@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +16,7 @@ import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 public class MultiplesHelper {
 
     public static List<String> HEADERS = new ArrayList<>(Arrays.asList(HEADER_1, HEADER_2, HEADER_3, HEADER_4, HEADER_5));
+    public static DateTimeFormatter DATE_TIME_USER_FRIENDLY_PATTERN = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
     public static List<String> getCaseIds(MultipleData multipleData) {
 
@@ -35,7 +37,7 @@ public class MultiplesHelper {
     }
 
     public static String getExcelBinaryUrl(MultipleDetails multipleDetails) {
-        return multipleDetails.getCaseData().getDocumentCollection().get(0).getValue().getUploadedDocument().getDocumentBinaryUrl();
+        return multipleDetails.getCaseData().getCaseImporterFile().getUploadedDocument().getDocumentBinaryUrl();
     }
 
 }

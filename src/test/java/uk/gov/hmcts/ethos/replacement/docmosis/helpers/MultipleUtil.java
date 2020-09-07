@@ -11,13 +11,15 @@ import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
+import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 
-import java.time.LocalDate;
 import java.util.*;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
@@ -121,13 +123,11 @@ public class MultipleUtil {
     }
 
     public static void getDocumentCollection(MultipleData multipleData) {
-        DocumentTypeItem documentTypeItem = new DocumentTypeItem();
-        DocumentType documentType = new DocumentType();
-        documentType.setShortDescription("Excel for case");
-        documentType.setUploadedDocument(getUploadedDocumentType());
-        documentTypeItem.setId(LocalDate.now().toString());
-        documentTypeItem.setValue(documentType);
-        multipleData.setDocumentCollection(new ArrayList<>(Collections.singletonList(documentTypeItem)));
+        CaseImporterFile caseImporterFile = new CaseImporterFile();
+        caseImporterFile.setUploadedDocument(getUploadedDocumentType());
+        caseImporterFile.setUploadUser("Eric Cooper");
+        caseImporterFile.setUploadDateTime("05-02-2020 10:12:46");
+        multipleData.setCaseImporterFile(caseImporterFile);
     }
 
     public static UploadedDocumentType getUploadedDocumentType() {

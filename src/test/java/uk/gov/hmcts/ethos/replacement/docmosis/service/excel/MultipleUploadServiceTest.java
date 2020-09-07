@@ -30,6 +30,8 @@ public class MultipleUploadServiceTest {
 
     @Mock
     private ExcelReadingService excelReadingService;
+    @Mock
+    private ExcelDocManagementService excelDocManagementService;
     @InjectMocks
     private MultipleUploadService multipleUploadService;
 

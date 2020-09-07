@@ -4,19 +4,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DocumentTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.DocumentType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
+import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.DATE_TIME_USER_FRIENDLY_PATTERN;
 
 @Slf4j
 @Service("excelDocManagementService")
@@ -30,12 +32,15 @@ public class ExcelDocManagementService {
 
     private final DocumentManagementService documentManagementService;
     private final ExcelCreationService excelCreationService;
+    private final UserService userService;
 
     @Autowired
     public ExcelDocManagementService(DocumentManagementService documentManagementService,
-                                     ExcelCreationService excelCreationService) {
+                                     ExcelCreationService excelCreationService,
+                                     UserService userService) {
         this.documentManagementService = documentManagementService;
         this.excelCreationService = excelCreationService;
+        this.userService = userService;
     }
 
     public void uploadExcelDocument(String userToken, MultipleData multipleData, byte[] excelBytes) {
@@ -47,7 +52,7 @@ public class ExcelDocManagementService {
 
         log.info("Add document to multiple");
 
-        addDocumentToMultiple(multipleData, documentSelfPath);
+        addDocumentToMultiple(userToken, multipleData, documentSelfPath);
 
     }
 
@@ -61,26 +66,14 @@ public class ExcelDocManagementService {
 
     }
 
-    private void addDocumentToMultiple(MultipleData multipleData, URI documentSelfPath) {
+    private void addDocumentToMultiple(String userToken, MultipleData multipleData, URI documentSelfPath) {
 
-        List<DocumentTypeItem> documentCollection = new ArrayList<>();
-
-        DocumentTypeItem documentTypeItem = new DocumentTypeItem();
-
-        DocumentType documentType = new DocumentType();
-        documentType.setShortDescription("Excel for case " + multipleData.getMultipleReference());
         UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
         uploadedDocumentType.setDocumentBinaryUrl(ccdDMStoreBaseUrl + documentSelfPath.getRawPath() + "/binary");
         uploadedDocumentType.setDocumentFilename(FILE_NAME);
         uploadedDocumentType.setDocumentUrl(ccdDMStoreBaseUrl + documentSelfPath.getRawPath());
-        documentType.setUploadedDocument(uploadedDocumentType);
 
-        documentTypeItem.setId(LocalDate.now().toString());
-        documentTypeItem.setValue(documentType);
-
-        documentCollection.add(documentTypeItem);
-
-        multipleData.setDocumentCollection(documentCollection);
+        multipleData.setCaseImporterFile(populateCaseImporterFile(userToken, uploadedDocumentType));
     }
 
     public void generateAndUploadExcel(List<?> multipleCollection, String userToken, MultipleData multipleData) {
@@ -88,6 +81,20 @@ public class ExcelDocManagementService {
         byte[] excelBytes = excelCreationService.writeExcel(multipleCollection);
 
         uploadExcelDocument(userToken, multipleData, excelBytes);
+
+    }
+
+    public CaseImporterFile populateCaseImporterFile(String userToken, UploadedDocumentType uploadedDocumentType) {
+
+        CaseImporterFile caseImporterFile = new CaseImporterFile();
+        LocalDateTime dateTime = LocalDateTime.now();
+        UserDetails userDetails = userService.getUserDetails(userToken);
+
+        caseImporterFile.setUploadedDocument(uploadedDocumentType);
+        caseImporterFile.setUploadDateTime(dateTime.format(DATE_TIME_USER_FRIENDLY_PATTERN));
+        caseImporterFile.setUploadUser(userDetails.getFirstName() + " " + userDetails.getLastName());
+
+        return caseImporterFile;
 
     }
 
