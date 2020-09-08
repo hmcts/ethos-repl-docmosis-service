@@ -111,7 +111,7 @@ public class ExcelActionsController {
                 .build());
     }
 
-    @PostMapping(value = "/importMultiples", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/importMultiple", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Check errors uploading an excel to the multiple")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
@@ -119,10 +119,10 @@ public class ExcelActionsController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<MultipleCallbackResponse> importMultiples(
+    public ResponseEntity<MultipleCallbackResponse> importMultiple(
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("IMPORT MULTIPLES ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+        log.info("IMPORT MULTIPLE ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);

@@ -43,7 +43,7 @@ public class ExcelActionsControllerTest {
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private static final String CREATE_MULTIPLE_URL = "/createMultiple";
     private static final String AMEND_MULTIPLE_URL = "/amendMultiple";
-    private static final String IMPORT_MULTIPLES_URL = "/importMultiples";
+    private static final String IMPORT_MULTIPLE_URL = "/importMultiple";
     private static final String PRE_ACCEPT_MULTIPLE_URL = "/preAcceptMultiple";
     private static final String AMEND_CASE_IDS_URL = "/amendCaseIDs";
     private static final String UPDATE_CASES_URL = "/updateCases";
@@ -121,7 +121,7 @@ public class ExcelActionsControllerTest {
     @Test
     public void uploadBulkExcel() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(IMPORT_MULTIPLES_URL)
+        mvc.perform(post(IMPORT_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -217,7 +217,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void uploadBulkExcelError400() throws Exception {
-        mvc.perform(post(IMPORT_MULTIPLES_URL)
+        mvc.perform(post(IMPORT_MULTIPLE_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -284,7 +284,7 @@ public class ExcelActionsControllerTest {
     public void uploadBulkExcelError500() throws Exception {
         doThrow(feignError()).when(multipleUploadService).bulkUploadLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(IMPORT_MULTIPLES_URL)
+        mvc.perform(post(IMPORT_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -358,7 +358,7 @@ public class ExcelActionsControllerTest {
     @Test
     public void uploadBulkExcelForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(IMPORT_MULTIPLES_URL)
+        mvc.perform(post(IMPORT_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
