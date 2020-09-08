@@ -156,7 +156,8 @@ public class MultipleAmendCaseIdsService {
                             .subMultiple("")
                             .flag1("")
                             .flag2("")
-                            .EQP("")
+                            .flag3("")
+                            .flag4("")
                             .build();
 
                 }

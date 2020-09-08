@@ -70,14 +70,16 @@ public class MultipleAmendCaseIdsServiceTest {
                         .ethosCaseRef("245000/2020")
                         .flag1("AA")
                         .flag2("BB")
-                        .EQP("")
+                        .flag3("")
+                        .flag4("")
                         .build(),
                 MultipleObject.builder()
                         .subMultiple("")
                         .ethosCaseRef("245001/2020")
                         .flag1("")
                         .flag2("")
-                        .EQP("")
+                        .flag3("")
+                        .flag4("")
                         .build()));
     }
 

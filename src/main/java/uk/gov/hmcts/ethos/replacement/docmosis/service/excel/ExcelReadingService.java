@@ -141,7 +141,8 @@ public class ExcelReadingService {
                 .subMultiple(getCellValue(currentRow.getCell(1)))
                 .flag1(getCellValue(currentRow.getCell(2)))
                 .flag2(getCellValue(currentRow.getCell(3)))
-                .EQP(getCellValue(currentRow.getCell(4)))
+                .flag3(getCellValue(currentRow.getCell(4)))
+                .flag4(getCellValue(currentRow.getCell(5)))
                 .build();
     }
 
@@ -149,7 +150,8 @@ public class ExcelReadingService {
 
         return getCellValue(currentRow.getCell(2)).equals(multipleData.getFlag1())
                 && getCellValue(currentRow.getCell(3)).equals(multipleData.getFlag2())
-                && getCellValue(currentRow.getCell(4)).equals(multipleData.getEQP());
+                && getCellValue(currentRow.getCell(4)).equals(multipleData.getFlag3())
+                && getCellValue(currentRow.getCell(5)).equals(multipleData.getFlag4());
     }
 
     private boolean isMultipleInFlagsAndBelongsSubMultiple(Row currentRow, MultipleData multipleData) {
@@ -157,7 +159,8 @@ public class ExcelReadingService {
         return !getCellValue(currentRow.getCell(1)).equals("") &&
                 getCellValue(currentRow.getCell(2)).equals(multipleData.getFlag1())
                 && getCellValue(currentRow.getCell(3)).equals(multipleData.getFlag2())
-                && getCellValue(currentRow.getCell(4)).equals(multipleData.getEQP());
+                && getCellValue(currentRow.getCell(4)).equals(multipleData.getFlag3())
+                && getCellValue(currentRow.getCell(5)).equals(multipleData.getFlag4());
     }
 
 }

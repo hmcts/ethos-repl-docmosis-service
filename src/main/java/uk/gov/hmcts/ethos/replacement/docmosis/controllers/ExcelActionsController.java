@@ -57,18 +57,18 @@ public class ExcelActionsController {
         this.multipleUploadService = multipleUploadService;
     }
 
-    @PostMapping(value = "/createBulkExcel", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Creates a multiple case. Retrieves cases by ethos case reference. Create an Excel")
+    @PostMapping(value = "/createMultiple", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Creates a multiple case. Retrieves cases by ethos case reference. Creates an Excel")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = MultipleCallbackResponse.class),
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<MultipleCallbackResponse> createBulkExcel(
+    public ResponseEntity<MultipleCallbackResponse> createMultiple(
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("CREATE MULTIPLE EXCEL ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+        log.info("CREATE MULTIPLE ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -97,7 +97,7 @@ public class ExcelActionsController {
     public ResponseEntity<MultipleCallbackResponse> amendMultiple(
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("AMEND MULTIPLE EXCEL ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+        log.info("AMEND MULTIPLE ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -111,7 +111,7 @@ public class ExcelActionsController {
                 .build());
     }
 
-    @PostMapping(value = "/uploadMultipleExcel", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/importMultiples", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Check errors uploading an excel to the multiple")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
@@ -119,10 +119,10 @@ public class ExcelActionsController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<MultipleCallbackResponse> uploadMultipleExcel(
+    public ResponseEntity<MultipleCallbackResponse> importMultiples(
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("UPLOAD MULTIPLE EXCEL ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+        log.info("IMPORT MULTIPLES ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -140,7 +140,7 @@ public class ExcelActionsController {
                 .build());
     }
 
-    @PostMapping(value = "/preAcceptBulkExcel", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/preAcceptMultiple", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Accept a bulk of cases.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
@@ -148,10 +148,10 @@ public class ExcelActionsController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<MultipleCallbackResponse> preAcceptBulkExcel(
+    public ResponseEntity<MultipleCallbackResponse> preAcceptMultiple(
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("PRE ACCEPT MULTIPLE EXCEL ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+        log.info("PRE ACCEPT MULTIPLE ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -169,18 +169,18 @@ public class ExcelActionsController {
                 .build());
     }
 
-    @PostMapping(value = "/updateBulkCaseExcel", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Update a bulk case. Update the collection of caseIds.")
+    @PostMapping(value = "/amendCaseIDs", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Update the collection of caseIds in a multiple.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = MultipleCallbackResponse.class),
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<MultipleCallbackResponse> updateBulkCaseExcel(
+    public ResponseEntity<MultipleCallbackResponse> amendCaseIDs(
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("UPDATE MULTIPLE CASE IDS EXCEL ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+        log.info("AMEND CASE IDS ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -198,7 +198,7 @@ public class ExcelActionsController {
                 .build());
     }
 
-    @PostMapping(value = "/updateBulkExcel", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/updateCases", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "updates cases in a bulk case. Update cases by given fields.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
@@ -206,10 +206,10 @@ public class ExcelActionsController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<MultipleCallbackResponse> updateBulkExcel(
+    public ResponseEntity<MultipleCallbackResponse> updateCases(
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("UPDATE MULTIPLE EXCEL ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+        log.info("UPDATE CASES ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -227,7 +227,7 @@ public class ExcelActionsController {
                 .build());
     }
 
-    @PostMapping(value = "/generateBulkScheduleExcel", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/printSchedule", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "generate a multiple schedule.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
@@ -235,10 +235,10 @@ public class ExcelActionsController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<MultipleCallbackResponse> generateBulkScheduleExcel(
+    public ResponseEntity<MultipleCallbackResponse> printSchedule(
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("GENERATE MULTIPLE SCHEDULE EXCEL ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+        log.info("PRINT SCHEDULE ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -259,7 +259,7 @@ public class ExcelActionsController {
                 .build());
     }
 
-    @PostMapping(value = "/generateBulkScheduleConfirmationExcel", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/printScheduleConfirmation", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "generate a multiple schedule confirmation.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
@@ -267,10 +267,10 @@ public class ExcelActionsController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<MultipleCallbackResponse> generateBulkScheduleConfirmationExcel(
+    public ResponseEntity<MultipleCallbackResponse> printScheduleConfirmation(
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("GENERATE MULTIPLE SCHEDULE CONFIRMATION EXCEL ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+        log.info("PRINT SCHEDULE CONFIRMATION ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);

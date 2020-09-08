@@ -41,14 +41,14 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignErro
 public class ExcelActionsControllerTest {
 
     private static final String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
-    private static final String CREATE_BULK_EXCEL_URL = "/createBulkExcel";
-    private static final String AMEND_MULTIPLE_EXCEL_URL = "/amendMultiple";
-    private static final String UPLOAD_MULTIPLE_EXCEL_URL = "/uploadMultipleExcel";
-    private static final String PRE_ACCEPT_BULK_EXCEL_URL = "/preAcceptBulkExcel";
-    private static final String UPDATE_BULK_CASE_EXCEL_URL = "/updateBulkCaseExcel";
-    private static final String UPDATE_BULK_EXCEL_URL = "/updateBulkExcel";
-    private static final String GENERATE_BULK_SCHEDULE_EXCEL_URL = "/generateBulkScheduleExcel";
-    private static final String GENERATE_BULK_SCHEDULE_CONFIRMATION_EXCEL_URL = "/generateBulkScheduleConfirmationExcel";
+    private static final String CREATE_MULTIPLE_URL = "/createMultiple";
+    private static final String AMEND_MULTIPLE_URL = "/amendMultiple";
+    private static final String IMPORT_MULTIPLES_URL = "/importMultiples";
+    private static final String PRE_ACCEPT_MULTIPLE_URL = "/preAcceptMultiple";
+    private static final String AMEND_CASE_IDS_URL = "/amendCaseIDs";
+    private static final String UPDATE_CASES_URL = "/updateCases";
+    private static final String PRINT_SCHEDULE_URL = "/printSchedule";
+    private static final String PRINT_SCHEDULE_CONFIRMATION_URL = "/printScheduleConfirmation";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -93,9 +93,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void createBulkExcel() throws Exception {
+    public void createMultiple() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(CREATE_BULK_EXCEL_URL)
+        mvc.perform(post(CREATE_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -106,9 +106,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void amendMultipleExcel() throws Exception {
+    public void amendMultiple() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(AMEND_MULTIPLE_EXCEL_URL)
+        mvc.perform(post(AMEND_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -121,7 +121,7 @@ public class ExcelActionsControllerTest {
     @Test
     public void uploadBulkExcel() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(UPLOAD_MULTIPLE_EXCEL_URL)
+        mvc.perform(post(IMPORT_MULTIPLES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -132,9 +132,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void preAcceptBulkExcel() throws Exception {
+    public void preAcceptMultiple() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(PRE_ACCEPT_BULK_EXCEL_URL)
+        mvc.perform(post(PRE_ACCEPT_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -145,9 +145,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void updateBulkCaseExcel() throws Exception {
+    public void amendCaseIDs() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(UPDATE_BULK_CASE_EXCEL_URL)
+        mvc.perform(post(AMEND_CASE_IDS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -158,9 +158,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void updateBulkExcel() throws Exception {
+    public void updateCases() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(UPDATE_BULK_EXCEL_URL)
+        mvc.perform(post(UPDATE_CASES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -171,10 +171,10 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void generateBulkScheduleExcel() throws Exception {
+    public void printSchedule() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         when(multipleScheduleService.bulkScheduleLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class))).thenReturn(documentInfo);
-        mvc.perform(post(GENERATE_BULK_SCHEDULE_EXCEL_URL)
+        mvc.perform(post(PRINT_SCHEDULE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -185,9 +185,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void generateBulkScheduleConfirmationExcel() throws Exception {
+    public void printScheduleConfirmation() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(GENERATE_BULK_SCHEDULE_CONFIRMATION_EXCEL_URL)
+        mvc.perform(post(PRINT_SCHEDULE_CONFIRMATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -198,8 +198,8 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void createBulkExcelError400() throws Exception {
-        mvc.perform(post(CREATE_BULK_EXCEL_URL)
+    public void createMultipleError400() throws Exception {
+        mvc.perform(post(CREATE_MULTIPLE_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -207,8 +207,8 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void amendMultipleExcelError400() throws Exception {
-        mvc.perform(post(AMEND_MULTIPLE_EXCEL_URL)
+    public void amendMultipleError400() throws Exception {
+        mvc.perform(post(AMEND_MULTIPLE_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -217,7 +217,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void uploadBulkExcelError400() throws Exception {
-        mvc.perform(post(UPLOAD_MULTIPLE_EXCEL_URL)
+        mvc.perform(post(IMPORT_MULTIPLES_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -225,8 +225,8 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void preAcceptBulkExcelError400() throws Exception {
-        mvc.perform(post(PRE_ACCEPT_BULK_EXCEL_URL)
+    public void preAcceptMultipleError400() throws Exception {
+        mvc.perform(post(PRE_ACCEPT_MULTIPLE_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -234,8 +234,8 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void updateBulkCaseExcelError400() throws Exception {
-        mvc.perform(post(UPDATE_BULK_CASE_EXCEL_URL)
+    public void amendCaseIDsError400() throws Exception {
+        mvc.perform(post(AMEND_CASE_IDS_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -243,8 +243,8 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void updateBulkExcelError400() throws Exception {
-        mvc.perform(post(UPDATE_BULK_EXCEL_URL)
+    public void updateCasesError400() throws Exception {
+        mvc.perform(post(UPDATE_CASES_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -252,8 +252,8 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void generateBulkScheduleExcelError400() throws Exception {
-        mvc.perform(post(GENERATE_BULK_SCHEDULE_EXCEL_URL)
+    public void printScheduleError400() throws Exception {
+        mvc.perform(post(PRINT_SCHEDULE_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -261,8 +261,8 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void generateBulkScheduleConfirmationExcelError400() throws Exception {
-        mvc.perform(post(GENERATE_BULK_SCHEDULE_CONFIRMATION_EXCEL_URL)
+    public void printScheduleConfirmationError400() throws Exception {
+        mvc.perform(post(PRINT_SCHEDULE_CONFIRMATION_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -270,10 +270,10 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void createBulkExcelError500() throws Exception {
+    public void createMultipleError500() throws Exception {
         doThrow(feignError()).when(multipleCreationService).bulkCreationLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(CREATE_BULK_EXCEL_URL)
+        mvc.perform(post(CREATE_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -284,7 +284,7 @@ public class ExcelActionsControllerTest {
     public void uploadBulkExcelError500() throws Exception {
         doThrow(feignError()).when(multipleUploadService).bulkUploadLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(UPLOAD_MULTIPLE_EXCEL_URL)
+        mvc.perform(post(IMPORT_MULTIPLES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -292,10 +292,10 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void preAcceptBulkExcelError500() throws Exception {
+    public void preAcceptMultipleError500() throws Exception {
         doThrow(feignError()).when(multiplePreAcceptService).bulkPreAcceptLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(PRE_ACCEPT_BULK_EXCEL_URL)
+        mvc.perform(post(PRE_ACCEPT_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -303,10 +303,10 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void updateBulkCaseExcelError500() throws Exception {
+    public void amendCaseIDsError500() throws Exception {
         doThrow(feignError()).when(multipleAmendCaseIdsService).bulkAmendCaseIdsLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(UPDATE_BULK_CASE_EXCEL_URL)
+        mvc.perform(post(AMEND_CASE_IDS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -314,10 +314,10 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void updateBulkExcelError500() throws Exception {
+    public void updateCasesError500() throws Exception {
         doThrow(feignError()).when(multipleUpdateService).bulkUpdateLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(UPDATE_BULK_EXCEL_URL)
+        mvc.perform(post(UPDATE_CASES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -325,10 +325,10 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void generateBulkScheduleExcelError500() throws Exception {
+    public void printScheduleError500() throws Exception {
         doThrow(feignError()).when(multipleScheduleService).bulkScheduleLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(GENERATE_BULK_SCHEDULE_EXCEL_URL)
+        mvc.perform(post(PRINT_SCHEDULE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -336,9 +336,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void createBulkExcelForbidden() throws Exception {
+    public void createMultipleForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(CREATE_BULK_EXCEL_URL)
+        mvc.perform(post(CREATE_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -346,9 +346,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void amendMultipleExcelForbidden() throws Exception {
+    public void amendMultipleForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(AMEND_MULTIPLE_EXCEL_URL)
+        mvc.perform(post(AMEND_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -358,7 +358,7 @@ public class ExcelActionsControllerTest {
     @Test
     public void uploadBulkExcelForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(UPLOAD_MULTIPLE_EXCEL_URL)
+        mvc.perform(post(IMPORT_MULTIPLES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -366,9 +366,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void preAcceptBulkExcelForbidden() throws Exception {
+    public void preAcceptMultipleForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(PRE_ACCEPT_BULK_EXCEL_URL)
+        mvc.perform(post(PRE_ACCEPT_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -376,9 +376,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void updateBulkCaseExcelForbidden() throws Exception {
+    public void amendCaseIDsForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(UPDATE_BULK_CASE_EXCEL_URL)
+        mvc.perform(post(AMEND_CASE_IDS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -386,9 +386,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void updateBulkExcelForbidden() throws Exception {
+    public void updateCasesForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(UPDATE_BULK_EXCEL_URL)
+        mvc.perform(post(UPDATE_CASES_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -396,9 +396,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void generateBulkScheduleExcelForbidden() throws Exception {
+    public void printScheduleForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(GENERATE_BULK_SCHEDULE_EXCEL_URL)
+        mvc.perform(post(PRINT_SCHEDULE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -406,9 +406,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void generateBulkScheduleConfirmationExcelForbidden() throws Exception {
+    public void printScheduleConfirmationForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(GENERATE_BULK_SCHEDULE_CONFIRMATION_EXCEL_URL)
+        mvc.perform(post(PRINT_SCHEDULE_CONFIRMATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

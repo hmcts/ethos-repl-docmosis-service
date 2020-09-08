@@ -18,7 +18,7 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.DATE_TIME_USER_FRIENDLY_PATTERN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DATE_TIME_USER_FRIENDLY_PATTERN;
 
 @Slf4j
 @Service("excelDocManagementService")
@@ -91,7 +91,7 @@ public class ExcelDocManagementService {
         UserDetails userDetails = userService.getUserDetails(userToken);
 
         caseImporterFile.setUploadedDocument(uploadedDocumentType);
-        caseImporterFile.setUploadDateTime(dateTime.format(DATE_TIME_USER_FRIENDLY_PATTERN));
+        caseImporterFile.setUploadedDateTime(dateTime.format(DATE_TIME_USER_FRIENDLY_PATTERN));
         caseImporterFile.setUploadUser(userDetails.getFirstName() + " " + userDetails.getLastName());
 
         return caseImporterFile;

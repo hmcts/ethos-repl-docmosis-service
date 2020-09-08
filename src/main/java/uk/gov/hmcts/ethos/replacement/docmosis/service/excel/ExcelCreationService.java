@@ -129,7 +129,8 @@ public class ExcelCreationService {
                         createCell(row, j++, multipleObject.getSubMultiple(), styleForUnLocking);
                         createCell(row, j++, multipleObject.getFlag1(), styleForUnLocking);
                         createCell(row, j++, multipleObject.getFlag2(), styleForUnLocking);
-                        createCell(row, j++, multipleObject.getEQP(), styleForUnLocking);
+                        createCell(row, j++, multipleObject.getFlag3(), styleForUnLocking);
+                        createCell(row, j++, multipleObject.getFlag4(), styleForUnLocking);
                     }
                 }
             }

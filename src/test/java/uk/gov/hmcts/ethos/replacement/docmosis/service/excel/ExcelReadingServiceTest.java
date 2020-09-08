@@ -58,7 +58,8 @@ public class ExcelReadingServiceTest {
         assertEquals("2", ((MultipleObject)multipleObjects.get("1820001/2019")).getFlag2());
         assertEquals("AA", ((MultipleObject)multipleObjects.get("1820002/2019")).getFlag1());
         assertEquals("", ((MultipleObject)multipleObjects.get("1820005/2019")).getFlag2());
-        assertEquals("", ((MultipleObject)multipleObjects.get("1820005/2019")).getEQP());
+        assertEquals("", ((MultipleObject)multipleObjects.get("1820005/2019")).getFlag3());
+        assertEquals("", ((MultipleObject)multipleObjects.get("1820005/2019")).getFlag4());
         assertEquals(0, errors.size());
     }
 

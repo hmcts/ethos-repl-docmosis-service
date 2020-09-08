@@ -40,14 +40,16 @@ public class MultipleUtil {
                 .ethosCaseRef("245000/2020")
                 .flag1("AA")
                 .flag2("BB")
-                .EQP("")
+                .flag3("")
+                .flag4("")
                 .build());
         multipleObjectTreeMap.put("245003/2020",  MultipleObject.builder()
                 .subMultiple("245003")
                 .ethosCaseRef("245003/2020")
                 .flag1("AA")
                 .flag2("EE")
-                .EQP("")
+                .flag3("")
+                .flag4("")
                 .build());
         return multipleObjectTreeMap;
     }
@@ -115,7 +117,8 @@ public class MultipleUtil {
 
         multipleData.setFlag1("AA");
         multipleData.setFlag2("");
-        multipleData.setEQP("");
+        multipleData.setFlag3("");
+        multipleData.setFlag4("");
         multipleData.setCaseIdCollection(caseIdCollection);
         multipleData.setScheduleDocName(MULTIPLE_SCHEDULE_CONFIG);
         getDocumentCollection(multipleData);
@@ -126,7 +129,7 @@ public class MultipleUtil {
         CaseImporterFile caseImporterFile = new CaseImporterFile();
         caseImporterFile.setUploadedDocument(getUploadedDocumentType());
         caseImporterFile.setUploadUser("Eric Cooper");
-        caseImporterFile.setUploadDateTime("05-02-2020 10:12:46");
+        caseImporterFile.setUploadedDateTime("05-02-2020 10:12:46");
         multipleData.setCaseImporterFile(caseImporterFile);
     }
 
