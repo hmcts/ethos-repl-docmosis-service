@@ -15,11 +15,11 @@ import java.util.List;
 @Service("multipleUploadService")
 public class MultipleUploadService {
 
-    public static final String ERROR_SHEET_NUMBER_ROWS = "Error: Number of rows expected ";
+    public static final String ERROR_SHEET_NUMBER_ROWS = "Number of rows expected ";
 
-    public static final String ERROR_SHEET_NUMBER_COLUMNS = "Error: Number of columns expected ";
+    public static final String ERROR_SHEET_NUMBER_COLUMNS = "Number of columns expected ";
 
-    public static final String ERROR_SHEET_EMPTY = "Error: Empty sheet";
+    public static final String ERROR_SHEET_EMPTY = "Empty sheet";
 
     private final ExcelReadingService excelReadingService;
 
@@ -44,18 +44,22 @@ public class MultipleUploadService {
                     MultiplesHelper.getExcelBinaryUrl(multipleDetails),
                     errors);
 
-            validateSheet(
-                    datatypeSheet,
-                    multipleDetails.getCaseData(),
-                    errors);
+            if (datatypeSheet != null) {
 
-            log.info("Update the document information");
-            log.info("File name uploaded: " + multipleDetails.getCaseData().getCaseImporterFile().getUploadedDocument().getDocumentFilename());
+                validateSheet(
+                        datatypeSheet,
+                        multipleDetails.getCaseData(),
+                        errors);
 
-            multipleDetails.getCaseData().setCaseImporterFile(
-                    excelDocManagementService.populateCaseImporterFile(
-                            userToken,
-                            multipleDetails.getCaseData().getCaseImporterFile().getUploadedDocument()));
+                log.info("Update the document information");
+                log.info("File name uploaded: " + multipleDetails.getCaseData().getCaseImporterFile().getUploadedDocument().getDocumentFilename());
+
+                multipleDetails.getCaseData().setCaseImporterFile(
+                        excelDocManagementService.populateCaseImporterFile(
+                                userToken,
+                                multipleDetails.getCaseData().getCaseImporterFile().getUploadedDocument()));
+
+            }
 
         } catch (IOException e) {
 

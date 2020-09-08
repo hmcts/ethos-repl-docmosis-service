@@ -20,7 +20,7 @@ import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NA
 @Service("excelReadingService")
 public class ExcelReadingService {
 
-    private static final String ERROR_SHEET_NAME_NOT_FOUND = "Error: SheetName not found";
+    private static final String ERROR_SHEET_NAME_NOT_FOUND = "SheetName not found";
 
     private final ExcelDocManagementService excelDocManagementService;
 
