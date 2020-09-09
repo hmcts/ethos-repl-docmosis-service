@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
@@ -32,12 +33,14 @@ public class MultipleDynamicListFlagsService {
 
         log.info("Read excel to populate dynamic list flags logic");
 
+        MultipleData multipleData = multipleDetails.getCaseData();
+
         TreeMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleDetails),
                         errors,
-                        multipleDetails.getCaseData(),
+                        multipleData,
                         FilterExcelType.DL_FLAGS);
 
         log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
@@ -45,10 +48,10 @@ public class MultipleDynamicListFlagsService {
 
         log.info("Populates the dynamic list with flags from Excel");
 
-        populateDynamicList(multipleDetails.getCaseData().getFlag1(), getDynamicList(multipleObjects, HEADER_3));
-        populateDynamicList(multipleDetails.getCaseData().getFlag2(), getDynamicList(multipleObjects, HEADER_4));
-        populateDynamicList(multipleDetails.getCaseData().getFlag3(), getDynamicList(multipleObjects, HEADER_5));
-        populateDynamicList(multipleDetails.getCaseData().getFlag4(), getDynamicList(multipleObjects, HEADER_6));
+        multipleData.setFlag1(populateDynamicList(multipleData.getFlag1(), getDynamicList(multipleObjects, HEADER_3)));
+        multipleData.setFlag2(populateDynamicList(multipleData.getFlag2(), getDynamicList(multipleObjects, HEADER_4)));
+        multipleData.setFlag3(populateDynamicList(multipleData.getFlag3(), getDynamicList(multipleObjects, HEADER_5)));
+        multipleData.setFlag4(populateDynamicList(multipleData.getFlag4(), getDynamicList(multipleObjects, HEADER_6)));
 
         log.info("FLAG1 : " + multipleDetails.getCaseData().getFlag1());
 
@@ -80,7 +83,7 @@ public class MultipleDynamicListFlagsService {
         return listItems;
     }
 
-    private void populateDynamicList(DynamicFixedListType dynamicListFlag, List<DynamicValueType> listItems) {
+    private DynamicFixedListType populateDynamicList(DynamicFixedListType dynamicListFlag, List<DynamicValueType> listItems) {
 
         log.info("DynamicListFlag: " + dynamicListFlag);
         if (dynamicListFlag != null) {
@@ -101,6 +104,8 @@ public class MultipleDynamicListFlagsService {
         dynamicValueType.setLabel(SELECT_ALL);
         dynamicListFlag.setValue(dynamicValueType);
         log.info("Adding default: " + dynamicValueType);
+
+        return dynamicListFlag;
 
     }
 

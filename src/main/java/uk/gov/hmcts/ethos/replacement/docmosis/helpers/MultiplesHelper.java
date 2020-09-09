@@ -15,7 +15,7 @@ import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 public class MultiplesHelper {
 
     public static List<String> HEADERS = new ArrayList<>(Arrays.asList(HEADER_1, HEADER_2, HEADER_3, HEADER_4, HEADER_5, HEADER_6));
-    public static String SELECT_ALL = "ALL";
+    public static String SELECT_ALL = "All";
 
     public static List<String> getCaseIds(MultipleData multipleData) {
 
@@ -39,4 +39,23 @@ public class MultiplesHelper {
         return multipleDetails.getCaseData().getCaseImporterFile().getUploadedDocument().getDocumentBinaryUrl();
     }
 
+    public static void resetMidFields(MultipleData multipleData) {
+
+        multipleData.setFlag1(null);
+        multipleData.setFlag2(null);
+        multipleData.setFlag3(null);
+        multipleData.setFlag4(null);
+
+        multipleData.setManagingOffice(null);
+        multipleData.setFileLocation(null);
+        multipleData.setFileLocationGlasgow(null);
+        multipleData.setFileLocationAberdeen(null);
+        multipleData.setFileLocationDundee(null);
+        multipleData.setFileLocationEdinburgh(null);
+        multipleData.setClerkResponsible(null);
+        multipleData.setPositionType(null);
+        multipleData.setReceiptDate(null);
+        multipleData.setHearingStage(null);
+
+    }
 }

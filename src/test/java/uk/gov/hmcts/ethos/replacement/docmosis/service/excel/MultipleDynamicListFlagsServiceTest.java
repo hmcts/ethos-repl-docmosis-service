@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.SELECT_ALL;
 
@@ -54,7 +53,8 @@ public class MultipleDynamicListFlagsServiceTest {
         assertEquals("AA", multipleDetails.getCaseData().getFlag1().getListItems().get(0).getCode());
         assertEquals(SELECT_ALL, multipleDetails.getCaseData().getFlag1().getValue().getCode());
         assertEquals(2, multipleDetails.getCaseData().getFlag2().getListItems().size());
-        assertNull(multipleDetails.getCaseData().getFlag3());
+        assertEquals("BB", multipleDetails.getCaseData().getFlag2().getListItems().get(0).getCode());
+        assertEquals(SELECT_ALL, multipleDetails.getCaseData().getFlag3().getValue().getCode());
     }
 
 }

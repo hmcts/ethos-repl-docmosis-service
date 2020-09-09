@@ -31,8 +31,8 @@
         },
         "list_items": [
           {
-            "code": "ALL",
-            "label": "ALL"
+            "code": "All",
+            "label": "All"
           }
         ]
       }

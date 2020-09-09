@@ -51,7 +51,10 @@ public class MultipleUpdateService {
 
         sendUpdatesToSingles(userToken, multipleDetails, errors, multipleObjects);
 
-        //TODO Reset all MID VALUES
+        log.info("Resetting mid fields");
+
+        MultiplesHelper.resetMidFields(multipleDetails.getCaseData());
+
     }
 
     private void sendUpdatesToSingles(String userToken, MultipleDetails multipleDetails,
@@ -64,7 +67,7 @@ public class MultipleUpdateService {
         PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails,
                 username,
                 multipleObjectsFiltered,
-                PersistentQHelper.getUpdateDataModel(),
+                PersistentQHelper.getUpdateDataModel(multipleDetails.getCaseData()),
                 errors,
                 multipleData.getMultipleReference(),
                 createUpdatesBusSender,
