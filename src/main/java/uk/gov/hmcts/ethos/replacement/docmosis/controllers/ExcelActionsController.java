@@ -16,7 +16,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.*;
 
 import java.util.ArrayList;
@@ -39,6 +39,7 @@ public class ExcelActionsController {
     private final MultipleUpdateService multipleUpdateService;
     private final MultipleScheduleService multipleScheduleService;
     private final MultipleUploadService multipleUploadService;
+    private final MultipleDynamicListFlagsService multipleDynamicListFlagsService;
 
     @Autowired
     public ExcelActionsController(VerifyTokenService verifyTokenService,
@@ -47,7 +48,8 @@ public class ExcelActionsController {
                                   MultipleAmendCaseIdsService multipleAmendCaseIdsService,
                                   MultipleUpdateService multipleUpdateService,
                                   MultipleScheduleService multipleScheduleService,
-                                  MultipleUploadService multipleUploadService) {
+                                  MultipleUploadService multipleUploadService,
+                                  MultipleDynamicListFlagsService multipleDynamicListFlagsService) {
         this.verifyTokenService = verifyTokenService;
         this.multipleCreationService = multipleCreationService;
         this.multiplePreAcceptService = multiplePreAcceptService;
@@ -55,6 +57,7 @@ public class ExcelActionsController {
         this.multipleUpdateService = multipleUpdateService;
         this.multipleScheduleService = multipleScheduleService;
         this.multipleUploadService = multipleUploadService;
+        this.multipleDynamicListFlagsService = multipleDynamicListFlagsService;
     }
 
     @PostMapping(value = "/createMultiple", consumes = APPLICATION_JSON_VALUE)
@@ -282,6 +285,35 @@ public class ExcelActionsController {
         return ResponseEntity.ok(MultipleCallbackResponse.builder()
                 .data(multipleData)
                 .confirmation_header(GENERATED_DOCUMENTS_URL + multipleData.getDocMarkUp())
+                .build());
+    }
+
+    @PostMapping(value = "/dynamicListFlags", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populate flags in dynamic lists with all flags values are in the excel.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = MultipleCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<MultipleCallbackResponse> dynamicListFlags(
+            @RequestBody MultipleRequest multipleRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DYNAMIC LIST FLAGS ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors = new ArrayList<>();
+        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
+
+        multipleDynamicListFlagsService.populateDynamicListFlagsLogic(userToken, multipleDetails, errors);
+
+        return ResponseEntity.ok(MultipleCallbackResponse.builder()
+                .errors(errors)
+                .data(multipleDetails.getCaseData())
                 .build());
     }
 }

@@ -51,6 +51,7 @@ public class MultipleUpdateService {
 
         sendUpdatesToSingles(userToken, multipleDetails, errors, multipleObjects);
 
+        //TODO Reset all MID VALUES
     }
 
     private void sendUpdatesToSingles(String userToken, MultipleDetails multipleDetails,

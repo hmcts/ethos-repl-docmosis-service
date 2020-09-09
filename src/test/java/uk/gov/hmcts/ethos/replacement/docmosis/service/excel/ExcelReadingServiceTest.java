@@ -14,13 +14,11 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil.TESTING_FILE_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil.TESTING_FILE_NAME_ERROR;
 
@@ -95,6 +93,27 @@ public class ExcelReadingServiceTest {
         assertEquals("1820004/2019", listSub.get(0));
         assertEquals("1820005/2019", listSub.get(1));
         assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void readExcelDynamicListFlags() throws IOException {
+
+        body = new ClassPathResource(TESTING_FILE_NAME);
+        when(excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl))
+                .thenReturn(body.getInputStream());
+        TreeMap<String, Object> multipleObjects = excelReadingService.readExcel(userToken, documentBinaryUrl,
+                errors, multipleData, FilterExcelType.DL_FLAGS);
+
+        Set<String> flags1 = (HashSet<String>) multipleObjects.get(HEADER_3);
+        assertEquals(2, flags1.size());
+
+        Set<String> flags3 = (HashSet<String>) multipleObjects.get(HEADER_5);
+        assertEquals(1, flags3.size());
+
+        assertTrue(flags1.contains("AA"));
+        assertFalse(flags1.contains("BB"));
+        assertTrue(flags3.contains(""));
+        assertFalse(flags3.contains("BB"));
     }
 
     @Test

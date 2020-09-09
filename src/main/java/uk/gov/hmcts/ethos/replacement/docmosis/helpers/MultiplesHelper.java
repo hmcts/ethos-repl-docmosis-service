@@ -15,6 +15,7 @@ import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 public class MultiplesHelper {
 
     public static List<String> HEADERS = new ArrayList<>(Arrays.asList(HEADER_1, HEADER_2, HEADER_3, HEADER_4, HEADER_5, HEADER_6));
+    public static String SELECT_ALL = "ALL";
 
     public static List<String> getCaseIds(MultipleData multipleData) {
 

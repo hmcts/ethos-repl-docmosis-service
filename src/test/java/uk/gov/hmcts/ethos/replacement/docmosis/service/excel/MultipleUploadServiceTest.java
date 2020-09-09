@@ -1,15 +1,10 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
@@ -21,7 +16,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleUploadService.*;
 
@@ -120,11 +114,4 @@ public class MultipleUploadServiceTest {
         verifyNoMoreInteractions(excelReadingService);
     }
 
-    private Sheet getDataTypeSheet(String fileName) throws IOException {
-
-        Resource body = new ClassPathResource(fileName);
-        Workbook workbook = new XSSFWorkbook(body.getInputStream());
-        return workbook.getSheet(SHEET_NAME);
-
-    }
 }

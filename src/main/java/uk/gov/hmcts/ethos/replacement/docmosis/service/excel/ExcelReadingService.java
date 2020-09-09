@@ -6,6 +6,7 @@ import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
@@ -14,7 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NAME;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.SELECT_ALL;
 
 @Slf4j
 @Service("excelReadingService")
@@ -84,6 +86,28 @@ public class ExcelReadingService {
 
     }
 
+    private void getFlagObjects(TreeMap<String, Object> multipleObjects, String flag1, String flag2, String flag3, String flag4) {
+
+        populateTreeMapWithSet(multipleObjects, HEADER_3, flag1);
+        populateTreeMapWithSet(multipleObjects, HEADER_4, flag2);
+        populateTreeMapWithSet(multipleObjects, HEADER_5, flag3);
+        populateTreeMapWithSet(multipleObjects, HEADER_6, flag4);
+
+    }
+
+    private void populateTreeMapWithSet(TreeMap<String, Object> multipleObjects, String key, String value) {
+
+        if (multipleObjects.containsKey(key)) {
+            HashSet<String> set = (HashSet<String>) multipleObjects.get(key);
+            set.add(value);
+            multipleObjects.put(key, set);
+
+        } else {
+            multipleObjects.put(key, new HashSet<>(Collections.singletonList(value)));
+        }
+
+    }
+
     private void populateMultipleObjects(TreeMap<String, Object> multipleObjects, Sheet datatypeSheet,
                                          MultipleData multipleData, FilterExcelType filter) {
 
@@ -106,6 +130,13 @@ public class ExcelReadingService {
                             getCellValue(currentRow.getCell(0)),
                             getCellValue(currentRow.getCell(0)));
                 }
+
+            } else if (filter.equals(FilterExcelType.DL_FLAGS)) {
+                getFlagObjects(multipleObjects,
+                        getCellValue(currentRow.getCell(2)),
+                        getCellValue(currentRow.getCell(3)),
+                        getCellValue(currentRow.getCell(4)),
+                        getCellValue(currentRow.getCell(5)));
 
             } else {
                 multipleObjects.put(
@@ -148,19 +179,33 @@ public class ExcelReadingService {
 
     private boolean isMultipleInFlags(Row currentRow, MultipleData multipleData) {
 
-        return getCellValue(currentRow.getCell(2)).equals(multipleData.getFlag1())
-                && getCellValue(currentRow.getCell(3)).equals(multipleData.getFlag2())
-                && getCellValue(currentRow.getCell(4)).equals(multipleData.getFlag3())
-                && getCellValue(currentRow.getCell(5)).equals(multipleData.getFlag4());
+        return isFilterPassed(currentRow.getCell(2), multipleData.getFlag1())
+                && isFilterPassed(currentRow.getCell(3), multipleData.getFlag2())
+                && isFilterPassed(currentRow.getCell(4), multipleData.getFlag3())
+                && isFilterPassed(currentRow.getCell(5), multipleData.getFlag4());
     }
 
     private boolean isMultipleInFlagsAndBelongsSubMultiple(Row currentRow, MultipleData multipleData) {
 
         return !getCellValue(currentRow.getCell(1)).equals("") &&
-                getCellValue(currentRow.getCell(2)).equals(multipleData.getFlag1())
-                && getCellValue(currentRow.getCell(3)).equals(multipleData.getFlag2())
-                && getCellValue(currentRow.getCell(4)).equals(multipleData.getFlag3())
-                && getCellValue(currentRow.getCell(5)).equals(multipleData.getFlag4());
+                isFilterPassed(currentRow.getCell(2), multipleData.getFlag1())
+                && isFilterPassed(currentRow.getCell(3), multipleData.getFlag2())
+                && isFilterPassed(currentRow.getCell(4), multipleData.getFlag3())
+                && isFilterPassed(currentRow.getCell(5), multipleData.getFlag4());
+    }
+
+    private boolean isFilterPassed(Cell cell, DynamicFixedListType flag) {
+
+        if (flag != null) {
+
+            return flag.getValue().getCode().equals(SELECT_ALL)
+                    || getCellValue(cell).equals(flag.getValue().getCode());
+
+        } else {
+
+            return getCellValue(cell).equals("");
+        }
+
     }
 
 }

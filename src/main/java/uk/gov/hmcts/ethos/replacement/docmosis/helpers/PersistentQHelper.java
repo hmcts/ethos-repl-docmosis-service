@@ -54,10 +54,6 @@ public class PersistentQHelper {
                 .newMultipleReference("2440001")
                 .clerkResponsible("ClerkResponsible")
                 .positionType("PositionType")
-                .flag1("Flag1")
-                .flag2("Flag2")
-                .flag3("Flag3")
-                .flag4("Flag4")
                 .jurisdictionCode("ECM")
                 .outcomeUpdate("OutcomeUpdate")
                 .build();

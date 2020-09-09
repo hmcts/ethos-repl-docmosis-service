@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -7,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
@@ -20,9 +25,11 @@ import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 
+import java.io.IOException;
 import java.util.*;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ExcelDocManagementService.FILE_NAME;
 
 public class MultipleUtil {
@@ -65,6 +72,13 @@ public class MultipleUtil {
         TreeMap<String, Object> multipleObjectTreeMap = new TreeMap<>();
         multipleObjectTreeMap.put("245000", new ArrayList<>(Collections.singletonList("245000/2020")));
         multipleObjectTreeMap.put("245003", new ArrayList<>(Collections.singletonList("245003/2020")));
+        return multipleObjectTreeMap;
+    }
+
+    public static TreeMap<String, Object> getMultipleObjectsDLFlags() {
+        TreeMap<String, Object> multipleObjectTreeMap = new TreeMap<>();
+        multipleObjectTreeMap.put(HEADER_3, new HashSet<>(Collections.singletonList("AA")));
+        multipleObjectTreeMap.put(HEADER_4, new HashSet<>(Arrays.asList("BB", "CC")));
         return multipleObjectTreeMap;
     }
 
@@ -115,10 +129,9 @@ public class MultipleUtil {
         caseIdTypeItem2.setValue(caseType2);
         caseIdCollection.add(caseIdTypeItem2);
 
-        multipleData.setFlag1("AA");
-        multipleData.setFlag2("");
-        multipleData.setFlag3("");
-        multipleData.setFlag4("");
+        multipleData.setFlag1(generateDynamicList("AA"));
+        multipleData.setFlag2(generateDynamicList(""));
+        multipleData.setFlag4(generateDynamicList(""));
         multipleData.setCaseIdCollection(caseIdCollection);
         multipleData.setScheduleDocName(MULTIPLE_SCHEDULE_CONFIG);
         getDocumentCollection(multipleData);
@@ -146,8 +159,8 @@ public class MultipleUtil {
 
         return UploadedDocument.builder()
                 .content(response.getBody())
-                .name(response.getHeaders().get("originalfilename").get(0))
-                .contentType(response.getHeaders().get(HttpHeaders.CONTENT_TYPE).get(0))
+                .name(Objects.requireNonNull(response.getHeaders().get("originalfilename")).get(0))
+                .contentType(Objects.requireNonNull(response.getHeaders().get(HttpHeaders.CONTENT_TYPE)).get(0))
                 .build();
     }
 
@@ -160,4 +173,21 @@ public class MultipleUtil {
 
     }
 
+    private static DynamicFixedListType generateDynamicList(String value) {
+        DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+        DynamicValueType dynamicValueType = new DynamicValueType();
+        dynamicValueType.setLabel(value);
+        dynamicValueType.setCode(value);
+        dynamicFixedListType.setValue(dynamicValueType);
+        dynamicFixedListType.setListItems(new ArrayList<>(Collections.singleton(dynamicValueType)));
+        return dynamicFixedListType;
+    }
+
+    public static Sheet getDataTypeSheet(String fileName) throws IOException {
+
+        Resource body = new ClassPathResource(fileName);
+        Workbook workbook = new XSSFWorkbook(body.getInputStream());
+        return workbook.getSheet(SHEET_NAME);
+
+    }
 }
