@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
 
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.SELECT_ALL;
@@ -30,14 +32,12 @@ public class MultipleDynamicListFlagsService {
 
         log.info("Read excel to populate dynamic list flags logic");
 
-        MultipleData multipleData = multipleDetails.getCaseData();
-
         TreeMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleDetails),
                         errors,
-                        multipleData,
+                        multipleDetails.getCaseData(),
                         FilterExcelType.DL_FLAGS);
 
         log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
@@ -45,10 +45,12 @@ public class MultipleDynamicListFlagsService {
 
         log.info("Populates the dynamic list with flags from Excel");
 
-        populateDynamicList(multipleData.getFlag1(), getDynamicList(multipleObjects, HEADER_3));
-        populateDynamicList(multipleData.getFlag2(), getDynamicList(multipleObjects, HEADER_4));
-        populateDynamicList(multipleData.getFlag3(), getDynamicList(multipleObjects, HEADER_5));
-        populateDynamicList(multipleData.getFlag4(), getDynamicList(multipleObjects, HEADER_6));
+        populateDynamicList(multipleDetails.getCaseData().getFlag1(), getDynamicList(multipleObjects, HEADER_3));
+        populateDynamicList(multipleDetails.getCaseData().getFlag2(), getDynamicList(multipleObjects, HEADER_4));
+        populateDynamicList(multipleDetails.getCaseData().getFlag3(), getDynamicList(multipleObjects, HEADER_5));
+        populateDynamicList(multipleDetails.getCaseData().getFlag4(), getDynamicList(multipleObjects, HEADER_6));
+
+        log.info("FLAG1 : " + multipleDetails.getCaseData().getFlag1());
 
     }
 
