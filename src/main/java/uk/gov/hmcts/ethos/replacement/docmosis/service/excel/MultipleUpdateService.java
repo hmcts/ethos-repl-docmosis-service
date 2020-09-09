@@ -13,7 +13,11 @@ import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeMap;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.UPDATING_STATE;
 
 @Slf4j
 @Service("multipleUpdateService")
@@ -47,6 +51,10 @@ public class MultipleUpdateService {
         log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
         log.info("MultipleObjectsValues: " + multipleObjects.values());
 
+        log.info("Add state to the multiple");
+
+        addStateToMultiple(multipleDetails.getCaseData(), multipleObjects.keySet());
+
         log.info("Send updates to single cases");
 
         sendUpdatesToSingles(userToken, multipleDetails, errors, multipleObjects);
@@ -75,4 +83,16 @@ public class MultipleUpdateService {
 
     }
 
+    private void addStateToMultiple(MultipleData multipleData, Set<String> caseFiltered) {
+
+        if (!caseFiltered.isEmpty()) {
+
+            multipleData.setState(UPDATING_STATE);
+
+        } else {
+
+            multipleData.setState(OPEN_STATE);
+
+        }
+    }
 }
