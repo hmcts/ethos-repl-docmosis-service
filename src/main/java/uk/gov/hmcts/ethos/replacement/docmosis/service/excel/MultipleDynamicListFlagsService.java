@@ -60,6 +60,8 @@ public class MultipleDynamicListFlagsService {
         Set<String> values = (Set<String>) multipleObjects.get(key);
         List<DynamicValueType> listItems = new ArrayList<>();
 
+        listItems.add(MultiplesHelper.getDynamicValue(SELECT_ALL));
+
         if (values != null && !values.isEmpty()) {
 
             for (String flag : values) {
@@ -70,8 +72,6 @@ public class MultipleDynamicListFlagsService {
                 }
             }
         }
-
-        listItems.add(MultiplesHelper.getDynamicValue(SELECT_ALL));
 
         return listItems;
     }

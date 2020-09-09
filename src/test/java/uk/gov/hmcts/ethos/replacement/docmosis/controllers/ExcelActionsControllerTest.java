@@ -46,7 +46,7 @@ public class ExcelActionsControllerTest {
     private static final String IMPORT_MULTIPLE_URL = "/importMultiple";
     private static final String PRE_ACCEPT_MULTIPLE_URL = "/preAcceptMultiple";
     private static final String AMEND_CASE_IDS_URL = "/amendCaseIDs";
-    private static final String UPDATE_CASES_URL = "/updateCases";
+    private static final String BATCH_UPDATE_URL = "/batchUpdate";
     private static final String PRINT_SCHEDULE_URL = "/printSchedule";
     private static final String PRINT_SCHEDULE_CONFIRMATION_URL = "/printScheduleConfirmation";
     private static final String DYNAMIC_LIST_FLAGS_URL = "/dynamicListFlags";
@@ -162,9 +162,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void updateCases() throws Exception {
+    public void batchUpdate() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(UPDATE_CASES_URL)
+        mvc.perform(post(BATCH_UPDATE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -260,8 +260,8 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void updateCasesError400() throws Exception {
-        mvc.perform(post(UPDATE_CASES_URL)
+    public void batchUpdateError400() throws Exception {
+        mvc.perform(post(BATCH_UPDATE_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -340,10 +340,10 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void updateCasesError500() throws Exception {
+    public void batchUpdateError500() throws Exception {
         doThrow(feignError()).when(multipleUpdateService).bulkUpdateLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(UPDATE_CASES_URL)
+        mvc.perform(post(BATCH_UPDATE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -423,9 +423,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void updateCasesForbidden() throws Exception {
+    public void batchUpdateForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(UPDATE_CASES_URL)
+        mvc.perform(post(BATCH_UPDATE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

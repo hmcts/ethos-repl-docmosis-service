@@ -201,7 +201,7 @@ public class ExcelActionsController {
                 .build());
     }
 
-    @PostMapping(value = "/updateCases", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/batchUpdate", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "updates cases in a bulk case. Update cases by given fields.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
@@ -209,10 +209,10 @@ public class ExcelActionsController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<MultipleCallbackResponse> updateCases(
+    public ResponseEntity<MultipleCallbackResponse> batchUpdate(
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("UPDATE CASES ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+        log.info("BATCH UPDATE ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
