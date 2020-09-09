@@ -49,12 +49,13 @@ public class MultipleDynamicListFlagsServiceTest {
                 multipleDetails,
                 errors);
 
-        assertEquals(1, multipleDetails.getCaseData().getFlag1().getListItems().size());
+        assertEquals(2, multipleDetails.getCaseData().getFlag1().getListItems().size());
         assertEquals("AA", multipleDetails.getCaseData().getFlag1().getListItems().get(0).getCode());
         assertEquals(SELECT_ALL, multipleDetails.getCaseData().getFlag1().getValue().getCode());
-        assertEquals(2, multipleDetails.getCaseData().getFlag2().getListItems().size());
+        assertEquals(3, multipleDetails.getCaseData().getFlag2().getListItems().size());
         assertEquals("BB", multipleDetails.getCaseData().getFlag2().getListItems().get(0).getCode());
         assertEquals(SELECT_ALL, multipleDetails.getCaseData().getFlag3().getValue().getCode());
+        assertEquals(SELECT_ALL, multipleDetails.getCaseData().getFlag4().getListItems().get(0).getCode());
     }
 
 }
