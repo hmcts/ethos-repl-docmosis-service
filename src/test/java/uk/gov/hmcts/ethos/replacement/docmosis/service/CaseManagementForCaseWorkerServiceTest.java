@@ -15,10 +15,13 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 
 import java.io.IOException;
@@ -125,6 +128,9 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData submitCaseData = new CaseData();
         submitCaseData.setRespondentCollection(createRespondentCollection(true));
         submitCaseData.setClaimantIndType(createClaimantIndType());
+        submitCaseData.setRepresentativeClaimantType(createRepresentedTypeC());
+        submitCaseData.setRepCollection(createRepCollection(false));
+        submitCaseData.setClaimantRepresentedQuestion(YES);
         ClaimantType claimantType = new ClaimantType();
         Address address = new Address();
         address.setAddressLine1("AddressLine1");
@@ -580,6 +586,35 @@ public class CaseManagementForCaseWorkerServiceTest {
         claimantIndType.setClaimantFirstNames("ClaimantName");
         claimantIndType.setClaimantTitle("Mr");
         return claimantIndType;
+    }
+
+    private RepresentedTypeC createRepresentedTypeC() {
+        RepresentedTypeC representativeClaimantType = new RepresentedTypeC();
+        representativeClaimantType.setNameOfRepresentative("Claimant Rep Name");
+        representativeClaimantType.setNameOfOrganisation("Claimant Rep Org");
+        representativeClaimantType.setRepresentativeReference("Claimant Rep Ref");
+        return representativeClaimantType;
+    }
+
+    private List<RepresentedTypeRItem> createRepCollection(boolean single) {
+        RepresentedTypeRItem representedTypeRItem1 = createRepresentedTypeR("", "RepresentativeNameAAA");
+        RepresentedTypeRItem representedTypeRItem2 = createRepresentedTypeR("dummy", "RepresentativeNameBBB");
+        RepresentedTypeRItem representedTypeRItem3 = createRepresentedTypeR("RespondentName1", "RepresentativeNameCCC");
+        if (single) {
+            return new ArrayList<>(Collections.singletonList(representedTypeRItem1));
+        } else {
+            return new ArrayList<>(Arrays.asList(representedTypeRItem1, representedTypeRItem2, representedTypeRItem3));
+        }
+    }
+
+    private RepresentedTypeRItem createRepresentedTypeR(String respondentName, String representativeName) {
+        RepresentedTypeR representedTypeR = new RepresentedTypeR();
+        representedTypeR.setRespRepName(respondentName);
+        representedTypeR.setNameOfRepresentative(representativeName);
+        RepresentedTypeRItem representedTypeRItem = new RepresentedTypeRItem();
+        representedTypeRItem.setId("111");
+        representedTypeRItem.setValue(representedTypeR);
+        return representedTypeRItem;
     }
 
     private DynamicFixedListType createRespondentECC() {

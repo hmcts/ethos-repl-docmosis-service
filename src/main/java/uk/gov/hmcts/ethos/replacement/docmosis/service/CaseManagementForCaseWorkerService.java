@@ -15,6 +15,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
@@ -23,6 +24,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantWorkAddressType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 
@@ -600,6 +603,8 @@ public class CaseManagementForCaseWorkerService {
         populateRespondentCollectionDetails(caseData, originalCaseData.getClaimantIndType(), originalCaseData.getClaimantType());
         populateTribunalCorrespondenceDetails(caseData, originalCaseData);
         populateCaseDataDetails(caseData, originalCaseData, originalId);
+        populateRepresentativeClaimantDetails(caseData, originalCaseData);
+        populateRepCollectionDetails(caseData, originalCaseData);
         buildFlagsImageFileName(caseData);
     }
 
@@ -663,6 +668,51 @@ public class CaseManagementForCaseWorkerService {
         caseData.setManagingOffice(originalCaseData.getManagingOffice() != null ? originalCaseData.getManagingOffice() : "");
         caseData.setAllocatedOffice(originalCaseData.getAllocatedOffice() != null ? originalCaseData.getAllocatedOffice() : "");
         caseData.setState(ACCEPTED_STATE);
+    }
+
+    private void populateRepresentativeClaimantDetails (CaseData caseData, CaseData originalCaseData) {
+        if (originalCaseData.getRepCollection() != null && !originalCaseData.getRepCollection().isEmpty()) {
+            ListIterator<RepresentedTypeRItem> itr = originalCaseData.getRepCollection().listIterator();
+            while (itr.hasNext()) {
+                RepresentedTypeR representedTypeR = itr.next().getValue();
+                if (representedTypeR.getRespRepName() != null && representedTypeR.getRespRepName().equals(caseData.getClaimantCompany())) {
+                    RepresentedTypeC representedTypeC = new RepresentedTypeC();
+                    representedTypeC.setNameOfRepresentative(nullCheck(representedTypeR.getNameOfRepresentative()));
+                    representedTypeC.setNameOfOrganisation(nullCheck(representedTypeR.getNameOfOrganisation()));
+                    representedTypeC.setRepresentativeReference(nullCheck(representedTypeR.getRepresentativeReference()));
+                    representedTypeC.setRepresentativeOccupation(nullCheck(representedTypeR.getRepresentativeOccupation()));
+                    representedTypeC.setRepresentativeOccupationOther(nullCheck(representedTypeR.getRepresentativeOccupationOther()));
+                    representedTypeC.setRepresentativeAddress(representedTypeR.getRepresentativeAddress());
+                    representedTypeC.setRepresentativePhoneNumber(nullCheck(representedTypeR.getRepresentativePhoneNumber()));
+                    representedTypeC.setRepresentativeMobileNumber(nullCheck(representedTypeR.getRepresentativeMobileNumber()));
+                    representedTypeC.setRepresentativeEmailAddress(nullCheck(representedTypeR.getRepresentativeEmailAddress()));
+                    representedTypeC.setRepresentativePreference(nullCheck(representedTypeR.getRepresentativePreference()));
+                    caseData.setRepresentativeClaimantType(representedTypeC);
+                    caseData.setClaimantRepresentedQuestion(YES);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void populateRepCollectionDetails(CaseData caseData, CaseData originalCaseData) {
+        RepresentedTypeC representativeClaimantType = originalCaseData.getRepresentativeClaimantType();
+        if (representativeClaimantType != null && originalCaseData.getClaimantRepresentedQuestion().equals(YES)) {
+            RepresentedTypeR representedTypeR = new RepresentedTypeR();
+            representedTypeR.setNameOfRepresentative(nullCheck(representativeClaimantType.getNameOfRepresentative()));
+            representedTypeR.setNameOfOrganisation(nullCheck(representativeClaimantType.getNameOfOrganisation()));
+            representedTypeR.setRepresentativeReference(nullCheck(representativeClaimantType.getRepresentativeReference()));
+            representedTypeR.setRepresentativeOccupation(nullCheck(representativeClaimantType.getRepresentativeOccupation()));
+            representedTypeR.setRepresentativeOccupationOther(nullCheck(representativeClaimantType.getRepresentativeOccupationOther()));
+            representedTypeR.setRepresentativeAddress(representativeClaimantType.getRepresentativeAddress());
+            representedTypeR.setRepresentativePhoneNumber(nullCheck(representativeClaimantType.getRepresentativePhoneNumber()));
+            representedTypeR.setRepresentativeMobileNumber(nullCheck(representativeClaimantType.getRepresentativeMobileNumber()));
+            representedTypeR.setRepresentativeEmailAddress(nullCheck(representativeClaimantType.getRepresentativeEmailAddress()));
+            representedTypeR.setRepresentativePreference(nullCheck(representativeClaimantType.getRepresentativePreference()));
+            RepresentedTypeRItem representedTypeRItem = new RepresentedTypeRItem();
+            representedTypeRItem.setValue(representedTypeR);
+            caseData.setRepCollection(new ArrayList<>(Collections.singleton(representedTypeRItem)));
+        }
     }
 
     private void sendUpdateSingleCaseECC(String authToken, CaseDetails currentCaseDetails, CaseData originalCaseData, String caseIdToLink) {
