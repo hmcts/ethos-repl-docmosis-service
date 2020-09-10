@@ -58,6 +58,11 @@ public class MultiplesHelper {
         multipleData.setReceiptDate(null);
         multipleData.setHearingStage(null);
 
+        multipleData.setBatchUpdateCase(null);
+        multipleData.setBatchUpdateType(null);
+
+        multipleData.setMoveCases(null);
+
     }
 
     public static DynamicValueType getDynamicValue(String value) {

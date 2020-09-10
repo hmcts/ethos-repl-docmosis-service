@@ -55,6 +55,13 @@ public class MultipleUpdateService {
 
         addStateToMultiple(multipleDetails.getCaseData(), multipleObjects.keySet());
 
+        //TODO check if batchUpdate2 then if same multipleRef move/add sub multiple NO NEED UPDATE
+        // if multipleRef empty then send update to single
+        // if multipleRef has something then send update to single and
+                //also update the multiple and caseids then generate the excel again.
+
+        // CAN USE CREATE MULTIPLE AND DETACH IN CASE IS SINGLE
+
         log.info("Send updates to single cases");
 
         sendUpdatesToSingles(userToken, multipleDetails, errors, multipleObjects);

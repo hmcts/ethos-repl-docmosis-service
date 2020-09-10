@@ -7,6 +7,7 @@ import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
+import uk.gov.hmcts.ecm.common.model.multiples.types.MoveCasesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
@@ -53,6 +54,9 @@ public class MultipleDynamicListFlagsService {
         multipleData.setFlag3(populateDynamicList(multipleData.getFlag3(), getDynamicList(multipleObjects, HEADER_5)));
         multipleData.setFlag4(populateDynamicList(multipleData.getFlag4(), getDynamicList(multipleObjects, HEADER_6)));
 
+        log.info("Pass the current multiple reference to the UI");
+        multipleData.setMoveCases(populateCurrentMultipleRef(multipleData.getMultipleReference()));
+
     }
 
     private List<DynamicValueType> getDynamicList(TreeMap<String, Object> multipleObjects, String key) {
@@ -96,4 +100,12 @@ public class MultipleDynamicListFlagsService {
 
     }
 
+    private MoveCasesType populateCurrentMultipleRef(String currentMultipleRef) {
+
+        MoveCasesType moveCasesType = new MoveCasesType();
+
+        moveCasesType.setUpdatedMultipleRef(currentMultipleRef);
+
+        return moveCasesType;
+    }
 }

@@ -50,6 +50,7 @@ public class ExcelActionsControllerTest {
     private static final String PRINT_SCHEDULE_URL = "/printSchedule";
     private static final String PRINT_SCHEDULE_CONFIRMATION_URL = "/printScheduleConfirmation";
     private static final String DYNAMIC_LIST_FLAGS_URL = "/dynamicListFlags";
+    private static final String MULTIPLE_MID_EVENT_VALIDATION_URL = "/multipleMidEventValidation";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -77,6 +78,9 @@ public class ExcelActionsControllerTest {
 
     @MockBean
     private MultipleDynamicListFlagsService multipleDynamicListFlagsService;
+
+    @MockBean
+    private MultipleMidEventValidationService multipleMidEventValidationService;
 
     private MockMvc mvc;
     private JsonNode requestContent;
@@ -215,6 +219,19 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void multipleMidEventValidation() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(MULTIPLE_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void createMultipleError400() throws Exception {
         mvc.perform(post(CREATE_MULTIPLE_URL)
                 .content("error")
@@ -296,6 +313,15 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void multipleMidEventValidationError400() throws Exception {
+        mvc.perform(post(MULTIPLE_MID_EVENT_VALIDATION_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void createMultipleError500() throws Exception {
         doThrow(feignError()).when(multipleCreationService).bulkCreationLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
@@ -366,6 +392,17 @@ public class ExcelActionsControllerTest {
         doThrow(feignError()).when(multipleDynamicListFlagsService).populateDynamicListFlagsLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(DYNAMIC_LIST_FLAGS_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void multipleMidEventValidationError500() throws Exception {
+        doThrow(feignError()).when(multipleMidEventValidationService).multipleValidationLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(MULTIPLE_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -456,6 +493,16 @@ public class ExcelActionsControllerTest {
     public void dynamicListFlagsForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(DYNAMIC_LIST_FLAGS_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void multipleMidEventValidationForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(MULTIPLE_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

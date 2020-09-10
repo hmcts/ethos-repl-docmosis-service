@@ -24,6 +24,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
+import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
+import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
+import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 
 import java.io.IOException;
 import java.util.*;
@@ -112,6 +115,23 @@ public class MultipleUtil {
         return new ArrayList<>(Arrays.asList(submitEvent1, submitEvent2));
     }
 
+    public static List<SubmitMultipleEvent> getSubmitMultipleEvents() {
+        SubmitMultipleEvent submitMultipleEventSearched = new SubmitMultipleEvent();
+        submitMultipleEventSearched.setCaseData(MultipleUtil.getMultipleData());
+        submitMultipleEventSearched.getCaseData().setMultipleReference("246001");
+        return new ArrayList<>(Collections.singletonList(submitMultipleEventSearched));
+    }
+
+    public static List<SubMultipleTypeItem> getSubMultipleCollection() {
+        SubMultipleTypeItem subMultipleTypeItem = new SubMultipleTypeItem();
+        SubMultipleType subMultipleType = new SubMultipleType();
+        subMultipleType.setSubMultipleName("SubMultiple");
+        subMultipleType.setSubMultipleRef("246000/1");
+        subMultipleTypeItem.setId("11111");
+        subMultipleTypeItem.setValue(subMultipleType);
+        return new ArrayList<>(Collections.singletonList(subMultipleTypeItem));
+    }
+
     public static MultipleData getMultipleData() {
         MultipleData multipleData = new MultipleData();
         List<CaseIdTypeItem> caseIdCollection = new ArrayList<>();
@@ -132,9 +152,11 @@ public class MultipleUtil {
         multipleData.setFlag1(generateDynamicList("AA"));
         multipleData.setFlag2(generateDynamicList(""));
         multipleData.setFlag4(generateDynamicList(""));
+        multipleData.setMultipleReference("246000");
         multipleData.setCaseIdCollection(caseIdCollection);
         multipleData.setScheduleDocName(MULTIPLE_SCHEDULE_CONFIG);
         getDocumentCollection(multipleData);
+        multipleData.setSubMultipleCollection(getSubMultipleCollection());
         return multipleData;
     }
 
