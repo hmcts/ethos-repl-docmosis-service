@@ -230,6 +230,7 @@ public class BulkActionsController {
 
         BulkDocumentInfo bulkDocumentInfo = documentGenerationService.processBulkDocumentRequest(bulkRequest, userToken);
         bulkRequest.getCaseDetails().getCaseData().setDocMarkUp(bulkDocumentInfo.getMarkUps());
+        documentGenerationService.clearUserChoicesForMultiples(bulkRequest.getCaseDetails());
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkDocumentInfo.getErrors())

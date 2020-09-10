@@ -58,6 +58,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_ADDRESS
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_AND_RESPONDENTS_REPS_ADDRESSES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_REPS_ADDRESSES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_REP;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_BULK_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
@@ -161,6 +162,16 @@ public class DocumentGenerationService {
         caseData.setAddressLabelsSelectionType(null);
         caseData.setAddressLabelCollection(null);
         caseData.setAddressLabelsAttributesType(null);
+    }
+
+    public void clearUserChoicesForMultiples(BulkDetails bulkDetails) {
+        BulkData bulkData = bulkDetails.getCaseData();
+
+        if(bulkDetails.getCaseTypeId().equals(SCOTLAND_BULK_CASE_TYPE_ID)) {
+            bulkData.setCorrespondenceScotType(null);
+        } else {
+            bulkData.setCorrespondenceType(null);
+        }
     }
 
     public DocumentInfo processDocumentRequest(CCDRequest ccdRequest, String authToken) {
