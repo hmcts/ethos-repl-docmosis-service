@@ -54,6 +54,9 @@ public class MultipleScheduleService {
 
         log.info("Pull information from single cases");
 
+        log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
+        log.info("MultipleObjectsValues: " + multipleObjects.values());
+
         List<SubmitEvent> submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
                 multipleDetails.getCaseTypeId(), multipleObjects, filterExcelType);
 
@@ -84,11 +87,13 @@ public class MultipleScheduleService {
 
             if (!multipleObjectsFiltered.keySet().isEmpty()) {
 
+                log.info("Coming here");
                 documentInfo = tornadoService.scheduleMultipleGeneration(userToken, multipleDetails.getCaseData(),
                         multipleObjectsFiltered, submitEvents);
 
             } else {
 
+                log.info("Should come here");
                 errors.add("No cases searched to generate schedules");
 
             }

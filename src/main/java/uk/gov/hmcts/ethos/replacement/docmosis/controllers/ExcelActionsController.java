@@ -258,11 +258,18 @@ public class ExcelActionsController {
 
         multipleDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
 
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .errors(errors)
-                .data(multipleDetails.getCaseData())
-                .significant_item(Helper.generateSignificantItem(documentInfo))
-                .build());
+        if (errors.isEmpty()) {
+            return ResponseEntity.ok(MultipleCallbackResponse.builder()
+                    .data(multipleDetails.getCaseData())
+                    .significant_item(Helper.generateSignificantItem(documentInfo))
+                    .build());
+        } else {
+            return ResponseEntity.ok(MultipleCallbackResponse.builder()
+                    .errors(errors)
+                    .data(multipleDetails.getCaseData())
+                    .build());
+        }
+
     }
 
     @PostMapping(value = "/printScheduleConfirmation", consumes = APPLICATION_JSON_VALUE)
