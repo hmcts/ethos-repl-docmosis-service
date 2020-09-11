@@ -6,12 +6,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
-import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -19,18 +15,20 @@ import java.util.TreeMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.UPDATING_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleUpdateServiceTest {
 
     @Mock
-    private CreateUpdatesBusSender createUpdatesBusSender;
-    @Mock
-    private UserService userService;
-    @Mock
     private ExcelReadingService excelReadingService;
+    @Mock
+    private MultipleBatchUpdate1Service multipleBatchUpdate1Service;
+    @Mock
+    private MultipleBatchUpdate2Service multipleBatchUpdate2Service;
+    @Mock
+    private MultipleBatchUpdate3Service multipleBatchUpdate3Service;
+
     @InjectMocks
     private MultipleUpdateService multipleUpdateService;
 
@@ -43,21 +41,53 @@ public class MultipleUpdateServiceTest {
         multipleObjectsFlags = MultipleUtil.getMultipleObjectsFlags();
         multipleDetails = new MultipleDetails();
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
-        UserDetails userDetails = HelperTest.getUserDetails();
-        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         userToken = "authString";
     }
 
     @Test
-    public void bulkUpdateLogic() {
+    public void bulkUpdate1Logic() {
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
         multipleUpdateService.bulkUpdateLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());
         assertEquals(UPDATING_STATE, multipleDetails.getCaseData().getState());
-        verify(userService, times(1)).getUserDetails(userToken);
-        verifyNoMoreInteractions(userService);
+        verify(multipleBatchUpdate1Service, times(1)).batchUpdate1Logic(userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                multipleObjectsFlags);
+        verifyNoMoreInteractions(multipleBatchUpdate1Service);
+    }
+
+    @Test
+    public void bulkUpdate2Logic() {
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjectsFlags);
+        multipleDetails.getCaseData().setBatchUpdateType(BATCH_UPDATE_TYPE_2);
+        multipleUpdateService.bulkUpdateLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        assertEquals(UPDATING_STATE, multipleDetails.getCaseData().getState());
+        verify(multipleBatchUpdate2Service, times(1)).batchUpdate2Logic(userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                multipleObjectsFlags);
+        verifyNoMoreInteractions(multipleBatchUpdate2Service);
+    }
+    @Test
+    public void bulkUpdate3Logic() {
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjectsFlags);
+        multipleDetails.getCaseData().setBatchUpdateType(BATCH_UPDATE_TYPE_3);
+        multipleUpdateService.bulkUpdateLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        assertEquals(UPDATING_STATE, multipleDetails.getCaseData().getState());
+        verify(multipleBatchUpdate3Service, times(1)).batchUpdate3Logic(userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                multipleObjectsFlags);
+        verifyNoMoreInteractions(multipleBatchUpdate3Service);
     }
 
     @Test

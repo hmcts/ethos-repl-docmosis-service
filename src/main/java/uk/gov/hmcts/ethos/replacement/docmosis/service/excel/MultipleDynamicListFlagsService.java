@@ -39,7 +39,7 @@ public class MultipleDynamicListFlagsService {
         TreeMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
-                        MultiplesHelper.getExcelBinaryUrl(multipleDetails),
+                        MultiplesHelper.getExcelBinaryUrl(multipleData),
                         errors,
                         multipleData,
                         FilterExcelType.DL_FLAGS);

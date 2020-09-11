@@ -102,4 +102,22 @@ public class MultipleCreationServiceTest {
         verifyNoMoreInteractions(excelDocManagementService);
         verifyNoMoreInteractions(userService);
     }
+
+    @Test
+    public void bulkCreationLogicWithNullMultipleRef() {
+        multipleDetails.getCaseData().setMultipleReference(null);
+        multipleCreationService.bulkCreationLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(excelDocManagementService, times(1)).generateAndUploadExcel(ethosCaseRefCollection,
+                userToken,
+                multipleDetails.getCaseData());
+        verifyNoMoreInteractions(excelDocManagementService);
+        verify(userService).getUserDetails(userToken);
+        verifyNoMoreInteractions(userService);
+        verify(multipleReferenceService, times(1)).createReference(
+                multipleDetails.getCaseTypeId()+"s",
+                1);
+        verifyNoMoreInteractions(multipleReferenceService);
+    }
 }

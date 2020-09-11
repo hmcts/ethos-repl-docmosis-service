@@ -45,7 +45,7 @@ public class MultipleAmendCaseIdsService {
         TreeMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
-                        MultiplesHelper.getExcelBinaryUrl(multipleDetails),
+                        MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                         errors,
                         multipleDetails.getCaseData(),
                         FilterExcelType.ALL);
@@ -113,7 +113,8 @@ public class MultipleAmendCaseIdsService {
         MultipleData multipleData = multipleDetails.getCaseData();
         String username = userService.getUserDetails(userToken).getEmail();
 
-        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails,
+        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(),
                 username,
                 detachCasesList,
                 PersistentQHelper.getDetachDataModel(),
@@ -122,7 +123,8 @@ public class MultipleAmendCaseIdsService {
                 createUpdatesBusSender,
                 updateSize);
 
-        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails,
+        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(),
                 username,
                 attachCasesList,
                 PersistentQHelper.getCreationDataModel(leadId,
@@ -151,14 +153,7 @@ public class MultipleAmendCaseIdsService {
 
                 } else {
 
-                    multipleObject = MultipleObject.builder()
-                            .ethosCaseRef(ethosCaseRef)
-                            .subMultiple("")
-                            .flag1("")
-                            .flag2("")
-                            .flag3("")
-                            .flag4("")
-                            .build();
+                    multipleObject = MultiplesHelper.createMultipleObject(ethosCaseRef, "");
 
                 }
 

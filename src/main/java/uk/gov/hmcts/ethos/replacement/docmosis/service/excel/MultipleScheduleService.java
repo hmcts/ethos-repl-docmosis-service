@@ -47,7 +47,7 @@ public class MultipleScheduleService {
         TreeMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
-                        MultiplesHelper.getExcelBinaryUrl(multipleDetails),
+                        MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                         errors,
                         multipleDetails.getCaseData(),
                         filterExcelType);

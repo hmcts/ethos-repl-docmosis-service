@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.servicebus.CreateUpdatesDto;
 import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
@@ -50,12 +49,13 @@ public class PersistentQHelper {
     /* MULTIPLE DETAILS */
     //********************
 
-    public static void sendSingleUpdatesPersistentQ(MultipleDetails multipleDetails, String username, List<String> ethosCaseRefCollection,
-                                                    DataModelParent dataModelParent, List<String> errors, String multipleRef,
+    public static void sendSingleUpdatesPersistentQ(String caseTypeId, String jurisdiction, String username,
+                                                    List<String> ethosCaseRefCollection, DataModelParent dataModelParent,
+                                                    List<String> errors, String multipleRef,
                                                     CreateUpdatesBusSender createUpdatesBusSender, String updateSize) {
         log.info("Case Ref collection: " + ethosCaseRefCollection);
         if (!ethosCaseRefCollection.isEmpty()) {
-            CreateUpdatesDto createUpdatesDto = PersistentQHelper.getMultipleCreateUpdatesDto(multipleDetails,
+            CreateUpdatesDto createUpdatesDto = PersistentQHelper.getMultipleCreateUpdatesDto(caseTypeId, jurisdiction,
                     ethosCaseRefCollection, username, multipleRef);
 
             createUpdatesBusSender.sendUpdatesToQueue(
@@ -68,11 +68,12 @@ public class PersistentQHelper {
         }
     }
 
-    private static CreateUpdatesDto getMultipleCreateUpdatesDto(MultipleDetails multipleDetails, List<String> ethosCaseRefCollection,
-                                                                String email, String multipleRef) {
+    private static CreateUpdatesDto getMultipleCreateUpdatesDto(String caseTypeId, String jurisdiction,
+                                                                List<String> ethosCaseRefCollection, String email,
+                                                                String multipleRef) {
         return CreateUpdatesDto.builder()
-                .caseTypeId(multipleDetails.getCaseTypeId())
-                .jurisdiction(multipleDetails.getJurisdiction())
+                .caseTypeId(caseTypeId)
+                .jurisdiction(jurisdiction)
                 .multipleRef(multipleRef)
                 .username(email)
                 .ethosCaseRefCollection(ethosCaseRefCollection)

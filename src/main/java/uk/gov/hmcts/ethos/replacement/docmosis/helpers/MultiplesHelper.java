@@ -1,9 +1,11 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
+import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,8 +38,79 @@ public class MultiplesHelper {
         }
     }
 
-    public static String getExcelBinaryUrl(MultipleDetails multipleDetails) {
-        return multipleDetails.getCaseData().getCaseImporterFile().getUploadedDocument().getDocumentBinaryUrl();
+    public static String getLeadFromCaseIds(MultipleData multipleData) {
+
+        List<String> caseIds = getCaseIds(multipleData);
+
+        if (caseIds.isEmpty()) {
+
+            return "";
+
+        } else {
+
+            return caseIds.get(0);
+
+        }
+
+    }
+
+    public static void removeCaseIds(MultipleData multipleData, List<String> multipleObjectsFiltered) {
+
+        List<CaseIdTypeItem> newCaseIdCollection = new ArrayList<>();
+
+        if (multipleData.getCaseIdCollection() != null
+                && !multipleData.getCaseIdCollection().isEmpty()) {
+
+            newCaseIdCollection = multipleData.getCaseIdCollection().stream()
+                    .filter(key -> key.getId() != null && !key.getId().equals("null"))
+                    .filter(caseId -> !multipleObjectsFiltered.contains(caseId.getValue().getEthosCaseReference()))
+                    .distinct()
+                    .collect(Collectors.toList());
+
+        }
+
+        multipleData.setCaseIdCollection(newCaseIdCollection);
+
+    }
+
+    public static void addCaseIds(MultipleData multipleData, List<String> multipleObjectsFiltered) {
+
+        List<CaseIdTypeItem> caseIdCollectionToAdd = new ArrayList<>();
+
+        for (String ethosCaseReference : multipleObjectsFiltered) {
+
+            caseIdCollectionToAdd.add(createCaseIdTypeItem(ethosCaseReference));
+        }
+
+        multipleData.getCaseIdCollection().addAll(caseIdCollectionToAdd);
+
+    }
+
+    public static CaseIdTypeItem createCaseIdTypeItem(String ethosCaseReference) {
+
+        CaseType caseType = new CaseType();
+        caseType.setEthosCaseReference(ethosCaseReference);
+        CaseIdTypeItem caseIdTypeItem = new CaseIdTypeItem();
+        caseIdTypeItem.setId(ethosCaseReference);
+        caseIdTypeItem.setValue(caseType);
+
+        return caseIdTypeItem;
+    }
+
+    public static MultipleObject createMultipleObject(String ethosCaseReference, String subMultiple) {
+
+        return MultipleObject.builder()
+                .ethosCaseRef(ethosCaseReference)
+                .subMultiple(subMultiple)
+                .flag1("")
+                .flag2("")
+                .flag3("")
+                .flag4("")
+                .build();
+    }
+
+    public static String getExcelBinaryUrl(MultipleData multipleData) {
+        return multipleData.getCaseImporterFile().getUploadedDocument().getDocumentBinaryUrl();
     }
 
     public static void resetMidFields(MultipleData multipleData) {

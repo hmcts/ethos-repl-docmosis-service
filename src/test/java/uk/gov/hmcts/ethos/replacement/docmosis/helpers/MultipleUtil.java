@@ -31,6 +31,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 import java.io.IOException;
 import java.util.*;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BATCH_UPDATE_TYPE_1;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ExcelDocManagementService.FILE_NAME;
@@ -58,6 +59,14 @@ public class MultipleUtil {
                 .ethosCaseRef("245003/2020")
                 .flag1("AA")
                 .flag2("EE")
+                .flag3("")
+                .flag4("")
+                .build());
+        multipleObjectTreeMap.put("245004/2020",  MultipleObject.builder()
+                .subMultiple("245002")
+                .ethosCaseRef("245004/2020")
+                .flag1("AA")
+                .flag2("BB")
                 .flag3("")
                 .flag4("")
                 .build());
@@ -155,6 +164,7 @@ public class MultipleUtil {
         multipleData.setMultipleReference("246000");
         multipleData.setCaseIdCollection(caseIdCollection);
         multipleData.setScheduleDocName(MULTIPLE_SCHEDULE_CONFIG);
+        multipleData.setBatchUpdateType(BATCH_UPDATE_TYPE_1);
         getDocumentCollection(multipleData);
         multipleData.setSubMultipleCollection(getSubMultipleCollection());
         return multipleData;

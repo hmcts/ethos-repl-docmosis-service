@@ -116,7 +116,8 @@ public class MultipleCreationService {
         if (!ethosCaseRefCollection.isEmpty()) {
 
             String username = userService.getUserDetails(userToken).getEmail();
-            PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails,
+            PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
+                    multipleDetails.getJurisdiction(),
                     username,
                     ethosCaseRefCollection,
                     PersistentQHelper.getCreationDataModel(ethosCaseRefCollection.get(0),

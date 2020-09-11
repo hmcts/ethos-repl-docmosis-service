@@ -27,7 +27,7 @@ public class MultipleCasesReadingService {
         List<SubmitMultipleEvent> submitMultipleEvents = new ArrayList<>();
 
         try {
-            submitMultipleEvents = ccdClient.retrieveMultipleCasesElasticSearch(
+            submitMultipleEvents = ccdClient.retrieveMultipleCasesElasticSearchWithRetries(
                     userToken,
                     multipleCaseTypeId,
                     multipleReference);

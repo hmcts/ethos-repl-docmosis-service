@@ -39,25 +39,27 @@ public class MultipleUploadService {
 
         try {
 
+            MultipleData multipleData = multipleDetails.getCaseData();
+
             Sheet datatypeSheet = excelReadingService.checkExcelErrors(
                     userToken,
-                    MultiplesHelper.getExcelBinaryUrl(multipleDetails),
+                    MultiplesHelper.getExcelBinaryUrl(multipleData),
                     errors);
 
             if (datatypeSheet != null) {
 
                 validateSheet(
                         datatypeSheet,
-                        multipleDetails.getCaseData(),
+                        multipleData,
                         errors);
 
                 log.info("Update the document information");
-                log.info("File name uploaded: " + multipleDetails.getCaseData().getCaseImporterFile().getUploadedDocument().getDocumentFilename());
+                log.info("File name uploaded: " + multipleData.getCaseImporterFile().getUploadedDocument().getDocumentFilename());
 
-                multipleDetails.getCaseData().setCaseImporterFile(
+                multipleData.setCaseImporterFile(
                         excelDocManagementService.populateCaseImporterFile(
                                 userToken,
-                                multipleDetails.getCaseData().getCaseImporterFile().getUploadedDocument()));
+                                multipleData.getCaseImporterFile().getUploadedDocument()));
 
             }
 

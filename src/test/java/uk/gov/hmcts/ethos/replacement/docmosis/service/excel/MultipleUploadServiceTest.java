@@ -46,7 +46,7 @@ public class MultipleUploadServiceTest {
 
         when(excelReadingService.checkExcelErrors(
                 userToken,
-                MultiplesHelper.getExcelBinaryUrl(multipleDetails),
+                MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                 new ArrayList<>()))
                 .thenReturn(getDataTypeSheet(TESTING_FILE_NAME_WITH_TWO));
 
@@ -64,7 +64,7 @@ public class MultipleUploadServiceTest {
 
         when(excelReadingService.checkExcelErrors(
                 userToken,
-                MultiplesHelper.getExcelBinaryUrl(multipleDetails),
+                MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                 new ArrayList<>()))
                 .thenReturn(getDataTypeSheet(TESTING_FILE_NAME_WRONG_COLUMN_ROW));
 
@@ -85,7 +85,7 @@ public class MultipleUploadServiceTest {
 
         when(excelReadingService.checkExcelErrors(
                 userToken,
-                MultiplesHelper.getExcelBinaryUrl(multipleDetails),
+                MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                 new ArrayList<>()))
                 .thenReturn(getDataTypeSheet(TESTING_FILE_NAME_EMPTY));
 
@@ -101,7 +101,7 @@ public class MultipleUploadServiceTest {
 
         when(excelReadingService.checkExcelErrors(
                 userToken,
-                MultiplesHelper.getExcelBinaryUrl(multipleDetails),
+                MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                 new ArrayList<>()))
                 .thenThrow(new IOException());
         multipleUploadService.bulkUploadLogic(userToken,
@@ -109,7 +109,7 @@ public class MultipleUploadServiceTest {
                 new ArrayList<>());
         verify(excelReadingService, times(1)).checkExcelErrors(
                 userToken,
-                MultiplesHelper.getExcelBinaryUrl(multipleDetails),
+                MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                 new ArrayList<>());
         verifyNoMoreInteractions(excelReadingService);
     }
