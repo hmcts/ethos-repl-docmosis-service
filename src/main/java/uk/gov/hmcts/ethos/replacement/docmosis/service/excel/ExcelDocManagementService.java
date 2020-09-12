@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 
@@ -78,7 +79,9 @@ public class ExcelDocManagementService {
 
     public void generateAndUploadExcel(List<?> multipleCollection, String userToken, MultipleData multipleData) {
 
-        byte[] excelBytes = excelCreationService.writeExcel(multipleCollection);
+        List<String> subMultipleCollection = MultiplesHelper.generateSubMultipleStringCollection(multipleData);
+
+        byte[] excelBytes = excelCreationService.writeExcel(multipleCollection, subMultipleCollection);
 
         uploadExcelDocument(userToken, multipleData, excelBytes);
 

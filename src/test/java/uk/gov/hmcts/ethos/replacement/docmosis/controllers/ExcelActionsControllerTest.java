@@ -47,10 +47,12 @@ public class ExcelActionsControllerTest {
     private static final String PRE_ACCEPT_MULTIPLE_URL = "/preAcceptMultiple";
     private static final String AMEND_CASE_IDS_URL = "/amendCaseIDs";
     private static final String BATCH_UPDATE_URL = "/batchUpdate";
+    private static final String UPDATE_SUB_MULTIPLE_URL = "/updateSubMultiple";
     private static final String PRINT_SCHEDULE_URL = "/printSchedule";
     private static final String PRINT_SCHEDULE_CONFIRMATION_URL = "/printScheduleConfirmation";
     private static final String DYNAMIC_LIST_FLAGS_URL = "/dynamicListFlags";
     private static final String MULTIPLE_MID_EVENT_VALIDATION_URL = "/multipleMidEventValidation";
+    private static final String SUB_MULTIPLE_MID_EVENT_VALIDATION_URL = "/subMultipleMidEventValidation";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -63,6 +65,9 @@ public class ExcelActionsControllerTest {
 
     @MockBean
     private MultipleUpdateService multipleUpdateService;
+
+    @MockBean
+    private SubMultipleUpdateService subMultipleUpdateService;
 
     @MockBean
     private MultipleScheduleService multipleScheduleService;
@@ -81,6 +86,9 @@ public class ExcelActionsControllerTest {
 
     @MockBean
     private MultipleMidEventValidationService multipleMidEventValidationService;
+
+    @MockBean
+    private SubMultipleMidEventValidationService subMultipleMidEventValidationService;
 
     private MockMvc mvc;
     private JsonNode requestContent;
@@ -179,6 +187,19 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void updateSubMultiple() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(UPDATE_SUB_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void printSchedule() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         when(multipleScheduleService.bulkScheduleLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class))).thenReturn(documentInfo);
@@ -222,6 +243,19 @@ public class ExcelActionsControllerTest {
     public void multipleMidEventValidation() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MULTIPLE_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void subMultipleMidEventValidation() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(SUB_MULTIPLE_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -286,6 +320,15 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void updateSubMultipleError400() throws Exception {
+        mvc.perform(post(UPDATE_SUB_MULTIPLE_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void printScheduleError400() throws Exception {
         mvc.perform(post(PRINT_SCHEDULE_URL)
                 .content("error")
@@ -315,6 +358,15 @@ public class ExcelActionsControllerTest {
     @Test
     public void multipleMidEventValidationError400() throws Exception {
         mvc.perform(post(MULTIPLE_MID_EVENT_VALIDATION_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void subMultipleMidEventValidationError400() throws Exception {
+        mvc.perform(post(SUB_MULTIPLE_MID_EVENT_VALIDATION_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -377,6 +429,17 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void updateSubMultipleError500() throws Exception {
+        doThrow(feignError()).when(subMultipleUpdateService).subMultipleUpdateLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(UPDATE_SUB_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
     public void printScheduleError500() throws Exception {
         doThrow(feignError()).when(multipleScheduleService).bulkScheduleLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
@@ -403,6 +466,17 @@ public class ExcelActionsControllerTest {
         doThrow(feignError()).when(multipleMidEventValidationService).multipleValidationLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MULTIPLE_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void subMultipleMidEventValidationError500() throws Exception {
+        doThrow(feignError()).when(subMultipleMidEventValidationService).subMultipleValidationLogic(isA(MultipleDetails.class), isA(List.class));
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(SUB_MULTIPLE_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -470,6 +544,16 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void updateSubMultipleForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(UPDATE_SUB_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void printScheduleForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(PRINT_SCHEDULE_URL)
@@ -503,6 +587,16 @@ public class ExcelActionsControllerTest {
     public void multipleMidEventValidationForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(MULTIPLE_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void subMultipleMidEventValidationForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(SUB_MULTIPLE_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

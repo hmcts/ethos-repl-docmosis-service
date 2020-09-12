@@ -38,7 +38,9 @@ public class SingleCasesReadingService {
                             getSubMultipleCaseIds(multipleObjects));
 
         } catch (Exception ex) {
+
             log.error("Error retrieving single cases");
+
         }
 
         return submitEvents;

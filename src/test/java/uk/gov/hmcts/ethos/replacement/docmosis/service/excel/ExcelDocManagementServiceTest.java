@@ -10,6 +10,7 @@ import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 
@@ -79,11 +80,13 @@ public class ExcelDocManagementServiceTest {
     public void generateAndUploadExcel() {
         URI uri = URI.create("http://google.com");
         List<String> multipleCollection = new ArrayList<>(Arrays.asList("245000/2020", "245001/2020", "245002/2020"));
+        List<String> subMultipleCollection = MultiplesHelper.generateSubMultipleStringCollection(multipleDetails.getCaseData());
         when(documentManagementService.uploadDocument(userToken,
                 bytes,
                 FILE_NAME, APPLICATION_EXCEL_VALUE))
                 .thenReturn(uri);
-        when(excelCreationService.writeExcel(multipleCollection))
+        when(excelCreationService.writeExcel(multipleCollection,
+                subMultipleCollection))
                 .thenReturn(bytes);
         excelDocManagementService.generateAndUploadExcel(multipleCollection,
                 userToken, multipleDetails.getCaseData());
@@ -91,7 +94,29 @@ public class ExcelDocManagementServiceTest {
                 bytes,
                 FILE_NAME, APPLICATION_EXCEL_VALUE);
         verifyNoMoreInteractions(documentManagementService);
-        verify(excelCreationService, times(1)).writeExcel(multipleCollection);
+        verify(excelCreationService, times(1)).writeExcel(multipleCollection, subMultipleCollection);
+        verifyNoMoreInteractions(excelCreationService);
+    }
+
+    @Test
+    public void generateAndUploadExcelEmptySubMultipleCollection() {
+        URI uri = URI.create("http://google.com");
+        List<String> multipleCollection = new ArrayList<>(Arrays.asList("245000/2020", "245001/2020", "245002/2020"));
+        multipleDetails.getCaseData().setSubMultipleCollection(null);
+        when(documentManagementService.uploadDocument(userToken,
+                bytes,
+                FILE_NAME, APPLICATION_EXCEL_VALUE))
+                .thenReturn(uri);
+        when(excelCreationService.writeExcel(multipleCollection,
+                new ArrayList<>()))
+                .thenReturn(bytes);
+        excelDocManagementService.generateAndUploadExcel(multipleCollection,
+                userToken, multipleDetails.getCaseData());
+        verify(documentManagementService, times(1)).uploadDocument(userToken,
+                bytes,
+                FILE_NAME, APPLICATION_EXCEL_VALUE);
+        verifyNoMoreInteractions(documentManagementService);
+        verify(excelCreationService, times(1)).writeExcel(multipleCollection, new ArrayList<>());
         verifyNoMoreInteractions(excelCreationService);
     }
 

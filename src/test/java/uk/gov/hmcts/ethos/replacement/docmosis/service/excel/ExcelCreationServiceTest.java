@@ -28,16 +28,29 @@ public class ExcelCreationServiceTest {
 
     @Test
     public void writeExcelObjects() {
-        assertNotNull(excelCreationService.writeExcel(new ArrayList<>(multipleObjects.values())));
+        assertNotNull(excelCreationService.writeExcel(
+                new ArrayList<>(multipleObjects.values()),
+                new ArrayList<>(Arrays.asList("245000/1", "245000/1"))));
+    }
+
+    @Test
+    public void writeExcelObjectsEmptySubMultiples() {
+        assertNotNull(excelCreationService.writeExcel(
+                new ArrayList<>(multipleObjects.values()),
+                new ArrayList<>()));
     }
 
     @Test
     public void writeExcelString() {
-        assertNotNull(excelCreationService.writeExcel(new ArrayList<>(Arrays.asList("245000/2020", "245001/2020", "245002/2020"))));
+        assertNotNull(excelCreationService.writeExcel(
+                new ArrayList<>(Arrays.asList("245000/2020", "245001/2020", "245002/2020")),
+                new ArrayList<>()));
     }
 
     @Test
     public void writeExcelStringEmpty() {
-        assertNotNull(excelCreationService.writeExcel(new ArrayList<>()));
+        assertNotNull(excelCreationService.writeExcel(
+                new ArrayList<>(),
+                new ArrayList<>()));
     }
 }

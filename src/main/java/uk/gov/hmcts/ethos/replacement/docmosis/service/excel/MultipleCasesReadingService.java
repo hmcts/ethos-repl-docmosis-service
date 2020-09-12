@@ -33,7 +33,9 @@ public class MultipleCasesReadingService {
                     multipleReference);
 
         } catch (Exception ex) {
+
             log.error("Error retrieving multiple cases");
+
         }
 
         return submitMultipleEvents;

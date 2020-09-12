@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -20,7 +21,7 @@ import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NA
 @Service("excelCreationService")
 public class ExcelCreationService {
 
-    public byte[] writeExcel(List<?> multipleCollection) {
+    public byte[] writeExcel(List<?> multipleCollection, List<String> subMultipleCollection) {
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet(SHEET_NAME);
@@ -29,9 +30,11 @@ public class ExcelCreationService {
 
         initializeHeaders(sheet);
 
-        initializeData(workbook, sheet, multipleCollection);
+        initializeData(workbook, sheet, multipleCollection, subMultipleCollection);
 
         adjustColumnSize(sheet);
+
+        addSubMultiplesValidation(sheet, multipleCollection, subMultipleCollection);
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -82,6 +85,27 @@ public class ExcelCreationService {
         sheet.autoSizeColumn(1);
     }
 
+    private void addSubMultiplesValidation(XSSFSheet sheet, List<?> multipleCollection, List<String> subMultipleCollection) {
+
+        if (!subMultipleCollection.isEmpty()) {
+
+            CellRangeAddressList addressList = new CellRangeAddressList(
+                1, multipleCollection.size(), 1, 1);
+
+            String[] stringArray = subMultipleCollection.toArray(new String[0]);
+
+            DataValidationHelper helper = sheet.getDataValidationHelper();
+            DataValidationConstraint constraint = helper.createExplicitListConstraint(stringArray);
+            DataValidation dataValidation = helper.createValidation(constraint, addressList);
+            dataValidation.setSuppressDropDownArrow(true);
+            dataValidation.setShowErrorBox(true);
+
+            sheet.addValidationData(dataValidation);
+
+        }
+
+    }
+
     private void initializeHeaders(XSSFSheet sheet) {
 
         XSSFRow rowHead = sheet.createRow((short) 0);
@@ -98,7 +122,7 @@ public class ExcelCreationService {
         cell.setCellStyle(styleForUnLocking);
     }
 
-    private void initializeData(XSSFWorkbook workbook, XSSFSheet sheet, List<?> multipleCollection) {
+    private void initializeData(XSSFWorkbook workbook, XSSFSheet sheet, List<?> multipleCollection, List<String> subMultipleCollection) {
 
         CellStyle styleForUnLocking = getStyleForUnLocking(workbook);
 
@@ -110,9 +134,14 @@ public class ExcelCreationService {
                     for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
                         XSSFRow row = sheet.createRow((short) i);
                         row.createCell(j++).setCellValue(multipleCollection.get(i - 1).toString());
-                        // Create empty cells unlocked
+
                         for (int k = 0; k < MultiplesHelper.HEADERS.size()-1; k++) {
-                            createCell(row, j++, "", styleForUnLocking);
+                            if (k == 0 && subMultipleCollection.isEmpty()) {
+                                row.createCell(j++).setCellValue("");
+                            } else {
+                                // Create empty cells unlocked
+                                createCell(row, j++, "", styleForUnLocking);
+                            }
                         }
                     }
                 }
@@ -125,6 +154,12 @@ public class ExcelCreationService {
                     for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
                         XSSFRow row = sheet.createRow((short) i);
                         row.createCell(j++).setCellValue(multipleObject.getEthosCaseRef());
+
+                        if (subMultipleCollection.isEmpty()) {
+                            row.createCell(j++).setCellValue(multipleObject.getSubMultiple());
+                        } else {
+                            createCell(row, j++, multipleObject.getSubMultiple(), styleForUnLocking);
+                        }
                         // Create these cells unlocked
                         createCell(row, j++, multipleObject.getSubMultiple(), styleForUnLocking);
                         createCell(row, j++, multipleObject.getFlag1(), styleForUnLocking);

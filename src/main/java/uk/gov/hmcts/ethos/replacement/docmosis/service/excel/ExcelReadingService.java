@@ -47,7 +47,9 @@ public class ExcelReadingService {
             }
 
         } catch (IOException e) {
+
             log.error("Error reading the Excel");
+
         }
 
         return multipleObjects;

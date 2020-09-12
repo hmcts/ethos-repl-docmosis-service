@@ -6,9 +6,12 @@ import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
+import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
+import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -135,6 +138,8 @@ public class MultiplesHelper {
         multipleData.setBatchUpdateType(null);
 
         multipleData.setMoveCases(null);
+        multipleData.setSubMultipleAction(null);
+        multipleData.setScheduleDocName(null);
 
     }
 
@@ -145,6 +150,55 @@ public class MultiplesHelper {
         dynamicValueType.setLabel(value);
 
         return dynamicValueType;
+
+    }
+
+    public static SubMultipleTypeItem createSubMultipleTypeItem(String subMultipleReference, String subMultipleName) {
+
+        SubMultipleType subMultipleType = new SubMultipleType();
+        subMultipleType.setSubMultipleName(subMultipleName);
+        subMultipleType.setSubMultipleRef(subMultipleReference);
+
+        SubMultipleTypeItem subMultipleTypeItem = new SubMultipleTypeItem();
+        subMultipleTypeItem.setId(subMultipleReference);
+        subMultipleTypeItem.setValue(subMultipleType);
+
+        return subMultipleTypeItem;
+
+    }
+
+    public static void addSubMultipleTypeToCase(MultipleData multipleData, SubMultipleTypeItem subMultipleTypeItem) {
+
+        List<SubMultipleTypeItem> subMultipleTypeItems = multipleData.getSubMultipleCollection();
+
+        if (subMultipleTypeItems != null) {
+
+            subMultipleTypeItems.add(subMultipleTypeItem);
+
+        } else {
+
+            subMultipleTypeItems = new ArrayList<>(Collections.singletonList(subMultipleTypeItem));
+
+        }
+
+        multipleData.setSubMultipleCollection(subMultipleTypeItems);
+
+    }
+
+    public static List<String> generateSubMultipleStringCollection(MultipleData multipleData) {
+
+        if (multipleData.getSubMultipleCollection() != null && !multipleData.getSubMultipleCollection().isEmpty()) {
+
+            return multipleData.getSubMultipleCollection().stream()
+                    .map(subMultipleTypeItem -> subMultipleTypeItem.getValue().getSubMultipleName())
+                    .distinct()
+                    .collect(Collectors.toList());
+
+        } else {
+
+            return new ArrayList<>();
+
+        }
 
     }
 }

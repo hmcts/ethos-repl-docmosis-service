@@ -62,7 +62,13 @@ public class MultipleScheduleService {
 
         log.info("Generate schedule");
 
-        return generateSchedule(multipleObjects, userToken, multipleDetails, submitEvents, errors);
+        DocumentInfo documentInfo = generateSchedule(multipleObjects, userToken, multipleDetails, submitEvents, errors);
+
+        log.info("Resetting mid fields");
+
+        MultiplesHelper.resetMidFields(multipleDetails.getCaseData());
+
+        return documentInfo;
 
     }
 
@@ -87,13 +93,11 @@ public class MultipleScheduleService {
 
             if (!multipleObjectsFiltered.keySet().isEmpty()) {
 
-                log.info("Coming here");
                 documentInfo = tornadoService.scheduleMultipleGeneration(userToken, multipleDetails.getCaseData(),
                         multipleObjectsFiltered, submitEvents);
 
             } else {
 
-                log.info("Should come here");
                 errors.add("No cases searched to generate schedules");
 
             }

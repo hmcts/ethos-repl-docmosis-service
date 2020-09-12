@@ -26,13 +26,13 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
+import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleActionType;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 
 import java.io.IOException;
 import java.util.*;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BATCH_UPDATE_TYPE_1;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ExcelDocManagementService.FILE_NAME;
 
@@ -65,6 +65,14 @@ public class MultipleUtil {
         multipleObjectTreeMap.put("245004/2020",  MultipleObject.builder()
                 .subMultiple("245002")
                 .ethosCaseRef("245004/2020")
+                .flag1("AA")
+                .flag2("BB")
+                .flag3("")
+                .flag4("")
+                .build());
+        multipleObjectTreeMap.put("245005/2020",  MultipleObject.builder()
+                .subMultiple("SubMultiple")
+                .ethosCaseRef("245005/2020")
                 .flag1("AA")
                 .flag2("BB")
                 .flag3("")
@@ -138,7 +146,23 @@ public class MultipleUtil {
         subMultipleType.setSubMultipleRef("246000/1");
         subMultipleTypeItem.setId("11111");
         subMultipleTypeItem.setValue(subMultipleType);
-        return new ArrayList<>(Collections.singletonList(subMultipleTypeItem));
+        SubMultipleTypeItem subMultipleTypeItem1 = new SubMultipleTypeItem();
+        SubMultipleType subMultipleType1 = new SubMultipleType();
+        subMultipleType1.setSubMultipleName("SubMultiple2");
+        subMultipleType1.setSubMultipleRef("246000/2");
+        subMultipleTypeItem1.setId("22222");
+        subMultipleTypeItem1.setValue(subMultipleType1);
+        return new ArrayList<>(Arrays.asList(subMultipleTypeItem, subMultipleTypeItem1));
+    }
+
+    public static SubMultipleActionType getSubMultipleActionType() {
+        SubMultipleActionType subMultipleActionType = new SubMultipleActionType();
+        subMultipleActionType.setActionType(CREATE_ACTION);
+        subMultipleActionType.setAmendSubMultipleNameExisting("SubMultiple");
+        subMultipleActionType.setAmendSubMultipleNameNew("SubMultipleAmended");
+        subMultipleActionType.setCreateSubMultipleName("NewSubMultiple");
+        subMultipleActionType.setDeleteSubMultipleName("SubMultiple");
+        return subMultipleActionType;
     }
 
     public static MultipleData getMultipleData() {
@@ -167,6 +191,7 @@ public class MultipleUtil {
         multipleData.setBatchUpdateType(BATCH_UPDATE_TYPE_1);
         getDocumentCollection(multipleData);
         multipleData.setSubMultipleCollection(getSubMultipleCollection());
+        multipleData.setSubMultipleAction(getSubMultipleActionType());
         return multipleData;
     }
 
