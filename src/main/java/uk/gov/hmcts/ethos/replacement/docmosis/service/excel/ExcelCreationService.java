@@ -28,7 +28,7 @@ public class ExcelCreationService {
 
         enableLocking(sheet);
 
-        initializeHeaders(sheet);
+        initializeHeaders(workbook, sheet);
 
         initializeData(workbook, sheet, multipleCollection, subMultipleCollection);
 
@@ -78,16 +78,27 @@ public class ExcelCreationService {
         return styleForUnLocking;
     }
 
+    private static CellStyle getStyleForLocking(XSSFWorkbook workbook) {
+        CellStyle styleForLocking = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setColor(IndexedColors.BLACK.getIndex());
+
+        styleForLocking.setAlignment(HorizontalAlignment.CENTER);
+        styleForLocking.setFont(font);
+
+        return styleForLocking;
+    }
+
     private void adjustColumnSize(XSSFSheet sheet) {
 
         //Adjust the column width to fit the content
         sheet.autoSizeColumn(0);
-        sheet.autoSizeColumn(1);
+        sheet.setColumnWidth(1, 8000);
     }
 
     private void addSubMultiplesValidation(XSSFSheet sheet, List<?> multipleCollection, List<String> subMultipleCollection) {
 
-        if (!subMultipleCollection.isEmpty()) {
+        if (!subMultipleCollection.isEmpty() && !multipleCollection.isEmpty()) {
 
             CellRangeAddressList addressList = new CellRangeAddressList(
                 1, multipleCollection.size(), 1, 1);
@@ -106,25 +117,28 @@ public class ExcelCreationService {
 
     }
 
-    private void initializeHeaders(XSSFSheet sheet) {
+    private void initializeHeaders(XSSFWorkbook workbook, XSSFSheet sheet) {
 
         XSSFRow rowHead = sheet.createRow((short) 0);
+        CellStyle styleForLocking = getStyleForLocking(workbook);
 
         for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
             rowHead.createCell(j).setCellValue(MultiplesHelper.HEADERS.get(j));
+            createCell(rowHead, j, MultiplesHelper.HEADERS.get(j), styleForLocking);
         }
 
     }
 
-    private void createCell(XSSFRow row, int cellIndex, String value, CellStyle styleForUnLocking) {
+    private void createCell(XSSFRow row, int cellIndex, String value, CellStyle style) {
         Cell cell = row.createCell(cellIndex);
         cell.setCellValue(value);
-        cell.setCellStyle(styleForUnLocking);
+        cell.setCellStyle(style);
     }
 
     private void initializeData(XSSFWorkbook workbook, XSSFSheet sheet, List<?> multipleCollection, List<String> subMultipleCollection) {
 
         CellStyle styleForUnLocking = getStyleForUnLocking(workbook);
+        CellStyle styleForLocking = getStyleForLocking(workbook);
 
         if (!multipleCollection.isEmpty()) {
             if (multipleCollection.get(0) instanceof String) {
@@ -133,11 +147,11 @@ public class ExcelCreationService {
                 for (int i = 1; i < multipleCollection.size() + 1; i++) {
                     for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
                         XSSFRow row = sheet.createRow((short) i);
-                        row.createCell(j++).setCellValue(multipleCollection.get(i - 1).toString());
+                        createCell(row, j++, multipleCollection.get(i - 1).toString(), styleForLocking);
 
                         for (int k = 0; k < MultiplesHelper.HEADERS.size()-1; k++) {
                             if (k == 0 && subMultipleCollection.isEmpty()) {
-                                row.createCell(j++).setCellValue("");
+                                createCell(row, j++, "", styleForLocking);
                             } else {
                                 // Create empty cells unlocked
                                 createCell(row, j++, "", styleForUnLocking);
@@ -153,10 +167,10 @@ public class ExcelCreationService {
                     MultipleObject multipleObject = (MultipleObject) multipleCollection.get(i - 1);
                     for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
                         XSSFRow row = sheet.createRow((short) i);
-                        row.createCell(j++).setCellValue(multipleObject.getEthosCaseRef());
+                        createCell(row, j++, multipleObject.getEthosCaseRef(), styleForLocking);
 
                         if (subMultipleCollection.isEmpty()) {
-                            row.createCell(j++).setCellValue(multipleObject.getSubMultiple());
+                            createCell(row, j++, multipleObject.getSubMultiple(), styleForLocking);
                         } else {
                             createCell(row, j++, multipleObject.getSubMultiple(), styleForUnLocking);
                         }

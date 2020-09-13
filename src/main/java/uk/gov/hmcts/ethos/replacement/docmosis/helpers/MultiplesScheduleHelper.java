@@ -40,7 +40,7 @@ public class MultiplesScheduleHelper {
     private static StringBuilder getDocumentData(MultipleData multipleData, TreeMap<String, Object> multipleObjectsFiltered,
                                                  List<SubmitEvent> submitEvents) {
         if (LIST_CASES_CONFIG.equals(multipleData.getScheduleDocName())) {
-            return getScheduleBySubMultipleData(multipleObjectsFiltered, submitEvents);
+            return getScheduleBySubMultipleData(multipleData, multipleObjectsFiltered, submitEvents);
         } else if (Arrays.asList(MULTIPLE_SCHEDULE_CONFIG, MULTIPLE_SCHEDULE_DETAILED_CONFIG).contains(multipleData.getScheduleDocName())) {
             return getScheduleData(submitEvents);
         } else {
@@ -48,7 +48,20 @@ public class MultiplesScheduleHelper {
         }
     }
 
-    private static StringBuilder getScheduleBySubMultipleData(TreeMap<String, Object> multipleObjectsFiltered, List<SubmitEvent> submitEvents) {
+    private static String getSubMultipleRef(MultipleData multipleData, String subMultipleName) {
+
+        return multipleData.getSubMultipleCollection().stream()
+                .filter(subMultipleTypeItem ->
+                        subMultipleTypeItem.getValue().getSubMultipleName().equals(subMultipleName))
+                .map(subMultipleTypeItem -> subMultipleTypeItem.getValue().getSubMultipleRef())
+                .findFirst()
+                .orElse("");
+
+    }
+
+    private static StringBuilder getScheduleBySubMultipleData(MultipleData multipleData,
+                                                              TreeMap<String, Object> multipleObjectsFiltered,
+                                                              List<SubmitEvent> submitEvents) {
 
         Map<String, SubmitEvent> submitEventMap = submitEvents.stream().collect(
                 Collectors.toMap(submitEvent -> submitEvent.getCaseData().getEthosCaseReference(),
@@ -63,7 +76,7 @@ public class MultiplesScheduleHelper {
             Iterator<Map.Entry<String, List<SubmitEvent>>> entries = new TreeMap<>(subMultipleMap).entrySet().iterator();
             while (entries.hasNext()) {
                 Map.Entry<String, List<SubmitEvent>> subMultipleEntry = entries.next();
-                sb.append("{\"SubMultiple_No\":\"").append(subMultipleEntry.getKey()).append(NEW_LINE);
+                sb.append("{\"SubMultiple_No\":\"").append(getSubMultipleRef(multipleData, subMultipleEntry.getKey())).append(NEW_LINE);
                 sb.append("\"SubMultiple_title\":\"").append(subMultipleEntry.getKey()).append(NEW_LINE);
                 sb.append("\"multiple\":[\n");
                 for (int i = 0; i < subMultipleEntry.getValue().size(); i++) {
