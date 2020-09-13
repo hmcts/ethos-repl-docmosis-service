@@ -70,7 +70,7 @@ public class BulkActionsControllerTest {
     private static final String MID_CREATE_SUB_MULTIPLE_URL = "/midCreateSubMultiple";
     private static final String CREATE_SUB_MULTIPLE_URL = "/createSubMultiple";
     private static final String MID_UPDATE_SUB_MULTIPLE_URL = "/midUpdateSubMultiple";
-    private static final String UPDATE_SUB_MULTIPLE_URL = "/updateSubMultiple";
+    private static final String UPDATE_SUB_MULTIPLE_URL = "/updateSubMultiple1";
     private static final String DELETE_SUB_MULTIPLE_URL = "/deleteSubMultiple";
     private static final String GENERATE_BULK_SCHEDULE_URL = "/generateBulkSchedule";
     private static final String GENERATE_BULK_SCHEDULE_CONFIRMATION_URL = "/generateBulkScheduleConfirmation";

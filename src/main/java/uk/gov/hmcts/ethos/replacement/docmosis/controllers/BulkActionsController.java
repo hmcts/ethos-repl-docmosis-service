@@ -470,7 +470,7 @@ public class BulkActionsController {
                 .build());
     }
 
-    @PostMapping(value = "/updateSubMultiple", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/updateSubMultiple1", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "update the name and the list of cases of a sub multiple.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
@@ -478,7 +478,7 @@ public class BulkActionsController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<BulkCallbackResponse> updateSubMultiple(
+    public ResponseEntity<BulkCallbackResponse> updateSubMultiple1(
             @RequestBody BulkRequest bulkRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("UPDATE SUB MULTIPLE ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
