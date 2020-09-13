@@ -161,7 +161,6 @@ public class ExcelCreationService {
                             createCell(row, j++, multipleObject.getSubMultiple(), styleForUnLocking);
                         }
                         // Create these cells unlocked
-                        createCell(row, j++, multipleObject.getSubMultiple(), styleForUnLocking);
                         createCell(row, j++, multipleObject.getFlag1(), styleForUnLocking);
                         createCell(row, j++, multipleObject.getFlag2(), styleForUnLocking);
                         createCell(row, j++, multipleObject.getFlag3(), styleForUnLocking);
