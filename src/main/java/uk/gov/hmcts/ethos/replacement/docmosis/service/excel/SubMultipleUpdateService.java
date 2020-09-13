@@ -112,7 +112,7 @@ public class SubMultipleUpdateService {
 
         MultiplesHelper.addSubMultipleTypeToCase(multipleDetails.getCaseData(), subMultipleTypeItem);
 
-        log.info("Generate the excel with the new sub multiple in the dropdown");
+        log.info("Generate the excel with the new sub multiple names in the dropdown");
 
         return getMultipleObjectListFromTreeMap(multipleObjects);
 
