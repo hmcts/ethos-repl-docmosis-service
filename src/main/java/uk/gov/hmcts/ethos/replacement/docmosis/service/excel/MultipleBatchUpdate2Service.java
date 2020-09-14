@@ -305,7 +305,7 @@ public class MultipleBatchUpdate2Service {
 
     private SubmitMultipleEvent getUpdatedMultiple(String userToken, String caseTypeId, String updatedMultipleRef) {
 
-        return multipleCasesReadingService.retrieveMultipleCases(
+        return multipleCasesReadingService.retrieveMultipleCasesWithRetries(
                         userToken,
                         caseTypeId,
                         updatedMultipleRef).get(0);

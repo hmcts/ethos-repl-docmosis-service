@@ -20,7 +20,7 @@ public class MultipleCasesReadingService {
         this.ccdClient = ccdClient;
     }
 
-    public List<SubmitMultipleEvent> retrieveMultipleCases(String userToken,
+    public List<SubmitMultipleEvent> retrieveMultipleCasesWithRetries(String userToken,
                                                            String multipleCaseTypeId,
                                                            String multipleReference) {
 
@@ -34,11 +34,34 @@ public class MultipleCasesReadingService {
 
         } catch (Exception ex) {
 
+            log.error("Error retrieving multiple cases with retries");
+
+        }
+
+        return submitMultipleEvents;
+
+    }
+
+    public List<SubmitMultipleEvent> retrieveMultipleCases(String userToken,
+                                                                      String multipleCaseTypeId,
+                                                                      String multipleReference) {
+
+        List<SubmitMultipleEvent> submitMultipleEvents = new ArrayList<>();
+
+        try {
+            submitMultipleEvents = ccdClient.retrieveMultipleCasesElasticSearch(
+                    userToken,
+                    multipleCaseTypeId,
+                    multipleReference);
+
+        } catch (Exception ex) {
+
             log.error("Error retrieving multiple cases");
 
         }
 
         return submitMultipleEvents;
+
     }
 
 }

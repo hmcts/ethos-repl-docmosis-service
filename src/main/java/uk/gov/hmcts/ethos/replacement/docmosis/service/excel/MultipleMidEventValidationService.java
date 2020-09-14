@@ -11,6 +11,8 @@ import uk.gov.hmcts.ecm.common.model.multiples.types.MoveCasesType;
 
 import java.util.List;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+
 @Slf4j
 @Service("multipleDMidEventValidationService")
 public class MultipleMidEventValidationService {
@@ -30,36 +32,42 @@ public class MultipleMidEventValidationService {
 
         MoveCasesType moveCasesType = multipleData.getMoveCases();
 
-        String updatedMultipleRef = moveCasesType.getUpdatedMultipleRef();
-        String updatedSubMultipleRef = moveCasesType.getUpdatedSubMultipleRef();
+        String convertToSingle = moveCasesType.getConvertToSingle();
 
-        if (updatedMultipleRef.equals(multipleData.getMultipleReference())) {
+        if (convertToSingle.equals(NO)) {
 
-            validateSubMultiple(updatedSubMultipleRef,
-                    multipleData.getSubMultipleCollection(),
-                    errors,
-                    updatedMultipleRef);
+            String updatedMultipleRef = moveCasesType.getUpdatedMultipleRef();
+            String updatedSubMultipleRef = moveCasesType.getUpdatedSubMultipleRef();
 
-        } else {
-
-            List<SubmitMultipleEvent> submitMultipleEvents =
-                    multipleCasesReadingService.retrieveMultipleCases(
-                            userToken,
-                            multipleDetails.getCaseTypeId(),
-                            updatedMultipleRef);
-
-            if (!submitMultipleEvents.isEmpty()) {
-
-                SubmitMultipleEvent submitMultipleEvent = submitMultipleEvents.get(0);
+            if (updatedMultipleRef.equals(multipleData.getMultipleReference())) {
 
                 validateSubMultiple(updatedSubMultipleRef,
-                        submitMultipleEvent.getCaseData().getSubMultipleCollection(),
+                        multipleData.getSubMultipleCollection(),
                         errors,
                         updatedMultipleRef);
 
             } else {
 
-                errors.add("Multiple " + updatedMultipleRef + " does not exists");
+                List<SubmitMultipleEvent> submitMultipleEvents =
+                        multipleCasesReadingService.retrieveMultipleCases(
+                                userToken,
+                                multipleDetails.getCaseTypeId(),
+                                updatedMultipleRef);
+
+                if (!submitMultipleEvents.isEmpty()) {
+
+                    SubmitMultipleEvent submitMultipleEvent = submitMultipleEvents.get(0);
+
+                    validateSubMultiple(updatedSubMultipleRef,
+                            submitMultipleEvent.getCaseData().getSubMultipleCollection(),
+                            errors,
+                            updatedMultipleRef);
+
+                } else {
+
+                    errors.add("Multiple " + updatedMultipleRef + " does not exists");
+
+                }
 
             }
 

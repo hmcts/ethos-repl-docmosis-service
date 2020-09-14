@@ -16,6 +16,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleMidEventValidationServiceTest {
@@ -45,6 +47,7 @@ public class MultipleMidEventValidationServiceTest {
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("246000");
         moveCasesType.setUpdatedSubMultipleRef("246000/1");
+        moveCasesType.setConvertToSingle(NO);
         multipleDetails.getCaseData().setMoveCases(moveCasesType);
 
         multipleMidEventValidationService.multipleValidationLogic(userToken,
@@ -63,6 +66,7 @@ public class MultipleMidEventValidationServiceTest {
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("246001");
         moveCasesType.setUpdatedSubMultipleRef("246000/1");
+        moveCasesType.setConvertToSingle(NO);
         multipleDetails.getCaseData().setMoveCases(moveCasesType);
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
@@ -86,6 +90,7 @@ public class MultipleMidEventValidationServiceTest {
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("246002");
         moveCasesType.setUpdatedSubMultipleRef("246002/1");
+        moveCasesType.setConvertToSingle(NO);
         multipleDetails.getCaseData().setMoveCases(moveCasesType);
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
@@ -109,6 +114,7 @@ public class MultipleMidEventValidationServiceTest {
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("246002");
         moveCasesType.setUpdatedSubMultipleRef("246002/1");
+        moveCasesType.setConvertToSingle(NO);
         multipleDetails.getCaseData().setMoveCases(moveCasesType);
 
         submitMultipleEvents.get(0).getCaseData().setSubMultipleCollection(null);
@@ -133,6 +139,7 @@ public class MultipleMidEventValidationServiceTest {
 
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("246002");
+        moveCasesType.setConvertToSingle(NO);
         multipleDetails.getCaseData().setMoveCases(moveCasesType);
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
@@ -145,6 +152,25 @@ public class MultipleMidEventValidationServiceTest {
                 errors);
 
         assertEquals("Multiple 246002 does not exists", errors.get(0));
+
+    }
+
+    @Test
+    public void multipleValidationLogicConvertToSingle() {
+
+        List<String> errors = new ArrayList<>();
+
+        MoveCasesType moveCasesType = new MoveCasesType();
+        moveCasesType.setUpdatedMultipleRef("");
+        moveCasesType.setUpdatedSubMultipleRef("");
+        moveCasesType.setConvertToSingle(YES);
+        multipleDetails.getCaseData().setMoveCases(moveCasesType);
+
+        multipleMidEventValidationService.multipleValidationLogic(userToken,
+                multipleDetails,
+                errors);
+
+        assertEquals(0, errors.size());
 
     }
 

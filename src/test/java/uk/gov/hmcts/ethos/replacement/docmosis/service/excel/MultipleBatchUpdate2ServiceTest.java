@@ -106,7 +106,7 @@ public class MultipleBatchUpdate2ServiceTest {
     public void batchUpdate2LogicDifferentMultipleEmptySubMultiple() {
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjects);
-        when(multipleCasesReadingService.retrieveMultipleCases(userToken,
+        when(multipleCasesReadingService.retrieveMultipleCasesWithRetries(userToken,
                 multipleDetails.getCaseTypeId(),
                 "246001")
         ).thenReturn(submitMultipleEvents);
@@ -127,7 +127,7 @@ public class MultipleBatchUpdate2ServiceTest {
     public void batchUpdate2LogicDifferentMultipleWithSubMultiple() {
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjects);
-        when(multipleCasesReadingService.retrieveMultipleCases(userToken,
+        when(multipleCasesReadingService.retrieveMultipleCasesWithRetries(userToken,
                 multipleDetails.getCaseTypeId(),
                 "246001")
         ).thenReturn(submitMultipleEvents);
