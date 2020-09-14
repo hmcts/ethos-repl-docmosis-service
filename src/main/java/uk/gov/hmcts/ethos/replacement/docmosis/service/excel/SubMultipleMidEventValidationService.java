@@ -29,7 +29,7 @@ public class SubMultipleMidEventValidationService {
 
             log.info("Create validation");
 
-            validateSubMultipleDoesNotExist(multipleData, subMultipleActionType.getCreateSubMultipleName(), errors);
+            validateSubMultipleExist(multipleData, subMultipleActionType.getCreateSubMultipleName(), errors);
 
         } else if (actionType.equals(AMEND_ACTION)) {
 
@@ -37,13 +37,7 @@ public class SubMultipleMidEventValidationService {
 
             validateSubMultipleDoesNotExist(multipleData, subMultipleActionType.getAmendSubMultipleNameExisting(), errors);
 
-            String newSubMultipleName = subMultipleActionType.getAmendSubMultipleNameNew();
-
-            if (doesSubMultipleExist(multipleData, newSubMultipleName)) {
-
-                errors.add("New Sub Multiple " + newSubMultipleName + " already exists");
-
-            }
+            validateSubMultipleExist(multipleData, subMultipleActionType.getAmendSubMultipleNameNew(), errors);
 
         } else {
 
@@ -65,9 +59,21 @@ public class SubMultipleMidEventValidationService {
 
     }
 
+    private void validateSubMultipleExist(MultipleData multipleData, String subMultipleName, List<String> errors) {
+
+        if (doesSubMultipleExist(multipleData, subMultipleName)) {
+
+            errors.add("Sub Multiple " + subMultipleName + " already exists");
+
+        }
+
+    }
+
     private boolean doesSubMultipleExist(MultipleData multipleData, String subMultipleName) {
 
         log.info("Checking if sub multiple name exists");
+
+        if (multipleData.getSubMultipleCollection() == null) return false;
 
         return multipleData.getSubMultipleCollection().stream().anyMatch(
                 subMultipleTypeItem ->

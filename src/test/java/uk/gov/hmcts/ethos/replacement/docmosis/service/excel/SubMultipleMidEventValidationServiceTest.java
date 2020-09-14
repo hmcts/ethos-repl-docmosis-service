@@ -34,12 +34,14 @@ public class SubMultipleMidEventValidationServiceTest {
     @Test
     public void subMultipleMidEventValidationServiceCreate() {
 
+        multipleDetails.getCaseData().getSubMultipleAction().setCreateSubMultipleName("SubMultiple");
+
         subMultipleMidEventValidationService.subMultipleValidationLogic(
                 multipleDetails,
                 errors);
 
         assertEquals(1, errors.size());
-        assertEquals("Sub Multiple NewSubMultiple does not exist", errors.get(0));
+        assertEquals("Sub Multiple SubMultiple already exists", errors.get(0));
 
     }
 
@@ -56,7 +58,24 @@ public class SubMultipleMidEventValidationServiceTest {
 
         assertEquals(2, errors.size());
         assertEquals("Sub Multiple SubMultipleDoesNotExist does not exist", errors.get(0));
-        assertEquals("New Sub Multiple SubMultiple already exists", errors.get(1));
+        assertEquals("Sub Multiple SubMultiple already exists", errors.get(1));
+
+    }
+
+    @Test
+    public void subMultipleMidEventValidationServiceAmendEmptySubCollection() {
+
+        multipleDetails.getCaseData().getSubMultipleAction().setActionType(AMEND_ACTION);
+        multipleDetails.getCaseData().getSubMultipleAction().setAmendSubMultipleNameExisting("SubMultipleDoesNotExist");
+        multipleDetails.getCaseData().getSubMultipleAction().setAmendSubMultipleNameNew("SubMultiple");
+        multipleDetails.getCaseData().setSubMultipleCollection(null);
+
+        subMultipleMidEventValidationService.subMultipleValidationLogic(
+                multipleDetails,
+                errors);
+
+        assertEquals(1, errors.size());
+        assertEquals("Sub Multiple SubMultipleDoesNotExist does not exist", errors.get(0));
 
     }
 
