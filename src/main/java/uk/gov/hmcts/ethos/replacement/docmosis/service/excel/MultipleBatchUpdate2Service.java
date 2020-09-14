@@ -58,15 +58,17 @@ public class MultipleBatchUpdate2Service {
 
         log.info("Convert to singles " + convertToSingle);
 
+        List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
+
         if (convertToSingle.equals(YES)) {
+
+            removeCasesFromCurrentMultiple(userToken, multipleDetails, errors, multipleObjectsFiltered);
 
             log.info("Sending detach updates to singles");
 
             sendDetachUpdatesToSingles(userToken, multipleDetails, errors, multipleObjects);
 
         } else {
-
-            List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
 
             MoveCasesType moveCasesType = multipleData.getMoveCases();
             String updatedMultipleRef = moveCasesType.getUpdatedMultipleRef();
@@ -97,19 +99,16 @@ public class MultipleBatchUpdate2Service {
                 updateToDifferentMultiple(userToken, multipleDetails, errors, multipleObjectsFiltered,
                         multipleObjects, updatedMultipleRef, updatedSubMultipleRef);
 
-
-
             }
 
         }
 
     }
 
-    private void updateToDifferentMultiple(String userToken, MultipleDetails multipleDetails, List<String> errors,
-                                           List<String> multipleObjectsFiltered, TreeMap<String, Object> multipleObjects,
-                                           String updatedMultipleRef, String updatedSubMultipleRef) {
+    private void removeCasesFromCurrentMultiple(String userToken, MultipleDetails multipleDetails, List<String> errors,
+                                                List<String> multipleObjectsFiltered) {
 
-        log.info("Remove case ids in multiple");
+        log.info("Remove case ids in current multiple");
 
         MultiplesHelper.removeCaseIds(multipleDetails.getCaseData(), multipleObjectsFiltered);
 
@@ -117,6 +116,14 @@ public class MultipleBatchUpdate2Service {
 
         readCurrentExcelAndRemoveCasesInMultiple(userToken, multipleDetails.getCaseData(), errors,
                 multipleObjectsFiltered);
+
+    }
+
+    private void updateToDifferentMultiple(String userToken, MultipleDetails multipleDetails, List<String> errors,
+                                           List<String> multipleObjectsFiltered, TreeMap<String, Object> multipleObjects,
+                                           String updatedMultipleRef, String updatedSubMultipleRef) {
+
+        removeCasesFromCurrentMultiple(userToken, multipleDetails, errors, multipleObjectsFiltered);
 
         SubmitMultipleEvent updatedMultiple = getUpdatedMultiple(userToken,
                 multipleDetails.getCaseTypeId(), updatedMultipleRef);

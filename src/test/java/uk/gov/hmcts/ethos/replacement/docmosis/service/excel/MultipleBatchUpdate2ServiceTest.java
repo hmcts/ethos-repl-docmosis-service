@@ -68,10 +68,17 @@ public class MultipleBatchUpdate2ServiceTest {
 
     @Test
     public void batchUpdate2LogicDetachCases() {
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjects);
         multipleBatchUpdate2Service.batchUpdate2Logic(userToken,
                 multipleDetails,
                 new ArrayList<>(),
                 multipleObjectsFlags);
+        verify(excelDocManagementService, times(1)).generateAndUploadExcel(
+                anyList(),
+                anyString(),
+                any());
+        verifyNoMoreInteractions(excelDocManagementService);
         verify(userService, times(1)).getUserDetails(userToken);
         verifyNoMoreInteractions(userService);
     }
