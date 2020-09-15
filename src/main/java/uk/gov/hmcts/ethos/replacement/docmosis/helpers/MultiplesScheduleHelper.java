@@ -137,10 +137,10 @@ public class MultiplesScheduleHelper {
         sb.append("\"Current_position\":\"").append(nullCheck(caseData.getPositionType())).append(NEW_LINE);
         sb.append("\"Case_No\":\"").append(nullCheck(caseData.getEthosCaseReference())).append(NEW_LINE);
         sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantIndType().claimantFullNames())).append(NEW_LINE);
-        sb.append("\"claimant_addressLine1\":\"").append(nullCheck(caseData.getClaimantType().getClaimantAddressUK().toString())).append(NEW_LINE);
+        sb.append("\"claimant_addressLine1\":\"").append(nullCheck(caseData.getClaimantType().getClaimantAddressUK().getAddressLine1())).append(NEW_LINE);
         sb.append("\"claimant_postCode\":\"").append(nullCheck(caseData.getClaimantType().getClaimantAddressUK().getPostCode())).append(NEW_LINE);
         sb.append("\"respondent_full_name\":\"").append(nullCheck(respondent.getRespondentName())).append(NEW_LINE);
-        sb.append("\"respondent_addressLine1\":\"").append(nullCheck(respondent.getRespondentAddress().toString())).append(NEW_LINE);
+        sb.append("\"respondent_addressLine1\":\"").append(nullCheck(respondent.getRespondentAddress().getAddressLine1())).append(NEW_LINE);
         sb.append("\"respondent_postCode\":\"").append(nullCheck(respondent.getRespondentAddress().getPostCode())).append("\"}");
         return sb;
     }
