@@ -41,4 +41,14 @@ public class MultiplesHelperTest {
 
     }
 
+    @Test
+    public void addCaseIdsWhenEmptyCollection() {
+
+        multipleData.setCaseIdCollection(null);
+        MultiplesHelper.addCaseIds(multipleData, new ArrayList<>(Arrays.asList("245003/2020", "245004/2020")));
+        assertEquals(2, multipleData.getCaseIdCollection().size());
+        assertEquals("245003/2020", multipleData.getCaseIdCollection().get(0).getValue().getEthosCaseReference());
+
+    }
+
 }

@@ -85,7 +85,15 @@ public class MultiplesHelper {
             caseIdCollectionToAdd.add(createCaseIdTypeItem(ethosCaseReference));
         }
 
-        multipleData.getCaseIdCollection().addAll(caseIdCollectionToAdd);
+        if (multipleData.getCaseIdCollection() == null) {
+
+            multipleData.setCaseIdCollection(new ArrayList<>(caseIdCollectionToAdd));
+
+        } else {
+
+            multipleData.getCaseIdCollection().addAll(caseIdCollectionToAdd);
+
+        }
 
     }
 

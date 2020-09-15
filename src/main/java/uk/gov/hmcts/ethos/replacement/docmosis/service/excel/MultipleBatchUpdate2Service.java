@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
@@ -91,6 +92,10 @@ public class MultipleBatchUpdate2Service {
                             multipleObjectsFiltered, updatedSubMultipleRef);
 
                 }
+
+                log.info("Update multiple state to open");
+
+                multipleDetails.getCaseData().setState(OPEN_STATE);
 
             } else {
 
