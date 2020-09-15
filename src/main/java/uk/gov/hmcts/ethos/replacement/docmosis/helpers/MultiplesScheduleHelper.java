@@ -132,11 +132,11 @@ public class MultiplesScheduleHelper {
         StringBuilder sb = new StringBuilder();
         CaseData caseData = submitEvent.getCaseData();
         RespondentSumType respondent = caseData.getRespondentCollection().get(0).getValue();
-        sb.append("{\"Claimant\":\"").append(nullCheck(caseData.getClaimantIndType().claimantFullName())).append(NEW_LINE);
+        sb.append("{\"Claimant\":\"").append(nullCheck(caseData.getClaimantIndType().claimantFullNames())).append(NEW_LINE);
         sb.append("\"Respondent\":\"").append(nullCheck(respondent.getRespondentName())).append(NEW_LINE);
         sb.append("\"Current_position\":\"").append(nullCheck(caseData.getPositionType())).append(NEW_LINE);
         sb.append("\"Case_No\":\"").append(nullCheck(caseData.getEthosCaseReference())).append(NEW_LINE);
-        sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantIndType().claimantFullName())).append(NEW_LINE);
+        sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantIndType().claimantFullNames())).append(NEW_LINE);
         sb.append("\"claimant_addressLine1\":\"").append(nullCheck(caseData.getClaimantType().getClaimantAddressUK().toString())).append(NEW_LINE);
         sb.append("\"claimant_postCode\":\"").append(nullCheck(caseData.getClaimantType().getClaimantAddressUK().getPostCode())).append(NEW_LINE);
         sb.append("\"respondent_full_name\":\"").append(nullCheck(respondent.getRespondentName())).append(NEW_LINE);
