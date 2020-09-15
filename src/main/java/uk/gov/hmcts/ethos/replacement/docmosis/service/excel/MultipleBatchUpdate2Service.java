@@ -93,10 +93,6 @@ public class MultipleBatchUpdate2Service {
 
                 }
 
-                log.info("Update multiple state to open");
-
-                multipleDetails.getCaseData().setState(OPEN_STATE);
-
             } else {
 
                 log.info("Updates to different multiple");
@@ -105,6 +101,10 @@ public class MultipleBatchUpdate2Service {
                         multipleObjects, updatedMultipleRef, updatedSubMultipleRef);
 
             }
+
+            log.info("Update multiple state to open");
+
+            multipleDetails.getCaseData().setState(OPEN_STATE);
 
         }
 
@@ -121,6 +121,9 @@ public class MultipleBatchUpdate2Service {
 
         readCurrentExcelAndRemoveCasesInMultiple(userToken, multipleDetails.getCaseData(), errors,
                 multipleObjectsFiltered);
+
+        //if deleted ones are LEAD then first caseId will be LEAD send the update to singles update LEAD field.
+        //TODO
 
     }
 

@@ -46,7 +46,7 @@ public class MultipleMidEventValidationServiceTest {
 
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("246000");
-        moveCasesType.setUpdatedSubMultipleRef("246000/1");
+        moveCasesType.setUpdatedSubMultipleRef("SubMultiple");
         moveCasesType.setConvertToSingle(NO);
         multipleDetails.getCaseData().setMoveCases(moveCasesType);
 
@@ -65,7 +65,7 @@ public class MultipleMidEventValidationServiceTest {
 
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("246001");
-        moveCasesType.setUpdatedSubMultipleRef("246000/1");
+        moveCasesType.setUpdatedSubMultipleRef("SubMultiple");
         moveCasesType.setConvertToSingle(NO);
         multipleDetails.getCaseData().setMoveCases(moveCasesType);
 
@@ -89,7 +89,7 @@ public class MultipleMidEventValidationServiceTest {
 
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("246002");
-        moveCasesType.setUpdatedSubMultipleRef("246002/1");
+        moveCasesType.setUpdatedSubMultipleRef("SubMultiple3");
         moveCasesType.setConvertToSingle(NO);
         multipleDetails.getCaseData().setMoveCases(moveCasesType);
 
@@ -102,7 +102,7 @@ public class MultipleMidEventValidationServiceTest {
                 multipleDetails,
                 errors);
 
-        assertEquals("Sub multiple 246002/1 does not exists in 246002", errors.get(0));
+        assertEquals("Sub multiple SubMultiple3 does not exists in 246002", errors.get(0));
 
     }
 
@@ -113,7 +113,7 @@ public class MultipleMidEventValidationServiceTest {
 
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("246002");
-        moveCasesType.setUpdatedSubMultipleRef("246002/1");
+        moveCasesType.setUpdatedSubMultipleRef("SubMultiple3");
         moveCasesType.setConvertToSingle(NO);
         multipleDetails.getCaseData().setMoveCases(moveCasesType);
 
@@ -128,7 +128,7 @@ public class MultipleMidEventValidationServiceTest {
                 multipleDetails,
                 errors);
 
-        assertEquals("Sub multiple 246002/1 does not exists in 246002", errors.get(0));
+        assertEquals("Sub multiple SubMultiple3 does not exists in 246002", errors.get(0));
 
     }
 

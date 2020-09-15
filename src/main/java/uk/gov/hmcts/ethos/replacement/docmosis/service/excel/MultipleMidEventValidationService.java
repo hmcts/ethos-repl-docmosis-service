@@ -37,11 +37,11 @@ public class MultipleMidEventValidationService {
         if (convertToSingle.equals(NO)) {
 
             String updatedMultipleRef = moveCasesType.getUpdatedMultipleRef();
-            String updatedSubMultipleRef = moveCasesType.getUpdatedSubMultipleRef();
+            String updatedSubMultipleName = moveCasesType.getUpdatedSubMultipleRef();
 
             if (updatedMultipleRef.equals(multipleData.getMultipleReference())) {
 
-                validateSubMultiple(updatedSubMultipleRef,
+                validateSubMultiple(updatedSubMultipleName,
                         multipleData.getSubMultipleCollection(),
                         errors,
                         updatedMultipleRef);
@@ -58,7 +58,7 @@ public class MultipleMidEventValidationService {
 
                     SubmitMultipleEvent submitMultipleEvent = submitMultipleEvents.get(0);
 
-                    validateSubMultiple(updatedSubMultipleRef,
+                    validateSubMultiple(updatedSubMultipleName,
                             submitMultipleEvent.getCaseData().getSubMultipleCollection(),
                             errors,
                             updatedMultipleRef);
@@ -75,26 +75,26 @@ public class MultipleMidEventValidationService {
 
     }
 
-    private void validateSubMultiple(String updatedSubMultipleRef,
+    private void validateSubMultiple(String updatedSubMultipleName,
                                      List<SubMultipleTypeItem> subMultiples,
                                      List<String> errors,
                                      String updatedMultipleRef) {
 
-        if (updatedSubMultipleRef != null && !doesSubMultipleExist(subMultiples, updatedSubMultipleRef)) {
+        if (updatedSubMultipleName != null && !doesSubMultipleExist(subMultiples, updatedSubMultipleName)) {
 
-            errors.add("Sub multiple " + updatedSubMultipleRef + " does not exists in " + updatedMultipleRef);
+            errors.add("Sub multiple " + updatedSubMultipleName + " does not exists in " + updatedMultipleRef);
 
         }
 
     }
 
-    private boolean doesSubMultipleExist(List<SubMultipleTypeItem> subMultiples, String updatedSubMultipleRef) {
+    private boolean doesSubMultipleExist(List<SubMultipleTypeItem> subMultiples, String updatedSubMultipleName) {
 
         if (subMultiples != null) {
 
             return subMultiples
                     .stream()
-                    .anyMatch(p -> p.getValue().getSubMultipleRef().equals(updatedSubMultipleRef));
+                    .anyMatch(p -> p.getValue().getSubMultipleName().equals(updatedSubMultipleName));
 
         } else {
 
