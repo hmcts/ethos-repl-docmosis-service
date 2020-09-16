@@ -34,8 +34,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.SE
 @Service("excelReadingService")
 public class ExcelReadingService {
 
-    private static final String ZERO = "0";
-    private static final String NOT_ALLOCATED = "Not Allocated";
+    private static final String NOT_ALLOCATED = "Not_Allocated";
     private static final String ERROR_SHEET_NAME_NOT_FOUND = "SheetName not found";
 
     private final ExcelDocManagementService excelDocManagementService;
@@ -140,7 +139,9 @@ public class ExcelReadingService {
                             getCellValue(currentRow.getCell(1)));
                 } else {
                     if (isMultipleInFlags(currentRow, multipleData)) {
-                        getSubMultipleObjects(multipleObjects, ZERO, NOT_ALLOCATED);
+                        getSubMultipleObjects(multipleObjects,
+                                getCellValue(currentRow.getCell(0)),
+                                NOT_ALLOCATED);
                     }
                 }
 
