@@ -95,7 +95,7 @@ public class MultiplesScheduleHelper {
                 }
                 sb.append("]\n");
                 if (entries.hasNext()) {
-                    sb.append("},\n\n");
+                    sb.append("},\n");
                 } else {
                     sb.append("}],\n");
                 }
