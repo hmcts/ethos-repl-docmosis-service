@@ -22,23 +22,23 @@ public class MultipleHelperService {
         this.singleCasesReadingService = singleCasesReadingService;
     }
 
-    public void addLeadMarkUp(String userToken, String caseTypeId, MultipleData multipleData) {
+    public void addLeadMarkUp(String userToken, String caseTypeId, MultipleData multipleData, String newLeadCaseId) {
 
         SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(
                 userToken,
                 caseTypeId,
-                multipleData.getLeadCase());
+                newLeadCaseId);
 
         if (submitEvent != null) {
 
             multipleData.setLeadCase(MultiplesHelper.generateLeadMarkUp(
                     ccdGatewayBaseUrl,
                     String.valueOf(submitEvent.getCaseId()),
-                    multipleData.getLeadCase()));
+                    newLeadCaseId));
 
         } else {
 
-            log.info("No lead case found for: " + multipleData.getLeadCase());
+            log.info("No lead case found for: " + newLeadCaseId);
 
         }
 

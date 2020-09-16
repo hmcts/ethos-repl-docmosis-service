@@ -128,7 +128,8 @@ public class MultipleBatchUpdate2Service {
 
                 log.info("Changing the lead case to: " + newLeadCase + " as old lead case: " + oldLeadCase + " has been taken out");
 
-                multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(), multipleDetails.getCaseData());
+                multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(),
+                        multipleDetails.getCaseData(), newLeadCase);
 
                 log.info("Sending single update with the lead flag");
 
@@ -182,7 +183,8 @@ public class MultipleBatchUpdate2Service {
 
         log.info("Add the lead case markUp");
 
-        multipleHelperService.addLeadMarkUp(userToken, updatedCaseTypeId, updatedMultipleData);
+        multipleHelperService.addLeadMarkUp(userToken, updatedCaseTypeId,
+                updatedMultipleData, MultiplesHelper.getLeadFromCaseIds(multipleDetails.getCaseData()));
 
         if (isNullOrEmpty(updatedSubMultipleRef)) {
 

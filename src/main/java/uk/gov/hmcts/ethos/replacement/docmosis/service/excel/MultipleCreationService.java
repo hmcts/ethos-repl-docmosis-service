@@ -80,6 +80,7 @@ public class MultipleCreationService {
                 || multipleData.getMultipleReference().trim().equals("")) {
 
             log.info("Case Type: " + multipleDetails.getCaseTypeId());
+
             return multipleReferenceService.createReference(multipleDetails.getCaseTypeId()+"s", 1);
 
         } else {
@@ -122,7 +123,7 @@ public class MultipleCreationService {
 
             MultiplesHelper.addLeadToCaseIds(multipleData, multipleData.getLeadCase());
 
-            multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(), multipleData);
+            multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(), multipleData, multipleData.getLeadCase());
 
         }
     }

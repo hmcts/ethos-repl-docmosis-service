@@ -46,7 +46,8 @@ public class MultipleHelperServiceTest {
                 .thenReturn(submitEventList.get(0));
         multipleHelperService.addLeadMarkUp(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData());
+                multipleDetails.getCaseData(),
+                multipleDetails.getCaseData().getLeadCase());
         assertEquals("<a target=\"_blank\" href=\"http://www-demo.ccd/dm-store:8080/v2/case//v2/case/1232121232\">21006/2020</a>",
                 multipleDetails.getCaseData().getLeadCase());
     }
@@ -60,7 +61,8 @@ public class MultipleHelperServiceTest {
                 .thenReturn(null);
         multipleHelperService.addLeadMarkUp(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData());
+                multipleDetails.getCaseData(),
+                multipleDetails.getCaseData().getLeadCase());
         assertEquals("21006/2020", multipleDetails.getCaseData().getLeadCase());
     }
 }
