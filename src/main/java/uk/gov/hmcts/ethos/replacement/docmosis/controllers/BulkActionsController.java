@@ -107,11 +107,11 @@ public class BulkActionsController {
         }
 
         //IF IT IS NOT ET ONLINE OR MIGRATION THEN SET THE STATE AS PENDING AS IT WILL NEED UPDATE SINGLES
-        if (!bulkRequest.getCaseDetails().getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
-            bulkRequest.getCaseDetails().getCaseData().setState(UPDATING_STATE);
-        } else {
-            bulkRequest.getCaseDetails().getCaseData().setState(OPEN_STATE);
-        }
+//        if (!bulkRequest.getCaseDetails().getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
+//            bulkRequest.getCaseDetails().getCaseData().setState(UPDATING_STATE);
+//        } else {
+//            bulkRequest.getCaseDetails().getCaseData().setState(OPEN_STATE);
+//        }
 
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
                 bulkRequest.getCaseDetails(), userToken, true, true);

@@ -48,7 +48,7 @@ public class MultipleCreationServiceTest {
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
         ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleDetails.getCaseData());
         //Adding lead to the case id collection
-        ethosCaseRefCollection.add("21006/2020");
+        ethosCaseRefCollection.add(0, "21006/2020");
         UserDetails userDetails = HelperTest.getUserDetails();
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         userToken = "authString";

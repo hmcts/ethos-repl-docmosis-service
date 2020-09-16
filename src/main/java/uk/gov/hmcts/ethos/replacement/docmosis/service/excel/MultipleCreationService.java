@@ -11,8 +11,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.MultipleReferenceService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -122,7 +120,7 @@ public class MultipleCreationService {
 
         if (!isNullOrEmpty(multipleData.getLeadCase())) {
 
-            MultiplesHelper.addCaseIds(multipleData, new ArrayList<>(Collections.singletonList(multipleData.getLeadCase())));
+            MultiplesHelper.addLeadToCaseIds(multipleData, multipleData.getLeadCase());
 
             multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(), multipleData);
 

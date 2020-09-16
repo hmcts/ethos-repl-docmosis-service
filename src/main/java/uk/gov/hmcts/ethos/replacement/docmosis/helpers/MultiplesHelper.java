@@ -83,6 +83,7 @@ public class MultiplesHelper {
         for (String ethosCaseReference : multipleObjectsFiltered) {
 
             caseIdCollectionToAdd.add(createCaseIdTypeItem(ethosCaseReference));
+
         }
 
         if (multipleData.getCaseIdCollection() == null) {
@@ -92,6 +93,22 @@ public class MultiplesHelper {
         } else {
 
             multipleData.getCaseIdCollection().addAll(caseIdCollectionToAdd);
+
+        }
+
+    }
+
+    public static void addLeadToCaseIds(MultipleData multipleData, String leadCase) {
+
+        CaseIdTypeItem caseIdTypeItem = createCaseIdTypeItem(leadCase);
+
+        if (multipleData.getCaseIdCollection() == null) {
+
+            multipleData.setCaseIdCollection(new ArrayList<>(Collections.singletonList(caseIdTypeItem)));
+
+        } else {
+
+            multipleData.getCaseIdCollection().add(0, caseIdTypeItem);
 
         }
 
