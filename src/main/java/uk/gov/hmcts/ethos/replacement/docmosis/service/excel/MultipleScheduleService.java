@@ -40,7 +40,7 @@ public class MultipleScheduleService {
 
     public DocumentInfo bulkScheduleLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
-        log.info("Read excel to schedule logic");
+        log.info("Read excel for schedule logic");
 
         FilterExcelType filterExcelType = getFilterExcelTypeByScheduleDoc(multipleDetails.getCaseData());
 

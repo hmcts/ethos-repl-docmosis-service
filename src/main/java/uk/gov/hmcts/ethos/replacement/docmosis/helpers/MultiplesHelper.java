@@ -210,9 +210,11 @@ public class MultiplesHelper {
 
     }
 
-    public static String generateLeadMarkUp(String ccdGatewayBaseUrl, String caseId) {
+    public static String generateLeadMarkUp(String ccdGatewayBaseUrl, String caseId, String ethosCaseRef) {
 
-        return ccdGatewayBaseUrl.replace("gateway","wwww").concat("/v2/case/" + caseId);
+        String url = ccdGatewayBaseUrl.replace("gateway","www").concat("/v2/case/" + caseId);
+
+        return "<a target=\"_blank\" href=\"" + url + "\">" + ethosCaseRef +"</a>";
 
     }
 

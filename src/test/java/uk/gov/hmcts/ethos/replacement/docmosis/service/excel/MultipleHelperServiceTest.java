@@ -47,7 +47,8 @@ public class MultipleHelperServiceTest {
         multipleHelperService.addLeadMarkUp(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData());
-        assertEquals("http://www-demo.ccd/dm-store:8080/v2/case//v2/case/1232121232", multipleDetails.getCaseData().getLeadCase());
+        assertEquals("<a target=\"_blank\" href=\"http://www-demo.ccd/dm-store:8080/v2/case//v2/case/1232121232\">21006/2020</a>",
+                multipleDetails.getCaseData().getLeadCase());
     }
 
 

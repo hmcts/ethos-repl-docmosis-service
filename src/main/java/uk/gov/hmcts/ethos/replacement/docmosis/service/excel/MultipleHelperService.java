@@ -31,7 +31,10 @@ public class MultipleHelperService {
 
         if (submitEvent != null) {
 
-            multipleData.setLeadCase(MultiplesHelper.generateLeadMarkUp(ccdGatewayBaseUrl, String.valueOf(submitEvent.getCaseId())));
+            multipleData.setLeadCase(MultiplesHelper.generateLeadMarkUp(
+                    ccdGatewayBaseUrl,
+                    String.valueOf(submitEvent.getCaseId()),
+                    multipleData.getLeadCase()));
 
         } else {
 
