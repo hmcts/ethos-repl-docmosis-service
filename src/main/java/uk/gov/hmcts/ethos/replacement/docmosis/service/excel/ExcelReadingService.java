@@ -1,7 +1,11 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +17,25 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.TreeMap;
 
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_3;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_4;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_5;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_6;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.SELECT_ALL;
 
 @Slf4j
 @Service("excelReadingService")
 public class ExcelReadingService {
 
+    private static final String ZERO = "0";
+    private static final String NOT_ALLOCATED = "Not Allocated";
     private static final String ERROR_SHEET_NAME_NOT_FOUND = "SheetName not found";
 
     private final ExcelDocManagementService excelDocManagementService;
@@ -124,6 +138,10 @@ public class ExcelReadingService {
                     getSubMultipleObjects(multipleObjects,
                             getCellValue(currentRow.getCell(0)),
                             getCellValue(currentRow.getCell(1)));
+                } else {
+                    if (isMultipleInFlags(currentRow, multipleData)) {
+                        getSubMultipleObjects(multipleObjects, ZERO, NOT_ALLOCATED);
+                    }
                 }
 
             } else if (filter.equals(FilterExcelType.FLAGS)) {
