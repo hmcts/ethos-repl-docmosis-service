@@ -13,12 +13,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -100,5 +98,32 @@ public class SingleCasesReadingServiceTest {
         }
 
         return caseIds;
+    }
+
+    @Test
+    public void retrieveSingleCase() throws IOException {
+        when(ccdClient.retrieveCasesElasticSearch(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(Collections.singletonList("240001/2020"))))
+                .thenReturn(submitEventList);
+        singleCasesReadingService.retrieveSingleCase(userToken,
+                multipleDetails.getCaseTypeId(),
+                "240001/2020");
+        verify(ccdClient, times(1)).retrieveCasesElasticSearch(userToken,
+                "Manchester",
+                new ArrayList<>(Collections.singletonList("240001/2020")));
+        verifyNoMoreInteractions(ccdClient);
+    }
+
+    @Test
+    public void retrieveSingleCaseException() throws IOException {
+        when(ccdClient.retrieveCasesElasticSearch(anyString(),
+                anyString(),
+                anyList()))
+                .thenThrow(new RuntimeException());
+        SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
+                multipleDetails.getCaseTypeId(),
+                "240001/2020");
+        assertNull(submitEvent);
     }
 }

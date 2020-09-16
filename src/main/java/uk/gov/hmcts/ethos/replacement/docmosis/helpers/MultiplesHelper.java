@@ -209,4 +209,11 @@ public class MultiplesHelper {
         }
 
     }
+
+    public static String generateLeadMarkUp(String ccdGatewayBaseUrl, String caseId) {
+
+        return ccdGatewayBaseUrl.replace("gateway","wwww").concat("/v2/case/" + caseId);
+
+    }
+
 }

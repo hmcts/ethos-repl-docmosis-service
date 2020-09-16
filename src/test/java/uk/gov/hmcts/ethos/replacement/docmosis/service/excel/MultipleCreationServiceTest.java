@@ -33,6 +33,8 @@ public class MultipleCreationServiceTest {
     private UserService userService;
     @Mock
     private MultipleReferenceService multipleReferenceService;
+    @Mock
+    private MultipleHelperService multipleHelperService;
     @InjectMocks
     private MultipleCreationService multipleCreationService;
 
@@ -45,6 +47,8 @@ public class MultipleCreationServiceTest {
         multipleDetails = new MultipleDetails();
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
         ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleDetails.getCaseData());
+        //Adding lead to the case id collection
+        ethosCaseRefCollection.add("21006/2020");
         UserDetails userDetails = HelperTest.getUserDetails();
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         userToken = "authString";
@@ -93,6 +97,7 @@ public class MultipleCreationServiceTest {
     @Test
     public void bulkCreationLogicEmptyCaseIdCollection() {
         multipleDetails.getCaseData().setCaseIdCollection(new ArrayList<>());
+        multipleDetails.getCaseData().setLeadCase(null);
         multipleCreationService.bulkCreationLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());
@@ -120,4 +125,5 @@ public class MultipleCreationServiceTest {
                 1);
         verifyNoMoreInteractions(multipleReferenceService);
     }
+
 }

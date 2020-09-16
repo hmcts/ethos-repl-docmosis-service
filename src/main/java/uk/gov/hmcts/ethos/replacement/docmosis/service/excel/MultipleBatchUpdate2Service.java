@@ -14,9 +14,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
@@ -32,6 +30,7 @@ public class MultipleBatchUpdate2Service {
     private final MultipleCasesReadingService multipleCasesReadingService;
     private final ExcelReadingService excelReadingService;
     private final MultipleCasesSendingService multipleCasesSendingService;
+    private final MultipleHelperService multipleHelperService;
 
     @Autowired
     public MultipleBatchUpdate2Service(CreateUpdatesBusSender createUpdatesBusSender,
@@ -39,13 +38,15 @@ public class MultipleBatchUpdate2Service {
                                        ExcelDocManagementService excelDocManagementService,
                                        MultipleCasesReadingService multipleCasesReadingService,
                                        ExcelReadingService excelReadingService,
-                                       MultipleCasesSendingService multipleCasesSendingService) {
+                                       MultipleCasesSendingService multipleCasesSendingService,
+                                       MultipleHelperService multipleHelperService) {
         this.createUpdatesBusSender = createUpdatesBusSender;
         this.userService = userService;
         this.excelDocManagementService = excelDocManagementService;
         this.multipleCasesReadingService = multipleCasesReadingService;
         this.excelReadingService = excelReadingService;
         this.multipleCasesSendingService = multipleCasesSendingService;
+        this.multipleHelperService = multipleHelperService;
     }
 
     public void batchUpdate2Logic(String userToken, MultipleDetails multipleDetails,
@@ -110,8 +111,40 @@ public class MultipleBatchUpdate2Service {
 
     }
 
+    private void performActionsWithNewLeadCase(String userToken, MultipleDetails multipleDetails, List<String> errors,
+                                               String oldLeadCase, List<String> multipleObjectsFiltered) {
+
+        String newLeadCase = MultiplesHelper.getLeadFromCaseIds(multipleDetails.getCaseData());
+
+        if (newLeadCase.isEmpty()) {
+
+            log.info("Removing lead as it has been already taken out");
+
+            multipleDetails.getCaseData().setLeadCase(null);
+
+        } else {
+
+            if (multipleObjectsFiltered.contains(oldLeadCase)) {
+
+                log.info("Changing the lead case to: " + newLeadCase + " as old lead case: " + oldLeadCase + " has been taken out");
+
+                multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(), multipleDetails.getCaseData());
+
+                log.info("Sending single update with the lead flag");
+
+                sendCreationUpdatesToSingles(userToken, multipleDetails.getCaseTypeId(), multipleDetails.getJurisdiction(),
+                        multipleDetails.getCaseData(), errors, new ArrayList<>(Collections.singletonList(newLeadCase)), newLeadCase);
+
+            }
+
+        }
+
+    }
+
     private void removeCasesFromCurrentMultiple(String userToken, MultipleDetails multipleDetails, List<String> errors,
                                                 List<String> multipleObjectsFiltered) {
+
+        String oldLeadCase = MultiplesHelper.getLeadFromCaseIds(multipleDetails.getCaseData());
 
         log.info("Remove case ids in current multiple");
 
@@ -122,8 +155,9 @@ public class MultipleBatchUpdate2Service {
         readCurrentExcelAndRemoveCasesInMultiple(userToken, multipleDetails.getCaseData(), errors,
                 multipleObjectsFiltered);
 
-        //if deleted ones are LEAD then first caseId will be LEAD send the update to singles update LEAD field.
-        //TODO
+        log.info("Perform actions with the new lead if exists");
+
+        performActionsWithNewLeadCase(userToken, multipleDetails, errors, oldLeadCase, multipleObjectsFiltered);
 
     }
 
@@ -136,36 +170,45 @@ public class MultipleBatchUpdate2Service {
         SubmitMultipleEvent updatedMultiple = getUpdatedMultiple(userToken,
                 multipleDetails.getCaseTypeId(), updatedMultipleRef);
 
+        MultipleData updatedMultipleData = updatedMultiple.getCaseData();
+
+        String updatedCaseTypeId = multipleDetails.getCaseTypeId();
+
+        String updatedJurisdiction = multipleDetails.getJurisdiction();
+
         log.info("Add new cases to case ids collection");
 
-        MultiplesHelper.addCaseIds(updatedMultiple.getCaseData(), multipleObjectsFiltered);
+        MultiplesHelper.addCaseIds(updatedMultipleData, multipleObjectsFiltered);
+
+        log.info("Add the lead case markUp");
+
+        multipleHelperService.addLeadMarkUp(userToken, updatedCaseTypeId, updatedMultipleData);
 
         if (isNullOrEmpty(updatedSubMultipleRef)) {
 
             log.info("Moving single cases without sub multiples");
 
-            readUpdatedExcelAndAddCasesInMultiple(userToken, updatedMultiple.getCaseData(), errors,
+            readUpdatedExcelAndAddCasesInMultiple(userToken, updatedMultipleData, errors,
                     multipleObjectsFiltered, "");
 
         } else {
 
             log.info("Moving single cases with sub multiples");
 
-            readUpdatedExcelAndAddCasesInMultiple(userToken, updatedMultiple.getCaseData(), errors,
+            readUpdatedExcelAndAddCasesInMultiple(userToken, updatedMultipleData, errors,
                     multipleObjectsFiltered, updatedSubMultipleRef);
 
         }
 
         log.info("Send update to the multiple with new excel");
 
-        multipleCasesSendingService.sendUpdateToMultiple(userToken, multipleDetails.getCaseTypeId(),
-                multipleDetails.getJurisdiction(), updatedMultiple.getCaseData(), String.valueOf(updatedMultiple.getCaseId()));
+        multipleCasesSendingService.sendUpdateToMultiple(userToken, updatedCaseTypeId, updatedJurisdiction,
+                updatedMultipleData, String.valueOf(updatedMultiple.getCaseId()));
 
         log.info("Sending creation updates to singles");
 
-        sendCreationUpdatesToSingles(userToken, multipleDetails.getCaseTypeId(), multipleDetails.getJurisdiction(),
-                updatedMultiple.getCaseData(), errors, multipleObjects,
-                MultiplesHelper.getLeadFromCaseIds(updatedMultiple.getCaseData()));
+        sendCreationUpdatesToSingles(userToken, updatedCaseTypeId, updatedJurisdiction, updatedMultipleData,
+                errors, new ArrayList<>(multipleObjects.keySet()), MultiplesHelper.getLeadFromCaseIds(updatedMultipleData));
 
     }
 
@@ -300,9 +343,8 @@ public class MultipleBatchUpdate2Service {
     }
 
     private void sendCreationUpdatesToSingles(String userToken, String caseTypeId, String jurisdiction, MultipleData updatedMultipleData,
-                                              List<String> errors, TreeMap<String, Object> multipleObjects, String leadId) {
+                                              List<String> errors, List<String> multipleObjectsFiltered, String leadId) {
 
-        List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
         String username = userService.getUserDetails(userToken).getEmail();
 
         PersistentQHelper.sendSingleUpdatesPersistentQ(caseTypeId,

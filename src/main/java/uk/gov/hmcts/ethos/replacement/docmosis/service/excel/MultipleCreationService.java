@@ -11,8 +11,11 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.MultipleReferenceService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
@@ -23,16 +26,19 @@ public class MultipleCreationService {
     private final UserService userService;
     private final ExcelDocManagementService excelDocManagementService;
     private final MultipleReferenceService multipleReferenceService;
+    private final MultipleHelperService multipleHelperService;
 
     @Autowired
     public MultipleCreationService(CreateUpdatesBusSender createUpdatesBusSender,
                                    UserService userService,
                                    ExcelDocManagementService excelDocManagementService,
-                                   MultipleReferenceService multipleReferenceService) {
+                                   MultipleReferenceService multipleReferenceService,
+                                   MultipleHelperService multipleHelperService) {
         this.createUpdatesBusSender = createUpdatesBusSender;
         this.userService = userService;
         this.excelDocManagementService = excelDocManagementService;
         this.multipleReferenceService = multipleReferenceService;
+        this.multipleHelperService = multipleHelperService;
     }
 
     public void bulkCreationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
@@ -48,6 +54,10 @@ public class MultipleCreationService {
         log.info("Add state to the multiple");
 
         addStateToMultiple(multipleDetails.getCaseData());
+
+        log.info("Get lead case markUp and add to the collection case Ids");
+
+        getLeadMarkUpAndAddLeadToCaseIds(userToken, multipleDetails);
 
         List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleDetails.getCaseData());
 
@@ -102,6 +112,19 @@ public class MultipleCreationService {
         } else {
 
             multipleData.setState(OPEN_STATE);
+
+        }
+    }
+
+    private void getLeadMarkUpAndAddLeadToCaseIds(String userToken, MultipleDetails multipleDetails) {
+
+        MultipleData multipleData = multipleDetails.getCaseData();
+
+        if (!isNullOrEmpty(multipleData.getLeadCase())) {
+
+            MultiplesHelper.addCaseIds(multipleData, new ArrayList<>(Collections.singletonList(multipleData.getLeadCase())));
+
+            multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(), multipleData);
 
         }
     }

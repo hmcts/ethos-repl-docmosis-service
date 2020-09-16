@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
@@ -39,6 +40,8 @@ public class MultipleBatchUpdate2ServiceTest {
     private ExcelReadingService excelReadingService;
     @Mock
     private MultipleCasesSendingService multipleCasesSendingService;
+    @Mock
+    private MultipleHelperService multipleHelperService;
 
     @InjectMocks
     private MultipleBatchUpdate2Service multipleBatchUpdate2Service;
@@ -79,8 +82,27 @@ public class MultipleBatchUpdate2ServiceTest {
                 anyString(),
                 any());
         verifyNoMoreInteractions(excelDocManagementService);
+        verify(userService, times(2)).getUserDetails(userToken);
+        verifyNoMoreInteractions(userService);
+    }
+
+    @Test
+    public void batchUpdate2LogicDetachCasesEmptyCasesLeft() {
+        multipleObjectsFlags.put("245001/2020",  "245001/2020");
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjects);
+        multipleBatchUpdate2Service.batchUpdate2Logic(userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                multipleObjectsFlags);
+        verify(excelDocManagementService, times(1)).generateAndUploadExcel(
+                anyList(),
+                anyString(),
+                any());
+        verifyNoMoreInteractions(excelDocManagementService);
         verify(userService, times(1)).getUserDetails(userToken);
         verifyNoMoreInteractions(userService);
+        assertNull(multipleDetails.getCaseData().getLeadCase());
     }
 
     @Test

@@ -127,8 +127,10 @@ public class MultipleUtil {
     public static List<SubmitEvent> getSubmitEvents() {
         SubmitEvent submitEvent1 = new SubmitEvent();
         submitEvent1.setCaseData(getCaseData("245000/2020"));
+        submitEvent1.setCaseId(1232121232);
         SubmitEvent submitEvent2 = new SubmitEvent();
         submitEvent2.setCaseData(getCaseData("245003/2020"));
+        submitEvent2.setCaseId(1232121233);
         return new ArrayList<>(Arrays.asList(submitEvent1, submitEvent2));
     }
 
@@ -192,6 +194,7 @@ public class MultipleUtil {
         getDocumentCollection(multipleData);
         multipleData.setSubMultipleCollection(getSubMultipleCollection());
         multipleData.setSubMultipleAction(getSubMultipleActionType());
+        multipleData.setLeadCase("21006/2020");
         return multipleData;
     }
 
