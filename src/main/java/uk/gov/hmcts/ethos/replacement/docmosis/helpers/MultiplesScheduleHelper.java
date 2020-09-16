@@ -17,7 +17,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 @Slf4j
 public class MultiplesScheduleHelper {
 
-    private static final String ZERO = "0";
+    private static final String ZERO = "/0";
     private static final String NOT_ALLOCATED = "Not_Allocated";
 
     public static StringBuilder buildScheduleDocumentContent(MultipleData multipleData, String accessKey,
@@ -80,11 +80,11 @@ public class MultiplesScheduleHelper {
             while (entries.hasNext()) {
                 Map.Entry<String, List<SubmitEvent>> subMultipleEntry = entries.next();
                 if (subMultipleEntry.getKey().equals(NOT_ALLOCATED)) {
-                    sb.append("{\"SubMultiple_No\":\"").append(ZERO).append(NEW_LINE);
+                    sb.append("{\"SubMultiple_No\":\"").append(multipleData.getMultipleReference()).append(ZERO).append(NEW_LINE);
                     sb.append("\"SubMultiple_title\":\"").append(subMultipleEntry.getKey().replace("_", " ")).append(NEW_LINE);
                 } else {
-                    sb.append("\"SubMultiple_title\":\"").append(subMultipleEntry.getKey()).append(NEW_LINE);
                     sb.append("{\"SubMultiple_No\":\"").append(getSubMultipleRef(multipleData, subMultipleEntry.getKey())).append(NEW_LINE);
+                    sb.append("\"SubMultiple_title\":\"").append(subMultipleEntry.getKey()).append(NEW_LINE);
                 }
                 sb.append("\"multiple\":[\n");
                 for (int i = 0; i < subMultipleEntry.getValue().size(); i++) {
