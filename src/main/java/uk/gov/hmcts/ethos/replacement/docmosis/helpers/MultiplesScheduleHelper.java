@@ -17,6 +17,9 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 @Slf4j
 public class MultiplesScheduleHelper {
 
+    private static final String ZERO = "/0";
+    private static final String NOT_ALLOCATED = "Not_Allocated";
+
     public static StringBuilder buildScheduleDocumentContent(MultipleData multipleData, String accessKey,
                                                              TreeMap<String, Object> multipleObjectsFiltered,
                                                              List<SubmitEvent> submitEvents) {
@@ -76,8 +79,13 @@ public class MultiplesScheduleHelper {
             Iterator<Map.Entry<String, List<SubmitEvent>>> entries = new TreeMap<>(subMultipleMap).entrySet().iterator();
             while (entries.hasNext()) {
                 Map.Entry<String, List<SubmitEvent>> subMultipleEntry = entries.next();
-                sb.append("{\"SubMultiple_No\":\"").append(getSubMultipleRef(multipleData, subMultipleEntry.getKey())).append(NEW_LINE);
-                sb.append("\"SubMultiple_title\":\"").append(subMultipleEntry.getKey()).append(NEW_LINE);
+                if (subMultipleEntry.getKey().equals(NOT_ALLOCATED)) {
+                    sb.append("{\"SubMultiple_No\":\"").append(multipleData.getMultipleReference()).append(ZERO).append(NEW_LINE);
+                    sb.append("\"SubMultiple_title\":\"").append(subMultipleEntry.getKey().replace("_", " ")).append(NEW_LINE);
+                } else {
+                    sb.append("{\"SubMultiple_No\":\"").append(getSubMultipleRef(multipleData, subMultipleEntry.getKey())).append(NEW_LINE);
+                    sb.append("\"SubMultiple_title\":\"").append(subMultipleEntry.getKey()).append(NEW_LINE);
+                }
                 sb.append("\"multiple\":[\n");
                 for (int i = 0; i < subMultipleEntry.getValue().size(); i++) {
                     sb.append(getMultipleTypeRow(subMultipleEntry.getValue().get(i)));
