@@ -183,8 +183,9 @@ public class MultipleBatchUpdate2Service {
 
         log.info("Add the lead case markUp");
 
-        multipleHelperService.addLeadMarkUp(userToken, updatedCaseTypeId,
-                updatedMultipleData, MultiplesHelper.getLeadFromCaseIds(multipleDetails.getCaseData()));
+        String updatedLeadCase = MultiplesHelper.getLeadFromCaseIds(updatedMultipleData);
+
+        multipleHelperService.addLeadMarkUp(userToken, updatedCaseTypeId, updatedMultipleData, updatedLeadCase);
 
         if (isNullOrEmpty(updatedSubMultipleRef)) {
 
@@ -210,7 +211,7 @@ public class MultipleBatchUpdate2Service {
         log.info("Sending creation updates to singles");
 
         sendCreationUpdatesToSingles(userToken, updatedCaseTypeId, updatedJurisdiction, updatedMultipleData,
-                errors, new ArrayList<>(multipleObjects.keySet()), MultiplesHelper.getLeadFromCaseIds(updatedMultipleData));
+                errors, new ArrayList<>(multipleObjects.keySet()), updatedLeadCase);
 
     }
 

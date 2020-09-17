@@ -43,6 +43,7 @@ public class ExcelActionsController {
     private final MultipleMidEventValidationService multipleMidEventValidationService;
     private final SubMultipleUpdateService subMultipleUpdateService;
     private final SubMultipleMidEventValidationService subMultipleMidEventValidationService;
+    private final MultipleCreationMidEventValidationService multipleCreationMidEventValidationService;
 
     @Autowired
     public ExcelActionsController(VerifyTokenService verifyTokenService,
@@ -55,7 +56,8 @@ public class ExcelActionsController {
                                   MultipleDynamicListFlagsService multipleDynamicListFlagsService,
                                   MultipleMidEventValidationService multipleMidEventValidationService,
                                   SubMultipleUpdateService subMultipleUpdateService,
-                                  SubMultipleMidEventValidationService subMultipleMidEventValidationService) {
+                                  SubMultipleMidEventValidationService subMultipleMidEventValidationService,
+                                  MultipleCreationMidEventValidationService multipleCreationMidEventValidationService) {
         this.verifyTokenService = verifyTokenService;
         this.multipleCreationService = multipleCreationService;
         this.multiplePreAcceptService = multiplePreAcceptService;
@@ -67,6 +69,7 @@ public class ExcelActionsController {
         this.multipleMidEventValidationService = multipleMidEventValidationService;
         this.subMultipleUpdateService = subMultipleUpdateService;
         this.subMultipleMidEventValidationService = subMultipleMidEventValidationService;
+        this.multipleCreationMidEventValidationService = multipleCreationMidEventValidationService;
     }
 
     @PostMapping(value = "/createMultiple", consumes = APPLICATION_JSON_VALUE)
@@ -420,4 +423,32 @@ public class ExcelActionsController {
                 .build());
     }
 
+    @PostMapping(value = "/multipleCreationMidEventValidation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "validates if single cases are right on the multiple creation.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = MultipleCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<MultipleCallbackResponse> multipleCreationMidEventValidation(
+            @RequestBody MultipleRequest multipleRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MULTIPLE CREATION MID EVENT VALIDATION ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors = new ArrayList<>();
+        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
+
+        multipleCreationMidEventValidationService.multipleCreationValidationLogic(userToken, multipleDetails, errors);
+
+        return ResponseEntity.ok(MultipleCallbackResponse.builder()
+                .errors(errors)
+                .data(multipleDetails.getCaseData())
+                .build());
+    }
 }

@@ -53,7 +53,7 @@ public class MultipleCreationService {
 
         addStateToMultiple(multipleDetails.getCaseData());
 
-        log.info("Get lead case markUp and add to the collection case Ids");
+        log.info("Get lead case link and add to the collection case Ids");
 
         getLeadMarkUpAndAddLeadToCaseIds(userToken, multipleDetails);
 
@@ -119,13 +119,26 @@ public class MultipleCreationService {
 
         MultipleData multipleData = multipleDetails.getCaseData();
 
+        String leadCase;
+
         if (!isNullOrEmpty(multipleData.getLeadCase())) {
+
+            log.info("Adding lead case introduced by user: " + multipleData.getLeadCase());
 
             MultiplesHelper.addLeadToCaseIds(multipleData, multipleData.getLeadCase());
 
-            multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(), multipleData, multipleData.getLeadCase());
+            leadCase = multipleData.getLeadCase();
+
+        } else {
+
+            log.info("Getting lead case from the case ids collection");
+
+            leadCase = MultiplesHelper.getLeadFromCaseIds(multipleData);
 
         }
+
+        multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(), multipleData, leadCase);
+
     }
 
     private void sendUpdatesToSingles(String userToken, MultipleDetails multipleDetails,

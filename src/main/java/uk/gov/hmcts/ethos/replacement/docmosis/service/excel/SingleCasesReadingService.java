@@ -56,12 +56,21 @@ public class SingleCasesReadingService {
 
     public SubmitEvent retrieveSingleCase(String userToken, String caseTypeId, String caseId) {
 
+        List<SubmitEvent> submitEvents = retrieveSingleCases(userToken,
+                caseTypeId,
+                new ArrayList<>(Collections.singletonList(caseId)));
+
+        return submitEvents.isEmpty() ? null : submitEvents.get(0);
+    }
+
+    public List<SubmitEvent> retrieveSingleCases(String userToken, String caseTypeId, List<String> caseIds) {
+
         List<SubmitEvent> submitEvents = new ArrayList<>();
 
         try {
             submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,
                     UtilHelper.getCaseTypeId(caseTypeId),
-                    new ArrayList<>(Collections.singletonList(caseId)));
+                    caseIds);
 
         } catch (Exception ex) {
 
@@ -69,7 +78,8 @@ public class SingleCasesReadingService {
 
         }
 
-        return submitEvents.isEmpty() ? null : submitEvents.get(0);
+        return submitEvents;
+
     }
 
 }
