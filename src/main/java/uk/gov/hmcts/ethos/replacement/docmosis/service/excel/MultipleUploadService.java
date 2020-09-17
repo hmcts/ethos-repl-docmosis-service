@@ -67,6 +67,8 @@ public class MultipleUploadService {
 
             log.error("Error reading the Excel");
 
+            log.error(e.getMessage());
+
         }
 
     }

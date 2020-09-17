@@ -43,8 +43,6 @@ public class MultipleCasesSendingService {
 
             log.error(ex.getMessage());
 
-            ex.printStackTrace();
-
         }
     }
 

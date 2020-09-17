@@ -12,6 +12,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender
 
 import java.util.List;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+
 @Slf4j
 @Service("multiplePreAcceptService")
 public class MultiplePreAcceptService {
@@ -41,6 +43,7 @@ public class MultiplePreAcceptService {
                 PersistentQHelper.getPreAcceptDataModel(),
                 errors,
                 multipleData.getMultipleReference(),
+                YES,
                 createUpdatesBusSender,
                 String.valueOf(ethosCaseRefCollection.size()));
 

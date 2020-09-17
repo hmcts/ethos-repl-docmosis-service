@@ -36,6 +36,8 @@ public class MultipleCasesReadingService {
 
             log.error("Error retrieving multiple cases with retries");
 
+            log.error(ex.getMessage());
+
         }
 
         return submitMultipleEvents;
@@ -57,6 +59,8 @@ public class MultipleCasesReadingService {
         } catch (Exception ex) {
 
             log.error("Error retrieving multiple cases");
+
+            log.error(ex.getMessage());
 
         }
 

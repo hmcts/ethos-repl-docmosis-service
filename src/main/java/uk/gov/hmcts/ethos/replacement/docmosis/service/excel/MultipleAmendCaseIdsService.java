@@ -18,6 +18,8 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+
 @Slf4j
 @Service("multipleAmendCaseIdsService")
 public class MultipleAmendCaseIdsService {
@@ -120,6 +122,7 @@ public class MultipleAmendCaseIdsService {
                 PersistentQHelper.getDetachDataModel(),
                 errors,
                 multipleData.getMultipleReference(),
+                YES,
                 createUpdatesBusSender,
                 updateSize);
 
@@ -131,6 +134,7 @@ public class MultipleAmendCaseIdsService {
                         multipleData.getMultipleReference()),
                 errors,
                 multipleData.getMultipleReference(),
+                YES,
                 createUpdatesBusSender,
                 updateSize);
 

@@ -47,6 +47,8 @@ public class ExcelCreationService {
 
             log.error("Error generating the excel");
 
+            log.error(e.getMessage());
+
         }
 
         return bos.toByteArray();

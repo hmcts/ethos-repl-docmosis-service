@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+
 @Slf4j
 @Service("multipleBatchUpdate1Service")
 public class MultipleBatchUpdate1Service {
@@ -52,6 +54,7 @@ public class MultipleBatchUpdate1Service {
                 PersistentQHelper.getUpdateDataModel(multipleDetails.getCaseData()),
                 errors,
                 multipleData.getMultipleReference(),
+                YES,
                 createUpdatesBusSender,
                 String.valueOf(multipleObjectsFiltered.size()));
 

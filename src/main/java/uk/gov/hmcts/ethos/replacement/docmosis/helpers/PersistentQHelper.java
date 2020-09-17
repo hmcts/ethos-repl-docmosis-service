@@ -51,12 +51,12 @@ public class PersistentQHelper {
 
     public static void sendSingleUpdatesPersistentQ(String caseTypeId, String jurisdiction, String username,
                                                     List<String> ethosCaseRefCollection, DataModelParent dataModelParent,
-                                                    List<String> errors, String multipleRef,
+                                                    List<String> errors, String multipleRef, String confirmation,
                                                     CreateUpdatesBusSender createUpdatesBusSender, String updateSize) {
         log.info("Case Ref collection: " + ethosCaseRefCollection);
         if (!ethosCaseRefCollection.isEmpty()) {
             CreateUpdatesDto createUpdatesDto = PersistentQHelper.getMultipleCreateUpdatesDto(caseTypeId, jurisdiction,
-                    ethosCaseRefCollection, username, multipleRef);
+                    ethosCaseRefCollection, username, multipleRef, confirmation);
 
             createUpdatesBusSender.sendUpdatesToQueue(
                     createUpdatesDto,
@@ -70,12 +70,13 @@ public class PersistentQHelper {
 
     private static CreateUpdatesDto getMultipleCreateUpdatesDto(String caseTypeId, String jurisdiction,
                                                                 List<String> ethosCaseRefCollection, String email,
-                                                                String multipleRef) {
+                                                                String multipleRef, String confirmation) {
         return CreateUpdatesDto.builder()
                 .caseTypeId(caseTypeId)
                 .jurisdiction(jurisdiction)
                 .multipleRef(multipleRef)
                 .username(email)
+                .confirmation(confirmation)
                 .ethosCaseRefCollection(ethosCaseRefCollection)
                 .build();
     }

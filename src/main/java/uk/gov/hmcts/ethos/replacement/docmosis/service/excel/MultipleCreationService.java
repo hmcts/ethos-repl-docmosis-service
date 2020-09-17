@@ -159,6 +159,7 @@ public class MultipleCreationService {
                             multipleData.getMultipleReference()),
                     errors,
                     multipleData.getMultipleReference(),
+                    YES,
                     createUpdatesBusSender,
                     String.valueOf(ethosCaseRefCollection.size()));
 

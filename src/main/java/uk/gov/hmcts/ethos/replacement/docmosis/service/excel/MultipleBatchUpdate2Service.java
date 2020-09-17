@@ -14,11 +14,13 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.TreeMap;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 @Service("multipleBatchUpdate2Service")
@@ -62,6 +64,10 @@ public class MultipleBatchUpdate2Service {
 
         List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
 
+        log.info("Update multiple state to open when batching update2 as there will be No Confirmation when updates");
+
+        multipleDetails.getCaseData().setState(OPEN_STATE);
+
         if (convertToSingle.equals(YES)) {
 
             removeCasesFromCurrentMultiple(userToken, multipleDetails, errors, multipleObjectsFiltered);
@@ -102,10 +108,6 @@ public class MultipleBatchUpdate2Service {
                         multipleObjects, updatedMultipleRef, updatedSubMultipleRef);
 
             }
-
-            log.info("Update multiple state to open");
-
-            multipleDetails.getCaseData().setState(OPEN_STATE);
 
         }
 
@@ -340,6 +342,7 @@ public class MultipleBatchUpdate2Service {
                 PersistentQHelper.getDetachDataModel(),
                 errors,
                 multipleData.getMultipleReference(),
+                NO,
                 createUpdatesBusSender,
                 String.valueOf(multipleObjectsFiltered.size()));
 
@@ -358,6 +361,7 @@ public class MultipleBatchUpdate2Service {
                         updatedMultipleData.getMultipleReference()),
                 errors,
                 updatedMultipleData.getMultipleReference(),
+                NO,
                 createUpdatesBusSender,
                 String.valueOf(multipleObjectsFiltered.size()));
 

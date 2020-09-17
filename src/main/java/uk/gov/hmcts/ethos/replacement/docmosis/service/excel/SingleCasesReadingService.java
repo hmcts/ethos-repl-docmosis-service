@@ -38,6 +38,8 @@ public class SingleCasesReadingService {
 
             log.error("Error retrieving single cases");
 
+            log.error(ex.getMessage());
+
         }
 
         return submitEvents;
@@ -75,6 +77,8 @@ public class SingleCasesReadingService {
         } catch (Exception ex) {
 
             log.error("Error retrieving single cases");
+
+            log.error(ex.getMessage());
 
         }
 
