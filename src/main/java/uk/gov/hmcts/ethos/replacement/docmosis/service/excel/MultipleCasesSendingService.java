@@ -41,6 +41,10 @@ public class MultipleCasesSendingService {
 
             log.error("Error sending update to multiple case: " + caseId);
 
+            log.error(ex.getMessage());
+
+            ex.printStackTrace();
+
         }
     }
 
