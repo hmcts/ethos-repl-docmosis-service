@@ -44,23 +44,35 @@ public class MultipleHelperService {
         this.multipleCasesSendingService = multipleCasesSendingService;
     }
 
-    public void addLeadMarkUp(String userToken, String caseTypeId, MultipleData multipleData, String newLeadCaseId) {
+    public void addLeadMarkUp(String userToken, String caseTypeId, MultipleData multipleData,
+                              String newLeadCase, String caseId) {
 
-        SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(
-                userToken,
-                caseTypeId,
-                newLeadCaseId);
+        if (caseId.equals("")) {
 
-        if (submitEvent != null) {
+            SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(
+                    userToken,
+                    caseTypeId,
+                    newLeadCase);
 
-            multipleData.setLeadCase(MultiplesHelper.generateLeadMarkUp(
-                    ccdGatewayBaseUrl,
-                    String.valueOf(submitEvent.getCaseId()),
-                    newLeadCaseId));
+            if (submitEvent != null) {
+
+                multipleData.setLeadCase(MultiplesHelper.generateLeadMarkUp(
+                        ccdGatewayBaseUrl,
+                        String.valueOf(submitEvent.getCaseId()),
+                        newLeadCase));
+
+            } else {
+
+                log.info("No lead case found for: " + newLeadCase);
+
+            }
 
         } else {
 
-            log.info("No lead case found for: " + newLeadCaseId);
+            multipleData.setLeadCase(MultiplesHelper.generateLeadMarkUp(
+                    ccdGatewayBaseUrl,
+                    caseId,
+                    newLeadCase));
 
         }
 

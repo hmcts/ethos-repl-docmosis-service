@@ -49,6 +49,7 @@ public class AddSingleCaseToMultipleServiceTest {
         String oldMultipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseDetails.getCaseTypeId());
         multipleCaseTypeId = oldMultipleCaseTypeId.substring(0, oldMultipleCaseTypeId.length() - 1);
         caseDetails.setCaseData(MultipleUtil.getCaseDataWithSingleMoveCases());
+        caseDetails.setCaseId("12321321");
         submitMultipleEvents = MultipleUtil.getSubmitMultipleEvents();
         userToken = "authString";
     }
@@ -71,6 +72,7 @@ public class AddSingleCaseToMultipleServiceTest {
                 userToken,
                 multipleCaseTypeId,
                 submitMultipleEvents.get(0).getCaseData(),
+                caseDetails.getCaseData().getEthosCaseReference(),
                 caseDetails.getCaseId());
 
         verify(multipleHelperService, times(1)).moveCasesAndSendUpdateToMultiple(
@@ -111,7 +113,8 @@ public class AddSingleCaseToMultipleServiceTest {
                 userToken,
                 multipleCaseTypeId,
                 submitMultipleEvents.get(0).getCaseData(),
-                caseDetails.getCaseId());
+                caseDetails.getCaseId(),
+                "");
 
         verify(multipleHelperService, times(1)).moveCasesAndSendUpdateToMultiple(
                 userToken,
@@ -152,6 +155,7 @@ public class AddSingleCaseToMultipleServiceTest {
                 userToken,
                 multipleCaseTypeId,
                 submitMultipleEvents.get(0).getCaseData(),
+                caseDetails.getCaseData().getEthosCaseReference(),
                 caseDetails.getCaseId());
 
         verify(multipleHelperService, times(1)).moveCasesAndSendUpdateToMultiple(

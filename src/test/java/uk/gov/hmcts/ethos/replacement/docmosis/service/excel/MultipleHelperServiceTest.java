@@ -65,11 +65,27 @@ public class MultipleHelperServiceTest {
         multipleHelperService.addLeadMarkUp(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData(),
-                multipleDetails.getCaseData().getLeadCase());
+                multipleDetails.getCaseData().getLeadCase(),
+                "");
         assertEquals("<a target=\"_blank\" href=\"http://www-demo.ccd/dm-store:8080/v2/case//v2/case/1232121232\">21006/2020</a>",
                 multipleDetails.getCaseData().getLeadCase());
     }
 
+    @Test
+    public void addLeadMarkUpWithCaseId() {
+        submitEventList.get(0).setCaseId(12345L);
+        when(singleCasesReadingService.retrieveSingleCase(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getCaseData().getLeadCase()))
+                .thenReturn(submitEventList.get(0));
+        multipleHelperService.addLeadMarkUp(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getCaseData(),
+                multipleDetails.getCaseData().getLeadCase(),
+                "12345");
+        assertEquals("<a target=\"_blank\" href=\"http://www-demo.ccd/dm-store:8080/v2/case//v2/case/12345\">21006/2020</a>",
+                multipleDetails.getCaseData().getLeadCase());
+    }
 
     @Test
     public void addLeadMarkUpEmptyCase() {
@@ -80,7 +96,8 @@ public class MultipleHelperServiceTest {
         multipleHelperService.addLeadMarkUp(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData(),
-                multipleDetails.getCaseData().getLeadCase());
+                multipleDetails.getCaseData().getLeadCase(),
+                "");
         assertEquals("21006/2020", multipleDetails.getCaseData().getLeadCase());
     }
 

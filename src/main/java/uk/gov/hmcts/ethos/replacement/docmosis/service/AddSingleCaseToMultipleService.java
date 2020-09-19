@@ -66,7 +66,8 @@ public class AddSingleCaseToMultipleService {
 
         }
 
-        addSingleCaseToCaseId(userToken, multipleCaseTypeId, multipleData, leadClaimant, ethosCaseReference);
+        addSingleCaseToCaseIds(userToken, multipleCaseTypeId, multipleData, leadClaimant,
+                ethosCaseReference, caseDetails.getCaseId());
 
         log.info("Generate and upload excel with sub multiple and send update to multiple");
 
@@ -88,15 +89,17 @@ public class AddSingleCaseToMultipleService {
 
     }
 
-    private void addSingleCaseToCaseId(String userToken, String multipleCaseTypeId, MultipleData multipleData,
-                                       String leadClaimant, String ethosCaseReference) {
+    private void addSingleCaseToCaseIds(String userToken, String multipleCaseTypeId, MultipleData multipleData,
+                                       String leadClaimant, String ethosCaseReference, String caseId) {
 
         if (leadClaimant.equals(YES)) {
 
             log.info("Lead: Adding the single case id to the TOP of case ids collection in multiple");
 
             multipleHelperService.addLeadMarkUp(
-                    userToken, multipleCaseTypeId, multipleData, ethosCaseReference);
+                    userToken, multipleCaseTypeId, multipleData, ethosCaseReference, caseId);
+
+            MultiplesHelper.addLeadToCaseIds(multipleData, ethosCaseReference);
 
         } else {
 
