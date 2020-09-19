@@ -94,7 +94,7 @@ public class MultipleCreationMidEventValidationServiceTest {
                 errors);
 
         assertEquals(2, errors.size());
-        assertEquals("[245000/2020] cases have not been Accepted.", errors.get(0));
+        assertEquals("[245000/2020, 245001/2020] cases have not been Accepted.", errors.get(0));
         assertEquals("[245000/2020] cases belong already to a different multiple", errors.get(1));
 
     }
