@@ -11,6 +11,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
 
@@ -42,9 +43,19 @@ public class MultipleCreationMidEventValidationService {
 
             MultipleData multipleData = multipleDetails.getCaseData();
 
+            log.info("Checking lead case");
+
+            if (!isNullOrEmpty(multipleData.getLeadCase())) {
+
+                log.info("Adding lead case introduced by user: " + multipleData.getLeadCase());
+
+                MultiplesHelper.addLeadToCaseIds(multipleData, multipleData.getLeadCase());
+
+            }
+
             List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleData);
 
-            log.info("Validating case id collection size");
+            log.info("Validating case id collection size: " + ethosCaseRefCollection.size());
 
             validateCaseReferenceCollectionSize(ethosCaseRefCollection, errors);
 

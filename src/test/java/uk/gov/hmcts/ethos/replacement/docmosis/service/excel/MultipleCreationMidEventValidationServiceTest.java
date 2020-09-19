@@ -74,12 +74,14 @@ public class MultipleCreationMidEventValidationServiceTest {
                 errors);
 
         assertEquals(1, errors.size());
-        assertEquals("Three are 60 cases in the multiple. The limit is 50.", errors.get(0));
+        assertEquals("Three are 61 cases in the multiple. The limit is 50.", errors.get(0));
 
     }
 
     @Test
-    public void multipleCreationMidEventValidationServiceWrongStateAndMultipleError() {
+    public void multipleCreationMidEventValidationServiceWrongStateAndMultipleErrorEmptyLead() {
+
+        multipleDetails.getCaseData().setLeadCase(null);
 
         when(singleCasesReadingService.retrieveSingleCases(userToken,
                 multipleDetails.getCaseTypeId(),
