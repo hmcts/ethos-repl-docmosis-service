@@ -53,6 +53,8 @@ public class MultipleCreationMidEventValidationService {
                 List<SubmitEvent> submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
                         multipleDetails.getCaseTypeId(), ethosCaseRefCollection);
 
+                log.info("Validating cases: " + submitEvents);
+
                 validateSingleCasesState(submitEvents, errors);
 
             }

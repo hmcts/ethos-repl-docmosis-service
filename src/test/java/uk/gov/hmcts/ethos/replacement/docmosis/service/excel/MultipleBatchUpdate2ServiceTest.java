@@ -39,8 +39,6 @@ public class MultipleBatchUpdate2ServiceTest {
     @Mock
     private ExcelReadingService excelReadingService;
     @Mock
-    private MultipleCasesSendingService multipleCasesSendingService;
-    @Mock
     private MultipleHelperService multipleHelperService;
 
     @InjectMocks
@@ -133,8 +131,6 @@ public class MultipleBatchUpdate2ServiceTest {
 
     @Test
     public void batchUpdate2LogicDifferentMultipleEmptySubMultiple() {
-        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
-                .thenReturn(multipleObjects);
         when(multipleCasesReadingService.retrieveMultipleCasesWithRetries(userToken,
                 multipleDetails.getCaseTypeId(),
                 "246001")
@@ -145,7 +141,7 @@ public class MultipleBatchUpdate2ServiceTest {
                 multipleDetails,
                 new ArrayList<>(),
                 multipleObjectsFlags);
-        verify(excelDocManagementService, times(2)).generateAndUploadExcel(
+        verify(excelDocManagementService, times(1)).generateAndUploadExcel(
                 anyList(),
                 anyString(),
                 any());
@@ -154,8 +150,6 @@ public class MultipleBatchUpdate2ServiceTest {
 
     @Test
     public void batchUpdate2LogicDifferentMultipleWithSubMultiple() {
-        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
-                .thenReturn(multipleObjects);
         when(multipleCasesReadingService.retrieveMultipleCasesWithRetries(userToken,
                 multipleDetails.getCaseTypeId(),
                 "246001")
@@ -167,7 +161,7 @@ public class MultipleBatchUpdate2ServiceTest {
                 multipleDetails,
                 new ArrayList<>(),
                 multipleObjectsFlags);
-        verify(excelDocManagementService, times(2)).generateAndUploadExcel(
+        verify(excelDocManagementService, times(1)).generateAndUploadExcel(
                 anyList(),
                 anyString(),
                 any());

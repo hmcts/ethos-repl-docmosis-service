@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.types.MoveCasesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
@@ -23,19 +22,17 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 public class MultipleMidEventValidationServiceTest {
 
     @Mock
-    private MultipleCasesReadingService multipleCasesReadingService;
+    private MultipleHelperService multipleHelperService;
     @InjectMocks
     private MultipleMidEventValidationService multipleMidEventValidationService;
 
     private MultipleDetails multipleDetails;
     private String userToken;
-    private List<SubmitMultipleEvent> submitMultipleEvents;
 
     @Before
     public void setUp() {
         multipleDetails = new MultipleDetails();
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
-        submitMultipleEvents = MultipleUtil.getSubmitMultipleEvents();
         userToken = "authString";
     }
 
@@ -54,12 +51,17 @@ public class MultipleMidEventValidationServiceTest {
                 multipleDetails,
                 errors);
 
-        assertEquals(0, errors.size());
+        verify(multipleHelperService, times(1)).validateSubMultiple(
+                "SubMultiple",
+                multipleDetails.getCaseData().getSubMultipleCollection(),
+                errors,
+                "246000");
+        verifyNoMoreInteractions(multipleHelperService);
 
     }
 
     @Test
-    public void multipleValidationLogicMultipleAndSubExist() {
+    public void multipleValidationLogicExternalMultiple() {
 
         List<String> errors = new ArrayList<>();
 
@@ -69,89 +71,17 @@ public class MultipleMidEventValidationServiceTest {
         moveCasesType.setConvertToSingle(NO);
         multipleDetails.getCaseData().setMoveCases(moveCasesType);
 
-        when(multipleCasesReadingService.retrieveMultipleCases(userToken,
-                multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData().getMoveCases().getUpdatedMultipleRef())
-        ).thenReturn(submitMultipleEvents);
-
         multipleMidEventValidationService.multipleValidationLogic(userToken,
                 multipleDetails,
                 errors);
 
-        assertEquals(0, errors.size());
-
-    }
-
-    @Test
-    public void multipleValidationLogicSubMultipleDoesNotExist() {
-
-        List<String> errors = new ArrayList<>();
-
-        MoveCasesType moveCasesType = new MoveCasesType();
-        moveCasesType.setUpdatedMultipleRef("246002");
-        moveCasesType.setUpdatedSubMultipleRef("SubMultiple3");
-        moveCasesType.setConvertToSingle(NO);
-        multipleDetails.getCaseData().setMoveCases(moveCasesType);
-
-        when(multipleCasesReadingService.retrieveMultipleCases(userToken,
+        verify(multipleHelperService, times(1)).validateExternalMultipleAndSubMultiple(
+                userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData().getMoveCases().getUpdatedMultipleRef())
-        ).thenReturn(submitMultipleEvents);
-
-        multipleMidEventValidationService.multipleValidationLogic(userToken,
-                multipleDetails,
+                "246001",
+                "SubMultiple",
                 errors);
-
-        assertEquals("Sub multiple SubMultiple3 does not exists in 246002", errors.get(0));
-
-    }
-
-    @Test
-    public void multipleValidationLogicSubMultipleNull() {
-
-        List<String> errors = new ArrayList<>();
-
-        MoveCasesType moveCasesType = new MoveCasesType();
-        moveCasesType.setUpdatedMultipleRef("246002");
-        moveCasesType.setUpdatedSubMultipleRef("SubMultiple3");
-        moveCasesType.setConvertToSingle(NO);
-        multipleDetails.getCaseData().setMoveCases(moveCasesType);
-
-        submitMultipleEvents.get(0).getCaseData().setSubMultipleCollection(null);
-
-        when(multipleCasesReadingService.retrieveMultipleCases(userToken,
-                multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData().getMoveCases().getUpdatedMultipleRef())
-        ).thenReturn(submitMultipleEvents);
-
-        multipleMidEventValidationService.multipleValidationLogic(userToken,
-                multipleDetails,
-                errors);
-
-        assertEquals("Sub multiple SubMultiple3 does not exists in 246002", errors.get(0));
-
-    }
-
-    @Test
-    public void multipleValidationLogicMultipleDoesNotExist() {
-
-        List<String> errors = new ArrayList<>();
-
-        MoveCasesType moveCasesType = new MoveCasesType();
-        moveCasesType.setUpdatedMultipleRef("246002");
-        moveCasesType.setConvertToSingle(NO);
-        multipleDetails.getCaseData().setMoveCases(moveCasesType);
-
-        when(multipleCasesReadingService.retrieveMultipleCases(userToken,
-                multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData().getMoveCases().getUpdatedMultipleRef())
-        ).thenReturn(new ArrayList<>());
-
-        multipleMidEventValidationService.multipleValidationLogic(userToken,
-                multipleDetails,
-                errors);
-
-        assertEquals("Multiple 246002 does not exists", errors.get(0));
+        verifyNoMoreInteractions(multipleHelperService);
 
     }
 

@@ -44,6 +44,10 @@ public class CaseActionsForCaseWorkerController {
 
     private final EventValidationService eventValidationService;
 
+    private final SingleCaseMultipleMidEventValidationService singleCaseMultipleMidEventValidationService;
+
+    private final AddSingleCaseToMultipleService addSingleCaseToMultipleService;
+
     @Autowired
     public CaseActionsForCaseWorkerController(VerifyTokenService verifyTokenService,
                                               CaseCreationForCaseWorkerService caseCreationForCaseWorkerService,
@@ -52,7 +56,9 @@ public class CaseActionsForCaseWorkerController {
                                               DefaultValuesReaderService defaultValuesReaderService,
                                               CaseManagementForCaseWorkerService caseManagementForCaseWorkerService,
                                               SingleReferenceService singleReferenceService,
-                                              EventValidationService eventValidationService) {
+                                              EventValidationService eventValidationService,
+                                              SingleCaseMultipleMidEventValidationService singleCaseMultipleMidEventValidationService,
+                                              AddSingleCaseToMultipleService addSingleCaseToMultipleService) {
         this.verifyTokenService = verifyTokenService;
         this.caseCreationForCaseWorkerService = caseCreationForCaseWorkerService;
         this.caseRetrievalForCaseWorkerService = caseRetrievalForCaseWorkerService;
@@ -61,6 +67,8 @@ public class CaseActionsForCaseWorkerController {
         this.caseManagementForCaseWorkerService = caseManagementForCaseWorkerService;
         this.singleReferenceService = singleReferenceService;
         this.eventValidationService = eventValidationService;
+        this.singleCaseMultipleMidEventValidationService = singleCaseMultipleMidEventValidationService;
+        this.addSingleCaseToMultipleService = addSingleCaseToMultipleService;
     }
 
     @PostMapping(value = "/createCase", consumes = APPLICATION_JSON_VALUE)
@@ -671,6 +679,66 @@ public class CaseActionsForCaseWorkerController {
         CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(), userToken, errors, SUBMITTED_CALLBACK);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
+                .errors(errors)
+                .build());
+    }
+
+    @PostMapping(value = "/singleCaseMultipleMidEventValidation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "validates the multiple and sub multiple in the single case when moving to a multiple.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> singleCaseMultipleMidEventValidation(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("SINGLE CASE MULTIPLE MID EVENT VALIDATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors = new ArrayList<>();
+        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+
+        singleCaseMultipleMidEventValidationService.singleCaseMultipleValidationLogic(
+                userToken, caseDetails, errors);
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseDetails.getCaseData())
+                .errors(errors)
+                .build());
+    }
+
+    @PostMapping(value = "/addSingleCaseToMultiple", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "adds a single case to a multiple.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> addSingleCaseToMultiple(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("ADD SINGLE CASE TO MULTIPLE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors = new ArrayList<>();
+        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+
+        addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
+                userToken, caseDetails, errors);
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseDetails.getCaseData())
                 .errors(errors)
                 .build());
     }

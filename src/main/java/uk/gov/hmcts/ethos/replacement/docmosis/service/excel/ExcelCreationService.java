@@ -96,6 +96,9 @@ public class ExcelCreationService {
         //Adjust the column width to fit the content
         sheet.autoSizeColumn(0);
         sheet.setColumnWidth(1, 8000);
+        for (int i=2; i<=5; i++) {
+            sheet.setColumnWidth(i, 4000);
+        }
     }
 
     private void addSubMultiplesValidation(XSSFSheet sheet, List<?> multipleCollection, List<String> subMultipleCollection) {

@@ -31,7 +31,6 @@ public class MultipleBatchUpdate2Service {
     private final ExcelDocManagementService excelDocManagementService;
     private final MultipleCasesReadingService multipleCasesReadingService;
     private final ExcelReadingService excelReadingService;
-    private final MultipleCasesSendingService multipleCasesSendingService;
     private final MultipleHelperService multipleHelperService;
 
     @Autowired
@@ -40,14 +39,12 @@ public class MultipleBatchUpdate2Service {
                                        ExcelDocManagementService excelDocManagementService,
                                        MultipleCasesReadingService multipleCasesReadingService,
                                        ExcelReadingService excelReadingService,
-                                       MultipleCasesSendingService multipleCasesSendingService,
                                        MultipleHelperService multipleHelperService) {
         this.createUpdatesBusSender = createUpdatesBusSender;
         this.userService = userService;
         this.excelDocManagementService = excelDocManagementService;
         this.multipleCasesReadingService = multipleCasesReadingService;
         this.excelReadingService = excelReadingService;
-        this.multipleCasesSendingService = multipleCasesSendingService;
         this.multipleHelperService = multipleHelperService;
     }
 
@@ -189,26 +186,9 @@ public class MultipleBatchUpdate2Service {
 
         multipleHelperService.addLeadMarkUp(userToken, updatedCaseTypeId, updatedMultipleData, updatedLeadCase);
 
-        if (isNullOrEmpty(updatedSubMultipleRef)) {
-
-            log.info("Moving single cases without sub multiples");
-
-            readUpdatedExcelAndAddCasesInMultiple(userToken, updatedMultipleData, errors,
-                    multipleObjectsFiltered, "");
-
-        } else {
-
-            log.info("Moving single cases with sub multiples");
-
-            readUpdatedExcelAndAddCasesInMultiple(userToken, updatedMultipleData, errors,
-                    multipleObjectsFiltered, updatedSubMultipleRef);
-
-        }
-
-        log.info("Send update to the multiple with new excel");
-
-        multipleCasesSendingService.sendUpdateToMultiple(userToken, updatedCaseTypeId, updatedJurisdiction,
-                updatedMultipleData, String.valueOf(updatedMultiple.getCaseId()));
+        multipleHelperService.moveCasesAndSendUpdateToMultiple(userToken, updatedSubMultipleRef,
+                updatedJurisdiction, updatedCaseTypeId, String.valueOf(updatedMultiple.getCaseId()),
+                updatedMultipleData, multipleObjectsFiltered, errors);
 
         log.info("Sending creation updates to singles");
 
@@ -284,45 +264,6 @@ public class MultipleBatchUpdate2Service {
                 newMultipleObjectsUpdated.add(multipleObject);
             }
         });
-
-        return newMultipleObjectsUpdated;
-
-    }
-
-    private void readUpdatedExcelAndAddCasesInMultiple(String userToken, MultipleData updatedMultipleData,
-                                                       List<String> errors, List<String> multipleObjectsFiltered,
-                                                       String updatedSubMultipleRef) {
-
-        TreeMap<String, Object> multipleObjects =
-                excelReadingService.readExcel(
-                        userToken,
-                        MultiplesHelper.getExcelBinaryUrl(updatedMultipleData),
-                        errors,
-                        updatedMultipleData,
-                        FilterExcelType.ALL);
-
-        List<MultipleObject> newMultipleObjectsUpdated = addCasesInMultiple(multipleObjectsFiltered,
-                multipleObjects, updatedSubMultipleRef);
-
-        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, updatedMultipleData);
-
-    }
-
-    private List<MultipleObject> addCasesInMultiple(List<String> multipleObjectsFiltered,
-                                                    TreeMap<String, Object> multipleObjects,
-                                                    String updatedSubMultipleRef) {
-
-        List<MultipleObject> multipleObjectsToBeAdded = new ArrayList<>();
-        List<MultipleObject> newMultipleObjectsUpdated = new ArrayList<>();
-
-        for (String ethosCaseReference : multipleObjectsFiltered) {
-
-            multipleObjectsToBeAdded.add(MultiplesHelper.createMultipleObject(ethosCaseReference, updatedSubMultipleRef));
-        }
-
-        multipleObjects.forEach((key, value) -> newMultipleObjectsUpdated.add((MultipleObject) value));
-
-        newMultipleObjectsUpdated.addAll(multipleObjectsToBeAdded);
 
         return newMultipleObjectsUpdated;
 
