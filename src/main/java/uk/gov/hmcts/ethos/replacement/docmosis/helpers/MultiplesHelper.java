@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
@@ -232,6 +233,14 @@ public class MultiplesHelper {
         String url = ccdGatewayBaseUrl.replace("gateway","www").concat("/v2/case/" + caseId);
 
         return "<a target=\"_blank\" href=\"" + url + "\">" + ethosCaseRef +"</a>";
+
+    }
+
+    public static String getMultipleCaseTypeIdFromSingle(String caseTypeId) {
+
+        String oldMultipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseTypeId);
+
+        return oldMultipleCaseTypeId.substring(0, oldMultipleCaseTypeId.length() - 1);
 
     }
 

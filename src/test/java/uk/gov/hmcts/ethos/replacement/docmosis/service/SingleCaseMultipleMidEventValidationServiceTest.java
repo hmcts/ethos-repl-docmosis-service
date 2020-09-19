@@ -7,8 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleHelperService;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class SingleCaseMultipleMidEventValidationServiceTest {
         caseDetails.setCaseTypeId(MANCHESTER_CASE_TYPE_ID);
         String oldMultipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseDetails.getCaseTypeId());
         multipleCaseTypeId = oldMultipleCaseTypeId.substring(0, oldMultipleCaseTypeId.length() - 1);
-        caseDetails.setCaseData(new CaseData());
+        caseDetails.setCaseData(MultipleUtil.getCaseDataWithSingleMoveCases());
         userToken = "authString";
     }
 
@@ -51,8 +51,8 @@ public class SingleCaseMultipleMidEventValidationServiceTest {
         verify(multipleHelperService, times(1)).validateExternalMultipleAndSubMultiple(
                 userToken,
                 multipleCaseTypeId,
-                "",
-                "",
+                caseDetails.getCaseData().getMoveCases().getUpdatedMultipleRef(),
+                caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName(),
                 errors);
         verifyNoMoreInteractions(multipleHelperService);
 

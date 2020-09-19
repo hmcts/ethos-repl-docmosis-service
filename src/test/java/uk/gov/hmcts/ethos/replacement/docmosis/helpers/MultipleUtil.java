@@ -17,10 +17,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.*;
 import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
@@ -248,6 +245,21 @@ public class MultipleUtil {
         Resource body = new ClassPathResource(fileName);
         Workbook workbook = new XSSFWorkbook(body.getInputStream());
         return workbook.getSheet(SHEET_NAME);
+
+    }
+
+    public static CaseData getCaseDataWithSingleMoveCases() {
+
+        CaseData caseData = new CaseData();
+
+        SingleMoveCasesType singleMoveCasesType = new SingleMoveCasesType();
+        singleMoveCasesType.setLeadCase(YES);
+        singleMoveCasesType.setUpdatedMultipleRef("246000");
+        singleMoveCasesType.setUpdatedSubMultipleName("updatedSubMultipleName");
+
+        caseData.setMoveCases(singleMoveCasesType);
+
+        return caseData;
 
     }
 }

@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
@@ -49,7 +48,7 @@ public class AddSingleCaseToMultipleServiceTest {
         caseDetails.setCaseTypeId(MANCHESTER_CASE_TYPE_ID);
         String oldMultipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseDetails.getCaseTypeId());
         multipleCaseTypeId = oldMultipleCaseTypeId.substring(0, oldMultipleCaseTypeId.length() - 1);
-        caseDetails.setCaseData(new CaseData());
+        caseDetails.setCaseData(MultipleUtil.getCaseDataWithSingleMoveCases());
         submitMultipleEvents = MultipleUtil.getSubmitMultipleEvents();
         userToken = "authString";
     }
@@ -57,13 +56,11 @@ public class AddSingleCaseToMultipleServiceTest {
     @Test
     public void addSingleCaseToMultipleLogicLead() {
 
-        // LEAD IN CASE DATA NEW FIELD
-
         List<String> errors = new ArrayList<>();
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData().getMultipleReference())
+                caseDetails.getCaseData().getMoveCases().getUpdatedMultipleRef())
         ).thenReturn(submitMultipleEvents);
 
         addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(userToken,
@@ -78,7 +75,7 @@ public class AddSingleCaseToMultipleServiceTest {
 
         verify(multipleHelperService, times(1)).moveCasesAndSendUpdateToMultiple(
                 userToken,
-                "246000/2",
+                caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName(),
                 caseDetails.getJurisdiction(),
                 multipleCaseTypeId,
                 String.valueOf(submitMultipleEvents.get(0).getCaseId()),
@@ -94,44 +91,44 @@ public class AddSingleCaseToMultipleServiceTest {
 
     }
 
-//    @Test
-//    public void addSingleCaseToMultipleLogicNoLead() {
-//
-//        // NO LEAD IN CASE DATA NEW FIELD
-//
-//        List<String> errors = new ArrayList<>();
-//
-//        when(multipleCasesReadingService.retrieveMultipleCases(userToken,
-//                multipleDetails.getCaseTypeId(),
-//                multipleDetails.getCaseData().getMultipleReference())
-//        ).thenReturn(submitMultipleEvents);
-//
-//        addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(userToken,
-//                caseDetails,
-//                errors);
-//
-//        verify(multipleHelperService, times(0)).addLeadMarkUp(
-//                userToken,
-//                multipleCaseTypeId,
-//                submitMultipleEvents.get(0).getCaseData(),
-//                caseDetails.getCaseId());
-//
-//        verify(multipleHelperService, times(1)).moveCasesAndSendUpdateToMultiple(
-//                userToken,
-//                "246000/2",
-//                caseDetails.getJurisdiction(),
-//                multipleCaseTypeId,
-//                String.valueOf(submitMultipleEvents.get(0).getCaseId()),
-//                submitMultipleEvents.get(0).getCaseData(),
-//                new ArrayList<>(Collections.singletonList(caseDetails.getCaseData().getEthosCaseReference())),
-//                new ArrayList<>());
-//
-//        verifyNoMoreInteractions(multipleHelperService);
-//
-//        assertEquals(MULTIPLE_CASE_TYPE, caseDetails.getCaseData().getCaseType());
-//        assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
-//        assertEquals(NO, caseDetails.getCaseData().getLeadClaimant());
-//
-//    }
+    @Test
+    public void addSingleCaseToMultipleLogicNoLead() {
+
+    caseDetails.getCaseData().getMoveCases().setLeadCase(NO);
+
+        List<String> errors = new ArrayList<>();
+
+        when(multipleCasesReadingService.retrieveMultipleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                caseDetails.getCaseData().getMoveCases().getUpdatedMultipleRef())
+        ).thenReturn(submitMultipleEvents);
+
+        addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(userToken,
+                caseDetails,
+                errors);
+
+        verify(multipleHelperService, times(0)).addLeadMarkUp(
+                userToken,
+                multipleCaseTypeId,
+                submitMultipleEvents.get(0).getCaseData(),
+                caseDetails.getCaseId());
+
+        verify(multipleHelperService, times(1)).moveCasesAndSendUpdateToMultiple(
+                userToken,
+                caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName(),
+                caseDetails.getJurisdiction(),
+                multipleCaseTypeId,
+                String.valueOf(submitMultipleEvents.get(0).getCaseId()),
+                submitMultipleEvents.get(0).getCaseData(),
+                new ArrayList<>(Collections.singletonList(caseDetails.getCaseData().getEthosCaseReference())),
+                new ArrayList<>());
+
+        verifyNoMoreInteractions(multipleHelperService);
+
+        assertEquals(MULTIPLE_CASE_TYPE, caseDetails.getCaseData().getCaseType());
+        assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
+        assertEquals(NO, caseDetails.getCaseData().getLeadClaimant());
+
+    }
 
 }

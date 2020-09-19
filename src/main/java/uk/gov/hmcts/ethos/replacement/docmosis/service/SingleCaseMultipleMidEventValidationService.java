@@ -3,8 +3,9 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.types.SingleMoveCasesType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleHelperService;
 
 import java.util.List;
@@ -22,18 +23,18 @@ public class SingleCaseMultipleMidEventValidationService {
 
     public void singleCaseMultipleValidationLogic(String userToken, CaseDetails caseDetails, List<String> errors) {
 
+        SingleMoveCasesType singleMoveCasesType = caseDetails.getCaseData().getMoveCases();
+
         log.info("Validating multiple and subMultiple in singles");
 
-        String oldMultipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseDetails.getCaseTypeId());
+        String multipleCaseTypeId = MultiplesHelper.getMultipleCaseTypeIdFromSingle(caseDetails.getCaseTypeId());
 
-        String multipleCaseType = oldMultipleCaseTypeId.substring(0, oldMultipleCaseTypeId.length() - 1);
+        String multipleReference = singleMoveCasesType.getUpdatedMultipleRef();
 
-        String multipleReference = "";
-
-        String subMultipleReference = "";
+        String subMultipleReference = singleMoveCasesType.getUpdatedSubMultipleName();
 
         multipleHelperService.validateExternalMultipleAndSubMultiple(userToken,
-                multipleCaseType,
+                multipleCaseTypeId,
                 multipleReference,
                 subMultipleReference,
                 errors);

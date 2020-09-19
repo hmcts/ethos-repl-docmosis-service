@@ -122,14 +122,6 @@
     "positionType": "First",
     "receiptDate": "2019-03-12",
     "responseReceived": "none",
-    "responseType": {
-      "response_received": "Yes",
-      "response_referred_to_judge": "Yes",
-      "responseRequiredInfoAbsent": "Yes",
-      "response_returned_from_judge": "Yes",
-      "response_status": "Status",
-      "responseToClaim": "No"
-    },
     "userLocation": "Liverpool"
   },
   "id": "123456789",
