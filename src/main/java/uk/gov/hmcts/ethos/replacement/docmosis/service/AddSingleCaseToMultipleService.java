@@ -58,6 +58,14 @@ public class AddSingleCaseToMultipleService {
 
         String ethosCaseReference = caseData.getEthosCaseReference();
 
+        log.info("If multiple is empty the single will be always the lead");
+
+        if (multipleData.getCaseIdCollection() == null || multipleData.getCaseIdCollection().isEmpty()) {
+
+            leadClaimant = YES;
+
+        }
+
         addSingleCaseToCaseId(userToken, multipleCaseTypeId, multipleData, leadClaimant, ethosCaseReference);
 
         log.info("Generate and upload excel with sub multiple and send update to multiple");

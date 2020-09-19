@@ -258,6 +258,7 @@ public class MultipleUtil {
         singleMoveCasesType.setUpdatedSubMultipleName("updatedSubMultipleName");
 
         caseData.setMoveCases(singleMoveCasesType);
+        caseData.setCaseType(SINGLE_CASE_TYPE);
 
         return caseData;
 

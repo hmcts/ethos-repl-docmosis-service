@@ -131,4 +131,45 @@ public class AddSingleCaseToMultipleServiceTest {
 
     }
 
+    @Test
+    public void addSingleCaseToMultipleLogicNoLeadButWithEmptyMultiple() {
+
+        caseDetails.getCaseData().getMoveCases().setLeadCase(NO);
+        submitMultipleEvents.get(0).getCaseData().setCaseIdCollection(null);
+
+        List<String> errors = new ArrayList<>();
+
+        when(multipleCasesReadingService.retrieveMultipleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                caseDetails.getCaseData().getMoveCases().getUpdatedMultipleRef())
+        ).thenReturn(submitMultipleEvents);
+
+        addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(userToken,
+                caseDetails,
+                errors);
+
+        verify(multipleHelperService, times(1)).addLeadMarkUp(
+                userToken,
+                multipleCaseTypeId,
+                submitMultipleEvents.get(0).getCaseData(),
+                caseDetails.getCaseId());
+
+        verify(multipleHelperService, times(1)).moveCasesAndSendUpdateToMultiple(
+                userToken,
+                caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName(),
+                caseDetails.getJurisdiction(),
+                multipleCaseTypeId,
+                String.valueOf(submitMultipleEvents.get(0).getCaseId()),
+                submitMultipleEvents.get(0).getCaseData(),
+                new ArrayList<>(Collections.singletonList(caseDetails.getCaseData().getEthosCaseReference())),
+                new ArrayList<>());
+
+        verifyNoMoreInteractions(multipleHelperService);
+
+        assertEquals(MULTIPLE_CASE_TYPE, caseDetails.getCaseData().getCaseType());
+        assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
+        assertEquals(YES, caseDetails.getCaseData().getLeadClaimant());
+
+    }
+
 }

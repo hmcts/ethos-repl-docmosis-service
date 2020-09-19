@@ -16,6 +16,8 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SingleCaseMultipleMidEventValidationServiceTest {
@@ -55,6 +57,22 @@ public class SingleCaseMultipleMidEventValidationServiceTest {
                 caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName(),
                 errors);
         verifyNoMoreInteractions(multipleHelperService);
+
+    }
+
+    @Test
+    public void singleCaseMultipleValidationLogicBelongsMultiple() {
+
+        List<String> errors = new ArrayList<>();
+
+        caseDetails.getCaseData().setCaseType(MULTIPLE_CASE_TYPE);
+
+        singleCaseMultipleMidEventValidationService.singleCaseMultipleValidationLogic(userToken,
+                caseDetails,
+                errors);
+
+        assertEquals(1, errors.size());
+        assertEquals("Case belongs already to a multiple", errors.get(0));
 
     }
 

@@ -10,6 +10,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleHelperServi
 
 import java.util.List;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+
 @Slf4j
 @Service("singleCaseMultipleDMidEventValidationService")
 public class SingleCaseMultipleMidEventValidationService {
@@ -22,6 +24,16 @@ public class SingleCaseMultipleMidEventValidationService {
     }
 
     public void singleCaseMultipleValidationLogic(String userToken, CaseDetails caseDetails, List<String> errors) {
+
+        log.info("Validating if single case has the correct case type");
+
+        if (caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+
+            errors.add("Case belongs already to a multiple");
+
+            return;
+
+        }
 
         SingleMoveCasesType singleMoveCasesType = caseDetails.getCaseData().getMoveCases();
 
