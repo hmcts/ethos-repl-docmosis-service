@@ -43,8 +43,6 @@ public class MultipleCreationMidEventValidationService {
 
             MultipleData multipleData = multipleDetails.getCaseData();
 
-            log.info("---------- Content --------- : " + multipleData);
-
             log.info("Checking lead case");
 
             if (!isNullOrEmpty(multipleData.getLeadCase())) {
@@ -54,6 +52,8 @@ public class MultipleCreationMidEventValidationService {
                 MultiplesHelper.addLeadToCaseIds(multipleData, multipleData.getLeadCase());
 
             }
+
+            log.info("---------- Content --------- : " + multipleData);
 
             List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIdsForMidEvent(multipleData);
 
