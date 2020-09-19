@@ -43,6 +43,8 @@ public class MultipleCreationMidEventValidationService {
 
             MultipleData multipleData = multipleDetails.getCaseData();
 
+            log.info("---------- Content --------- : " + multipleData);
+
             log.info("Checking lead case");
 
             if (!isNullOrEmpty(multipleData.getLeadCase())) {
@@ -115,7 +117,7 @@ public class MultipleCreationMidEventValidationService {
 
         if (!listCasesStateError.isEmpty()) {
 
-            errors.add(listCasesMultipleError + CASE_STATE_ERROR);
+            errors.add(listCasesStateError + CASE_STATE_ERROR);
 
         }
 

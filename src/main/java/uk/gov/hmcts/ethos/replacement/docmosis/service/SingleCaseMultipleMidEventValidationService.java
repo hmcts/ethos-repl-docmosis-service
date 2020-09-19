@@ -27,7 +27,11 @@ public class SingleCaseMultipleMidEventValidationService {
 
         log.info("Validating multiple and subMultiple in singles");
 
+        log.info("---------- Content --------- : " + caseDetails.getCaseData());
+
         String multipleCaseTypeId = MultiplesHelper.getMultipleCaseTypeIdFromSingle(caseDetails.getCaseTypeId());
+
+        log.info("SingleMoveCasesType: " + singleMoveCasesType);
 
         String multipleReference = singleMoveCasesType.getUpdatedMultipleRef();
 
