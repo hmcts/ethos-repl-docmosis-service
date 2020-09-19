@@ -42,6 +42,26 @@ public class MultiplesHelper {
         }
     }
 
+    // MID EVENTS COLLECTIONS HAVE KEY AS NULL BUT WITH VALUES!
+
+    public static List<String> getCaseIdsForMidEvent(MultipleData multipleData) {
+
+        if (multipleData.getCaseIdCollection() != null
+                && !multipleData.getCaseIdCollection().isEmpty()) {
+
+            return multipleData.getCaseIdCollection().stream()
+                    .filter(caseId -> caseId.getValue().getEthosCaseReference() != null)
+                    .map(caseId -> caseId.getValue().getEthosCaseReference())
+                    .distinct()
+                    .collect(Collectors.toList());
+
+        } else {
+
+            return new ArrayList<>();
+
+        }
+    }
+
     public static String getLeadFromCaseIds(MultipleData multipleData) {
 
         List<String> caseIds = getCaseIds(multipleData);
