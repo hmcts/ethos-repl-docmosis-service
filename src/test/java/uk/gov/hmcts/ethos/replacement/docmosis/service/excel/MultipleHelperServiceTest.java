@@ -7,10 +7,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
+import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +37,10 @@ public class MultipleHelperServiceTest {
     private ExcelDocManagementService excelDocManagementService;
     @Mock
     private MultipleCasesSendingService multipleCasesSendingService;
+    @Mock
+    private CreateUpdatesBusSender createUpdatesBusSender;
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private MultipleHelperService multipleHelperService;
@@ -50,6 +58,8 @@ public class MultipleHelperServiceTest {
         multipleDetails.setCaseTypeId("Manchester_Multiple");
         multipleDetails.setCaseId("12121212");
         submitEventList = MultipleUtil.getSubmitEvents();
+        UserDetails userDetails = HelperTest.getUserDetails();
+        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         userToken = "authString";
         ReflectionTestUtils.setField(multipleHelperService, "ccdGatewayBaseUrl", "http://www-demo.ccd/dm-store:8080/v2/case/");
         submitMultipleEvents = MultipleUtil.getSubmitMultipleEvents();
@@ -258,6 +268,39 @@ public class MultipleHelperServiceTest {
                 multipleDetails.getCaseData(),
                 multipleDetails.getCaseId());
         verifyNoMoreInteractions(multipleCasesSendingService);
+
+    }
+
+    @Test
+    public void sendCreationUpdatesToSinglesNoConfirmation() {
+
+        multipleHelperService.sendCreationUpdatesToSinglesNoConfirmation(
+                userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(),
+                multipleDetails.getCaseData(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                ""
+        );
+
+        verify(userService).getUserDetails(userToken);
+        verifyNoMoreInteractions(userService);
+
+    }
+
+    @Test
+    public void sendDetachUpdatesToSinglesNoConfirmation() {
+
+        multipleHelperService.sendDetachUpdatesToSinglesNoConfirmation(
+                userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                multipleObjects
+        );
+
+        verify(userService).getUserDetails(userToken);
+        verifyNoMoreInteractions(userService);
 
     }
 

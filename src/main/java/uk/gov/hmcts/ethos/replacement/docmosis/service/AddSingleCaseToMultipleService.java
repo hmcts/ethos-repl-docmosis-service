@@ -66,8 +66,8 @@ public class AddSingleCaseToMultipleService {
 
         }
 
-        addSingleCaseToCaseIds(userToken, multipleCaseTypeId, multipleData, leadClaimant,
-                ethosCaseReference, caseDetails.getCaseId());
+        addSingleCaseToCaseIds(userToken, multipleCaseTypeId, caseDetails.getJurisdiction(),
+                multipleData, leadClaimant, ethosCaseReference, caseDetails.getCaseId(), errors);
 
         log.info("Generate and upload excel with sub multiple and send update to multiple");
 
@@ -79,6 +79,10 @@ public class AddSingleCaseToMultipleService {
 
         updateCaseDataForMultiple(caseData, updatedMultipleReference, leadClaimant);
 
+        log.info("Reset mid fields");
+
+        caseData.setMoveCases(null);
+
     }
 
     private void updateCaseDataForMultiple(CaseData caseData, String newMultipleReference, String leadClaimant) {
@@ -89,12 +93,24 @@ public class AddSingleCaseToMultipleService {
 
     }
 
-    private void addSingleCaseToCaseIds(String userToken, String multipleCaseTypeId, MultipleData multipleData,
-                                       String leadClaimant, String ethosCaseReference, String caseId) {
+    private void addSingleCaseToCaseIds(String userToken, String multipleCaseTypeId, String jurisdiction, MultipleData multipleData,
+                                        String leadClaimant, String ethosCaseReference, String caseId, List<String> errors) {
 
         if (leadClaimant.equals(YES)) {
 
             log.info("Lead: Adding the single case id to the TOP of case ids collection in multiple");
+
+            String currentLeadCase = MultiplesHelper.getLeadFromCaseIds(multipleData);
+
+            if (!currentLeadCase.isEmpty()) {
+
+                log.info("There is already a lead case in the multiple. Sending update to be no LEAD");
+
+                multipleHelperService.sendCreationUpdatesToSinglesNoConfirmation(userToken, multipleCaseTypeId,
+                        jurisdiction, multipleData, errors,
+                        new ArrayList<>(Collections.singletonList(currentLeadCase)), "");
+
+            }
 
             multipleHelperService.addLeadMarkUp(
                     userToken, multipleCaseTypeId, multipleData, ethosCaseReference, caseId);

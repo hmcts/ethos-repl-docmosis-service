@@ -10,9 +10,6 @@ import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.types.MoveCasesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
-import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,28 +17,23 @@ import java.util.List;
 import java.util.TreeMap;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("multipleBatchUpdate2Service")
 public class MultipleBatchUpdate2Service {
 
-    private final CreateUpdatesBusSender createUpdatesBusSender;
-    private final UserService userService;
     private final ExcelDocManagementService excelDocManagementService;
     private final MultipleCasesReadingService multipleCasesReadingService;
     private final ExcelReadingService excelReadingService;
     private final MultipleHelperService multipleHelperService;
 
     @Autowired
-    public MultipleBatchUpdate2Service(CreateUpdatesBusSender createUpdatesBusSender,
-                                       UserService userService,
-                                       ExcelDocManagementService excelDocManagementService,
+    public MultipleBatchUpdate2Service(ExcelDocManagementService excelDocManagementService,
                                        MultipleCasesReadingService multipleCasesReadingService,
                                        ExcelReadingService excelReadingService,
                                        MultipleHelperService multipleHelperService) {
-        this.createUpdatesBusSender = createUpdatesBusSender;
-        this.userService = userService;
         this.excelDocManagementService = excelDocManagementService;
         this.multipleCasesReadingService = multipleCasesReadingService;
         this.excelReadingService = excelReadingService;
@@ -71,7 +63,7 @@ public class MultipleBatchUpdate2Service {
 
             log.info("Sending detach updates to singles");
 
-            sendDetachUpdatesToSingles(userToken, multipleDetails, errors, multipleObjects);
+            multipleHelperService.sendDetachUpdatesToSinglesNoConfirmation(userToken, multipleDetails, errors, multipleObjects);
 
         } else {
 
@@ -132,8 +124,9 @@ public class MultipleBatchUpdate2Service {
 
                 log.info("Sending single update with the lead flag");
 
-                sendCreationUpdatesToSingles(userToken, multipleDetails.getCaseTypeId(), multipleDetails.getJurisdiction(),
-                        multipleDetails.getCaseData(), errors, new ArrayList<>(Collections.singletonList(newLeadCase)), newLeadCase);
+                multipleHelperService.sendCreationUpdatesToSinglesNoConfirmation(userToken, multipleDetails.getCaseTypeId(),
+                        multipleDetails.getJurisdiction(), multipleDetails.getCaseData(), errors,
+                        new ArrayList<>(Collections.singletonList(newLeadCase)), newLeadCase);
 
             }
 
@@ -192,8 +185,8 @@ public class MultipleBatchUpdate2Service {
 
         log.info("Sending creation updates to singles");
 
-        sendCreationUpdatesToSingles(userToken, updatedCaseTypeId, updatedJurisdiction, updatedMultipleData,
-                errors, new ArrayList<>(multipleObjects.keySet()), updatedLeadCase);
+        multipleHelperService.sendCreationUpdatesToSinglesNoConfirmation(userToken, updatedCaseTypeId, updatedJurisdiction,
+                updatedMultipleData, errors, new ArrayList<>(multipleObjects.keySet()), updatedLeadCase);
 
     }
 
@@ -266,45 +259,6 @@ public class MultipleBatchUpdate2Service {
         });
 
         return newMultipleObjectsUpdated;
-
-    }
-
-    private void sendDetachUpdatesToSingles(String userToken, MultipleDetails multipleDetails,
-                                              List<String> errors, TreeMap<String, Object> multipleObjects) {
-
-        List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
-        MultipleData multipleData = multipleDetails.getCaseData();
-        String username = userService.getUserDetails(userToken).getEmail();
-
-        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
-                multipleDetails.getJurisdiction(),
-                username,
-                multipleObjectsFiltered,
-                PersistentQHelper.getDetachDataModel(),
-                errors,
-                multipleData.getMultipleReference(),
-                NO,
-                createUpdatesBusSender,
-                String.valueOf(multipleObjectsFiltered.size()));
-
-    }
-
-    private void sendCreationUpdatesToSingles(String userToken, String caseTypeId, String jurisdiction, MultipleData updatedMultipleData,
-                                              List<String> errors, List<String> multipleObjectsFiltered, String leadId) {
-
-        String username = userService.getUserDetails(userToken).getEmail();
-
-        PersistentQHelper.sendSingleUpdatesPersistentQ(caseTypeId,
-                jurisdiction,
-                username,
-                multipleObjectsFiltered,
-                PersistentQHelper.getCreationDataModel(leadId,
-                        updatedMultipleData.getMultipleReference()),
-                errors,
-                updatedMultipleData.getMultipleReference(),
-                NO,
-                createUpdatesBusSender,
-                String.valueOf(multipleObjectsFiltered.size()));
 
     }
 

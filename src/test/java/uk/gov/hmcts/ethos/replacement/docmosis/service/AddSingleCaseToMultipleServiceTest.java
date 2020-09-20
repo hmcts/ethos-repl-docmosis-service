@@ -11,6 +11,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleCasesReadingService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleHelperService;
 
@@ -58,6 +59,7 @@ public class AddSingleCaseToMultipleServiceTest {
     public void addSingleCaseToMultipleLogicLead() {
 
         List<String> errors = new ArrayList<>();
+        String updatedSubMultipleName = caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName();
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
                 multipleDetails.getCaseTypeId(),
@@ -77,13 +79,23 @@ public class AddSingleCaseToMultipleServiceTest {
 
         verify(multipleHelperService, times(1)).moveCasesAndSendUpdateToMultiple(
                 userToken,
-                caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName(),
+                updatedSubMultipleName,
                 caseDetails.getJurisdiction(),
                 multipleCaseTypeId,
                 String.valueOf(submitMultipleEvents.get(0).getCaseId()),
                 submitMultipleEvents.get(0).getCaseData(),
                 new ArrayList<>(Collections.singletonList(caseDetails.getCaseData().getEthosCaseReference())),
                 new ArrayList<>());
+
+        verify(multipleHelperService, times(1)).sendCreationUpdatesToSinglesNoConfirmation(
+                userToken,
+                multipleCaseTypeId,
+                caseDetails.getJurisdiction(),
+                submitMultipleEvents.get(0).getCaseData(),
+                new ArrayList<>(),
+                new ArrayList<>(Collections.singletonList(
+                        MultiplesHelper.getLeadFromCaseIds(submitMultipleEvents.get(0).getCaseData()))),
+                "");
 
         verifyNoMoreInteractions(multipleHelperService);
 
@@ -99,6 +111,7 @@ public class AddSingleCaseToMultipleServiceTest {
     caseDetails.getCaseData().getMoveCases().setLeadCase(NO);
 
         List<String> errors = new ArrayList<>();
+        String updatedSubMultipleName = caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName();
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
                 multipleDetails.getCaseTypeId(),
@@ -118,7 +131,7 @@ public class AddSingleCaseToMultipleServiceTest {
 
         verify(multipleHelperService, times(1)).moveCasesAndSendUpdateToMultiple(
                 userToken,
-                caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName(),
+                updatedSubMultipleName,
                 caseDetails.getJurisdiction(),
                 multipleCaseTypeId,
                 String.valueOf(submitMultipleEvents.get(0).getCaseId()),
@@ -139,6 +152,7 @@ public class AddSingleCaseToMultipleServiceTest {
 
         caseDetails.getCaseData().getMoveCases().setLeadCase(NO);
         submitMultipleEvents.get(0).getCaseData().setCaseIdCollection(null);
+        String updatedSubMultipleName = caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName();
 
         List<String> errors = new ArrayList<>();
 
@@ -160,7 +174,7 @@ public class AddSingleCaseToMultipleServiceTest {
 
         verify(multipleHelperService, times(1)).moveCasesAndSendUpdateToMultiple(
                 userToken,
-                caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName(),
+                updatedSubMultipleName,
                 caseDetails.getJurisdiction(),
                 multipleCaseTypeId,
                 String.valueOf(submitMultipleEvents.get(0).getCaseId()),

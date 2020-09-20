@@ -6,17 +6,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
+import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 
 @Slf4j
 @Service("multipleHelperService")
@@ -27,6 +32,8 @@ public class MultipleHelperService {
     private final ExcelReadingService excelReadingService;
     private final ExcelDocManagementService excelDocManagementService;
     private final MultipleCasesSendingService multipleCasesSendingService;
+    private final CreateUpdatesBusSender createUpdatesBusSender;
+    private final UserService userService;
 
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
@@ -36,12 +43,16 @@ public class MultipleHelperService {
                                  MultipleCasesReadingService multipleCasesReadingService,
                                  ExcelReadingService excelReadingService,
                                  ExcelDocManagementService excelDocManagementService,
-                                 MultipleCasesSendingService multipleCasesSendingService) {
+                                 MultipleCasesSendingService multipleCasesSendingService,
+                                 CreateUpdatesBusSender createUpdatesBusSender,
+                                 UserService userService) {
         this.singleCasesReadingService = singleCasesReadingService;
         this.multipleCasesReadingService = multipleCasesReadingService;
         this.excelReadingService = excelReadingService;
         this.excelDocManagementService = excelDocManagementService;
         this.multipleCasesSendingService = multipleCasesSendingService;
+        this.createUpdatesBusSender = createUpdatesBusSender;
+        this.userService = userService;
     }
 
     public void addLeadMarkUp(String userToken, String caseTypeId, MultipleData multipleData,
@@ -197,6 +208,47 @@ public class MultipleHelperService {
         newMultipleObjectsUpdated.addAll(multipleObjectsToBeAdded);
 
         return newMultipleObjectsUpdated;
+
+    }
+
+
+    public void sendCreationUpdatesToSinglesNoConfirmation(String userToken, String caseTypeId, String jurisdiction,
+                                                           MultipleData updatedMultipleData, List<String> errors,
+                                                           List<String> multipleObjectsFiltered, String leadId) {
+
+        String username = userService.getUserDetails(userToken).getEmail();
+
+        PersistentQHelper.sendSingleUpdatesPersistentQ(caseTypeId,
+                jurisdiction,
+                username,
+                multipleObjectsFiltered,
+                PersistentQHelper.getCreationDataModel(leadId,
+                        updatedMultipleData.getMultipleReference()),
+                errors,
+                updatedMultipleData.getMultipleReference(),
+                NO,
+                createUpdatesBusSender,
+                String.valueOf(multipleObjectsFiltered.size()));
+
+    }
+
+    public void sendDetachUpdatesToSinglesNoConfirmation(String userToken, MultipleDetails multipleDetails,
+                                            List<String> errors, TreeMap<String, Object> multipleObjects) {
+
+        List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
+        MultipleData multipleData = multipleDetails.getCaseData();
+        String username = userService.getUserDetails(userToken).getEmail();
+
+        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(),
+                username,
+                multipleObjectsFiltered,
+                PersistentQHelper.getDetachDataModel(),
+                errors,
+                multipleData.getMultipleReference(),
+                NO,
+                createUpdatesBusSender,
+                String.valueOf(multipleObjectsFiltered.size()));
 
     }
 

@@ -6,14 +6,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.types.MoveCasesType;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
-import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +24,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleBatchUpdate2ServiceTest {
 
-    @Mock
-    private CreateUpdatesBusSender createUpdatesBusSender;
-    @Mock
-    private UserService userService;
     @Mock
     private ExcelDocManagementService excelDocManagementService;
     @Mock
@@ -56,8 +48,6 @@ public class MultipleBatchUpdate2ServiceTest {
         multipleObjects = MultipleUtil.getMultipleObjectsAll();
         multipleDetails = new MultipleDetails();
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
-        UserDetails userDetails = HelperTest.getUserDetails();
-        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         userToken = "authString";
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("246000");
@@ -80,8 +70,6 @@ public class MultipleBatchUpdate2ServiceTest {
                 anyString(),
                 any());
         verifyNoMoreInteractions(excelDocManagementService);
-        verify(userService, times(2)).getUserDetails(userToken);
-        verifyNoMoreInteractions(userService);
     }
 
     @Test
@@ -98,8 +86,6 @@ public class MultipleBatchUpdate2ServiceTest {
                 anyString(),
                 any());
         verifyNoMoreInteractions(excelDocManagementService);
-        verify(userService, times(1)).getUserDetails(userToken);
-        verifyNoMoreInteractions(userService);
         assertNull(multipleDetails.getCaseData().getLeadCase());
     }
 
