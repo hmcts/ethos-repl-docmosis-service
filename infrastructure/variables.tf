@@ -77,7 +77,7 @@ variable "managed_identity_object_id" {
 }
 
 variable "appinsights_location" {
-  default = "UK South"
+  default     = "West Europe"
   description = "Location for Application Insights"
 }
 
