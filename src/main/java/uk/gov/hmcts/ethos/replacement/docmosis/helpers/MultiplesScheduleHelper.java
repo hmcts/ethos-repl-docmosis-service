@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
@@ -140,11 +141,11 @@ public class MultiplesScheduleHelper {
         StringBuilder sb = new StringBuilder();
         CaseData caseData = submitEvent.getCaseData();
         RespondentSumType respondent = caseData.getRespondentCollection().get(0).getValue();
-        sb.append("{\"Claimant\":\"").append(nullCheck(caseData.getClaimantIndType().claimantFullNames())).append(NEW_LINE);
+        sb.append("{\"Claimant\":\"").append(getClaimantName(caseData)).append(NEW_LINE);
         sb.append("\"Respondent\":\"").append(nullCheck(respondent.getRespondentName())).append(NEW_LINE);
         sb.append("\"Current_position\":\"").append(nullCheck(caseData.getPositionType())).append(NEW_LINE);
         sb.append("\"Case_No\":\"").append(nullCheck(caseData.getEthosCaseReference())).append(NEW_LINE);
-        sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantIndType().claimantFullNames())).append(NEW_LINE);
+        sb.append("\"claimant_full_name\":\"").append(getClaimantName(caseData)).append(NEW_LINE);
         sb.append("\"claimant_addressLine1\":\"").append(nullCheck(caseData.getClaimantType().getClaimantAddressUK().getAddressLine1())).append(NEW_LINE);
         sb.append("\"claimant_postCode\":\"").append(nullCheck(caseData.getClaimantType().getClaimantAddressUK().getPostCode())).append(NEW_LINE);
         sb.append("\"respondent_full_name\":\"").append(nullCheck(respondent.getRespondentName())).append(NEW_LINE);
@@ -152,4 +153,27 @@ public class MultiplesScheduleHelper {
         sb.append("\"respondent_postCode\":\"").append(nullCheck(respondent.getRespondentAddress().getPostCode())).append("\"}");
         return sb;
     }
+
+    private static String getClaimantName(CaseData caseData) {
+
+        if (!isNullOrEmpty(caseData.getClaimantCompany())) {
+
+            return caseData.getClaimantCompany();
+
+        } else {
+
+            if (caseData.getClaimantIndType() != null) {
+
+                return caseData.getClaimantIndType().claimantFullNames();
+
+            } else {
+
+                return "";
+
+            }
+
+        }
+
+    }
+
 }

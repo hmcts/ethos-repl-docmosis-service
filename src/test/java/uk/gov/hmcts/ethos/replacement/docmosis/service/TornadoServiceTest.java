@@ -114,6 +114,26 @@ public class TornadoServiceTest {
     }
 
     @Test
+    public void scheduleMultipleGenerationFlagsClaimantCompany() throws IOException {
+        submitEventList.get(0).getCaseData().setClaimantCompany("Company");
+        DocumentInfo documentInfo1 = tornadoService.scheduleMultipleGeneration(userToken,
+                multipleDetails.getCaseData(),
+                multipleObjectsFlags,
+                submitEventList);
+        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    }
+
+    @Test
+    public void scheduleMultipleGenerationFlagsNullClaimant() throws IOException {
+        submitEventList.get(0).getCaseData().setClaimantIndType(null);
+        DocumentInfo documentInfo1 = tornadoService.scheduleMultipleGeneration(userToken,
+                multipleDetails.getCaseData(),
+                multipleObjectsFlags,
+                submitEventList);
+        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    }
+
+    @Test
     public void scheduleMultipleGenerationWrongScheduleDocName() throws IOException {
         multipleDetails.getCaseData().setScheduleDocName("WRONG_SCHEDULE_NAME");
         DocumentInfo documentInfo1 = tornadoService.scheduleMultipleGeneration(userToken,
