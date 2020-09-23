@@ -37,7 +37,7 @@ public class SingleCaseMultipleMidEventValidationServiceTest {
         caseDetails.setCaseTypeId(MANCHESTER_CASE_TYPE_ID);
         String oldMultipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseDetails.getCaseTypeId());
         multipleCaseTypeId = oldMultipleCaseTypeId.substring(0, oldMultipleCaseTypeId.length() - 1);
-        caseDetails.setCaseData(MultipleUtil.getCaseDataWithSingleMoveCases());
+        caseDetails.setCaseData(MultipleUtil.getCaseDataForSinglesToBeMoved());
         userToken = "authString";
     }
 
@@ -53,8 +53,8 @@ public class SingleCaseMultipleMidEventValidationServiceTest {
         verify(multipleHelperService, times(1)).validateExternalMultipleAndSubMultiple(
                 userToken,
                 multipleCaseTypeId,
-                caseDetails.getCaseData().getMoveCases().getUpdatedMultipleRef(),
-                caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName(),
+                caseDetails.getCaseData().getMultipleReference(),
+                caseDetails.getCaseData().getSubMultipleReference(),
                 errors);
         verifyNoMoreInteractions(multipleHelperService);
 

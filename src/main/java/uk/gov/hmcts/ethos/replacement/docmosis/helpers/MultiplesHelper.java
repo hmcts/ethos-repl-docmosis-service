@@ -43,7 +43,6 @@ public class MultiplesHelper {
     }
 
     // MID EVENTS COLLECTIONS HAVE KEY AS NULL BUT WITH VALUES!
-
     public static List<String> getCaseIdsForMidEvent(MultipleData multipleData) {
 
         if (multipleData.getCaseIdCollection() != null

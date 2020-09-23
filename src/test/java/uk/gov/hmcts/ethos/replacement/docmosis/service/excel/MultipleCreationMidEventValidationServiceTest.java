@@ -45,7 +45,7 @@ public class MultipleCreationMidEventValidationServiceTest {
     }
 
     @Test
-    public void multipleCreationMidEventValidationService() {
+    public void multipleCreationValidationLogic() {
 
         when(singleCasesReadingService.retrieveSingleCases(userToken,
                 multipleDetails.getCaseTypeId(),
@@ -64,7 +64,7 @@ public class MultipleCreationMidEventValidationServiceTest {
     }
 
     @Test
-    public void multipleCreationMidEventValidationServiceMaxSize() {
+    public void multipleCreationValidationLogicMaxSize() {
 
         createCaseIdCollection(multipleDetails.getCaseData(), 60);
 
@@ -79,7 +79,7 @@ public class MultipleCreationMidEventValidationServiceTest {
     }
 
     @Test
-    public void multipleCreationMidEventValidationServiceWrongStateAndMultipleErrorEmptyLead() {
+    public void multipleCreationValidationLogicWrongStateAndMultipleErrorEmptyLead() {
 
         multipleDetails.getCaseData().setLeadCase(null);
 
@@ -100,7 +100,7 @@ public class MultipleCreationMidEventValidationServiceTest {
     }
 
     @Test
-    public void multipleCreationMidEventValidationServiceET1OnlineCase() {
+    public void multipleCreationValidationLogicET1OnlineCase() {
 
         multipleDetails.getCaseData().setMultipleSource(ET1_ONLINE_CASE_SOURCE);
 

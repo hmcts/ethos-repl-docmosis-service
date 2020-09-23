@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.types.SingleMoveCasesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleHelperService;
 
@@ -35,17 +34,13 @@ public class SingleCaseMultipleMidEventValidationService {
 
         }
 
-        SingleMoveCasesType singleMoveCasesType = caseDetails.getCaseData().getMoveCases();
-
         log.info("Validating multiple and subMultiple in singles");
 
         String multipleCaseTypeId = MultiplesHelper.getMultipleCaseTypeIdFromSingle(caseDetails.getCaseTypeId());
 
-        log.info("SingleMoveCasesType: " + singleMoveCasesType);
+        String multipleReference = caseDetails.getCaseData().getMultipleReference();
 
-        String multipleReference = singleMoveCasesType.getUpdatedMultipleRef();
-
-        String subMultipleReference = singleMoveCasesType.getUpdatedSubMultipleName();
+        String subMultipleReference = caseDetails.getCaseData().getSubMultipleReference();
 
         multipleHelperService.validateExternalMultipleAndSubMultiple(userToken,
                 multipleCaseTypeId,

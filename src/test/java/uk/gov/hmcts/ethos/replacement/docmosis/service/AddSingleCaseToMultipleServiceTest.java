@@ -49,7 +49,7 @@ public class AddSingleCaseToMultipleServiceTest {
         caseDetails.setCaseTypeId(MANCHESTER_CASE_TYPE_ID);
         String oldMultipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseDetails.getCaseTypeId());
         multipleCaseTypeId = oldMultipleCaseTypeId.substring(0, oldMultipleCaseTypeId.length() - 1);
-        caseDetails.setCaseData(MultipleUtil.getCaseDataWithSingleMoveCases());
+        caseDetails.setCaseData(MultipleUtil.getCaseDataForSinglesToBeMoved());
         caseDetails.setCaseId("12321321");
         submitMultipleEvents = MultipleUtil.getSubmitMultipleEvents();
         userToken = "authString";
@@ -59,11 +59,11 @@ public class AddSingleCaseToMultipleServiceTest {
     public void addSingleCaseToMultipleLogicLead() {
 
         List<String> errors = new ArrayList<>();
-        String updatedSubMultipleName = caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName();
+        String updatedSubMultipleName = caseDetails.getCaseData().getSubMultipleReference();
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
                 multipleDetails.getCaseTypeId(),
-                caseDetails.getCaseData().getMoveCases().getUpdatedMultipleRef())
+                caseDetails.getCaseData().getMultipleReference())
         ).thenReturn(submitMultipleEvents);
 
         addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(userToken,
@@ -108,14 +108,14 @@ public class AddSingleCaseToMultipleServiceTest {
     @Test
     public void addSingleCaseToMultipleLogicNoLead() {
 
-    caseDetails.getCaseData().getMoveCases().setLeadCase(NO);
+    caseDetails.getCaseData().setLeadClaimant(NO);
 
         List<String> errors = new ArrayList<>();
-        String updatedSubMultipleName = caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName();
+        String updatedSubMultipleName = caseDetails.getCaseData().getSubMultipleReference();
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
                 multipleDetails.getCaseTypeId(),
-                caseDetails.getCaseData().getMoveCases().getUpdatedMultipleRef())
+                caseDetails.getCaseData().getMultipleReference())
         ).thenReturn(submitMultipleEvents);
 
         addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(userToken,
@@ -150,15 +150,15 @@ public class AddSingleCaseToMultipleServiceTest {
     @Test
     public void addSingleCaseToMultipleLogicNoLeadButWithEmptyMultiple() {
 
-        caseDetails.getCaseData().getMoveCases().setLeadCase(NO);
+        caseDetails.getCaseData().setLeadClaimant(NO);
         submitMultipleEvents.get(0).getCaseData().setCaseIdCollection(null);
-        String updatedSubMultipleName = caseDetails.getCaseData().getMoveCases().getUpdatedSubMultipleName();
+        String updatedSubMultipleName = caseDetails.getCaseData().getSubMultipleReference();
 
         List<String> errors = new ArrayList<>();
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
                 multipleDetails.getCaseTypeId(),
-                caseDetails.getCaseData().getMoveCases().getUpdatedMultipleRef())
+                caseDetails.getCaseData().getMultipleReference())
         ).thenReturn(submitMultipleEvents);
 
         addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(userToken,

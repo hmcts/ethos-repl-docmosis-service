@@ -248,16 +248,14 @@ public class MultipleUtil {
 
     }
 
-    public static CaseData getCaseDataWithSingleMoveCases() {
+    public static CaseData getCaseDataForSinglesToBeMoved() {
 
         CaseData caseData = new CaseData();
 
-        SingleMoveCasesType singleMoveCasesType = new SingleMoveCasesType();
-        singleMoveCasesType.setLeadCase(YES);
-        singleMoveCasesType.setUpdatedMultipleRef("246000");
-        singleMoveCasesType.setUpdatedSubMultipleName("updatedSubMultipleName");
+        caseData.setLeadClaimant(YES);
+        caseData.setMultipleReference("246000");
+        caseData.setSubMultipleReference("updatedSubMultipleName");
 
-        caseData.setMoveCases(singleMoveCasesType);
         caseData.setCaseType(SINGLE_CASE_TYPE);
 
         return caseData;

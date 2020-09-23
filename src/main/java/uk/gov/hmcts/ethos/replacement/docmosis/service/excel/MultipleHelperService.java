@@ -55,14 +55,14 @@ public class MultipleHelperService {
         this.userService = userService;
     }
 
-    public void addLeadMarkUp(String userToken, String caseTypeId, MultipleData multipleData,
+    public void addLeadMarkUp(String userToken, String multipleCaseTypeId, MultipleData multipleData,
                               String newLeadCase, String caseId) {
 
         if (caseId.equals("")) {
 
             SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(
                     userToken,
-                    caseTypeId,
+                    multipleCaseTypeId,
                     newLeadCase);
 
             if (submitEvent != null) {

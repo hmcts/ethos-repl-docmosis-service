@@ -56,22 +56,22 @@ public class SingleCasesReadingService {
         return caseIds;
     }
 
-    public SubmitEvent retrieveSingleCase(String userToken, String caseTypeId, String caseId) {
+    public SubmitEvent retrieveSingleCase(String userToken, String multipleCaseTypeId, String caseId) {
 
         List<SubmitEvent> submitEvents = retrieveSingleCases(userToken,
-                caseTypeId,
+                multipleCaseTypeId,
                 new ArrayList<>(Collections.singletonList(caseId)));
 
         return submitEvents.isEmpty() ? null : submitEvents.get(0);
     }
 
-    public List<SubmitEvent> retrieveSingleCases(String userToken, String caseTypeId, List<String> caseIds) {
+    public List<SubmitEvent> retrieveSingleCases(String userToken, String multipleCaseTypeId, List<String> caseIds) {
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
 
         try {
             submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,
-                    UtilHelper.getCaseTypeId(caseTypeId),
+                    UtilHelper.getCaseTypeId(multipleCaseTypeId),
                     caseIds);
 
         } catch (Exception ex) {

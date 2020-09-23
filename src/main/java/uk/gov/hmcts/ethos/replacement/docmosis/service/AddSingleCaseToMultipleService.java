@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.types.SingleMoveCasesType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
@@ -37,10 +36,8 @@ public class AddSingleCaseToMultipleService {
 
         CaseData caseData = caseDetails.getCaseData();
 
-        SingleMoveCasesType singleMoveCasesType = caseData.getMoveCases();
-
-        String leadClaimant = singleMoveCasesType.getLeadCase();
-        String updatedMultipleReference = singleMoveCasesType.getUpdatedMultipleRef();
+        String leadClaimant = caseData.getLeadClaimant();
+        String updatedMultipleReference = caseData.getMultipleReference();
 
         String multipleCaseTypeId = MultiplesHelper.getMultipleCaseTypeIdFromSingle(caseDetails.getCaseTypeId());
 
@@ -71,7 +68,7 @@ public class AddSingleCaseToMultipleService {
 
         log.info("Generate and upload excel with sub multiple and send update to multiple");
 
-        multipleHelperService.moveCasesAndSendUpdateToMultiple(userToken, singleMoveCasesType.getUpdatedSubMultipleName(),
+        multipleHelperService.moveCasesAndSendUpdateToMultiple(userToken, caseData.getSubMultipleReference(),
                 caseDetails.getJurisdiction(), multipleCaseTypeId, String.valueOf(multipleEvent.getCaseId()),
                 multipleData, new ArrayList<>(Collections.singletonList(ethosCaseReference)), errors);
 
@@ -81,7 +78,7 @@ public class AddSingleCaseToMultipleService {
 
         log.info("Reset mid fields");
 
-        caseData.setMoveCases(null);
+        caseData.setSubMultipleReference(null);
 
     }
 
