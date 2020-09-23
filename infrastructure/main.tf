@@ -76,13 +76,6 @@ resource "azurerm_application_insights" "appinsights" {
 
   tags = var.common_tags
 
-  lifecycle {
-    ignore_changes = [
-      # Ignore changes to appinsights as otherwise upgrading to the Azure provider 2.x
-      # destroys and re-creates this appinsights instance
-      application_type,
-    ]
-  }
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
