@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
@@ -31,23 +30,22 @@ public class AddSingleCaseToMultipleService {
         this.multipleCasesReadingService = multipleCasesReadingService;
     }
 
-    public void addSingleCaseToMultipleLogic(String userToken, CaseDetails caseDetails, List<String> errors) {
+    public void addSingleCaseToMultipleLogic(String userToken, CaseData caseData, String caseTypeId,
+                                             String jurisdiction, String caseId, List<String> errors) {
 
         log.info("Adding single case to multiple logic");
 
-        if (caseDetails.getCaseData().getCheckMultiple().equals(NO)
-                && caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+        if (caseData.getCheckMultiple().equals(NO)
+                && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
             log.info("Case was single and now will be multiple");
-
-            CaseData caseData = caseDetails.getCaseData();
 
             String leadClaimant = caseData.getLeadClaimant();
             String updatedMultipleReference = caseData.getMultipleReference();
 
-            String multipleCaseTypeId = MultiplesHelper.getMultipleCaseTypeIdFromSingle(caseDetails.getCaseTypeId());
+            String multipleCaseTypeId = MultiplesHelper.getMultipleCaseTypeIdFromSingle(caseTypeId);
 
-            log.info("Pulling the multiple case");
+            log.info("Pulling the multiple case: " + updatedMultipleReference);
 
             List<SubmitMultipleEvent> multipleEvents =
                     multipleCasesReadingService.retrieveMultipleCases(
@@ -69,13 +67,13 @@ public class AddSingleCaseToMultipleService {
 
             }
 
-            addSingleCaseToCaseIds(userToken, multipleCaseTypeId, caseDetails.getJurisdiction(),
-                    multipleData, leadClaimant, ethosCaseReference, caseDetails.getCaseId(), errors);
+            addSingleCaseToCaseIds(userToken, multipleCaseTypeId, jurisdiction,
+                    multipleData, leadClaimant, ethosCaseReference, caseId, errors);
 
             log.info("Generate and upload excel with sub multiple and send update to multiple");
 
             multipleHelperService.moveCasesAndSendUpdateToMultiple(userToken, caseData.getSubMultipleName(),
-                    caseDetails.getJurisdiction(), multipleCaseTypeId, String.valueOf(multipleEvent.getCaseId()),
+                    jurisdiction, multipleCaseTypeId, String.valueOf(multipleEvent.getCaseId()),
                     multipleData, new ArrayList<>(Collections.singletonList(ethosCaseReference)), errors);
 
             log.info("Update multipleRef, multiple and lead");

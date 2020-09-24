@@ -293,7 +293,9 @@ public class CaseActionsForCaseWorkerController {
             caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
 
             addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
-                    userToken, ccdRequest.getCaseDetails(), errors);
+                    userToken, caseData, ccdRequest.getCaseDetails().getCaseTypeId(),
+                    ccdRequest.getCaseDetails().getJurisdiction(),
+                    ccdRequest.getCaseDetails().getCaseId(), errors);
 
         }
 

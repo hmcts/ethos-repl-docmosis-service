@@ -67,7 +67,10 @@ public class AddSingleCaseToMultipleServiceTest {
         ).thenReturn(submitMultipleEvents);
 
         addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(userToken,
-                caseDetails,
+                caseDetails.getCaseData(),
+                caseDetails.getCaseTypeId(),
+                caseDetails.getJurisdiction(),
+                caseDetails.getCaseId(),
                 errors);
 
         verify(multipleHelperService, times(1)).addLeadMarkUp(
@@ -119,7 +122,10 @@ public class AddSingleCaseToMultipleServiceTest {
         ).thenReturn(submitMultipleEvents);
 
         addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(userToken,
-                caseDetails,
+                caseDetails.getCaseData(),
+                caseDetails.getCaseTypeId(),
+                caseDetails.getJurisdiction(),
+                caseDetails.getCaseId(),
                 errors);
 
         verify(multipleHelperService, times(0)).addLeadMarkUp(
@@ -162,7 +168,10 @@ public class AddSingleCaseToMultipleServiceTest {
         ).thenReturn(submitMultipleEvents);
 
         addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(userToken,
-                caseDetails,
+                caseDetails.getCaseData(),
+                caseDetails.getCaseTypeId(),
+                caseDetails.getJurisdiction(),
+                caseDetails.getCaseId(),
                 errors);
 
         verify(multipleHelperService, times(1)).addLeadMarkUp(
