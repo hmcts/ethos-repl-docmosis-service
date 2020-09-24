@@ -254,9 +254,10 @@ public class MultipleUtil {
 
         caseData.setLeadClaimant(YES);
         caseData.setMultipleReference("246000");
-        caseData.setSubMultipleReference("updatedSubMultipleName");
+        caseData.setSubMultipleName("updatedSubMultipleName");
 
-        caseData.setCaseType(SINGLE_CASE_TYPE);
+        caseData.setCaseType(MULTIPLE_CASE_TYPE);
+        caseData.setCheckMultiple(NO);
 
         return caseData;
 

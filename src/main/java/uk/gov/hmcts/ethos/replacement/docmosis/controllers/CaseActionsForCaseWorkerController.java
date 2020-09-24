@@ -229,6 +229,8 @@ public class CaseActionsForCaseWorkerController {
                 log.info("Post Default values loaded: " + defaultValues);
                 caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
                 generateEthosCaseReference(caseData, ccdRequest);
+                caseData.setCheckMultiple(caseData.getCaseType() != null
+                        && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
             }
         } else {
             errors.add("The payload is empty. Please make sure you have some data on your case");
@@ -289,6 +291,10 @@ public class CaseActionsForCaseWorkerController {
             log.info("Post Default values loaded: " + defaultValues);
             caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
             caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+
+            addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
+                    userToken, ccdRequest.getCaseDetails(), errors);
+
         }
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
@@ -705,36 +711,6 @@ public class CaseActionsForCaseWorkerController {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
 
         singleCaseMultipleMidEventValidationService.singleCaseMultipleValidationLogic(
-                userToken, caseDetails, errors);
-
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseDetails.getCaseData())
-                .errors(errors)
-                .build());
-    }
-
-    @PostMapping(value = "/addSingleCaseToMultiple", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "adds a single case to a multiple.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<CCDCallbackResponse> addSingleCaseToMultiple(
-            @RequestBody CCDRequest ccdRequest,
-            @RequestHeader(value = "Authorization") String userToken) {
-        log.info("ADD SINGLE CASE TO MULTIPLE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        List<String> errors = new ArrayList<>();
-        CaseDetails caseDetails = ccdRequest.getCaseDetails();
-
-        addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
                 userToken, caseDetails, errors);
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()

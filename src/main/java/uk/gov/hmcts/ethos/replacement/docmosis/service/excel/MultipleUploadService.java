@@ -4,12 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service("multipleUploadService")
@@ -20,6 +22,10 @@ public class MultipleUploadService {
     public static final String ERROR_SHEET_NUMBER_COLUMNS = "Number of columns expected ";
 
     public static final String ERROR_SHEET_EMPTY = "Empty sheet";
+
+    public static final String ERROR_DOCUMENT_EXTENSION = "Document extension is not valid";
+
+    public static final String EXCEL_DOCUMENT_EXTENSION = "xlsx";
 
     private final ExcelReadingService excelReadingService;
 
@@ -40,6 +46,12 @@ public class MultipleUploadService {
         try {
 
             MultipleData multipleData = multipleDetails.getCaseData();
+
+            log.info("Validating document extension");
+
+            validateDocumentImported(multipleData.getCaseImporterFile().getUploadedDocument(), errors);
+
+            if (!errors.isEmpty()) return;
 
             Sheet datatypeSheet = excelReadingService.checkExcelErrors(
                     userToken,
@@ -102,4 +114,28 @@ public class MultipleUploadService {
 
         }
     }
+
+    private void validateDocumentImported(UploadedDocumentType uploadedDocumentType, List<String> errors) {
+
+        if (uploadedDocumentType == null || !checkFileNameExtension(uploadedDocumentType.getDocumentFilename())) {
+
+            log.info("Document extension is not valid");
+
+            errors.add(ERROR_DOCUMENT_EXTENSION);
+
+        }
+
+    }
+
+    private boolean checkFileNameExtension(String filename) {
+
+        String extension = Optional.ofNullable(filename)
+                .filter(f -> f.contains("."))
+                .map(f -> f.substring(filename.lastIndexOf(".") + 1))
+                .orElse("");
+
+        return extension.equals(EXCEL_DOCUMENT_EXTENSION);
+
+    }
+
 }

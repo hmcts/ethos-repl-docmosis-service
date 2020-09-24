@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 @Service("addSingleCaseToMultipleService")
@@ -34,51 +33,64 @@ public class AddSingleCaseToMultipleService {
 
     public void addSingleCaseToMultipleLogic(String userToken, CaseDetails caseDetails, List<String> errors) {
 
-        CaseData caseData = caseDetails.getCaseData();
+        log.info("Adding single case to multiple logic");
 
-        String leadClaimant = caseData.getLeadClaimant();
-        String updatedMultipleReference = caseData.getMultipleReference();
+        if (caseDetails.getCaseData().getCheckMultiple().equals(NO)
+                && caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
-        String multipleCaseTypeId = MultiplesHelper.getMultipleCaseTypeIdFromSingle(caseDetails.getCaseTypeId());
+            log.info("Case was single and now will be multiple");
 
-        log.info("Pulling the multiple case");
+            CaseData caseData = caseDetails.getCaseData();
 
-        List<SubmitMultipleEvent> multipleEvents =
-                multipleCasesReadingService.retrieveMultipleCases(
-                        userToken,
-                        multipleCaseTypeId,
-                        updatedMultipleReference);
+            String leadClaimant = caseData.getLeadClaimant();
+            String updatedMultipleReference = caseData.getMultipleReference();
 
-        SubmitMultipleEvent multipleEvent = multipleEvents.get(0);
+            String multipleCaseTypeId = MultiplesHelper.getMultipleCaseTypeIdFromSingle(caseDetails.getCaseTypeId());
 
-        MultipleData multipleData = multipleEvent.getCaseData();
+            log.info("Pulling the multiple case");
 
-        String ethosCaseReference = caseData.getEthosCaseReference();
+            List<SubmitMultipleEvent> multipleEvents =
+                    multipleCasesReadingService.retrieveMultipleCases(
+                            userToken,
+                            multipleCaseTypeId,
+                            updatedMultipleReference);
 
-        log.info("If multiple is empty the single will be always the lead");
+            SubmitMultipleEvent multipleEvent = multipleEvents.get(0);
 
-        if (multipleData.getCaseIdCollection() == null || multipleData.getCaseIdCollection().isEmpty()) {
+            MultipleData multipleData = multipleEvent.getCaseData();
 
-            leadClaimant = YES;
+            String ethosCaseReference = caseData.getEthosCaseReference();
+
+            log.info("If multiple is empty the single will be always the lead");
+
+            if (multipleData.getCaseIdCollection() == null || multipleData.getCaseIdCollection().isEmpty()) {
+
+                leadClaimant = YES;
+
+            }
+
+            addSingleCaseToCaseIds(userToken, multipleCaseTypeId, caseDetails.getJurisdiction(),
+                    multipleData, leadClaimant, ethosCaseReference, caseDetails.getCaseId(), errors);
+
+            log.info("Generate and upload excel with sub multiple and send update to multiple");
+
+            multipleHelperService.moveCasesAndSendUpdateToMultiple(userToken, caseData.getSubMultipleName(),
+                    caseDetails.getJurisdiction(), multipleCaseTypeId, String.valueOf(multipleEvent.getCaseId()),
+                    multipleData, new ArrayList<>(Collections.singletonList(ethosCaseReference)), errors);
+
+            log.info("Update multipleRef, multiple and lead");
+
+            updateCaseDataForMultiple(caseData, updatedMultipleReference, leadClaimant);
+
+            log.info("Reset mid fields");
+
+            caseData.setSubMultipleName(null);
+
+            log.info("Update check multiple flag");
+
+            caseData.setCheckMultiple(YES);
 
         }
-
-        addSingleCaseToCaseIds(userToken, multipleCaseTypeId, caseDetails.getJurisdiction(),
-                multipleData, leadClaimant, ethosCaseReference, caseDetails.getCaseId(), errors);
-
-        log.info("Generate and upload excel with sub multiple and send update to multiple");
-
-        multipleHelperService.moveCasesAndSendUpdateToMultiple(userToken, caseData.getSubMultipleReference(),
-                caseDetails.getJurisdiction(), multipleCaseTypeId, String.valueOf(multipleEvent.getCaseId()),
-                multipleData, new ArrayList<>(Collections.singletonList(ethosCaseReference)), errors);
-
-        log.info("Update multipleRef, multiple and lead");
-
-        updateCaseDataForMultiple(caseData, updatedMultipleReference, leadClaimant);
-
-        log.info("Reset mid fields");
-
-        caseData.setSubMultipleReference(null);
 
     }
 

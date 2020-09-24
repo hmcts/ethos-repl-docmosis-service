@@ -9,7 +9,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleHelperServi
 
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 @Service("singleCaseMultipleDMidEventValidationService")
@@ -26,27 +26,42 @@ public class SingleCaseMultipleMidEventValidationService {
 
         log.info("Validating if single case has the correct case type");
 
-        if (caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+        if (caseDetails.getCaseData().getCaseType().equals(SINGLE_CASE_TYPE)) {
 
-            errors.add("Case belongs already to a multiple");
+            if (caseDetails.getCaseData().getCheckMultiple().equals(YES)) {
+
+                log.info("Case belongs to a multiple. It can not be moved to single");
+
+                errors.add("Case belongs to a multiple. It can not be moved to single");
+
+            } else {
+
+                log.info("No changes. Skip validation");
+
+            }
 
             return;
 
         }
 
-        log.info("Validating multiple and subMultiple in singles");
+        if (caseDetails.getCaseData().getCheckMultiple().equals(NO)
+                && caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
-        String multipleCaseTypeId = MultiplesHelper.getMultipleCaseTypeIdFromSingle(caseDetails.getCaseTypeId());
+            log.info("Validating multiple and subMultiple in singles");
 
-        String multipleReference = caseDetails.getCaseData().getMultipleReference();
+            String multipleCaseTypeId = MultiplesHelper.getMultipleCaseTypeIdFromSingle(caseDetails.getCaseTypeId());
 
-        String subMultipleReference = caseDetails.getCaseData().getSubMultipleReference();
+            String multipleReference = caseDetails.getCaseData().getMultipleReference();
 
-        multipleHelperService.validateExternalMultipleAndSubMultiple(userToken,
-                multipleCaseTypeId,
-                multipleReference,
-                subMultipleReference,
-                errors);
+            String subMultipleName = caseDetails.getCaseData().getSubMultipleName();
+
+            multipleHelperService.validateExternalMultipleAndSubMultiple(userToken,
+                    multipleCaseTypeId,
+                    multipleReference,
+                    subMultipleName,
+                    errors);
+
+        }
 
     }
 

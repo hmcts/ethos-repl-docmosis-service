@@ -15,9 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static org.junit.Assert.assertEquals;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SingleCaseMultipleMidEventValidationServiceTest {
@@ -54,25 +53,42 @@ public class SingleCaseMultipleMidEventValidationServiceTest {
                 userToken,
                 multipleCaseTypeId,
                 caseDetails.getCaseData().getMultipleReference(),
-                caseDetails.getCaseData().getSubMultipleReference(),
+                caseDetails.getCaseData().getSubMultipleName(),
                 errors);
         verifyNoMoreInteractions(multipleHelperService);
 
     }
 
     @Test
-    public void singleCaseMultipleValidationLogicBelongsMultiple() {
+    public void singleCaseMultipleValidationLogicMultipleToSingleError() {
 
         List<String> errors = new ArrayList<>();
 
-        caseDetails.getCaseData().setCaseType(MULTIPLE_CASE_TYPE);
+        caseDetails.getCaseData().setCaseType(SINGLE_CASE_TYPE);
+        caseDetails.getCaseData().setCheckMultiple(YES);
 
         singleCaseMultipleMidEventValidationService.singleCaseMultipleValidationLogic(userToken,
                 caseDetails,
                 errors);
 
         assertEquals(1, errors.size());
-        assertEquals("Case belongs already to a multiple", errors.get(0));
+        assertEquals("Case belongs to a multiple. It can not be moved to single", errors.get(0));
+
+    }
+
+    @Test
+    public void singleCaseMultipleValidationLogicSingleToSingle() {
+
+        List<String> errors = new ArrayList<>();
+
+        caseDetails.getCaseData().setCaseType(SINGLE_CASE_TYPE);
+        caseDetails.getCaseData().setCheckMultiple(NO);
+
+        singleCaseMultipleMidEventValidationService.singleCaseMultipleValidationLogic(userToken,
+                caseDetails,
+                errors);
+
+        assertEquals(0, errors.size());
 
     }
 

@@ -59,7 +59,7 @@ public class AddSingleCaseToMultipleServiceTest {
     public void addSingleCaseToMultipleLogicLead() {
 
         List<String> errors = new ArrayList<>();
-        String updatedSubMultipleName = caseDetails.getCaseData().getSubMultipleReference();
+        String updatedSubMultipleName = caseDetails.getCaseData().getSubMultipleName();
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
                 multipleDetails.getCaseTypeId(),
@@ -111,7 +111,7 @@ public class AddSingleCaseToMultipleServiceTest {
     caseDetails.getCaseData().setLeadClaimant(NO);
 
         List<String> errors = new ArrayList<>();
-        String updatedSubMultipleName = caseDetails.getCaseData().getSubMultipleReference();
+        String updatedSubMultipleName = caseDetails.getCaseData().getSubMultipleName();
 
         when(multipleCasesReadingService.retrieveMultipleCases(userToken,
                 multipleDetails.getCaseTypeId(),
@@ -152,7 +152,7 @@ public class AddSingleCaseToMultipleServiceTest {
 
         caseDetails.getCaseData().setLeadClaimant(NO);
         submitMultipleEvents.get(0).getCaseData().setCaseIdCollection(null);
-        String updatedSubMultipleName = caseDetails.getCaseData().getSubMultipleReference();
+        String updatedSubMultipleName = caseDetails.getCaseData().getSubMultipleName();
 
         List<String> errors = new ArrayList<>();
 

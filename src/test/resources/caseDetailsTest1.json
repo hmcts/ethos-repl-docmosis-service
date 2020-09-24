@@ -37,9 +37,7 @@
           "depositNotes": "None"
         }
       }
-    ],
-    "addSubMultipleComment": "Comment",
-    "additionalCaseInfo": {
+    ], "additionalCaseInfo": {
       "additional_accepted1": "additional_accepted1",
       "additional_accepted2": "additional_accepted2",
       "additional_conciliation_track": "additional_conciliation_track",
