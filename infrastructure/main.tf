@@ -69,20 +69,20 @@ resource "azurerm_key_vault_secret" "AZURE_APPINSGHTS_KEY" {
 }
 
 resource "azurerm_application_insights" "appinsights" {
-  name                = "${var.product}-${var.component}-appinsights-${var.env}"
+  name                = "${var.product}-${var.component}-appinsightsUK-${var.env}"
   location            = var.appinsights_location
   resource_group_name = local.vaultGroupName
   application_type    = "web"
 
   tags = var.common_tags
 
-  lifecycle {
-    ignore_changes = [
-      # Ignore changes to appinsights as otherwise upgrading to the Azure provider 2.x
-      # destroys and re-creates this appinsights instance
-      application_type,
-    ]
-  }
+//  lifecycle {
+//    ignore_changes = [
+//      # Ignore changes to appinsights as otherwise upgrading to the Azure provider 2.x
+//      # destroys and re-creates this appinsights instance
+//      application_type,
+//    ]
+//  }
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
