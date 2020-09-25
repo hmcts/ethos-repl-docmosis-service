@@ -371,7 +371,7 @@ public class DefaultValuesReaderServiceTest {
     public void getCaseData() {
         String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, tribunalCorrespondenceTelephone=0141 " +
                 "204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, " +
-                "ethosCaseReference=null, caseType=Single, multipleReference=null, subMultipleName=null, leadClaimant=null, checkMultiple=null, " +
+                "ethosCaseReference=null, caseType=Single, multipleReference=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, " +
                 "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, claimantOtherType=null, preAcceptCase=null, " +
                 "receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=Manually Created, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, " +
@@ -425,7 +425,7 @@ public class DefaultValuesReaderServiceTest {
     public void getCaseDataWithClaimantWorkAddress() {
         String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, tribunalCorrespondenceTelephone=0141 " +
                 "204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, " +
-                "ethosCaseReference=null, caseType=Single, multipleReference=null, subMultipleName=null, leadClaimant=null, checkMultiple=null, " +
+                "ethosCaseReference=null, caseType=Single, multipleReference=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, " +
                 "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, claimantOtherType=null, preAcceptCase=null, " +
                 "receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=Yes, claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=[RespondentSumTypeItem(id=null, value=RespondentSumType(responseStatus=null, responseToClaim=null, rejectionReason=null, " +

@@ -35,7 +35,7 @@ public class AddSingleCaseToMultipleService {
 
         log.info("Adding single case to multiple logic");
 
-        if (caseData.getCheckMultiple().equals(NO)
+        if (caseData.getMultipleFlag().equals(NO)
                 && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
             log.info("Case was single and now will be multiple: " + caseData);
@@ -86,7 +86,7 @@ public class AddSingleCaseToMultipleService {
 
             log.info("Update check multiple flag");
 
-            caseData.setCheckMultiple(YES);
+            caseData.setMultipleFlag(YES);
 
         }
 

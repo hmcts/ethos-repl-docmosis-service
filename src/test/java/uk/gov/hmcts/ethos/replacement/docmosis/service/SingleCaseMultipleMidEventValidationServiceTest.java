@@ -65,7 +65,7 @@ public class SingleCaseMultipleMidEventValidationServiceTest {
         List<String> errors = new ArrayList<>();
 
         caseDetails.getCaseData().setCaseType(SINGLE_CASE_TYPE);
-        caseDetails.getCaseData().setCheckMultiple(YES);
+        caseDetails.getCaseData().setMultipleFlag(YES);
 
         singleCaseMultipleMidEventValidationService.singleCaseMultipleValidationLogic(userToken,
                 caseDetails,
@@ -82,7 +82,7 @@ public class SingleCaseMultipleMidEventValidationServiceTest {
         List<String> errors = new ArrayList<>();
 
         caseDetails.getCaseData().setCaseType(SINGLE_CASE_TYPE);
-        caseDetails.getCaseData().setCheckMultiple(NO);
+        caseDetails.getCaseData().setMultipleFlag(NO);
 
         singleCaseMultipleMidEventValidationService.singleCaseMultipleValidationLogic(userToken,
                 caseDetails,

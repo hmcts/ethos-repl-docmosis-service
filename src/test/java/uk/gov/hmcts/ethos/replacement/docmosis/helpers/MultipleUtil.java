@@ -257,7 +257,7 @@ public class MultipleUtil {
         caseData.setSubMultipleName("updatedSubMultipleName");
 
         caseData.setCaseType(MULTIPLE_CASE_TYPE);
-        caseData.setCheckMultiple(NO);
+        caseData.setMultipleFlag(NO);
 
         return caseData;
 

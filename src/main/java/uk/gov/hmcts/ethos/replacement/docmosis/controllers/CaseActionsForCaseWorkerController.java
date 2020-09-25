@@ -228,7 +228,7 @@ public class CaseActionsForCaseWorkerController {
             log.info("Post Default values loaded: " + defaultValues);
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             generateEthosCaseReference(caseData, ccdRequest);
-            caseData.setCheckMultiple(caseData.getCaseType() != null
+            caseData.setMultipleFlag(caseData.getCaseType() != null
                     && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
         }
 

@@ -28,7 +28,7 @@ public class SingleCaseMultipleMidEventValidationService {
 
         if (caseDetails.getCaseData().getCaseType().equals(SINGLE_CASE_TYPE)) {
 
-            if (caseDetails.getCaseData().getCheckMultiple().equals(YES)) {
+            if (caseDetails.getCaseData().getMultipleFlag().equals(YES)) {
 
                 log.info("Case belongs to a multiple. It can not be moved to single");
 
@@ -44,7 +44,7 @@ public class SingleCaseMultipleMidEventValidationService {
 
         }
 
-        if (caseDetails.getCaseData().getCheckMultiple().equals(NO)
+        if (caseDetails.getCaseData().getMultipleFlag().equals(NO)
                 && caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
             log.info("Validating multiple and subMultiple in singles");
