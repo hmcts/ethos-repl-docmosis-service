@@ -389,16 +389,17 @@ public class DefaultValuesReaderServiceTest {
                 "hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, hearingPartHeard=null, hearingReservedJudgement=null, attendeeClaimant=null, " +
                 "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, " +
                 "hearingTimingResume=null, hearingTimingFinish=null, hearingTimingDuration=null)";
-        assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow).toString());
+        defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
+        assertEquals(caseDataExpected, caseData.toString());
     }
 
     @Test
     public void getCaseDataWithPositionTypeAndCaseSource() {
         caseData.setPositionType(MANUALLY_CREATED_POSITION);
         caseData.setCaseSource(ET1_ONLINE_CASE_SOURCE);
-        CaseData caseDataResult = defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
-        assertEquals(MANUALLY_CREATED_POSITION, caseDataResult.getPositionType());
-        assertEquals(ET1_ONLINE_CASE_SOURCE, caseDataResult.getCaseSource());
+        defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
+        assertEquals(MANUALLY_CREATED_POSITION, caseData.getPositionType());
+        assertEquals(ET1_ONLINE_CASE_SOURCE, caseData.getCaseSource());
     }
 
     private CaseData getCaseDataWithClaimantWorkAddress(CaseData caseData) {
@@ -450,7 +451,8 @@ public class DefaultValuesReaderServiceTest {
                 "hearingPartHeard=null, hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, " +
                 "attendeeRespAndRep=null, attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, " +
                 "hearingTimingDuration=null)";
-        assertEquals(caseDataExpected, defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow).toString());
+        defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
+        assertEquals(caseDataExpected, caseData.toString());
     }
 
     @Test

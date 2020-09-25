@@ -38,7 +38,7 @@ public class AddSingleCaseToMultipleService {
         if (caseData.getCheckMultiple().equals(NO)
                 && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
-            log.info("Case was single and now will be multiple");
+            log.info("Case was single and now will be multiple: " + caseData);
 
             String leadClaimant = caseData.getLeadClaimant();
             String updatedMultipleReference = caseData.getMultipleReference();
