@@ -217,24 +217,21 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        List<String> errors = new ArrayList<>();
-        CaseData caseData = new CaseData();
-        if (ccdRequest.getCaseDetails() != null && ccdRequest.getCaseDetails().getCaseId() != null) {
-            errors = eventValidationService.validateReceiptDate(ccdRequest.getCaseDetails().getCaseData());
-            log.info("Event fields validation:: " + errors);
-            if (errors.isEmpty()) {
-                caseManagementForCaseWorkerService.caseDataDefaults(ccdRequest.getCaseDetails().getCaseData());
-                log.info("POST DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-                DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
-                log.info("Post Default values loaded: " + defaultValues);
-                defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
-                generateEthosCaseReference(caseData, ccdRequest);
-                caseData.setCheckMultiple(caseData.getCaseType() != null
-                        && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
-            }
-        } else {
-            errors.add("The payload is empty. Please make sure you have some data on your case");
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+
+        List<String> errors = eventValidationService.validateReceiptDate(caseData);
+        log.info("Event fields validation:: " + errors);
+
+        if (errors.isEmpty()) {
+            caseManagementForCaseWorkerService.caseDataDefaults(caseData);
+            DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
+            log.info("Post Default values loaded: " + defaultValues);
+            defaultValuesReaderService.getCaseData(caseData, defaultValues);
+            generateEthosCaseReference(caseData, ccdRequest);
+            caseData.setCheckMultiple(caseData.getCaseType() != null
+                    && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
         }
+
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
                 .errors(errors)
