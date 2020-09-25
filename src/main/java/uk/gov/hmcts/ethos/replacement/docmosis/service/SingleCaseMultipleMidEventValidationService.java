@@ -55,6 +55,8 @@ public class SingleCaseMultipleMidEventValidationService {
 
             String subMultipleName = caseDetails.getCaseData().getSubMultipleName();
 
+            log.info("MultipleReference: " + multipleReference);
+
             multipleHelperService.validateExternalMultipleAndSubMultiple(userToken,
                     multipleCaseTypeId,
                     multipleReference,

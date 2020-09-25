@@ -11,7 +11,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleCasesReadingService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleHelperService;
 
@@ -89,18 +88,6 @@ public class AddSingleCaseToMultipleServiceTest {
                 submitMultipleEvents.get(0).getCaseData(),
                 new ArrayList<>(Collections.singletonList(caseDetails.getCaseData().getEthosCaseReference())),
                 new ArrayList<>());
-
-        verify(multipleHelperService, times(1)).sendCreationUpdatesToSinglesNoConfirmation(
-                userToken,
-                multipleCaseTypeId,
-                caseDetails.getJurisdiction(),
-                submitMultipleEvents.get(0).getCaseData(),
-                new ArrayList<>(),
-                new ArrayList<>(Collections.singletonList(
-                        MultiplesHelper.getLeadFromCaseIds(submitMultipleEvents.get(0).getCaseData()))),
-                "");
-
-        verifyNoMoreInteractions(multipleHelperService);
 
         assertEquals(MULTIPLE_CASE_TYPE, caseDetails.getCaseData().getCaseType());
         assertEquals("246000", caseDetails.getCaseData().getMultipleReference());

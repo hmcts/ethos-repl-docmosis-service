@@ -41,10 +41,6 @@ public class MultipleCreationService {
 
     public void bulkCreationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
-        log.info("Create multiple reference number");
-
-        multipleDetails.getCaseData().setMultipleReference(generateMultipleRef(multipleDetails));
-
         log.info("Add data to the multiple");
 
         addDataToMultiple(multipleDetails.getCaseData());
@@ -62,6 +58,10 @@ public class MultipleCreationService {
         log.info("Create the EXCEL");
 
         excelDocManagementService.generateAndUploadExcel(ethosCaseRefCollection, userToken, multipleDetails.getCaseData());
+
+        log.info("Create multiple reference number");
+
+        multipleDetails.getCaseData().setMultipleReference(generateMultipleRef(multipleDetails));
 
         if (!multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
 

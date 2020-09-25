@@ -10,10 +10,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
@@ -139,7 +136,7 @@ public class MultiplesHelper {
         CaseType caseType = new CaseType();
         caseType.setEthosCaseReference(ethosCaseReference);
         CaseIdTypeItem caseIdTypeItem = new CaseIdTypeItem();
-        caseIdTypeItem.setId(ethosCaseReference);
+        caseIdTypeItem.setId(UUID.randomUUID().toString());
         caseIdTypeItem.setValue(caseType);
 
         return caseIdTypeItem;
