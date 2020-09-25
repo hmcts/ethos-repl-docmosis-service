@@ -58,6 +58,25 @@ public class MultiplesHelper {
         }
     }
 
+    public static List<CaseIdTypeItem> filterDuplicatedAndEmptyCaseIds(MultipleData multipleData) {
+
+        if (multipleData.getCaseIdCollection() != null
+                && !multipleData.getCaseIdCollection().isEmpty()) {
+
+            return multipleData.getCaseIdCollection().stream()
+                    .filter(caseId ->
+                            caseId.getValue().getEthosCaseReference() != null
+                                    && !caseId.getValue().getEthosCaseReference().trim().equals(""))
+                    .distinct()
+                    .collect(Collectors.toList());
+
+        } else {
+
+            return new ArrayList<>();
+
+        }
+    }
+
     public static String getLeadFromCaseIds(MultipleData multipleData) {
 
         List<String> caseIds = getCaseIds(multipleData);

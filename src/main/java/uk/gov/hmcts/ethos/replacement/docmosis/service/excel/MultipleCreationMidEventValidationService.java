@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -21,6 +22,8 @@ public class MultipleCreationMidEventValidationService {
 
     public static final String CASE_STATE_ERROR = " cases have not been Accepted.";
     public static final String CASE_BELONG_MULTIPLE_ERROR = " cases belong already to a different multiple";
+    public static final String LEAD_STATE_ERROR = " lead case has not been Accepted.";
+    public static final String LEAD_BELONG_MULTIPLE_ERROR = " lead case belongs already to a different multiple";
     public static final int MULTIPLE_MAX_SIZE = 50;
 
     private final SingleCasesReadingService singleCasesReadingService;
@@ -47,9 +50,10 @@ public class MultipleCreationMidEventValidationService {
 
             if (!isNullOrEmpty(multipleData.getLeadCase())) {
 
-                log.info("Adding lead case introduced by user: " + multipleData.getLeadCase());
+                log.info("Validating lead case introduced by user: " + multipleData.getLeadCase());
 
-                MultiplesHelper.addLeadToCaseIds(multipleData, multipleData.getLeadCase());
+                validateCases(userToken, multipleDetails.getCaseTypeId(),
+                        new ArrayList<>(Collections.singletonList(multipleData.getLeadCase())), errors, true);
 
             }
 
@@ -59,16 +63,7 @@ public class MultipleCreationMidEventValidationService {
 
             validateCaseReferenceCollectionSize(ethosCaseRefCollection, errors);
 
-            if (errors.isEmpty() && !ethosCaseRefCollection.isEmpty()) {
-
-                List<SubmitEvent> submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
-                        multipleDetails.getCaseTypeId(), ethosCaseRefCollection);
-
-                log.info("Validating cases: " + submitEvents);
-
-                validateSingleCasesState(submitEvents, errors);
-
-            }
+            validateCases(userToken, multipleDetails.getCaseTypeId(), ethosCaseRefCollection, errors, false);
 
         }
 
@@ -80,13 +75,29 @@ public class MultipleCreationMidEventValidationService {
 
             log.info("Case id collection reached the max size");
 
-            errors.add("Three are " + ethosCaseRefCollection.size() + " cases in the multiple. The limit is " + MULTIPLE_MAX_SIZE + ".");
+            errors.add("There are " + ethosCaseRefCollection.size() + " cases in the multiple. The limit is " + MULTIPLE_MAX_SIZE + ".");
 
         }
 
     }
 
-    private void validateSingleCasesState(List<SubmitEvent> submitEvents, List<String> errors) {
+    private void validateCases(String userToken, String multipleCaseTypeId, List<String> caseRefCollection,
+                               List<String> errors, boolean isLead) {
+
+        if (errors.isEmpty() && !caseRefCollection.isEmpty()) {
+
+            List<SubmitEvent> submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
+                    multipleCaseTypeId, caseRefCollection);
+
+            log.info("Validating cases: " + submitEvents);
+
+            validateSingleCasesState(submitEvents, errors, isLead);
+
+        }
+
+    }
+
+    private void validateSingleCasesState(List<SubmitEvent> submitEvents, List<String> errors, boolean isLead) {
 
         List<String> listCasesStateError = new ArrayList<>();
 
@@ -115,13 +126,17 @@ public class MultipleCreationMidEventValidationService {
 
         if (!listCasesStateError.isEmpty()) {
 
-            errors.add(listCasesStateError + CASE_STATE_ERROR);
+            String errorMessage = isLead ? LEAD_STATE_ERROR : CASE_STATE_ERROR;
+
+            errors.add(listCasesStateError + errorMessage);
 
         }
 
         if (!listCasesMultipleError.isEmpty()) {
 
-            errors.add(listCasesMultipleError + CASE_BELONG_MULTIPLE_ERROR);
+            String errorMessage = isLead ? LEAD_BELONG_MULTIPLE_ERROR : CASE_BELONG_MULTIPLE_ERROR;
+
+            errors.add(listCasesMultipleError + errorMessage);
 
         }
 

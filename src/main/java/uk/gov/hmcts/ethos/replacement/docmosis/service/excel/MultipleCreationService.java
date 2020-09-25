@@ -41,29 +41,35 @@ public class MultipleCreationService {
 
     public void bulkCreationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
+        MultipleData multipleData = multipleDetails.getCaseData();
+
         log.info("Add data to the multiple");
 
-        addDataToMultiple(multipleDetails.getCaseData());
+        addDataToMultiple(multipleData);
 
         log.info("Add state to the multiple");
 
-        addStateToMultiple(multipleDetails.getCaseData());
+        addStateToMultiple(multipleData);
 
         log.info("Get lead case link and add to the collection case Ids");
 
         getLeadMarkUpAndAddLeadToCaseIds(userToken, multipleDetails);
 
-        List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleDetails.getCaseData());
+        log.info("Filter duplicated and empty caseIds");
+
+        multipleData.setCaseIdCollection(MultiplesHelper.filterDuplicatedAndEmptyCaseIds(multipleData));
+
+        List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleData);
 
         log.info("Create the EXCEL");
 
-        excelDocManagementService.generateAndUploadExcel(ethosCaseRefCollection, userToken, multipleDetails.getCaseData());
+        excelDocManagementService.generateAndUploadExcel(ethosCaseRefCollection, userToken, multipleData);
 
         log.info("Create multiple reference number");
 
-        multipleDetails.getCaseData().setMultipleReference(generateMultipleRef(multipleDetails));
+        multipleData.setMultipleReference(generateMultipleRef(multipleDetails));
 
-        if (!multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
+        if (!multipleData.getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
 
             log.info("Send updates to single cases");
 
