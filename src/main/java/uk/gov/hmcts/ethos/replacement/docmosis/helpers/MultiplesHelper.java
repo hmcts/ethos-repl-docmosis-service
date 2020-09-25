@@ -11,6 +11,9 @@ import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
@@ -67,6 +70,7 @@ public class MultiplesHelper {
                     .filter(caseId ->
                             caseId.getValue().getEthosCaseReference() != null
                                     && !caseId.getValue().getEthosCaseReference().trim().equals(""))
+                    .filter(distinctByValue(CaseIdTypeItem::getValue))
                     .distinct()
                     .collect(Collectors.toList());
 
@@ -75,6 +79,14 @@ public class MultiplesHelper {
             return new ArrayList<>();
 
         }
+    }
+
+    private static <T> Predicate<T> distinctByValue(Function<? super T, Object> keyExtractor) {
+
+        Map<Object, Boolean> map = new ConcurrentHashMap<>();
+
+        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+
     }
 
     public static String getLeadFromCaseIds(MultipleData multipleData) {
