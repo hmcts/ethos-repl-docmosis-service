@@ -16,6 +16,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 
 @Slf4j
@@ -67,9 +68,7 @@ public class MultiplesHelper {
                 && !multipleData.getCaseIdCollection().isEmpty()) {
 
             return multipleData.getCaseIdCollection().stream()
-                    .filter(caseId ->
-                            caseId.getValue().getEthosCaseReference() != null
-                                    && !caseId.getValue().getEthosCaseReference().trim().equals(""))
+                    .filter(caseId -> !isNullOrEmpty(caseId.getValue().getEthosCaseReference()))
                     .filter(distinctByValue(CaseIdTypeItem::getValue))
                     .distinct()
                     .collect(Collectors.toList());

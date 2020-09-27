@@ -18,6 +18,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
@@ -729,7 +730,7 @@ public class CaseActionsForCaseWorkerController {
     }
 
     private void generateEthosCaseReference(CaseData caseData, CCDRequest ccdRequest) {
-        if (caseData.getEthosCaseReference() == null || caseData.getEthosCaseReference().trim().equals("")) {
+        if (isNullOrEmpty(caseData.getEthosCaseReference())) {
             log.info("Case Type Id: " + ccdRequest.getCaseDetails().getCaseTypeId());
             String reference = singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(), 1);
             log.info("Reference generated: " + reference);

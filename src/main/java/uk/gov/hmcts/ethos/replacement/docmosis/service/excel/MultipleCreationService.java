@@ -82,8 +82,7 @@ public class MultipleCreationService {
 
         MultipleData multipleData = multipleDetails.getCaseData();
 
-        if (multipleData.getMultipleReference() == null
-                || multipleData.getMultipleReference().trim().equals("")) {
+        if (isNullOrEmpty(multipleData.getMultipleReference())) {
 
             log.info("Case Type: " + multipleDetails.getCaseTypeId());
 
@@ -98,8 +97,7 @@ public class MultipleCreationService {
 
     private void addDataToMultiple(MultipleData multipleData) {
 
-        if (multipleData.getMultipleSource() == null
-                || multipleData.getMultipleSource().trim().equals("")) {
+        if (isNullOrEmpty(multipleData.getMultipleSource())) {
 
             multipleData.setMultipleSource(MANUALLY_CREATED_POSITION);
 

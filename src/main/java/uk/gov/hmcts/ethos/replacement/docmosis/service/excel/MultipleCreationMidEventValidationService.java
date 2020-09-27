@@ -113,8 +113,7 @@ public class MultipleCreationMidEventValidationService {
 
             }
 
-            if (submitEvent.getCaseData().getMultipleReference() != null
-                    && !submitEvent.getCaseData().getMultipleReference().trim().isEmpty()) {
+            if (!isNullOrEmpty(submitEvent.getCaseData().getMultipleReference())) {
 
                 log.info("VALIDATION ERROR: already another multiple");
 

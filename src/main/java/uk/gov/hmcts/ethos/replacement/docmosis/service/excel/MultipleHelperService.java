@@ -120,7 +120,7 @@ public class MultipleHelperService {
                                      List<String> errors,
                                      String multipleReference) {
 
-        if (subMultipleName != null && !doesSubMultipleExist(subMultiples, subMultipleName)) {
+        if (!isNullOrEmpty(subMultipleName) && !doesSubMultipleExist(subMultiples, subMultipleName)) {
 
             errors.add("Sub multiple " + subMultipleName + " does not exist in " + multipleReference);
 
