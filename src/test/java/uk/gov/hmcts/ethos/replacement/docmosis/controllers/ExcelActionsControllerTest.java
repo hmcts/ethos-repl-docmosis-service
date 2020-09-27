@@ -54,6 +54,7 @@ public class ExcelActionsControllerTest {
     private static final String MULTIPLE_MID_EVENT_VALIDATION_URL = "/multipleMidEventValidation";
     private static final String SUB_MULTIPLE_MID_EVENT_VALIDATION_URL = "/subMultipleMidEventValidation";
     private static final String MULTIPLE_CREATION_MID_EVENT_VALIDATION_URL = "/multipleCreationMidEventValidation";
+    private static final String MULTIPLE_SINGLE_MID_EVENT_VALIDATION_URL = "/multipleSingleMidEventValidation";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -93,6 +94,9 @@ public class ExcelActionsControllerTest {
 
     @MockBean
     private MultipleCreationMidEventValidationService multipleCreationMidEventValidationService;
+
+    @MockBean
+    private MultipleSingleMidEventValidationService multipleSingleMidEventValidationService;
 
     private MockMvc mvc;
     private JsonNode requestContent;
@@ -283,6 +287,19 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void multipleSingleMidEventValidation() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(MULTIPLE_SINGLE_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void createMultipleError400() throws Exception {
         mvc.perform(post(CREATE_MULTIPLE_URL)
                 .content("error")
@@ -393,6 +410,15 @@ public class ExcelActionsControllerTest {
     @Test
     public void multipleCreationMidEventValidationError400() throws Exception {
         mvc.perform(post(MULTIPLE_CREATION_MID_EVENT_VALIDATION_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void multipleSingleMidEventValidationError400() throws Exception {
+        mvc.perform(post(MULTIPLE_SINGLE_MID_EVENT_VALIDATION_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -532,6 +558,18 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void multipleSingleMidEventValidationError500() throws Exception {
+        doThrow(feignError()).when(multipleSingleMidEventValidationService).multipleSingleValidationLogic(
+                eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(MULTIPLE_SINGLE_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
     public void createMultipleForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(CREATE_MULTIPLE_URL)
@@ -655,6 +693,16 @@ public class ExcelActionsControllerTest {
     public void multipleCreationMidEventValidationForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(MULTIPLE_CREATION_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void multipleSingleMidEventValidationForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(MULTIPLE_SINGLE_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

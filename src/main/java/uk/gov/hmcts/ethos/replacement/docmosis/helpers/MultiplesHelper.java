@@ -213,6 +213,10 @@ public class MultiplesHelper {
         multipleData.setSubMultipleAction(null);
         multipleData.setScheduleDocName(null);
 
+        multipleData.setBatchUpdateRespondent(null);
+        multipleData.setBatchUpdateJurisdiction(null);
+        multipleData.setBatchUpdateClaimantRep(null);
+
     }
 
     public static DynamicValueType getDynamicValue(String value) {

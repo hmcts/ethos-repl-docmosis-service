@@ -9,6 +9,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
@@ -16,10 +19,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -297,6 +297,52 @@ public class MultipleHelperServiceTest {
                 multipleDetails,
                 new ArrayList<>(),
                 multipleObjects
+        );
+
+        verify(userService).getUserDetails(userToken);
+        verifyNoMoreInteractions(userService);
+
+    }
+
+    @Test
+    public void sendUpdatesToSinglesWithConfirmationNullCaseData() {
+
+        multipleHelperService.sendUpdatesToSinglesWithConfirmation(
+                userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                multipleObjects,
+                null
+        );
+
+        verify(userService).getUserDetails(userToken);
+        verifyNoMoreInteractions(userService);
+
+    }
+
+    @Test
+    public void sendUpdatesToSinglesWithConfirmation() {
+
+        RepresentedTypeC representedTypeC = new RepresentedTypeC();
+        representedTypeC.setNameOfRepresentative("Rep");
+        submitEventList.get(0).getCaseData().setRepresentativeClaimantType(representedTypeC);
+
+        JurCodesTypeItem jurCodesTypeItem = new JurCodesTypeItem();
+        JurCodesType jurCodesType = new JurCodesType();
+        jurCodesType.setJuridictionCodesList("AA");
+        jurCodesTypeItem.setValue(jurCodesType);
+        submitEventList.get(0).getCaseData().setJurCodesCollection(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
+
+        multipleDetails.getCaseData().setBatchUpdateClaimantRep(MultipleUtil.generateDynamicList("Rep"));
+        multipleDetails.getCaseData().setBatchUpdateJurisdiction(MultipleUtil.generateDynamicList("AA"));
+        multipleDetails.getCaseData().setBatchUpdateRespondent(MultipleUtil.generateDynamicList("Andrew Smith"));
+
+        multipleHelperService.sendUpdatesToSinglesWithConfirmation(
+                userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                multipleObjects,
+                submitEventList.get(0).getCaseData()
         );
 
         verify(userService).getUserDetails(userToken);

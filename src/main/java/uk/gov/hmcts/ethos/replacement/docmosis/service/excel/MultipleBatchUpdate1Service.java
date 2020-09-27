@@ -3,30 +3,20 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
-import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("multipleBatchUpdate1Service")
 public class MultipleBatchUpdate1Service {
 
-    private final CreateUpdatesBusSender createUpdatesBusSender;
-    private final UserService userService;
+    private final MultipleHelperService multipleHelperService;
 
     @Autowired
-    public MultipleBatchUpdate1Service(CreateUpdatesBusSender createUpdatesBusSender,
-                                       UserService userService) {
-        this.createUpdatesBusSender = createUpdatesBusSender;
-        this.userService = userService;
+    public MultipleBatchUpdate1Service(MultipleHelperService multipleHelperService) {
+        this.multipleHelperService = multipleHelperService;
     }
 
     public void batchUpdate1Logic(String userToken, MultipleDetails multipleDetails,
@@ -34,29 +24,11 @@ public class MultipleBatchUpdate1Service {
 
         log.info("Batch update type = 1");
 
-        log.info("Send updates to single cases");
+        log.info("Sending updates to single cases without caseSearched");
 
-        sendUpdatesToSingles(userToken, multipleDetails, errors, multipleObjects);
-
-    }
-
-    private void sendUpdatesToSingles(String userToken, MultipleDetails multipleDetails,
-                                      List<String> errors, TreeMap<String, Object> multipleObjects) {
-
-        List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
-        MultipleData multipleData = multipleDetails.getCaseData();
-        String username = userService.getUserDetails(userToken).getEmail();
-
-        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
-                multipleDetails.getJurisdiction(),
-                username,
-                multipleObjectsFiltered,
-                PersistentQHelper.getUpdateDataModel(multipleDetails.getCaseData()),
-                errors,
-                multipleData.getMultipleReference(),
-                YES,
-                createUpdatesBusSender,
-                String.valueOf(multipleObjectsFiltered.size()));
+        multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
+                multipleObjects, null);
 
     }
+
 }

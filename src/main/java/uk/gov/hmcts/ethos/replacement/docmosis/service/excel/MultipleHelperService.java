@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
@@ -22,6 +23,7 @@ import java.util.TreeMap;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("multipleHelperService")
@@ -233,7 +235,7 @@ public class MultipleHelperService {
     }
 
     public void sendDetachUpdatesToSinglesNoConfirmation(String userToken, MultipleDetails multipleDetails,
-                                            List<String> errors, TreeMap<String, Object> multipleObjects) {
+                                                         List<String> errors, TreeMap<String, Object> multipleObjects) {
 
         List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
         MultipleData multipleData = multipleDetails.getCaseData();
@@ -247,6 +249,27 @@ public class MultipleHelperService {
                 errors,
                 multipleData.getMultipleReference(),
                 NO,
+                createUpdatesBusSender,
+                String.valueOf(multipleObjectsFiltered.size()));
+
+    }
+
+    public void sendUpdatesToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails,
+                                                     List<String> errors, TreeMap<String, Object> multipleObjects,
+                                                     CaseData caseData) {
+
+        List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
+        MultipleData multipleData = multipleDetails.getCaseData();
+        String username = userService.getUserDetails(userToken).getEmail();
+
+        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(),
+                username,
+                multipleObjectsFiltered,
+                PersistentQHelper.getUpdateDataModel(multipleDetails.getCaseData(), caseData),
+                errors,
+                multipleData.getMultipleReference(),
+                YES,
                 createUpdatesBusSender,
                 String.valueOf(multipleObjectsFiltered.size()));
 

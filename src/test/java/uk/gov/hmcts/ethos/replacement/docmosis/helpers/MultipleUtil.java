@@ -230,7 +230,7 @@ public class MultipleUtil {
 
     }
 
-    private static DynamicFixedListType generateDynamicList(String value) {
+    public static DynamicFixedListType generateDynamicList(String value) {
         DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
         DynamicValueType dynamicValueType = new DynamicValueType();
         dynamicValueType.setLabel(value);
