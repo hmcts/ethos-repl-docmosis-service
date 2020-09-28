@@ -58,6 +58,8 @@ public class MultipleSingleMidEventValidationService {
 
         }
 
+        log.info("End of validation");
+
     }
 
     private void validateSingleCaseInMultiple(MultipleData multipleData, List<String> errors, String caseToSearch) {

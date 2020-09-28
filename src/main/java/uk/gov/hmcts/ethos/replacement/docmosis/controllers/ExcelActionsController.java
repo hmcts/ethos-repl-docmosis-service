@@ -478,6 +478,8 @@ public class ExcelActionsController {
 
         multipleSingleMidEventValidationService.multipleSingleValidationLogic(userToken, multipleDetails, errors);
 
+        log.info("Returning callback");
+
         return ResponseEntity.ok(MultipleCallbackResponse.builder()
                 .errors(errors)
                 .data(multipleDetails.getCaseData())
