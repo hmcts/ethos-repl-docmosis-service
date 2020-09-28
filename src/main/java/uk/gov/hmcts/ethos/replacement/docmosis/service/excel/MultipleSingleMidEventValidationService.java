@@ -18,6 +18,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
+
 @Slf4j
 @Service("multipleSingleMidEventValidationService")
 public class MultipleSingleMidEventValidationService {
@@ -34,6 +37,14 @@ public class MultipleSingleMidEventValidationService {
         MultipleData multipleData = multipleDetails.getCaseData();
 
         String caseToSearch = multipleData.getBatchUpdateCase();
+
+        if (isNullOrEmpty(caseToSearch)) {
+
+            log.info("No adding any validation");
+
+            return;
+
+        }
 
         log.info("Validating the single case exists in the multiple");
 
@@ -95,20 +106,34 @@ public class MultipleSingleMidEventValidationService {
                 caseTypeId,
                 caseToSearch);
 
+        log.info("Reading case");
+
         RepresentedTypeC representativeClaimantType = submitEvent.getCaseData().getRepresentativeClaimantType();
+
+        log.info("RepresentativeClaimantType: " + representativeClaimantType);
 
         multipleData.setBatchUpdateClaimantRep(
                 populateDynamicList(getRepClaimantDynamicList(representativeClaimantType)));
 
+        log.info("BatchUpdateClaimantRep: " + multipleData.getBatchUpdateClaimantRep());
+
         List<JurCodesTypeItem> jurCodesCollection = submitEvent.getCaseData().getJurCodesCollection();
+
+        log.info("JurCodesCollection: " + jurCodesCollection);
 
         multipleData.setBatchUpdateJurisdiction(
                 populateDynamicList(getJurCodesDynamicList(jurCodesCollection)));
 
+        log.info("BatchUpdateJurisdiction: " + multipleData.getBatchUpdateJurisdiction());
+
         List<RespondentSumTypeItem> respondentCollection = submitEvent.getCaseData().getRespondentCollection();
+
+        log.info("RespondentCollection: " + respondentCollection);
 
         multipleData.setBatchUpdateRespondent(
                 populateDynamicList(getRespondentDynamicList(respondentCollection)));
+
+        log.info("BatchUpdateRespondent: " + multipleData.getBatchUpdateRespondent());
 
     }
 
@@ -160,16 +185,13 @@ public class MultipleSingleMidEventValidationService {
 
     private DynamicFixedListType populateDynamicList(List<DynamicValueType> listItems) {
 
+        listItems.add(0, MultiplesHelper.getDynamicValue(SELECT_NONE_VALUE));
+
         DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
 
-        if (!listItems.isEmpty()) {
+        dynamicFixedListType.setListItems(listItems);
 
-            dynamicFixedListType.setListItems(listItems);
-
-            //Default dynamic list
-            dynamicFixedListType.setValue(listItems.get(0));
-
-        }
+        dynamicFixedListType.setValue(MultiplesHelper.getDynamicValue(SELECT_NONE_VALUE));
 
         return dynamicFixedListType;
 

@@ -18,8 +18,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleSingleMidEventValidationServiceTest {
@@ -60,9 +60,9 @@ public class MultipleSingleMidEventValidationServiceTest {
                 errors);
 
         assertEquals(0, errors.size());
-        assertNull(multipleDetails.getCaseData().getBatchUpdateClaimantRep().getListItems());
-        assertNull(multipleDetails.getCaseData().getBatchUpdateJurisdiction().getListItems());
-        assertEquals(1, multipleDetails.getCaseData().getBatchUpdateRespondent().getListItems().size());
+        assertEquals(SELECT_NONE_VALUE, multipleDetails.getCaseData().getBatchUpdateClaimantRep().getValue().getCode());
+        assertEquals(SELECT_NONE_VALUE, multipleDetails.getCaseData().getBatchUpdateJurisdiction().getValue().getLabel());
+        assertEquals(2, multipleDetails.getCaseData().getBatchUpdateRespondent().getListItems().size());
 
     }
 
@@ -85,6 +85,7 @@ public class MultipleSingleMidEventValidationServiceTest {
     public void multipleSingleValidationLogicEmptyCaseIdCollection() {
 
         multipleDetails.getCaseData().setCaseIdCollection(null);
+        multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
 
         multipleSingleMidEventValidationService.multipleSingleValidationLogic(
                 userToken,
@@ -93,6 +94,20 @@ public class MultipleSingleMidEventValidationServiceTest {
 
         assertEquals(1, errors.size());
         assertEquals("Multiple does not have cases", errors.get(0));
+
+    }
+
+    @Test
+    public void multipleSingleValidationLogicEmptyCaseSearch() {
+
+        multipleDetails.getCaseData().setBatchUpdateCase(null);
+
+        multipleSingleMidEventValidationService.multipleSingleValidationLogic(
+                userToken,
+                multipleDetails,
+                errors);
+
+        assertEquals(0, errors.size());
 
     }
 
@@ -122,9 +137,9 @@ public class MultipleSingleMidEventValidationServiceTest {
                 errors);
 
         assertEquals(0, errors.size());
-        assertEquals(1, multipleDetails.getCaseData().getBatchUpdateClaimantRep().getListItems().size());
-        assertEquals(1, multipleDetails.getCaseData().getBatchUpdateJurisdiction().getListItems().size());
-        assertEquals(1, multipleDetails.getCaseData().getBatchUpdateRespondent().getListItems().size());
+        assertEquals(2, multipleDetails.getCaseData().getBatchUpdateClaimantRep().getListItems().size());
+        assertEquals(2, multipleDetails.getCaseData().getBatchUpdateJurisdiction().getListItems().size());
+        assertEquals(2, multipleDetails.getCaseData().getBatchUpdateRespondent().getListItems().size());
 
     }
 
