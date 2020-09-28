@@ -50,13 +50,13 @@ public class MultipleSingleMidEventValidationService {
 
         validateSingleCaseInMultiple(multipleData, errors, caseToSearch);
 
-        if (errors.isEmpty()) {
-
-            log.info("Populating dynamic lists");
-
-            populateDynamicLists(userToken, multipleDetails.getCaseTypeId(), multipleData, caseToSearch);
-
-        }
+//        if (errors.isEmpty()) {
+//
+//            log.info("Populating dynamic lists");
+//
+//            populateDynamicLists(userToken, multipleDetails.getCaseTypeId(), multipleData, caseToSearch);
+//
+//        }
 
     }
 

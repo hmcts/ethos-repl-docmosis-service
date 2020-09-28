@@ -44,7 +44,7 @@ public class MultipleSingleMidEventValidationServiceTest {
         userToken = "authString";
     }
 
-    @Test
+    //@Test
     public void multipleSingleValidationLogic() {
 
         multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
@@ -111,7 +111,7 @@ public class MultipleSingleMidEventValidationServiceTest {
 
     }
 
-    @Test
+    //@Test
     public void multipleSingleValidationLogicWithDynamicLists() {
 
         multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
