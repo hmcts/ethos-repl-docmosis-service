@@ -124,7 +124,7 @@ public class ExcelCreationService {
 
     private void initializeHeaders(XSSFWorkbook workbook, XSSFSheet sheet) {
 
-        XSSFRow rowHead = sheet.createRow((short) 0);
+        XSSFRow rowHead = sheet.createRow(0);
         CellStyle styleForLocking = getStyleForLocking(workbook);
 
         for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
@@ -151,7 +151,7 @@ public class ExcelCreationService {
 
                 for (int i = 1; i < multipleCollection.size() + 1; i++) {
                     for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
-                        XSSFRow row = sheet.createRow((short) i);
+                        XSSFRow row = sheet.createRow(i);
                         createCell(row, j++, multipleCollection.get(i - 1).toString(), styleForLocking);
 
                         for (int k = 0; k < MultiplesHelper.HEADERS.size()-1; k++) {
@@ -171,7 +171,7 @@ public class ExcelCreationService {
                 for (int i = 1; i < multipleCollection.size() + 1; i++) {
                     MultipleObject multipleObject = (MultipleObject) multipleCollection.get(i - 1);
                     for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
-                        XSSFRow row = sheet.createRow((short) i);
+                        XSSFRow row = sheet.createRow(i);
                         createCell(row, j++, multipleObject.getEthosCaseRef(), styleForLocking);
 
                         if (subMultipleCollection.isEmpty()) {

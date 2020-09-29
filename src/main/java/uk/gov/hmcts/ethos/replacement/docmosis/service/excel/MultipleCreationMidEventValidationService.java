@@ -11,6 +11,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
@@ -22,8 +23,10 @@ public class MultipleCreationMidEventValidationService {
 
     public static final String CASE_STATE_ERROR = " cases have not been Accepted.";
     public static final String CASE_BELONG_MULTIPLE_ERROR = " cases belong already to a different multiple";
+    public static final String CASE_EXIST_ERROR = " cases do not exist.";
     public static final String LEAD_STATE_ERROR = " lead case has not been Accepted.";
     public static final String LEAD_BELONG_MULTIPLE_ERROR = " lead case belongs already to a different multiple";
+    public static final String LEAD_EXIST_ERROR = " lead case does not exist.";
     public static final int MULTIPLE_MAX_SIZE = 50;
 
     private final SingleCasesReadingService singleCasesReadingService;
@@ -89,9 +92,39 @@ public class MultipleCreationMidEventValidationService {
             List<SubmitEvent> submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
                     multipleCaseTypeId, caseRefCollection);
 
+            log.info("Validate number of cases returned");
+
+            validateNumberCasesReturned(submitEvents, errors, isLead, caseRefCollection);
+
             log.info("Validating cases: " + submitEvents);
 
             validateSingleCasesState(submitEvents, errors, isLead);
+
+        }
+
+    }
+
+    private void validateNumberCasesReturned(List<SubmitEvent> submitEvents, List<String> errors, boolean isLead,
+                                             List<String> caseRefCollection) {
+
+        if (caseRefCollection.size() != submitEvents.size()) {
+
+            log.info("List returned is different");
+
+            List<String> listCasesDoNotExistError = caseRefCollection.stream()
+                    .filter(caseRef ->
+                            submitEvents.stream()
+                                    .noneMatch(submitEvent ->
+                                            submitEvent.getCaseData().getEthosCaseReference().equals(caseRef)))
+                    .collect(Collectors.toList());
+
+            if (!listCasesDoNotExistError.isEmpty()) {
+
+                String errorMessage = isLead ? LEAD_EXIST_ERROR : CASE_EXIST_ERROR;
+
+                errors.add(listCasesDoNotExistError + errorMessage);
+
+            }
 
         }
 

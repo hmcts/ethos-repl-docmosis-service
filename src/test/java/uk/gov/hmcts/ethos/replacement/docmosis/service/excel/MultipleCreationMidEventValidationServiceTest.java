@@ -17,12 +17,12 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleCreationMidEventValidationServiceTest {
@@ -45,26 +45,36 @@ public class MultipleCreationMidEventValidationServiceTest {
     }
 
     @Test
-    public void multipleCreationValidationLogic() {
+    public void multipleCreationValidationLogicCaseDoesNotExist() {
+
+        CaseData caseData = new CaseData();
+        caseData.setState(ACCEPTED_STATE);
+        caseData.setEthosCaseReference("245004/2020");
+
+        SubmitEvent submitEvent = new SubmitEvent();
+        submitEvent.setCaseData(caseData);
+        submitEvent.setState(ACCEPTED_STATE);
+        submitEvent.setCaseId(1232121232);
+
+        multipleDetails.getCaseData().setLeadCase(null);
 
         when(singleCasesReadingService.retrieveSingleCases(userToken,
                 multipleDetails.getCaseTypeId(),
                 MultiplesHelper.getCaseIds(multipleDetails.getCaseData())))
-                .thenReturn(new ArrayList<>());
-
-        createCaseIdCollection(multipleDetails.getCaseData(), 40);
+                .thenReturn(new ArrayList<>(Collections.singletonList(submitEvent)));
 
         multipleCreationMidEventValidationService.multipleCreationValidationLogic(
                 userToken,
                 multipleDetails,
                 errors);
 
-        assertEquals(0, errors.size());
+        assertEquals(1, errors.size());
+        assertEquals("[245000/2020, 245001/2020] cases do not exist.", errors.get(0));
 
     }
 
     @Test
-    public void multipleCreationValidationLogicMaxSize() {
+    public void multipleCreationValidationLogicMaxSizeAndLeadCaseDoesNotExist() {
 
         createCaseIdCollection(multipleDetails.getCaseData(), 60);
 
@@ -73,8 +83,9 @@ public class MultipleCreationMidEventValidationServiceTest {
                 multipleDetails,
                 errors);
 
-        assertEquals(1, errors.size());
-        assertEquals("There are 60 cases in the multiple. The limit is 50.", errors.get(0));
+        assertEquals(2, errors.size());
+        assertEquals("[21006/2020] lead case does not exist.", errors.get(0));
+        assertEquals("There are 60 cases in the multiple. The limit is 50.", errors.get(1));
 
     }
 
