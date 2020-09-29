@@ -114,18 +114,4 @@ public class MultipleUploadServiceTest {
         verifyNoMoreInteractions(excelReadingService);
     }
 
-    @Test
-    public void bulkUploadLogicWrongDocumentExtension() {
-
-        List<String> errors = new ArrayList<>();
-
-        multipleDetails.getCaseData().getCaseImporterFile().getUploadedDocument().setDocumentFilename("document.png");
-
-        multipleUploadService.bulkUploadLogic(userToken,
-                multipleDetails,
-                errors);
-
-        assertEquals(ERROR_DOCUMENT_EXTENSION, errors.get(0));
-    }
-
 }

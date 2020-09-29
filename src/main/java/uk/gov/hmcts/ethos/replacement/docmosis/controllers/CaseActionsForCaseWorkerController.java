@@ -715,8 +715,6 @@ public class CaseActionsForCaseWorkerController {
         singleCaseMultipleMidEventValidationService.singleCaseMultipleValidationLogic(
                 userToken, caseDetails, errors);
 
-        log.info("CaseData end validation: " + caseDetails.getCaseData());
-
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseDetails.getCaseData())
                 .errors(errors)
