@@ -458,19 +458,6 @@
     "positionType": "First",
     "receiptDate": "2019-03-12",
     "responseReceived": "none",
-    "responseType": {
-      "responseReceivedDate" : "23/12/2019",
-      "responseRespondentName" : "RespondentName",
-      "response_received": "Yes",
-      "response_referred_to_judge": "Yes",
-      "responseRequiredInfoAbsent": "Yes",
-      "response_returned_from_judge": "Yes",
-      "response_status": "Status",
-      "rejection_reason" : "none",
-      "rejection_reason_other" : "none",
-      "responseNotes" : "notes",
-      "responseToClaim": "No"
-    },
     "userLocation": "Liverpool",
     "flagsImageFileName": "1000001.png"
   },
