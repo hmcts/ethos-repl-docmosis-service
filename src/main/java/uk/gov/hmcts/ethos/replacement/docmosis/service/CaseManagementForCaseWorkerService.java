@@ -43,9 +43,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVE
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DO_NOT_POSTPONE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_EMP_CONT_CLAIM;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_LIVE_APPEAL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_REPORTING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_RESERVED;
@@ -53,6 +52,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_RULE_503B;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_SENSITIVE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_EXTENSION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_PRECEDING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ONE;
@@ -60,7 +60,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ZERO;
-
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -192,13 +191,13 @@ public class CaseManagementForCaseWorkerService {
         StringBuilder flagsImageAltText = new StringBuilder();
 
         flagsImageFileName.append(IMAGE_FILE_PRECEDING);
-        setFlagImageFor(FLAG_SENSITIVE, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_REPORTING, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_RULE_503B, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_EMP_CONT_CLAIM, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_LIVE_APPEAL, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_DO_NOT_POSTPONE, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_LIVE_APPEAL, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_RULE_503B, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_REPORTING, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_SENSITIVE, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_ECC, flagsImageFileName, flagsImageAltText, caseData);
         flagsImageFileName.append(IMAGE_FILE_EXTENSION);
 
         caseData.setFlagsImageAltText(flagsImageAltText.toString());
@@ -210,33 +209,33 @@ public class CaseManagementForCaseWorkerService {
         String flagColor;
 
         switch (flagName) {
-            case FLAG_SENSITIVE:
-                flagRequired = sensitiveCase(caseData);
-                flagColor = COLOR_ORANGE;
-                break;
-            case FLAG_REPORTING:
-                flagRequired = rule503dApplies(caseData);
-                flagColor = COLOR_TURQUOISE;
-                break;
-            case FLAG_RULE_503B:
-                flagRequired = rule503bApplies(caseData);
-                flagColor = COLOR_RED;
-                break;
-            case FLAG_RESERVED:
-                flagRequired = reservedJudgement(caseData);
-                flagColor = COLOR_PURPLE;
-                break;
-            case FLAG_EMP_CONT_CLAIM:
-                flagRequired = counterClaimMade(caseData);
-                flagColor = COLOR_BLUE;
+            case FLAG_DO_NOT_POSTPONE:
+                flagRequired = doNotPostpone(caseData);
+                flagColor = COLOR_BLACK;
                 break;
             case FLAG_LIVE_APPEAL:
                 flagRequired = liveAppeal(caseData);
                 flagColor = COLOR_GREEN;
                 break;
-            case FLAG_DO_NOT_POSTPONE:
-                flagRequired = doNotPostpone(caseData);
-                flagColor = COLOR_BLACK;
+            case FLAG_RULE_503B:
+                flagRequired = rule503bApplies(caseData);
+                flagColor = COLOR_RED;
+                break;
+            case FLAG_REPORTING:
+                flagRequired = rule503dApplies(caseData);
+                flagColor = COLOR_TURQUOISE;
+                break;
+            case FLAG_SENSITIVE:
+                flagRequired = sensitiveCase(caseData);
+                flagColor = COLOR_ORANGE;
+                break;
+            case FLAG_RESERVED:
+                flagRequired = reservedJudgement(caseData);
+                flagColor = COLOR_PURPLE;
+                break;
+            case FLAG_ECC:
+                flagRequired = counterClaimMade(caseData);
+                flagColor = COLOR_BLUE;
                 break;
             default:
                 flagRequired = false;
