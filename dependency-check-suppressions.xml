@@ -395,4 +395,12 @@
         <notes><![CDATA[ CVE-2020-7712  ]]></notes>
         <cve>CVE-2020-7712</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2007-1651  ]]></notes>
+        <cve>CVE-2007-1651</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2007-1652  ]]></notes>
+        <cve>CVE-2007-1652</cve>
+    </suppress>
 </suppressions>
