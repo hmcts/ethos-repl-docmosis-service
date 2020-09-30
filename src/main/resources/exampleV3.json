@@ -93,14 +93,6 @@
         "respondent_phone2": "07577136570"
       },
       "responseReceived": "none",
-      "responseType": {
-        "response_received": "Yes",
-        "response_referred_to_judge": "Yes",
-        "responseRequiredInfoAbsent": "Yes",
-        "response_returned_from_judge": "Yes",
-        "response_status": "Status",
-        "responseToClaim": "No"
-      },
       "tribunalOffice": "Manchester",
       "userLocation": "Liverpool"
     },

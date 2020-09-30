@@ -64,14 +64,6 @@
         "claimant_disabled": "No"
       },
       "feeGroupReference": "666666666666",
-      "responseType": {
-        "responseReceivedDate": "2019-05-17",
-        "responseRespondentName": "Manny",
-        "response_status": "Rejected",
-        "rejection_reason": "Not on Prescribed Form",
-        "responseNotes": "Manny objects on principle",
-        "response_referred_to_judge": "2019-05-17"
-      },
       "ethosCaseReference": "987654321",
       "claimantType": {
         "claimant_addressUK": {
@@ -174,17 +166,6 @@
         }
       },
       "feeGroupReference": "PUBLIC",
-      "responseType": {
-        "classification": "PUBLIC",
-        "value": {
-          "responseReceivedDate": "PUBLIC",
-          "responseRespondentName": "PUBLIC",
-          "response_status": "PUBLIC",
-          "rejection_reason": "PUBLIC",
-          "responseNotes": "PUBLIC",
-          "response_referred_to_judge": "PUBLIC"
-        }
-      },
       "ethosCaseReference": "PUBLIC",
       "claimantType": {
         "classification": "PUBLIC",
@@ -303,17 +284,6 @@
         }
       },
       "feeGroupReference": "PUBLIC",
-      "responseType": {
-        "classification": "PUBLIC",
-        "value": {
-          "responseReceivedDate": "PUBLIC",
-          "responseRespondentName": "PUBLIC",
-          "response_status": "PUBLIC",
-          "rejection_reason": "PUBLIC",
-          "responseNotes": "PUBLIC",
-          "response_referred_to_judge": "PUBLIC"
-        }
-      },
       "ethosCaseReference": "PUBLIC",
       "claimantType": {
         "classification": "PUBLIC",

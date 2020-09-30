@@ -1,5 +1,10 @@
+data "azurerm_user_assigned_identity" "ethos-identity" {
+  name                = "ethos-${var.env}-mi"
+  resource_group_name = "managed-identities-${var.env}-rg"
+}
+
 module "key-vault" {
-  source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
+  source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=azurermv2"
   product                 = var.product
   env                     = var.env
   tenant_id               = var.tenant_id
@@ -8,7 +13,7 @@ module "key-vault" {
   # dcd_group_ethos_v2 group object ID
   product_group_object_id = "414c132d-5160-42b3-bbff-43a2e1daafcf"
   common_tags             = var.common_tags
-  managed_identity_object_id = var.managed_identity_object_id
+  managed_identity_object_ids = [data.azurerm_user_assigned_identity.ethos-identity.principal_id]
 }
 
 module "db" {
