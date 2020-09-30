@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
@@ -147,7 +146,7 @@ public class DefaultValuesReaderService {
         if (caseData.getPositionType() == null) {
             caseData.setPositionType(defaultValues.getPositionType());
         }
-        if (isNullOrEmpty(caseData.getCaseSource())) {
+        if (caseData.getCaseSource() == null || caseData.getCaseSource().trim().equals("")) {
             caseData.setCaseSource(defaultValues.getPositionType());
         }
         if (defaultValues.getManagingOffice() != null) {

@@ -16,6 +16,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
@@ -343,6 +344,35 @@ public class MultipleHelperServiceTest {
                 new ArrayList<>(),
                 multipleObjects,
                 submitEventList.get(0).getCaseData()
+        );
+
+        verify(userService).getUserDetails(userToken);
+        verifyNoMoreInteractions(userService);
+
+    }
+
+    @Test
+    public void sendPreAcceptToSinglesWithConfirmation() {
+
+        multipleHelperService.sendPreAcceptToSinglesWithConfirmation(
+                userToken,
+                multipleDetails,
+                new ArrayList<>()
+        );
+
+        verify(userService).getUserDetails(userToken);
+        verifyNoMoreInteractions(userService);
+
+    }
+
+    @Test
+    public void sendCreationUpdatesToSinglesWithConfirmation() {
+
+        multipleHelperService.sendCreationUpdatesToSinglesWithConfirmation(
+                userToken,
+                multipleDetails,
+                MultiplesHelper.getCaseIds(multipleDetails.getCaseData()),
+                new ArrayList<>()
         );
 
         verify(userService).getUserDetails(userToken);

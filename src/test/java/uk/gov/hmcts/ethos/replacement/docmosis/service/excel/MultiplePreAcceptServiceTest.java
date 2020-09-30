@@ -6,25 +6,18 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
-import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.ArrayList;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultiplePreAcceptServiceTest {
 
     @Mock
-    private CreateUpdatesBusSender createUpdatesBusSender;
-    @Mock
-    private UserService userService;
+    private MultipleHelperService multipleHelperService;
     @InjectMocks
     private MultiplePreAcceptService multiplePreAcceptService;
 
@@ -35,8 +28,6 @@ public class MultiplePreAcceptServiceTest {
     public void setUp() {
         multipleDetails = new MultipleDetails();
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
-        UserDetails userDetails = HelperTest.getUserDetails();
-        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         userToken = "authString";
     }
 
@@ -45,8 +36,9 @@ public class MultiplePreAcceptServiceTest {
         multiplePreAcceptService.bulkPreAcceptLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());
-        verify(userService, times(1)).getUserDetails(userToken);
-        verifyNoMoreInteractions(userService);
+        verify(multipleHelperService, times(1))
+                .sendPreAcceptToSinglesWithConfirmation(userToken, multipleDetails, new ArrayList<>());
+        verifyNoMoreInteractions(multipleHelperService);
     }
 
 }

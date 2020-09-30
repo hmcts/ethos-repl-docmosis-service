@@ -6,19 +6,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.MultipleReferenceService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
-import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
 
@@ -26,11 +21,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOU
 public class MultipleCreationServiceTest {
 
     @Mock
-    private CreateUpdatesBusSender createUpdatesBusSender;
-    @Mock
     private ExcelDocManagementService excelDocManagementService;
-    @Mock
-    private UserService userService;
     @Mock
     private MultipleReferenceService multipleReferenceService;
     @Mock
@@ -49,8 +40,6 @@ public class MultipleCreationServiceTest {
         ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleDetails.getCaseData());
         //Adding lead to the case id collection
         ethosCaseRefCollection.add(0, "21006/2020");
-        UserDetails userDetails = HelperTest.getUserDetails();
-        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         userToken = "authString";
     }
 
@@ -63,8 +52,6 @@ public class MultipleCreationServiceTest {
                 userToken,
                 multipleDetails.getCaseData());
         verifyNoMoreInteractions(excelDocManagementService);
-        verify(userService).getUserDetails(userToken);
-        verifyNoMoreInteractions(userService);
     }
 
     @Test
@@ -77,8 +64,6 @@ public class MultipleCreationServiceTest {
                 userToken,
                 multipleDetails.getCaseData());
         verifyNoMoreInteractions(excelDocManagementService);
-        verify(userService).getUserDetails(userToken);
-        verifyNoMoreInteractions(userService);
     }
 
     @Test
@@ -91,7 +76,6 @@ public class MultipleCreationServiceTest {
                 userToken,
                 multipleDetails.getCaseData());
         verifyNoMoreInteractions(excelDocManagementService);
-        verifyNoMoreInteractions(userService);
     }
 
     @Test
@@ -105,7 +89,6 @@ public class MultipleCreationServiceTest {
                 userToken,
                 multipleDetails.getCaseData());
         verifyNoMoreInteractions(excelDocManagementService);
-        verifyNoMoreInteractions(userService);
     }
 
     @Test
@@ -118,8 +101,6 @@ public class MultipleCreationServiceTest {
                 userToken,
                 multipleDetails.getCaseData());
         verifyNoMoreInteractions(excelDocManagementService);
-        verify(userService).getUserDetails(userToken);
-        verifyNoMoreInteractions(userService);
         verify(multipleReferenceService, times(1)).createReference(
                 multipleDetails.getCaseTypeId()+"s",
                 1);

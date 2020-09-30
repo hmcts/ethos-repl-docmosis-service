@@ -21,8 +21,6 @@ public class MultipleUploadService {
 
     public static final String ERROR_SHEET_EMPTY = "Empty sheet";
 
-    public static final String EXCEL_DOCUMENT_EXTENSION = "xlsx";
-
     private final ExcelReadingService excelReadingService;
 
     private final ExcelDocManagementService excelDocManagementService;

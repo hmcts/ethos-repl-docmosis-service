@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_SELECT_ALL_VALUE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
 
@@ -37,7 +36,7 @@ public class SubMultipleService {
     }
 
     private String generateSubMultipleRef(BulkDetails bulkDetails) {
-        if (isNullOrEmpty(bulkDetails.getCaseData().getSubMultipleRef())) {
+        if (bulkDetails.getCaseData().getSubMultipleRef() == null || bulkDetails.getCaseData().getSubMultipleRef().trim().equals("")) {
             return subMultipleReferenceService.createReference(bulkDetails.getCaseTypeId(), bulkDetails.getCaseData().getMultipleReference(), 1);
         } else {
             return bulkDetails.getCaseData().getSubMultipleRef();

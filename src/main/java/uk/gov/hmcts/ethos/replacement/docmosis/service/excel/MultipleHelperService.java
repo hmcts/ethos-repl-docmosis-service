@@ -275,4 +275,44 @@ public class MultipleHelperService {
 
     }
 
+    public void sendPreAcceptToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails,
+                                                     List<String> errors) {
+
+        MultipleData multipleData = multipleDetails.getCaseData();
+        List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleData);
+        String username = userService.getUserDetails(userToken).getEmail();
+
+        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(),
+                username,
+                ethosCaseRefCollection,
+                PersistentQHelper.getPreAcceptDataModel(),
+                errors,
+                multipleData.getMultipleReference(),
+                YES,
+                createUpdatesBusSender,
+                String.valueOf(ethosCaseRefCollection.size()));
+
+    }
+
+    public void sendCreationUpdatesToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails,
+                                                             List<String> ethosCaseRefCollection, List<String> errors) {
+
+        MultipleData multipleData = multipleDetails.getCaseData();
+
+        String username = userService.getUserDetails(userToken).getEmail();
+        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(),
+                username,
+                ethosCaseRefCollection,
+                PersistentQHelper.getCreationDataModel(ethosCaseRefCollection.get(0),
+                        multipleData.getMultipleReference()),
+                errors,
+                multipleData.getMultipleReference(),
+                YES,
+                createUpdatesBusSender,
+                String.valueOf(ethosCaseRefCollection.size()));
+
+    }
+
 }

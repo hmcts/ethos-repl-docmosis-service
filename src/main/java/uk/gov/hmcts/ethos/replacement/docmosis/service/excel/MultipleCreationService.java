@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.MultipleReferenceService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
-import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.List;
 
@@ -20,20 +17,14 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 @Service("multipleCreationService")
 public class MultipleCreationService {
 
-    private final CreateUpdatesBusSender createUpdatesBusSender;
-    private final UserService userService;
     private final ExcelDocManagementService excelDocManagementService;
     private final MultipleReferenceService multipleReferenceService;
     private final MultipleHelperService multipleHelperService;
 
     @Autowired
-    public MultipleCreationService(CreateUpdatesBusSender createUpdatesBusSender,
-                                   UserService userService,
-                                   ExcelDocManagementService excelDocManagementService,
+    public MultipleCreationService(ExcelDocManagementService excelDocManagementService,
                                    MultipleReferenceService multipleReferenceService,
                                    MultipleHelperService multipleHelperService) {
-        this.createUpdatesBusSender = createUpdatesBusSender;
-        this.userService = userService;
         this.excelDocManagementService = excelDocManagementService;
         this.multipleReferenceService = multipleReferenceService;
         this.multipleHelperService = multipleHelperService;
@@ -82,7 +73,8 @@ public class MultipleCreationService {
 
         MultipleData multipleData = multipleDetails.getCaseData();
 
-        if (isNullOrEmpty(multipleData.getMultipleReference())) {
+        if (multipleData.getMultipleReference() == null
+                || multipleData.getMultipleReference().trim().equals("")) {
 
             log.info("Case Type: " + multipleDetails.getCaseTypeId());
 
@@ -97,7 +89,8 @@ public class MultipleCreationService {
 
     private void addDataToMultiple(MultipleData multipleData) {
 
-        if (isNullOrEmpty(multipleData.getMultipleSource())) {
+        if (multipleData.getMultipleSource() == null
+                || multipleData.getMultipleSource().trim().equals("")) {
 
             multipleData.setMultipleSource(MANUALLY_CREATED_POSITION);
 
@@ -148,24 +141,12 @@ public class MultipleCreationService {
     private void sendUpdatesToSingles(String userToken, MultipleDetails multipleDetails,
                                       List<String> errors, List<String> ethosCaseRefCollection) {
 
-        MultipleData multipleData = multipleDetails.getCaseData();
-
         log.info("Ethos case ref collection: " + ethosCaseRefCollection);
 
         if (!ethosCaseRefCollection.isEmpty()) {
 
-            String username = userService.getUserDetails(userToken).getEmail();
-            PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
-                    multipleDetails.getJurisdiction(),
-                    username,
-                    ethosCaseRefCollection,
-                    PersistentQHelper.getCreationDataModel(ethosCaseRefCollection.get(0),
-                            multipleData.getMultipleReference()),
-                    errors,
-                    multipleData.getMultipleReference(),
-                    YES,
-                    createUpdatesBusSender,
-                    String.valueOf(ethosCaseRefCollection.size()));
+            multipleHelperService.sendCreationUpdatesToSinglesWithConfirmation(userToken,
+                    multipleDetails, ethosCaseRefCollection, errors);
 
         } else {
 

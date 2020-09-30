@@ -195,7 +195,7 @@ public class ExcelActionsController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<MultipleCallbackResponse> amendCaseIDs(
+    @Deprecated public ResponseEntity<MultipleCallbackResponse> amendCaseIDs(
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("AMEND CASE IDS ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
