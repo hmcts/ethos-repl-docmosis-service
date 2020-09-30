@@ -42,7 +42,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMA
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DO_NOT_POSTPONE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_EMP_CONT_CLAIM;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_LIVE_APPEAL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_REPORTING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_RESERVED;
@@ -193,7 +192,6 @@ public class CaseManagementForCaseWorkerService {
         setFlagImageFor(FLAG_REPORTING, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_RULE_503B, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_EMP_CONT_CLAIM, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_LIVE_APPEAL, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_DO_NOT_POSTPONE, flagsImageFileName, flagsImageAltText, caseData);
         flagsImageFileName.append(IMAGE_FILE_EXTENSION);
@@ -222,10 +220,6 @@ public class CaseManagementForCaseWorkerService {
             case FLAG_RESERVED:
                 flagRequired = reservedJudgement(caseData);
                 flagColor = COLOR_PURPLE;
-                break;
-            case FLAG_EMP_CONT_CLAIM:
-                flagRequired = counterClaimMade(caseData);
-                flagColor = COLOR_BLUE;
                 break;
             case FLAG_LIVE_APPEAL:
                 flagRequired = liveAppeal(caseData);
