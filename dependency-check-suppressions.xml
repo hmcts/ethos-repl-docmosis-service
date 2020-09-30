@@ -387,4 +387,12 @@
         <notes><![CDATA[ CVE-2020-7019  ]]></notes>
         <cve>CVE-2020-7019</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-10663  ]]></notes>
+        <cve>CVE-2020-10663</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-7712  ]]></notes>
+        <cve>CVE-2020-7712</cve>
+    </suppress>
 </suppressions>
