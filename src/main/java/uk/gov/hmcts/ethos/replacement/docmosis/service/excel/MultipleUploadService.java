@@ -77,7 +77,7 @@ public class MultipleUploadService {
 
         if (datatypeSheet.getRow(0) != null) {
 
-            int collectionSize = multipleData.getCaseIdCollection().size();
+            int collectionSize = multipleData.getCaseIdCollection() == null ? 0 : multipleData.getCaseIdCollection().size();
 
             log.info("Case IDs: " + collectionSize);
             log.info("Number of rows: " + datatypeSheet.getLastRowNum());
