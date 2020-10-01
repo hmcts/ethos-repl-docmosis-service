@@ -47,7 +47,7 @@ public class ExcelCreationService {
 
             log.error("Error generating the excel");
 
-            log.error(e.getMessage());
+            throw new RuntimeException("Error generating the excel", e);
 
         }
 

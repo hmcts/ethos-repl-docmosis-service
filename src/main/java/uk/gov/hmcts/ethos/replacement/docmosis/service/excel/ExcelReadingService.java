@@ -63,7 +63,7 @@ public class ExcelReadingService {
 
             log.error("Error reading the Excel");
 
-            log.error(e.getMessage());
+            throw new RuntimeException("Error reading the excel", e);
 
         }
 

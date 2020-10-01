@@ -36,7 +36,7 @@ public class MultipleCasesReadingService {
 
             log.error("Error retrieving multiple cases with retries");
 
-            log.error(ex.getMessage());
+            throw new RuntimeException("Error retrieving multiple cases with retries", ex);
 
         }
 
@@ -60,7 +60,7 @@ public class MultipleCasesReadingService {
 
             log.error("Error retrieving multiple cases");
 
-            log.error(ex.getMessage());
+            throw new RuntimeException("Error retrieving multiple cases", ex);
 
         }
 
