@@ -126,7 +126,7 @@ public class ExcelReadingServiceTest {
         assertEquals(1, errors.size());
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void readExcelException() throws IOException {
 
         body = new ClassPathResource(TESTING_FILE_NAME_ERROR);

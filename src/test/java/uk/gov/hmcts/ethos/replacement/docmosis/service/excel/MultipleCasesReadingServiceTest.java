@@ -52,7 +52,7 @@ public class MultipleCasesReadingServiceTest {
         verifyNoMoreInteractions(ccdClient);
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void retrieveMultipleCasesWithRetriesException() throws IOException {
         when(ccdClient.retrieveMultipleCasesElasticSearchWithRetries(userToken,
                 multipleDetails.getCaseTypeId(),
@@ -82,7 +82,7 @@ public class MultipleCasesReadingServiceTest {
         verifyNoMoreInteractions(ccdClient);
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void retrieveMultipleCasesException() throws IOException {
         when(ccdClient.retrieveMultipleCasesElasticSearch(userToken,
                 multipleDetails.getCaseTypeId(),

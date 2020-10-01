@@ -61,7 +61,7 @@ public class MultipleCasesSendingServiceTest {
         verifyNoMoreInteractions(ccdClient);
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void sendUpdateToMultipleException() throws IOException {
         when(ccdClient.startBulkAmendEventForCase(userToken,
                 multipleDetails.getCaseTypeId(),

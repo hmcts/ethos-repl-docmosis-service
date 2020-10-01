@@ -96,7 +96,7 @@ public class MultipleUploadServiceTest {
         assertEquals(ERROR_SHEET_EMPTY, errors.get(0));
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void bulkUploadLogicException() throws IOException {
 
         when(excelReadingService.checkExcelErrors(
