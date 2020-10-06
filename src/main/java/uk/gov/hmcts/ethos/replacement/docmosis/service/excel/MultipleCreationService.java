@@ -46,6 +46,26 @@ public class MultipleCreationService {
 
         getLeadMarkUpAndAddLeadToCaseIds(userToken, multipleDetails);
 
+        if (!multipleData.getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
+
+            log.info("Multiple Creation UI");
+
+            multipleCreationUI(userToken, multipleDetails, errors);
+
+        } else {
+
+            log.info("Multiple Creation ET1 Online");
+
+            multipleCreationET1Online(userToken, multipleData);
+
+        }
+
+    }
+
+    private void multipleCreationUI(String userToken, MultipleDetails multipleDetails, List<String> errors) {
+
+        MultipleData multipleData = multipleDetails.getCaseData();
+
         log.info("Filter duplicated and empty caseIds");
 
         multipleData.setCaseIdCollection(MultiplesHelper.filterDuplicatedAndEmptyCaseIds(multipleData));
@@ -60,13 +80,21 @@ public class MultipleCreationService {
 
         multipleData.setMultipleReference(generateMultipleRef(multipleDetails));
 
-        if (!multipleData.getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
+        log.info("Send updates to single cases");
 
-            log.info("Send updates to single cases");
+        sendUpdatesToSingles(userToken, multipleDetails, errors, ethosCaseRefCollection);
 
-            sendUpdatesToSingles(userToken, multipleDetails, errors, ethosCaseRefCollection);
+    }
 
-        }
+    private void multipleCreationET1Online(String userToken, MultipleData multipleData) {
+
+        log.info("Create the EXCEL ET1Online");
+
+        excelDocManagementService.generateAndUploadExcel(
+                MultiplesHelper.getCaseIds(multipleData),
+                userToken,
+                multipleData);
+
     }
 
     private String generateMultipleRef(MultipleDetails multipleDetails) {
