@@ -163,19 +163,15 @@ public class CaseManagementForCaseWorkerService {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             List<RespondentSumTypeItem> activeRespondent = new ArrayList<>();
             List<RespondentSumTypeItem> struckRespondent = new ArrayList<>();
-            ListIterator<RespondentSumTypeItem> itr = caseData.getRespondentCollection().listIterator();
-            while (itr.hasNext()) {
-                RespondentSumTypeItem respondentSumTypeItem = itr.next();
+            for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
                 RespondentSumType respondentSumType = respondentSumTypeItem.getValue();
                 if (respondentSumType.getResponseStruckOut() != null) {
                     if (respondentSumType.getResponseStruckOut().equals(YES)) {
                         struckRespondent.add(respondentSumTypeItem);
-                    }
-                    else {
+                    } else {
                         activeRespondent.add(respondentSumTypeItem);
                     }
-                }
-                else{
+                } else {
                     respondentSumType.setResponseStruckOut(NO);
                     activeRespondent.add(respondentSumTypeItem);
                 }
