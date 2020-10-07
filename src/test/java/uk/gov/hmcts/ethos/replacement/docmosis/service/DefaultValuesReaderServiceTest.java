@@ -436,7 +436,7 @@ public class DefaultValuesReaderServiceTest {
                 "respondentAddress=Line1, PostCode, respondentPhone1=null, respondentPhone2=null, respondentEmail=null, respondentContactPreference=null, " +
                 "responseStruckOut=null, responseStruckOutDate=null, responseStruckOutChairman=null, responseStruckOutReason=null, " +
                 "responseRespondentAddress=null, responseRespondentPhone1=null, responseRespondentPhone2=null, responseRespondentEmail=null, responseRespondentContactPreference=null, " +
-                "responseReceivedDate=null, responseRespondentNameQuestion=null, responseRespondentName=null, responseContinue=null, " +
+                "responseReceived=null, responseReceivedDate=null, responseRespondentNameQuestion=null, responseRespondentName=null, responseContinue=null, " +
                 "responseCounterClaim=null))], repCollection=null, positionType=Manually Created, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, depositCollection=null, " +
                 "judgementCollection=null, judgementDetailsCollection=null, costsCollection=null, jurCodesCollection=null, broughtForwardCollection=null, " +
