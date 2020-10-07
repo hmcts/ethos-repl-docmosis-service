@@ -45,21 +45,9 @@ public class TornadoService {
             conn = createConnection();
             log.info("Connected");
             UserDetails userDetails = userService.getUserDetails(authToken);
+            String documentName = Helper.getDocumentName(caseData);
             buildInstruction(conn, caseData, userDetails);
-            int status = conn.getResponseCode();
-            if (status == HTTP_OK) {
-                log.info("HTTP_OK");
-                String documentName = Helper.getDocumentName(caseData);
-                documentInfo = createDocument(authToken, conn, documentName);
-            } else {
-                log.error("Our call failed: status = " + status);
-                log.error("message:" + conn.getResponseMessage());
-                BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-                String msg;
-                while ((msg = errorReader.readLine()) != null) {
-                    log.error(msg);
-                }
-            }
+            documentInfo = checkResponseStatus(authToken, conn, documentName);
         } catch (ConnectException e) {
             log.error("Unable to connect to Docmosis: " + e.getMessage());
             log.error("If you have a proxy, you will need the Proxy aware example code.");
@@ -123,6 +111,22 @@ public class TornadoService {
                 .build();
     }
 
+    private DocumentInfo checkResponseStatus(String authToken, HttpURLConnection conn, String documentName) throws IOException {
+        DocumentInfo documentInfo = new DocumentInfo();
+        int status = conn.getResponseCode();
+        if (status == HTTP_OK) {
+            documentInfo = createDocument(authToken, conn, documentName);
+        } else {
+            log.error("message:" + conn.getResponseMessage());
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            String msg;
+            while ((msg = errorReader.readLine()) != null) {
+                log.error(msg);
+            }
+        }
+        return documentInfo;
+    }
+
     DocumentInfo listingGeneration(String authToken, ListingData listingData, String caseType) throws IOException {
         HttpURLConnection conn = null;
         DocumentInfo documentInfo = new DocumentInfo();
@@ -132,17 +136,7 @@ public class TornadoService {
             UserDetails userDetails = userService.getUserDetails(authToken);
             String documentName = ListingHelper.getListingDocName(listingData);
             buildListingInstruction(conn, listingData, documentName, userDetails, caseType);
-            int status = conn.getResponseCode();
-            if (status == HTTP_OK) {
-                documentInfo = createDocument(authToken, conn, documentName);
-            } else {
-                log.error("message:" + conn.getResponseMessage());
-                BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-                String msg;
-                while ((msg = errorReader.readLine()) != null) {
-                    log.error(msg);
-                }
-            }
+            documentInfo = checkResponseStatus(authToken, conn, documentName);
         } catch (ConnectException e) {
             log.error("Unable to connect to Docmosis: " + e.getMessage());
             log.error("If you have a proxy, you will need the Proxy aware example code.");
@@ -170,19 +164,9 @@ public class TornadoService {
         try {
             conn = createConnection();
             log.info("Connected");
+            String documentName = BulkHelper.getScheduleDocName(bulkData.getScheduleDocName());
             buildScheduleInstruction(conn, bulkData);
-            int status = conn.getResponseCode();
-            if (status == HTTP_OK) {
-                log.info("HTTP_OK");
-                documentInfo = createDocument(authToken, conn, BulkHelper.getScheduleDocName(bulkData.getScheduleDocName()));
-            } else {
-                log.error("message:" + conn.getResponseMessage());
-                BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-                String msg;
-                while ((msg = errorReader.readLine()) != null) {
-                    log.error(msg);
-                }
-            }
+            documentInfo = checkResponseStatus(authToken, conn, documentName);
         } catch (ConnectException e) {
             log.error("Unable to connect to Docmosis: " + e.getMessage());
             log.error("If you have a proxy, you will need the Proxy aware example code.");
@@ -211,19 +195,9 @@ public class TornadoService {
         try {
             conn = createConnection();
             log.info("Connected");
+            String documentName = BulkHelper.getScheduleDocName(multipleData.getScheduleDocName());
             buildScheduleMultipleInstruction(conn, multipleData, multipleObjectsFiltered, submitEventList);
-            int status = conn.getResponseCode();
-            if (status == HTTP_OK) {
-                log.info("HTTP_OK");
-                documentInfo = createDocument(authToken, conn, BulkHelper.getScheduleDocName(multipleData.getScheduleDocName()));
-            } else {
-                log.error("message:" + conn.getResponseMessage());
-                BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-                String msg;
-                while ((msg = errorReader.readLine()) != null) {
-                    log.error(msg);
-                }
-            }
+            documentInfo = checkResponseStatus(authToken, conn, documentName);
         } catch (ConnectException e) {
             log.error("Unable to connect to Docmosis: " + e.getMessage());
             log.error("If you have a proxy, you will need the Proxy aware example code.");
