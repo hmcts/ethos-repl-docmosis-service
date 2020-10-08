@@ -6,9 +6,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
@@ -110,78 +107,59 @@ public class MultipleSingleMidEventValidationService {
 
         log.info("Reading case");
 
-        RepresentedTypeC representativeClaimantType = submitEvent.getCaseData().getRepresentativeClaimantType();
+        log.info("Checking RepresentativeClaimantType");
 
-        log.info("RepresentativeClaimantType: " + representativeClaimantType);
+        List<DynamicValueType> claimantDynamicList = new ArrayList<>();
 
-        multipleData.setBatchUpdateClaimantRep(
-                populateDynamicList(getRepClaimantDynamicList(representativeClaimantType)));
+        if (submitEvent.getCaseData().getRepresentativeClaimantType() != null) {
+
+            log.info("RepresentativeClaimantType: " + submitEvent.getCaseData().getRepresentativeClaimantType());
+
+            claimantDynamicList = new ArrayList<>(Collections.singletonList(
+                    MultiplesHelper.getDynamicValue(
+                            submitEvent.getCaseData().getRepresentativeClaimantType().getNameOfRepresentative())));
+
+        }
+
+        multipleData.setBatchUpdateClaimantRep(populateDynamicList(claimantDynamicList));
 
         log.info("BatchUpdateClaimantRep: " + multipleData.getBatchUpdateClaimantRep());
 
-        List<JurCodesTypeItem> jurCodesCollection = submitEvent.getCaseData().getJurCodesCollection();
+        log.info("Checking JurCodesCollection");
 
-        log.info("JurCodesCollection: " + jurCodesCollection);
+        List<DynamicValueType> jurCodesCollection = new ArrayList<>();
 
-        multipleData.setBatchUpdateJurisdiction(
-                populateDynamicList(getJurCodesDynamicList(jurCodesCollection)));
+        if (submitEvent.getCaseData().getJurCodesCollection() != null) {
 
-        log.info("BatchUpdateJurisdiction: " + multipleData.getBatchUpdateJurisdiction());
+            log.info("JurCodesCollection: " + submitEvent.getCaseData().getJurCodesCollection());
 
-        List<RespondentSumTypeItem> respondentCollection = submitEvent.getCaseData().getRespondentCollection();
-
-        log.info("RespondentCollection: " + respondentCollection);
-
-        multipleData.setBatchUpdateRespondent(
-                populateDynamicList(getRespondentDynamicList(respondentCollection)));
-
-        log.info("BatchUpdateRespondent: " + multipleData.getBatchUpdateRespondent());
-
-    }
-
-    private List<DynamicValueType> getRepClaimantDynamicList(RepresentedTypeC representativeClaimantType) {
-
-        if (representativeClaimantType == null) {
-
-            return new ArrayList<>();
-
-        } else {
-
-            return new ArrayList<>(Collections.singletonList(
-                    MultiplesHelper.getDynamicValue(representativeClaimantType.getNameOfRepresentative())));
-
-        }
-    }
-
-    private List<DynamicValueType> getJurCodesDynamicList(List<JurCodesTypeItem> jurCodesCollection) {
-
-        List<DynamicValueType> listItems = new ArrayList<>();
-
-        if (jurCodesCollection != null) {
-
-            listItems = jurCodesCollection.stream()
+            jurCodesCollection = submitEvent.getCaseData().getJurCodesCollection().stream()
                     .map(jurCodesTypeItem -> MultiplesHelper.getDynamicValue(jurCodesTypeItem.getValue().getJuridictionCodesList()))
                     .collect(Collectors.toList());
 
         }
 
-        return listItems;
+        multipleData.setBatchUpdateJurisdiction(populateDynamicList(jurCodesCollection));
 
-    }
+        log.info("BatchUpdateJurisdiction: " + multipleData.getBatchUpdateJurisdiction());
 
-    private List<DynamicValueType> getRespondentDynamicList(List<RespondentSumTypeItem> respondentCollection) {
+        log.info("Checking RespondentCollection");
 
-        List<DynamicValueType> listItems = new ArrayList<>();
+        List<DynamicValueType> respondentCollection = new ArrayList<>();
 
-        if (respondentCollection != null) {
+        if (submitEvent.getCaseData().getRespondentCollection() != null) {
 
-            listItems = respondentCollection.stream()
+            log.info("RespondentCollection: " + submitEvent.getCaseData().getRespondentCollection());
+
+            respondentCollection = submitEvent.getCaseData().getRespondentCollection().stream()
                     .map(respondentSumTypeItem -> MultiplesHelper.getDynamicValue(respondentSumTypeItem.getValue().getRespondentName()))
                     .collect(Collectors.toList());
 
         }
 
-        return listItems;
+        multipleData.setBatchUpdateRespondent(populateDynamicList(respondentCollection));
+
+        log.info("BatchUpdateRespondent: " + multipleData.getBatchUpdateRespondent());
 
     }
 

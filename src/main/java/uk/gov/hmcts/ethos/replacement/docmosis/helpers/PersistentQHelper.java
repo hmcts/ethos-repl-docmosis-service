@@ -117,7 +117,9 @@ public class PersistentQHelper {
                 .positionType(multipleData.getPositionType())
                 .receiptDate(multipleData.getReceiptDate())
                 .hearingStage(multipleData.getHearingStage())
-                .representativeClaimantType(caseData != null ? caseData.getRepresentativeClaimantType() : null)
+                .representativeClaimantType(caseData != null && caseData.getRepresentativeClaimantType() != null
+                        ? caseData.getRepresentativeClaimantType()
+                        : null)
                 .jurCodesType(getJurCodesType(multipleData, caseData))
                 .respondentSumType(getRespondentSumType(multipleData, caseData))
                 .build();

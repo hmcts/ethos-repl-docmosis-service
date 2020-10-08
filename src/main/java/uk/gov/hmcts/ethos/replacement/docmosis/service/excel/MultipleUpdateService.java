@@ -89,7 +89,6 @@ public class MultipleUpdateService {
                     errors,
                     multipleObjects);
 
-
         } else if (batchUpdateType.equals(BATCH_UPDATE_TYPE_2)) {
 
             multipleBatchUpdate2Service.batchUpdate2Logic(
