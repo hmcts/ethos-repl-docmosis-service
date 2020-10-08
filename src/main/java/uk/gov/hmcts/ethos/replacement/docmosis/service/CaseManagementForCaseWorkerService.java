@@ -694,6 +694,7 @@ public class CaseManagementForCaseWorkerService {
         RepresentedTypeC representativeClaimantType = originalCaseData.getRepresentativeClaimantType();
         if (representativeClaimantType != null && originalCaseData.getClaimantRepresentedQuestion().equals(YES)) {
             RepresentedTypeR representedTypeR = new RepresentedTypeR();
+            representedTypeR.setRespRepName(caseData.getRespondentCollection().get(0).getValue().getRespondentName());
             representedTypeR.setNameOfRepresentative(nullCheck(representativeClaimantType.getNameOfRepresentative()));
             representedTypeR.setNameOfOrganisation(nullCheck(representativeClaimantType.getNameOfOrganisation()));
             representedTypeR.setRepresentativeReference(nullCheck(representativeClaimantType.getRepresentativeReference()));
