@@ -192,6 +192,7 @@ public class MultipleUtil {
         multipleData.setSubMultipleCollection(getSubMultipleCollection());
         multipleData.setSubMultipleAction(getSubMultipleActionType());
         multipleData.setLeadCase("21006/2020");
+        multipleData.setState(OPEN_STATE);
         return multipleData;
     }
 

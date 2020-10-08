@@ -3,13 +3,11 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 import java.util.List;
-import java.util.Set;
 import java.util.TreeMap;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
@@ -49,31 +47,26 @@ public class MultipleUpdateService {
         log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
         log.info("MultipleObjectsValues: " + multipleObjects.values());
 
-        log.info("Add state to the multiple");
+        if (multipleObjects.keySet().isEmpty()) {
 
-        addStateToMultiple(multipleDetails.getCaseData(), multipleObjects.keySet());
+            log.info("No cases filtered");
 
-        log.info("Logic depending on batch update type");
+            errors.add("No cases filtered");
 
-        batchUpdateLogic(userToken, multipleDetails, errors, multipleObjects);
+        } else {
+
+            log.info("Logic depending on batch update type");
+
+            multipleDetails.getCaseData().setState(UPDATING_STATE);
+
+            batchUpdateLogic(userToken, multipleDetails, errors, multipleObjects);
+
+        }
 
         log.info("Resetting mid fields");
 
         MultiplesHelper.resetMidFields(multipleDetails.getCaseData());
 
-    }
-
-    private void addStateToMultiple(MultipleData multipleData, Set<String> caseFiltered) {
-
-        if (!caseFiltered.isEmpty()) {
-
-            multipleData.setState(UPDATING_STATE);
-
-        } else {
-
-            multipleData.setState(OPEN_STATE);
-
-        }
     }
 
     private void batchUpdateLogic(String userToken, MultipleDetails multipleDetails,
