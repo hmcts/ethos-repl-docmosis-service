@@ -141,7 +141,6 @@ public class CaseManagementForCaseWorkerServiceTest {
         address.setPostCode("L1 122");
         claimantType.setClaimantAddressUK(address);
         submitCaseData.setClaimantType(claimantType);
-        submitCaseData.setEt3Received("Yes");
         submitEvent.setState("Accepted");
         submitEvent.setCaseId(123);
         submitEvent.setCaseData(submitCaseData);
@@ -493,7 +492,6 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void midRespondentECCWithStruckOut() {
         CaseData caseData = new CaseData();
         caseData.setRespondentCollection(createRespondentCollection(false));
-        caseData.setEt3Received("Yes");
         submitEvent.setCaseData(caseData);
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
@@ -547,7 +545,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void createECCFromClosedCaseWithoutET3() {
         submitEvent.setState("Closed");
-        submitEvent.getCaseData().setEt3Received("No");
+        submitEvent.getCaseData().getRespondentCollection().get(0).getValue().setResponseReceived(NO);
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
         List<String> errors = new ArrayList<>();
@@ -555,7 +553,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         assertNull(caseData.getRespondentECC().getListItems());
         assertEquals(2, errors.size());
         submitEvent.setState("Accepted");
-        submitEvent.getCaseData().setEt3Received("Yes");
+        submitEvent.getCaseData().getRespondentCollection().get(0).getValue().setResponseReceived(YES);
     }
 
     private List<RespondentSumTypeItem> createRespondentCollection(boolean single) {
@@ -575,6 +573,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         if (struckOut) {
             respondentSumType.setResponseStruckOut(YES);
         }
+        respondentSumType.setResponseReceived(YES);
         RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
         respondentSumTypeItem.setId("111");
         respondentSumTypeItem.setValue(respondentSumType);

@@ -576,11 +576,25 @@ public class CaseManagementForCaseWorkerService {
             errors.add(WRONG_CASE_STATE_MESSAGE);
             validCaseForECC = false;
         }
-        if(submitEvent.getCaseData().getEt3Received() == null || submitEvent.getCaseData().getEt3Received().equals(NO)) {
+        if (!et3Received(submitEvent)) {
             errors.add(ET3_RESPONSE_NOT_FOUND_MESSAGE);
             validCaseForECC = false;
         }
         return validCaseForECC;
+    }
+
+    private boolean et3Received(SubmitEvent submitEvent) {
+        CaseData caseData = submitEvent.getCaseData();
+        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+            ListIterator<RespondentSumTypeItem> itr = caseData.getRespondentCollection().listIterator();
+            while (itr.hasNext()) {
+                RespondentSumType respondentSumType = itr.next().getValue();
+                if (respondentSumType.getResponseReceived() != null && respondentSumType.getResponseReceived().equals(YES)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void createECCLogic(CaseData caseData, CaseData originalCaseData, String originalId) {
