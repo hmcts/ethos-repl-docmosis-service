@@ -1,12 +1,9 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.NumberToTextConverter;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,17 +14,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_3;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_4;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_5;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_6;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NAME;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.SELECT_ALL;
 
 @Slf4j
@@ -35,7 +24,8 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.SE
 public class ExcelReadingService {
 
     private static final String NOT_ALLOCATED = "Not_Allocated";
-    private static final String ERROR_SHEET_NAME_NOT_FOUND = "SheetName not found";
+    private static final String ERROR_SHEET_NAME_NOT_FOUND = "Worksheet name not found";
+    private static final String ERROR_DOCUMENT_NOT_VALID = "Document uploaded not valid";
 
     private final ExcelDocManagementService excelDocManagementService;
 
@@ -51,7 +41,7 @@ public class ExcelReadingService {
 
         try {
 
-            Sheet datatypeSheet = checkExcelErrors(userToken, documentBinaryUrl, errors);
+            XSSFSheet datatypeSheet = checkExcelErrors(userToken, documentBinaryUrl, errors);
 
             if (errors.isEmpty()) {
 
@@ -71,18 +61,22 @@ public class ExcelReadingService {
 
     }
 
-    public Sheet checkExcelErrors(String userToken, String documentBinaryUrl, List<String> errors) throws IOException {
+    public XSSFSheet checkExcelErrors(String userToken, String documentBinaryUrl, List<String> errors) throws IOException {
 
         InputStream excelInputStream =
                 excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl);
 
-        Workbook workbook = new XSSFWorkbook(excelInputStream);
+        XSSFWorkbook workbook = new XSSFWorkbook(excelInputStream);
 
-        Sheet datatypeSheet = workbook.getSheet(SHEET_NAME);
+        XSSFSheet datatypeSheet = workbook.getSheet(SHEET_NAME);
 
         if (datatypeSheet == null) {
 
             errors.add(ERROR_SHEET_NAME_NOT_FOUND);
+
+        } else if (!datatypeSheet.validateSheetPassword(CONSTRAINT_KEY)) {
+
+            errors.add(ERROR_DOCUMENT_NOT_VALID);
 
         }
 
@@ -125,7 +119,7 @@ public class ExcelReadingService {
 
     }
 
-    private void populateMultipleObjects(TreeMap<String, Object> multipleObjects, Sheet datatypeSheet,
+    private void populateMultipleObjects(TreeMap<String, Object> multipleObjects, XSSFSheet datatypeSheet,
                                          MultipleData multipleData, FilterExcelType filter) {
 
         for (Row currentRow : datatypeSheet) {

@@ -295,4 +295,10 @@ public class MultiplesHelper {
 
     }
 
+    public static String generateExcelDocumentName(MultipleData multipleData) {
+
+        return multipleData.getMultipleName() + "-" + multipleData.getMultipleReference() + ".xlsx";
+
+    }
+
 }

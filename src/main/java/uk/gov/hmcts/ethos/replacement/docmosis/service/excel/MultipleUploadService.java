@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
@@ -41,12 +41,12 @@ public class MultipleUploadService {
 
             MultipleData multipleData = multipleDetails.getCaseData();
 
-            Sheet datatypeSheet = excelReadingService.checkExcelErrors(
+            XSSFSheet datatypeSheet = excelReadingService.checkExcelErrors(
                     userToken,
                     MultiplesHelper.getExcelBinaryUrl(multipleData),
                     errors);
 
-            if (datatypeSheet != null) {
+            if (errors.isEmpty()) {
 
                 validateSheet(
                         datatypeSheet,
@@ -73,7 +73,7 @@ public class MultipleUploadService {
 
     }
 
-    private void validateSheet(Sheet datatypeSheet, MultipleData multipleData, List<String> errors) {
+    private void validateSheet(XSSFSheet datatypeSheet, MultipleData multipleData, List<String> errors) {
 
         if (datatypeSheet.getRow(0) != null) {
 

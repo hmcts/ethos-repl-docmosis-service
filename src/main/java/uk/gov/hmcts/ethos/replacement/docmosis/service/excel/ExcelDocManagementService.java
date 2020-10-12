@@ -26,7 +26,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.DATE_TIME_USER_FRIE
 public class ExcelDocManagementService {
 
     public static final String APPLICATION_EXCEL_VALUE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    public static final String FILE_NAME = "Multiples.xlsx";
 
     @Value("${document_management.url}")
     private String ccdDMStoreBaseUrl;
@@ -47,7 +46,7 @@ public class ExcelDocManagementService {
     public void uploadExcelDocument(String userToken, MultipleData multipleData, byte[] excelBytes) {
 
         URI documentSelfPath = documentManagementService.uploadDocument(userToken, excelBytes,
-                FILE_NAME, APPLICATION_EXCEL_VALUE);
+                MultiplesHelper.generateExcelDocumentName(multipleData), APPLICATION_EXCEL_VALUE);
 
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
 
@@ -71,7 +70,7 @@ public class ExcelDocManagementService {
 
         UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
         uploadedDocumentType.setDocumentBinaryUrl(ccdDMStoreBaseUrl + documentSelfPath.getRawPath() + "/binary");
-        uploadedDocumentType.setDocumentFilename(FILE_NAME);
+        uploadedDocumentType.setDocumentFilename(MultiplesHelper.generateExcelDocumentName(multipleData));
         uploadedDocumentType.setDocumentUrl(ccdDMStoreBaseUrl + documentSelfPath.getRawPath());
 
         multipleData.setCaseImporterFile(populateCaseImporterFile(userToken, uploadedDocumentType));

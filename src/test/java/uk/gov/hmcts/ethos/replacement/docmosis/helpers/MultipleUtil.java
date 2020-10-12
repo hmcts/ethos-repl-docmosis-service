@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -17,7 +16,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
@@ -31,7 +33,6 @@ import java.util.*;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ExcelDocManagementService.FILE_NAME;
 
 public class MultipleUtil {
 
@@ -207,7 +208,7 @@ public class MultipleUtil {
     public static UploadedDocumentType getUploadedDocumentType() {
         UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
         uploadedDocumentType.setDocumentBinaryUrl("http://127.0.0.1:3453/documents/20d8a494-4232-480a-aac3-23ad0746c07b/binary");
-        uploadedDocumentType.setDocumentFilename(FILE_NAME);
+        uploadedDocumentType.setDocumentFilename(MultiplesHelper.generateExcelDocumentName(new MultipleData()));
         uploadedDocumentType.setDocumentUrl("http://127.0.0.1:3453/documents/20d8a494-4232-480a-aac3-23ad0746c07b");
         return uploadedDocumentType;
     }
@@ -241,10 +242,10 @@ public class MultipleUtil {
         return dynamicFixedListType;
     }
 
-    public static Sheet getDataTypeSheet(String fileName) throws IOException {
+    public static XSSFSheet getDataTypeSheet(String fileName) throws IOException {
 
         Resource body = new ClassPathResource(fileName);
-        Workbook workbook = new XSSFWorkbook(body.getInputStream());
+        XSSFWorkbook workbook = new XSSFWorkbook(body.getInputStream());
         return workbook.getSheet(SHEET_NAME);
 
     }
