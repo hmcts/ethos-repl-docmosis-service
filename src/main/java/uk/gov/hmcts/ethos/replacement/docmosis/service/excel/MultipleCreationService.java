@@ -72,13 +72,13 @@ public class MultipleCreationService {
 
         List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleData);
 
-        log.info("Create the EXCEL");
-
-        excelDocManagementService.generateAndUploadExcel(ethosCaseRefCollection, userToken, multipleData);
-
         log.info("Create multiple reference number");
 
         multipleData.setMultipleReference(generateMultipleRef(multipleDetails));
+
+        log.info("Create the EXCEL");
+
+        excelDocManagementService.generateAndUploadExcel(ethosCaseRefCollection, userToken, multipleData);
 
         log.info("Send updates to single cases");
 
