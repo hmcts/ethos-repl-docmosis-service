@@ -13,7 +13,8 @@ module "key-vault" {
   # dcd_group_ethos_v2 group object ID
   product_group_object_id = "414c132d-5160-42b3-bbff-43a2e1daafcf"
   common_tags             = var.common_tags
-  managed_identity_object_ids = [data.azurerm_user_assigned_identity.ethos-identity.principal_id]
+  managed_identity_object_ids = ["${data.azurerm_user_assigned_identity.ethos-identity.principal_id}"]
+  create_managed_identity = false
 }
 
 module "db" {
