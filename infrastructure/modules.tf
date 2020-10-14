@@ -1,6 +1,6 @@
 data "azurerm_user_assigned_identity" "ethos-identity" {
-  name                = "ethos-${var.env}-mi"
-  resource_group_name = "managed-identities-${var.env}-rg"
+  name                = "${var.managed_identity_name}"
+  resource_group_name = "${var.managed_identity_rg_name}"
 }
 
 module "key-vault" {
