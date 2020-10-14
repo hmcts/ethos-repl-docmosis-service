@@ -22,10 +22,10 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOU
 public class MultipleCreationMidEventValidationService {
 
     public static final String CASE_STATE_ERROR = " cases have not been Accepted.";
-    public static final String CASE_BELONG_MULTIPLE_ERROR = " cases belong already to a different multiple";
+    public static final String CASE_BELONG_MULTIPLE_ERROR = " cases already belong to a different multiple";
     public static final String CASE_EXIST_ERROR = " cases do not exist.";
     public static final String LEAD_STATE_ERROR = " lead case has not been Accepted.";
-    public static final String LEAD_BELONG_MULTIPLE_ERROR = " lead case belongs already to a different multiple";
+    public static final String LEAD_BELONG_MULTIPLE_ERROR = " lead case already belongs to a different multiple";
     public static final String LEAD_EXIST_ERROR = " lead case does not exist.";
     public static final int MULTIPLE_MAX_SIZE = 50;
 
