@@ -66,12 +66,12 @@ public class TornadoServiceTest {
     @Test(expected = Exception.class)
     public void documentGenerationError() throws IOException {
         when(userService.getUserDetails(anyString())).thenThrow(new RuntimeException());
-        tornadoService.documentGeneration("TOKEN", caseData);
+        tornadoService.documentGeneration("TOKEN", caseData, MANCHESTER_CASE_TYPE_ID);
     }
 
     @Test
     public void documentGeneration() throws IOException {
-        DocumentInfo documentInfo1 = tornadoService.documentGeneration("TOKEN", caseData);
+        DocumentInfo documentInfo1 = tornadoService.documentGeneration("TOKEN", caseData, MANCHESTER_CASE_TYPE_ID);
         assertEquals(documentInfo.toString(), documentInfo1.toString());
     }
 

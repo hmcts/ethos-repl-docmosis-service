@@ -35,14 +35,14 @@ public class TornadoService {
     private String ccdGatewayBaseUrl;
     private final UserService userService;
 
-    DocumentInfo documentGeneration(String authToken, CaseData caseData) throws IOException {
+    DocumentInfo documentGeneration(String authToken, CaseData caseData, String caseTypeId) throws IOException {
         HttpURLConnection conn = null;
         DocumentInfo documentInfo = new DocumentInfo();
         try {
             conn = createConnection();
             log.info("Connected");
             UserDetails userDetails = userService.getUserDetails(authToken);
-            buildInstruction(conn, caseData, userDetails);
+            buildInstruction(conn, caseData, userDetails, caseTypeId);
             int status = conn.getResponseCode();
             if (status == HTTP_OK) {
                 log.info("HTTP_OK");
@@ -83,8 +83,8 @@ public class TornadoService {
         return conn;
     }
 
-    private void buildInstruction(HttpURLConnection conn, CaseData caseData, UserDetails userDetails) throws IOException {
-        StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(), userDetails);
+    private void buildInstruction(HttpURLConnection conn, CaseData caseData, UserDetails userDetails, String caseTypeId) throws IOException {
+        StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(), userDetails, caseTypeId);
         //log.info("Sending request: " + sb.toString());
         // send the instruction in UTF-8 encoding so that most character sets are available
         OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);

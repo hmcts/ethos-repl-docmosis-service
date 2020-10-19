@@ -166,7 +166,7 @@ public class DocumentGenerationService {
     public DocumentInfo processDocumentRequest(CCDRequest ccdRequest, String authToken) {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
         try {
-            return tornadoService.documentGeneration(authToken, caseDetails.getCaseData());
+            return tornadoService.documentGeneration(authToken, caseDetails.getCaseData(), caseDetails.getCaseTypeId());
         } catch (Exception ex) {
             throw new DocumentManagementException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }
@@ -197,7 +197,7 @@ public class DocumentGenerationService {
                     log.info("Generating document for: " + submitEvent.getCaseData().getEthosCaseReference());
                     submitEvent.getCaseData().setCorrespondenceType(bulkDetails.getCaseData().getCorrespondenceType());
                     submitEvent.getCaseData().setCorrespondenceScotType(bulkDetails.getCaseData().getCorrespondenceScotType());
-                    documentInfoList.add(tornadoService.documentGeneration(authToken, submitEvent.getCaseData()));
+                    documentInfoList.add(tornadoService.documentGeneration(authToken, submitEvent.getCaseData(), bulkDetails.getCaseTypeId()));
                 }
             }
             if (documentInfoList.isEmpty()) {

@@ -1,6 +1,14 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.NumberToTextConverter;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.util.ResourceUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
@@ -24,6 +32,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -50,7 +61,9 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 @Slf4j
 public class Helper {
 
-    public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails) {
+    private static final String FILE_NAME = "classpath:venueAddressValues.xlsx";
+
+    public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails, String caseTypeId) {
         StringBuilder sb = new StringBuilder();
         String templateName = getTemplateName(caseData);
 
@@ -68,7 +81,7 @@ public class Helper {
         } else {
             sb.append(getClaimantData(caseData));
             sb.append(getRespondentData(caseData));
-            sb.append(getHearingData(caseData));
+            sb.append(getHearingData(caseData, caseTypeId));
             sb.append(getCorrespondenceData(caseData));
             sb.append(getCorrespondenceScotData(caseData));
             sb.append(getCourtData(caseData));
@@ -266,7 +279,7 @@ public class Helper {
         return sb;
     }
 
-    private static StringBuilder getHearingData(CaseData caseData) {
+    private static StringBuilder getHearingData(CaseData caseData, String caseTypeId) {
         StringBuilder sb = new StringBuilder();
         //Currently checking collection not the HearingType
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
@@ -279,7 +292,7 @@ public class Helper {
                 sb.append("\"Hearing_date\":\"").append(NEW_LINE);
                 sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
             }
-            sb.append("\"Hearing_venue\":\"").append(nullCheck(hearingType.getHearingVenue())).append(NEW_LINE);
+            sb.append("\"Hearing_venue\":\"").append(nullCheck(getVenueAddress(hearingType, caseTypeId))).append(NEW_LINE);
             sb.append("\"Hearing_duration\":\"").append(nullCheck(getHearingDuration(hearingType))).append(NEW_LINE);
         } else {
             sb.append("\"Hearing_date\":\"").append(NEW_LINE);
@@ -288,6 +301,49 @@ public class Helper {
             sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
         }
         return sb;
+    }
+
+    private static String getVenueAddress(HearingType hearingType, String caseTypeId) {
+
+        try {
+
+            File venueAddressFile = ResourceUtils.getFile(FILE_NAME);
+            FileInputStream excelFile = new FileInputStream(venueAddressFile);
+            Workbook workbook = new XSSFWorkbook(excelFile);
+            Sheet datatypeSheet = workbook.getSheet(caseTypeId);
+
+            if (datatypeSheet == null) {
+                return hearingType.getHearingVenue();
+            }
+
+            for (Row currentRow : datatypeSheet) {
+
+                if (currentRow.getRowNum() == 0) {
+                    continue;
+                }
+
+                String hearingVenue = getCellValue(currentRow.getCell(0));
+
+                if (!isNullOrEmpty(hearingVenue) && hearingVenue.equals(hearingType.getHearingVenue())) {
+                    return getCellValue(currentRow.getCell(1));
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return hearingType.getHearingVenue();
+    }
+
+    private static String getCellValue(Cell currentCell) {
+        if (currentCell.getCellType() == CellType.STRING) {
+            return currentCell.getStringCellValue();
+        } else if (currentCell.getCellType() == CellType.NUMERIC) {
+            return NumberToTextConverter.toText(currentCell.getNumericCellValue());
+        } else {
+            return "";
+        }
     }
 
     public static String getCorrespondenceHearingNumber(CaseData caseData) {
