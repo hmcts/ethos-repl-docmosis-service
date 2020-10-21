@@ -80,3 +80,9 @@ variable "appinsights_location" {
 variable "enable_ase" {
   default = false
 }
+
+variable "managed_identity_rg_name" {
+}
+
+variable "managed_identity_name" {
+}
