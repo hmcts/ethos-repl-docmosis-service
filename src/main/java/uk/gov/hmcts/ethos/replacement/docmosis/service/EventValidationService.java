@@ -5,16 +5,33 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.*;
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EMPTY_HEARING_COLLECTION_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EMPTY_RESPONDENT_COLLECTION_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RECEIPT_DATE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_NUMBER_MISMATCH_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESP_REP_NAME_MISMATCH_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRespondents;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getCorrespondenceHearingNumber;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getHearingByNumber;
 
 @Slf4j
 @Service("eventValidationService")
@@ -49,6 +66,34 @@ public class EventValidationService {
                 RespondentSumType respondentSumType = itr.next().getValue();
                 validateResponseReceivedDateDate(respondentSumType, errors, index);
                 validateResponseReturnedFromJudgeDate(respondentSumType, errors, index);
+            }
+        }
+        return errors;
+    }
+
+    public List<String> validateRespRepNames(CaseData caseData) {
+        List<String> errors = new ArrayList<>();
+        if(caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty()) {
+            ListIterator<RepresentedTypeRItem> repItr = caseData.getRepCollection().listIterator();
+            int index;
+            while (repItr.hasNext()) {
+                index = repItr.nextIndex() + 1;
+                String respRepName = repItr.next().getValue().getRespRepName();
+                if (!isNullOrEmpty(respRepName)) {
+                    if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+                        ListIterator<RespondentSumTypeItem> respItr = caseData.getRespondentCollection().listIterator();
+                        boolean validLink = false;
+                        while (respItr.hasNext()) {
+                            if (respRepName.equals(respItr.next().getValue().getRespondentName())) {
+                                validLink = true;
+                                break;
+                            }
+                        }
+                        if (!validLink) {
+                            errors.add(RESP_REP_NAME_MISMATCH_ERROR_MESSAGE + " - " + index);
+                        }
+                    }
+                }
             }
         }
         return errors;

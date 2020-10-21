@@ -177,14 +177,14 @@ public class HelperTest {
                 "\"respondent_or_rep_county\":\"Lancashire\",\n" +
                 "\"respondent_or_rep_postCode\":\"M3 KJR\",\n" +
                 "\"respondent_reference\":\"1111111\",\n" +
-                "\"respondent_full_name\":\"\",\n" +
-                "\"respondent_addressLine1\":\"\",\n" +
-                "\"respondent_addressLine2\":\"\",\n" +
+                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_addressLine2\":\"22 House\",\n" +
                 "\"respondent_addressLine3\":\"\",\n" +
-                "\"respondent_town\":\"\",\n" +
-                "\"respondent_county\":\"\",\n" +
-                "\"respondent_postCode\":\"\",\n" +
-                "\"Respondent\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"North West\",\n" +
+                "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
@@ -239,13 +239,14 @@ public class HelperTest {
                 "\"claimant_town\":\"Manchester\",\n" +
                 "\"claimant_county\":\"Lancashire\",\n" +
                 "\"claimant_postCode\":\"M3 6gw\",\n" +
-                "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n" +
-                "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n" +
-                "\"respondent_or_rep_addressLine2\":\"22 House\",\n" +
+                "\"respondent_or_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"56 Block C\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
                 "\"respondent_or_rep_addressLine3\":\"\",\n" +
                 "\"respondent_or_rep_town\":\"Manchester\",\n" +
-                "\"respondent_or_rep_county\":\"North West\",\n" +
-                "\"respondent_or_rep_postCode\":\"M12 42R\",\n" +
+                "\"respondent_or_rep_county\":\"Lancashire\",\n" +
+                "\"respondent_or_rep_postCode\":\"M3 KJR\",\n" +
+                "\"respondent_reference\":\"1111111\",\n" +
                 "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
                 "\"respondent_addressLine1\":\"11 Small Street\",\n" +
                 "\"respondent_addressLine2\":\"22 House\",\n" +

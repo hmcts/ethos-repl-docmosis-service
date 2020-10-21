@@ -15,10 +15,13 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 
 import java.io.IOException;
@@ -125,6 +128,9 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData submitCaseData = new CaseData();
         submitCaseData.setRespondentCollection(createRespondentCollection(true));
         submitCaseData.setClaimantIndType(createClaimantIndType());
+        submitCaseData.setRepresentativeClaimantType(createRepresentedTypeC());
+        submitCaseData.setRepCollection(createRepCollection(false));
+        submitCaseData.setClaimantRepresentedQuestion(YES);
         ClaimantType claimantType = new ClaimantType();
         Address address = new Address();
         address.setAddressLine1("AddressLine1");
@@ -135,7 +141,6 @@ public class CaseManagementForCaseWorkerServiceTest {
         address.setPostCode("L1 122");
         claimantType.setClaimantAddressUK(address);
         submitCaseData.setClaimantType(claimantType);
-        submitCaseData.setEt3Received("Yes");
         submitEvent.setState("Accepted");
         submitEvent.setCaseId(123);
         submitEvent.setCaseData(submitCaseData);
@@ -293,13 +298,14 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void buildFlagsImageFileNameForTrueFlagsFields() {
         CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
-        String expected = "<font color='Orange'>SENSITIVE</font> - " +
-                "<font color='Turquoise'>REPORTING</font> - " +
-                "<font color='Red'>RULE 50(3)b</font> - " +
-                "<font color='Purple'>RESERVED</font> - " +
-                "<font color='Blue'>EMP CONT CLAIM</font> - " +
+        String expected = "" +
+                "<font color='Black'>DO NOT POSTPONE</font> - " +
                 "<font color='Green'>LIVE APPEAL</font> - " +
-                "<font color='Black'>DO NOT POSTPONE</font>";
+                "<font color='Red'>RULE 50(3)b</font> - " +
+                "<font color='Turquoise'>REPORTING</font> - " +
+                "<font color='Orange'>SENSITIVE</font> - " +
+                "<font color='Purple'>RESERVED</font> - " +
+                "<font color='Blue'>ECC</font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
         assertEquals("EMP-TRIB-1111111.jpg", caseData.getFlagsImageFileName());
     }
@@ -486,7 +492,6 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void midRespondentECCWithStruckOut() {
         CaseData caseData = new CaseData();
         caseData.setRespondentCollection(createRespondentCollection(false));
-        caseData.setEt3Received("Yes");
         submitEvent.setCaseData(caseData);
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
@@ -540,7 +545,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void createECCFromClosedCaseWithoutET3() {
         submitEvent.setState("Closed");
-        submitEvent.getCaseData().setEt3Received("No");
+        submitEvent.getCaseData().getRespondentCollection().get(0).getValue().setResponseReceived(NO);
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
         List<String> errors = new ArrayList<>();
@@ -548,7 +553,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         assertNull(caseData.getRespondentECC().getListItems());
         assertEquals(2, errors.size());
         submitEvent.setState("Accepted");
-        submitEvent.getCaseData().setEt3Received("Yes");
+        submitEvent.getCaseData().getRespondentCollection().get(0).getValue().setResponseReceived(YES);
     }
 
     private List<RespondentSumTypeItem> createRespondentCollection(boolean single) {
@@ -568,6 +573,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         if (struckOut) {
             respondentSumType.setResponseStruckOut(YES);
         }
+        respondentSumType.setResponseReceived(YES);
         RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
         respondentSumTypeItem.setId("111");
         respondentSumTypeItem.setValue(respondentSumType);
@@ -580,6 +586,35 @@ public class CaseManagementForCaseWorkerServiceTest {
         claimantIndType.setClaimantFirstNames("ClaimantName");
         claimantIndType.setClaimantTitle("Mr");
         return claimantIndType;
+    }
+
+    private RepresentedTypeC createRepresentedTypeC() {
+        RepresentedTypeC representativeClaimantType = new RepresentedTypeC();
+        representativeClaimantType.setNameOfRepresentative("Claimant Rep Name");
+        representativeClaimantType.setNameOfOrganisation("Claimant Rep Org");
+        representativeClaimantType.setRepresentativeReference("Claimant Rep Ref");
+        return representativeClaimantType;
+    }
+
+    private List<RepresentedTypeRItem> createRepCollection(boolean single) {
+        RepresentedTypeRItem representedTypeRItem1 = createRepresentedTypeR("", "RepresentativeNameAAA");
+        RepresentedTypeRItem representedTypeRItem2 = createRepresentedTypeR("dummy", "RepresentativeNameBBB");
+        RepresentedTypeRItem representedTypeRItem3 = createRepresentedTypeR("RespondentName1", "RepresentativeNameCCC");
+        if (single) {
+            return new ArrayList<>(Collections.singletonList(representedTypeRItem1));
+        } else {
+            return new ArrayList<>(Arrays.asList(representedTypeRItem1, representedTypeRItem2, representedTypeRItem3));
+        }
+    }
+
+    private RepresentedTypeRItem createRepresentedTypeR(String respondentName, String representativeName) {
+        RepresentedTypeR representedTypeR = new RepresentedTypeR();
+        representedTypeR.setRespRepName(respondentName);
+        representedTypeR.setNameOfRepresentative(representativeName);
+        RepresentedTypeRItem representedTypeRItem = new RepresentedTypeRItem();
+        representedTypeRItem.setId("111");
+        representedTypeRItem.setValue(representedTypeR);
+        return representedTypeRItem;
     }
 
     private DynamicFixedListType createRespondentECC() {
