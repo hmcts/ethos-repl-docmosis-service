@@ -56,12 +56,11 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.LBL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 public class Helper {
-
-    private static final String FILE_NAME = "classpath:venueAddressValues.xlsx";
 
     public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails, String caseTypeId) {
         StringBuilder sb = new StringBuilder();
@@ -307,7 +306,7 @@ public class Helper {
 
         try {
 
-            File venueAddressFile = ResourceUtils.getFile(FILE_NAME);
+            File venueAddressFile = ResourceUtils.getFile(VENUE_ADDRESS_VALUES_FILE_PATH);
             FileInputStream excelFile = new FileInputStream(venueAddressFile);
             Workbook workbook = new XSSFWorkbook(excelFile);
             Sheet datatypeSheet = workbook.getSheet(caseTypeId);
