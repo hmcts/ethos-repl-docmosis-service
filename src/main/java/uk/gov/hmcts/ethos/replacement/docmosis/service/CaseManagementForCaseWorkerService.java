@@ -15,6 +15,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
@@ -23,6 +24,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantWorkAddressType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 
@@ -40,9 +43,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVE
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DO_NOT_POSTPONE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_EMP_CONT_CLAIM;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_LIVE_APPEAL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_REPORTING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_RESERVED;
@@ -50,6 +52,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_RULE_503B;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_SENSITIVE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_EXTENSION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_PRECEDING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ONE;
@@ -57,7 +60,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ZERO;
-
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -161,19 +163,15 @@ public class CaseManagementForCaseWorkerService {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             List<RespondentSumTypeItem> activeRespondent = new ArrayList<>();
             List<RespondentSumTypeItem> struckRespondent = new ArrayList<>();
-            ListIterator<RespondentSumTypeItem> itr = caseData.getRespondentCollection().listIterator();
-            while (itr.hasNext()) {
-                RespondentSumTypeItem respondentSumTypeItem = itr.next();
+            for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
                 RespondentSumType respondentSumType = respondentSumTypeItem.getValue();
                 if (respondentSumType.getResponseStruckOut() != null) {
                     if (respondentSumType.getResponseStruckOut().equals(YES)) {
                         struckRespondent.add(respondentSumTypeItem);
-                    }
-                    else {
+                    } else {
                         activeRespondent.add(respondentSumTypeItem);
                     }
-                }
-                else{
+                } else {
                     respondentSumType.setResponseStruckOut(NO);
                     activeRespondent.add(respondentSumTypeItem);
                 }
@@ -189,13 +187,13 @@ public class CaseManagementForCaseWorkerService {
         StringBuilder flagsImageAltText = new StringBuilder();
 
         flagsImageFileName.append(IMAGE_FILE_PRECEDING);
-        setFlagImageFor(FLAG_SENSITIVE, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_REPORTING, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_RULE_503B, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_EMP_CONT_CLAIM, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_LIVE_APPEAL, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_DO_NOT_POSTPONE, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_LIVE_APPEAL, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_RULE_503B, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_REPORTING, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_SENSITIVE, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_ECC, flagsImageFileName, flagsImageAltText, caseData);
         flagsImageFileName.append(IMAGE_FILE_EXTENSION);
 
         caseData.setFlagsImageAltText(flagsImageAltText.toString());
@@ -207,33 +205,33 @@ public class CaseManagementForCaseWorkerService {
         String flagColor;
 
         switch (flagName) {
-            case FLAG_SENSITIVE:
-                flagRequired = sensitiveCase(caseData);
-                flagColor = COLOR_ORANGE;
-                break;
-            case FLAG_REPORTING:
-                flagRequired = rule503dApplies(caseData);
-                flagColor = COLOR_TURQUOISE;
-                break;
-            case FLAG_RULE_503B:
-                flagRequired = rule503bApplies(caseData);
-                flagColor = COLOR_RED;
-                break;
-            case FLAG_RESERVED:
-                flagRequired = reservedJudgement(caseData);
-                flagColor = COLOR_PURPLE;
-                break;
-            case FLAG_EMP_CONT_CLAIM:
-                flagRequired = counterClaimMade(caseData);
-                flagColor = COLOR_BLUE;
+            case FLAG_DO_NOT_POSTPONE:
+                flagRequired = doNotPostpone(caseData);
+                flagColor = COLOR_BLACK;
                 break;
             case FLAG_LIVE_APPEAL:
                 flagRequired = liveAppeal(caseData);
                 flagColor = COLOR_GREEN;
                 break;
-            case FLAG_DO_NOT_POSTPONE:
-                flagRequired = doNotPostpone(caseData);
-                flagColor = COLOR_BLACK;
+            case FLAG_RULE_503B:
+                flagRequired = rule503bApplies(caseData);
+                flagColor = COLOR_RED;
+                break;
+            case FLAG_REPORTING:
+                flagRequired = rule503dApplies(caseData);
+                flagColor = COLOR_TURQUOISE;
+                break;
+            case FLAG_SENSITIVE:
+                flagRequired = sensitiveCase(caseData);
+                flagColor = COLOR_ORANGE;
+                break;
+            case FLAG_RESERVED:
+                flagRequired = reservedJudgement(caseData);
+                flagColor = COLOR_PURPLE;
+                break;
+            case FLAG_ECC:
+                flagRequired = counterClaimMade(caseData);
+                flagColor = COLOR_BLUE;
                 break;
             default:
                 flagRequired = false;
@@ -578,11 +576,25 @@ public class CaseManagementForCaseWorkerService {
             errors.add(WRONG_CASE_STATE_MESSAGE);
             validCaseForECC = false;
         }
-        if(submitEvent.getCaseData().getEt3Received() == null || submitEvent.getCaseData().getEt3Received().equals(NO)) {
+        if (!et3Received(submitEvent)) {
             errors.add(ET3_RESPONSE_NOT_FOUND_MESSAGE);
             validCaseForECC = false;
         }
         return validCaseForECC;
+    }
+
+    private boolean et3Received(SubmitEvent submitEvent) {
+        CaseData caseData = submitEvent.getCaseData();
+        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+            ListIterator<RespondentSumTypeItem> itr = caseData.getRespondentCollection().listIterator();
+            while (itr.hasNext()) {
+                RespondentSumType respondentSumType = itr.next().getValue();
+                if (respondentSumType.getResponseReceived() != null && respondentSumType.getResponseReceived().equals(YES)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void createECCLogic(CaseData caseData, CaseData originalCaseData, String originalId) {
@@ -600,6 +612,8 @@ public class CaseManagementForCaseWorkerService {
         populateRespondentCollectionDetails(caseData, originalCaseData.getClaimantIndType(), originalCaseData.getClaimantType());
         populateTribunalCorrespondenceDetails(caseData, originalCaseData);
         populateCaseDataDetails(caseData, originalCaseData, originalId);
+        populateRepresentativeClaimantDetails(caseData, originalCaseData);
+        populateRepCollectionDetails(caseData, originalCaseData);
         buildFlagsImageFileName(caseData);
     }
 
@@ -663,6 +677,52 @@ public class CaseManagementForCaseWorkerService {
         caseData.setManagingOffice(originalCaseData.getManagingOffice() != null ? originalCaseData.getManagingOffice() : "");
         caseData.setAllocatedOffice(originalCaseData.getAllocatedOffice() != null ? originalCaseData.getAllocatedOffice() : "");
         caseData.setState(ACCEPTED_STATE);
+    }
+
+    private void populateRepresentativeClaimantDetails (CaseData caseData, CaseData originalCaseData) {
+        if (originalCaseData.getRepCollection() != null && !originalCaseData.getRepCollection().isEmpty()) {
+            ListIterator<RepresentedTypeRItem> itr = originalCaseData.getRepCollection().listIterator();
+            while (itr.hasNext()) {
+                RepresentedTypeR representedTypeR = itr.next().getValue();
+                if (representedTypeR.getRespRepName() != null && representedTypeR.getRespRepName().equals(caseData.getClaimantCompany())) {
+                    RepresentedTypeC representedTypeC = new RepresentedTypeC();
+                    representedTypeC.setNameOfRepresentative(nullCheck(representedTypeR.getNameOfRepresentative()));
+                    representedTypeC.setNameOfOrganisation(nullCheck(representedTypeR.getNameOfOrganisation()));
+                    representedTypeC.setRepresentativeReference(nullCheck(representedTypeR.getRepresentativeReference()));
+                    representedTypeC.setRepresentativeOccupation(nullCheck(representedTypeR.getRepresentativeOccupation()));
+                    representedTypeC.setRepresentativeOccupationOther(nullCheck(representedTypeR.getRepresentativeOccupationOther()));
+                    representedTypeC.setRepresentativeAddress(representedTypeR.getRepresentativeAddress());
+                    representedTypeC.setRepresentativePhoneNumber(nullCheck(representedTypeR.getRepresentativePhoneNumber()));
+                    representedTypeC.setRepresentativeMobileNumber(nullCheck(representedTypeR.getRepresentativeMobileNumber()));
+                    representedTypeC.setRepresentativeEmailAddress(nullCheck(representedTypeR.getRepresentativeEmailAddress()));
+                    representedTypeC.setRepresentativePreference(nullCheck(representedTypeR.getRepresentativePreference()));
+                    caseData.setRepresentativeClaimantType(representedTypeC);
+                    caseData.setClaimantRepresentedQuestion(YES);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void populateRepCollectionDetails(CaseData caseData, CaseData originalCaseData) {
+        RepresentedTypeC representativeClaimantType = originalCaseData.getRepresentativeClaimantType();
+        if (representativeClaimantType != null && originalCaseData.getClaimantRepresentedQuestion().equals(YES)) {
+            RepresentedTypeR representedTypeR = new RepresentedTypeR();
+            representedTypeR.setRespRepName(caseData.getRespondentCollection().get(0).getValue().getRespondentName());
+            representedTypeR.setNameOfRepresentative(nullCheck(representativeClaimantType.getNameOfRepresentative()));
+            representedTypeR.setNameOfOrganisation(nullCheck(representativeClaimantType.getNameOfOrganisation()));
+            representedTypeR.setRepresentativeReference(nullCheck(representativeClaimantType.getRepresentativeReference()));
+            representedTypeR.setRepresentativeOccupation(nullCheck(representativeClaimantType.getRepresentativeOccupation()));
+            representedTypeR.setRepresentativeOccupationOther(nullCheck(representativeClaimantType.getRepresentativeOccupationOther()));
+            representedTypeR.setRepresentativeAddress(representativeClaimantType.getRepresentativeAddress());
+            representedTypeR.setRepresentativePhoneNumber(nullCheck(representativeClaimantType.getRepresentativePhoneNumber()));
+            representedTypeR.setRepresentativeMobileNumber(nullCheck(representativeClaimantType.getRepresentativeMobileNumber()));
+            representedTypeR.setRepresentativeEmailAddress(nullCheck(representativeClaimantType.getRepresentativeEmailAddress()));
+            representedTypeR.setRepresentativePreference(nullCheck(representativeClaimantType.getRepresentativePreference()));
+            RepresentedTypeRItem representedTypeRItem = new RepresentedTypeRItem();
+            representedTypeRItem.setValue(representedTypeR);
+            caseData.setRepCollection(new ArrayList<>(Collections.singleton(representedTypeRItem)));
+        }
     }
 
     private void sendUpdateSingleCaseECC(String authToken, CaseDetails currentCaseDetails, CaseData originalCaseData, String caseIdToLink) {

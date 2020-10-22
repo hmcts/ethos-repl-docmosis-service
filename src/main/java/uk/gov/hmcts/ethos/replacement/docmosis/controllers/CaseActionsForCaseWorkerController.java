@@ -309,9 +309,11 @@ public class CaseActionsForCaseWorkerController {
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = eventValidationService.validateActiveRespondents(caseData);
-
         if(errors.isEmpty()) {
-            caseData = caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
+            errors = eventValidationService.validateET3ResponseFields(caseData);
+            if (errors.isEmpty()) {
+                caseData = caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
+            }
         }
 
         log.info("Event fields validation: " + errors);
@@ -322,34 +324,27 @@ public class CaseActionsForCaseWorkerController {
                 .build());
     }
 
-    @PostMapping(value = "/addAmendET3", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "add or amend ET3 respondent details for a single case.")
+    @PostMapping(value = "/amendRespondentRepresentative", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "amend respondent representative for a single case.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = CCDCallbackResponse.class),
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<CCDCallbackResponse> addAmendET3(
+    public ResponseEntity<CCDCallbackResponse> amendRespondentRepresentative(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("ADD AMEND ET3 ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        log.info("AMEND RESPONDENT REPRESENTATIVE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        List<String> errors;
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        List<String> errors = eventValidationService.validateRespRepNames(caseData);
 
-        errors = eventValidationService.validateActiveRespondents(caseData);
-        if(errors.isEmpty()) {
-            errors = eventValidationService.validateET3ResponseFields(caseData);
-            if (errors.isEmpty()) {
-                caseData = caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
-            }
-        }
         log.info("Event fields validation: " + errors);
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()

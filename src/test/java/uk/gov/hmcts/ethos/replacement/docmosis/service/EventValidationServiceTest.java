@@ -136,6 +136,42 @@ public class EventValidationServiceTest {
     }
 
     @Test
+    public void shouldValidateRespRepNamesWithEmptyRepCollection() {
+        CaseData caseData = caseDetails1.getCaseData();
+
+        List<String> errors = eventValidationService.validateRespRepNames(caseData);
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateRespRepNamesWithMismatch() {
+        CaseData caseData = caseDetails2.getCaseData();
+
+        List<String> errors = eventValidationService.validateRespRepNames(caseData);
+
+        assertEquals(1, errors.size());
+    }
+
+    @Test
+    public void shouldValidateRespRepNamesWithMatch() {
+        CaseData caseData = caseDetails3.getCaseData();
+
+        List<String> errors = eventValidationService.validateRespRepNames(caseData);
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateRespRepNamesWithNullRepCollection() {
+        CaseData caseData = caseDetails4.getCaseData();
+
+        List<String> errors = eventValidationService.validateRespRepNames(caseData);
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
     public void shouldValidateHearingNumberMatching() {
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails1.getCaseData());
 

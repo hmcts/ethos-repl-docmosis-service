@@ -54,6 +54,30 @@
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
+    "repCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "resp_rep_name" : "Antonio Vazquez",
+          "name_of_organisation": "RepresentativeOrganisation",
+          "name_of_representative": "RepresentativeNameRespondent",
+          "representative_address": {
+            "AddressLine1": "56 Block C",
+            "AddressLine2": "Ellesmere Street",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M3 KJR",
+            "PostTown": "Manchester"
+          },
+          "representative_dx": "222222222",
+          "representative_email_address": "example@gmail.com",
+          "representative_mobile_number": "07577136570",
+          "representative_phone_number": "07577136570",
+          "representative_preference": "Post",
+          "representative_reference": "1111111"
+        }
+      }
+    ],
     "respondentCollection": [
       {
         "id" : "123345",
