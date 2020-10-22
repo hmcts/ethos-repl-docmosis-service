@@ -54,7 +54,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String PRE_ACCEPT_CASE_URL = "/preAcceptCase";
     private static final String AMEND_CASE_DETAILS_URL = "/amendCaseDetails";
     private static final String AMEND_RESPONDENT_DETAILS_URL = "/amendRespondentDetails";
-    private static final String ADD_AMEND_ET3_URL = "/addAmendET3";
+    private static final String AMEND_RESPONDENT_REPRESENTATIVE_URL = "/amendRespondentRepresentative";
     private static final String UPDATE_HEARING_URL = "/updateHearing";
     private static final String RESTRICTED_CASES_URL = "/restrictedCases";
     private static final String ADD_HEARING_URL = "/addHearing";
@@ -287,10 +287,9 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
-    public void addAmendET3() throws Exception {
-        when(caseManagementForCaseWorkerService.struckOutRespondents(isA(CCDRequest.class))).thenReturn(submitEvent.getCaseData());
+    public void amendRespondentRepresentative() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(ADD_AMEND_ET3_URL)
+        mvc.perform(post(AMEND_RESPONDENT_REPRESENTATIVE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -574,8 +573,8 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
-    public void addAmendET3Error400() throws Exception {
-        mvc.perform(post(ADD_AMEND_ET3_URL)
+    public void amendRespondentRepresentativeError400() throws Exception {
+        mvc.perform(post(AMEND_RESPONDENT_REPRESENTATIVE_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -791,17 +790,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
-    public void addAmendET3Error500() throws Exception {
-        when(caseManagementForCaseWorkerService.struckOutRespondents(isA(CCDRequest.class))).thenThrow(feignError());
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(ADD_AMEND_ET3_URL)
-                .content(requestContent.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
     public void addHearingError500() throws Exception {
         when(caseManagementForCaseWorkerService.addNewHearingItem(isA(CCDRequest.class))).thenThrow(feignError());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
@@ -948,9 +936,9 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
-    public void addAmendET3Forbidden() throws Exception {
+    public void amendRespondentRepresentativeForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(ADD_AMEND_ET3_URL)
+        mvc.perform(post(AMEND_RESPONDENT_REPRESENTATIVE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

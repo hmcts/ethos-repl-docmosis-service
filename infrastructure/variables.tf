@@ -82,9 +82,7 @@ variable "enable_ase" {
 }
 
 variable "managed_identity_rg_name" {
-  default = "managed-identities-${var.env}-rg"
 }
 
 variable "managed_identity_name" {
-  default = "ethos-${var.env}-mi"
 }
