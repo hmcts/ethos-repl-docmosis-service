@@ -142,7 +142,7 @@ public class DefaultValuesReaderService {
                 .build();
     }
 
-    public CaseData getCaseData(CaseData caseData, DefaultValues defaultValues) {
+    public void getCaseData(CaseData caseData, DefaultValues defaultValues) {
         if (caseData.getPositionType() == null) {
             caseData.setPositionType(defaultValues.getPositionType());
         }
@@ -174,7 +174,6 @@ public class DefaultValuesReaderService {
             caseData.setClaimantWorkAddressQRespondent(null);
             caseData.setClaimantWorkAddress(claimantWorkAddressType);
         }
-        return caseData;
     }
 
     public ListingData getListingData(ListingData listingData, DefaultValues defaultValues) {

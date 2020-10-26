@@ -1,0 +1,48 @@
+{
+  "case_details": {
+    "case_data": {
+      "multipleName": "MultipleName",
+      "multipleReference": "2440001",
+      "state": "Accepted",
+      "multipleSource": "Manually Created",
+      "caseIdCollection": [
+        {
+          "id": "1559817606275162",
+          "value": {
+            "ethos_CaseReference": "111"
+          }
+        }
+        ],
+      "documentCollection": [
+        {
+          "id": "1559817606275122",
+          "value": {
+            "typeOfDocument": "1559817606275122",
+            "uploadedDocument": {
+              "document_binary_url": "http://127.0.0.1:3453/documents/20d8a494-4232-480a-aac3-23ad0746c07b/binary"
+            }
+          }
+        }
+      ],
+      "flag1": {
+        "value": {
+          "code": "AA",
+          "label": "AA"
+        },
+        "list_items": [
+          {
+            "code": "All",
+            "label": "All"
+          }
+        ]
+      }
+    },
+    "id": "232323232",
+    "jurisdiction": "Employment",
+    "case_type_id" : "Manchester_Multiple",
+    "state": "Accepted"
+  },
+  "event_id": "1212121",
+  "token": "token"
+}
+

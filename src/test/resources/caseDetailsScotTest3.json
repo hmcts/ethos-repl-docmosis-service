@@ -13,7 +13,6 @@
     "ethosCaseReference" : "123456",
     "claimantRepresentedQuestion" : "no",
     "claimant_TypeOfClaimant" : "Individual",
-    "addSubMultipleComment": "Comment",
     "additionalCaseInfo": {
       "additional_accepted1": "additional_accepted1",
       "additional_accepted2": "additional_accepted2",
