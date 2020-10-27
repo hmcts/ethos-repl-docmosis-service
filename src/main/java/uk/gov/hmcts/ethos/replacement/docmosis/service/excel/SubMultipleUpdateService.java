@@ -167,7 +167,7 @@ public class SubMultipleUpdateService {
     private String generateSubMultipleReference(MultipleDetails multipleDetails) {
 
         return subMultipleReferenceService.createReference(
-                multipleDetails.getCaseTypeId()+"s",
+                multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getMultipleReference(),
                 1);
     }

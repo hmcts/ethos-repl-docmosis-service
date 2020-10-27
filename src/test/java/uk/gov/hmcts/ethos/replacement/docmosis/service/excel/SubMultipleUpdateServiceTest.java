@@ -60,7 +60,7 @@ public class SubMultipleUpdateServiceTest {
                 multipleDetails.getCaseData().getSubMultipleCollection().get(2).getValue().getSubMultipleName());
 
         verify(subMultipleReferenceService, times(1)).createReference(
-                multipleDetails.getCaseTypeId()+"s",
+                multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getMultipleReference(),
                 1);
         verifyNoMoreInteractions(subMultipleReferenceService);
@@ -87,7 +87,7 @@ public class SubMultipleUpdateServiceTest {
                 multipleDetails.getCaseData().getSubMultipleCollection().get(0).getValue().getSubMultipleName());
 
         verify(subMultipleReferenceService, times(1)).createReference(
-                multipleDetails.getCaseTypeId()+"s",
+                multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getMultipleReference(),
                 1);
         verifyNoMoreInteractions(subMultipleReferenceService);

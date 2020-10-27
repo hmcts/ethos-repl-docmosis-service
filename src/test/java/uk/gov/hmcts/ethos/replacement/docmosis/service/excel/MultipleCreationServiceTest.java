@@ -102,7 +102,7 @@ public class MultipleCreationServiceTest {
                 multipleDetails.getCaseData());
         verifyNoMoreInteractions(excelDocManagementService);
         verify(multipleReferenceService, times(1)).createReference(
-                multipleDetails.getCaseTypeId()+"s",
+                multipleDetails.getCaseTypeId(),
                 1);
         verifyNoMoreInteractions(multipleReferenceService);
     }
