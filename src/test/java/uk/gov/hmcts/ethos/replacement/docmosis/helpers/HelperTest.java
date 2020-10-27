@@ -119,7 +119,7 @@ public class HelperTest {
                 "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n3. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
                 "\"Hearing_date\":\"25 November 2019, 14 December 2019, 28 December 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019, 14 December 2019, 28 December 2019 at 10:30\",\n" +
-                "\"Hearing_venue\":\"Manchester Venue, Address.\",\n" +
+                "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t1_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
@@ -189,7 +189,7 @@ public class HelperTest {
                 "\"resp_address\":\"\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
-                "\"Hearing_venue\":\"Manchester Venue, Address.\",\n" +
+                "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t2_2A\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
@@ -542,7 +542,7 @@ public class HelperTest {
                 "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
-                "\"Hearing_venue\":\"Manchester Venue, Address.\",\n" +
+                "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t7_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
@@ -612,7 +612,7 @@ public class HelperTest {
                 "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 1333 Small Street, 22222 House, Liverpool, North West, L12 42R, UK\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
-                "\"Hearing_venue\":\"Manchester Venue, Address.\",\n" +
+                "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t10_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
@@ -682,7 +682,7 @@ public class HelperTest {
                 "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
-                "\"Hearing_venue\":\"Manchester Venue, Address.\",\n" +
+                "\"Hearing_venue\":\"Manchester\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t9_2\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
@@ -1312,7 +1312,7 @@ public class HelperTest {
                 "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 13 Small Street, 26 House, Scotland, North West, SC13 4ED, UK\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
-                "\"Hearing_venue\":\"Glasgow Venue, Address.\",\n" +
+                "\"Hearing_venue\":\"Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t_Scot_7_1\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Eagle Building,\",\n" +
@@ -1382,7 +1382,7 @@ public class HelperTest {
                 "\"resp_address\":\"\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
-                "\"Hearing_venue\":\"Glasgow Venue, Address.\",\n" +
+                "\"Hearing_venue\":\"Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t_Scot_24\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Eagle Building,\",\n" +
