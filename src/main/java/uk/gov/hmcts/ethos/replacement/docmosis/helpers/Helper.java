@@ -6,7 +6,6 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.ResourceUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
@@ -61,6 +60,10 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 public class Helper {
+
+    private static final String FILE_OPENING_PROCESSING_ERROR = "Error: opening or processing the entries for the venue address values file";
+    private static final String INPUT_STREAM_CLOSING_ERROR = "Error: closing the FileInputStream for the venue address values file";
+    private static final String WORKBOOK_CLOSING_ERROR = "Error: closing the Workbook for the venue address values file";
 
     public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails, String caseTypeId) {
         StringBuilder sb = new StringBuilder();
@@ -304,32 +307,49 @@ public class Helper {
 
     private static String getVenueAddress(HearingType hearingType, String caseTypeId) {
 
+        FileInputStream excelFile = null;
+        Workbook workbook = null;
+
         try {
 
             File venueAddressFile = ResourceUtils.getFile(VENUE_ADDRESS_VALUES_FILE_PATH);
-            FileInputStream excelFile = new FileInputStream(venueAddressFile);
-            Workbook workbook = new XSSFWorkbook(excelFile);
+            excelFile = new FileInputStream(venueAddressFile);
+            workbook = new XSSFWorkbook(excelFile);
             Sheet datatypeSheet = workbook.getSheet(caseTypeId);
 
-            if (datatypeSheet == null) {
-                return hearingType.getHearingVenue();
-            }
+            if (datatypeSheet != null) {
+                for (Row currentRow : datatypeSheet) {
 
-            for (Row currentRow : datatypeSheet) {
+                    if (currentRow.getRowNum() == 0) {
+                        continue;
+                    }
 
-                if (currentRow.getRowNum() == 0) {
-                    continue;
-                }
+                    String hearingVenue = getCellValue(currentRow.getCell(0));
 
-                String hearingVenue = getCellValue(currentRow.getCell(0));
-
-                if (!isNullOrEmpty(hearingVenue) && hearingVenue.equals(hearingType.getHearingVenue())) {
-                    return getCellValue(currentRow.getCell(1));
+                    if (!isNullOrEmpty(hearingVenue) && hearingVenue.equals(hearingType.getHearingVenue())) {
+                        return getCellValue(currentRow.getCell(1));
+                    }
                 }
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(FILE_OPENING_PROCESSING_ERROR);
+        } finally {
+            if (excelFile != null) {
+                try {
+                    excelFile.close();
+                } catch (IOException e) {
+                    log.error(INPUT_STREAM_CLOSING_ERROR);
+                }
+            }
+
+            if (workbook != null) {
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    log.error(WORKBOOK_CLOSING_ERROR);
+                }
+            }
         }
 
         return hearingType.getHearingVenue();
@@ -338,8 +358,6 @@ public class Helper {
     private static String getCellValue(Cell currentCell) {
         if (currentCell.getCellType() == CellType.STRING) {
             return currentCell.getStringCellValue();
-        } else if (currentCell.getCellType() == CellType.NUMERIC) {
-            return NumberToTextConverter.toText(currentCell.getNumericCellValue());
         } else {
             return "";
         }
