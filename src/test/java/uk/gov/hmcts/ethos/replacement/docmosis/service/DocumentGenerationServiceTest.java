@@ -304,6 +304,22 @@ public class DocumentGenerationServiceTest {
     }
 
     @Test
+    public void clearUserChoicesForMultiplesScotland() {
+        BulkDetails bulkDetails = bulkRequest.getCaseDetails();
+        bulkDetails.setCaseTypeId("Scotland_Multiples");
+        documentGenerationService.clearUserChoicesForMultiples (bulkDetails);
+        assertNull(bulkDetails.getCaseData().getCorrespondenceScotType());
+    }
+
+    @Test
+    public void clearUserChoicesForMultiplesEngland() {
+        BulkDetails bulkDetails = bulkRequest.getCaseDetails();
+        bulkDetails.setCaseTypeId("Not Scotland Multiples");
+        documentGenerationService.clearUserChoicesForMultiples (bulkDetails);
+        assertNull(bulkDetails.getCaseData().getCorrespondenceType());
+    }
+
+    @Test
     public void processDocumentRequest() throws IOException {
         when(tornadoService.documentGeneration(anyString(), any(), anyString())).thenReturn(documentInfo);
         DocumentInfo documentInfo1 = documentGenerationService.processDocumentRequest(ccdRequest, "authToken");

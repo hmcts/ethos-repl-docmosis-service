@@ -8,16 +8,21 @@ import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -36,6 +41,11 @@ public class TornadoServiceTest {
     private BulkData bulkData;
     private ListingData listingData;
     private UserDetails userDetails;
+    private String userToken;
+    private TreeMap<String, Object> multipleObjectsFlags;
+    private TreeMap<String, Object> multipleObjectsSubMultiple;
+    private MultipleDetails multipleDetails;
+    private List<SubmitEvent> submitEventList;
 
     @Before
     public void setUp() {
@@ -61,29 +71,85 @@ public class TornadoServiceTest {
         IdamApi idamApi = authorisation -> userDetails;
         userService = new UserService(idamApi);
         tornadoService = new TornadoService(tornadoConfiguration, documentManagementService, userService);
+        userToken = "authToken";
+        multipleObjectsFlags = MultipleUtil.getMultipleObjectsFlags();
+        multipleObjectsSubMultiple = MultipleUtil.getMultipleObjectsSubMultiple();
+        multipleDetails = new MultipleDetails();
+        multipleDetails.setCaseData(MultipleUtil.getMultipleData());
+        multipleDetails.setCaseTypeId("Manchester_Multiple");
+        submitEventList = MultipleUtil.getSubmitEvents();
     }
 
     @Test(expected = Exception.class)
     public void documentGenerationError() throws IOException {
         when(userService.getUserDetails(anyString())).thenThrow(new RuntimeException());
-        tornadoService.documentGeneration("TOKEN", caseData, MANCHESTER_CASE_TYPE_ID);
+        tornadoService.documentGeneration(userToken, caseData, MANCHESTER_CASE_TYPE_ID);
     }
 
     @Test
     public void documentGeneration() throws IOException {
-        DocumentInfo documentInfo1 = tornadoService.documentGeneration("TOKEN", caseData, MANCHESTER_CASE_TYPE_ID);
+        DocumentInfo documentInfo1 = tornadoService.documentGeneration(userToken, caseData, MANCHESTER_CASE_TYPE_ID);
         assertEquals(documentInfo.toString(), documentInfo1.toString());
     }
 
     @Test
     public void listingGeneration() throws IOException {
-        DocumentInfo documentInfo1 = tornadoService.listingGeneration("TOKEN", listingData, MANCHESTER_LISTING_CASE_TYPE_ID);
+        DocumentInfo documentInfo1 = tornadoService.listingGeneration(userToken, listingData, MANCHESTER_LISTING_CASE_TYPE_ID);
         assertEquals(documentInfo.toString(), documentInfo1.toString());
     }
 
     @Test
     public void scheduleGeneration() throws IOException {
-        DocumentInfo documentInfo1 = tornadoService.scheduleGeneration("TOKEN", bulkData);
+        DocumentInfo documentInfo1 = tornadoService.scheduleGeneration(userToken, bulkData);
+        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    }
+
+    @Test
+    public void scheduleMultipleGenerationFlags() throws IOException {
+        DocumentInfo documentInfo1 = tornadoService.scheduleMultipleGeneration(userToken,
+                multipleDetails.getCaseData(),
+                multipleObjectsFlags,
+                submitEventList);
+        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    }
+
+    @Test
+    public void scheduleMultipleGenerationFlagsClaimantCompany() throws IOException {
+        submitEventList.get(0).getCaseData().setClaimantCompany("Company");
+        DocumentInfo documentInfo1 = tornadoService.scheduleMultipleGeneration(userToken,
+                multipleDetails.getCaseData(),
+                multipleObjectsFlags,
+                submitEventList);
+        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    }
+
+    @Test
+    public void scheduleMultipleGenerationFlagsNullClaimant() throws IOException {
+        submitEventList.get(0).getCaseData().setClaimantIndType(null);
+        DocumentInfo documentInfo1 = tornadoService.scheduleMultipleGeneration(userToken,
+                multipleDetails.getCaseData(),
+                multipleObjectsFlags,
+                submitEventList);
+        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    }
+
+    @Test
+    public void scheduleMultipleGenerationWrongScheduleDocName() throws IOException {
+        multipleDetails.getCaseData().setScheduleDocName("WRONG_SCHEDULE_NAME");
+        DocumentInfo documentInfo1 = tornadoService.scheduleMultipleGeneration(userToken,
+                multipleDetails.getCaseData(),
+                multipleObjectsSubMultiple,
+                submitEventList);
+        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    }
+
+    @Test
+    public void scheduleMultipleGenerationSubMultiple() throws IOException {
+        multipleDetails.getCaseData().setScheduleDocName(LIST_CASES_CONFIG);
+        DocumentInfo documentInfo1 = tornadoService.scheduleMultipleGeneration(userToken,
+                multipleDetails.getCaseData(),
+                multipleObjectsSubMultiple,
+                submitEventList);
         assertEquals(documentInfo.toString(), documentInfo1.toString());
     }
 

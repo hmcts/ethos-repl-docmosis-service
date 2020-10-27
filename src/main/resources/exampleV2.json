@@ -2,7 +2,6 @@
   "case_details": {
     "case_data": {
       "claimant_TypeOfClaimant" : "Individual",
-      "addSubMultipleComment": "Comment",
       "additionalCaseInfo": {
         "additional_accepted1": "additional_accepted1",
         "additional_accepted2": "additional_accepted2",

@@ -44,6 +44,10 @@ public class CaseActionsForCaseWorkerController {
 
     private final EventValidationService eventValidationService;
 
+    private final SingleCaseMultipleMidEventValidationService singleCaseMultipleMidEventValidationService;
+
+    private final AddSingleCaseToMultipleService addSingleCaseToMultipleService;
+
     @Autowired
     public CaseActionsForCaseWorkerController(VerifyTokenService verifyTokenService,
                                               CaseCreationForCaseWorkerService caseCreationForCaseWorkerService,
@@ -52,7 +56,9 @@ public class CaseActionsForCaseWorkerController {
                                               DefaultValuesReaderService defaultValuesReaderService,
                                               CaseManagementForCaseWorkerService caseManagementForCaseWorkerService,
                                               SingleReferenceService singleReferenceService,
-                                              EventValidationService eventValidationService) {
+                                              EventValidationService eventValidationService,
+                                              SingleCaseMultipleMidEventValidationService singleCaseMultipleMidEventValidationService,
+                                              AddSingleCaseToMultipleService addSingleCaseToMultipleService) {
         this.verifyTokenService = verifyTokenService;
         this.caseCreationForCaseWorkerService = caseCreationForCaseWorkerService;
         this.caseRetrievalForCaseWorkerService = caseRetrievalForCaseWorkerService;
@@ -61,6 +67,8 @@ public class CaseActionsForCaseWorkerController {
         this.caseManagementForCaseWorkerService = caseManagementForCaseWorkerService;
         this.singleReferenceService = singleReferenceService;
         this.eventValidationService = eventValidationService;
+        this.singleCaseMultipleMidEventValidationService = singleCaseMultipleMidEventValidationService;
+        this.addSingleCaseToMultipleService = addSingleCaseToMultipleService;
     }
 
     @PostMapping(value = "/createCase", consumes = APPLICATION_JSON_VALUE)
@@ -209,22 +217,21 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        List<String> errors = new ArrayList<>();
-        CaseData caseData = new CaseData();
-        if (ccdRequest.getCaseDetails() != null && ccdRequest.getCaseDetails().getCaseId() != null) {
-            errors = eventValidationService.validateReceiptDate(ccdRequest.getCaseDetails().getCaseData());
-            log.info("Event fields validation:: " + errors);
-            if (errors.isEmpty()) {
-                caseManagementForCaseWorkerService.caseDataDefaults(ccdRequest.getCaseDetails().getCaseData());
-                log.info("POST DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-                DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
-                log.info("Post Default values loaded: " + defaultValues);
-                caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
-                generateEthosCaseReference(caseData, ccdRequest);
-            }
-        } else {
-            errors.add("The payload is empty. Please make sure you have some data on your case");
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+
+        List<String> errors = eventValidationService.validateReceiptDate(caseData);
+        log.info("Event fields validation:: " + errors);
+
+        if (errors.isEmpty()) {
+            caseManagementForCaseWorkerService.caseDataDefaults(caseData);
+            DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
+            log.info("Post Default values loaded: " + defaultValues);
+            defaultValuesReaderService.getCaseData(caseData, defaultValues);
+            generateEthosCaseReference(caseData, ccdRequest);
+            caseData.setMultipleFlag(caseData.getCaseType() != null
+                    && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
         }
+
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
                 .errors(errors)
@@ -274,13 +281,21 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        log.info("CaseData init: " + caseData);
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
         log.info("Event fields validation: " + errors);
+
         if (errors.isEmpty()) {
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
-            caseData = defaultValuesReaderService.getCaseData(ccdRequest.getCaseDetails().getCaseData(), defaultValues);
+            defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+
+            addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
+                    userToken, caseData, ccdRequest.getCaseDetails().getCaseTypeId(),
+                    ccdRequest.getCaseDetails().getJurisdiction(),
+                    ccdRequest.getCaseDetails().getCaseId(), errors);
+
         }
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
@@ -666,6 +681,36 @@ public class CaseActionsForCaseWorkerController {
         CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(), userToken, errors, SUBMITTED_CALLBACK);
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
+                .errors(errors)
+                .build());
+    }
+
+    @PostMapping(value = "/singleCaseMultipleMidEventValidation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "validates the multiple and sub multiple in the single case when moving to a multiple.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> singleCaseMultipleMidEventValidation(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("SINGLE CASE MULTIPLE MID EVENT VALIDATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors = new ArrayList<>();
+        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+
+        singleCaseMultipleMidEventValidationService.singleCaseMultipleValidationLogic(
+                userToken, caseDetails, errors);
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(caseDetails.getCaseData())
                 .errors(errors)
                 .build());
     }
