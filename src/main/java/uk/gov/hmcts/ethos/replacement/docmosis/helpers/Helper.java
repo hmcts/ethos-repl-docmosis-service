@@ -31,7 +31,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -62,8 +61,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 public class Helper {
 
     private static final String FILE_OPENING_PROCESSING_ERROR = "Error: opening or processing the entries for the venue address values file";
-    private static final String INPUT_STREAM_CLOSING_ERROR = "Error: closing the FileInputStream for the venue address values file";
-    private static final String WORKBOOK_CLOSING_ERROR = "Error: closing the Workbook for the venue address values file";
 
     public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails, String caseTypeId) {
         StringBuilder sb = new StringBuilder();
@@ -307,14 +304,9 @@ public class Helper {
 
     private static String getVenueAddress(HearingType hearingType, String caseTypeId) {
 
-        FileInputStream excelFile = null;
-        Workbook workbook = null;
+        try (FileInputStream excelFile = new FileInputStream(ResourceUtils.getFile(VENUE_ADDRESS_VALUES_FILE_PATH));
+             Workbook workbook = new XSSFWorkbook(excelFile)) {
 
-        try {
-
-            File venueAddressFile = ResourceUtils.getFile(VENUE_ADDRESS_VALUES_FILE_PATH);
-            excelFile = new FileInputStream(venueAddressFile);
-            workbook = new XSSFWorkbook(excelFile);
             Sheet datatypeSheet = workbook.getSheet(caseTypeId);
 
             if (datatypeSheet != null) {
@@ -334,22 +326,6 @@ public class Helper {
 
         } catch (IOException e) {
             log.error(FILE_OPENING_PROCESSING_ERROR);
-        } finally {
-            if (excelFile != null) {
-                try {
-                    excelFile.close();
-                } catch (IOException e) {
-                    log.error(INPUT_STREAM_CLOSING_ERROR);
-                }
-            }
-
-            if (workbook != null) {
-                try {
-                    workbook.close();
-                } catch (IOException e) {
-                    log.error(WORKBOOK_CLOSING_ERROR);
-                }
-            }
         }
 
         return hearingType.getHearingVenue();
