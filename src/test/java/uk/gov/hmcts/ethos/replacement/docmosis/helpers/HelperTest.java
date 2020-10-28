@@ -24,6 +24,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_
 
 public class HelperTest {
 
+    private static final String DUMMY_CASE_TYPE_ID = "dummy case type id";
+
     private CaseDetails caseDetails1;
     private CaseDetails caseDetails2;
     private CaseDetails caseDetails3;
@@ -1382,7 +1384,7 @@ public class HelperTest {
                 "\"resp_address\":\"\",\n" +
                 "\"Hearing_date\":\"25 November 2019\",\n" +
                 "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
-                "\"Hearing_venue\":\"Glasgow Tribunal Centre, Atlantic Quay, 20 York Street, Glasgow, G2 8GT\",\n" +
+                "\"Hearing_venue\":\"Glasgow\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t_Scot_24\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Eagle Building,\",\n" +
@@ -1407,7 +1409,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot2.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot2.getCaseData(), "", userDetails, DUMMY_CASE_TYPE_ID).toString());
     }
 
     @Test
