@@ -159,7 +159,7 @@ dependencies {
     compile(group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger)
     compile (group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger)
 
-    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     compile group: 'uk.gov.hmcts.reform', name: 'document-management-client', version: '6.0.0'
 
     compile group: 'uk.gov.hmcts.reform', name: 'ecm-common', version: '0.0.80'
