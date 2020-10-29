@@ -11,6 +11,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -46,6 +47,8 @@ public class HelperTest {
     private CaseDetails caseDetailsScot3;
     private UserDetails userDetails;
 
+    private InputStream venueAddressInputStream;
+
     @Before
     public void setUp() throws Exception {
         caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
@@ -70,6 +73,7 @@ public class HelperTest {
         caseDetailsEmpty.setCaseData(new CaseData());
         userDetails = getUserDetails();
 
+        venueAddressInputStream = getClass().getClassLoader().getResourceAsStream("venueAddressValues.xlsx");
     }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
@@ -146,7 +150,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails1.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails1.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -216,7 +220,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails2.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails2.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -286,7 +290,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails3.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails3.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -356,7 +360,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails4.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails4.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -427,7 +431,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails5.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails5.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -498,7 +502,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails6.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails6.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -569,7 +573,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails7.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails7.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -639,7 +643,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails8.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails8.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -709,7 +713,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails9.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails9.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -733,7 +737,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails10.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails10.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -781,7 +785,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails12.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails12.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -821,7 +825,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails13.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails13.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -979,7 +983,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails14.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails14.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -1207,7 +1211,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetails15.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetails15.getCaseData(), "", userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -1269,7 +1273,7 @@ public class HelperTest {
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsEmpty.getCaseData(), "", userDetails, "").toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsEmpty.getCaseData(), "", userDetails, "", venueAddressInputStream).toString());
     }
 
     @Test
@@ -1339,7 +1343,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot1.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot1.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -1409,7 +1413,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot2.getCaseData(), "", userDetails, DUMMY_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot2.getCaseData(), "", userDetails, DUMMY_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -1478,7 +1482,7 @@ public class HelperTest {
                 "\"Case_No\":\"123456\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot3.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID).toString());
+        assertEquals(expected, Helper.buildDocumentContent(caseDetailsScot3.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -1492,7 +1496,7 @@ public class HelperTest {
         correspondenceScotType.setPart3ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID).toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream).toString());
         topLevel = "Part_4_Scot";
         part = "42";
         correspondenceScotType = new CorrespondenceScotType();
@@ -1500,7 +1504,7 @@ public class HelperTest {
         correspondenceScotType.setPart4ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID).toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream).toString());
         topLevel = "Part_5_Scot";
         part = "52";
         correspondenceScotType = new CorrespondenceScotType();
@@ -1508,7 +1512,7 @@ public class HelperTest {
         correspondenceScotType.setPart5ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID).toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream).toString());
         topLevel = "Part_6_Scot";
         part = "62";
         correspondenceScotType = new CorrespondenceScotType();
@@ -1516,7 +1520,7 @@ public class HelperTest {
         correspondenceScotType.setPart6ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID).toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream).toString());
         topLevel = "Part_7_Scot";
         part = "72";
         correspondenceScotType = new CorrespondenceScotType();
@@ -1524,7 +1528,7 @@ public class HelperTest {
         correspondenceScotType.setPart7ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID).toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream).toString());
         topLevel = "Part_15_Scot";
         part = "152";
         correspondenceScotType = new CorrespondenceScotType();
@@ -1532,7 +1536,7 @@ public class HelperTest {
         correspondenceScotType.setPart15ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID).toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream).toString());
         topLevel = "Part_9_Scot";
         part = "162";
         correspondenceScotType = new CorrespondenceScotType();
@@ -1540,7 +1544,7 @@ public class HelperTest {
         correspondenceScotType.setPart9ScotDocuments(part);
         caseData.setCorrespondenceScotType(correspondenceScotType);
         caseDetailsTemplates.setCaseData(caseData);
-        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID).toString());
+        assertEquals(getJson(topLevel, part), Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream).toString());
     }
 
     @Test
@@ -1612,7 +1616,7 @@ public class HelperTest {
                 "\"Case_No\":\"\",\n" +
                 "}\n" +
                 "}\n";
-        assertEquals(result, Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, "").toString());
+        assertEquals(result, Helper.buildDocumentContent(caseDetailsTemplates.getCaseData(), "", userDetails, "", venueAddressInputStream).toString());
     }
 
     private String getJson(String topLevel, String part) {

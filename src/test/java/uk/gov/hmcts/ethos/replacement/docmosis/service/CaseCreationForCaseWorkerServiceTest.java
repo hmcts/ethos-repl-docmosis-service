@@ -64,7 +64,7 @@ public class CaseCreationForCaseWorkerServiceTest {
     @Test
     public void generateCaseRefNumbers() {
         when(singleReferenceService.createReference("Manchester",2)).thenReturn("2100001/2019");
-        when(multipleReferenceService.createReference("Manchester_Multiples",1)).thenReturn("2100005");
+        when(multipleReferenceService.createReference("Manchester_Multiple",1)).thenReturn("2100005");
         CaseData caseData = caseCreationForCaseWorkerService.generateCaseRefNumbers(ccdRequest);
         assertEquals(caseData.getStartCaseRefNumber(),"2100001/2019");
         assertEquals(caseData.getCaseRefNumberCount(),"2");

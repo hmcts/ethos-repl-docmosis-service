@@ -12,9 +12,18 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -25,12 +34,15 @@ import java.util.TreeMap;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService.APPLICATION_DOCX_VALUE;
 
 @Slf4j
 @Service("tornadoService")
 @RequiredArgsConstructor
 public class TornadoService {
+
+    private static final String VENUE_ADDRESS_INPUT_STREAM_ERROR = "Failed to get an inputStream for the venueAddressValues.xlsx file : ---> ";
 
     private final TornadoConfiguration tornadoConfiguration;
     private final DocumentManagementService documentManagementService;
@@ -75,12 +87,17 @@ public class TornadoService {
     }
 
     private void buildInstruction(HttpURLConnection conn, CaseData caseData, UserDetails userDetails, String caseTypeId) throws IOException {
-        StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(), userDetails, caseTypeId);
-        //log.info("Sending request: " + sb.toString());
-        // send the instruction in UTF-8 encoding so that most character sets are available
-        OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
-        os.write(sb.toString());
-        os.flush();
+
+        try (InputStream venueAddressInputStream = getClass().getClassLoader().getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH)) {
+            StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(), userDetails, caseTypeId, venueAddressInputStream);
+            //log.info("Sending request: " + sb.toString());
+            // send the instruction in UTF-8 encoding so that most character sets are available
+            OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
+            os.write(sb.toString());
+            os.flush();
+        } catch (Exception ex) {
+            log.error(VENUE_ADDRESS_INPUT_STREAM_ERROR + ex.getMessage());
+        }
     }
 
     private byte[] getBytesFromInputStream(InputStream is) throws IOException {
