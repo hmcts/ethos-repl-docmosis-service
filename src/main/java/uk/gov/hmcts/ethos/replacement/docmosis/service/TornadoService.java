@@ -12,9 +12,18 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -25,6 +34,7 @@ import java.util.TreeMap;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService.APPLICATION_DOCX_VALUE;
 
 @Slf4j
@@ -32,13 +42,15 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagement
 @RequiredArgsConstructor
 public class TornadoService {
 
+    private static final String VENUE_ADDRESS_INPUT_STREAM_ERROR = "Failed to get an inputStream for the venueAddressValues.xlsx file : ---> ";
+
     private final TornadoConfiguration tornadoConfiguration;
     private final DocumentManagementService documentManagementService;
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
     private final UserService userService;
 
-    DocumentInfo documentGeneration(String authToken, CaseData caseData) throws IOException {
+    DocumentInfo documentGeneration(String authToken, CaseData caseData, String caseTypeId) throws IOException {
         HttpURLConnection conn = null;
         DocumentInfo documentInfo = new DocumentInfo();
         try {
@@ -46,7 +58,7 @@ public class TornadoService {
             log.info("Connected");
             UserDetails userDetails = userService.getUserDetails(authToken);
             String documentName = Helper.getDocumentName(caseData);
-            buildInstruction(conn, caseData, userDetails);
+            buildInstruction(conn, caseData, userDetails, caseTypeId);
             documentInfo = checkResponseStatus(authToken, conn, documentName);
         } catch (ConnectException e) {
             log.error("Unable to connect to Docmosis: " + e.getMessage());
@@ -74,13 +86,18 @@ public class TornadoService {
         return conn;
     }
 
-    private void buildInstruction(HttpURLConnection conn, CaseData caseData, UserDetails userDetails) throws IOException {
-        StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(), userDetails);
-        //log.info("Sending request: " + sb.toString());
-        // send the instruction in UTF-8 encoding so that most character sets are available
-        OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
-        os.write(sb.toString());
-        os.flush();
+    private void buildInstruction(HttpURLConnection conn, CaseData caseData, UserDetails userDetails, String caseTypeId) throws IOException {
+
+        try (InputStream venueAddressInputStream = getClass().getClassLoader().getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH)) {
+            StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(), userDetails, caseTypeId, venueAddressInputStream);
+            //log.info("Sending request: " + sb.toString());
+            // send the instruction in UTF-8 encoding so that most character sets are available
+            OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
+            os.write(sb.toString());
+            os.flush();
+        } catch (Exception ex) {
+            log.error(VENUE_ADDRESS_INPUT_STREAM_ERROR + ex.getMessage());
+        }
     }
 
     private byte[] getBytesFromInputStream(InputStream is) throws IOException {
