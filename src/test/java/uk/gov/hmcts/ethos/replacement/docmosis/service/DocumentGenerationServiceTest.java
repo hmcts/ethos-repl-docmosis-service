@@ -306,7 +306,7 @@ public class DocumentGenerationServiceTest {
     @Test
     public void clearUserChoicesForMultiplesScotland() {
         BulkDetails bulkDetails = bulkRequest.getCaseDetails();
-        bulkDetails.setCaseTypeId("Scotland_Multiples");
+        bulkDetails.setCaseTypeId("Scotland_Multiple");
         documentGenerationService.clearUserChoicesForMultiples (bulkDetails);
         assertNull(bulkDetails.getCaseData().getCorrespondenceScotType());
     }
@@ -314,7 +314,7 @@ public class DocumentGenerationServiceTest {
     @Test
     public void clearUserChoicesForMultiplesEngland() {
         BulkDetails bulkDetails = bulkRequest.getCaseDetails();
-        bulkDetails.setCaseTypeId("Not Scotland Multiples");
+        bulkDetails.setCaseTypeId("Not Scotland Multiple");
         documentGenerationService.clearUserChoicesForMultiples (bulkDetails);
         assertNull(bulkDetails.getCaseData().getCorrespondenceType());
     }

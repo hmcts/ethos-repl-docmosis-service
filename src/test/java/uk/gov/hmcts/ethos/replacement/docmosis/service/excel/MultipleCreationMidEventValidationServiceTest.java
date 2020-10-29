@@ -124,6 +124,20 @@ public class MultipleCreationMidEventValidationServiceTest {
 
     }
 
+    @Test
+    public void multipleCreationValidationLogicMigrationCase() {
+
+        multipleDetails.getCaseData().setMultipleSource(MIGRATION_CASE_SOURCE);
+
+        multipleCreationMidEventValidationService.multipleCreationValidationLogic(
+                userToken,
+                multipleDetails,
+                errors);
+
+        assertEquals(0, errors.size());
+
+    }
+
     private void createCaseIdCollection(MultipleData multipleData, int numberCases) {
 
         List<CaseIdTypeItem> caseIdCollection = new ArrayList<>();

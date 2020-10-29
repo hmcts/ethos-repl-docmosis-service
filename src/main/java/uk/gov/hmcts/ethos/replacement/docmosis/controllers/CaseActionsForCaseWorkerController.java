@@ -281,7 +281,6 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        log.info("CaseData init: " + caseData);
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
         log.info("Event fields validation: " + errors);
 

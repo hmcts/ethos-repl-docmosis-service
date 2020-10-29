@@ -80,6 +80,13 @@ public class ExcelDocManagementService {
 
         List<String> subMultipleCollection = MultiplesHelper.generateSubMultipleStringCollection(multipleData);
 
+        writeAndUploadExcelDocument(multipleCollection, userToken, multipleData, subMultipleCollection);
+
+    }
+
+    public void writeAndUploadExcelDocument(List<?> multipleCollection, String userToken,
+                                            MultipleData multipleData, List<String> subMultipleCollection) {
+
         byte[] excelBytes = excelCreationService.writeExcel(multipleCollection, subMultipleCollection);
 
         uploadExcelDocument(userToken, multipleData, excelBytes);

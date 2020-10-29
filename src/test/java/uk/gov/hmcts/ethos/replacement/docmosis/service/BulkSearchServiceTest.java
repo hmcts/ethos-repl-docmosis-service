@@ -78,7 +78,7 @@ public class BulkSearchServiceTest {
         midSearchTypeItem1.setValue("2222");
         bulkData.setMidSearchCollection(new ArrayList<>(Arrays.asList(midSearchTypeItem, midSearchTypeItem1)));
         bulkDetails.setJurisdiction("TRIBUNALS");
-        bulkDetails.setCaseTypeId("Manchester_Multiples");
+        bulkDetails.setCaseTypeId("Manchester_Multiple");
         bulkDetails.setCaseData(bulkData);
         bulkRequest.setCaseDetails(bulkDetails);
         submitEvent = new SubmitEvent();
@@ -109,7 +109,7 @@ public class BulkSearchServiceTest {
 
     @Test
     public void bulkMidSearchLogic() {
-        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiples, createdDate=null, " +
+        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiple, createdDate=null, " +
                 "lastModified=null, dataClassification=null), caseData=BulkData(bulkCaseTitle=null, multipleReference=1111, feeGroupReference=null, claimantSurname=, " +
                 "respondentSurname=null, claimantRep=null, respondentRep=JuanPedro, ethosCaseReference=222, clerkResponsible=null, fileLocation=null, " +
                 "jurCodesCollection=null, fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, " +
@@ -131,7 +131,7 @@ public class BulkSearchServiceTest {
 
     @Test
     public void bulkMidSearchLogicWithSelectAll() {
-        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiples, createdDate=null, " +
+        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiple, createdDate=null, " +
                 "lastModified=null, dataClassification=null), caseData=BulkData(bulkCaseTitle=null, multipleReference=1111, feeGroupReference=null, claimantSurname=, " +
                 "respondentSurname=null, claimantRep=null, respondentRep=JuanPedro, ethosCaseReference=222, clerkResponsible=null, fileLocation=null, " +
                 "jurCodesCollection=null, fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, " +
@@ -162,7 +162,7 @@ public class BulkSearchServiceTest {
 
     @Test
     public void bulkMidSearchSubMultipleLogic() {
-        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiples, createdDate=null, " +
+        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiple, createdDate=null, " +
                 "lastModified=null, dataClassification=null), caseData=BulkData(bulkCaseTitle=null, multipleReference=1111, feeGroupReference=null, claimantSurname=, " +
                 "respondentSurname=null, claimantRep=null, respondentRep=JuanPedro, ethosCaseReference=222, clerkResponsible=null, fileLocation=null, " +
                 "jurCodesCollection=null, fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, " +
@@ -192,7 +192,7 @@ public class BulkSearchServiceTest {
 
     @Test
     public void midCreateSubMultiple() {
-        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiples, createdDate=null, " +
+        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiple, createdDate=null, " +
                 "lastModified=null, dataClassification=null), caseData=BulkData(bulkCaseTitle=null, multipleReference=1111, feeGroupReference=null, claimantSurname=, " +
                 "respondentSurname=null, claimantRep=null, respondentRep=JuanPedro, ethosCaseReference=222, clerkResponsible=null, fileLocation=null, " +
                 "jurCodesCollection=null, fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, " +
@@ -214,7 +214,7 @@ public class BulkSearchServiceTest {
 
     @Test
     public void midCreateSubMultipleCaseBelongsToOtherSubMultiple() {
-        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiples, createdDate=null, " +
+        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiple, createdDate=null, " +
                 "lastModified=null, dataClassification=null), caseData=BulkData(bulkCaseTitle=null, multipleReference=1111, feeGroupReference=null, claimantSurname=, " +
                 "respondentSurname=null, claimantRep=null, respondentRep=JuanPedro, ethosCaseReference=222, clerkResponsible=null, fileLocation=null, " +
                 "jurCodesCollection=null, fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, " +
