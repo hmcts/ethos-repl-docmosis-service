@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 @Service("multipleCreationMidEventValidationService")
@@ -39,7 +38,10 @@ public class MultipleCreationMidEventValidationService {
     public void multipleCreationValidationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
         if (multipleDetails.getCaseData().getMultipleSource() != null
-                && multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
+                &&
+                ( multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
+                        || multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)
+                )) {
 
             log.info("Skipping validation as ET1 Online Case");
 
@@ -96,7 +98,7 @@ public class MultipleCreationMidEventValidationService {
 
             validateNumberCasesReturned(submitEvents, errors, isLead, caseRefCollection);
 
-            log.info("Validating cases: " + submitEvents);
+            log.info("Validating cases");
 
             validateSingleCasesState(submitEvents, errors, isLead);
 

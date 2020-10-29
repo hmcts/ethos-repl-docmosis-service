@@ -102,11 +102,7 @@ public class SubMultipleUpdateService {
 
         String subMultipleName = multipleDetails.getCaseData().getSubMultipleAction().getCreateSubMultipleName();
 
-        String subMultipleReference = generateSubMultipleReference(multipleDetails);
-
-        log.info("SubMultipleName: " + subMultipleName + " - SubMultipleReference: " + subMultipleReference);
-
-        SubMultipleTypeItem subMultipleTypeItem = MultiplesHelper.createSubMultipleTypeItem(subMultipleReference, subMultipleName);
+        SubMultipleTypeItem subMultipleTypeItem = createSubMultipleTypeItemWithReference(multipleDetails, subMultipleName);
 
         log.info("Add sub multiple to the multiple");
 
@@ -153,6 +149,16 @@ public class SubMultipleUpdateService {
         log.info("Generating the multiple object list without the sub multiple name");
 
         return getMultipleObjectListFromTreeMapSubMultipleUpdated(multipleObjects, deleteSubMultipleName, "");
+
+    }
+
+    public SubMultipleTypeItem createSubMultipleTypeItemWithReference(MultipleDetails multipleDetails, String subMultipleName) {
+
+        String subMultipleReference = generateSubMultipleReference(multipleDetails);
+
+        log.info("SubMultipleName: " + subMultipleName + " - SubMultipleReference: " + subMultipleReference);
+
+        return MultiplesHelper.createSubMultipleTypeItem(subMultipleReference, subMultipleName);
 
     }
 

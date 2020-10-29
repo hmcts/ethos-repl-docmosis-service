@@ -12,10 +12,12 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.MultipleReferenceService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleCreationServiceTest {
@@ -26,6 +28,8 @@ public class MultipleCreationServiceTest {
     private MultipleReferenceService multipleReferenceService;
     @Mock
     private MultipleHelperService multipleHelperService;
+    @Mock
+    private SubMultipleUpdateService subMultipleUpdateService;
     @InjectMocks
     private MultipleCreationService multipleCreationService;
 
@@ -72,9 +76,25 @@ public class MultipleCreationServiceTest {
         multipleCreationService.bulkCreationLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());
-        verify(excelDocManagementService, times(1)).generateAndUploadExcel(ethosCaseRefCollection,
+        verify(excelDocManagementService, times(1)).writeAndUploadExcelDocument(ethosCaseRefCollection,
                 userToken,
-                multipleDetails.getCaseData());
+                multipleDetails.getCaseData(),
+                new ArrayList<>());
+        verifyNoMoreInteractions(excelDocManagementService);
+    }
+
+    @Test
+    public void bulkCreationLogicMigration() {
+        multipleDetails.getCaseData().setMultipleSource(MIGRATION_CASE_SOURCE);
+        multipleDetails.getCaseData().setCaseMultipleCollection(MultipleUtil.getCaseMultipleCollection());
+        multipleCreationService.bulkCreationLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(excelDocManagementService, times(1)).writeAndUploadExcelDocument(
+                MultipleUtil.getCaseMultipleObjectCollection(),
+                userToken,
+                multipleDetails.getCaseData(),
+                new ArrayList<>(Arrays.asList("Sub3", "Sub2", "Sub1")));
         verifyNoMoreInteractions(excelDocManagementService);
     }
 
