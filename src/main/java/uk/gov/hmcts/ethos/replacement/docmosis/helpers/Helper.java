@@ -302,43 +302,6 @@ public class Helper {
         return sb;
     }
 
-    private static String getVenueAddress(HearingType hearingType, String caseTypeId) {
-
-        try (FileInputStream excelFile = new FileInputStream(ResourceUtils.getFile(VENUE_ADDRESS_VALUES_FILE_PATH));
-             Workbook workbook = new XSSFWorkbook(excelFile)) {
-
-            Sheet datatypeSheet = workbook.getSheet(caseTypeId);
-
-            if (datatypeSheet != null) {
-                for (Row currentRow : datatypeSheet) {
-
-                    if (currentRow.getRowNum() == 0) {
-                        continue;
-                    }
-
-                    String hearingVenue = getCellValue(currentRow.getCell(0));
-
-                    if (!isNullOrEmpty(hearingVenue) && hearingVenue.equals(hearingType.getHearingVenue())) {
-                        return getCellValue(currentRow.getCell(1));
-                    }
-                }
-            }
-
-        } catch (IOException e) {
-            log.error(FILE_OPENING_PROCESSING_ERROR);
-        }
-
-        return hearingType.getHearingVenue();
-    }
-
-    private static String getCellValue(Cell currentCell) {
-        if (currentCell.getCellType() == CellType.STRING) {
-            return currentCell.getStringCellValue();
-        } else {
-            return "";
-        }
-    }
-
     public static String getCorrespondenceHearingNumber(CaseData caseData) {
         Optional<CorrespondenceType> correspondenceType = Optional.ofNullable(caseData.getCorrespondenceType());
         if (correspondenceType.isPresent()) {
@@ -402,6 +365,53 @@ public class Helper {
         sb.append(earliestTime.toString());
 
         return sb.toString();
+    }
+
+    private static String getVenueAddress(HearingType hearingType, String caseTypeId) {
+
+        log.info("FETCHING VENUE ADDRESS VALUES FILE : ---> " + VENUE_ADDRESS_VALUES_FILE_PATH);
+
+        try (FileInputStream excelFile = new FileInputStream(ResourceUtils.getFile(VENUE_ADDRESS_VALUES_FILE_PATH));
+             Workbook workbook = new XSSFWorkbook(excelFile)) {
+
+            log.info("FETCHING SPREADSHEET TAB FOR CASE TYPE ID : ---> " + caseTypeId);
+
+            Sheet datatypeSheet = workbook.getSheet(caseTypeId);
+
+            if (datatypeSheet != null) {
+
+                log.info("PROCESSING VENUE ADDRESSES FOR TAB : ---> " + caseTypeId + " WITHIN FILE : ---> " + VENUE_ADDRESS_VALUES_FILE_PATH);
+
+                for (Row currentRow : datatypeSheet) {
+
+                    if (currentRow.getRowNum() == 0) {
+                        continue;
+                    }
+
+                    log.info("FETCHING HEARING VENUE :  ..... ");
+                    String hearingVenue = getCellValue(currentRow.getCell(0));
+                    log.info("FETCHED HEARING VENUE : ---> " + hearingVenue);
+
+                    if (!isNullOrEmpty(hearingVenue) && hearingVenue.equals(hearingType.getHearingVenue())) {
+                        log.info("RETURNING VENUE ADDRESS : ---> " + getCellValue(currentRow.getCell(1)));
+                        return getCellValue(currentRow.getCell(1));
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            log.error(FILE_OPENING_PROCESSING_ERROR);
+        }
+
+        return hearingType.getHearingVenue();
+    }
+
+    private static String getCellValue(Cell currentCell) {
+        if (currentCell.getCellType() == CellType.STRING) {
+            return currentCell.getStringCellValue();
+        } else {
+            return "";
+        }
     }
 
     static String getHearingDuration(HearingType hearingType) {
