@@ -71,7 +71,7 @@ public class MultipleCreationService {
 
         log.info("Clearing the payload");
 
-        multipleDetails.getCaseData().setCaseIdCollection(new ArrayList<>());
+        multipleDetails.getCaseData().setCaseIdCollection(null);
 
     }
 
