@@ -42,22 +42,20 @@ public class MultipleCreationService {
 
     public void bulkCreationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
-        MultipleData multipleData = multipleDetails.getCaseData();
-
         log.info("Add data to the multiple");
 
-        addDataToMultiple(multipleData);
+        addDataToMultiple(multipleDetails.getCaseData());
 
         log.info("Add state to the multiple");
 
-        addStateToMultiple(multipleData);
+        addStateToMultiple(multipleDetails.getCaseData());
 
         log.info("Get lead case link and add to the collection case Ids");
 
         getLeadMarkUpAndAddLeadToCaseIds(userToken, multipleDetails);
 
-        if (!multipleData.getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
-                && !multipleData.getMultipleSource().equals(MIGRATION_CASE_SOURCE)) {
+        if (!multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
+                && !multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)) {
 
             log.info("Multiple Creation UI");
 
@@ -73,7 +71,7 @@ public class MultipleCreationService {
 
         log.info("Clearing the payload");
 
-        multipleData.setCaseIdCollection(null);
+        multipleDetails.getCaseData().setCaseIdCollection(new ArrayList<>());
 
     }
 
