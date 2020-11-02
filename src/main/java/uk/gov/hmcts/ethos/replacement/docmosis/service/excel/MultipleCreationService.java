@@ -71,6 +71,10 @@ public class MultipleCreationService {
 
         }
 
+        log.info("Clearing the payload");
+
+        multipleData.setCaseIdCollection(null);
+
     }
 
     private void multipleCreationUI(String userToken, MultipleDetails multipleDetails, List<String> errors) {
