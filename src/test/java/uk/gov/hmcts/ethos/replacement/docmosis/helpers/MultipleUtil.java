@@ -83,8 +83,9 @@ public class MultipleUtil {
 
     public static TreeMap<String, Object> getMultipleObjectsFlags() {
         TreeMap<String, Object> multipleObjectTreeMap = new TreeMap<>();
-        multipleObjectTreeMap.put("245000/2020",  "245000/2020");
-        multipleObjectTreeMap.put("245003/2020",  "245003/2020");
+        multipleObjectTreeMap.put("245000/2020", "245000/2020");
+        multipleObjectTreeMap.put("245003/2020", "245003/2020");
+        multipleObjectTreeMap.put("21006/2020", "21006/2020");
         return multipleObjectTreeMap;
     }
 

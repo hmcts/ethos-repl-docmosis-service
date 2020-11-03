@@ -104,47 +104,6 @@ public class MultiplesHelper {
 
     }
 
-    public static void removeCaseIds(MultipleData multipleData, List<String> multipleObjectsFiltered) {
-
-        List<CaseIdTypeItem> newCaseIdCollection = new ArrayList<>();
-
-        if (multipleData.getCaseIdCollection() != null
-                && !multipleData.getCaseIdCollection().isEmpty()) {
-
-            newCaseIdCollection = multipleData.getCaseIdCollection().stream()
-                    .filter(key -> key.getId() != null && !key.getId().equals("null"))
-                    .filter(caseId -> !multipleObjectsFiltered.contains(caseId.getValue().getEthosCaseReference()))
-                    .distinct()
-                    .collect(Collectors.toList());
-
-        }
-
-        multipleData.setCaseIdCollection(newCaseIdCollection);
-
-    }
-
-    public static void addCaseIds(MultipleData multipleData, List<String> multipleObjectsFiltered) {
-
-        List<CaseIdTypeItem> caseIdCollectionToAdd = new ArrayList<>();
-
-        for (String ethosCaseReference : multipleObjectsFiltered) {
-
-            caseIdCollectionToAdd.add(createCaseIdTypeItem(ethosCaseReference));
-
-        }
-
-        if (multipleData.getCaseIdCollection() == null) {
-
-            multipleData.setCaseIdCollection(new ArrayList<>(caseIdCollectionToAdd));
-
-        } else {
-
-            multipleData.getCaseIdCollection().addAll(caseIdCollectionToAdd);
-
-        }
-
-    }
-
     public static void addLeadToCaseIds(MultipleData multipleData, String leadCase) {
 
         CaseIdTypeItem caseIdTypeItem = createCaseIdTypeItem(leadCase);
@@ -289,6 +248,14 @@ public class MultiplesHelper {
     public static String generateExcelDocumentName(MultipleData multipleData) {
 
         return multipleData.getMultipleName() + "-" + multipleData.getMultipleReference() + ".xlsx";
+
+    }
+
+    public static String getCurrentLead(String leadCaseLink) {
+
+        return leadCaseLink != null && !leadCaseLink.isEmpty()
+                ? leadCaseLink.substring(leadCaseLink.indexOf(">") + 1).replace("</a>", "")
+                : "";
 
     }
 

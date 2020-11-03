@@ -380,4 +380,30 @@ public class MultipleHelperServiceTest {
 
     }
 
+    @Test
+    public void getLeadCaseFromExcel() {
+
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjects);
+
+        assertEquals("245000/2020", multipleHelperService.getLeadCaseFromExcel(
+                userToken,
+                multipleDetails.getCaseData(),
+                new ArrayList<>()));
+
+    }
+
+    @Test
+    public void getEmptyLeadCaseFromExcel() {
+
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(new TreeMap<>());
+
+        assertEquals("", multipleHelperService.getLeadCaseFromExcel(
+                userToken,
+                multipleDetails.getCaseData(),
+                new ArrayList<>()));
+
+    }
+
 }

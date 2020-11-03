@@ -58,24 +58,26 @@ public class AddSingleCaseToMultipleService {
 
             MultipleData multipleData = multipleEvent.getCaseData();
 
-            String ethosCaseReference = caseData.getEthosCaseReference();
+            List<String> ethosCaseRefCollection = multipleHelperService.getEthosCaseRefCollection(userToken, multipleData, errors);
+
+            String newEthosCaseReferenceToAdd = caseData.getEthosCaseReference();
 
             log.info("If multiple is empty the single will be always the lead");
 
-            if (multipleData.getCaseIdCollection() == null || multipleData.getCaseIdCollection().isEmpty()) {
+            if (ethosCaseRefCollection.isEmpty()) {
 
                 leadClaimant = YES;
 
             }
 
-            addSingleCaseToCaseIds(userToken, multipleCaseTypeId, jurisdiction,
-                    multipleData, leadClaimant, ethosCaseReference, caseId, errors);
+            addNewLeadToMultiple(userToken, multipleCaseTypeId, jurisdiction,
+                    multipleData, leadClaimant, newEthosCaseReferenceToAdd, caseId, errors);
 
             log.info("Generate and upload excel with sub multiple and send update to multiple");
 
             multipleHelperService.moveCasesAndSendUpdateToMultiple(userToken, caseData.getSubMultipleName(),
                     jurisdiction, multipleCaseTypeId, String.valueOf(multipleEvent.getCaseId()),
-                    multipleData, new ArrayList<>(Collections.singletonList(ethosCaseReference)), errors);
+                    multipleData, new ArrayList<>(Collections.singletonList(newEthosCaseReferenceToAdd)), errors);
 
             log.info("Update multipleRef, multiple and lead");
 
@@ -101,14 +103,15 @@ public class AddSingleCaseToMultipleService {
 
     }
 
-    private void addSingleCaseToCaseIds(String userToken, String multipleCaseTypeId, String jurisdiction, MultipleData multipleData,
-                                        String leadClaimant, String ethosCaseReference, String caseId, List<String> errors) {
+    private void addNewLeadToMultiple(String userToken, String multipleCaseTypeId, String jurisdiction,
+                                        MultipleData multipleData, String leadClaimant, String newEthosCaseReferenceToAdd,
+                                        String caseId, List<String> errors) {
 
         if (leadClaimant.equals(YES)) {
 
-            log.info("Lead: Adding the single case id to the TOP of case ids collection in multiple");
+            log.info("Checking if there was a lead");
 
-            String currentLeadCase = MultiplesHelper.getLeadFromCaseIds(multipleData);
+            String currentLeadCase = MultiplesHelper.getCurrentLead(multipleData.getLeadCase());
 
             if (!currentLeadCase.isEmpty()) {
 
@@ -120,17 +123,10 @@ public class AddSingleCaseToMultipleService {
 
             }
 
+            log.info("Adding the new lead");
+
             multipleHelperService.addLeadMarkUp(
-                    userToken, multipleCaseTypeId, multipleData, ethosCaseReference, caseId);
-
-            MultiplesHelper.addLeadToCaseIds(multipleData, ethosCaseReference);
-
-        } else {
-
-            log.info("No Lead: Adding the single case id to the case ids collection in multiple");
-
-            MultiplesHelper.addCaseIds(
-                    multipleData, new ArrayList<>(Collections.singletonList(ethosCaseReference)));
+                    userToken, multipleCaseTypeId, multipleData, newEthosCaseReferenceToAdd, caseId);
 
         }
 

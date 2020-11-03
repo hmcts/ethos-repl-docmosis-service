@@ -203,6 +203,7 @@ public class MultipleHelperService {
         for (String ethosCaseReference : multipleObjectsFiltered) {
 
             multipleObjectsToBeAdded.add(MultiplesHelper.createMultipleObject(ethosCaseReference, newSubMultipleName));
+
         }
 
         multipleObjects.forEach((key, value) -> newMultipleObjectsUpdated.add((MultipleObject) value));
@@ -276,10 +277,10 @@ public class MultipleHelperService {
     }
 
     public void sendPreAcceptToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails,
-                                                     List<String> errors) {
+                                                       List<String> errors) {
 
         MultipleData multipleData = multipleDetails.getCaseData();
-        List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleData);
+        List<String> ethosCaseRefCollection = getEthosCaseRefCollection(userToken, multipleData, errors);
         String username = userService.getUserDetails(userToken).getEmail();
 
         PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
@@ -312,6 +313,28 @@ public class MultipleHelperService {
                 YES,
                 createUpdatesBusSender,
                 String.valueOf(ethosCaseRefCollection.size()));
+
+    }
+
+    public List<String> getEthosCaseRefCollection(String userToken, MultipleData newMultipleData, List<String> errors) {
+
+        TreeMap<String, Object> multipleObjects =
+                excelReadingService.readExcel(
+                        userToken,
+                        MultiplesHelper.getExcelBinaryUrl(newMultipleData),
+                        errors,
+                        newMultipleData,
+                        FilterExcelType.ALL);
+
+        return new ArrayList<>(multipleObjects.keySet());
+
+    }
+
+    public String getLeadCaseFromExcel(String userToken, MultipleData newMultipleData, List<String> errors) {
+
+        List<String> ethosCaseRefCollection = getEthosCaseRefCollection(userToken, newMultipleData, errors);
+
+        return ethosCaseRefCollection.isEmpty() ? "" : ethosCaseRefCollection.get(0);
 
     }
 
