@@ -46,8 +46,7 @@ public class AddSingleCaseToMultipleServiceTest {
         multipleDetails.setCaseId("12121212");
         caseDetails = new CaseDetails();
         caseDetails.setCaseTypeId(MANCHESTER_CASE_TYPE_ID);
-        String oldMultipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseDetails.getCaseTypeId());
-        multipleCaseTypeId = oldMultipleCaseTypeId.substring(0, oldMultipleCaseTypeId.length() - 1);
+        multipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseDetails.getCaseTypeId());
         caseDetails.setCaseData(MultipleUtil.getCaseDataForSinglesToBeMoved());
         caseDetails.setCaseId("12321321");
         submitMultipleEvents = MultipleUtil.getSubmitMultipleEvents();

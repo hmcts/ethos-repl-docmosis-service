@@ -1,6 +1,12 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
@@ -24,6 +30,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -45,12 +52,15 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.LBL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 public class Helper {
 
-    public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails) {
+    private static final String VENUE_ADDRESS_OPENING_PROCESSING_ERROR = "Failed while opening or processing the entries for the venueAddressValues.xlsx file : ---> ";
+
+    public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails, String caseTypeId, InputStream venueAddressInputStream) {
         StringBuilder sb = new StringBuilder();
         String templateName = getTemplateName(caseData);
 
@@ -68,7 +78,7 @@ public class Helper {
         } else {
             sb.append(getClaimantData(caseData));
             sb.append(getRespondentData(caseData));
-            sb.append(getHearingData(caseData));
+            sb.append(getHearingData(caseData, caseTypeId, venueAddressInputStream));
             sb.append(getCorrespondenceData(caseData));
             sb.append(getCorrespondenceScotData(caseData));
             sb.append(getCourtData(caseData));
@@ -266,7 +276,7 @@ public class Helper {
         return sb;
     }
 
-    private static StringBuilder getHearingData(CaseData caseData) {
+    private static StringBuilder getHearingData(CaseData caseData, String caseTypeId, InputStream venueAddressInputStream) {
         StringBuilder sb = new StringBuilder();
         //Currently checking collection not the HearingType
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
@@ -279,7 +289,7 @@ public class Helper {
                 sb.append("\"Hearing_date\":\"").append(NEW_LINE);
                 sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
             }
-            sb.append("\"Hearing_venue\":\"").append(nullCheck(hearingType.getHearingVenue())).append(NEW_LINE);
+            sb.append("\"Hearing_venue\":\"").append(nullCheck(getVenueAddress(hearingType, caseTypeId, venueAddressInputStream))).append(NEW_LINE);
             sb.append("\"Hearing_duration\":\"").append(nullCheck(getHearingDuration(hearingType))).append(NEW_LINE);
         } else {
             sb.append("\"Hearing_date\":\"").append(NEW_LINE);
@@ -353,6 +363,51 @@ public class Helper {
         sb.append(earliestTime.toString());
 
         return sb.toString();
+    }
+
+    private static String getVenueAddress(HearingType hearingType, String caseTypeId, InputStream venueAddressInputStream) {
+
+        log.info("CREATING WORKBOOK FROM VENUE ADDRESS VALUES FILE : " + VENUE_ADDRESS_VALUES_FILE_PATH);
+
+        try (Workbook workbook = new XSSFWorkbook(venueAddressInputStream)) {
+
+            log.info("FETCHING SPREADSHEET TAB FOR CASE TYPE ID : " + caseTypeId);
+
+            Sheet datatypeSheet = workbook.getSheet(caseTypeId);
+
+            if (datatypeSheet != null) {
+
+                log.info("Processing venue addresses for tab : " + caseTypeId + " within file : " + VENUE_ADDRESS_VALUES_FILE_PATH);
+
+                for (Row currentRow : datatypeSheet) {
+
+                    if (currentRow.getRowNum() == 0) {
+                        continue;
+                    }
+
+                    String hearingVenue = getCellValue(currentRow.getCell(0));
+                    log.info("FETCHED HEARING VENUE : " + hearingVenue);
+
+                    if (!isNullOrEmpty(hearingVenue) && hearingVenue.equals(hearingType.getHearingVenue())) {
+                        log.info("RETURNED VENUE ADDRESS : " + getCellValue(currentRow.getCell(1)));
+                        return getCellValue(currentRow.getCell(1));
+                    }
+                }
+            }
+
+        } catch (Exception ex) {
+            log.error(VENUE_ADDRESS_OPENING_PROCESSING_ERROR + ex.getMessage());
+        }
+
+        return hearingType.getHearingVenue();
+    }
+
+    private static String getCellValue(Cell currentCell) {
+        if (currentCell.getCellType() == CellType.STRING) {
+            return currentCell.getStringCellValue();
+        } else {
+            return "";
+        }
     }
 
     static String getHearingDuration(HearingType hearingType) {

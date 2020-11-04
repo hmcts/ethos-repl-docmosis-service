@@ -24,7 +24,9 @@ import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
+import uk.gov.hmcts.ecm.common.model.multiples.items.CaseMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
+import uk.gov.hmcts.ecm.common.model.multiples.types.MultipleObjectType;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleActionType;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 
@@ -163,6 +165,41 @@ public class MultipleUtil {
         subMultipleActionType.setCreateSubMultipleName("NewSubMultiple");
         subMultipleActionType.setDeleteSubMultipleName("SubMultiple");
         return subMultipleActionType;
+    }
+
+    public static List<CaseMultipleTypeItem> getCaseMultipleCollection() {
+        List<CaseMultipleTypeItem> caseMultipleTypeItemList = new ArrayList<>();
+        caseMultipleTypeItemList.add(generateMultipleObjectType("1", "21006/2020", "Sub1", "DD"));
+        caseMultipleTypeItemList.add(generateMultipleObjectType("2", "245000/2020", "Sub2", "DD"));
+        caseMultipleTypeItemList.add(generateMultipleObjectType("3", "245001/2020", "Sub3", "CC"));
+        return caseMultipleTypeItemList;
+    }
+
+    private static CaseMultipleTypeItem generateMultipleObjectType(String id, String ethosCaseRef, String subMultiple, String flag1) {
+        CaseMultipleTypeItem caseMultipleTypeItem = new CaseMultipleTypeItem();
+        MultipleObjectType multipleObjectType = new MultipleObjectType();
+        multipleObjectType.setEthosCaseRef(ethosCaseRef);
+        multipleObjectType.setSubMultiple(subMultiple);
+        multipleObjectType.setFlag1(flag1);
+        caseMultipleTypeItem.setId(id);
+        caseMultipleTypeItem.setValue(multipleObjectType);
+        return caseMultipleTypeItem;
+    }
+
+    public static List<MultipleObject> getCaseMultipleObjectCollection() {
+        List<MultipleObject> multipleObjects = new ArrayList<>();
+        multipleObjects.add(generateMultipleObject("21006/2020", "Sub1", "DD"));
+        multipleObjects.add(generateMultipleObject("245000/2020", "Sub2", "DD"));
+        multipleObjects.add(generateMultipleObject("245001/2020", "Sub3", "CC"));
+        return multipleObjects;
+    }
+
+    private static MultipleObject generateMultipleObject(String ethosCaseRef, String subMultiple, String flag1) {
+        return MultipleObject.builder()
+                .ethosCaseRef(ethosCaseRef)
+                .subMultiple(subMultiple)
+                .flag1(flag1)
+                .build();
     }
 
     public static MultipleData getMultipleData() {

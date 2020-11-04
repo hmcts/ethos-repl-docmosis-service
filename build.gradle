@@ -8,7 +8,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.0'
-        classpath("net.serenity-bdd:serenity-gradle-plugin:2.2.10")
+        classpath("net.serenity-bdd:serenity-gradle-plugin:2.3.6")
     }
 }
 
@@ -162,7 +162,7 @@ dependencies {
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
     compile group: 'uk.gov.hmcts.reform', name: 'document-management-client', version: '6.0.0'
 
-    compile group: 'uk.gov.hmcts.reform', name: 'ecm-common', version: '0.0.80'
+    compile group: 'uk.gov.hmcts.reform', name: 'ecm-common', version: '0.0.83'
 
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.0.2.RELEASE'
     compile group: 'io.github.openfeign', name: 'feign-httpclient', version: '10.0.1'
@@ -188,12 +188,12 @@ dependencies {
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.3.1.RELEASE'
     testCompile group: 'com.warrenstrange', name: 'googleauth', version: '1.5.0'
 
-    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '2.2.10'
-    testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.2.10', {
+    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '2.3.6'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.3.6', {
         exclude module: 'jaxb-osgi'
     }
-    testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.2.10'
-    testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.2.10'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.3.6'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.3.6'
 }
 
 bootJar {
