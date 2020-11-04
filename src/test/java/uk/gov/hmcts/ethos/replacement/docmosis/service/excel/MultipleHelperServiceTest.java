@@ -16,7 +16,6 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
@@ -273,9 +272,9 @@ public class MultipleHelperServiceTest {
     }
 
     @Test
-    public void sendCreationUpdatesToSinglesNoConfirmation() {
+    public void sendCreationUpdatesToSinglesWithoutConfirmation() {
 
-        multipleHelperService.sendCreationUpdatesToSinglesNoConfirmation(
+        multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(
                 userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getJurisdiction(),
@@ -291,9 +290,9 @@ public class MultipleHelperServiceTest {
     }
 
     @Test
-    public void sendDetachUpdatesToSinglesNoConfirmation() {
+    public void sendDetachUpdatesToSinglesWithoutConfirmation() {
 
-        multipleHelperService.sendDetachUpdatesToSinglesNoConfirmation(
+        multipleHelperService.sendDetachUpdatesToSinglesWithoutConfirmation(
                 userToken,
                 multipleDetails,
                 new ArrayList<>(),
@@ -357,21 +356,6 @@ public class MultipleHelperServiceTest {
         multipleHelperService.sendPreAcceptToSinglesWithConfirmation(
                 userToken,
                 multipleDetails,
-                new ArrayList<>()
-        );
-
-        verify(userService).getUserDetails(userToken);
-        verifyNoMoreInteractions(userService);
-
-    }
-
-    @Test
-    public void sendCreationUpdatesToSinglesWithConfirmation() {
-
-        multipleHelperService.sendCreationUpdatesToSinglesWithConfirmation(
-                userToken,
-                multipleDetails,
-                MultiplesHelper.getCaseIds(multipleDetails.getCaseData()),
                 new ArrayList<>()
         );
 

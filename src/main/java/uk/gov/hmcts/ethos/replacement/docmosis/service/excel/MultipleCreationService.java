@@ -48,7 +48,7 @@ public class MultipleCreationService {
 
         log.info("Add state to the multiple");
 
-        addStateToMultiple(multipleDetails.getCaseData());
+        multipleDetails.getCaseData().setState(OPEN_STATE);
 
         log.info("Get lead case link and add to the collection case Ids");
 
@@ -230,21 +230,6 @@ public class MultipleCreationService {
 
     }
 
-    private void addStateToMultiple(MultipleData multipleData) {
-
-        if (!multipleData.getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
-                && !multipleData.getMultipleSource().equals(MIGRATION_CASE_SOURCE)
-                && !multipleData.getCaseIdCollection().isEmpty()) {
-
-            multipleData.setState(UPDATING_STATE);
-
-        } else {
-
-            multipleData.setState(OPEN_STATE);
-
-        }
-    }
-
     private void getLeadMarkUpAndAddLeadToCaseIds(String userToken, MultipleDetails multipleDetails) {
 
         MultipleData multipleData = multipleDetails.getCaseData();
@@ -278,8 +263,13 @@ public class MultipleCreationService {
 
         if (!ethosCaseRefCollection.isEmpty()) {
 
-            multipleHelperService.sendCreationUpdatesToSinglesWithConfirmation(userToken,
-                    multipleDetails, ethosCaseRefCollection, errors);
+            multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken,
+                    multipleDetails.getCaseTypeId(),
+                    multipleDetails.getJurisdiction(),
+                    multipleDetails.getCaseData(),
+                    errors,
+                    ethosCaseRefCollection,
+                    ethosCaseRefCollection.get(0));
 
         } else {
 

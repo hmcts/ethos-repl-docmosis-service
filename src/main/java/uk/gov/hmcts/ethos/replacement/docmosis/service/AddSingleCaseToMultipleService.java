@@ -117,7 +117,7 @@ public class AddSingleCaseToMultipleService {
 
                 log.info("There is already a lead case in the multiple. Sending update to be no LEAD");
 
-                multipleHelperService.sendCreationUpdatesToSinglesNoConfirmation(userToken, multipleCaseTypeId,
+                multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken, multipleCaseTypeId,
                         jurisdiction, multipleData, errors,
                         new ArrayList<>(Collections.singletonList(currentLeadCase)), "");
 

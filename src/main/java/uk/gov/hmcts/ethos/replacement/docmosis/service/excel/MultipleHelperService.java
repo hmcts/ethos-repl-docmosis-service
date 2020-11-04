@@ -215,7 +215,7 @@ public class MultipleHelperService {
     }
 
 
-    public void sendCreationUpdatesToSinglesNoConfirmation(String userToken, String caseTypeId, String jurisdiction,
+    public void sendCreationUpdatesToSinglesWithoutConfirmation(String userToken, String caseTypeId, String jurisdiction,
                                                            MultipleData updatedMultipleData, List<String> errors,
                                                            List<String> multipleObjectsFiltered, String leadId) {
 
@@ -235,7 +235,7 @@ public class MultipleHelperService {
 
     }
 
-    public void sendDetachUpdatesToSinglesNoConfirmation(String userToken, MultipleDetails multipleDetails,
+    public void sendDetachUpdatesToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails,
                                                          List<String> errors, TreeMap<String, Object> multipleObjects) {
 
         List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
@@ -288,26 +288,6 @@ public class MultipleHelperService {
                 username,
                 ethosCaseRefCollection,
                 PersistentQHelper.getPreAcceptDataModel(),
-                errors,
-                multipleData.getMultipleReference(),
-                YES,
-                createUpdatesBusSender,
-                String.valueOf(ethosCaseRefCollection.size()));
-
-    }
-
-    public void sendCreationUpdatesToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails,
-                                                             List<String> ethosCaseRefCollection, List<String> errors) {
-
-        MultipleData multipleData = multipleDetails.getCaseData();
-
-        String username = userService.getUserDetails(userToken).getEmail();
-        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
-                multipleDetails.getJurisdiction(),
-                username,
-                ethosCaseRefCollection,
-                PersistentQHelper.getCreationDataModel(ethosCaseRefCollection.get(0),
-                        multipleData.getMultipleReference()),
                 errors,
                 multipleData.getMultipleReference(),
                 YES,

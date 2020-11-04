@@ -84,7 +84,7 @@ public class AddSingleCaseToMultipleServiceTest {
                 submitMultipleEvents.get(0).getCaseData(),
                 errors);
 
-        verify(multipleHelperService, times(1)).sendCreationUpdatesToSinglesNoConfirmation(
+        verify(multipleHelperService, times(1)).sendCreationUpdatesToSinglesWithoutConfirmation(
                 userToken,
                 multipleCaseTypeId,
                 multipleDetails.getJurisdiction(),

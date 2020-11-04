@@ -63,7 +63,7 @@ public class MultipleBatchUpdate2Service {
 
             log.info("Sending detach updates to singles");
 
-            multipleHelperService.sendDetachUpdatesToSinglesNoConfirmation(userToken, multipleDetails, errors, multipleObjects);
+            multipleHelperService.sendDetachUpdatesToSinglesWithoutConfirmation(userToken, multipleDetails, errors, multipleObjects);
 
         } else {
 
@@ -124,7 +124,7 @@ public class MultipleBatchUpdate2Service {
 
                 log.info("Sending single update with the lead flag");
 
-                multipleHelperService.sendCreationUpdatesToSinglesNoConfirmation(userToken, multipleDetails.getCaseTypeId(),
+                multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken, multipleDetails.getCaseTypeId(),
                         multipleDetails.getJurisdiction(), multipleDetails.getCaseData(), errors,
                         new ArrayList<>(Collections.singletonList(newLeadCase)), newLeadCase);
 
@@ -177,7 +177,7 @@ public class MultipleBatchUpdate2Service {
 
         log.info("Sending creation updates to singles");
 
-        multipleHelperService.sendCreationUpdatesToSinglesNoConfirmation(userToken, updatedCaseTypeId, updatedJurisdiction,
+        multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken, updatedCaseTypeId, updatedJurisdiction,
                 updatedMultipleData, errors, new ArrayList<>(multipleObjects.keySet()), updatedLeadCase);
 
     }
