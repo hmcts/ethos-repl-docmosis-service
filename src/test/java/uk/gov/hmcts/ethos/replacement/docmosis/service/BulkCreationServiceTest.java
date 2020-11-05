@@ -66,7 +66,7 @@ public class BulkCreationServiceTest {
         BulkData bulkData = new BulkData();
         BulkDetails bulkDetails = new BulkDetails();
         bulkDetails.setJurisdiction("TRIBUNALS");
-        bulkDetails.setCaseTypeId("Manchester_Multiples");
+        bulkDetails.setCaseTypeId("Manchester_Multiple");
         bulkData.setMultipleSource(MANUALLY_CREATED_POSITION);
         bulkData.setFeeGroupReference("111111");
         bulkData.setClaimantSurname("Fernandez");
@@ -305,7 +305,7 @@ public class BulkCreationServiceTest {
 
     @Test
     public void bulkCreationLogic() {
-        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiples, createdDate=null, " +
+        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiple, createdDate=null, " +
                 "lastModified=null, dataClassification=null), caseData=BulkData(bulkCaseTitle=null, multipleReference=null, feeGroupReference=111111, " +
                 "claimantSurname=Fernandez, respondentSurname=Mr Respondent, claimantRep=Mike Johnson, respondentRep=Juan Pedro, ethosCaseReference=null, " +
                 "clerkResponsible=null, fileLocation=null, jurCodesCollection=[JurCodesTypeItem(id=null, value=JurCodesType(juridictionCodesList=AB, " +
@@ -367,7 +367,7 @@ public class BulkCreationServiceTest {
 
     @Test
     public void bulkUpdateCaseIdsLogic() {
-        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiples, createdDate=null, " +
+        String result = "BulkDetails(super=GenericCaseDetails(caseId=null, jurisdiction=TRIBUNALS, state=null, caseTypeId=Manchester_Multiple, createdDate=null, " +
                 "lastModified=null, dataClassification=null), caseData=BulkData(bulkCaseTitle=null, multipleReference=null, feeGroupReference=111111, " +
                 "claimantSurname=Fernandez, respondentSurname=Mr Respondent, claimantRep=Mike Johnson, respondentRep=Juan Pedro, ethosCaseReference=null, " +
                 "clerkResponsible=null, fileLocation=null, jurCodesCollection=[JurCodesTypeItem(id=null, value=JurCodesType(juridictionCodesList=AB, " +

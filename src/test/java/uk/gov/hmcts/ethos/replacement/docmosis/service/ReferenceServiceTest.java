@@ -213,6 +213,12 @@ public class ReferenceServiceTest {
         assertEquals(result, caseDataResult.toString());
     }
 
+    @Test(expected = Exception.class)
+    public void fetchHearingVenueRefDataException() throws IOException {
+        when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenThrow(new RuntimeException());
+        referenceService.fetchHearingVenueRefData(caseDetails, "authToken");
+    }
+
     @Test
     public void fetchDateListedRefDataWithAllRefDataPresent() throws IOException {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
@@ -386,4 +392,11 @@ public class ReferenceServiceTest {
         CaseData caseDataResult = referenceService.fetchDateListedRefData(caseDetails, "authToken");
         assertEquals(result, caseDataResult.toString());
     }
+
+    @Test(expected = Exception.class)
+    public void fetchDateListedRefDataException() throws IOException {
+        when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenThrow(new RuntimeException());
+        referenceService.fetchDateListedRefData(caseDetails, "authToken");
+    }
+
 }
