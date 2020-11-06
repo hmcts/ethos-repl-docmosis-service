@@ -57,6 +57,9 @@ public class MultipleScheduleService {
         log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
         log.info("MultipleObjectsValues: " + multipleObjects.values());
 
+        //Split it in 5000 search
+        //Get submitEvents and parse to multipleObject
+
         List<SubmitEvent> submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
                 multipleDetails.getCaseTypeId(), multipleObjects, filterExcelType);
 

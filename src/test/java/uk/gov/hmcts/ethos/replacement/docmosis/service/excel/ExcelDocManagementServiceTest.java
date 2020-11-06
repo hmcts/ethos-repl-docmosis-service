@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ExcelDocManagementService.APPLICATION_EXCEL_VALUE;
@@ -95,6 +96,7 @@ public class ExcelDocManagementServiceTest {
         verifyNoMoreInteractions(documentManagementService);
         verify(excelCreationService, times(1)).writeExcel(multipleCollection, subMultipleCollection);
         verifyNoMoreInteractions(excelCreationService);
+        assertEquals("3", multipleDetails.getCaseData().getCaseCounter());
     }
 
     @Test

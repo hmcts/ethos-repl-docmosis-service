@@ -15,6 +15,8 @@ import java.util.List;
 @Service("multipleUploadService")
 public class MultipleUploadService {
 
+    public static final String ERROR_SHEET_NUMBER_ROWS = "Number of rows expected ";
+
     public static final String ERROR_SHEET_NUMBER_COLUMNS = "Number of columns expected ";
 
     public static final String ERROR_SHEET_EMPTY = "Empty sheet";
@@ -48,6 +50,7 @@ public class MultipleUploadService {
 
                 validateSheet(
                         datatypeSheet,
+                        multipleData,
                         errors);
 
                 log.info("Update the document information");
@@ -70,11 +73,21 @@ public class MultipleUploadService {
 
     }
 
-    private void validateSheet(XSSFSheet datatypeSheet, List<String> errors) {
+    private void validateSheet(XSSFSheet datatypeSheet, MultipleData multipleData, List<String> errors) {
 
         if (datatypeSheet.getRow(0) != null) {
 
+            int collectionSize = Integer.parseInt(multipleData.getCaseCounter());
+
+            log.info("Case Counter " + collectionSize);
+
             log.info("Number of rows: " + datatypeSheet.getLastRowNum());
+
+            if (collectionSize != datatypeSheet.getLastRowNum()) {
+
+                errors.add(ERROR_SHEET_NUMBER_ROWS + collectionSize);
+
+            }
 
             log.info("Number of columns: " + datatypeSheet.getRow(0).getLastCellNum());
 

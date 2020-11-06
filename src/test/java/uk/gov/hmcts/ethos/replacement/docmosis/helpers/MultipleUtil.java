@@ -232,6 +232,7 @@ public class MultipleUtil {
         multipleData.setSubMultipleAction(getSubMultipleActionType());
         multipleData.setLeadCase("21006/2020");
         multipleData.setState(OPEN_STATE);
+        multipleData.setCaseCounter("2");
         return multipleData;
     }
 

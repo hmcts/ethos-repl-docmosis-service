@@ -91,6 +91,10 @@ public class ExcelDocManagementService {
 
         uploadExcelDocument(userToken, multipleData, excelBytes);
 
+        log.info("Add multiple case counter");
+
+        multipleData.setCaseCounter(String.valueOf(multipleCollection.size()));
+
     }
 
     public CaseImporterFile populateCaseImporterFile(String userToken, UploadedDocumentType uploadedDocumentType) {

@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
@@ -143,8 +142,6 @@ public class MultipleCreationService {
 
         List<CaseMultipleTypeItem> caseMultipleTypeItemList = multipleDetails.getCaseData().getCaseMultipleCollection();
 
-        List<CaseIdTypeItem> caseIdCollection = new ArrayList<>();
-
         HashSet<SubMultipleTypeItem> subMultipleTypeItems = new HashSet<>();
 
         if (caseMultipleTypeItemList != null) {
@@ -155,7 +152,8 @@ public class MultipleCreationService {
 
                 MultipleObjectType multipleObjectType = caseMultipleTypeItem.getValue();
 
-                if (!multipleObjectType.getSubMultiple().trim().isEmpty()
+                if (multipleObjectType.getSubMultiple() != null
+                        && !multipleObjectType.getSubMultiple().trim().isEmpty()
                         && !subMultipleNames.contains(multipleObjectType.getSubMultiple())) {
 
                     subMultipleNames.add(multipleObjectType.getSubMultiple());
@@ -172,17 +170,11 @@ public class MultipleCreationService {
 
                 multipleObjectList.add(generateMultipleObjectFromMultipleObjectType(multipleObjectType));
 
-                log.info("Creating a new caseTypeItem and add to the caseIdCollection");
-
-                caseIdCollection.add(MultiplesHelper.createCaseIdTypeItem(multipleObjectType.getEthosCaseRef()));
-
             }
 
         }
 
-        log.info("Adding the new caseIdCollection and subMultipleCollection coming from Migration");
-
-        multipleDetails.getCaseData().setCaseIdCollection(caseIdCollection);
+        log.info("Adding the new subMultipleCollection coming from Migration");
 
         multipleDetails.getCaseData().setSubMultipleCollection(new ArrayList<>(subMultipleTypeItems));
 
