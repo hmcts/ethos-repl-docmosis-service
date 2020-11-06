@@ -155,7 +155,8 @@ public class MultipleCreationService {
 
                 MultipleObjectType multipleObjectType = caseMultipleTypeItem.getValue();
 
-                if (!multipleObjectType.getSubMultiple().trim().isEmpty()
+                if (multipleObjectType.getSubMultiple() != null
+                        && !multipleObjectType.getSubMultiple().trim().isEmpty()
                         && !subMultipleNames.contains(multipleObjectType.getSubMultiple())) {
 
                     subMultipleNames.add(multipleObjectType.getSubMultiple());
