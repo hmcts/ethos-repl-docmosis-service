@@ -178,11 +178,11 @@ public class MultipleCreationService {
 
         return MultipleObject.builder()
                 .ethosCaseRef(multipleObjectType.getEthosCaseRef())
-                .subMultiple(multipleObjectType.getSubMultiple())
-                .flag1(multipleObjectType.getFlag1())
-                .flag2(multipleObjectType.getFlag2())
-                .flag3(multipleObjectType.getFlag3())
-                .flag4(multipleObjectType.getFlag4())
+                .subMultiple(multipleObjectType.getSubMultiple() != null ? multipleObjectType.getSubMultiple() : "")
+                .flag1(multipleObjectType.getFlag1() != null ? multipleObjectType.getFlag1() : "")
+                .flag2(multipleObjectType.getFlag2() != null ? multipleObjectType.getFlag2() : "")
+                .flag3(multipleObjectType.getFlag3() != null ? multipleObjectType.getFlag3() : "")
+                .flag4(multipleObjectType.getFlag4() != null ? multipleObjectType.getFlag4() : "")
                 .build();
 
     }

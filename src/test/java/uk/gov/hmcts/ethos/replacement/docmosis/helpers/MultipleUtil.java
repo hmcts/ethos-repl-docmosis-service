@@ -200,6 +200,9 @@ public class MultipleUtil {
                 .ethosCaseRef(ethosCaseRef)
                 .subMultiple(subMultiple)
                 .flag1(flag1)
+                .flag2("")
+                .flag3("")
+                .flag4("")
                 .build();
     }
 
