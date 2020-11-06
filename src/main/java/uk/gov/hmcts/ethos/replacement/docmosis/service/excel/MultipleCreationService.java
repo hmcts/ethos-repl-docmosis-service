@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
@@ -62,8 +61,6 @@ public class MultipleCreationService {
             multipleCreationUI(userToken, multipleDetails, errors);
 
         } else {
-
-            log.info("Multiple Creation ET1Online or Migration");
 
             multipleCreationET1OnlineMigration(userToken, multipleDetails);
 
@@ -143,15 +140,11 @@ public class MultipleCreationService {
 
         List<CaseMultipleTypeItem> caseMultipleTypeItemList = multipleDetails.getCaseData().getCaseMultipleCollection();
 
-        List<CaseIdTypeItem> caseIdCollection = new ArrayList<>();
-
         HashSet<SubMultipleTypeItem> subMultipleTypeItems = new HashSet<>();
 
         if (caseMultipleTypeItemList != null) {
 
             for (CaseMultipleTypeItem caseMultipleTypeItem : caseMultipleTypeItemList) {
-
-                log.info("Adding the new subMultiple name to the collection");
 
                 MultipleObjectType multipleObjectType = caseMultipleTypeItem.getValue();
 
@@ -169,21 +162,13 @@ public class MultipleCreationService {
 
                 }
 
-                log.info("Creating multipleObject from the collection");
-
                 multipleObjectList.add(generateMultipleObjectFromMultipleObjectType(multipleObjectType));
-
-                log.info("Creating a new caseTypeItem and add to the caseIdCollection");
-
-                caseIdCollection.add(MultiplesHelper.createCaseIdTypeItem(multipleObjectType.getEthosCaseRef()));
 
             }
 
         }
 
-        log.info("Adding the new caseIdCollection and subMultipleCollection coming from Migration");
-
-        multipleDetails.getCaseData().setCaseIdCollection(caseIdCollection);
+        log.info("Adding the subMultipleCollection coming from Migration");
 
         multipleDetails.getCaseData().setSubMultipleCollection(new ArrayList<>(subMultipleTypeItems));
 
@@ -247,9 +232,18 @@ public class MultipleCreationService {
 
         } else {
 
-            log.info("Getting lead case from the case ids collection");
+            if (multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)) {
 
-            leadCase = MultiplesHelper.getLeadFromCaseIds(multipleData);
+                log.info("Getting lead case from caseMultipleCollection");
+
+                leadCase = MultiplesHelper.getLeadFromCaseMultipleCollection(multipleData);
+
+            } else {
+
+                log.info("Getting lead case from the case ids collection");
+
+                leadCase = MultiplesHelper.getLeadFromCaseIds(multipleData);
+            }
 
         }
 
