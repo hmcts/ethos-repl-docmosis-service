@@ -6,6 +6,7 @@ import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
+import uk.gov.hmcts.ecm.common.model.multiples.items.CaseMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 
@@ -99,6 +100,22 @@ public class MultiplesHelper {
         } else {
 
             return caseIds.get(0);
+
+        }
+
+    }
+
+    public static String getLeadFromCaseMultipleCollection(MultipleData multipleData) {
+
+        List<CaseMultipleTypeItem> caseMultipleTypeItemList = multipleData.getCaseMultipleCollection();
+
+        if (caseMultipleTypeItemList.isEmpty()) {
+
+            return "";
+
+        } else {
+
+            return caseMultipleTypeItemList.get(0).getValue().getEthosCaseRef();
 
         }
 

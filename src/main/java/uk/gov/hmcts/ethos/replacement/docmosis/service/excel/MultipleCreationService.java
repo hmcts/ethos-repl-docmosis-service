@@ -62,8 +62,6 @@ public class MultipleCreationService {
 
         } else {
 
-            log.info("Multiple Creation ET1Online or Migration");
-
             multipleCreationET1OnlineMigration(userToken, multipleDetails);
 
         }
@@ -148,8 +146,6 @@ public class MultipleCreationService {
 
             for (CaseMultipleTypeItem caseMultipleTypeItem : caseMultipleTypeItemList) {
 
-                log.info("Adding the new subMultiple name to the collection");
-
                 MultipleObjectType multipleObjectType = caseMultipleTypeItem.getValue();
 
                 if (multipleObjectType.getSubMultiple() != null
@@ -166,15 +162,13 @@ public class MultipleCreationService {
 
                 }
 
-                log.info("Creating multipleObject from the collection");
-
                 multipleObjectList.add(generateMultipleObjectFromMultipleObjectType(multipleObjectType));
 
             }
 
         }
 
-        log.info("Adding the new subMultipleCollection coming from Migration");
+        log.info("Adding the subMultipleCollection coming from Migration");
 
         multipleDetails.getCaseData().setSubMultipleCollection(new ArrayList<>(subMultipleTypeItems));
 
@@ -184,11 +178,11 @@ public class MultipleCreationService {
 
         return MultipleObject.builder()
                 .ethosCaseRef(multipleObjectType.getEthosCaseRef())
-                .subMultiple(multipleObjectType.getSubMultiple())
-                .flag1(multipleObjectType.getFlag1())
-                .flag2(multipleObjectType.getFlag2())
-                .flag3(multipleObjectType.getFlag3())
-                .flag4(multipleObjectType.getFlag4())
+                .subMultiple(multipleObjectType.getSubMultiple() != null ? multipleObjectType.getSubMultiple() : "")
+                .flag1(multipleObjectType.getFlag1() != null ? multipleObjectType.getFlag1() : "")
+                .flag2(multipleObjectType.getFlag2() != null ? multipleObjectType.getFlag2() : "")
+                .flag3(multipleObjectType.getFlag3() != null ? multipleObjectType.getFlag3() : "")
+                .flag4(multipleObjectType.getFlag4() != null ? multipleObjectType.getFlag4() : "")
                 .build();
 
     }
@@ -238,9 +232,18 @@ public class MultipleCreationService {
 
         } else {
 
-            log.info("Getting lead case from the case ids collection");
+            if (multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)) {
 
-            leadCase = MultiplesHelper.getLeadFromCaseIds(multipleData);
+                log.info("Getting lead case from caseMultipleCollection");
+
+                leadCase = MultiplesHelper.getLeadFromCaseMultipleCollection(multipleData);
+
+            } else {
+
+                log.info("Getting lead case from the case ids collection");
+
+                leadCase = MultiplesHelper.getLeadFromCaseIds(multipleData);
+            }
 
         }
 
