@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -24,7 +23,7 @@ public class MultipleCasesReadingService {
                                                            String multipleCaseTypeId,
                                                            String multipleReference) {
 
-        List<SubmitMultipleEvent> submitMultipleEvents = new ArrayList<>();
+        List<SubmitMultipleEvent> submitMultipleEvents;
 
         try {
             submitMultipleEvents = ccdClient.retrieveMultipleCasesElasticSearchWithRetries(
@@ -48,7 +47,7 @@ public class MultipleCasesReadingService {
                                                                       String multipleCaseTypeId,
                                                                       String multipleReference) {
 
-        List<SubmitMultipleEvent> submitMultipleEvents = new ArrayList<>();
+        List<SubmitMultipleEvent> submitMultipleEvents;
 
         try {
             submitMultipleEvents = ccdClient.retrieveMultipleCasesElasticSearch(

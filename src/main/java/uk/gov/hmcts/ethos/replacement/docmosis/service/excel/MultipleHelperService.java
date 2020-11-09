@@ -203,6 +203,7 @@ public class MultipleHelperService {
         for (String ethosCaseReference : multipleObjectsFiltered) {
 
             multipleObjectsToBeAdded.add(MultiplesHelper.createMultipleObject(ethosCaseReference, newSubMultipleName));
+
         }
 
         multipleObjects.forEach((key, value) -> newMultipleObjectsUpdated.add((MultipleObject) value));
@@ -214,7 +215,7 @@ public class MultipleHelperService {
     }
 
 
-    public void sendCreationUpdatesToSinglesNoConfirmation(String userToken, String caseTypeId, String jurisdiction,
+    public void sendCreationUpdatesToSinglesWithoutConfirmation(String userToken, String caseTypeId, String jurisdiction,
                                                            MultipleData updatedMultipleData, List<String> errors,
                                                            List<String> multipleObjectsFiltered, String leadId) {
 
@@ -234,7 +235,7 @@ public class MultipleHelperService {
 
     }
 
-    public void sendDetachUpdatesToSinglesNoConfirmation(String userToken, MultipleDetails multipleDetails,
+    public void sendDetachUpdatesToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails,
                                                          List<String> errors, TreeMap<String, Object> multipleObjects) {
 
         List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
@@ -276,10 +277,10 @@ public class MultipleHelperService {
     }
 
     public void sendPreAcceptToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails,
-                                                     List<String> errors) {
+                                                       List<String> errors) {
 
         MultipleData multipleData = multipleDetails.getCaseData();
-        List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleData);
+        List<String> ethosCaseRefCollection = getEthosCaseRefCollection(userToken, multipleData, errors);
         String username = userService.getUserDetails(userToken).getEmail();
 
         PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
@@ -295,23 +296,25 @@ public class MultipleHelperService {
 
     }
 
-    public void sendCreationUpdatesToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails,
-                                                             List<String> ethosCaseRefCollection, List<String> errors) {
+    public List<String> getEthosCaseRefCollection(String userToken, MultipleData newMultipleData, List<String> errors) {
 
-        MultipleData multipleData = multipleDetails.getCaseData();
+        TreeMap<String, Object> multipleObjects =
+                excelReadingService.readExcel(
+                        userToken,
+                        MultiplesHelper.getExcelBinaryUrl(newMultipleData),
+                        errors,
+                        newMultipleData,
+                        FilterExcelType.ALL);
 
-        String username = userService.getUserDetails(userToken).getEmail();
-        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
-                multipleDetails.getJurisdiction(),
-                username,
-                ethosCaseRefCollection,
-                PersistentQHelper.getCreationDataModel(ethosCaseRefCollection.get(0),
-                        multipleData.getMultipleReference()),
-                errors,
-                multipleData.getMultipleReference(),
-                YES,
-                createUpdatesBusSender,
-                String.valueOf(ethosCaseRefCollection.size()));
+        return new ArrayList<>(multipleObjects.keySet());
+
+    }
+
+    public String getLeadCaseFromExcel(String userToken, MultipleData newMultipleData, List<String> errors) {
+
+        List<String> ethosCaseRefCollection = getEthosCaseRefCollection(userToken, newMultipleData, errors);
+
+        return ethosCaseRefCollection.isEmpty() ? "" : ethosCaseRefCollection.get(0);
 
     }
 

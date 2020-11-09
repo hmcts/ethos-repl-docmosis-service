@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
@@ -42,22 +41,20 @@ public class MultipleCreationService {
 
     public void bulkCreationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
-        MultipleData multipleData = multipleDetails.getCaseData();
-
         log.info("Add data to the multiple");
 
-        addDataToMultiple(multipleData);
+        addDataToMultiple(multipleDetails.getCaseData());
 
         log.info("Add state to the multiple");
 
-        addStateToMultiple(multipleData);
+        multipleDetails.getCaseData().setState(OPEN_STATE);
 
         log.info("Get lead case link and add to the collection case Ids");
 
         getLeadMarkUpAndAddLeadToCaseIds(userToken, multipleDetails);
 
-        if (!multipleData.getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
-                && !multipleData.getMultipleSource().equals(MIGRATION_CASE_SOURCE)) {
+        if (!multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
+                && !multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)) {
 
             log.info("Multiple Creation UI");
 
@@ -65,11 +62,13 @@ public class MultipleCreationService {
 
         } else {
 
-            log.info("Multiple Creation ET1Online or Migration");
-
             multipleCreationET1OnlineMigration(userToken, multipleDetails);
 
         }
+
+        log.info("Clearing the payload");
+
+        multipleDetails.getCaseData().setCaseIdCollection(null);
 
     }
 
@@ -141,19 +140,16 @@ public class MultipleCreationService {
 
         List<CaseMultipleTypeItem> caseMultipleTypeItemList = multipleDetails.getCaseData().getCaseMultipleCollection();
 
-        List<CaseIdTypeItem> caseIdCollection = new ArrayList<>();
-
         HashSet<SubMultipleTypeItem> subMultipleTypeItems = new HashSet<>();
 
         if (caseMultipleTypeItemList != null) {
 
             for (CaseMultipleTypeItem caseMultipleTypeItem : caseMultipleTypeItemList) {
 
-                log.info("Adding the new subMultiple name to the collection");
-
                 MultipleObjectType multipleObjectType = caseMultipleTypeItem.getValue();
 
-                if (!multipleObjectType.getSubMultiple().trim().isEmpty()
+                if (multipleObjectType.getSubMultiple() != null
+                        && !multipleObjectType.getSubMultiple().trim().isEmpty()
                         && !subMultipleNames.contains(multipleObjectType.getSubMultiple())) {
 
                     subMultipleNames.add(multipleObjectType.getSubMultiple());
@@ -166,21 +162,13 @@ public class MultipleCreationService {
 
                 }
 
-                log.info("Creating multipleObject from the collection");
-
                 multipleObjectList.add(generateMultipleObjectFromMultipleObjectType(multipleObjectType));
-
-                log.info("Creating a new caseTypeItem and add to the caseIdCollection");
-
-                caseIdCollection.add(MultiplesHelper.createCaseIdTypeItem(multipleObjectType.getEthosCaseRef()));
 
             }
 
         }
 
-        log.info("Adding the new caseIdCollection and subMultipleCollection coming from Migration");
-
-        multipleDetails.getCaseData().setCaseIdCollection(caseIdCollection);
+        log.info("Adding the subMultipleCollection coming from Migration");
 
         multipleDetails.getCaseData().setSubMultipleCollection(new ArrayList<>(subMultipleTypeItems));
 
@@ -190,11 +178,11 @@ public class MultipleCreationService {
 
         return MultipleObject.builder()
                 .ethosCaseRef(multipleObjectType.getEthosCaseRef())
-                .subMultiple(multipleObjectType.getSubMultiple())
-                .flag1(multipleObjectType.getFlag1())
-                .flag2(multipleObjectType.getFlag2())
-                .flag3(multipleObjectType.getFlag3())
-                .flag4(multipleObjectType.getFlag4())
+                .subMultiple(multipleObjectType.getSubMultiple() != null ? multipleObjectType.getSubMultiple() : "")
+                .flag1(multipleObjectType.getFlag1() != null ? multipleObjectType.getFlag1() : "")
+                .flag2(multipleObjectType.getFlag2() != null ? multipleObjectType.getFlag2() : "")
+                .flag3(multipleObjectType.getFlag3() != null ? multipleObjectType.getFlag3() : "")
+                .flag4(multipleObjectType.getFlag4() != null ? multipleObjectType.getFlag4() : "")
                 .build();
 
     }
@@ -228,21 +216,6 @@ public class MultipleCreationService {
 
     }
 
-    private void addStateToMultiple(MultipleData multipleData) {
-
-        if (!multipleData.getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
-                && !multipleData.getMultipleSource().equals(MIGRATION_CASE_SOURCE)
-                && !multipleData.getCaseIdCollection().isEmpty()) {
-
-            multipleData.setState(UPDATING_STATE);
-
-        } else {
-
-            multipleData.setState(OPEN_STATE);
-
-        }
-    }
-
     private void getLeadMarkUpAndAddLeadToCaseIds(String userToken, MultipleDetails multipleDetails) {
 
         MultipleData multipleData = multipleDetails.getCaseData();
@@ -259,9 +232,18 @@ public class MultipleCreationService {
 
         } else {
 
-            log.info("Getting lead case from the case ids collection");
+            if (multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)) {
 
-            leadCase = MultiplesHelper.getLeadFromCaseIds(multipleData);
+                log.info("Getting lead case from caseMultipleCollection");
+
+                leadCase = MultiplesHelper.getLeadFromCaseMultipleCollection(multipleData);
+
+            } else {
+
+                log.info("Getting lead case from the case ids collection");
+
+                leadCase = MultiplesHelper.getLeadFromCaseIds(multipleData);
+            }
 
         }
 
@@ -276,8 +258,13 @@ public class MultipleCreationService {
 
         if (!ethosCaseRefCollection.isEmpty()) {
 
-            multipleHelperService.sendCreationUpdatesToSinglesWithConfirmation(userToken,
-                    multipleDetails, ethosCaseRefCollection, errors);
+            multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken,
+                    multipleDetails.getCaseTypeId(),
+                    multipleDetails.getJurisdiction(),
+                    multipleDetails.getCaseData(),
+                    errors,
+                    ethosCaseRefCollection,
+                    ethosCaseRefCollection.get(0));
 
         } else {
 

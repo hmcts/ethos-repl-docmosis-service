@@ -53,7 +53,7 @@ public class MultipleBatchUpdate3ServiceTest {
 
         multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
 
-        assertEquals(2, multipleObjectsFlags.size());
+        assertEquals(3, multipleObjectsFlags.size());
 
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
@@ -65,7 +65,7 @@ public class MultipleBatchUpdate3ServiceTest {
                 new ArrayList<>(),
                 multipleObjectsFlags);
 
-        assertEquals(1, multipleObjectsFlags.size());
+        assertEquals(2, multipleObjectsFlags.size());
 
         verify(multipleHelperService, times(1))
                 .sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, new ArrayList<>(),

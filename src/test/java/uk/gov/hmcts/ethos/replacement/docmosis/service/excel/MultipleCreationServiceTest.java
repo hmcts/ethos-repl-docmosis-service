@@ -85,6 +85,8 @@ public class MultipleCreationServiceTest {
 
     @Test
     public void bulkCreationLogicMigration() {
+        multipleDetails.getCaseData().setLeadCase("");
+        multipleDetails.getCaseData().setCaseIdCollection(new ArrayList<>());
         multipleDetails.getCaseData().setMultipleSource(MIGRATION_CASE_SOURCE);
         multipleDetails.getCaseData().setCaseMultipleCollection(MultipleUtil.getCaseMultipleCollection());
         multipleCreationService.bulkCreationLogic(userToken,
@@ -95,6 +97,23 @@ public class MultipleCreationServiceTest {
                 userToken,
                 multipleDetails.getCaseData(),
                 new ArrayList<>(Arrays.asList("Sub3", "Sub2", "Sub1")));
+        verifyNoMoreInteractions(excelDocManagementService);
+    }
+
+    @Test
+    public void bulkCreationLogicMigrationEmptyCaseMultipleCollection() {
+        multipleDetails.getCaseData().setLeadCase("");
+        multipleDetails.getCaseData().setCaseIdCollection(new ArrayList<>());
+        multipleDetails.getCaseData().setMultipleSource(MIGRATION_CASE_SOURCE);
+        multipleDetails.getCaseData().setCaseMultipleCollection(new ArrayList<>());
+        multipleCreationService.bulkCreationLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(excelDocManagementService, times(1)).writeAndUploadExcelDocument(
+                new ArrayList<>(),
+                userToken,
+                multipleDetails.getCaseData(),
+                new ArrayList<>());
         verifyNoMoreInteractions(excelDocManagementService);
     }
 
