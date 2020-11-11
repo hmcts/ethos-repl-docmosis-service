@@ -8,12 +8,12 @@ import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
+import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SchedulePayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
@@ -121,7 +121,7 @@ public class ExcelDocManagementService {
     }
 
     public DocumentInfo writeAndUploadScheduleDocument(String userToken, TreeMap<String, Object> multipleObjectsFiltered,
-                                                       MultipleDetails multipleDetails, List<SchedulePayload > schedulePayloads) {
+                                                       MultipleDetails multipleDetails, List<SchedulePayload> schedulePayloads) {
 
         byte[] excelBytes = scheduleCreationService.writeSchedule(multipleDetails.getCaseData(), schedulePayloads, multipleObjectsFiltered);
 

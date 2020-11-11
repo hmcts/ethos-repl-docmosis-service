@@ -4,12 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
 import java.util.*;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_DETAILED_CONFIG;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -74,7 +76,7 @@ public class MultiplesScheduleHelper {
     }
 
     public static TreeMap<String, List<SchedulePayload>> getMultipleTreeMap(TreeMap<String, Object> multipleObjectsFiltered,
-                                                                 Map<String, SchedulePayload> scheduleEventMap) {
+                                                                            Map<String, SchedulePayload> scheduleEventMap) {
 
         TreeMap<String, List<SchedulePayload>> subMultipleTreeMap = new TreeMap<>();
 
