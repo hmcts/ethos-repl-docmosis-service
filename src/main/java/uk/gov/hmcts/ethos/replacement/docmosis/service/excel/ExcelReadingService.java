@@ -18,12 +18,12 @@ import java.util.*;
 
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.SELECT_ALL;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
 
 @Slf4j
 @Service("excelReadingService")
 public class ExcelReadingService {
 
-    private static final String NOT_ALLOCATED = "Not_Allocated";
     private static final String ERROR_SHEET_NAME_NOT_FOUND = "Worksheet name not found";
     private static final String ERROR_DOCUMENT_NOT_VALID = "Document uploaded not valid";
 

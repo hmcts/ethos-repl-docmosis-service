@@ -1,48 +1,43 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.TornadoService;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SchedulePayload;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_DETAILED_CONFIG;
 
 @Slf4j
 @Service("multipleScheduleService")
 public class MultipleScheduleService {
 
-    private static final String MESSAGE = "Failed to generate document for case id : ";
-
-    private final TornadoService tornadoService;
     private final ExcelReadingService excelReadingService;
     private final SingleCasesReadingService singleCasesReadingService;
+    private final ExcelDocManagementService excelDocManagementService;
 
     @Autowired
-    public MultipleScheduleService(TornadoService tornadoService,
-                                   ExcelReadingService excelReadingService,
-                                   SingleCasesReadingService singleCasesReadingService) {
-        this.tornadoService = tornadoService;
+    public MultipleScheduleService(ExcelReadingService excelReadingService,
+                                   SingleCasesReadingService singleCasesReadingService,
+                                   ExcelDocManagementService excelDocManagementService) {
         this.excelReadingService = excelReadingService;
         this.singleCasesReadingService = singleCasesReadingService;
+        this.excelDocManagementService = excelDocManagementService;
     }
 
     public DocumentInfo bulkScheduleLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
         log.info("Read excel for schedule logic");
 
-        FilterExcelType filterExcelType = getFilterExcelTypeByScheduleDoc(multipleDetails.getCaseData());
+        FilterExcelType filterExcelType = MultiplesScheduleHelper.getFilterExcelTypeByScheduleDoc(multipleDetails.getCaseData());
 
         TreeMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
@@ -57,15 +52,13 @@ public class MultipleScheduleService {
         log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
         log.info("MultipleObjectsValues: " + multipleObjects.values());
 
-        //Split it in 5000 search
-        //Get submitEvents and parse to multipleObject
-
-        List<SubmitEvent> submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
-                multipleDetails.getCaseTypeId(), multipleObjects, filterExcelType);
+        List<SchedulePayload> schedulePayloads =
+                getSchedulePayloadCollection(userToken, multipleDetails.getCaseTypeId(),
+                        getCaseIdCollectionFromFilter(multipleObjects, filterExcelType));
 
         log.info("Generate schedule");
 
-        DocumentInfo documentInfo = generateSchedule(multipleObjects, userToken, multipleDetails, submitEvents, errors);
+        DocumentInfo documentInfo = generateSchedule(userToken, multipleObjects, multipleDetails, schedulePayloads, errors);
 
         log.info("Resetting mid fields");
 
@@ -75,39 +68,57 @@ public class MultipleScheduleService {
 
     }
 
-    private FilterExcelType getFilterExcelTypeByScheduleDoc(MultipleData multipleData) {
+    private List<String> getCaseIdCollectionFromFilter(TreeMap<String, Object> multipleObjects, FilterExcelType filterExcelType) {
 
-        if (Arrays.asList(MULTIPLE_SCHEDULE_CONFIG, MULTIPLE_SCHEDULE_DETAILED_CONFIG)
-                .contains(multipleData.getScheduleDocName())) {
-            return FilterExcelType.FLAGS;
+        if (filterExcelType.equals(FilterExcelType.FLAGS)) {
+
+            return new ArrayList<>(multipleObjects.keySet());
 
         } else {
-            return FilterExcelType.SUB_MULTIPLE;
+
+            return MultiplesScheduleHelper.getSubMultipleCaseIds(multipleObjects);
+
         }
+
     }
 
-    private DocumentInfo generateSchedule(TreeMap<String, Object> multipleObjectsFiltered, String userToken,
-                                          MultipleDetails multipleDetails, List<SubmitEvent> submitEvents,
+    private List<SchedulePayload> getSchedulePayloadCollection(String userToken, String caseTypeId, List<String> caseIdCollection) {
+
+        List<SchedulePayload> schedulePayloads = new ArrayList<>();
+
+        for (List<String> partitionCaseIds : Lists.partition(caseIdCollection, 5000)) {
+
+            log.info("Partition: " + partitionCaseIds);
+
+            List<SubmitEvent> submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
+                    caseTypeId, caseIdCollection);
+
+            for (SubmitEvent submitEvent : submitEvents) {
+
+                schedulePayloads.add(MultiplesScheduleHelper.getSchedulePayloadFromSubmitEvent(submitEvent));
+
+            }
+
+        }
+
+        return schedulePayloads;
+
+    }
+
+    private DocumentInfo generateSchedule(String userToken, TreeMap<String, Object> multipleObjectsFiltered,
+                                          MultipleDetails multipleDetails, List<SchedulePayload> schedulePayloads,
                                           List<String> errors) {
 
         DocumentInfo documentInfo = new DocumentInfo();
 
-        try {
+        if (!multipleObjectsFiltered.keySet().isEmpty()) {
 
-            if (!multipleObjectsFiltered.keySet().isEmpty()) {
+            documentInfo = excelDocManagementService.writeAndUploadScheduleDocument(userToken,
+                    multipleObjectsFiltered, multipleDetails, schedulePayloads);
 
-                documentInfo = tornadoService.scheduleMultipleGeneration(userToken, multipleDetails.getCaseData(),
-                        multipleObjectsFiltered, submitEvents);
+        } else {
 
-            } else {
-
-                errors.add("No cases searched to generate schedules");
-
-            }
-
-        } catch (Exception ex) {
-
-            throw new DocumentManagementException(MESSAGE + multipleDetails.getCaseId() + ex.getMessage());
+            errors.add("No cases searched to generate schedules");
 
         }
 

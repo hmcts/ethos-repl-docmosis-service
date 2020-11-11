@@ -91,8 +91,8 @@ public class MultipleUtil {
 
     public static TreeMap<String, Object> getMultipleObjectsSubMultiple() {
         TreeMap<String, Object> multipleObjectTreeMap = new TreeMap<>();
-        multipleObjectTreeMap.put("245000", new ArrayList<>(Collections.singletonList("245000/2020")));
-        multipleObjectTreeMap.put("245003", new ArrayList<>(Collections.singletonList("245003/2020")));
+        multipleObjectTreeMap.put("SubMultiple", new ArrayList<>(Collections.singletonList("245000/2020")));
+        multipleObjectTreeMap.put("SubMultiple3", new ArrayList<>(Collections.singletonList("245003/2020")));
         return multipleObjectTreeMap;
     }
 

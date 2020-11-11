@@ -225,19 +225,6 @@ public class DocumentGenerationService {
         return bulkDocumentInfo;
     }
 
-//    private List<CaseData> filterCasesById(List<SubmitEvent> submitEvents, List<SearchTypeItem> searchTypeItems) {
-//        List<CaseData> caseDataResultList = new ArrayList<>();
-//        Map<String, CaseData> submitEventsList = submitEvents.stream().collect(Collectors.toMap(s -> String.valueOf(s.getCaseId()), SubmitEvent::getCaseData));
-//        for (SearchTypeItem searchTypeItem : searchTypeItems) {
-//            String caseId = searchTypeItem.getValue().getCaseIDS();
-//            if (submitEventsList.containsKey(caseId)) {
-//                log.info("Adding submitted key: " + caseId);
-//                caseDataResultList.add(submitEventsList.get(caseId));
-//            }
-//        }
-//        return caseDataResultList;
-//    }
-
     public BulkDocumentInfo processBulkScheduleRequest(BulkRequest bulkRequest, String authToken) {
         BulkDocumentInfo bulkDocumentInfo = new BulkDocumentInfo();
         BulkData bulkData = bulkRequest.getCaseDetails().getCaseData();

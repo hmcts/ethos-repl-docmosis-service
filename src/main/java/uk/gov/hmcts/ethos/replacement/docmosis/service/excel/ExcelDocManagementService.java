@@ -5,11 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
 import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SchedulePayload;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 
@@ -18,6 +23,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.TreeMap;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DATE_TIME_USER_FRIENDLY_PATTERN;
 
@@ -33,14 +39,17 @@ public class ExcelDocManagementService {
     private final DocumentManagementService documentManagementService;
     private final ExcelCreationService excelCreationService;
     private final UserService userService;
+    private final ScheduleCreationService scheduleCreationService;
 
     @Autowired
     public ExcelDocManagementService(DocumentManagementService documentManagementService,
                                      ExcelCreationService excelCreationService,
-                                     UserService userService) {
+                                     UserService userService,
+                                     ScheduleCreationService scheduleCreationService) {
         this.documentManagementService = documentManagementService;
         this.excelCreationService = excelCreationService;
         this.userService = userService;
+        this.scheduleCreationService = scheduleCreationService;
     }
 
     public void uploadExcelDocument(String userToken, MultipleData multipleData, byte[] excelBytes) {
@@ -108,6 +117,38 @@ public class ExcelDocManagementService {
         caseImporterFile.setUploadUser(userDetails.getFirstName() + " " + userDetails.getLastName());
 
         return caseImporterFile;
+
+    }
+
+    public DocumentInfo writeAndUploadScheduleDocument(String userToken, TreeMap<String, Object> multipleObjectsFiltered,
+                                                       MultipleDetails multipleDetails, List<SchedulePayload > schedulePayloads) {
+
+        byte[] excelBytes = scheduleCreationService.writeSchedule(multipleDetails.getCaseData(), schedulePayloads, multipleObjectsFiltered);
+
+        return uploadScheduleDocument(userToken, multipleDetails.getCaseData(), excelBytes);
+
+    }
+
+    private DocumentInfo uploadScheduleDocument(String userToken, MultipleData multipleData, byte[] excelBytes) {
+
+        String documentName = MultiplesScheduleHelper.generateScheduleDocumentName(multipleData);
+
+        URI documentSelfPath = documentManagementService.uploadDocument(userToken, excelBytes, documentName, APPLICATION_EXCEL_VALUE);
+
+        log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
+
+        return getScheduleDocument(documentSelfPath, documentName);
+
+    }
+
+    private DocumentInfo getScheduleDocument(URI documentSelfPath, String documentName) {
+
+        return DocumentInfo.builder()
+                .type(SignificantItemType.DOCUMENT.name())
+                .description(documentName)
+                .markUp(documentManagementService.generateMarkupDocument(documentManagementService.generateDownloadableURL(documentSelfPath)))
+                .url(documentManagementService.generateDownloadableURL(documentSelfPath))
+                .build();
 
     }
 
