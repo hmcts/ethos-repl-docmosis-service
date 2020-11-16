@@ -67,7 +67,7 @@ public class ExcelDocManagementService {
 
     public InputStream downloadExcelDocument(String userToken, String binaryUrl) throws IOException {
 
-        UploadedDocument uploadedDocument = documentManagementService.downloadFile(userToken, binaryUrl);
+        UploadedDocument uploadedDocument = documentManagementService.downloadFile(binaryUrl);
 
         log.info("Downloaded excel name: " + uploadedDocument.getName());
 
