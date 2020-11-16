@@ -191,24 +191,30 @@ public class ScheduleCreationService {
         if (!schedulePayloadTreeMap.isEmpty()) {
             log.info("Sub Multiple schedule");
 
-            for(Map.Entry<String, List<SchedulePayload>> entry : schedulePayloadTreeMap.entrySet()) {
+            for (Map.Entry<String, List<SchedulePayload>> entry : schedulePayloadTreeMap.entrySet()) {
                 List<SchedulePayload> schedulePayloads = entry.getValue();
+                //TITLE ROW
                 XSSFRow subMultipleRow = sheet.createRow(startingRow);
                 createCell(subMultipleRow, 0, getSubMultipleTitle(multipleData, entry.getKey()),
                         MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
-                XSSFRow tableTitleRow = sheet.createRow(1 + startingRow);
+                //SUBTITLE ROW
+                XSSFRow tableTitleRow = sheet.createRow(startingRow + 1);
                 for (int j = 0; j < subMultipleHeaders.size(); j++) {
                     createCell(tableTitleRow, j, subMultipleHeaders.get(j), MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
                 }
-                for (int j = 0; j < schedulePayloads.size(); j++) {
-                    SchedulePayload schedulePayload = schedulePayloads.get(j);
-                    XSSFRow row = sheet.createRow(2 + startingRow);
-                    createCell(row, j++, schedulePayload.getEthosCaseRef(), cellStyle);
-                    createCell(row, j++, schedulePayload.getClaimantName(), cellStyle);
-                    createCell(row, j++, schedulePayload.getPositionType(), cellStyle);
+                //DATA ROWS
+                for (int i = 0; i < schedulePayloads.size(); i++) {
+                    SchedulePayload schedulePayload = schedulePayloads.get(i);
+                    XSSFRow row = sheet.createRow(startingRow + 2 + i);
+                    for (int j = 0; j < subMultipleHeaders.size(); j++) {
+                        createCell(row, j++, schedulePayload.getEthosCaseRef(), cellStyle);
+                        createCell(row, j++, schedulePayload.getClaimantName(), cellStyle);
+                        createCell(row, j++, schedulePayload.getPositionType(), cellStyle);
+                    }
                 }
-                startingRow = startingRow + 3 + schedulePayloads.size();
+                startingRow += 3 + schedulePayloads.size();
             }
+
         }
     }
 
