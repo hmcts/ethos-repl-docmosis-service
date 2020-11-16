@@ -20,6 +20,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
+import uk.gov.hmcts.reform.document.domain.Classification;
+import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,7 +31,9 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -37,6 +41,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService.APPLICATION_DOCX_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService.FILES_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.ResourceLoader.successfulDocumentManagementUploadResponse;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.ResourceLoader.unsuccessfulDocumentManagementUploadResponse;
 
@@ -73,7 +78,11 @@ public class DocumentManagementServiceTest {
 
     @Test
     public void shouldUploadToDocumentManagement() throws IOException, URISyntaxException {
-        when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
+        when(documentUploadClient.upload(null, "authString", null,
+                new ArrayList<>(), Classification.PUBLIC,
+                singletonList(
+                        new InMemoryMultipartFile(
+                                FILES_NAME, OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE, Files.readAllBytes(file.toPath())))))
                 .thenReturn(successfulDocumentManagementUploadResponse());
         URI documentSelfPath = documentManagementService.uploadDocument("authString", Files.readAllBytes(file.toPath()),
                 OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE);

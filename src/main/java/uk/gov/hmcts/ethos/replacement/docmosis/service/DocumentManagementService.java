@@ -17,11 +17,13 @@ import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
+import uk.gov.hmcts.reform.document.domain.Classification;
 import uk.gov.hmcts.reform.document.domain.Document;
 import uk.gov.hmcts.reform.document.domain.UploadResponse;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import static java.util.Collections.singletonList;
@@ -32,7 +34,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 @ConditionalOnProperty(prefix = "document_management", name = "url")
 public class DocumentManagementService {
 
-    private static final String FILES_NAME = "files";
+    public static final String FILES_NAME = "files";
     public static final String APPLICATION_DOCX_VALUE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     private final DocumentUploadClientApi documentUploadClient;
     private final AuthTokenGenerator authTokenGenerator;
@@ -59,9 +61,11 @@ public class DocumentManagementService {
             log.info("ccdGatewayBaseUrl: " + ccdGatewayBaseUrl);
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, outputFileName, type, byteArray);
             UploadResponse response = documentUploadClient.upload(
+                    null,
                     authToken,
-                    authTokenGenerator.generate(),
-                    userService.getUserDetails(authToken).getUid(),
+                    null,
+                    new ArrayList<>(),
+                    Classification.PUBLIC,
                     singletonList(file)
             );
             //log.info("Response: " + response.toString());
