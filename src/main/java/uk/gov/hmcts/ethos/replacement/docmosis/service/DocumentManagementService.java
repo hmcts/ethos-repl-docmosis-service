@@ -94,10 +94,10 @@ public class DocumentManagementService {
 
     public UploadedDocument downloadFile(String authToken, String urlString) {
         ResponseEntity<Resource> response = documentDownloadClientApi.downloadBinary(
-                authToken,
+                null,
                 authTokenGenerator.generate(),
                 "",
-                userService.getUserDetails(authToken).getUid(),
+                null,
                 getDownloadUrl(urlString)
         );
         if (HttpStatus.OK.equals(response.getStatusCode())) {
