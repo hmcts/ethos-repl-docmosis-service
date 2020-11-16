@@ -62,7 +62,7 @@ public class DocumentManagementService {
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, outputFileName, type, byteArray);
             UploadResponse response = documentUploadClient.upload(
                     null,
-                    authToken,
+                    authTokenGenerator.generate(),
                     null,
                     new ArrayList<>(),
                     Classification.PUBLIC,
