@@ -92,7 +92,7 @@ public class DocumentManagementService {
     }
 
 
-    public UploadedDocument downloadFile(String authToken, String urlString) {
+    public UploadedDocument downloadFile(String urlString) {
         ResponseEntity<Resource> response = documentDownloadClientApi.downloadBinary(
                 null,
                 authTokenGenerator.generate(),

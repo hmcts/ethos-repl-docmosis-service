@@ -74,8 +74,7 @@ public class ExcelDocManagementServiceTest {
     @Test
     public void downloadExcelDocument() throws IOException {
         String binaryUrl = "http://127.0.0.1:3453/documents/20d8a494-4232-480a-aac3-23ad0746c07b/binary";
-        when(documentManagementService.downloadFile(userToken,
-                binaryUrl))
+        when(documentManagementService.downloadFile(binaryUrl))
                 .thenReturn(MultipleUtil.getUploadedDocument());
         assertNotNull(excelDocManagementService.downloadExcelDocument(userToken, binaryUrl));
     }
