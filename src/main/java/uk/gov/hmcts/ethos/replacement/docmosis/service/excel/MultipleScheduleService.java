@@ -24,7 +24,7 @@ public class MultipleScheduleService {
     private final SingleCasesReadingService singleCasesReadingService;
     private final ExcelDocManagementService excelDocManagementService;
 
-    public static final int ES_PARTITION_SIZE = 1000;
+    public static final int ES_PARTITION_SIZE = 500;
 
     @Autowired
     public MultipleScheduleService(ExcelReadingService excelReadingService,
@@ -50,8 +50,6 @@ public class MultipleScheduleService {
                         filterExcelType);
 
         log.info("Pull information from single cases");
-
-        log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
 
         List<SchedulePayload> schedulePayloads =
                 getSchedulePayloadCollection(userToken, multipleDetails.getCaseTypeId(),
