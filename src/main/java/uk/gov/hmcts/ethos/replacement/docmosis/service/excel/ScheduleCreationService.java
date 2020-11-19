@@ -101,7 +101,7 @@ public class ScheduleCreationService {
     }
 
     private String getClaimantVsRespondent(SchedulePayload schedulePayload) {
-        return schedulePayload.getClaimantName() + " vs " + schedulePayload.getRespondentName();
+        return schedulePayload.getClaimantName() + " -v- " + schedulePayload.getRespondentName();
     }
 
     private void initializeData(XSSFWorkbook workbook, XSSFSheet sheet,

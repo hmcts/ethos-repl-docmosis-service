@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
@@ -29,13 +30,23 @@ public class MultiplesScheduleHelper {
         return SchedulePayload.builder()
                 .ethosCaseRef(nullCheck(caseData.getEthosCaseReference()))
                 .claimantName(getClaimantName(caseData))
-                .respondentName(nullCheck(respondent.getRespondentName()))
+                .respondentName(nullCheck(getRespondentName(caseData.getRespondentCollection())))
                 .positionType(nullCheck(caseData.getPositionType()))
                 .claimantAddressLine1(nullCheck(caseData.getClaimantType().getClaimantAddressUK().getAddressLine1()))
                 .claimantPostCode(nullCheck(caseData.getClaimantType().getClaimantAddressUK().getPostCode()))
                 .respondentAddressLine1(nullCheck(respondent.getRespondentAddress().getAddressLine1()))
                 .respondentPostCode(nullCheck(respondent.getRespondentAddress().getPostCode()))
                 .build();
+
+    }
+
+    private static String getRespondentName(List<RespondentSumTypeItem> respondentCollection) {
+
+        String respondentName = respondentCollection.get(0).getValue().getRespondentName();
+
+        return respondentCollection.size() > 1
+                ? respondentName + " & Others"
+                : respondentName;
 
     }
 

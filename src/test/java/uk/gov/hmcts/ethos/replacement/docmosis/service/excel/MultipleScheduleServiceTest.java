@@ -7,6 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
@@ -49,6 +51,26 @@ public class MultipleScheduleServiceTest {
 
     @Test
     public void bulkScheduleLogicFlags() {
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjectsFlags);
+        when(singleCasesReadingService.retrieveSingleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(multipleObjectsFlags.keySet())))
+                .thenReturn(submitEvents);
+        multipleScheduleService.bulkScheduleLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(singleCasesReadingService, times(1)).retrieveSingleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(multipleObjectsFlags.keySet()));
+        verifyNoMoreInteractions(singleCasesReadingService);
+    }
+
+    @Test
+    public void bulkScheduleLogicFlagsMultipleRespondents() {
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setValue(new RespondentSumType());
+        submitEvents.get(0).getCaseData().getRespondentCollection().add(respondentSumTypeItem);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
         when(singleCasesReadingService.retrieveSingleCases(userToken,

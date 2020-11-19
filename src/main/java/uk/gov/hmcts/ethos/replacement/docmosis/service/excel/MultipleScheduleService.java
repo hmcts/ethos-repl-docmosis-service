@@ -24,6 +24,8 @@ public class MultipleScheduleService {
     private final SingleCasesReadingService singleCasesReadingService;
     private final ExcelDocManagementService excelDocManagementService;
 
+    public static final int ES_PARTITION_SIZE = 1000;
+
     @Autowired
     public MultipleScheduleService(ExcelReadingService excelReadingService,
                                    SingleCasesReadingService singleCasesReadingService,
@@ -50,7 +52,6 @@ public class MultipleScheduleService {
         log.info("Pull information from single cases");
 
         log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
-        log.info("MultipleObjectsValues: " + multipleObjects.values());
 
         List<SchedulePayload> schedulePayloads =
                 getSchedulePayloadCollection(userToken, multipleDetails.getCaseTypeId(),
@@ -86,12 +87,10 @@ public class MultipleScheduleService {
 
         List<SchedulePayload> schedulePayloads = new ArrayList<>();
 
-        for (List<String> partitionCaseIds : Lists.partition(caseIdCollection, 5000)) {
-
-            log.info("Partition: " + partitionCaseIds);
+        for (List<String> partitionCaseIds : Lists.partition(caseIdCollection, ES_PARTITION_SIZE)) {
 
             List<SubmitEvent> submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
-                    caseTypeId, caseIdCollection);
+                    caseTypeId, partitionCaseIds);
 
             for (SubmitEvent submitEvent : submitEvents) {
 
