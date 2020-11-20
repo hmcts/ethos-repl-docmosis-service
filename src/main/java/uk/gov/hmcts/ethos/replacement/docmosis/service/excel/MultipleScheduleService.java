@@ -107,8 +107,6 @@ public class MultipleScheduleService {
 
             } catch (InterruptedException | ExecutionException e) {
 
-                log.error("Error Generating Schedules");
-
                 errors.add("Error Generating Schedules");
 
                 Thread.currentThread().interrupt();
