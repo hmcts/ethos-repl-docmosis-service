@@ -64,7 +64,6 @@ public class DocumentManagementService {
                     userService.getUserDetails(authToken).getUid(),
                     singletonList(file)
             );
-            //log.info("Response: " + response.toString());
             Document document = response.getEmbedded().getDocuments().stream()
                     .findFirst()
                     .orElseThrow(() ->
@@ -92,7 +91,7 @@ public class DocumentManagementService {
         ResponseEntity<Resource> response = documentDownloadClientApi.downloadBinary(
                 authToken,
                 authTokenGenerator.generate(),
-                "",
+                "caseworker",
                 userService.getUserDetails(authToken).getUid(),
                 getDownloadUrl(urlString)
         );
