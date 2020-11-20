@@ -26,7 +26,7 @@ public class MultipleScheduleService {
     private final ExcelDocManagementService excelDocManagementService;
 
     public static final int ES_PARTITION_SIZE = 500;
-    public static final int THREAD_NUMBER = 100;
+    public static final int THREAD_NUMBER = 20;
 
     @Autowired
     public MultipleScheduleService(ExcelReadingService excelReadingService,
