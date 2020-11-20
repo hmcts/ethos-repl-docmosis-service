@@ -67,7 +67,7 @@ public class DocumentManagementService {
                     authTokenGenerator.generate(),
                     user.getUid(),
                     new ArrayList<>(singletonList("caseworker-employment")),
-                    Classification.RESTRICTED,
+                    Classification.PUBLIC,
                     singletonList(file)
             );
             Document document = response.getEmbedded().getDocuments().stream()
