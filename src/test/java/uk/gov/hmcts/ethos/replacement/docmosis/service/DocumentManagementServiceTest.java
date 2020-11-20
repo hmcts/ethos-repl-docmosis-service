@@ -32,8 +32,7 @@ import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService.APPLICATION_DOCX_VALUE;
@@ -73,7 +72,7 @@ public class DocumentManagementServiceTest {
 
     @Test
     public void shouldUploadToDocumentManagement() throws IOException, URISyntaxException {
-        when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
+        when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList(), any(), anyList()))
                 .thenReturn(successfulDocumentManagementUploadResponse());
         URI documentSelfPath = documentManagementService.uploadDocument("authString", Files.readAllBytes(file.toPath()),
                 OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE);
