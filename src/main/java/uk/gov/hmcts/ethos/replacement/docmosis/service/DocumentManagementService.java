@@ -91,7 +91,7 @@ public class DocumentManagementService {
         ResponseEntity<Resource> response = documentDownloadClientApi.downloadBinary(
                 authToken,
                 authTokenGenerator.generate(),
-                "caseworker",
+                "caseworker-employment",
                 userService.getUserDetails(authToken).getUid(),
                 getDownloadUrl(urlString)
         );
