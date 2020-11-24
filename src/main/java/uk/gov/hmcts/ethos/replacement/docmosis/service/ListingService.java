@@ -18,8 +18,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.BroughtForwardDatesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
@@ -33,13 +35,20 @@ import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 
 @Slf4j
 @Service("listingService")
@@ -124,10 +133,14 @@ public class ListingService {
     }
 
     public ListingData generateReportData(ListingDetails listingDetails, String authToken) {
-        if (listingDetails.getCaseData().getReportType().equals(BROUGHT_FORWARD_REPORT)) {
-            return processBroughtForwardDatesRequest(listingDetails, authToken);
-        } else {
-            return listingDetails.getCaseData();
+
+        switch (listingDetails.getCaseData().getReportType()) {
+            case BROUGHT_FORWARD_REPORT:
+                return processBroughtForwardDatesRequest(listingDetails, authToken);
+            case CLAIMS_ACCEPTED_REPORT:
+                return processClaimsAcceptedDatesRequest(listingDetails, authToken);
+            default:
+                return listingDetails.getCaseData();
         }
     }
 
@@ -149,6 +162,36 @@ public class ListingService {
                     }
                 }
                 listingDetails.getCaseData().setBfDateCollection(bFDateTypeItems);
+            }
+            return clearListingFields(listingDetails.getCaseData());
+        } catch (Exception ex) {
+            throw new CaseRetrievalException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
+        }
+    }
+
+    private ListingData processClaimsAcceptedDatesRequest(ListingDetails listingDetails, String authToken) {
+        try {
+            //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
+            List<SubmitEvent> submitEvents = getGenericReportSearch(listingDetails, authToken);
+            if (submitEvents != null || !submitEvents.isEmpty()) {
+                log.info("Cases searched: " + submitEvents.size());
+                int totalCases = 0; int totalSingles = 0; int totalMultiples = 0;
+                AdhocReportType localReportsSummaryHdr = new AdhocReportType();
+                List<AdhocReportTypeItem> localReportsDetailList = new ArrayList<>();
+                for (SubmitEvent submitEvent : submitEvents) {
+                    AdhocReportTypeItem localReportsDetailItem = getLocalReportsDetailItem(listingDetails, submitEvent.getCaseData());
+                    if (localReportsDetailItem.getValue() != null) {
+                        totalCases++;
+                        if (localReportsDetailItem.getValue().getCaseType().equals(SINGLE_CASE_TYPE)) totalSingles++;
+                        else totalMultiples++;
+                        localReportsDetailList.add(localReportsDetailItem);
+                    }
+                }
+                localReportsSummaryHdr.setTotal(Integer.toString(totalCases));
+                localReportsSummaryHdr.setSinglesTotal(Integer.toString(totalSingles));
+                localReportsSummaryHdr.setMultiplesTotal(Integer.toString(totalMultiples));
+                listingDetails.getCaseData().setLocalReportsSummaryHdr(localReportsSummaryHdr);
+                listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
             }
             return clearListingFields(listingDetails.getCaseData());
         } catch (Exception ex) {
@@ -241,6 +284,29 @@ public class ListingService {
         return bFDateTypeItem;
     }
 
+    private AdhocReportTypeItem getLocalReportsDetailItem(ListingDetails listingDetails, CaseData caseData) {
+        AdhocReportTypeItem adhocReportTypeItem = new AdhocReportTypeItem();
+        ListingData listingData = listingDetails.getCaseData();
+        String caseTypeId = ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId());
+        if (caseData.getPreAcceptCase() != null && caseData.getPreAcceptCase().getDateAccepted() != null) {
+            boolean matchingDateIsValid = validateMatchingDate(listingData, caseData.getPreAcceptCase().getDateAccepted());
+            if (matchingDateIsValid) {
+                AdhocReportType adhocReportType = new AdhocReportType();
+                adhocReportType.setCaseType(caseData.getCaseType());
+                adhocReportType.setCaseReference(caseData.getEthosCaseReference());
+                adhocReportType.setDateOfAcceptance(caseData.getPreAcceptCase().getDateAccepted());
+                adhocReportType.setMultipleRef(caseData.getMultipleReference());
+                adhocReportType.setLeadCase(caseData.getLeadClaimant());
+                adhocReportType.setPosition(caseData.getCurrentPosition());
+                adhocReportType.setDateToPosition(caseData.getDateToPosition());
+                adhocReportType.setFileLocation(getFileLocation(caseTypeId, caseData));
+                adhocReportType.setClerk(caseData.getClerkResponsible());
+                adhocReportTypeItem.setValue(adhocReportType);
+            }
+        }
+        return adhocReportTypeItem;
+    }
+
     private boolean isAllVenuesGlasgowAndAberdeen(ListingData listingData) {
         boolean allVenuesGlasgow = !isNullOrEmpty(listingData.getListingVenueOfficeGlas()) && listingData.getListingVenueOfficeGlas().equals(ALL_VENUES);
         boolean allVenuesAberdeen = !isNullOrEmpty(listingData.getListingVenueOfficeAber()) && listingData.getListingVenueOfficeAber().equals(ALL_VENUES);
@@ -323,6 +389,25 @@ public class ListingService {
             return false;
         }
         return true;
+    }
+
+    private String getFileLocation(String caseTypeId, CaseData caseData) {
+        if (!caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)) {
+            return caseData.getFileLocation();
+        } else {
+            switch (caseData.getManagingOffice()) {
+                case DUNDEE_OFFICE:
+                    return caseData.getFileLocationDundee();
+                case GLASGOW_OFFICE:
+                    return caseData.getFileLocationGlasgow();
+                case ABERDEEN_OFFICE:
+                    return caseData.getFileLocationAberdeen();
+                case EDINBURGH_OFFICE:
+                    return caseData.getFileLocationEdinburgh();
+                default:
+                    return "";
+            }
+        }
     }
 
     public DocumentInfo processHearingDocument(ListingData listingData, String caseTypeId, String authToken) {
