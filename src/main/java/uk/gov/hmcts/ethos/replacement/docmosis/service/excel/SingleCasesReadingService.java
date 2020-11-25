@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
 
 import java.util.*;
 
@@ -47,6 +48,27 @@ public class SingleCasesReadingService {
         }
 
         return submitEvents;
+
+    }
+
+    public List<SchedulePayloadES> retrieveScheduleCases(String userToken, String multipleCaseTypeId, List<String> caseIds) {
+
+        List<SchedulePayloadES> submitEventsES = new ArrayList<>();
+
+        try {
+            submitEventsES = ccdClient.retrieveCasesElasticSearchSchedule(userToken,
+                    UtilHelper.getCaseTypeId(multipleCaseTypeId),
+                    caseIds);
+
+        } catch (Exception ex) {
+
+            log.error("Error retrieving schedule cases");
+
+            log.error(ex.getMessage());
+
+        }
+
+        return submitEventsES;
 
     }
 

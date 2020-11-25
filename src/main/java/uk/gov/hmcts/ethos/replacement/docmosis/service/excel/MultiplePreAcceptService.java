@@ -7,6 +7,9 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
 import java.util.List;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.UPDATING_STATE;
+
 @Slf4j
 @Service("multiplePreAcceptService")
 public class MultiplePreAcceptService {
@@ -20,9 +23,21 @@ public class MultiplePreAcceptService {
 
     public void bulkPreAcceptLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
-        log.info("Send updates to single cases");
+        if (multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
 
-        multipleHelperService.sendPreAcceptToSinglesWithConfirmation(userToken, multipleDetails, errors);
+            multipleDetails.getCaseData().setState(UPDATING_STATE);
+
+            log.info("Send updates to single cases");
+
+            multipleHelperService.sendPreAcceptToSinglesWithConfirmation(userToken, multipleDetails, errors);
+
+        } else {
+
+            log.info("All cases are in Accepted state");
+
+            errors.add("All cases are in Accepted state");
+
+        }
 
     }
 

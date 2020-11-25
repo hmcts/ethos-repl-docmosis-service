@@ -9,11 +9,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
+import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
 import java.io.IOException;
 import java.util.*;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 
@@ -28,6 +30,7 @@ public class SingleCasesReadingServiceTest {
     private MultipleDetails multipleDetails;
     private String userToken;
     private List<SubmitEvent> submitEventList;
+    private List<SchedulePayloadES> schedulePayloadES;
 
     @Before
     public void setUp() {
@@ -35,6 +38,7 @@ public class SingleCasesReadingServiceTest {
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
         multipleDetails.setCaseTypeId("Manchester_Multiple");
         submitEventList = MultipleUtil.getSubmitEvents();
+        schedulePayloadES = MultipleUtil.getSchedulePayloadES();
         userToken = "authString";
     }
 
@@ -64,4 +68,32 @@ public class SingleCasesReadingServiceTest {
                 "240001/2020");
         assertNull(submitEvent);
     }
+
+    @Test
+    public void retrieveScheduleCases() throws IOException {
+        when(ccdClient.retrieveCasesElasticSearchSchedule(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(Collections.singletonList("240001/2020"))))
+                .thenReturn(schedulePayloadES);
+        singleCasesReadingService.retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(Collections.singletonList("240001/2020")));
+        verify(ccdClient, times(1)).retrieveCasesElasticSearchSchedule(userToken,
+                "Manchester",
+                new ArrayList<>(Collections.singletonList("240001/2020")));
+        verifyNoMoreInteractions(ccdClient);
+    }
+
+    @Test
+    public void retrieveScheduleCasesException() throws IOException {
+        when(ccdClient.retrieveCasesElasticSearchSchedule(anyString(),
+                anyString(),
+                anyList()))
+                .thenThrow(new RuntimeException());
+        List<SchedulePayloadES> schedulePayloadESList = singleCasesReadingService.retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(Collections.singletonList("240001/2020")));
+        assertEquals(schedulePayloadESList, new ArrayList<>());
+    }
+
 }

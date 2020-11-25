@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
+import uk.gov.hmcts.ecm.common.model.schedule.items.ScheduleRespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
+import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleRespondentSumType;
 
 import java.util.*;
 
@@ -21,26 +21,24 @@ public class MultiplesScheduleHelper {
     public static final String SUB_ZERO = "/0";
     public static final String NOT_ALLOCATED = "Not_Allocated";
 
-    public static SchedulePayload getSchedulePayloadFromSubmitEvent(SubmitEvent submitEvent) {
+    public static SchedulePayload getSchedulePayloadFromSchedulePayloadES(SchedulePayloadES submitEventES) {
 
-        CaseData caseData = submitEvent.getCaseData();
-
-        RespondentSumType respondent = caseData.getRespondentCollection().get(0).getValue();
+        ScheduleRespondentSumType respondent = submitEventES.getRespondentCollection().get(0).getValue();
 
         return SchedulePayload.builder()
-                .ethosCaseRef(nullCheck(caseData.getEthosCaseReference()))
-                .claimantName(getClaimantName(caseData))
-                .respondentName(nullCheck(getRespondentName(caseData.getRespondentCollection())))
-                .positionType(nullCheck(caseData.getPositionType()))
-                .claimantAddressLine1(nullCheck(caseData.getClaimantType().getClaimantAddressUK().getAddressLine1()))
-                .claimantPostCode(nullCheck(caseData.getClaimantType().getClaimantAddressUK().getPostCode()))
+                .ethosCaseRef(nullCheck(submitEventES.getEthosCaseReference()))
+                .claimantName(getClaimantName(submitEventES.getClaimantCompany(), submitEventES.getClaimantIndType()))
+                .respondentName(nullCheck(getRespondentName(submitEventES.getRespondentCollection())))
+                .positionType(nullCheck(submitEventES.getPositionType()))
+                .claimantAddressLine1(nullCheck(submitEventES.getClaimantType().getClaimantAddressUK().getAddressLine1()))
+                .claimantPostCode(nullCheck(submitEventES.getClaimantType().getClaimantAddressUK().getPostCode()))
                 .respondentAddressLine1(nullCheck(respondent.getRespondentAddress().getAddressLine1()))
                 .respondentPostCode(nullCheck(respondent.getRespondentAddress().getPostCode()))
                 .build();
 
     }
 
-    private static String getRespondentName(List<RespondentSumTypeItem> respondentCollection) {
+    private static String getRespondentName(List<ScheduleRespondentSumTypeItem> respondentCollection) {
 
         String respondentName = respondentCollection.get(0).getValue().getRespondentName();
 
@@ -50,17 +48,17 @@ public class MultiplesScheduleHelper {
 
     }
 
-    private static String getClaimantName(CaseData caseData) {
+    private static String getClaimantName(String claimantCompany, ScheduleClaimantIndType scheduleClaimantIndType) {
 
-        if (!isNullOrEmpty(caseData.getClaimantCompany())) {
+        if (!isNullOrEmpty(claimantCompany)) {
 
-            return caseData.getClaimantCompany();
+            return claimantCompany;
 
         } else {
 
-            if (caseData.getClaimantIndType() != null) {
+            if (scheduleClaimantIndType != null) {
 
-                return caseData.getClaimantIndType().claimantFullNames();
+                return scheduleClaimantIndType.claimantFullNames();
 
             } else {
 

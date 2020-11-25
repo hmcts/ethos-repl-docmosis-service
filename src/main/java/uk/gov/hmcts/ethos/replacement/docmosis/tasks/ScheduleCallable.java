@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.tasks;
 
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
+import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.SingleCasesReadingService;
 
@@ -30,12 +30,12 @@ public class ScheduleCallable implements Callable<List<SchedulePayload>> {
 
         List<SchedulePayload> schedulePayloads = new ArrayList<>();
 
-        List<SubmitEvent> submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
+        List<SchedulePayloadES> submitEventsES = singleCasesReadingService.retrieveScheduleCases(userToken,
                 caseTypeId, partitionCaseIds);
 
-        for (SubmitEvent submitEvent : submitEvents) {
+        for (SchedulePayloadES submitEventES : submitEventsES) {
 
-            schedulePayloads.add(MultiplesScheduleHelper.getSchedulePayloadFromSubmitEvent(submitEvent));
+            schedulePayloads.add(MultiplesScheduleHelper.getSchedulePayloadFromSchedulePayloadES(submitEventES));
 
         }
 
