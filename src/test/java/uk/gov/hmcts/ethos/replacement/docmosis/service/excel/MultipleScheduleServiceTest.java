@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
 import uk.gov.hmcts.ecm.common.model.schedule.items.ScheduleRespondentSumTypeItem;
@@ -37,6 +38,7 @@ public class MultipleScheduleServiceTest {
     private TreeMap<String, Object> multipleObjectsSubMultiple;
     private MultipleDetails multipleDetails;
     private List<SchedulePayloadES> schedulePayloadES;
+    private List<SubmitEvent> submitEvents;
     private String userToken;
 
     @Before
@@ -50,18 +52,36 @@ public class MultipleScheduleServiceTest {
     }
 
     //@Test
+//    public void bulkScheduleLogicFlags() {
+//        schedulePayloadES.get(0).setClaimantCompany(null);
+//        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+//                .thenReturn(multipleObjectsFlags);
+//        when(singleCasesReadingService.retrieveScheduleCases(userToken,
+//                multipleDetails.getCaseTypeId(),
+//                new ArrayList<>(multipleObjectsFlags.keySet())))
+//                .thenReturn(schedulePayloadES);
+//        multipleScheduleService.bulkScheduleLogic(userToken,
+//                multipleDetails,
+//                new ArrayList<>());
+//        verify(singleCasesReadingService, times(1)).retrieveScheduleCases(userToken,
+//                multipleDetails.getCaseTypeId(),
+//                new ArrayList<>(multipleObjectsFlags.keySet()));
+//        verifyNoMoreInteractions(singleCasesReadingService);
+//    }
+
+    @Test
     public void bulkScheduleLogicFlags() {
         schedulePayloadES.get(0).setClaimantCompany(null);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
-        when(singleCasesReadingService.retrieveScheduleCases(userToken,
+        when(singleCasesReadingService.retrieveSingleCasesScheduleQuery(userToken,
                 multipleDetails.getCaseTypeId(),
                 new ArrayList<>(multipleObjectsFlags.keySet())))
-                .thenReturn(schedulePayloadES);
+                .thenReturn(submitEvents);
         multipleScheduleService.bulkScheduleLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());
-        verify(singleCasesReadingService, times(1)).retrieveScheduleCases(userToken,
+        verify(singleCasesReadingService, times(1)).retrieveSingleCasesScheduleQuery(userToken,
                 multipleDetails.getCaseTypeId(),
                 new ArrayList<>(multipleObjectsFlags.keySet()));
         verifyNoMoreInteractions(singleCasesReadingService);
