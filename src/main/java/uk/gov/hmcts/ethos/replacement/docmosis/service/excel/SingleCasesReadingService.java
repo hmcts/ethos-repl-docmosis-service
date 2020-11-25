@@ -51,6 +51,27 @@ public class SingleCasesReadingService {
 
     }
 
+    public List<SubmitEvent> retrieveSingleCasesScheduleQuery(String userToken, String multipleCaseTypeId, List<String> caseIds) {
+
+        List<SubmitEvent> submitEvents = new ArrayList<>();
+
+        try {
+            submitEvents = ccdClient.retrieveCasesElasticSearchScheduleQuery(userToken,
+                    UtilHelper.getCaseTypeId(multipleCaseTypeId),
+                    caseIds);
+
+        } catch (Exception ex) {
+
+            log.error("Error retrieving single cases");
+
+            log.error(ex.getMessage());
+
+        }
+
+        return submitEvents;
+
+    }
+
     public List<SchedulePayloadES> retrieveScheduleCases(String userToken, String multipleCaseTypeId, List<String> caseIds) {
 
         List<SchedulePayloadES> submitEventsES = new ArrayList<>();
