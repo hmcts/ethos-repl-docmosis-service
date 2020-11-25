@@ -64,7 +64,9 @@ public class SingleCasesReadingService {
 
             log.error("Error retrieving schedule cases");
 
-            log.error(ex.getMessage());
+            log.error(ex.getMessage(), ex);
+
+            log.error(Arrays.toString(ex.getStackTrace()));
 
         }
 
