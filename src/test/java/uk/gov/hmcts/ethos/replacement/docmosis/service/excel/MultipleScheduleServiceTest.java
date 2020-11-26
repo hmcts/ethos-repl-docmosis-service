@@ -51,43 +51,43 @@ public class MultipleScheduleServiceTest {
         userToken = "authString";
     }
 
-    //@Test
+    @Test
+    public void bulkScheduleLogicFlags() {
+        schedulePayloadES.get(0).setClaimantCompany(null);
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjectsFlags);
+        when(singleCasesReadingService.retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(multipleObjectsFlags.keySet())))
+                .thenReturn(schedulePayloadES);
+        multipleScheduleService.bulkScheduleLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(singleCasesReadingService, times(1)).retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(multipleObjectsFlags.keySet()));
+        verifyNoMoreInteractions(singleCasesReadingService);
+    }
+
+//    @Test
 //    public void bulkScheduleLogicFlags() {
 //        schedulePayloadES.get(0).setClaimantCompany(null);
 //        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
 //                .thenReturn(multipleObjectsFlags);
-//        when(singleCasesReadingService.retrieveScheduleCases(userToken,
+//        when(singleCasesReadingService.retrieveSingleCasesScheduleQuery(userToken,
 //                multipleDetails.getCaseTypeId(),
 //                new ArrayList<>(multipleObjectsFlags.keySet())))
-//                .thenReturn(schedulePayloadES);
+//                .thenReturn(submitEvents);
 //        multipleScheduleService.bulkScheduleLogic(userToken,
 //                multipleDetails,
 //                new ArrayList<>());
-//        verify(singleCasesReadingService, times(1)).retrieveScheduleCases(userToken,
+//        verify(singleCasesReadingService, times(1)).retrieveSingleCasesScheduleQuery(userToken,
 //                multipleDetails.getCaseTypeId(),
 //                new ArrayList<>(multipleObjectsFlags.keySet()));
 //        verifyNoMoreInteractions(singleCasesReadingService);
 //    }
 
     @Test
-    public void bulkScheduleLogicFlags() {
-        schedulePayloadES.get(0).setClaimantCompany(null);
-        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
-                .thenReturn(multipleObjectsFlags);
-        when(singleCasesReadingService.retrieveSingleCasesScheduleQuery(userToken,
-                multipleDetails.getCaseTypeId(),
-                new ArrayList<>(multipleObjectsFlags.keySet())))
-                .thenReturn(submitEvents);
-        multipleScheduleService.bulkScheduleLogic(userToken,
-                multipleDetails,
-                new ArrayList<>());
-        verify(singleCasesReadingService, times(1)).retrieveSingleCasesScheduleQuery(userToken,
-                multipleDetails.getCaseTypeId(),
-                new ArrayList<>(multipleObjectsFlags.keySet()));
-        verifyNoMoreInteractions(singleCasesReadingService);
-    }
-
-    //@Test
     public void bulkScheduleLogicFlagsWithoutCompanyNorClaimant() {
         schedulePayloadES.get(0).setClaimantCompany(null);
         schedulePayloadES.get(0).setClaimantIndType(null);
@@ -106,7 +106,7 @@ public class MultipleScheduleServiceTest {
         verifyNoMoreInteractions(singleCasesReadingService);
     }
 
-    //@Test
+    @Test
     public void bulkScheduleLogicFlagsMultipleRespondents() {
         ScheduleRespondentSumTypeItem respondentSumTypeItem = new ScheduleRespondentSumTypeItem();
         respondentSumTypeItem.setValue(new ScheduleRespondentSumType());
@@ -126,7 +126,7 @@ public class MultipleScheduleServiceTest {
         verifyNoMoreInteractions(singleCasesReadingService);
     }
 
-    //@Test
+    @Test
     public void bulkScheduleLogicSubMultiple() {
         multipleDetails.getCaseData().setScheduleDocName(LIST_CASES_CONFIG);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
