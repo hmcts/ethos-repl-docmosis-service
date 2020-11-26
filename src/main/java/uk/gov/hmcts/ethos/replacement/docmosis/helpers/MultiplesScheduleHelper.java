@@ -3,10 +3,11 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ecm.common.model.schedule.ScheduleAddress;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
 import uk.gov.hmcts.ecm.common.model.schedule.items.ScheduleRespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
-import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleRespondentSumType;
+import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantType;
 
 import java.util.*;
 
@@ -20,31 +21,94 @@ public class MultiplesScheduleHelper {
 
     public static final String SUB_ZERO = "/0";
     public static final String NOT_ALLOCATED = "Not_Allocated";
+    public static final String RESPONDENT_NAME = "RespondentName";
+    public static final String ADDRESS_LINE1 = "AddressLine1";
+    public static final String POSTCODE = "PostCode";
 
     public static SchedulePayload getSchedulePayloadFromSchedulePayloadES(SchedulePayloadES submitEventES) {
-
-        ScheduleRespondentSumType respondent = submitEventES.getRespondentCollection().get(0).getValue();
 
         return SchedulePayload.builder()
                 .ethosCaseRef(nullCheck(submitEventES.getEthosCaseReference()))
                 .claimantName(getClaimantName(submitEventES.getClaimantCompany(), submitEventES.getClaimantIndType()))
-                .respondentName(nullCheck(getRespondentName(submitEventES.getRespondentCollection())))
+                .respondentName(getRespondentData(submitEventES.getRespondentCollection(), RESPONDENT_NAME))
                 .positionType(nullCheck(submitEventES.getPositionType()))
-                .claimantAddressLine1(nullCheck(submitEventES.getClaimantType().getClaimantAddressUK().getAddressLine1()))
-                .claimantPostCode(nullCheck(submitEventES.getClaimantType().getClaimantAddressUK().getPostCode()))
-                .respondentAddressLine1(nullCheck(respondent.getRespondentAddress().getAddressLine1()))
-                .respondentPostCode(nullCheck(respondent.getRespondentAddress().getPostCode()))
+                .claimantAddressLine1(getClaimantData(submitEventES.getClaimantType(), ADDRESS_LINE1))
+                .claimantPostCode(getClaimantData(submitEventES.getClaimantType(), POSTCODE))
+                .respondentAddressLine1(getRespondentData(submitEventES.getRespondentCollection(), ADDRESS_LINE1))
+                .respondentPostCode(getRespondentData(submitEventES.getRespondentCollection(), POSTCODE))
                 .build();
 
     }
 
-    private static String getRespondentName(List<ScheduleRespondentSumTypeItem> respondentCollection) {
+    private static String getRespondentData(List<ScheduleRespondentSumTypeItem> respondentCollection, String field) {
 
-        String respondentName = respondentCollection.get(0).getValue().getRespondentName();
+        if (respondentCollection != null && !respondentCollection.isEmpty()) {
 
-        return respondentCollection.size() > 1
-                ? respondentName + " & Others"
-                : respondentName;
+            if (field.equals(RESPONDENT_NAME)) {
+
+                String respondentName = respondentCollection.get(0).getValue().getRespondentName();
+
+                return respondentCollection.size() > 1
+                        ? respondentName + " & Others"
+                        : respondentName;
+
+            }
+
+            if (field.equals(ADDRESS_LINE1)) {
+
+                ScheduleAddress scheduleAddress = respondentCollection.get(0).getValue().getRespondentAddress();
+
+                return scheduleAddress != null
+                        ? scheduleAddress.getAddressLine1()
+                        : "";
+
+            }
+
+            else {
+
+                ScheduleAddress scheduleAddress = respondentCollection.get(0).getValue().getRespondentAddress();
+
+                return scheduleAddress != null
+                        ? scheduleAddress.getPostCode()
+                        : "";
+
+            }
+
+        } else {
+
+            return "";
+
+        }
+
+    }
+
+    private static String getClaimantData(ScheduleClaimantType scheduleClaimantType, String field) {
+
+        if (scheduleClaimantType != null) {
+
+            ScheduleAddress scheduleAddress = scheduleClaimantType.getClaimantAddressUK();
+
+            if (field.equals(ADDRESS_LINE1)) {
+
+                return scheduleAddress.getAddressLine1() != null
+                        ? scheduleAddress.getAddressLine1()
+                        : "";
+
+            }
+
+            else {
+
+                return scheduleAddress != null
+                        ? scheduleAddress.getPostCode()
+                        : "";
+
+            }
+
+        } else {
+
+            return "";
+
+        }
 
     }
 

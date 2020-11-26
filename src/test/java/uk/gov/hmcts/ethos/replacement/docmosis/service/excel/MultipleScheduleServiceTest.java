@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
 import uk.gov.hmcts.ecm.common.model.schedule.items.ScheduleRespondentSumTypeItem;
@@ -14,9 +13,7 @@ import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleRespondentSumType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -38,7 +35,6 @@ public class MultipleScheduleServiceTest {
     private TreeMap<String, Object> multipleObjectsSubMultiple;
     private MultipleDetails multipleDetails;
     private List<SchedulePayloadES> schedulePayloadES;
-    private List<SubmitEvent> submitEvents;
     private String userToken;
 
     @Before
@@ -69,23 +65,23 @@ public class MultipleScheduleServiceTest {
         verifyNoMoreInteractions(singleCasesReadingService);
     }
 
-//    @Test
-//    public void bulkScheduleLogicFlags() {
-//        schedulePayloadES.get(0).setClaimantCompany(null);
-//        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
-//                .thenReturn(multipleObjectsFlags);
-//        when(singleCasesReadingService.retrieveSingleCasesScheduleQuery(userToken,
-//                multipleDetails.getCaseTypeId(),
-//                new ArrayList<>(multipleObjectsFlags.keySet())))
-//                .thenReturn(submitEvents);
-//        multipleScheduleService.bulkScheduleLogic(userToken,
-//                multipleDetails,
-//                new ArrayList<>());
-//        verify(singleCasesReadingService, times(1)).retrieveSingleCasesScheduleQuery(userToken,
-//                multipleDetails.getCaseTypeId(),
-//                new ArrayList<>(multipleObjectsFlags.keySet()));
-//        verifyNoMoreInteractions(singleCasesReadingService);
-//    }
+    @Test
+    public void bulkScheduleLogicFlagsEmptySchedules() {
+        List<SchedulePayloadES> schedulePayloadES1 = new ArrayList<>(Collections.singletonList(new SchedulePayloadES()));
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjectsFlags);
+        when(singleCasesReadingService.retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(multipleObjectsFlags.keySet())))
+                .thenReturn(schedulePayloadES1);
+        multipleScheduleService.bulkScheduleLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(singleCasesReadingService, times(1)).retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(multipleObjectsFlags.keySet()));
+        verifyNoMoreInteractions(singleCasesReadingService);
+    }
 
     @Test
     public void bulkScheduleLogicFlagsWithoutCompanyNorClaimant() {
