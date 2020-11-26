@@ -62,9 +62,9 @@ public class SingleCasesReadingService {
 
         } catch (Exception ex) {
 
-            log.error("Error retrieving single cases");
+            log.error("Error retrieving schedule cases");
 
-            log.error(ex.getMessage());
+            log.error(ex.getMessage(), ex);
 
         }
 
