@@ -58,7 +58,7 @@ public class MultipleUploadServiceTest {
     }
 
     @Test
-    public void bulkUploadLogicWrongColumn() throws IOException {
+    public void bulkUploadLogicWrongColumnRow() throws IOException {
 
         List<String> errors = new ArrayList<>();
 
@@ -72,8 +72,10 @@ public class MultipleUploadServiceTest {
                 multipleDetails,
                 errors);
 
-        assertEquals(ERROR_SHEET_NUMBER_COLUMNS + MultiplesHelper.HEADERS.size(),
+        assertEquals(ERROR_SHEET_NUMBER_ROWS + multipleDetails.getCaseData().getCaseIdCollection().size(),
                 errors.get(0));
+        assertEquals(ERROR_SHEET_NUMBER_COLUMNS + MultiplesHelper.HEADERS.size(),
+                errors.get(1));
     }
 
     @Test

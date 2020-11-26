@@ -411,5 +411,12 @@
         <notes><![CDATA[ CVE-2020-13943  ]]></notes>
         <cve>CVE-2020-13943</cve>
     </suppress>
-
+    <suppress>
+        <notes><![CDATA[ CVE-2020-7020  ]]></notes>
+        <cve>CVE-2020-7020</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-15250  ]]></notes>
+        <cve>CVE-2020-15250</cve>
+    </suppress>
 </suppressions>

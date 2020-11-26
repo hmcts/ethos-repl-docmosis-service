@@ -6,17 +6,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
+import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
+import uk.gov.hmcts.ecm.common.model.schedule.items.ScheduleRespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleRespondentSumType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.TornadoService;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -30,75 +27,116 @@ public class MultipleScheduleServiceTest {
     @Mock
     private SingleCasesReadingService singleCasesReadingService;
     @Mock
-    private TornadoService tornadoService;
+    private ExcelDocManagementService excelDocManagementService;
     @InjectMocks
     private MultipleScheduleService multipleScheduleService;
 
     private TreeMap<String, Object> multipleObjectsFlags;
     private TreeMap<String, Object> multipleObjectsSubMultiple;
     private MultipleDetails multipleDetails;
-    private List<SubmitEvent> submitEvents;
-    private DocumentInfo documentInfo;
+    private List<SchedulePayloadES> schedulePayloadES;
     private String userToken;
 
     @Before
     public void setUp() {
         multipleObjectsFlags = MultipleUtil.getMultipleObjectsFlags();
         multipleObjectsSubMultiple = MultipleUtil.getMultipleObjectsSubMultiple();
-        submitEvents = MultipleUtil.getSubmitEvents();
+        schedulePayloadES = MultipleUtil.getSchedulePayloadES();
         multipleDetails = new MultipleDetails();
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
-        documentInfo = new DocumentInfo();
-        documentInfo.setMarkUp("<a target=\"_blank\" href=\"null/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary\">Document</a>");
         userToken = "authString";
     }
 
     @Test
-    public void bulkScheduleLogicFlags() throws IOException {
+    public void bulkScheduleLogicFlags() {
+        schedulePayloadES.get(0).setClaimantCompany(null);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
-        when(singleCasesReadingService.retrieveSingleCases(userToken,
+        when(singleCasesReadingService.retrieveScheduleCases(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleObjectsFlags,
-                FilterExcelType.FLAGS))
-                .thenReturn(submitEvents);
-        when(tornadoService.scheduleMultipleGeneration(userToken,
-                multipleDetails.getCaseData(),
-                multipleObjectsFlags,
-                submitEvents))
-        .thenReturn(documentInfo);
+                new ArrayList<>(multipleObjectsFlags.keySet())))
+                .thenReturn(schedulePayloadES);
         multipleScheduleService.bulkScheduleLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());
-        verify(singleCasesReadingService, times(1)).retrieveSingleCases(userToken,
+        verify(singleCasesReadingService, times(1)).retrieveScheduleCases(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleObjectsFlags,
-                FilterExcelType.FLAGS);
+                new ArrayList<>(multipleObjectsFlags.keySet()));
         verifyNoMoreInteractions(singleCasesReadingService);
     }
 
     @Test
-    public void bulkScheduleLogicSubMultiple() throws IOException {
-        multipleDetails.getCaseData().setScheduleDocName(LIST_CASES_CONFIG);
+    public void bulkScheduleLogicFlagsEmptySchedules() {
+        List<SchedulePayloadES> schedulePayloadES1 = new ArrayList<>(Collections.singletonList(new SchedulePayloadES()));
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
-                .thenReturn(multipleObjectsSubMultiple);
-        when(singleCasesReadingService.retrieveSingleCases(userToken,
+                .thenReturn(multipleObjectsFlags);
+        when(singleCasesReadingService.retrieveScheduleCases(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleObjectsSubMultiple,
-                FilterExcelType.SUB_MULTIPLE))
-                .thenReturn(submitEvents);
-        when(tornadoService.scheduleMultipleGeneration(userToken,
-                multipleDetails.getCaseData(),
-                multipleObjectsSubMultiple,
-                submitEvents))
-                .thenReturn(documentInfo);
+                new ArrayList<>(multipleObjectsFlags.keySet())))
+                .thenReturn(schedulePayloadES1);
         multipleScheduleService.bulkScheduleLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());
-        verify(singleCasesReadingService, times(1)).retrieveSingleCases(userToken,
+        verify(singleCasesReadingService, times(1)).retrieveScheduleCases(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleObjectsSubMultiple,
-                FilterExcelType.SUB_MULTIPLE);
+                new ArrayList<>(multipleObjectsFlags.keySet()));
+        verifyNoMoreInteractions(singleCasesReadingService);
+    }
+
+    @Test
+    public void bulkScheduleLogicFlagsWithoutCompanyNorClaimant() {
+        schedulePayloadES.get(0).setClaimantCompany(null);
+        schedulePayloadES.get(0).setClaimantIndType(null);
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjectsFlags);
+        when(singleCasesReadingService.retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(multipleObjectsFlags.keySet())))
+                .thenReturn(schedulePayloadES);
+        multipleScheduleService.bulkScheduleLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(singleCasesReadingService, times(1)).retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(multipleObjectsFlags.keySet()));
+        verifyNoMoreInteractions(singleCasesReadingService);
+    }
+
+    @Test
+    public void bulkScheduleLogicFlagsMultipleRespondents() {
+        ScheduleRespondentSumTypeItem respondentSumTypeItem = new ScheduleRespondentSumTypeItem();
+        respondentSumTypeItem.setValue(new ScheduleRespondentSumType());
+        schedulePayloadES.get(0).getRespondentCollection().add(respondentSumTypeItem);
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjectsFlags);
+        when(singleCasesReadingService.retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(multipleObjectsFlags.keySet())))
+                .thenReturn(schedulePayloadES);
+        multipleScheduleService.bulkScheduleLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(singleCasesReadingService, times(1)).retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(multipleObjectsFlags.keySet()));
+        verifyNoMoreInteractions(singleCasesReadingService);
+    }
+
+    @Test
+    public void bulkScheduleLogicSubMultiple() {
+        multipleDetails.getCaseData().setScheduleDocName(LIST_CASES_CONFIG);
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjectsSubMultiple);
+        when(singleCasesReadingService.retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                MultiplesScheduleHelper.getSubMultipleCaseIds(multipleObjectsSubMultiple)))
+                .thenReturn(schedulePayloadES);
+        multipleScheduleService.bulkScheduleLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(singleCasesReadingService, times(1)).retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                MultiplesScheduleHelper.getSubMultipleCaseIds(multipleObjectsSubMultiple));
         verifyNoMoreInteractions(singleCasesReadingService);
     }
 
@@ -107,35 +145,14 @@ public class MultipleScheduleServiceTest {
         multipleDetails.getCaseData().setScheduleDocName(LIST_CASES_CONFIG);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(new TreeMap<>());
-        when(singleCasesReadingService.retrieveSingleCases(userToken,
+        when(singleCasesReadingService.retrieveScheduleCases(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleObjectsSubMultiple,
-                FilterExcelType.SUB_MULTIPLE))
-                .thenReturn(submitEvents);
+                MultiplesScheduleHelper.getSubMultipleCaseIds(multipleObjectsSubMultiple)))
+                .thenReturn(schedulePayloadES);
         multipleScheduleService.bulkScheduleLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());
-        verifyNoMoreInteractions(tornadoService);
-    }
-
-    @Test(expected = Exception.class)
-    public void bulkScheduleLogicSubMultipleException() throws IOException {
-        multipleDetails.getCaseData().setScheduleDocName(LIST_CASES_CONFIG);
-        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
-                .thenReturn(multipleObjectsSubMultiple);
-        when(singleCasesReadingService.retrieveSingleCases(userToken,
-                multipleDetails.getCaseTypeId(),
-                multipleObjectsSubMultiple,
-                FilterExcelType.SUB_MULTIPLE))
-                .thenReturn(submitEvents);
-        when(tornadoService.scheduleMultipleGeneration(userToken,
-                multipleDetails.getCaseData(),
-                multipleObjectsSubMultiple,
-                submitEvents))
-                .thenThrow(new RuntimeException());
-        multipleScheduleService.bulkScheduleLogic(userToken,
-                multipleDetails,
-                new ArrayList<>());
+        verifyNoMoreInteractions(excelDocManagementService);
     }
 
 }

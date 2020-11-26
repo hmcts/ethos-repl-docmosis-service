@@ -1,170 +1,128 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ecm.common.model.schedule.ScheduleAddress;
+import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
+import uk.gov.hmcts.ecm.common.model.schedule.items.ScheduleRespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
+import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantType;
 
-import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_DETAILED_CONFIG;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
 public class MultiplesScheduleHelper {
 
-    private static final String ZERO = "/0";
-    private static final String NOT_ALLOCATED = "Not_Allocated";
+    public static final String SUB_ZERO = "/0";
+    public static final String NOT_ALLOCATED = "Not_Allocated";
+    public static final String RESPONDENT_NAME = "RespondentName";
+    public static final String ADDRESS_LINE1 = "AddressLine1";
+    public static final String POSTCODE = "PostCode";
 
-    public static StringBuilder buildScheduleDocumentContent(MultipleData multipleData, String accessKey,
-                                                             TreeMap<String, Object> multipleObjectsFiltered,
-                                                             List<SubmitEvent> submitEvents) {
-        StringBuilder sb = new StringBuilder();
-        // Start building the instruction
-        sb.append("{\n");
-        sb.append("\"accessKey\":\"").append(accessKey).append(NEW_LINE);
-        sb.append("\"templateName\":\"").append(BulkHelper.getScheduleDocName(multipleData.getScheduleDocName())).append(FILE_EXTENSION).append(NEW_LINE);
-        sb.append("\"outputName\":\"").append(OUTPUT_FILE_NAME).append(NEW_LINE);
-        // Building the document data
-        sb.append("\"data\":{\n");
-        sb.append("\"Multiple_No\":\"").append(multipleData.getMultipleReference()).append(NEW_LINE);
-        sb.append("\"Multiple_title\":\"").append(multipleData.getMultipleName()).append(NEW_LINE);
-        sb.append(getDocumentData(multipleData, multipleObjectsFiltered, submitEvents));
-        sb.append("\"Today_date\":\"").append(UtilHelper.formatCurrentDate(LocalDate.now())).append("\"\n");
-        sb.append("}\n");
-        sb.append("}\n");
-        return sb;
-    }
+    public static SchedulePayload getSchedulePayloadFromSchedulePayloadES(SchedulePayloadES submitEventES) {
 
-    private static StringBuilder getDocumentData(MultipleData multipleData, TreeMap<String, Object> multipleObjectsFiltered,
-                                                 List<SubmitEvent> submitEvents) {
-        if (LIST_CASES_CONFIG.equals(multipleData.getScheduleDocName())) {
-            return getScheduleBySubMultipleData(multipleData, multipleObjectsFiltered, submitEvents);
-        } else if (Arrays.asList(MULTIPLE_SCHEDULE_CONFIG, MULTIPLE_SCHEDULE_DETAILED_CONFIG).contains(multipleData.getScheduleDocName())) {
-            return getScheduleData(submitEvents);
-        } else {
-            return new StringBuilder();
-        }
-    }
-
-    private static String getSubMultipleRef(MultipleData multipleData, String subMultipleName) {
-
-        return multipleData.getSubMultipleCollection().stream()
-                .filter(subMultipleTypeItem ->
-                        subMultipleTypeItem.getValue().getSubMultipleName().equals(subMultipleName))
-                .map(subMultipleTypeItem -> subMultipleTypeItem.getValue().getSubMultipleRef())
-                .findFirst()
-                .orElse("");
+        return SchedulePayload.builder()
+                .ethosCaseRef(nullCheck(submitEventES.getEthosCaseReference()))
+                .claimantName(getClaimantName(submitEventES.getClaimantCompany(), submitEventES.getClaimantIndType()))
+                .respondentName(getRespondentData(submitEventES.getRespondentCollection(), RESPONDENT_NAME))
+                .positionType(nullCheck(submitEventES.getPositionType()))
+                .claimantAddressLine1(getClaimantData(submitEventES.getClaimantType(), ADDRESS_LINE1))
+                .claimantPostCode(getClaimantData(submitEventES.getClaimantType(), POSTCODE))
+                .respondentAddressLine1(getRespondentData(submitEventES.getRespondentCollection(), ADDRESS_LINE1))
+                .respondentPostCode(getRespondentData(submitEventES.getRespondentCollection(), POSTCODE))
+                .build();
 
     }
 
-    private static StringBuilder getScheduleBySubMultipleData(MultipleData multipleData,
-                                                              TreeMap<String, Object> multipleObjectsFiltered,
-                                                              List<SubmitEvent> submitEvents) {
+    private static String getRespondentData(List<ScheduleRespondentSumTypeItem> respondentCollection, String field) {
 
-        Map<String, SubmitEvent> submitEventMap = submitEvents.stream().collect(
-                Collectors.toMap(submitEvent -> submitEvent.getCaseData().getEthosCaseReference(),
-                        submitEvent -> submitEvent));
+        if (respondentCollection != null && !respondentCollection.isEmpty()) {
 
-        Map<String, List<SubmitEvent>> subMultipleMap = getMultipleMap(multipleObjectsFiltered, submitEventMap);
+            if (field.equals(RESPONDENT_NAME)) {
 
-        StringBuilder sb = new StringBuilder();
+                String respondentName = respondentCollection.get(0).getValue().getRespondentName();
 
-        if (!subMultipleMap.isEmpty()) {
-            sb.append("\"subMultiple\":[\n");
-            Iterator<Map.Entry<String, List<SubmitEvent>>> entries = new TreeMap<>(subMultipleMap).entrySet().iterator();
-            while (entries.hasNext()) {
-                Map.Entry<String, List<SubmitEvent>> subMultipleEntry = entries.next();
-                if (subMultipleEntry.getKey().equals(NOT_ALLOCATED)) {
-                    sb.append("{\"SubMultiple_No\":\"").append(multipleData.getMultipleReference()).append(ZERO).append(NEW_LINE);
-                    sb.append("\"SubMultiple_title\":\"").append(subMultipleEntry.getKey().replace("_", " ")).append(NEW_LINE);
-                } else {
-                    sb.append("{\"SubMultiple_No\":\"").append(getSubMultipleRef(multipleData, subMultipleEntry.getKey())).append(NEW_LINE);
-                    sb.append("\"SubMultiple_title\":\"").append(subMultipleEntry.getKey()).append(NEW_LINE);
-                }
-                sb.append("\"multiple\":[\n");
-                for (int i = 0; i < subMultipleEntry.getValue().size(); i++) {
-                    sb.append(getMultipleTypeRow(subMultipleEntry.getValue().get(i)));
-                    if (i != subMultipleEntry.getValue().size() - 1) {
-                        sb.append(",\n");
-                    }
-                }
-                sb.append("]\n");
-                if (entries.hasNext()) {
-                    sb.append("},\n");
-                } else {
-                    sb.append("}],\n");
-                }
-            }
-        }
-        return sb;
-    }
+                return respondentCollection.size() > 1
+                        ? respondentName + " & Others"
+                        : respondentName;
 
-    private static Map<String, List<SubmitEvent>> getMultipleMap(TreeMap<String, Object> multipleObjectsFiltered,
-                                                                 Map<String, SubmitEvent> submitEventMap) {
-        Map<String, List<SubmitEvent>> subMultipleMap = new HashMap<>();
-
-        for (Map.Entry<String, Object> entry : multipleObjectsFiltered.entrySet()) {
-
-            List<String> caseIds = ((List<String>) entry.getValue());
-            List<SubmitEvent> submitEvents = new ArrayList<>();
-
-            for (String caseId : caseIds) {
-                submitEvents.add(submitEventMap.get(caseId));
             }
 
-            subMultipleMap.put(entry.getKey(), submitEvents);
-        }
+            if (field.equals(ADDRESS_LINE1)) {
 
-        return subMultipleMap;
-    }
+                ScheduleAddress scheduleAddress = respondentCollection.get(0).getValue().getRespondentAddress();
 
-    private static StringBuilder getScheduleData(List<SubmitEvent> submitEvents) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\"multiple\":[\n");
-        for (int i = 0; i < submitEvents.size(); i++) {
-            sb.append(getMultipleTypeRow(submitEvents.get(i)));
-            if (i != submitEvents.size() - 1) {
-                sb.append(",\n");
+                return scheduleAddress != null
+                        ? scheduleAddress.getAddressLine1()
+                        : "";
+
             }
-        }
-        sb.append("],\n");
-        return sb;
-    }
 
-    private static StringBuilder getMultipleTypeRow(SubmitEvent submitEvent) {
-        StringBuilder sb = new StringBuilder();
-        CaseData caseData = submitEvent.getCaseData();
-        RespondentSumType respondent = caseData.getRespondentCollection().get(0).getValue();
-        sb.append("{\"Claimant\":\"").append(getClaimantName(caseData)).append(NEW_LINE);
-        sb.append("\"Respondent\":\"").append(nullCheck(respondent.getRespondentName())).append(NEW_LINE);
-        sb.append("\"Current_position\":\"").append(nullCheck(caseData.getPositionType())).append(NEW_LINE);
-        sb.append("\"Case_No\":\"").append(nullCheck(caseData.getEthosCaseReference())).append(NEW_LINE);
-        sb.append("\"claimant_full_name\":\"").append(getClaimantName(caseData)).append(NEW_LINE);
-        sb.append("\"claimant_addressLine1\":\"").append(nullCheck(caseData.getClaimantType().getClaimantAddressUK().getAddressLine1())).append(NEW_LINE);
-        sb.append("\"claimant_postCode\":\"").append(nullCheck(caseData.getClaimantType().getClaimantAddressUK().getPostCode())).append(NEW_LINE);
-        sb.append("\"respondent_full_name\":\"").append(nullCheck(respondent.getRespondentName())).append(NEW_LINE);
-        sb.append("\"respondent_addressLine1\":\"").append(nullCheck(respondent.getRespondentAddress().getAddressLine1())).append(NEW_LINE);
-        sb.append("\"respondent_postCode\":\"").append(nullCheck(respondent.getRespondentAddress().getPostCode())).append("\"}");
-        return sb;
-    }
+            else {
 
-    private static String getClaimantName(CaseData caseData) {
+                ScheduleAddress scheduleAddress = respondentCollection.get(0).getValue().getRespondentAddress();
 
-        if (!isNullOrEmpty(caseData.getClaimantCompany())) {
+                return scheduleAddress != null
+                        ? scheduleAddress.getPostCode()
+                        : "";
 
-            return caseData.getClaimantCompany();
+            }
 
         } else {
 
-            if (caseData.getClaimantIndType() != null) {
+            return "";
 
-                return caseData.getClaimantIndType().claimantFullNames();
+        }
+
+    }
+
+    private static String getClaimantData(ScheduleClaimantType scheduleClaimantType, String field) {
+
+        if (scheduleClaimantType != null) {
+
+            ScheduleAddress scheduleAddress = scheduleClaimantType.getClaimantAddressUK();
+
+            if (field.equals(ADDRESS_LINE1)) {
+
+                return scheduleAddress.getAddressLine1() != null
+                        ? scheduleAddress.getAddressLine1()
+                        : "";
+
+            }
+
+            else {
+
+                return scheduleAddress != null
+                        ? scheduleAddress.getPostCode()
+                        : "";
+
+            }
+
+        } else {
+
+            return "";
+
+        }
+
+    }
+
+    private static String getClaimantName(String claimantCompany, ScheduleClaimantIndType scheduleClaimantIndType) {
+
+        if (!isNullOrEmpty(claimantCompany)) {
+
+            return claimantCompany;
+
+        } else {
+
+            if (scheduleClaimantIndType != null) {
+
+                return scheduleClaimantIndType.claimantFullNames();
 
             } else {
 
@@ -174,6 +132,60 @@ public class MultiplesScheduleHelper {
 
         }
 
+    }
+
+    public static List<String> getSubMultipleCaseIds(TreeMap<String, Object> multipleObjects) {
+
+        List<String> caseIds = new ArrayList<>();
+
+        for (Map.Entry<String, Object> entry : multipleObjects.entrySet()) {
+
+            caseIds.addAll((List<String>) entry.getValue());
+
+        }
+
+        return caseIds;
+
+    }
+
+    public static TreeMap<String, List<SchedulePayload>> getMultipleTreeMap(TreeMap<String, Object> multipleObjectsFiltered,
+                                                                            Map<String, SchedulePayload> scheduleEventMap) {
+
+        TreeMap<String, List<SchedulePayload>> subMultipleTreeMap = new TreeMap<>();
+
+        for (Map.Entry<String, Object> entry : multipleObjectsFiltered.entrySet()) {
+
+            List<String> caseIds = ((List<String>) entry.getValue());
+            List<SchedulePayload> scheduleEvents = new ArrayList<>();
+
+            for (String caseId : caseIds) {
+                scheduleEvents.add(scheduleEventMap.get(caseId));
+            }
+
+            subMultipleTreeMap.put(entry.getKey(), scheduleEvents);
+        }
+
+        return subMultipleTreeMap;
+    }
+
+    public static String generateScheduleDocumentName(MultipleData multipleData) {
+
+        return multipleData.getMultipleReference() + " - " + multipleData.getScheduleDocName() + ".xlsx";
+
+    }
+
+    public static FilterExcelType getFilterExcelTypeByScheduleDoc(MultipleData multipleData) {
+
+        if (Arrays.asList(MULTIPLE_SCHEDULE_CONFIG, MULTIPLE_SCHEDULE_DETAILED_CONFIG)
+                .contains(multipleData.getScheduleDocName())) {
+
+            return FilterExcelType.FLAGS;
+
+        } else {
+
+            return FilterExcelType.SUB_MULTIPLE;
+
+        }
     }
 
 }
