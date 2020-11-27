@@ -18,7 +18,6 @@ public class MultiplesScheduleHelper {
 
     public static final String SUB_ZERO = "/0";
     public static final String NOT_ALLOCATED = "Not_Allocated";
-    //public static final String RESPONDENT_NAME = "RespondentName";
     public static final String ADDRESS_LINE1 = "AddressLine1";
     public static final String POSTCODE = "PostCode";
 
@@ -44,46 +43,6 @@ public class MultiplesScheduleHelper {
                 .build();
 
     }
-
-//    private static String getRespondentData(List<ScheduleRespondentSumTypeItem> respondentCollection, String field) {
-//
-//        if (respondentCollection != null && !respondentCollection.isEmpty()) {
-//
-//            if (field.equals(RESPONDENT_NAME)) {
-//
-//                String respondentName = respondentCollection.get(0).getValue().getRespondentName();
-//
-//                return respondentCollection.size() > 1
-//                        ? respondentName + " & Others"
-//                        : respondentName;
-//
-//            }
-//
-//            ScheduleAddress scheduleAddress = respondentCollection.get(0).getValue().getRespondentAddress();
-//
-//            if (field.equals(ADDRESS_LINE1)) {
-//
-//                return scheduleAddress != null
-//                        ? scheduleAddress.getAddressLine1()
-//                        : "";
-//
-//            }
-//
-//            else {
-//
-//                return scheduleAddress != null
-//                        ? scheduleAddress.getPostCode()
-//                        : "";
-//
-//            }
-//
-//        } else {
-//
-//            return "";
-//
-//        }
-//
-//    }
 
     private static String getClaimantData(ScheduleClaimantType scheduleClaimantType, String field) {
 
@@ -114,28 +73,6 @@ public class MultiplesScheduleHelper {
         }
 
     }
-
-//    private static String getClaimantName(String claimantCompany, ScheduleClaimantIndType scheduleClaimantIndType) {
-//
-//        if (!isNullOrEmpty(claimantCompany)) {
-//
-//            return claimantCompany;
-//
-//        } else {
-//
-//            if (scheduleClaimantIndType != null) {
-//
-//                return scheduleClaimantIndType.claimantFullNames();
-//
-//            } else {
-//
-//                return "";
-//
-//            }
-//
-//        }
-//
-//    }
 
     public static List<String> getSubMultipleCaseIds(TreeMap<String, Object> multipleObjects) {
 
