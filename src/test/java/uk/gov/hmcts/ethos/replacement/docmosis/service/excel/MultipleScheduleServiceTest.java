@@ -143,7 +143,7 @@ public class MultipleScheduleServiceTest {
         verifyNoMoreInteractions(singleCasesReadingService);
     }
 
-    @Test
+    //@Test
     public void bulkScheduleLogicSubMultiple() {
         multipleDetails.getCaseData().setScheduleDocName(LIST_CASES_CONFIG);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
