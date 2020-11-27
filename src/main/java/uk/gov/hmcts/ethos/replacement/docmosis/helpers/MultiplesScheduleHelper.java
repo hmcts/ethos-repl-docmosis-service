@@ -29,7 +29,7 @@ public class MultiplesScheduleHelper {
 
         if (submitEventES == null) {
 
-            log.info("SubmitEvent is empty");
+            log.info("submitEventES is empty");
 
             return SchedulePayload.builder().build();
 
