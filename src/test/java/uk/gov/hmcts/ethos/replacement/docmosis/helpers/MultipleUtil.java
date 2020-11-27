@@ -31,6 +31,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleActionType;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 import uk.gov.hmcts.ecm.common.model.schedule.ScheduleAddress;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
+import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
 import uk.gov.hmcts.ecm.common.model.schedule.items.ScheduleRespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantType;
@@ -131,7 +132,7 @@ public class MultipleUtil {
         return caseData;
     }
 
-    public static SchedulePayloadES getSchedulePayloadESData(String ethosCaseReference) {
+    public static SchedulePayloadEvent getSchedulePayloadEventData(String ethosCaseReference) {
         SchedulePayloadES schedulePayloadES = new SchedulePayloadES();
         schedulePayloadES.setClaimantCompany("JuanFran");
         ScheduleClaimantType claimantType = new ScheduleClaimantType();
@@ -142,7 +143,7 @@ public class MultipleUtil {
         schedulePayloadES.setClaimantType(claimantType);
         ScheduleClaimantIndType claimantIndType = new ScheduleClaimantIndType();
         claimantIndType.setClaimantLastName("Mike");
-        //schedulePayloadES.setClaimantIndType(claimantIndType);
+        schedulePayloadES.setClaimantIndType(claimantIndType);
         ScheduleRespondentSumType respondentSumType = new ScheduleRespondentSumType();
         respondentSumType.setRespondentName("Andrew Smith");
         respondentSumType.setRespondentAddress(address);
@@ -150,7 +151,10 @@ public class MultipleUtil {
         respondentSumTypeItem.setValue(respondentSumType);
         //schedulePayloadES.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
         schedulePayloadES.setEthosCaseReference(ethosCaseReference);
-        return schedulePayloadES;
+
+        SchedulePayloadEvent schedulePayloadEvent = new SchedulePayloadEvent();
+        schedulePayloadEvent.setSchedulePayloadES(schedulePayloadES);
+        return schedulePayloadEvent;
     }
 
     public static List<SubmitEvent> getSubmitEvents() {
@@ -163,10 +167,10 @@ public class MultipleUtil {
         return new ArrayList<>(Arrays.asList(submitEvent1, submitEvent2));
     }
 
-    public static List<SchedulePayloadES> getSchedulePayloadES() {
+    public static List<SchedulePayloadEvent> getSchedulePayloadEvents() {
         return new ArrayList<>(Arrays.asList(
-                getSchedulePayloadESData("245000/2020"),
-                getSchedulePayloadESData("245003/2020")));
+                getSchedulePayloadEventData("245000/2020"),
+                getSchedulePayloadEventData("245003/2020")));
     }
 
     public static List<SubmitMultipleEvent> getSubmitMultipleEvents() {

@@ -5,6 +5,7 @@ import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.schedule.ScheduleAddress;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
+import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantType;
 
 import java.util.*;
@@ -12,12 +13,14 @@ import java.util.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_DETAILED_CONFIG;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 @Slf4j
 public class MultiplesScheduleHelper {
 
     public static final String SUB_ZERO = "/0";
     public static final String NOT_ALLOCATED = "Not_Allocated";
+    //public static final String RESPONDENT_NAME = "RespondentName";
     public static final String ADDRESS_LINE1 = "AddressLine1";
     public static final String POSTCODE = "PostCode";
 
@@ -33,8 +36,8 @@ public class MultiplesScheduleHelper {
 
         return SchedulePayload.builder()
                 .ethosCaseRef(nullCheck(submitEventES.getEthosCaseReference()))
-//                .claimantName(getClaimantName(submitEventES.getClaimantCompany(), submitEventES.getClaimantIndType()))
-//                .respondentName(getRespondentData(submitEventES.getRespondentCollection(), RESPONDENT_NAME))
+                .claimantName(getClaimantName(submitEventES.getClaimantCompany(), submitEventES.getClaimantIndType()))
+                //.respondentName(getRespondentData(submitEventES.getRespondentCollection(), RESPONDENT_NAME))
                 .positionType(nullCheck(submitEventES.getPositionType()))
                 .claimantAddressLine1(getClaimantData(submitEventES.getClaimantType(), ADDRESS_LINE1))
                 .claimantPostCode(getClaimantData(submitEventES.getClaimantType(), POSTCODE))
@@ -43,6 +46,46 @@ public class MultiplesScheduleHelper {
                 .build();
 
     }
+
+//    private static String getRespondentData(List<ScheduleRespondentSumTypeItem> respondentCollection, String field) {
+//
+//        if (respondentCollection != null && !respondentCollection.isEmpty()) {
+//
+//            if (field.equals(RESPONDENT_NAME)) {
+//
+//                String respondentName = respondentCollection.get(0).getValue().getRespondentName();
+//
+//                return respondentCollection.size() > 1
+//                        ? respondentName + " & Others"
+//                        : respondentName;
+//
+//            }
+//
+//            ScheduleAddress scheduleAddress = respondentCollection.get(0).getValue().getRespondentAddress();
+//
+//            if (field.equals(ADDRESS_LINE1)) {
+//
+//                return scheduleAddress != null
+//                        ? scheduleAddress.getAddressLine1()
+//                        : "";
+//
+//            }
+//
+//            else {
+//
+//                return scheduleAddress != null
+//                        ? scheduleAddress.getPostCode()
+//                        : "";
+//
+//            }
+//
+//        } else {
+//
+//            return "";
+//
+//        }
+//
+//    }
 
     private static String getClaimantData(ScheduleClaimantType scheduleClaimantType, String field) {
 
@@ -68,7 +111,29 @@ public class MultiplesScheduleHelper {
 
         } else {
 
-            return "ClaimantEmpty";
+            return "";
+
+        }
+
+    }
+
+    private static String getClaimantName(String claimantCompany, ScheduleClaimantIndType scheduleClaimantIndType) {
+
+        if (!isNullOrEmpty(claimantCompany)) {
+
+            return claimantCompany;
+
+        } else {
+
+            if (scheduleClaimantIndType != null) {
+
+                return scheduleClaimantIndType.claimantFullNames();
+
+            } else {
+
+                return "";
+
+            }
 
         }
 

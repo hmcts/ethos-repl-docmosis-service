@@ -6,9 +6,12 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
+import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Service("singleCasesReadingService")
@@ -51,12 +54,12 @@ public class SingleCasesReadingService {
 
     }
 
-    public List<SchedulePayloadES> retrieveScheduleCases(String userToken, String multipleCaseTypeId, List<String> caseIds) {
+    public List<SchedulePayloadEvent> retrieveScheduleCases(String userToken, String multipleCaseTypeId, List<String> caseIds) {
 
-        List<SchedulePayloadES> submitEventsES = new ArrayList<>();
+        List<SchedulePayloadEvent> schedulePayloadEvents = new ArrayList<>();
 
         try {
-            submitEventsES = ccdClient.retrieveCasesElasticSearchSchedule(userToken,
+            schedulePayloadEvents = ccdClient.retrieveCasesElasticSearchSchedule(userToken,
                     UtilHelper.getCaseTypeId(multipleCaseTypeId),
                     caseIds);
 
@@ -70,7 +73,7 @@ public class SingleCasesReadingService {
 
         }
 
-        return submitEventsES;
+        return schedulePayloadEvents;
 
     }
 
