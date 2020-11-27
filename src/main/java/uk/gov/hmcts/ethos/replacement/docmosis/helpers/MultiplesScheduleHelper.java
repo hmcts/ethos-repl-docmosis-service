@@ -27,15 +27,23 @@ public class MultiplesScheduleHelper {
 
     public static SchedulePayload getSchedulePayloadFromSchedulePayloadES(SchedulePayloadES submitEventES) {
 
+        if (submitEventES == null) {
+
+            log.info("SubmitEvent is empty");
+
+            return SchedulePayload.builder().build();
+
+        }
+
         return SchedulePayload.builder()
                 .ethosCaseRef(nullCheck(submitEventES.getEthosCaseReference()))
-                .claimantName(getClaimantName(submitEventES.getClaimantCompany(), submitEventES.getClaimantIndType()))
-                .respondentName(getRespondentData(submitEventES.getRespondentCollection(), RESPONDENT_NAME))
+//                .claimantName(getClaimantName(submitEventES.getClaimantCompany(), submitEventES.getClaimantIndType()))
+//                .respondentName(getRespondentData(submitEventES.getRespondentCollection(), RESPONDENT_NAME))
                 .positionType(nullCheck(submitEventES.getPositionType()))
                 .claimantAddressLine1(getClaimantData(submitEventES.getClaimantType(), ADDRESS_LINE1))
                 .claimantPostCode(getClaimantData(submitEventES.getClaimantType(), POSTCODE))
-                .respondentAddressLine1(getRespondentData(submitEventES.getRespondentCollection(), ADDRESS_LINE1))
-                .respondentPostCode(getRespondentData(submitEventES.getRespondentCollection(), POSTCODE))
+//                .respondentAddressLine1(getRespondentData(submitEventES.getRespondentCollection(), ADDRESS_LINE1))
+//                .respondentPostCode(getRespondentData(submitEventES.getRespondentCollection(), POSTCODE))
                 .build();
 
     }
@@ -54,9 +62,9 @@ public class MultiplesScheduleHelper {
 
             }
 
-            if (field.equals(ADDRESS_LINE1)) {
+            ScheduleAddress scheduleAddress = respondentCollection.get(0).getValue().getRespondentAddress();
 
-                ScheduleAddress scheduleAddress = respondentCollection.get(0).getValue().getRespondentAddress();
+            if (field.equals(ADDRESS_LINE1)) {
 
                 return scheduleAddress != null
                         ? scheduleAddress.getAddressLine1()
@@ -65,8 +73,6 @@ public class MultiplesScheduleHelper {
             }
 
             else {
-
-                ScheduleAddress scheduleAddress = respondentCollection.get(0).getValue().getRespondentAddress();
 
                 return scheduleAddress != null
                         ? scheduleAddress.getPostCode()
@@ -106,7 +112,7 @@ public class MultiplesScheduleHelper {
 
         } else {
 
-            return "";
+            return "ClaimantEmpty";
 
         }
 

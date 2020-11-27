@@ -142,13 +142,13 @@ public class MultipleUtil {
         schedulePayloadES.setClaimantType(claimantType);
         ScheduleClaimantIndType claimantIndType = new ScheduleClaimantIndType();
         claimantIndType.setClaimantLastName("Mike");
-        schedulePayloadES.setClaimantIndType(claimantIndType);
+        //schedulePayloadES.setClaimantIndType(claimantIndType);
         ScheduleRespondentSumType respondentSumType = new ScheduleRespondentSumType();
         respondentSumType.setRespondentName("Andrew Smith");
         respondentSumType.setRespondentAddress(address);
         ScheduleRespondentSumTypeItem respondentSumTypeItem = new ScheduleRespondentSumTypeItem();
         respondentSumTypeItem.setValue(respondentSumType);
-        schedulePayloadES.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
+        //schedulePayloadES.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
         schedulePayloadES.setEthosCaseReference(ethosCaseReference);
         return schedulePayloadES;
     }

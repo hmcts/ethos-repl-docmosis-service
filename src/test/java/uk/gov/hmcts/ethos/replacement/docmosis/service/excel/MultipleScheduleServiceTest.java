@@ -86,7 +86,7 @@ public class MultipleScheduleServiceTest {
     @Test
     public void bulkScheduleLogicFlagsWithoutCompanyNorClaimant() {
         schedulePayloadES.get(0).setClaimantCompany(null);
-        schedulePayloadES.get(0).setClaimantIndType(null);
+        //schedulePayloadES.get(0).setClaimantIndType(null);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
         when(singleCasesReadingService.retrieveScheduleCases(userToken,
@@ -106,7 +106,7 @@ public class MultipleScheduleServiceTest {
     public void bulkScheduleLogicFlagsMultipleRespondents() {
         ScheduleRespondentSumTypeItem respondentSumTypeItem = new ScheduleRespondentSumTypeItem();
         respondentSumTypeItem.setValue(new ScheduleRespondentSumType());
-        schedulePayloadES.get(0).getRespondentCollection().add(respondentSumTypeItem);
+        //schedulePayloadES.get(0).getRespondentCollection().add(respondentSumTypeItem);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
         when(singleCasesReadingService.retrieveScheduleCases(userToken,
