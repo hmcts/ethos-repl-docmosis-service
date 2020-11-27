@@ -84,6 +84,24 @@ public class MultipleScheduleServiceTest {
     }
 
     @Test
+    public void bulkScheduleLogicFlagsNullSchedules() {
+        List<SchedulePayloadES> schedulePayloadES1 = new ArrayList<>(Collections.singletonList(null));
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjectsFlags);
+        when(singleCasesReadingService.retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(multipleObjectsFlags.keySet())))
+                .thenReturn(schedulePayloadES1);
+        multipleScheduleService.bulkScheduleLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(singleCasesReadingService, times(1)).retrieveScheduleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(multipleObjectsFlags.keySet()));
+        verifyNoMoreInteractions(singleCasesReadingService);
+    }
+
+    @Test
     public void bulkScheduleLogicFlagsWithoutCompanyNorClaimant() {
         schedulePayloadES.get(0).setClaimantCompany(null);
         //schedulePayloadES.get(0).setClaimantIndType(null);
