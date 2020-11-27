@@ -33,7 +33,7 @@ public class ScheduleCallable implements Callable<List<SchedulePayload>> {
         List<SchedulePayloadES> submitEventsES = singleCasesReadingService.retrieveScheduleCases(userToken,
                 caseTypeId, partitionCaseIds);
 
-        log.info("SubmitEvents: " + submitEventsES);
+        log.info("submitEventsES: " + submitEventsES);
 
         for (SchedulePayloadES submitEventES : submitEventsES) {
 
