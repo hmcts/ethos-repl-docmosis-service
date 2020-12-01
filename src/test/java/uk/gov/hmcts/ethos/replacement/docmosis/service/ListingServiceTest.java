@@ -234,10 +234,12 @@ public class ListingServiceTest {
                 "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , " +
                 "claimantRepresentative= , respondent= , respondentTown= , respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , " +
                 "hearingRoom=Tribunal 4, respondentOthers= , hearingNotes= ))], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
+                "hearingDocType=ETCL - Cause List, hearingDocETCL=Public, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
                 "reportType=Brought Forward Report, documentName=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().setHearingType("Valid Hearing");
+        listingDetails.getCaseData().setHearingDocType(HEARING_DOC_ETCL);
+        listingDetails.getCaseData().setHearingDocETCL(HEARING_ETCL_PUBLIC);
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
@@ -248,10 +250,12 @@ public class ListingServiceTest {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
+                "hearingDocType=ETCL - Cause List, hearingDocETCL=Public, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
                 "reportType=Brought Forward Report, documentName=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().setHearingType("Judicial Mediation");
+        listingDetails.getCaseData().setHearingDocType(HEARING_DOC_ETCL);
+        listingDetails.getCaseData().setHearingDocETCL(HEARING_ETCL_PUBLIC);
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
@@ -262,11 +266,13 @@ public class ListingServiceTest {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
+                "hearingDocType=ETCL - Cause List, hearingDocETCL=Press List, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
                 "reportType=Brought Forward Report, documentName=null)";
         submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
         submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().setHearingType("Preliminary Hearing");
         submitEvents.get(0).getCaseData().getHearingCollection().get(0).getValue().setHearingPublicPrivate("Private");
+        listingDetails.getCaseData().setHearingDocType(HEARING_DOC_ETCL);
+        listingDetails.getCaseData().setHearingDocETCL(HEARING_ETCL_PRESS_LIST);
         when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
