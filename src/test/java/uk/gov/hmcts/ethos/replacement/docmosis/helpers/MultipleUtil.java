@@ -149,7 +149,7 @@ public class MultipleUtil {
         respondentSumType.setRespondentAddress(address);
         ScheduleRespondentSumTypeItem respondentSumTypeItem = new ScheduleRespondentSumTypeItem();
         respondentSumTypeItem.setValue(respondentSumType);
-        //schedulePayloadES.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
+        schedulePayloadES.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
         schedulePayloadES.setEthosCaseReference(ethosCaseReference);
 
         SchedulePayloadEvent schedulePayloadEvent = new SchedulePayloadEvent();

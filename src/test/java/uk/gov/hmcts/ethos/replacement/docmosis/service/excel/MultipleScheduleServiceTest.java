@@ -14,7 +14,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -50,7 +49,7 @@ public class MultipleScheduleServiceTest {
         userToken = "authString";
     }
 
-    //@Test
+    @Test
     public void bulkScheduleLogicFlags() {
         schedulePayloadEvents.get(0).getSchedulePayloadES().setClaimantCompany(null);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
@@ -59,42 +58,6 @@ public class MultipleScheduleServiceTest {
                 multipleDetails.getCaseTypeId(),
                 new ArrayList<>(multipleObjectsFlags.keySet())))
                 .thenReturn(schedulePayloadEvents);
-        multipleScheduleService.bulkScheduleLogic(userToken,
-                multipleDetails,
-                new ArrayList<>());
-        verify(singleCasesReadingService, times(1)).retrieveScheduleCases(userToken,
-                multipleDetails.getCaseTypeId(),
-                new ArrayList<>(multipleObjectsFlags.keySet()));
-        verifyNoMoreInteractions(singleCasesReadingService);
-    }
-
-    @Test
-    public void bulkScheduleLogicFlagsEmptySchedules() {
-        List<SchedulePayloadEvent> schedulePayloadEvents1 = new ArrayList<>(Collections.singletonList(new SchedulePayloadEvent()));
-        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
-                .thenReturn(multipleObjectsFlags);
-        when(singleCasesReadingService.retrieveScheduleCases(userToken,
-                multipleDetails.getCaseTypeId(),
-                new ArrayList<>(multipleObjectsFlags.keySet())))
-                .thenReturn(schedulePayloadEvents1);
-        multipleScheduleService.bulkScheduleLogic(userToken,
-                multipleDetails,
-                new ArrayList<>());
-        verify(singleCasesReadingService, times(1)).retrieveScheduleCases(userToken,
-                multipleDetails.getCaseTypeId(),
-                new ArrayList<>(multipleObjectsFlags.keySet()));
-        verifyNoMoreInteractions(singleCasesReadingService);
-    }
-
-    @Test
-    public void bulkScheduleLogicFlagsNullSchedules() {
-        List<SchedulePayloadEvent> schedulePayloadEvents1 = new ArrayList<>(Collections.singletonList(null));
-        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
-                .thenReturn(multipleObjectsFlags);
-        when(singleCasesReadingService.retrieveScheduleCases(userToken,
-                multipleDetails.getCaseTypeId(),
-                new ArrayList<>(multipleObjectsFlags.keySet())))
-                .thenReturn(schedulePayloadEvents1);
         multipleScheduleService.bulkScheduleLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());
@@ -127,7 +90,7 @@ public class MultipleScheduleServiceTest {
     public void bulkScheduleLogicFlagsMultipleRespondents() {
         ScheduleRespondentSumTypeItem respondentSumTypeItem = new ScheduleRespondentSumTypeItem();
         respondentSumTypeItem.setValue(new ScheduleRespondentSumType());
-        //schedulePayloadEvents.get(0).getSchedulePayloadES().getRespondentCollection().add(respondentSumTypeItem);
+        schedulePayloadEvents.get(0).getSchedulePayloadES().getRespondentCollection().add(respondentSumTypeItem);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
         when(singleCasesReadingService.retrieveScheduleCases(userToken,
@@ -143,7 +106,7 @@ public class MultipleScheduleServiceTest {
         verifyNoMoreInteractions(singleCasesReadingService);
     }
 
-    //@Test
+    @Test
     public void bulkScheduleLogicSubMultiple() {
         multipleDetails.getCaseData().setScheduleDocName(LIST_CASES_CONFIG);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
