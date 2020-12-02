@@ -63,6 +63,8 @@ public class SingleCasesReadingService {
                     UtilHelper.getCaseTypeId(multipleCaseTypeId),
                     caseIds);
 
+            log.info("SchedulePayloadEvents: " + schedulePayloadEvents);
+
         } catch (Exception ex) {
 
             log.error("Error retrieving schedule cases");
