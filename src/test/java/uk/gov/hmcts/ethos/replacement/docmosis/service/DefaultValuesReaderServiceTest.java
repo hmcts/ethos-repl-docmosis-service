@@ -374,8 +374,8 @@ public class DefaultValuesReaderServiceTest {
                 "ethosCaseReference=null, caseType=Single, multipleReference=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, " +
                 "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, claimantOtherType=null, preAcceptCase=null, " +
                 "receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
-                "respondentCollection=null, repCollection=null, positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
-                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, depositCollection=null, judgementCollection=null, " +
+                "respondentCollection=null, repCollection=null, positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, " +
+                "fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, depositCollection=null, judgementCollection=null, " +
                 "judgementDetailsCollection=null, costsCollection=null, jurCodesCollection=null, broughtForwardCollection=null, clerkResponsible=null, " +
                 "userLocation=null, documentCollection=null, backFromJudge=null, additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, " +
                 "addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, caseNotes=null, claimantWorkAddress=null, " +
@@ -435,8 +435,8 @@ public class DefaultValuesReaderServiceTest {
                 "respondentContactPreference=null, responseStruckOut=null, responseStruckOutDate=null, responseStruckOutChairman=null, responseStruckOutReason=null, " +
                 "responseRespondentAddress=null, responseRespondentPhone1=null, responseRespondentPhone2=null, responseRespondentEmail=null, " +
                 "responseRespondentContactPreference=null, responseReceived=null, responseReceivedDate=null, responseRespondentNameQuestion=null, responseRespondentName=null, " +
-                "responseContinue=null, responseCounterClaim=null))], repCollection=null, positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, " +
-                "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, depositCollection=null, " +
+                "responseContinue=null, responseCounterClaim=null))], repCollection=null, positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
+                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, depositCollection=null, " +
                 "judgementCollection=null, judgementDetailsCollection=null, costsCollection=null, jurCodesCollection=null, broughtForwardCollection=null, " +
                 "clerkResponsible=null, userLocation=null, documentCollection=null, backFromJudge=null, additionalCaseInfoType=null, correspondenceScotType=null, " +
                 "correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, caseNotes=null, " +
@@ -490,7 +490,8 @@ public class DefaultValuesReaderServiceTest {
                 "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, hearingDateType=null, listingDate=null, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=null, listingCollection=null, listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
-                "reportType=null, documentName=null)";
+                "reportType=null, documentName=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
+                "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         assertEquals(listingDataExpected, defaultValuesReaderService.getListingData(listingData, postDefaultValuesGlasgow).toString());
     }
 }

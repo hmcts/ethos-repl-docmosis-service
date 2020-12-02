@@ -184,7 +184,7 @@ public class CaseActionsForCaseWorkerController {
     public ResponseEntity<CCDCallbackResponse> preDefaultValues(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("PRE DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        log.info("PRE DEFAULT VALUES ---> " + LOG_MESSAGE);
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -192,7 +192,6 @@ public class CaseActionsForCaseWorkerController {
         }
 
         DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, "", "");
-        log.info("Pre Default values loaded: " + defaultValues);
         ccdRequest.getCaseDetails().getCaseData().setClaimantTypeOfClaimant(defaultValues.getClaimantTypeOfClaimant());
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(ccdRequest.getCaseDetails().getCaseData())
@@ -220,17 +219,17 @@ public class CaseActionsForCaseWorkerController {
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
 
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
-        log.info("Event fields validation:: " + errors);
 
         if (errors.isEmpty()) {
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
-            log.info("Post Default values loaded: " + defaultValues);
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.caseDataDefaults(caseData);
             generateEthosCaseReference(caseData, ccdRequest);
             caseData.setMultipleFlag(caseData.getCaseType() != null
                     && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
         }
+
+        log.info("PostDefaultValues for case: " + caseData.getEthosCaseReference());
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)

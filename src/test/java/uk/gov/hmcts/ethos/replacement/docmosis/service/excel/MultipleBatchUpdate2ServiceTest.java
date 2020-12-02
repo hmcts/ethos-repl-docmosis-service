@@ -48,6 +48,7 @@ public class MultipleBatchUpdate2ServiceTest {
         multipleObjects = MultipleUtil.getMultipleObjectsAll();
         multipleDetails = new MultipleDetails();
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
+        multipleDetails.getCaseData().setCaseIdCollection(null);
         userToken = "authString";
         MoveCasesType moveCasesType = new MoveCasesType();
         moveCasesType.setUpdatedMultipleRef("246000");
@@ -61,6 +62,8 @@ public class MultipleBatchUpdate2ServiceTest {
     public void batchUpdate2LogicDetachCases() {
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjects);
+        when(multipleHelperService.getLeadCaseFromExcel(anyString(), any(), anyList()))
+                .thenReturn("245003/2020");
         multipleBatchUpdate2Service.batchUpdate2Logic(userToken,
                 multipleDetails,
                 new ArrayList<>(),
@@ -73,10 +76,11 @@ public class MultipleBatchUpdate2ServiceTest {
     }
 
     @Test
-    public void batchUpdate2LogicDetachCasesEmptyCasesLeft() {
-        multipleObjectsFlags.put("245001/2020",  "245001/2020");
+    public void batchUpdate2LogicDetachCasesEmptyNewLeadCase() {
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjects);
+        when(multipleHelperService.getLeadCaseFromExcel(anyString(), any(), anyList()))
+                .thenReturn("");
         multipleBatchUpdate2Service.batchUpdate2Logic(userToken,
                 multipleDetails,
                 new ArrayList<>(),
@@ -121,6 +125,8 @@ public class MultipleBatchUpdate2ServiceTest {
                 multipleDetails.getCaseTypeId(),
                 "246001")
         ).thenReturn(submitMultipleEvents);
+        when(multipleHelperService.getLeadCaseFromExcel(anyString(), any(), anyList()))
+                .thenReturn("245003/2020");
         multipleDetails.getCaseData().getMoveCases().setConvertToSingle(NO);
         multipleDetails.getCaseData().getMoveCases().setUpdatedMultipleRef("246001");
         multipleBatchUpdate2Service.batchUpdate2Logic(userToken,
@@ -140,6 +146,8 @@ public class MultipleBatchUpdate2ServiceTest {
                 multipleDetails.getCaseTypeId(),
                 "246001")
         ).thenReturn(submitMultipleEvents);
+        when(multipleHelperService.getLeadCaseFromExcel(anyString(), any(), anyList()))
+                .thenReturn("245003/2020");
         multipleDetails.getCaseData().getMoveCases().setConvertToSingle(NO);
         multipleDetails.getCaseData().getMoveCases().setUpdatedMultipleRef("246001");
         multipleDetails.getCaseData().getMoveCases().setUpdatedSubMultipleRef("246001/1");

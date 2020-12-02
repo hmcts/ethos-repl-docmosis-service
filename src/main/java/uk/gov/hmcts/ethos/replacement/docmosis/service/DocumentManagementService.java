@@ -13,15 +13,18 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
+import uk.gov.hmcts.reform.document.domain.Classification;
 import uk.gov.hmcts.reform.document.domain.Document;
 import uk.gov.hmcts.reform.document.domain.UploadResponse;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import static java.util.Collections.singletonList;
@@ -58,13 +61,15 @@ public class DocumentManagementService {
         try {
             log.info("ccdGatewayBaseUrl: " + ccdGatewayBaseUrl);
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, outputFileName, type, byteArray);
+            UserDetails user = userService.getUserDetails(authToken);
             UploadResponse response = documentUploadClient.upload(
                     authToken,
                     authTokenGenerator.generate(),
-                    userService.getUserDetails(authToken).getUid(),
+                    user.getUid(),
+                    new ArrayList<>(singletonList("caseworker-employment")),
+                    Classification.PUBLIC,
                     singletonList(file)
             );
-            //log.info("Response: " + response.toString());
             Document document = response.getEmbedded().getDocuments().stream()
                     .findFirst()
                     .orElseThrow(() ->
@@ -79,21 +84,21 @@ public class DocumentManagementService {
         }
     }
 
-    String generateDownloadableURL(URI documentSelf) {
+    public String generateDownloadableURL(URI documentSelf) {
         return ccdGatewayBaseUrl + documentSelf.getRawPath() + "/binary";
     }
 
-    String generateMarkupDocument(String documentDownloadableURL) {
+    public String generateMarkupDocument(String documentDownloadableURL) {
         return "<a target=\"_blank\" href=\"" + documentDownloadableURL + "\">Document</a>";
     }
 
-
     public UploadedDocument downloadFile(String authToken, String urlString) {
+        UserDetails user = userService.getUserDetails(authToken);
         ResponseEntity<Resource> response = documentDownloadClientApi.downloadBinary(
                 authToken,
                 authTokenGenerator.generate(),
-                "",
-                userService.getUserDetails(authToken).getUid(),
+                String.join(",", user.getRoles()),
+                user.getUid(),
                 getDownloadUrl(urlString)
         );
         if (HttpStatus.OK.equals(response.getStatusCode())) {

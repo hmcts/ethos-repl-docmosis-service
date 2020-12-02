@@ -14,6 +14,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class MultipleSingleMidEventValidationServiceTest {
 
     @Mock
     private SingleCasesReadingService singleCasesReadingService;
+    @Mock
+    private MultipleHelperService multipleHelperService;
 
     @InjectMocks
     private MultipleSingleMidEventValidationService multipleSingleMidEventValidationService;
@@ -34,6 +37,7 @@ public class MultipleSingleMidEventValidationServiceTest {
     private List<String> errors;
     private String userToken;
     private List<SubmitEvent> submitEventList;
+    private List<String> caseIdCollection;
 
     @Before
     public void setUp() {
@@ -42,6 +46,7 @@ public class MultipleSingleMidEventValidationServiceTest {
         submitEventList = MultipleUtil.getSubmitEvents();
         errors = new ArrayList<>();
         userToken = "authString";
+        caseIdCollection = new ArrayList<>(Arrays.asList("21006/2020", "245000/2020", "245001/2020"));
     }
 
     @Test
@@ -53,6 +58,11 @@ public class MultipleSingleMidEventValidationServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getBatchUpdateCase()))
                 .thenReturn(submitEventList.get(0));
+
+        when(multipleHelperService.getEthosCaseRefCollection(userToken,
+                multipleDetails.getCaseData(),
+                errors))
+                .thenReturn(caseIdCollection);
 
         multipleSingleMidEventValidationService.multipleSingleValidationLogic(
                 userToken,
@@ -70,6 +80,11 @@ public class MultipleSingleMidEventValidationServiceTest {
     public void multipleSingleValidationLogicDoesNotExist() {
 
         multipleDetails.getCaseData().setBatchUpdateCase("245010/2020");
+
+        when(multipleHelperService.getEthosCaseRefCollection(userToken,
+                multipleDetails.getCaseData(),
+                errors))
+                .thenReturn(caseIdCollection);
 
         multipleSingleMidEventValidationService.multipleSingleValidationLogic(
                 userToken,
@@ -130,6 +145,11 @@ public class MultipleSingleMidEventValidationServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getBatchUpdateCase()))
                 .thenReturn(submitEventList.get(0));
+
+        when(multipleHelperService.getEthosCaseRefCollection(userToken,
+                multipleDetails.getCaseData(),
+                errors))
+                .thenReturn(caseIdCollection);
 
         multipleSingleMidEventValidationService.multipleSingleValidationLogic(
                 userToken,

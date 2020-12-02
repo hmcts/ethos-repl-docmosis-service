@@ -6,6 +6,7 @@ import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
+import uk.gov.hmcts.ecm.common.model.multiples.items.CaseMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 
@@ -104,42 +105,17 @@ public class MultiplesHelper {
 
     }
 
-    public static void removeCaseIds(MultipleData multipleData, List<String> multipleObjectsFiltered) {
+    public static String getLeadFromCaseMultipleCollection(MultipleData multipleData) {
 
-        List<CaseIdTypeItem> newCaseIdCollection = new ArrayList<>();
+        List<CaseMultipleTypeItem> caseMultipleTypeItemList = multipleData.getCaseMultipleCollection();
 
-        if (multipleData.getCaseIdCollection() != null
-                && !multipleData.getCaseIdCollection().isEmpty()) {
+        if (caseMultipleTypeItemList.isEmpty()) {
 
-            newCaseIdCollection = multipleData.getCaseIdCollection().stream()
-                    .filter(key -> key.getId() != null && !key.getId().equals("null"))
-                    .filter(caseId -> !multipleObjectsFiltered.contains(caseId.getValue().getEthosCaseReference()))
-                    .distinct()
-                    .collect(Collectors.toList());
-
-        }
-
-        multipleData.setCaseIdCollection(newCaseIdCollection);
-
-    }
-
-    public static void addCaseIds(MultipleData multipleData, List<String> multipleObjectsFiltered) {
-
-        List<CaseIdTypeItem> caseIdCollectionToAdd = new ArrayList<>();
-
-        for (String ethosCaseReference : multipleObjectsFiltered) {
-
-            caseIdCollectionToAdd.add(createCaseIdTypeItem(ethosCaseReference));
-
-        }
-
-        if (multipleData.getCaseIdCollection() == null) {
-
-            multipleData.setCaseIdCollection(new ArrayList<>(caseIdCollectionToAdd));
+            return "";
 
         } else {
 
-            multipleData.getCaseIdCollection().addAll(caseIdCollectionToAdd);
+            return caseMultipleTypeItemList.get(0).getValue().getEthosCaseRef();
 
         }
 
@@ -289,6 +265,14 @@ public class MultiplesHelper {
     public static String generateExcelDocumentName(MultipleData multipleData) {
 
         return multipleData.getMultipleName() + "-" + multipleData.getMultipleReference() + ".xlsx";
+
+    }
+
+    public static String getCurrentLead(String leadCaseLink) {
+
+        return leadCaseLink != null && !leadCaseLink.isEmpty()
+                ? leadCaseLink.substring(leadCaseLink.indexOf(">") + 1).replace("</a>", "")
+                : "";
 
     }
 

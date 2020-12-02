@@ -29,6 +29,12 @@ import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.types.MultipleObjectType;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleActionType;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
+import uk.gov.hmcts.ecm.common.model.schedule.ScheduleAddress;
+import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
+import uk.gov.hmcts.ecm.common.model.schedule.items.ScheduleRespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
+import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantType;
+import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleRespondentSumType;
 
 import java.io.IOException;
 import java.util.*;
@@ -83,15 +89,16 @@ public class MultipleUtil {
 
     public static TreeMap<String, Object> getMultipleObjectsFlags() {
         TreeMap<String, Object> multipleObjectTreeMap = new TreeMap<>();
-        multipleObjectTreeMap.put("245000/2020",  "245000/2020");
-        multipleObjectTreeMap.put("245003/2020",  "245003/2020");
+        multipleObjectTreeMap.put("245000/2020", "245000/2020");
+        multipleObjectTreeMap.put("245003/2020", "245003/2020");
+        multipleObjectTreeMap.put("21006/2020", "21006/2020");
         return multipleObjectTreeMap;
     }
 
     public static TreeMap<String, Object> getMultipleObjectsSubMultiple() {
         TreeMap<String, Object> multipleObjectTreeMap = new TreeMap<>();
-        multipleObjectTreeMap.put("245000", new ArrayList<>(Collections.singletonList("245000/2020")));
-        multipleObjectTreeMap.put("245003", new ArrayList<>(Collections.singletonList("245003/2020")));
+        multipleObjectTreeMap.put("SubMultiple", new ArrayList<>(Collections.singletonList("245000/2020")));
+        multipleObjectTreeMap.put("SubMultiple3", new ArrayList<>(Collections.singletonList("245003/2020")));
         return multipleObjectTreeMap;
     }
 
@@ -124,6 +131,28 @@ public class MultipleUtil {
         return caseData;
     }
 
+    public static SchedulePayloadES getSchedulePayloadESData(String ethosCaseReference) {
+        SchedulePayloadES schedulePayloadES = new SchedulePayloadES();
+        schedulePayloadES.setClaimantCompany("JuanFran");
+        ScheduleClaimantType claimantType = new ScheduleClaimantType();
+        ScheduleAddress address = new ScheduleAddress();
+        address.setPostCode("M2 45GD");
+        address.setAddressLine1("12 Sillavan Way");
+        claimantType.setClaimantAddressUK(address);
+        schedulePayloadES.setClaimantType(claimantType);
+        ScheduleClaimantIndType claimantIndType = new ScheduleClaimantIndType();
+        claimantIndType.setClaimantLastName("Mike");
+        schedulePayloadES.setClaimantIndType(claimantIndType);
+        ScheduleRespondentSumType respondentSumType = new ScheduleRespondentSumType();
+        respondentSumType.setRespondentName("Andrew Smith");
+        respondentSumType.setRespondentAddress(address);
+        ScheduleRespondentSumTypeItem respondentSumTypeItem = new ScheduleRespondentSumTypeItem();
+        respondentSumTypeItem.setValue(respondentSumType);
+        schedulePayloadES.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
+        schedulePayloadES.setEthosCaseReference(ethosCaseReference);
+        return schedulePayloadES;
+    }
+
     public static List<SubmitEvent> getSubmitEvents() {
         SubmitEvent submitEvent1 = new SubmitEvent();
         submitEvent1.setCaseData(getCaseData("245000/2020"));
@@ -132,6 +161,12 @@ public class MultipleUtil {
         submitEvent2.setCaseData(getCaseData("245003/2020"));
         submitEvent2.setCaseId(1232121233);
         return new ArrayList<>(Arrays.asList(submitEvent1, submitEvent2));
+    }
+
+    public static List<SchedulePayloadES> getSchedulePayloadES() {
+        return new ArrayList<>(Arrays.asList(
+                getSchedulePayloadESData("245000/2020"),
+                getSchedulePayloadESData("245003/2020")));
     }
 
     public static List<SubmitMultipleEvent> getSubmitMultipleEvents() {
@@ -199,6 +234,9 @@ public class MultipleUtil {
                 .ethosCaseRef(ethosCaseRef)
                 .subMultiple(subMultiple)
                 .flag1(flag1)
+                .flag2("")
+                .flag3("")
+                .flag4("")
                 .build();
     }
 
@@ -231,6 +269,7 @@ public class MultipleUtil {
         multipleData.setSubMultipleAction(getSubMultipleActionType());
         multipleData.setLeadCase("21006/2020");
         multipleData.setState(OPEN_STATE);
+        multipleData.setCaseCounter("2");
         return multipleData;
     }
 

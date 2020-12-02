@@ -12,8 +12,6 @@ import uk.gov.hmcts.ecm.common.servicebus.ServiceBusSender;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CHUNK_MESSAGE_SIZE;
-
 /**
  * Sends create updates messages to create-updates queue.
  */
@@ -38,7 +36,7 @@ public class CreateUpdatesBusSender {
                 CreateUpdatesHelper.getCreateUpdatesMessagesCollection(
                         createUpdatesDto,
                         dataModelParent,
-                        CHUNK_MESSAGE_SIZE,
+                        500,
                         updateSize);
 
         createUpdatesMsgList

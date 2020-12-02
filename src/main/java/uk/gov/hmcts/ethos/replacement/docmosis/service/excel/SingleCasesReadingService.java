@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
+import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
 
 import java.util.*;
 
@@ -19,41 +19,6 @@ public class SingleCasesReadingService {
     @Autowired
     public SingleCasesReadingService(CcdClient ccdClient) {
         this.ccdClient = ccdClient;
-    }
-
-    public List<SubmitEvent> retrieveSingleCases(String userToken, String caseTypeId,
-                                                  TreeMap<String, Object> multipleObjects,
-                                                  FilterExcelType filterExcelType) {
-
-        List<SubmitEvent> submitEvents = new ArrayList<>();
-
-        try {
-            submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,
-                    UtilHelper.getCaseTypeId(caseTypeId),
-                    filterExcelType.equals(FilterExcelType.FLAGS) ?
-                            new ArrayList<>(multipleObjects.keySet()) :
-                            getSubMultipleCaseIds(multipleObjects));
-
-        } catch (Exception ex) {
-
-            log.error("Error retrieving single cases");
-
-            log.error(ex.getMessage());
-
-        }
-
-        return submitEvents;
-    }
-
-    private List<String> getSubMultipleCaseIds(TreeMap<String, Object> multipleObjects) {
-
-        List<String> caseIds = new ArrayList<>();
-
-        for (Map.Entry<String, Object> entry : multipleObjects.entrySet()) {
-            caseIds.addAll((List<String>) entry.getValue());
-        }
-
-        return caseIds;
     }
 
     public SubmitEvent retrieveSingleCase(String userToken, String multipleCaseTypeId, String caseId) {
@@ -83,6 +48,29 @@ public class SingleCasesReadingService {
         }
 
         return submitEvents;
+
+    }
+
+    public List<SchedulePayloadES> retrieveScheduleCases(String userToken, String multipleCaseTypeId, List<String> caseIds) {
+
+        List<SchedulePayloadES> submitEventsES = new ArrayList<>();
+
+        try {
+            submitEventsES = ccdClient.retrieveCasesElasticSearchSchedule(userToken,
+                    UtilHelper.getCaseTypeId(multipleCaseTypeId),
+                    caseIds);
+
+        } catch (Exception ex) {
+
+            log.error("Error retrieving schedule cases");
+
+            log.error(ex.getMessage(), ex);
+
+            log.error(Arrays.toString(ex.getStackTrace()));
+
+        }
+
+        return submitEventsES;
 
     }
 

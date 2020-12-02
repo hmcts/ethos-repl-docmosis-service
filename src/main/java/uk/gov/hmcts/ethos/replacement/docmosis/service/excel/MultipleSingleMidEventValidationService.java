@@ -23,10 +23,13 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
 public class MultipleSingleMidEventValidationService {
 
     private final SingleCasesReadingService singleCasesReadingService;
+    private final MultipleHelperService multipleHelperService;
 
     @Autowired
-    public MultipleSingleMidEventValidationService(SingleCasesReadingService singleCasesReadingService) {
+    public MultipleSingleMidEventValidationService(SingleCasesReadingService singleCasesReadingService,
+                                                   MultipleHelperService multipleHelperService) {
         this.singleCasesReadingService = singleCasesReadingService;
+        this.multipleHelperService = multipleHelperService;
     }
 
     public void multipleSingleValidationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
@@ -45,7 +48,7 @@ public class MultipleSingleMidEventValidationService {
 
         log.info("Validating the single case exists in the multiple");
 
-        validateSingleCaseInMultiple(multipleData, errors, caseToSearch);
+        validateSingleCaseInMultiple(userToken, multipleData, errors, caseToSearch);
 
         if (errors.isEmpty()) {
 
@@ -59,10 +62,12 @@ public class MultipleSingleMidEventValidationService {
 
     }
 
-    private void validateSingleCaseInMultiple(MultipleData multipleData, List<String> errors, String caseToSearch) {
+    private void validateSingleCaseInMultiple(String userToken, MultipleData multipleData, List<String> errors, String caseToSearch) {
 
-        if (multipleData.getCaseIdCollection() == null ||
-                multipleData.getCaseIdCollection().isEmpty()) {
+        List<String> ethosCaseRefCollection = multipleHelperService.getEthosCaseRefCollection(userToken, multipleData, errors);
+
+        if (ethosCaseRefCollection == null ||
+                ethosCaseRefCollection.isEmpty()) {
 
             log.info("Multiple does not have cases");
 
@@ -72,7 +77,7 @@ public class MultipleSingleMidEventValidationService {
 
             log.info("Searching case: " + caseToSearch);
 
-            if (searchCaseInCaseIdCollection(multipleData, caseToSearch)) {
+            if (searchCaseInCaseIdCollection(ethosCaseRefCollection, caseToSearch)) {
 
                 log.info("Case found");
 
@@ -88,12 +93,10 @@ public class MultipleSingleMidEventValidationService {
 
     }
 
-    private boolean searchCaseInCaseIdCollection(MultipleData multipleData, String caseToSearch) {
+    private boolean searchCaseInCaseIdCollection(List<String> ethosCaseRefCollection, String caseToSearch) {
 
-        return multipleData.getCaseIdCollection().stream()
-                .anyMatch(value -> value.getId() != null
-                        && !value.getId().equals("null")
-                        && value.getValue().getEthosCaseReference().equals(caseToSearch));
+        return ethosCaseRefCollection.stream()
+                .anyMatch(caseId -> caseId.equals(caseToSearch));
 
     }
 
