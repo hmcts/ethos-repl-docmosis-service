@@ -16,6 +16,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.BroughtForwardDatesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
@@ -35,6 +36,8 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
@@ -49,6 +52,14 @@ public class ListingService {
     private final CcdClient ccdClient;
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
+
+    private static final String HEARING_TYPE_PRIVATE = "Private";
+
+    private static final String HEARING_TYPE_JUDICIAL_MEDIATION = "Judicial Mediation";
+    private static final String HEARING_TYPE_JUDICIAL_MEDIATION_TCC = "Judicial Mediation - TCC";
+    private static final String HEARING_TYPE_PERLIMINARY_HEARING = "Preliminary Hearing";
+    private static final String HEARING_TYPE_PERLIMINARY_HEARING_CM = "Preliminary Hearing(CM)";
+    private static final String HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC = "Preliminary Hearing (CM) - TCC";
 
     @Autowired
     public ListingService(TornadoService tornadoService, CcdClient ccdClient) {
@@ -205,18 +216,20 @@ public class ListingService {
 
     private List<ListingTypeItem> getListingTypeItems(HearingTypeItem hearingTypeItem, ListingData listingData, CaseData caseData) {
         List<ListingTypeItem> listingTypeItems = new ArrayList<>();
-        int hearingDateCollectionSize = hearingTypeItem.getValue().getHearingDateCollection().size();
-        for (int i = 0; i < hearingDateCollectionSize; i++) {
-            DateListedTypeItem dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
-            boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
-            boolean isListingDateValid = isListingDateValid(listingData, dateListedTypeItem);
-            boolean isListingStatusValid = isListingStatusValid(dateListedTypeItem);
-            if (isListingDateValid && isListingVenueValid && isListingStatusValid) {
-                ListingTypeItem listingTypeItem = new ListingTypeItem();
-                ListingType listingType = ListingHelper.getListingTypeFromCaseData(listingData, caseData, hearingTypeItem.getValue(), dateListedTypeItem.getValue(), i, hearingDateCollectionSize);
-                listingTypeItem.setId(String.valueOf(dateListedTypeItem.getId()));
-                listingTypeItem.setValue(listingType);
-                listingTypeItems.add(listingTypeItem);
+        if (isHearingTypeValid(listingData, hearingTypeItem)) {
+            int hearingDateCollectionSize = hearingTypeItem.getValue().getHearingDateCollection().size();
+            for (int i = 0; i < hearingDateCollectionSize; i++) {
+                DateListedTypeItem dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
+                boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
+                boolean isListingDateValid = isListingDateValid(listingData, dateListedTypeItem);
+                boolean isListingStatusValid = isListingStatusValid(dateListedTypeItem);
+                if (isListingDateValid && isListingVenueValid && isListingStatusValid) {
+                    ListingTypeItem listingTypeItem = new ListingTypeItem();
+                    ListingType listingType = ListingHelper.getListingTypeFromCaseData(listingData, caseData, hearingTypeItem.getValue(), dateListedTypeItem.getValue(), i, hearingDateCollectionSize);
+                    listingTypeItem.setId(String.valueOf(dateListedTypeItem.getId()));
+                    listingTypeItem.setValue(listingType);
+                    listingTypeItems.add(listingTypeItem);
+                }
             }
         }
         return listingTypeItems;
@@ -297,10 +310,26 @@ public class ListingService {
         if (dateListedType.getHearingStatus() != null) {
             List<String> invalidHearingStatuses = Arrays.asList(HEARING_STATUS_SETTLED, HEARING_STATUS_WITHDRAWN, HEARING_STATUS_POSTPONED);
             return invalidHearingStatuses.stream().noneMatch(str -> str.equals(dateListedType.getHearingStatus()));
-        }
-        else {
+        } else {
             return true;
         }
+    }
+
+    private boolean isHearingTypeValid(ListingData listingData, HearingTypeItem hearingTypeItem) {
+        if (!isNullOrEmpty(listingData.getHearingDocType()) && !isNullOrEmpty(listingData.getHearingDocETCL())) {
+            if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && !listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)) {
+                HearingType hearingType = hearingTypeItem.getValue();
+                if (hearingType.getHearingType() != null) {
+                    if (hearingType.getHearingType().equals(HEARING_TYPE_PERLIMINARY_HEARING) && hearingType.getHearingPublicPrivate().equals(HEARING_TYPE_PRIVATE)) {
+                        return false;
+                    } else {
+                        List<String> invalidHearingTypes = Arrays.asList(HEARING_TYPE_JUDICIAL_MEDIATION, HEARING_TYPE_JUDICIAL_MEDIATION_TCC, HEARING_TYPE_PERLIMINARY_HEARING_CM, HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC);
+                        return invalidHearingTypes.stream().noneMatch(str -> str.equals(hearingType.getHearingType()));
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     private boolean validateMatchingDate(ListingData listingData, String matchingDate) {

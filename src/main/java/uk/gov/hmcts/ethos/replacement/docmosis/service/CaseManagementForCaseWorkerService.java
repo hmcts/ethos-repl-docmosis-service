@@ -102,6 +102,7 @@ public class CaseManagementForCaseWorkerService {
         claimantDefaults(caseData);
         respondentDefaults(caseData);
         struckOutDefaults(caseData);
+        dateToCurrentPosition(caseData);
         flagsImageFileNameDefaults(caseData);
     }
 
@@ -156,6 +157,15 @@ public class CaseManagementForCaseWorkerService {
             }
         }
         return caseData;
+    }
+
+    public void dateToCurrentPosition(CaseData caseData) {
+        if (!isNullOrEmpty(caseData.getPositionType())) {
+            if (isNullOrEmpty(caseData.getCurrentPosition()) || !caseData.getPositionType().equals(caseData.getCurrentPosition())) {
+                caseData.setDateToPosition(LocalDate.now().toString());
+                caseData.setCurrentPosition(caseData.getPositionType());
+            }
+        }
     }
 
     public CaseData struckOutRespondents(CCDRequest ccdRequest) {

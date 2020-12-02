@@ -221,9 +221,9 @@ public class CaseActionsForCaseWorkerController {
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
 
         if (errors.isEmpty()) {
-            caseManagementForCaseWorkerService.caseDataDefaults(caseData);
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
+            caseManagementForCaseWorkerService.caseDataDefaults(caseData);
             generateEthosCaseReference(caseData, ccdRequest);
             caseData.setMultipleFlag(caseData.getCaseType() != null
                     && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
@@ -287,6 +287,7 @@ public class CaseActionsForCaseWorkerController {
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
+            caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
             caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
 
             addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(

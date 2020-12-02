@@ -279,7 +279,7 @@ public class ListingHelper {
 
     private static StringBuilder getListingTypeRow(ListingType listingType, String caseType, ListingData listingData) {
         StringBuilder sb = new StringBuilder();
-        sb.append("{\"Judge\":\"").append(nullCheck(listingType.getHearingJudgeName())).append(NEW_LINE);
+        sb.append("{\"Judge\":\"").append(nullCheck(extractHearingJudgeName(listingType))).append(NEW_LINE);
         sb.append(getCourtListingData(listingData));
         sb.append(getLogo(caseType));
         sb.append("\"ERMember\":\"").append(nullCheck(listingType.getHearingERMember())).append(NEW_LINE);
@@ -305,6 +305,10 @@ public class ListingHelper {
         sb.append("\"Hearing_notes\":\"").append(nullCheck(listingType.getHearingNotes())).append(NEW_LINE);
         sb.append("\"respondent_representative\":\"").append(nullCheck(listingType.getRespondentRepresentative())).append("\"}");
         return sb;
+    }
+
+    private static String extractHearingJudgeName(ListingType listingType) {
+        return listingType.getHearingJudgeName().substring(listingType.getHearingJudgeName().indexOf('_') + 1);
     }
 
     public static String getRespondentOthersWithLineBreaks(ListingType listingType) {

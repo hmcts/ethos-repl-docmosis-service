@@ -367,11 +367,7 @@ public class Helper {
 
     private static String getVenueAddress(HearingType hearingType, String caseTypeId, InputStream venueAddressInputStream) {
 
-        log.info("CREATING WORKBOOK FROM VENUE ADDRESS VALUES FILE : " + VENUE_ADDRESS_VALUES_FILE_PATH);
-
         try (Workbook workbook = new XSSFWorkbook(venueAddressInputStream)) {
-
-            log.info("FETCHING SPREADSHEET TAB FOR CASE TYPE ID : " + caseTypeId);
 
             Sheet datatypeSheet = workbook.getSheet(caseTypeId);
 
@@ -386,10 +382,8 @@ public class Helper {
                     }
 
                     String hearingVenue = getCellValue(currentRow.getCell(0));
-                    log.info("FETCHED HEARING VENUE : " + hearingVenue);
 
                     if (!isNullOrEmpty(hearingVenue) && hearingVenue.equals(hearingType.getHearingVenue())) {
-                        log.info("RETURNED VENUE ADDRESS : " + getCellValue(currentRow.getCell(1)));
                         return getCellValue(currentRow.getCell(1));
                     }
                 }
