@@ -25,7 +25,7 @@ public class MultipleScheduleService {
     private final SingleCasesReadingService singleCasesReadingService;
     private final ExcelDocManagementService excelDocManagementService;
 
-    public static final int ES_PARTITION_SIZE = 1000;
+    public static final int ES_PARTITION_SIZE = 500;
     public static final int THREAD_NUMBER = 20;
 
     @Autowired
