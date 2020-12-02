@@ -33,8 +33,6 @@ public class ScheduleCallable implements Callable<List<SchedulePayload>> {
         List<SchedulePayloadEvent> schedulePayloadEvents = singleCasesReadingService.retrieveScheduleCases(userToken,
                 caseTypeId, partitionCaseIds);
 
-        log.info("schedulePayloadEvent: " + schedulePayloadEvents);
-
         for (SchedulePayloadEvent schedulePayloadEvent : schedulePayloadEvents) {
 
             schedulePayloads.add(MultiplesScheduleHelper.getSchedulePayloadFromSchedulePayloadES(schedulePayloadEvent.getSchedulePayloadES()));
