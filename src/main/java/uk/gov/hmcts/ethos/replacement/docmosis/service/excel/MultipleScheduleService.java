@@ -89,6 +89,8 @@ public class MultipleScheduleService {
 
         List<Future<List<SchedulePayload>>> resultList = new ArrayList<>();
 
+        log.info("CaseIdCollectionSize: " + caseIdCollection.size());
+
         for (List<String> partitionCaseIds : Lists.partition(caseIdCollection, ES_PARTITION_SIZE)) {
 
             ScheduleCallable scheduleCallable = new ScheduleCallable(singleCasesReadingService, userToken, caseTypeId, partitionCaseIds);
@@ -103,7 +105,11 @@ public class MultipleScheduleService {
 
             try {
 
-                result.addAll(fut.get());
+                List<SchedulePayload> schedulePayloads = fut.get();
+
+                log.info("PartialSize: " + schedulePayloads.size());
+
+                result.addAll(schedulePayloads);
 
             } catch (InterruptedException | ExecutionException e) {
 
@@ -118,6 +124,8 @@ public class MultipleScheduleService {
         }
 
         executor.shutdown();
+
+        log.info("ResultSize: " + result.size());
 
         return result;
 
