@@ -167,8 +167,8 @@ public class MultipleUtil {
         return new ArrayList<>(Arrays.asList(submitEvent1, submitEvent2));
     }
 
-    public static List<SchedulePayloadEvent> getSchedulePayloadEvents() {
-        return new ArrayList<>(Arrays.asList(
+    public static HashSet<SchedulePayloadEvent> getSchedulePayloadEvents() {
+        return new HashSet<>(Arrays.asList(
                 getSchedulePayloadEventData("245000/2020"),
                 getSchedulePayloadEventData("245003/2020")));
     }

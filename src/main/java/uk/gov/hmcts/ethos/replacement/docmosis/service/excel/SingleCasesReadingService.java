@@ -8,10 +8,7 @@ import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service("singleCasesReadingService")
@@ -54,14 +51,14 @@ public class SingleCasesReadingService {
 
     }
 
-    public List<SchedulePayloadEvent> retrieveScheduleCases(String userToken, String multipleCaseTypeId, List<String> caseIds) {
+    public HashSet<SchedulePayloadEvent> retrieveScheduleCases(String userToken, String multipleCaseTypeId, List<String> caseIds) {
 
-        List<SchedulePayloadEvent> schedulePayloadEvents = new ArrayList<>();
+        HashSet<SchedulePayloadEvent> schedulePayloadEvents = new HashSet<>();
 
         try {
-            schedulePayloadEvents = ccdClient.retrieveCasesElasticSearchSchedule(userToken,
+            schedulePayloadEvents = new HashSet<>(ccdClient.retrieveCasesElasticSearchSchedule(userToken,
                     UtilHelper.getCaseTypeId(multipleCaseTypeId),
-                    caseIds);
+                    caseIds));
 
             log.info("SchedulePayloadEvents: " + schedulePayloadEvents);
 

@@ -6,12 +6,12 @@ import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.SingleCasesReadingService;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 @Slf4j
-public class ScheduleCallable implements Callable<List<SchedulePayload>> {
+public class ScheduleCallable implements Callable<HashSet<SchedulePayload>> {
 
     private SingleCasesReadingService singleCasesReadingService;
     private String userToken;
@@ -26,11 +26,11 @@ public class ScheduleCallable implements Callable<List<SchedulePayload>> {
     }
 
     @Override
-    public List<SchedulePayload> call() {
+    public HashSet<SchedulePayload> call() {
 
-        List<SchedulePayload> schedulePayloads = new ArrayList<>();
+        HashSet<SchedulePayload> schedulePayloads = new HashSet<>();
 
-        List<SchedulePayloadEvent> schedulePayloadEvents = singleCasesReadingService.retrieveScheduleCases(userToken,
+        HashSet<SchedulePayloadEvent> schedulePayloadEvents = singleCasesReadingService.retrieveScheduleCases(userToken,
                 caseTypeId, partitionCaseIds);
 
         for (SchedulePayloadEvent schedulePayloadEvent : schedulePayloadEvents) {

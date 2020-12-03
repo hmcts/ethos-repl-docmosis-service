@@ -14,7 +14,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.TreeMap;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -36,7 +36,7 @@ public class MultipleScheduleServiceTest {
     private TreeMap<String, Object> multipleObjectsFlags;
     private TreeMap<String, Object> multipleObjectsSubMultiple;
     private MultipleDetails multipleDetails;
-    private List<SchedulePayloadEvent> schedulePayloadEvents;
+    private HashSet<SchedulePayloadEvent> schedulePayloadEvents;
     private String userToken;
 
     @Before
@@ -51,7 +51,7 @@ public class MultipleScheduleServiceTest {
 
     @Test
     public void bulkScheduleLogicFlags() {
-        schedulePayloadEvents.get(0).getSchedulePayloadES().setClaimantCompany(null);
+        schedulePayloadEvents.iterator().next().getSchedulePayloadES().setClaimantCompany(null);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
         when(singleCasesReadingService.retrieveScheduleCases(userToken,
@@ -69,8 +69,8 @@ public class MultipleScheduleServiceTest {
 
     @Test
     public void bulkScheduleLogicFlagsWithoutCompanyNorClaimant() {
-        schedulePayloadEvents.get(0).getSchedulePayloadES().setClaimantCompany(null);
-        schedulePayloadEvents.get(0).getSchedulePayloadES().setClaimantIndType(null);
+        schedulePayloadEvents.iterator().next().getSchedulePayloadES().setClaimantCompany(null);
+        schedulePayloadEvents.iterator().next().getSchedulePayloadES().setClaimantIndType(null);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
         when(singleCasesReadingService.retrieveScheduleCases(userToken,
@@ -90,7 +90,7 @@ public class MultipleScheduleServiceTest {
     public void bulkScheduleLogicFlagsMultipleRespondents() {
         ScheduleRespondentSumTypeItem respondentSumTypeItem = new ScheduleRespondentSumTypeItem();
         respondentSumTypeItem.setValue(new ScheduleRespondentSumType());
-        schedulePayloadEvents.get(0).getSchedulePayloadES().getRespondentCollection().add(respondentSumTypeItem);
+        schedulePayloadEvents.iterator().next().getSchedulePayloadES().getRespondentCollection().add(respondentSumTypeItem);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
         when(singleCasesReadingService.retrieveScheduleCases(userToken,
