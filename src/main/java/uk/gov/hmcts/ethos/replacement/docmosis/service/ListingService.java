@@ -41,6 +41,12 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PRIVATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 
@@ -52,14 +58,6 @@ public class ListingService {
     private final CcdClient ccdClient;
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
-
-    private static final String HEARING_TYPE_PRIVATE = "Private";
-
-    private static final String HEARING_TYPE_JUDICIAL_MEDIATION = "Judicial Mediation";
-    private static final String HEARING_TYPE_JUDICIAL_MEDIATION_TCC = "Judicial Mediation - TCC";
-    private static final String HEARING_TYPE_PERLIMINARY_HEARING = "Preliminary Hearing";
-    private static final String HEARING_TYPE_PERLIMINARY_HEARING_CM = "Preliminary Hearing(CM)";
-    private static final String HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC = "Preliminary Hearing (CM) - TCC";
 
     @Autowired
     public ListingService(TornadoService tornadoService, CcdClient ccdClient) {
@@ -316,16 +314,19 @@ public class ListingService {
     }
 
     private boolean isHearingTypeValid(ListingData listingData, HearingTypeItem hearingTypeItem) {
-        if (!isNullOrEmpty(listingData.getHearingDocType()) && !isNullOrEmpty(listingData.getHearingDocETCL())) {
-            if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL) && !listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)) {
-                HearingType hearingType = hearingTypeItem.getValue();
-                if (hearingType.getHearingType() != null) {
-                    if (hearingType.getHearingType().equals(HEARING_TYPE_PERLIMINARY_HEARING) && hearingType.getHearingPublicPrivate().equals(HEARING_TYPE_PRIVATE)) {
-                        return false;
-                    } else {
-                        List<String> invalidHearingTypes = Arrays.asList(HEARING_TYPE_JUDICIAL_MEDIATION, HEARING_TYPE_JUDICIAL_MEDIATION_TCC, HEARING_TYPE_PERLIMINARY_HEARING_CM, HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC);
-                        return invalidHearingTypes.stream().noneMatch(str -> str.equals(hearingType.getHearingType()));
-                    }
+        if (!isNullOrEmpty(listingData.getHearingDocType()) &&
+                !isNullOrEmpty(listingData.getHearingDocETCL()) &&
+                listingData.getHearingDocType().equals(HEARING_DOC_ETCL) &&
+                !listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)) {
+
+            HearingType hearingType = hearingTypeItem.getValue();
+
+            if (hearingType.getHearingType() != null) {
+                if (hearingType.getHearingType().equals(HEARING_TYPE_PERLIMINARY_HEARING) && hearingType.getHearingPublicPrivate().equals(HEARING_TYPE_PRIVATE)) {
+                    return false;
+                } else {
+                    List<String> invalidHearingTypes = Arrays.asList(HEARING_TYPE_JUDICIAL_MEDIATION, HEARING_TYPE_JUDICIAL_MEDIATION_TCC, HEARING_TYPE_PERLIMINARY_HEARING_CM, HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC);
+                    return invalidHearingTypes.stream().noneMatch(str -> str.equals(hearingType.getHearingType()));
                 }
             }
         }

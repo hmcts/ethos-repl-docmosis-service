@@ -160,11 +160,9 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public void dateToCurrentPosition(CaseData caseData) {
-        if (!isNullOrEmpty(caseData.getPositionType())) {
-            if (isNullOrEmpty(caseData.getCurrentPosition()) || !caseData.getPositionType().equals(caseData.getCurrentPosition())) {
-                caseData.setDateToPosition(LocalDate.now().toString());
-                caseData.setCurrentPosition(caseData.getPositionType());
-            }
+        if (!isNullOrEmpty(caseData.getPositionType()) && positionChanged(caseData)) {
+            caseData.setDateToPosition(LocalDate.now().toString());
+            caseData.setCurrentPosition(caseData.getPositionType());
         }
     }
 
@@ -312,6 +310,10 @@ public class CaseManagementForCaseWorkerService {
                 return caseData.getAdditionalCaseInfoType().getDoNotPostpone().equals(YES);
             } else { return false; }
         } else { return false; }
+    }
+
+    private boolean positionChanged(CaseData caseData) {
+        return (isNullOrEmpty(caseData.getCurrentPosition()) || !caseData.getPositionType().equals(caseData.getCurrentPosition()));
     }
 
     public CaseData addNewHearingItem(CCDRequest ccdRequest) {

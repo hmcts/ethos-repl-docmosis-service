@@ -253,7 +253,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = scotlandCcdRequest2.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
         assertEquals(caseData.getCurrentPosition(), caseData.getPositionType());
-        assertEquals(caseData.getDateToPosition(), "2019-11-15");
+        assertEquals("2019-11-15", caseData.getDateToPosition());
     }
 
     @Test
