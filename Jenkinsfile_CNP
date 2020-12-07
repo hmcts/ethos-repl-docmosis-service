@@ -5,6 +5,7 @@
 def type = "java"
 def product = "ethos"
 def component = "repl-docmosis-backend"
+def branchesToSync = ['demo', 'perftest']
 
 withPipeline(type, product, component) {
   enableAksStagingDeployment()
@@ -25,6 +26,7 @@ withPipeline(type, product, component) {
     env.TF_STATE_STORAGE_TEMPLATE = 'statestore'
     env.TF_STATE_CONTAINER_TEMPLATE = 'statectr'
   }
+  syncBranchesWithMaster(branchesToSync)
   enableSlackNotifications('#ethos-repl-service')
 
   after('functional') {
