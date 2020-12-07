@@ -4,7 +4,7 @@ data "azurerm_user_assigned_identity" "ethos-identity" {
 }
 
 module "key-vault" {
-  source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=azurermv2"
+  source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
   product                 = var.product
   env                     = var.env
   tenant_id               = var.tenant_id
