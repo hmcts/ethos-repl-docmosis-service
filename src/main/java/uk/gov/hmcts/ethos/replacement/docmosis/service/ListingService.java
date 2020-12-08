@@ -45,7 +45,13 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_CLOSED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_INPUT_IN_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_OTHER_COUNTRY;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_SAME_COUNTRY;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_REJECTED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
@@ -138,7 +144,9 @@ public class ListingService {
             case BROUGHT_FORWARD_REPORT:
                 return processBroughtForwardDatesRequest(listingDetails, authToken);
             case CLAIMS_ACCEPTED_REPORT:
-                return processClaimsAcceptedDatesRequest(listingDetails, authToken);
+                return processClaimsAcceptedRequest(listingDetails, authToken);
+            case LIVE_CASELOAD_REPORT:
+                return processLiveCaseloadRequest(listingDetails, authToken);
             default:
                 return listingDetails.getCaseData();
         }
@@ -169,7 +177,7 @@ public class ListingService {
         }
     }
 
-    private ListingData processClaimsAcceptedDatesRequest(ListingDetails listingDetails, String authToken) {
+    private ListingData processClaimsAcceptedRequest(ListingDetails listingDetails, String authToken) {
         try {
             //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
             List<SubmitEvent> submitEvents = getGenericReportSearch(listingDetails, authToken);
@@ -179,7 +187,7 @@ public class ListingService {
                 AdhocReportType localReportsSummaryHdr = new AdhocReportType();
                 List<AdhocReportTypeItem> localReportsDetailList = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
-                    AdhocReportTypeItem localReportsDetailItem = getLocalReportsDetailItem(listingDetails, submitEvent.getCaseData());
+                    AdhocReportTypeItem localReportsDetailItem = getClaimsAcceptedDetailItem(listingDetails, submitEvent.getCaseData());
                     if (localReportsDetailItem.getValue() != null) {
                         totalCases++;
                         if (localReportsDetailItem.getValue().getCaseType().equals(SINGLE_CASE_TYPE)) totalSingles++;
@@ -191,6 +199,27 @@ public class ListingService {
                 localReportsSummaryHdr.setSinglesTotal(Integer.toString(totalSingles));
                 localReportsSummaryHdr.setMultiplesTotal(Integer.toString(totalMultiples));
                 listingDetails.getCaseData().setLocalReportsSummaryHdr(localReportsSummaryHdr);
+                listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
+            }
+            return clearListingFields(listingDetails.getCaseData());
+        } catch (Exception ex) {
+            throw new CaseRetrievalException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
+        }
+    }
+
+    private ListingData processLiveCaseloadRequest(ListingDetails listingDetails, String authToken) {
+        try {
+            //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
+            List<SubmitEvent> submitEvents = getGenericReportSearch(listingDetails, authToken);
+            if (submitEvents != null || !submitEvents.isEmpty()) {
+                log.info("Cases searched: " + submitEvents.size());
+                List<AdhocReportTypeItem> localReportsDetailList = new ArrayList<>();
+                for (SubmitEvent submitEvent : submitEvents) {
+                    AdhocReportTypeItem localReportsDetailItem = getLiveCaseloadDetailItem(listingDetails, submitEvent.getCaseData());
+                    if (localReportsDetailItem.getValue() != null) {
+                        localReportsDetailList.add(localReportsDetailItem);
+                    }
+                }
                 listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
             }
             return clearListingFields(listingDetails.getCaseData());
@@ -284,23 +313,32 @@ public class ListingService {
         return bFDateTypeItem;
     }
 
-    private AdhocReportTypeItem getLocalReportsDetailItem(ListingDetails listingDetails, CaseData caseData) {
+    private AdhocReportTypeItem getClaimsAcceptedDetailItem(ListingDetails listingDetails, CaseData caseData) {
         AdhocReportTypeItem adhocReportTypeItem = new AdhocReportTypeItem();
         ListingData listingData = listingDetails.getCaseData();
-        String caseTypeId = ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId());
         if (caseData.getPreAcceptCase() != null && caseData.getPreAcceptCase().getDateAccepted() != null) {
             boolean matchingDateIsValid = validateMatchingDate(listingData, caseData.getPreAcceptCase().getDateAccepted());
             if (matchingDateIsValid) {
                 AdhocReportType adhocReportType = new AdhocReportType();
                 adhocReportType.setCaseType(caseData.getCaseType());
-                adhocReportType.setCaseReference(caseData.getEthosCaseReference());
-                adhocReportType.setDateOfAcceptance(caseData.getPreAcceptCase().getDateAccepted());
-                adhocReportType.setMultipleRef(caseData.getMultipleReference());
-                adhocReportType.setLeadCase(caseData.getLeadClaimant());
-                adhocReportType.setPosition(caseData.getCurrentPosition());
-                adhocReportType.setDateToPosition(caseData.getDateToPosition());
-                adhocReportType.setFileLocation(getFileLocation(caseTypeId, caseData));
-                adhocReportType.setClerk(caseData.getClerkResponsible());
+                getCommonReportDetailFields(listingDetails, caseData, adhocReportType);
+                adhocReportTypeItem.setValue(adhocReportType);
+            }
+        }
+        return adhocReportTypeItem;
+    }
+
+    private AdhocReportTypeItem getLiveCaseloadDetailItem(ListingDetails listingDetails, CaseData caseData) {
+        AdhocReportTypeItem adhocReportTypeItem = new AdhocReportTypeItem();
+        ListingData listingData = listingDetails.getCaseData();
+        if (caseData.getPreAcceptCase() != null && caseData.getPreAcceptCase().getDateAccepted() != null) {
+            boolean matchingDateIsValid = validateMatchingDate(listingData, caseData.getPreAcceptCase().getDateAccepted());
+            boolean isPositionTypeValid = isPositionTypeValid(caseData);
+            if (matchingDateIsValid && isPositionTypeValid) {
+                AdhocReportType adhocReportType = new AdhocReportType();
+                adhocReportType.setReportOffice(getTribunalOffice(listingDetails, caseData));
+                // TODO : hearingCollection.Hearing_stage implementation
+                getCommonReportDetailFields(listingDetails, caseData, adhocReportType);
                 adhocReportTypeItem.setValue(adhocReportType);
             }
         }
@@ -391,7 +429,19 @@ public class ListingService {
         return true;
     }
 
-    private String getFileLocation(String caseTypeId, CaseData caseData) {
+    private void getCommonReportDetailFields(ListingDetails listingDetails, CaseData caseData, AdhocReportType adhocReportType) {
+        adhocReportType.setCaseReference(caseData.getEthosCaseReference());
+        adhocReportType.setDateOfAcceptance(caseData.getPreAcceptCase().getDateAccepted());
+        adhocReportType.setMultipleRef(caseData.getMultipleReference());
+        adhocReportType.setLeadCase(caseData.getLeadClaimant());
+        adhocReportType.setPosition(caseData.getCurrentPosition());
+        adhocReportType.setDateToPosition(caseData.getDateToPosition());
+        adhocReportType.setFileLocation(getFileLocation(listingDetails, caseData));
+        adhocReportType.setClerk(caseData.getClerkResponsible());
+    }
+
+    private String getFileLocation(ListingDetails listingDetails, CaseData caseData) {
+        String caseTypeId = ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId());
         if (!caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)) {
             return caseData.getFileLocation();
         } else {
@@ -408,6 +458,23 @@ public class ListingService {
                     return "";
             }
         }
+    }
+
+    private boolean isPositionTypeValid(CaseData caseData) {
+        if (caseData.getPositionType() != null) {
+            List<String> invalidPositionTypes = Arrays.asList(POSITION_TYPE_REJECTED,
+                    POSITION_TYPE_CASE_CLOSED,
+                    POSITION_TYPE_CASE_INPUT_IN_ERROR,
+                    POSITION_TYPE_CASE_TRANSFERRED_SAME_COUNTRY,
+                    POSITION_TYPE_CASE_TRANSFERRED_OTHER_COUNTRY);
+            return invalidPositionTypes.stream().noneMatch(str -> str.equals(caseData.getPositionType()));
+        }
+        return true;
+    }
+
+    private String getTribunalOffice(ListingDetails listingDetails, CaseData caseData) {
+        String caseTypeId = ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId());
+        return caseTypeId.equals(SCOTLAND_CASE_TYPE_ID) ? caseData.getManagingOffice() : caseTypeId;
     }
 
     public DocumentInfo processHearingDocument(ListingData listingData, String caseTypeId, String authToken) {
