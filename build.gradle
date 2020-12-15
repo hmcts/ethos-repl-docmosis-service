@@ -176,7 +176,7 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.1.0'
     compile group: 'org.springframework.retry', name: 'spring-retry'
 
-    compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.19'
+    compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.2'
 
     testCompile (group: 'org.docx4j', name: 'docx4j', version: '6.1.2') {
         exclude module: 'slf4j-log4j12'
