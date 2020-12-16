@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -237,6 +238,39 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void preAcceptCaseRejected() {
         manchesterCcdRequest.getCaseDetails().getCaseData().getPreAcceptCase().setCaseAccepted(NO);
         assertEquals(REJECTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
+    }
+
+    @Test
+    public void dateToCurrentPositionChanged() {
+        CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
+        assertEquals(caseData.getCurrentPosition(), caseData.getPositionType());
+        assertEquals(caseData.getDateToPosition(), LocalDate.now().toString());
+    }
+
+    @Test
+    public void dateToCurrentPositionUnChanged() {
+        CaseData caseData = scotlandCcdRequest2.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
+        assertEquals(caseData.getCurrentPosition(), caseData.getPositionType());
+        assertEquals("2019-11-15", caseData.getDateToPosition());
+    }
+
+    @Test
+    public void dateToCurrentPositionNullPositionType() {
+        CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
+        caseData.setPositionType(null);
+        caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
+        assertNull(caseData.getPositionType());
+        assertNull(caseData.getDateToPosition());
+    }
+
+    @Test
+    public void dateToCurrentPositionNullCurrentPosition() {
+        CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
+        assertEquals(caseData.getCurrentPosition(), caseData.getPositionType());
+        assertEquals(caseData.getDateToPosition(), LocalDate.now().toString());
     }
 
     @Test

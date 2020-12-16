@@ -108,7 +108,9 @@ public class DefaultValuesReaderService {
             case WATFORD_USERS_CASE_TYPE_ID:
             case WATFORD_CASE_TYPE_ID:
                 return getWatfordPostDefaultValues(values);
-            default:
+            case SCOTLAND_DEV_CASE_TYPE_ID:
+            case SCOTLAND_USERS_CASE_TYPE_ID:
+            case SCOTLAND_CASE_TYPE_ID:
                 if (managingOffice != null && !managingOffice.equals("")) {
                     switch (managingOffice) {
                         case EDINBURGH_OFFICE:
@@ -123,6 +125,8 @@ public class DefaultValuesReaderService {
                 } else {
                     return getGlasgowPostDefaultValues(values);
                 }
+            default:
+                return getManchesterPostDefaultValues(values);
         }
     }
 

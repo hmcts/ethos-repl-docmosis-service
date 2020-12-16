@@ -54,25 +54,9 @@ public class MultiplesScheduleHelper {
 
             }
 
-            if (field.equals(ADDRESS_LINE1)) {
+            ScheduleAddress scheduleAddress = respondentCollection.get(0).getValue().getRespondentAddress();
 
-                ScheduleAddress scheduleAddress = respondentCollection.get(0).getValue().getRespondentAddress();
-
-                return scheduleAddress != null
-                        ? scheduleAddress.getAddressLine1()
-                        : "";
-
-            }
-
-            else {
-
-                ScheduleAddress scheduleAddress = respondentCollection.get(0).getValue().getRespondentAddress();
-
-                return scheduleAddress != null
-                        ? scheduleAddress.getPostCode()
-                        : "";
-
-            }
+            return getScheduleAddress(field, scheduleAddress);
 
         } else {
 
@@ -88,25 +72,31 @@ public class MultiplesScheduleHelper {
 
             ScheduleAddress scheduleAddress = scheduleClaimantType.getClaimantAddressUK();
 
-            if (field.equals(ADDRESS_LINE1)) {
-
-                return scheduleAddress.getAddressLine1() != null
-                        ? scheduleAddress.getAddressLine1()
-                        : "";
-
-            }
-
-            else {
-
-                return scheduleAddress != null
-                        ? scheduleAddress.getPostCode()
-                        : "";
-
-            }
+            return getScheduleAddress(field, scheduleAddress);
 
         } else {
 
             return "";
+
+        }
+
+    }
+
+    private static String getScheduleAddress(String field, ScheduleAddress scheduleAddress) {
+
+        if (field.equals(ADDRESS_LINE1)) {
+
+            return scheduleAddress.getAddressLine1() != null
+                    ? scheduleAddress.getAddressLine1()
+                    : "";
+
+        }
+
+        else {
+
+            return scheduleAddress != null
+                    ? scheduleAddress.getPostCode()
+                    : "";
 
         }
 

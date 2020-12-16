@@ -13,9 +13,13 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.tasks.ScheduleCallable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Slf4j
 @Service("multipleScheduleService")
@@ -25,7 +29,7 @@ public class MultipleScheduleService {
     private final SingleCasesReadingService singleCasesReadingService;
     private final ExcelDocManagementService excelDocManagementService;
 
-    public static final int ES_PARTITION_SIZE = 1000;
+    public static final int ES_PARTITION_SIZE = 500;
     public static final int THREAD_NUMBER = 20;
 
     @Autowired
@@ -87,7 +91,9 @@ public class MultipleScheduleService {
 
         ExecutorService executor = Executors.newFixedThreadPool(THREAD_NUMBER);
 
-        List<Future<List<SchedulePayload>>> resultList = new ArrayList<>();
+        List<Future<HashSet<SchedulePayload>>> resultList = new ArrayList<>();
+
+        log.info("CaseIdCollectionSize: " + caseIdCollection.size());
 
         for (List<String> partitionCaseIds : Lists.partition(caseIdCollection, ES_PARTITION_SIZE)) {
 
@@ -99,11 +105,15 @@ public class MultipleScheduleService {
 
         List<SchedulePayload> result = new ArrayList<>();
 
-        for (Future<List<SchedulePayload>> fut : resultList){
+        for (Future<HashSet<SchedulePayload>> fut : resultList){
 
             try {
 
-                result.addAll(fut.get());
+                HashSet<SchedulePayload> schedulePayloads = fut.get();
+
+                log.info("PartialSize: " + schedulePayloads.size());
+
+                result.addAll(schedulePayloads);
 
             } catch (InterruptedException | ExecutionException e) {
 
@@ -118,6 +128,8 @@ public class MultipleScheduleService {
         }
 
         executor.shutdown();
+
+        log.info("ResultSize: " + result.size());
 
         return result;
 

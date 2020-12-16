@@ -102,6 +102,7 @@ public class CaseManagementForCaseWorkerService {
         claimantDefaults(caseData);
         respondentDefaults(caseData);
         struckOutDefaults(caseData);
+        dateToCurrentPosition(caseData);
         flagsImageFileNameDefaults(caseData);
     }
 
@@ -156,6 +157,13 @@ public class CaseManagementForCaseWorkerService {
             }
         }
         return caseData;
+    }
+
+    public void dateToCurrentPosition(CaseData caseData) {
+        if (!isNullOrEmpty(caseData.getPositionType()) && positionChanged(caseData)) {
+            caseData.setDateToPosition(LocalDate.now().toString());
+            caseData.setCurrentPosition(caseData.getPositionType());
+        }
     }
 
     public CaseData struckOutRespondents(CCDRequest ccdRequest) {
@@ -302,6 +310,10 @@ public class CaseManagementForCaseWorkerService {
                 return caseData.getAdditionalCaseInfoType().getDoNotPostpone().equals(YES);
             } else { return false; }
         } else { return false; }
+    }
+
+    private boolean positionChanged(CaseData caseData) {
+        return (isNullOrEmpty(caseData.getCurrentPosition()) || !caseData.getPositionType().equals(caseData.getCurrentPosition()));
     }
 
     public CaseData addNewHearingItem(CCDRequest ccdRequest) {

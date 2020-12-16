@@ -101,6 +101,8 @@
     "locationType": "Manchester",
     "multipleReference": "No",
     "positionType": "First",
+    "dateToPosition": "2019-11-15",
+    "currentPosition": "First",
     "receiptDate": "2019-03-12",
     "responseReceived": "none",
     "userLocation": "Liverpool"

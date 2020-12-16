@@ -9,11 +9,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
+import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -30,7 +33,7 @@ public class SingleCasesReadingServiceTest {
     private MultipleDetails multipleDetails;
     private String userToken;
     private List<SubmitEvent> submitEventList;
-    private List<SchedulePayloadES> schedulePayloadES;
+    private HashSet<SchedulePayloadEvent> schedulePayloadEvents;
 
     @Before
     public void setUp() {
@@ -38,7 +41,7 @@ public class SingleCasesReadingServiceTest {
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
         multipleDetails.setCaseTypeId("Manchester_Multiple");
         submitEventList = MultipleUtil.getSubmitEvents();
-        schedulePayloadES = MultipleUtil.getSchedulePayloadES();
+        schedulePayloadEvents = MultipleUtil.getSchedulePayloadEvents();
         userToken = "authString";
     }
 
@@ -74,7 +77,7 @@ public class SingleCasesReadingServiceTest {
         when(ccdClient.retrieveCasesElasticSearchSchedule(userToken,
                 multipleDetails.getCaseTypeId(),
                 new ArrayList<>(Collections.singletonList("240001/2020"))))
-                .thenReturn(schedulePayloadES);
+                .thenReturn(new ArrayList<>(schedulePayloadEvents));
         singleCasesReadingService.retrieveScheduleCases(userToken,
                 multipleDetails.getCaseTypeId(),
                 new ArrayList<>(Collections.singletonList("240001/2020")));
@@ -90,10 +93,10 @@ public class SingleCasesReadingServiceTest {
                 anyString(),
                 anyList()))
                 .thenThrow(new RuntimeException());
-        List<SchedulePayloadES> schedulePayloadESList = singleCasesReadingService.retrieveScheduleCases(userToken,
+        HashSet<SchedulePayloadEvent> schedulePayloadEventList = singleCasesReadingService.retrieveScheduleCases(userToken,
                 multipleDetails.getCaseTypeId(),
                 new ArrayList<>(Collections.singletonList("240001/2020")));
-        assertEquals(schedulePayloadESList, new ArrayList<>());
+        assertEquals(schedulePayloadEventList, new HashSet<>());
     }
 
 }
