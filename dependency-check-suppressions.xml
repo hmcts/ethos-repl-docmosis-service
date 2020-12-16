@@ -419,4 +419,12 @@
         <notes><![CDATA[ CVE-2020-15250  ]]></notes>
         <cve>CVE-2020-15250</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-8908  ]]></notes>
+        <cve>CVE-2020-8908</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-17527  ]]></notes>
+        <cve>CVE-2020-17527</cve>
+    </suppress>
 </suppressions>
