@@ -40,7 +40,7 @@ public class TornadoService {
     private String ccdGatewayBaseUrl;
     private final UserService userService;
 
-    DocumentInfo documentGeneration(String authToken, CaseData caseData, String caseTypeId) throws IOException {
+    public DocumentInfo documentGeneration(String authToken, CaseData caseData, String caseTypeId) throws IOException {
         HttpURLConnection conn = null;
         DocumentInfo documentInfo = new DocumentInfo();
         try {
@@ -76,7 +76,7 @@ public class TornadoService {
         return conn;
     }
 
-    private void buildInstruction(HttpURLConnection conn, CaseData caseData, UserDetails userDetails, String caseTypeId) throws IOException {
+    private void buildInstruction(HttpURLConnection conn, CaseData caseData, UserDetails userDetails, String caseTypeId) {
 
         try (InputStream venueAddressInputStream = getClass().getClassLoader().getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH)) {
             StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(), userDetails, caseTypeId, venueAddressInputStream);
