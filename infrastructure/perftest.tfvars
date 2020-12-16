@@ -7,4 +7,4 @@ s2s_url = "http://rpe-service-auth-provider-perftest.service.core-compute-perfte
 ccd_gateway_url = "https://gateway-ccd.perftest.platform.hmcts.net"
 micro_service = "ethos_repl_service"
 managed_identity_rg_name = "managed-identities-perftest-rg"
-managed_identity_name = "ethos-ldata-perftest-mi"
+managed_identity_name = "ethos-perftest-mi"
