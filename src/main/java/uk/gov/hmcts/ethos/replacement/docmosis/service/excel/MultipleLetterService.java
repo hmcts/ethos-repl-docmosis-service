@@ -55,7 +55,7 @@ public class MultipleLetterService {
             SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
                     multipleDetails.getCaseTypeId(), multipleObjects.firstKey());
 
-            log.info("Generate letter");
+            log.info("Generate letter for document");
 
             documentInfo = generateLetter(userToken, multipleDetails, submitEvent);
 
