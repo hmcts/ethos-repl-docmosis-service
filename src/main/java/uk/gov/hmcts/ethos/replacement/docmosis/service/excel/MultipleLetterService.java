@@ -78,8 +78,11 @@ public class MultipleLetterService {
         DocumentInfo documentInfo;
 
         try {
-             documentInfo = tornadoService.documentGeneration(
-                     userToken, submitEvent.getCaseData(), UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()));
+            documentInfo = tornadoService.documentGeneration(userToken,
+                    submitEvent.getCaseData(),
+                    UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()),
+                    multipleDetails.getCaseData().getCorrespondenceType(),
+                    multipleDetails.getCaseData().getCorrespondenceScotType());
 
         } catch (Exception ex) {
 

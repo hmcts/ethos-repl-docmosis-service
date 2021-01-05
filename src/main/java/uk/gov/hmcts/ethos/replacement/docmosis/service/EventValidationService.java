@@ -101,7 +101,8 @@ public class EventValidationService {
 
     public List<String> validateHearingNumber(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        String correspondenceHearingNumber = getCorrespondenceHearingNumber(caseData);
+        String correspondenceHearingNumber = getCorrespondenceHearingNumber(
+                caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType());
         if(correspondenceHearingNumber != null) {
             if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
                 HearingType hearingType = getHearingByNumber(caseData.getHearingCollection(), correspondenceHearingNumber);

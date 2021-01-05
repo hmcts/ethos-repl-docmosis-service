@@ -58,7 +58,7 @@ public class MultipleLetterServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleObjectsFlags.firstKey()))
                 .thenReturn(submitEvents.get(0));
-        when(tornadoService.documentGeneration(anyString(), any(), anyString()))
+        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any()))
                 .thenReturn(new DocumentInfo());
         multipleLetterService.bulkLetterLogic(userToken,
                 multipleDetails,
@@ -77,7 +77,7 @@ public class MultipleLetterServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleObjectsFlags.firstKey()))
                 .thenReturn(submitEvents.get(0));
-        when(tornadoService.documentGeneration(anyString(), any(), anyString()))
+        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any()))
                 .thenThrow(new IOException());
         multipleLetterService.bulkLetterLogic(userToken,
                 multipleDetails,
