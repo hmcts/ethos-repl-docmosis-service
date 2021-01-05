@@ -193,6 +193,9 @@ public class MultiplesHelper {
         multipleData.setBatchUpdateJurisdiction(null);
         multipleData.setBatchUpdateClaimantRep(null);
 
+        multipleData.setCorrespondenceType(null);
+        multipleData.setCorrespondenceScotType(null);
+
     }
 
     public static DynamicValueType getDynamicValue(String value) {
