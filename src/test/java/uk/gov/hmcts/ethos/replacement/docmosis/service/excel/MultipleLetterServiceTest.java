@@ -10,6 +10,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.TornadoService;
 
 import java.io.IOException;
@@ -30,6 +31,8 @@ public class MultipleLetterServiceTest {
     private SingleCasesReadingService singleCasesReadingService;
     @Mock
     private TornadoService tornadoService;
+    @Mock
+    private EventValidationService eventValidationService;
     @InjectMocks
     private MultipleLetterService multipleLetterService;
 

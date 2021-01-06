@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
-import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ecm.common.model.ccd.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
@@ -152,23 +149,26 @@ public class DocumentGenerationController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        List<String> errors = eventValidationService.validateHearingNumber(ccdRequest.getCaseDetails().getCaseData());
+        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+
+        List<String> errors = eventValidationService.validateHearingNumber(caseDetails.getCaseData(),
+                caseDetails.getCaseData().getCorrespondenceType(), caseDetails.getCaseData().getCorrespondenceScotType());
 
         if (errors.isEmpty()) {
             DocumentInfo documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
-            ccdRequest.getCaseDetails().getCaseData().setDocMarkUp(documentInfo.getMarkUp());
+            caseDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
 
-            documentGenerationService.clearUserChoices(ccdRequest.getCaseDetails());
+            documentGenerationService.clearUserChoices(caseDetails);
 
             return ResponseEntity.ok(CCDCallbackResponse.builder()
-                    .data(ccdRequest.getCaseDetails().getCaseData())
+                    .data(caseDetails.getCaseData())
                     .errors(errors)
                     .significant_item(Helper.generateSignificantItem(documentInfo))
                     .build());
         }
         else {
             return ResponseEntity.ok(CCDCallbackResponse.builder()
-                    .data(ccdRequest.getCaseDetails().getCaseData())
+                    .data(caseDetails.getCaseData())
                     .errors(errors)
                     .build());
         }

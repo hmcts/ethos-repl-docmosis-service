@@ -31,8 +31,7 @@ import java.util.Collections;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -249,7 +248,8 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void generateDocumentValidationErrors() throws Exception {
-        when(eventValidationService.validateHearingNumber(isA(CaseData.class))).thenReturn(new ArrayList<>(Collections.singletonList("Error")));
+        when(eventValidationService.validateHearingNumber(any(), any(), any()))
+                .thenReturn(new ArrayList<>(Collections.singletonList("Error")));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())

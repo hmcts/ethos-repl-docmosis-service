@@ -10,6 +10,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.TornadoService;
 
 import java.util.List;
@@ -24,14 +25,17 @@ public class MultipleLetterService {
     private final TornadoService tornadoService;
     private final ExcelReadingService excelReadingService;
     private final SingleCasesReadingService singleCasesReadingService;
+    private final EventValidationService eventValidationService;
 
     @Autowired
     public MultipleLetterService(TornadoService tornadoService,
                                  ExcelReadingService excelReadingService,
-                                 SingleCasesReadingService singleCasesReadingService) {
+                                 SingleCasesReadingService singleCasesReadingService,
+                                 EventValidationService eventValidationService) {
         this.tornadoService = tornadoService;
         this.excelReadingService = excelReadingService;
         this.singleCasesReadingService = singleCasesReadingService;
+        this.eventValidationService = eventValidationService;
     }
 
     public DocumentInfo bulkLetterLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
@@ -55,9 +59,19 @@ public class MultipleLetterService {
             SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
                     multipleDetails.getCaseTypeId(), multipleObjects.firstKey());
 
-            log.info("Generate letter for document");
+            log.info("Validating hearing number");
 
-            documentInfo = generateLetter(userToken, multipleDetails, submitEvent);
+            errors.addAll(eventValidationService.validateHearingNumber(submitEvent.getCaseData(),
+                    multipleDetails.getCaseData().getCorrespondenceType(),
+                    multipleDetails.getCaseData().getCorrespondenceScotType()));
+
+            if (errors.isEmpty()) {
+
+                log.info("Generate letter for document");
+
+                documentInfo = generateLetter(userToken, multipleDetails, submitEvent);
+
+            }
 
         } else {
 

@@ -486,9 +486,10 @@ public class ExcelActionsController {
 
         DocumentInfo documentInfo = multipleLetterService.bulkLetterLogic(userToken, multipleDetails, errors);
 
-        multipleDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
-
         if (errors.isEmpty()) {
+
+            multipleDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
+
             return ResponseEntity.ok(MultipleCallbackResponse.builder()
                     .data(multipleDetails.getCaseData())
                     .significant_item(Helper.generateSignificantItem(documentInfo))
