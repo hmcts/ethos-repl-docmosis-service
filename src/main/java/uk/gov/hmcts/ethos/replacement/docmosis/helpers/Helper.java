@@ -59,6 +59,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 public class Helper {
 
     private static final String VENUE_ADDRESS_OPENING_PROCESSING_ERROR = "Failed while opening or processing the entries for the venueAddressValues.xlsx file : ---> ";
+    public static final String HEARING_CREATION_NUMBER_ERROR = "A new hearing can only be added from the List Hearing menu item";
+    public static final String HEARING_CREATION_DAY_ERROR = "A new day for a hearing can only be added from the List Hearing menu item";
 
     public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey,
                                                      UserDetails userDetails, String caseTypeId,
@@ -794,4 +796,47 @@ public class Helper {
             caseData.getRespondentECC().setValue(listItems.get(0));
         }
     }
+
+    public static List<String> hearingMidEventValidation(CaseData caseData) {
+
+        List<String> errors = new ArrayList<>();
+
+        if (caseData.getHearingCollection() != null) {
+
+            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+
+                if (hearingTypeItem.getValue().getHearingNumber() == null
+                        || hearingTypeItem.getValue().getHearingNumber().isEmpty()) {
+
+                    errors.add(HEARING_CREATION_NUMBER_ERROR);
+
+                    return errors;
+
+                }
+
+                if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
+
+                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+
+                        if (dateListedTypeItem.getValue().getListedDate() == null
+                                || dateListedTypeItem.getValue().getListedDate().isEmpty()) {
+
+                            errors.add(HEARING_CREATION_DAY_ERROR);
+
+                            return  errors;
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return errors;
+
+    }
+
 }

@@ -22,6 +22,8 @@ import java.util.Objects;
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.HEARING_CREATION_DAY_ERROR;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.HEARING_CREATION_NUMBER_ERROR;
 
 public class HelperTest {
 
@@ -1804,6 +1806,42 @@ public class HelperTest {
         List<RespondentSumTypeItem> activeRespondents = Helper.getActiveRespondents(caseDetailsScot2.getCaseData());
 
         assertEquals(activeRespondentsFound, activeRespondents.size());
+    }
+
+    @Test
+    public void hearingMidEventValidationNumberError() {
+
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue().setHearingNumber(null);
+
+        assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
+
+        assertEquals(HEARING_CREATION_NUMBER_ERROR, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
+
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue().setHearingNumber("");
+
+        assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
+
+        assertEquals(HEARING_CREATION_NUMBER_ERROR, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
+
+    }
+
+    @Test
+    public void hearingMidEventValidationDayError() {
+
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().setListedDate(null);
+
+        assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
+
+        assertEquals(HEARING_CREATION_DAY_ERROR, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
+
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().setListedDate("");
+
+        assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
+
+        assertEquals(HEARING_CREATION_DAY_ERROR, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
+
     }
 
 }
