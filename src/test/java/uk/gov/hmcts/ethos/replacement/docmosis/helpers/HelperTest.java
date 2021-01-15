@@ -1842,6 +1842,11 @@ public class HelperTest {
 
         assertEquals(HEARING_CREATION_DAY_ERROR, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
 
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .setHearingDateCollection(null);
+
+        assertEquals(0, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
+
     }
 
 }
