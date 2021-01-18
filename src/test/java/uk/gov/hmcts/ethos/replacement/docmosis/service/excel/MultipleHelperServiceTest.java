@@ -77,7 +77,7 @@ public class MultipleHelperServiceTest {
                 multipleDetails.getCaseData(),
                 multipleDetails.getCaseData().getLeadCase(),
                 "");
-        assertEquals("<a target=\"_blank\" href=\"http://www-demo.ccd/dm-store:8080/v2/case//v2/case/1232121232\">21006/2020</a>",
+        assertEquals("<a target=\"_blank\" href=\"/case/1232121232\">21006/2020</a>",
                 multipleDetails.getCaseData().getLeadCase());
     }
 
@@ -93,7 +93,7 @@ public class MultipleHelperServiceTest {
                 multipleDetails.getCaseData(),
                 multipleDetails.getCaseData().getLeadCase(),
                 "12345");
-        assertEquals("<a target=\"_blank\" href=\"http://www-demo.ccd/dm-store:8080/v2/case//v2/case/12345\">21006/2020</a>",
+        assertEquals("<a target=\"_blank\" href=\"/case/12345\">21006/2020</a>",
                 multipleDetails.getCaseData().getLeadCase());
     }
 

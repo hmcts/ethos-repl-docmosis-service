@@ -259,7 +259,7 @@ public class MultiplesHelper {
 
     public static String generateLeadMarkUp(String ccdGatewayBaseUrl, String caseId, String ethosCaseRef) {
 
-        String url = ccdGatewayBaseUrl.replace("gateway","www").concat("/v2/case/" + caseId);
+        String url = "/case/" + caseId;
 
         return "<a target=\"_blank\" href=\"" + url + "\">" + ethosCaseRef +"</a>";
 

@@ -62,7 +62,7 @@ public class DocumentManagementServiceTest {
     @Before
     public void setUp() {
         file = createTestFile();
-        markup = "<a target=\"_blank\" href=\"null/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary\">Document</a>";
+        markup = "<a target=\"_blank\" href=\"/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary\">Document</a>";
         when(authTokenGenerator.generate()).thenReturn("authString");
         responseEntity = MultipleUtil.getResponseOK();
         UserDetails userDetails = HelperTest.getUserDetails();
