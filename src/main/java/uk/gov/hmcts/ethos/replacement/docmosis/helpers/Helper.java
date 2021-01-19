@@ -1,11 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
@@ -15,20 +11,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SignificantItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ecm.common.model.ccd.items.*;
+import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadES;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -37,23 +23,12 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_PAGE_SIZE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LABEL;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LBL;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 public class Helper {
@@ -66,7 +41,8 @@ public class Helper {
                                                      UserDetails userDetails, String caseTypeId,
                                                      InputStream venueAddressInputStream,
                                                      CorrespondenceType correspondenceType,
-                                                     CorrespondenceScotType correspondenceScotType) {
+                                                     CorrespondenceScotType correspondenceScotType,
+                                                     MultipleData multipleData) {
         StringBuilder sb = new StringBuilder();
         String templateName = getTemplateName(correspondenceType, correspondenceScotType);
 
@@ -79,8 +55,10 @@ public class Helper {
         // Building the document data
         sb.append("\"data\":{\n");
 
-        if (templateName.equals(ADDRESS_LABELS_TEMPLATE)) {
-            sb.append(getAddressLabelsData(caseData));
+        if (templateName.equals(ADDRESS_LABELS_TEMPLATE) && multipleData == null) {
+            sb.append(getAddressLabelsDataSingleCase(caseData));
+        } else if (templateName.equals(ADDRESS_LABELS_TEMPLATE)) {
+            sb.append(getAddressLabelsDataMultipleCase(multipleData));
         } else {
             sb.append(getClaimantData(caseData));
             sb.append(getRespondentData(caseData));
@@ -534,12 +512,32 @@ public class Helper {
         return sb;
     }
 
-    private static StringBuilder getAddressLabelsData(CaseData caseData) {
+    private static StringBuilder getAddressLabelsDataSingleCase(CaseData caseData) {
+
         int numberOfCopies = Integer.parseInt(caseData.getAddressLabelsAttributesType().getNumberOfCopies());
         int startingLabel = Integer.parseInt(caseData.getAddressLabelsAttributesType().getStartingLabel());
         String showTelFax = caseData.getAddressLabelsAttributesType().getShowTelFax();
+        List<AddressLabelTypeItem> addressLabelCollection = caseData.getAddressLabelCollection();
 
-        List<AddressLabelTypeItem> selectedAddressLabelCollection = getSelectedAddressLabels(caseData);
+        return getAddressLabelsData(numberOfCopies, startingLabel, showTelFax, addressLabelCollection);
+
+    }
+
+    private static StringBuilder getAddressLabelsDataMultipleCase(MultipleData multipleData) {
+
+        int numberOfCopies = Integer.parseInt(multipleData.getAddressLabelsAttributesType().getNumberOfCopies());
+        int startingLabel = Integer.parseInt(multipleData.getAddressLabelsAttributesType().getStartingLabel());
+        String showTelFax = multipleData.getAddressLabelsAttributesType().getShowTelFax();
+        List<AddressLabelTypeItem> addressLabelCollection = multipleData.getAddressLabelCollection();
+
+        return getAddressLabelsData(numberOfCopies, startingLabel, showTelFax, addressLabelCollection);
+
+    }
+
+    private static StringBuilder getAddressLabelsData(int numberOfCopies, int startingLabel, String showTelFax,
+                                                      List<AddressLabelTypeItem> addressLabelCollection) {
+
+        List<AddressLabelTypeItem> selectedAddressLabelCollection = getSelectedAddressLabels(addressLabelCollection);
         List<AddressLabelTypeItem> copiedAddressLabelCollection = getCopiedAddressLabels(selectedAddressLabelCollection, numberOfCopies);
 
         StringBuilder sb = new StringBuilder();
@@ -556,7 +554,9 @@ public class Helper {
 
             if (pageLabelNumber > ADDRESS_LABELS_PAGE_SIZE) {
                 int numberOfFullLabelPages = pageLabelNumber / ADDRESS_LABELS_PAGE_SIZE;
-                pageLabelNumber = pageLabelNumber % ADDRESS_LABELS_PAGE_SIZE == 0 ? ADDRESS_LABELS_PAGE_SIZE : pageLabelNumber - (numberOfFullLabelPages * ADDRESS_LABELS_PAGE_SIZE);
+                pageLabelNumber = pageLabelNumber % ADDRESS_LABELS_PAGE_SIZE == 0
+                        ? ADDRESS_LABELS_PAGE_SIZE
+                        : pageLabelNumber - (numberOfFullLabelPages * ADDRESS_LABELS_PAGE_SIZE);
             }
 
             if (pageLabelNumber == 1 || startingLabelAboveOne) {
@@ -723,19 +723,35 @@ public class Helper {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             activeRespondents = caseData.getRespondentCollection()
                     .stream()
-                    .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
+                    .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null
+                            || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
                     .collect(Collectors.toList());
         }
 
         return activeRespondents;
     }
 
-    public static List<AddressLabelTypeItem> getSelectedAddressLabels(CaseData caseData) {
+    public static List<RespondentSumTypeItem> getActiveRespondentsLabels(LabelPayloadES labelPayloadES) {
+
+        List<RespondentSumTypeItem> activeRespondents = new ArrayList<>();
+
+        if (labelPayloadES.getRespondentCollection() != null && !labelPayloadES.getRespondentCollection().isEmpty()) {
+            activeRespondents = labelPayloadES.getRespondentCollection()
+                    .stream()
+                    .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null
+                            || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
+                    .collect(Collectors.toList());
+        }
+
+        return activeRespondents;
+    }
+
+    public static List<AddressLabelTypeItem> getSelectedAddressLabels(List<AddressLabelTypeItem> addressLabelCollection) {
 
         List<AddressLabelTypeItem> selectedAddressLabels = new ArrayList<>();
 
-        if (caseData.getAddressLabelCollection() != null && !caseData.getAddressLabelCollection().isEmpty()) {
-            selectedAddressLabels = caseData.getAddressLabelCollection()
+        if (addressLabelCollection != null && !addressLabelCollection.isEmpty()) {
+            selectedAddressLabels = addressLabelCollection
                     .stream()
                     .filter(addressLabelTypeItem -> addressLabelTypeItem.getValue().getPrintLabel() != null && addressLabelTypeItem.getValue().getPrintLabel().equals(YES))
                     .filter(addressLabelTypeItem -> addressLabelTypeItem.getValue().getFullName() != null || addressLabelTypeItem.getValue().getFullAddress() != null)
@@ -749,9 +765,8 @@ public class Helper {
 
         List<AddressLabelTypeItem> copiedAddressLabels = new ArrayList<>();
         if (!selectedAddressLabels.isEmpty() && numberOfCopies > 1) {
-            ListIterator<AddressLabelTypeItem> itr = selectedAddressLabels.listIterator();
-            while (itr.hasNext()) {
-                AddressLabelType addressLabelType = itr.next().getValue();
+            for (AddressLabelTypeItem selectedAddressLabel : selectedAddressLabels) {
+                AddressLabelType addressLabelType = selectedAddressLabel.getValue();
                 for (int i = 0; i < numberOfCopies; i++) {
                     AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
                     addressLabelTypeItem.setId(String.valueOf(copiedAddressLabels.size()));

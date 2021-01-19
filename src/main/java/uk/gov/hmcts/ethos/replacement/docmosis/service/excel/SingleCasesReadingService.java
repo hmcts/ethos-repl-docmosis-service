@@ -6,9 +6,13 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 @Slf4j
 @Service("singleCasesReadingService")
@@ -48,6 +52,27 @@ public class SingleCasesReadingService {
         }
 
         return submitEvents;
+
+    }
+
+    public List<LabelPayloadEvent> retrieveLabelCases(String userToken, String multipleCaseTypeId, List<String> caseIds) {
+
+        List<LabelPayloadEvent> labelEvents = new ArrayList<>();
+
+        try {
+            labelEvents = ccdClient.retrieveCasesElasticSearchLabels(userToken,
+                    UtilHelper.getCaseTypeId(multipleCaseTypeId),
+                    caseIds);
+
+        } catch (Exception ex) {
+
+            log.error("Error retrieving label cases");
+
+            log.error(ex.getMessage());
+
+        }
+
+        return labelEvents;
 
     }
 

@@ -10,12 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleRequest;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.*;
 
@@ -30,15 +27,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ExcelActionsController {
 
     private static final String LOG_MESSAGE = "received notification request for multiple reference : ";
-    private static final String GENERATED_DOCUMENT_URL = "Please download the document from : ";
 
     private final VerifyTokenService verifyTokenService;
     private final MultipleCreationService multipleCreationService;
     private final MultiplePreAcceptService multiplePreAcceptService;
     private final MultipleAmendCaseIdsService multipleAmendCaseIdsService;
     private final MultipleUpdateService multipleUpdateService;
-    private final MultipleScheduleService multipleScheduleService;
-    private final MultipleLetterService multipleLetterService;
     private final MultipleUploadService multipleUploadService;
     private final MultipleDynamicListFlagsService multipleDynamicListFlagsService;
     private final MultipleMidEventValidationService multipleMidEventValidationService;
@@ -53,8 +47,6 @@ public class ExcelActionsController {
                                   MultiplePreAcceptService multiplePreAcceptService,
                                   MultipleAmendCaseIdsService multipleAmendCaseIdsService,
                                   MultipleUpdateService multipleUpdateService,
-                                  MultipleLetterService multipleLetterService,
-                                  MultipleScheduleService multipleScheduleService,
                                   MultipleUploadService multipleUploadService,
                                   MultipleDynamicListFlagsService multipleDynamicListFlagsService,
                                   MultipleMidEventValidationService multipleMidEventValidationService,
@@ -67,8 +59,6 @@ public class ExcelActionsController {
         this.multiplePreAcceptService = multiplePreAcceptService;
         this.multipleAmendCaseIdsService = multipleAmendCaseIdsService;
         this.multipleUpdateService = multipleUpdateService;
-        this.multipleScheduleService = multipleScheduleService;
-        this.multipleLetterService = multipleLetterService;
         this.multipleUploadService = multipleUploadService;
         this.multipleDynamicListFlagsService = multipleDynamicListFlagsService;
         this.multipleMidEventValidationService = multipleMidEventValidationService;
@@ -248,45 +238,6 @@ public class ExcelActionsController {
                 .build());
     }
 
-    @PostMapping(value = "/printSchedule", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "generate a multiple schedule.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = MultipleCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<MultipleCallbackResponse> printSchedule(
-            @RequestBody MultipleRequest multipleRequest,
-            @RequestHeader(value = "Authorization") String userToken) {
-        log.info("PRINT SCHEDULE ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        List<String> errors = new ArrayList<>();
-        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
-
-        DocumentInfo documentInfo = multipleScheduleService.bulkScheduleLogic(userToken, multipleDetails, errors);
-
-        multipleDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
-
-        if (errors.isEmpty()) {
-            return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                    .data(multipleDetails.getCaseData())
-                    .significant_item(Helper.generateSignificantItem(documentInfo))
-                    .build());
-        } else {
-            return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                    .errors(errors)
-                    .data(multipleDetails.getCaseData())
-                    .build());
-        }
-
-    }
-
     @PostMapping(value = "/dynamicListFlags", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "populate flags in dynamic lists with all flags values are in the excel.")
     @ApiResponses(value = {
@@ -460,71 +411,6 @@ public class ExcelActionsController {
         return ResponseEntity.ok(MultipleCallbackResponse.builder()
                 .errors(errors)
                 .data(multipleDetails.getCaseData())
-                .build());
-    }
-
-    @PostMapping(value = "/printLetter", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "generate a letter for the first case in the filtered collection.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = MultipleCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<MultipleCallbackResponse> printLetter(
-            @RequestBody MultipleRequest multipleRequest,
-            @RequestHeader(value = "Authorization") String userToken) {
-        log.info("PRINT LETTER ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        List<String> errors = new ArrayList<>();
-        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
-
-        DocumentInfo documentInfo = multipleLetterService.bulkLetterLogic(userToken, multipleDetails, errors);
-
-        if (errors.isEmpty()) {
-
-            multipleDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
-
-            return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                    .data(multipleDetails.getCaseData())
-                    .significant_item(Helper.generateSignificantItem(documentInfo))
-                    .build());
-        } else {
-            return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                    .errors(errors)
-                    .data(multipleDetails.getCaseData())
-                    .build());
-        }
-    }
-
-    @PostMapping(value = "/printDocumentConfirmation", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "generate a confirmation with a link to the document generated.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = MultipleCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<MultipleCallbackResponse> printDocumentConfirmation(
-            @RequestBody MultipleRequest multipleRequest,
-            @RequestHeader(value = "Authorization") String userToken) {
-        log.info("PRINT DOCUMENT CONFIRMATION ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        MultipleData multipleData = multipleRequest.getCaseDetails().getCaseData();
-
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .data(multipleData)
-                .confirmation_header(GENERATED_DOCUMENT_URL + multipleData.getDocMarkUp())
                 .build());
     }
 

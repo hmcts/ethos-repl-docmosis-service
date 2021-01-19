@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
@@ -34,6 +35,7 @@ public class SingleCasesReadingServiceTest {
     private String userToken;
     private List<SubmitEvent> submitEventList;
     private HashSet<SchedulePayloadEvent> schedulePayloadEvents;
+    private List<LabelPayloadEvent> labelPayloadEvents;
 
     @Before
     public void setUp() {
@@ -42,6 +44,7 @@ public class SingleCasesReadingServiceTest {
         multipleDetails.setCaseTypeId("Manchester_Multiple");
         submitEventList = MultipleUtil.getSubmitEvents();
         schedulePayloadEvents = MultipleUtil.getSchedulePayloadEvents();
+        labelPayloadEvents = MultipleUtil.getLabelPayloadEvents();
         userToken = "authString";
     }
 
@@ -97,6 +100,33 @@ public class SingleCasesReadingServiceTest {
                 multipleDetails.getCaseTypeId(),
                 new ArrayList<>(Collections.singletonList("240001/2020")));
         assertEquals(schedulePayloadEventList, new HashSet<>());
+    }
+
+    @Test
+    public void retrieveLabelCases() throws IOException {
+        when(ccdClient.retrieveCasesElasticSearchLabels(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(Collections.singletonList("240001/2020"))))
+                .thenReturn(labelPayloadEvents);
+        singleCasesReadingService.retrieveLabelCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(Collections.singletonList("240001/2020")));
+        verify(ccdClient, times(1)).retrieveCasesElasticSearchLabels(userToken,
+                "Manchester",
+                new ArrayList<>(Collections.singletonList("240001/2020")));
+        verifyNoMoreInteractions(ccdClient);
+    }
+
+    @Test
+    public void retrieveLabelCasesException() throws IOException {
+        when(ccdClient.retrieveCasesElasticSearchLabels(anyString(),
+                anyString(),
+                anyList()))
+                .thenThrow(new RuntimeException());
+        List<LabelPayloadEvent> labelPayloadEvents = singleCasesReadingService.retrieveLabelCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                new ArrayList<>(Collections.singletonList("240001/2020")));
+        assertEquals(labelPayloadEvents, new ArrayList<>());
     }
 
 }

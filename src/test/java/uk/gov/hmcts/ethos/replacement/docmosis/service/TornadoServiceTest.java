@@ -69,13 +69,13 @@ public class TornadoServiceTest {
     public void documentGenerationError() throws IOException {
         when(userService.getUserDetails(anyString())).thenThrow(new RuntimeException());
         tornadoService.documentGeneration(userToken, caseData, MANCHESTER_CASE_TYPE_ID,
-                caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType());
+                caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
     }
 
     @Test
     public void documentGeneration() throws IOException {
         DocumentInfo documentInfo1 = tornadoService.documentGeneration(userToken, caseData, MANCHESTER_CASE_TYPE_ID,
-                caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType());
+                caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
         assertEquals(documentInfo.toString(), documentInfo1.toString());
     }
 

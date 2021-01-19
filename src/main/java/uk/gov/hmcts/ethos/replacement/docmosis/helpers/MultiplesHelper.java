@@ -195,6 +195,9 @@ public class MultiplesHelper {
 
         multipleData.setCorrespondenceType(null);
         multipleData.setCorrespondenceScotType(null);
+        multipleData.setAddressLabelsSelectionTypeMSL(null);
+        multipleData.setAddressLabelCollection(null);
+        multipleData.setAddressLabelsAttributesType(null);
 
     }
 
