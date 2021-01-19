@@ -42,6 +42,8 @@ public class DocumentManagementService {
     private final DocumentDownloadClientApi documentDownloadClientApi;
     private final UserService userService;
 
+    @Value("${ccd_gateway_base_url}")
+    private String ccdGatewayBaseUrl;
     @Value("${document_management.url}")
     private String ccdDMStoreBaseUrl;
 
@@ -82,7 +84,7 @@ public class DocumentManagementService {
     }
 
     public String generateDownloadableURL(URI documentSelf) {
-        return documentSelf.getRawPath() + "/binary";
+        return ccdGatewayBaseUrl + documentSelf.getRawPath() + "/binary";
     }
 
     public String generateMarkupDocument(String documentDownloadableURL) {

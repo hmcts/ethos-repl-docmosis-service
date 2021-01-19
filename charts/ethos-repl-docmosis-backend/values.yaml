@@ -30,7 +30,7 @@ java:
     CCD_DATA_STORE_API_URL: "http://ccd-data-store-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
     DOCUMENT_MANAGEMENT_URL: "http://dm-store-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
     SERVICE_AUTH_PROVIDER_URL: "http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
-    CCD_GATEWAY_BASE_URL: "https://gateway-ccd.{{ .Values.global.environment }}.platform.hmcts.net"
+    CCD_GATEWAY_BASE_URL: "https://manage-case.{{ .Values.global.environment }}.platform.hmcts.net"
     MICRO_SERVICE: "ethos_repl_service"
     ETHOS_REPL_DB_CONN_OPTIONS: ?sslmode=require
     ETHOS_REPL_DB_HOST: ethos-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
