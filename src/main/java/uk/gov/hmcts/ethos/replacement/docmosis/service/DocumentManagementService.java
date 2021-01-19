@@ -42,8 +42,6 @@ public class DocumentManagementService {
     private final DocumentDownloadClientApi documentDownloadClientApi;
     private final UserService userService;
 
-    @Value("${ccd_gateway_base_url}")
-    private String ccdGatewayBaseUrl;
     @Value("${document_management.url}")
     private String ccdDMStoreBaseUrl;
 
@@ -59,7 +57,6 @@ public class DocumentManagementService {
     @Retryable(value = {DocumentManagementException.class}, backoff = @Backoff(delay = 200))
     public URI uploadDocument(String authToken, byte[] byteArray, String outputFileName, String type) {
         try {
-            log.info("ccdGatewayBaseUrl: " + ccdGatewayBaseUrl);
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, outputFileName, type, byteArray);
             UserDetails user = userService.getUserDetails(authToken);
             UploadResponse response = documentUploadClient.upload(

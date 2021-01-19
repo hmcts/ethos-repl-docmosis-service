@@ -121,7 +121,7 @@ public class TornadoService {
                 .type(SignificantItemType.DOCUMENT.name())
                 .description(documentName)
                 .markUp(markupURL)
-                .url(documentSelfPath.getRawPath() + "/binary")
+                .url(ccdGatewayBaseUrl + documentSelfPath.getRawPath() + "/binary")
                 .build();
     }
 
