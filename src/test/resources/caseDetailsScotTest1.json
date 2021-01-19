@@ -22,7 +22,6 @@
       "additional_live_appeal": "additional_live_appeal",
       "additional_sensitive": "string"
     },
-    "backFromJudge": "backFromJudge",
     "representativeClaimantType": {
       "resp_rep_name" : "RepresentativeNameClaimant",
       "name_of_organisation": "RepresentativeOrganisation",

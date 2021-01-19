@@ -23,7 +23,6 @@
       "additional_live_appeal": "additional_live_appeal",
       "additional_sensitive": "string"
     },
-    "backFromJudge": "backFromJudge",
     "caseNotes": "Example of Case Note",
     "caseType": "Single",
     "claimantType": {

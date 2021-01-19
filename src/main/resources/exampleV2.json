@@ -11,7 +11,6 @@
         "additional_live_appeal": "additional_live_appeal",
         "additional_sensitive": "string"
       },
-      "backFromJudge": "backFromJudge",
       "broughtForwardDate": "broughtForwardDate",
       "c_RepresentedType": {
         "name_of_organisation": "ClaimantOrganisation",

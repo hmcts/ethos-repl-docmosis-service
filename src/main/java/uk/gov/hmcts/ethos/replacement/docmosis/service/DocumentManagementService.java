@@ -59,7 +59,6 @@ public class DocumentManagementService {
     @Retryable(value = {DocumentManagementException.class}, backoff = @Backoff(delay = 200))
     public URI uploadDocument(String authToken, byte[] byteArray, String outputFileName, String type) {
         try {
-            log.info("ccdGatewayBaseUrl: " + ccdGatewayBaseUrl);
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, outputFileName, type, byteArray);
             UserDetails user = userService.getUserDetails(authToken);
             UploadResponse response = documentUploadClient.upload(

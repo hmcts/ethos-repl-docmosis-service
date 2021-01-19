@@ -59,10 +59,16 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 public class Helper {
 
     private static final String VENUE_ADDRESS_OPENING_PROCESSING_ERROR = "Failed while opening or processing the entries for the venueAddressValues.xlsx file : ---> ";
+    public static final String HEARING_CREATION_NUMBER_ERROR = "A new hearing can only be added from the List Hearing menu item";
+    public static final String HEARING_CREATION_DAY_ERROR = "A new day for a hearing can only be added from the List Hearing menu item";
 
-    public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey, UserDetails userDetails, String caseTypeId, InputStream venueAddressInputStream) {
+    public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey,
+                                                     UserDetails userDetails, String caseTypeId,
+                                                     InputStream venueAddressInputStream,
+                                                     CorrespondenceType correspondenceType,
+                                                     CorrespondenceScotType correspondenceScotType) {
         StringBuilder sb = new StringBuilder();
-        String templateName = getTemplateName(caseData);
+        String templateName = getTemplateName(correspondenceType, correspondenceScotType);
 
         // Start building the instruction
         sb.append("{\n");
@@ -78,24 +84,30 @@ public class Helper {
         } else {
             sb.append(getClaimantData(caseData));
             sb.append(getRespondentData(caseData));
-            sb.append(getHearingData(caseData, caseTypeId, venueAddressInputStream));
-            sb.append(getCorrespondenceData(caseData));
-            sb.append(getCorrespondenceScotData(caseData));
+            sb.append(getHearingData(caseData, caseTypeId, venueAddressInputStream, correspondenceType, correspondenceScotType));
+            sb.append(getCorrespondenceData(correspondenceType));
+            sb.append(getCorrespondenceScotData(correspondenceScotType));
             sb.append(getCourtData(caseData));
         }
 
-        sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts\":\"")
-                .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
-        sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts1\":\"")
-                .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
-        sb.append("\"i").append(getSectionName(caseData).replace(".", "_")).append("_enhmcts2\":\"")
-                .append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
-        sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts\":\"")
-                .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
-        sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts1\":\"")
-                .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
-        sb.append("\"iScot").append(getScotSectionName(caseData).replace(".", "_")).append("_schmcts2\":\"")
-                .append("[userImage:").append("schmcts.png]").append(NEW_LINE);
+        sb.append("\"i").append(getEWSectionName(correspondenceType)
+                .replace(".", "_"))
+                .append("_enhmcts\":\"").append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
+        sb.append("\"i").append(getEWSectionName(correspondenceType)
+                .replace(".", "_"))
+                .append("_enhmcts1\":\"").append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
+        sb.append("\"i").append(getEWSectionName(correspondenceType)
+                .replace(".", "_"))
+                .append("_enhmcts2\":\"").append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
+        sb.append("\"iScot").append(getScotSectionName(correspondenceScotType)
+                .replace(".", "_"))
+                .append("_schmcts\":\"").append("[userImage:").append("schmcts.png]").append(NEW_LINE);
+        sb.append("\"iScot").append(getScotSectionName(correspondenceScotType)
+                .replace(".", "_"))
+                .append("_schmcts1\":\"").append("[userImage:").append("schmcts.png]").append(NEW_LINE);
+        sb.append("\"iScot").append(getScotSectionName(correspondenceScotType)
+                .replace(".", "_"))
+                .append("_schmcts2\":\"").append("[userImage:").append("schmcts.png]").append(NEW_LINE);
 
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
@@ -276,11 +288,14 @@ public class Helper {
         return sb;
     }
 
-    private static StringBuilder getHearingData(CaseData caseData, String caseTypeId, InputStream venueAddressInputStream) {
+    private static StringBuilder getHearingData(CaseData caseData, String caseTypeId,
+                                                InputStream venueAddressInputStream,
+                                                CorrespondenceType correspondenceType,
+                                                CorrespondenceScotType correspondenceScotType) {
         StringBuilder sb = new StringBuilder();
         //Currently checking collection not the HearingType
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
-            String correspondenceHearingNumber = getCorrespondenceHearingNumber(caseData);
+            String correspondenceHearingNumber = getCorrespondenceHearingNumber(correspondenceType, correspondenceScotType);
             HearingType hearingType = getHearingByNumber(caseData.getHearingCollection(), correspondenceHearingNumber);
             if (hearingType.getHearingDateCollection() != null && !hearingType.getHearingDateCollection().isEmpty()) {
                 sb.append("\"Hearing_date\":\"").append(nullCheck(getHearingDates(hearingType.getHearingDateCollection()))).append(NEW_LINE);
@@ -300,14 +315,13 @@ public class Helper {
         return sb;
     }
 
-    public static String getCorrespondenceHearingNumber(CaseData caseData) {
-        Optional<CorrespondenceType> correspondenceType = Optional.ofNullable(caseData.getCorrespondenceType());
-        if (correspondenceType.isPresent()) {
-            return correspondenceType.get().getHearingNumber();
+    public static String getCorrespondenceHearingNumber(CorrespondenceType correspondenceType,
+                                                        CorrespondenceScotType correspondenceScotType) {
+        if (correspondenceType != null) {
+            return correspondenceType.getHearingNumber();
         } else {
-            Optional<CorrespondenceScotType> correspondenceScotType = Optional.ofNullable(caseData.getCorrespondenceScotType());
-            if (correspondenceScotType.isPresent()) {
-                return correspondenceScotType.get().getHearingNumber();
+            if (correspondenceScotType != null) {
+                return correspondenceScotType.getHearingNumber();
             } else {
                 return "";
             }
@@ -408,79 +422,85 @@ public class Helper {
         return String.join(" ", hearingType.getHearingEstLengthNum(), hearingType.getHearingEstLengthNumType());
     }
 
-    public static String getDocumentName(CaseData caseData) {
-        String ewSection = getSectionName(caseData);
-        String sectionName = ewSection.equals("") ? getScotSectionName(caseData) : ewSection;
-        return getTemplateName(caseData) + "_" + sectionName;
+    public static String getDocumentName(CorrespondenceType correspondenceType,
+                                         CorrespondenceScotType correspondenceScotType) {
+        String ewSection = getEWSectionName(correspondenceType);
+        String sectionName = ewSection.equals("") ? getScotSectionName(correspondenceScotType) : ewSection;
+        return getTemplateName(correspondenceType, correspondenceScotType) + "_" + sectionName;
     }
 
-    public static String getTemplateName(CaseData caseData) {
-        Optional<CorrespondenceType> correspondenceType = Optional.ofNullable(caseData.getCorrespondenceType());
-        if (correspondenceType.isPresent()) {
-            return correspondenceType.get().getTopLevelDocuments();
+    public static String getTemplateName(CorrespondenceType correspondenceType,
+                                          CorrespondenceScotType correspondenceScotType) {
+        if (correspondenceType != null) {
+            return correspondenceType.getTopLevelDocuments();
         } else {
-            Optional<CorrespondenceScotType> correspondenceScotType = Optional.ofNullable(caseData.getCorrespondenceScotType());
-            if (correspondenceScotType.isPresent()) {
-                return correspondenceScotType.get().getTopLevelScotDocuments();
+            if (correspondenceScotType != null) {
+                return correspondenceScotType.getTopLevelScotDocuments();
             } else {
                 return "";
             }
         }
     }
 
-    public static String getSectionName(CaseData caseData) {
-        Optional<CorrespondenceType> correspondenceType = Optional.ofNullable(caseData.getCorrespondenceType());
-        if (correspondenceType.isPresent()) {
-            CorrespondenceType correspondence = correspondenceType.get();
-            if (correspondence.getPart0Documents() != null) return correspondence.getPart0Documents();
-            if (correspondence.getPart1Documents() != null) return correspondence.getPart1Documents();
-            if (correspondence.getPart2Documents() != null) return correspondence.getPart2Documents();
-            if (correspondence.getPart3Documents() != null) return correspondence.getPart3Documents();
-            if (correspondence.getPart4Documents() != null) return correspondence.getPart4Documents();
-            if (correspondence.getPart5Documents() != null) return correspondence.getPart5Documents();
-            if (correspondence.getPart6Documents() != null) return correspondence.getPart6Documents();
-            if (correspondence.getPart7Documents() != null) return correspondence.getPart7Documents();
-            if (correspondence.getPart8Documents() != null) return correspondence.getPart8Documents();
-            if (correspondence.getPart9Documents() != null) return correspondence.getPart9Documents();
-            if (correspondence.getPart10Documents() != null) return correspondence.getPart10Documents();
-            if (correspondence.getPart11Documents() != null) return correspondence.getPart11Documents();
-            if (correspondence.getPart12Documents() != null) return correspondence.getPart12Documents();
-            if (correspondence.getPart13Documents() != null) return correspondence.getPart13Documents();
-            if (correspondence.getPart14Documents() != null) return correspondence.getPart14Documents();
-            if (correspondence.getPart15Documents() != null) return correspondence.getPart15Documents();
-            if (correspondence.getPart16Documents() != null) return correspondence.getPart16Documents();
-            if (correspondence.getPart17Documents() != null) return correspondence.getPart17Documents();
-            if (correspondence.getPart18Documents() != null) return correspondence.getPart18Documents();
+    public static String getEWSectionName(CorrespondenceType correspondenceType) {
+        if (correspondenceType != null) {
+            return getEWPartDocument(correspondenceType);
         }
         return "";
     }
 
-    public static String getScotSectionName(CaseData caseData) {
-        Optional<CorrespondenceScotType> correspondenceScotTypeOptional = Optional.ofNullable(caseData.getCorrespondenceScotType());
-        if (correspondenceScotTypeOptional.isPresent()) {
-            CorrespondenceScotType correspondenceScotType = correspondenceScotTypeOptional.get();
-            if (correspondenceScotType.getPart0ScotDocuments() != null) return correspondenceScotType.getPart0ScotDocuments();
-            if (correspondenceScotType.getPart1ScotDocuments() != null) return correspondenceScotType.getPart1ScotDocuments();
-            if (correspondenceScotType.getPart2ScotDocuments() != null) return correspondenceScotType.getPart2ScotDocuments();
-            if (correspondenceScotType.getPart3ScotDocuments() != null) return correspondenceScotType.getPart3ScotDocuments();
-            if (correspondenceScotType.getPart4ScotDocuments() != null) return correspondenceScotType.getPart4ScotDocuments();
-            if (correspondenceScotType.getPart5ScotDocuments() != null) return correspondenceScotType.getPart5ScotDocuments();
-            if (correspondenceScotType.getPart6ScotDocuments() != null) return correspondenceScotType.getPart6ScotDocuments();
-            if (correspondenceScotType.getPart7ScotDocuments() != null) return correspondenceScotType.getPart7ScotDocuments();
-            if (correspondenceScotType.getPart8ScotDocuments() != null) return correspondenceScotType.getPart8ScotDocuments();
-            if (correspondenceScotType.getPart9ScotDocuments() != null) return correspondenceScotType.getPart9ScotDocuments();
-            if (correspondenceScotType.getPart10ScotDocuments() != null) return correspondenceScotType.getPart10ScotDocuments();
-            if (correspondenceScotType.getPart11ScotDocuments() != null) return correspondenceScotType.getPart11ScotDocuments();
-            if (correspondenceScotType.getPart12ScotDocuments() != null) return correspondenceScotType.getPart12ScotDocuments();
-            if (correspondenceScotType.getPart13ScotDocuments() != null) return correspondenceScotType.getPart13ScotDocuments();
-            if (correspondenceScotType.getPart14ScotDocuments() != null) return correspondenceScotType.getPart14ScotDocuments();
-            if (correspondenceScotType.getPart15ScotDocuments() != null) return correspondenceScotType.getPart15ScotDocuments();
+    public static String getScotSectionName(CorrespondenceScotType correspondenceScotType) {
+        if (correspondenceScotType != null) {
+            return getScotPartDocument(correspondenceScotType);
         }
         return "";
     }
 
-    private static StringBuilder getCorrespondenceData(CaseData caseData) {
-        String sectionName = getSectionName(caseData);
+    private static String getEWPartDocument(CorrespondenceType correspondence) {
+        if (correspondence.getPart0Documents() != null) return correspondence.getPart0Documents();
+        if (correspondence.getPart1Documents() != null) return correspondence.getPart1Documents();
+        if (correspondence.getPart2Documents() != null) return correspondence.getPart2Documents();
+        if (correspondence.getPart3Documents() != null) return correspondence.getPart3Documents();
+        if (correspondence.getPart4Documents() != null) return correspondence.getPart4Documents();
+        if (correspondence.getPart5Documents() != null) return correspondence.getPart5Documents();
+        if (correspondence.getPart6Documents() != null) return correspondence.getPart6Documents();
+        if (correspondence.getPart7Documents() != null) return correspondence.getPart7Documents();
+        if (correspondence.getPart8Documents() != null) return correspondence.getPart8Documents();
+        if (correspondence.getPart9Documents() != null) return correspondence.getPart9Documents();
+        if (correspondence.getPart10Documents() != null) return correspondence.getPart10Documents();
+        if (correspondence.getPart11Documents() != null) return correspondence.getPart11Documents();
+        if (correspondence.getPart12Documents() != null) return correspondence.getPart12Documents();
+        if (correspondence.getPart13Documents() != null) return correspondence.getPart13Documents();
+        if (correspondence.getPart14Documents() != null) return correspondence.getPart14Documents();
+        if (correspondence.getPart15Documents() != null) return correspondence.getPart15Documents();
+        if (correspondence.getPart16Documents() != null) return correspondence.getPart16Documents();
+        if (correspondence.getPart17Documents() != null) return correspondence.getPart17Documents();
+        if (correspondence.getPart18Documents() != null) return correspondence.getPart18Documents();
+        return "";
+    }
+
+    private static String getScotPartDocument(CorrespondenceScotType correspondenceScotType) {
+        if (correspondenceScotType.getPart0ScotDocuments() != null) return correspondenceScotType.getPart0ScotDocuments();
+        if (correspondenceScotType.getPart1ScotDocuments() != null) return correspondenceScotType.getPart1ScotDocuments();
+        if (correspondenceScotType.getPart2ScotDocuments() != null) return correspondenceScotType.getPart2ScotDocuments();
+        if (correspondenceScotType.getPart3ScotDocuments() != null) return correspondenceScotType.getPart3ScotDocuments();
+        if (correspondenceScotType.getPart4ScotDocuments() != null) return correspondenceScotType.getPart4ScotDocuments();
+        if (correspondenceScotType.getPart5ScotDocuments() != null) return correspondenceScotType.getPart5ScotDocuments();
+        if (correspondenceScotType.getPart6ScotDocuments() != null) return correspondenceScotType.getPart6ScotDocuments();
+        if (correspondenceScotType.getPart7ScotDocuments() != null) return correspondenceScotType.getPart7ScotDocuments();
+        if (correspondenceScotType.getPart8ScotDocuments() != null) return correspondenceScotType.getPart8ScotDocuments();
+        if (correspondenceScotType.getPart9ScotDocuments() != null) return correspondenceScotType.getPart9ScotDocuments();
+        if (correspondenceScotType.getPart10ScotDocuments() != null) return correspondenceScotType.getPart10ScotDocuments();
+        if (correspondenceScotType.getPart11ScotDocuments() != null) return correspondenceScotType.getPart11ScotDocuments();
+        if (correspondenceScotType.getPart12ScotDocuments() != null) return correspondenceScotType.getPart12ScotDocuments();
+        if (correspondenceScotType.getPart13ScotDocuments() != null) return correspondenceScotType.getPart13ScotDocuments();
+        if (correspondenceScotType.getPart14ScotDocuments() != null) return correspondenceScotType.getPart14ScotDocuments();
+        if (correspondenceScotType.getPart15ScotDocuments() != null) return correspondenceScotType.getPart15ScotDocuments();
+        return "";
+    }
+
+    private static StringBuilder getCorrespondenceData(CorrespondenceType correspondence) {
+        String sectionName = getEWSectionName(correspondence);
         StringBuilder sb = new StringBuilder();
         if (!sectionName.equals("")) {
             sb.append("\"").append("t").append(sectionName.replace(".", "_")).append("\":\"").append("true").append(NEW_LINE);
@@ -488,8 +508,8 @@ public class Helper {
         return sb;
     }
 
-    private static StringBuilder getCorrespondenceScotData(CaseData caseData) {
-        String scotSectionName = getScotSectionName(caseData);
+    private static StringBuilder getCorrespondenceScotData(CorrespondenceScotType correspondenceScotType) {
+        String scotSectionName = getScotSectionName(correspondenceScotType);
         StringBuilder sb = new StringBuilder();
         if (!scotSectionName.equals("")) {
             sb.append("\"").append("t_Scot_").append(scotSectionName.replace(".", "_")).append("\":\"").append("true").append(NEW_LINE);
@@ -776,4 +796,47 @@ public class Helper {
             caseData.getRespondentECC().setValue(listItems.get(0));
         }
     }
+
+    public static List<String> hearingMidEventValidation(CaseData caseData) {
+
+        List<String> errors = new ArrayList<>();
+
+        if (caseData.getHearingCollection() != null) {
+
+            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+
+                if (hearingTypeItem.getValue().getHearingNumber() == null
+                        || hearingTypeItem.getValue().getHearingNumber().isEmpty()) {
+
+                    errors.add(HEARING_CREATION_NUMBER_ERROR);
+
+                    return errors;
+
+                }
+
+                if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
+
+                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+
+                        if (dateListedTypeItem.getValue().getListedDate() == null
+                                || dateListedTypeItem.getValue().getListedDate().isEmpty()) {
+
+                            errors.add(HEARING_CREATION_DAY_ERROR);
+
+                            return  errors;
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return errors;
+
+    }
+
 }

@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
@@ -61,7 +60,6 @@ public class MultipleHelperServiceTest {
         UserDetails userDetails = HelperTest.getUserDetails();
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         userToken = "authString";
-        ReflectionTestUtils.setField(multipleHelperService, "ccdGatewayBaseUrl", "http://www-demo.ccd/dm-store:8080/v2/case/");
         submitMultipleEvents = MultipleUtil.getSubmitMultipleEvents();
         multipleObjects = MultipleUtil.getMultipleObjectsAll();
     }
@@ -77,7 +75,7 @@ public class MultipleHelperServiceTest {
                 multipleDetails.getCaseData(),
                 multipleDetails.getCaseData().getLeadCase(),
                 "");
-        assertEquals("<a target=\"_blank\" href=\"http://www-demo.ccd/dm-store:8080/v2/case//v2/case/1232121232\">21006/2020</a>",
+        assertEquals("<a target=\"_blank\" href=\"/v2/case/1232121232\">21006/2020</a>",
                 multipleDetails.getCaseData().getLeadCase());
     }
 
@@ -93,7 +91,7 @@ public class MultipleHelperServiceTest {
                 multipleDetails.getCaseData(),
                 multipleDetails.getCaseData().getLeadCase(),
                 "12345");
-        assertEquals("<a target=\"_blank\" href=\"http://www-demo.ccd/dm-store:8080/v2/case//v2/case/12345\">21006/2020</a>",
+        assertEquals("<a target=\"_blank\" href=\"/v2/case/12345\">21006/2020</a>",
                 multipleDetails.getCaseData().getLeadCase());
     }
 

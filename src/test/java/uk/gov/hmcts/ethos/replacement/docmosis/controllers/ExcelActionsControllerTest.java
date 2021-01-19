@@ -49,7 +49,8 @@ public class ExcelActionsControllerTest {
     private static final String BATCH_UPDATE_URL = "/batchUpdate";
     private static final String UPDATE_SUB_MULTIPLE_URL = "/updateSubMultiple";
     private static final String PRINT_SCHEDULE_URL = "/printSchedule";
-    private static final String PRINT_SCHEDULE_CONFIRMATION_URL = "/printScheduleConfirmation";
+    private static final String PRINT_LETTER_URL = "/printLetter";
+    private static final String PRINT_DOCUMENT_CONFIRMATION_URL = "/printDocumentConfirmation";
     private static final String DYNAMIC_LIST_FLAGS_URL = "/dynamicListFlags";
     private static final String MULTIPLE_MID_EVENT_VALIDATION_URL = "/multipleMidEventValidation";
     private static final String SUB_MULTIPLE_MID_EVENT_VALIDATION_URL = "/subMultipleMidEventValidation";
@@ -97,6 +98,9 @@ public class ExcelActionsControllerTest {
 
     @MockBean
     private MultipleSingleMidEventValidationService multipleSingleMidEventValidationService;
+
+    @MockBean
+    private MultipleLetterService multipleLetterService;
 
     private MockMvc mvc;
     private JsonNode requestContent;
@@ -222,9 +226,23 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void printScheduleConfirmation() throws Exception {
+    public void printLetter() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(PRINT_SCHEDULE_CONFIRMATION_URL)
+        when(multipleLetterService.bulkLetterLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class))).thenReturn(documentInfo);
+        mvc.perform(post(PRINT_LETTER_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void printDocumentConfirmation() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(PRINT_DOCUMENT_CONFIRMATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -372,8 +390,17 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void printScheduleConfirmationError400() throws Exception {
-        mvc.perform(post(PRINT_SCHEDULE_CONFIRMATION_URL)
+    public void printLetterError400() throws Exception {
+        mvc.perform(post(PRINT_LETTER_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void printDocumentConfirmationError400() throws Exception {
+        mvc.perform(post(PRINT_DOCUMENT_CONFIRMATION_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -503,6 +530,17 @@ public class ExcelActionsControllerTest {
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(PRINT_SCHEDULE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void printLetterError500() throws Exception {
+        when(multipleLetterService.bulkLetterLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class))).thenThrow(feignError());
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(PRINT_LETTER_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -650,9 +688,19 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void printScheduleConfirmationForbidden() throws Exception {
+    public void printLetterForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(PRINT_SCHEDULE_CONFIRMATION_URL)
+        mvc.perform(post(PRINT_LETTER_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void printDocumentConfirmationForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(PRINT_DOCUMENT_CONFIRMATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

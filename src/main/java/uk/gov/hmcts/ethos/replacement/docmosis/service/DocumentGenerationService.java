@@ -79,12 +79,14 @@ public class DocumentGenerationService {
     }
 
     public CaseData midAddressLabels(CaseData caseData) {
-        String templateName = Helper.getTemplateName(caseData);
+        String templateName = Helper.getTemplateName(caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType());
         log.info("midAddressLabels - templateName : " + templateName);
         if (templateName.equals(ADDRESS_LABELS_TEMPLATE)) {
-            String ewSection = Helper.getSectionName(caseData);
+            String ewSection = Helper.getEWSectionName(caseData.getCorrespondenceType());
             caseData.setAddressLabelCollection(new ArrayList<>());
-            String sectionName = ewSection.equals("") ? Helper.getScotSectionName(caseData) : ewSection;
+            String sectionName = ewSection.equals("")
+                    ? Helper.getScotSectionName(caseData.getCorrespondenceScotType())
+                    : ewSection;
             log.info("midAddressLabels - sectionName : " + sectionName);
             switch (sectionName) {
                 case CUSTOMISE_SELECTED_ADDRESSES:
@@ -177,7 +179,8 @@ public class DocumentGenerationService {
     public DocumentInfo processDocumentRequest(CCDRequest ccdRequest, String authToken) {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
         try {
-            return tornadoService.documentGeneration(authToken, caseDetails.getCaseData(), caseDetails.getCaseTypeId());
+            return tornadoService.documentGeneration(authToken, caseDetails.getCaseData(), caseDetails.getCaseTypeId(),
+                    caseDetails.getCaseData().getCorrespondenceType(), caseDetails.getCaseData().getCorrespondenceScotType());
         } catch (Exception ex) {
             throw new DocumentManagementException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }
@@ -208,7 +211,9 @@ public class DocumentGenerationService {
                     log.info("Generating document for: " + submitEvent.getCaseData().getEthosCaseReference());
                     submitEvent.getCaseData().setCorrespondenceType(bulkDetails.getCaseData().getCorrespondenceType());
                     submitEvent.getCaseData().setCorrespondenceScotType(bulkDetails.getCaseData().getCorrespondenceScotType());
-                    documentInfoList.add(tornadoService.documentGeneration(authToken, submitEvent.getCaseData(), bulkDetails.getCaseTypeId()));
+                    documentInfoList.add(tornadoService.documentGeneration(authToken, submitEvent.getCaseData(),
+                            bulkDetails.getCaseTypeId(), submitEvent.getCaseData().getCorrespondenceType(),
+                            submitEvent.getCaseData().getCorrespondenceScotType()));
                 }
             }
             if (documentInfoList.isEmpty()) {

@@ -173,14 +173,16 @@ public class EventValidationServiceTest {
 
     @Test
     public void shouldValidateHearingNumberMatching() {
-        List<String> errors = eventValidationService.validateHearingNumber(caseDetails1.getCaseData());
+        List<String> errors = eventValidationService.validateHearingNumber(caseDetails1.getCaseData(),
+                caseDetails1.getCaseData().getCorrespondenceType(), caseDetails1.getCaseData().getCorrespondenceScotType());
 
         assertEquals(0, errors.size());
     }
 
     @Test
     public void shouldValidateHearingNumberMismatch() {
-        List<String> errors = eventValidationService.validateHearingNumber(caseDetails2.getCaseData());
+        List<String> errors = eventValidationService.validateHearingNumber(caseDetails2.getCaseData(),
+                caseDetails2.getCaseData().getCorrespondenceType(), caseDetails2.getCaseData().getCorrespondenceScotType());
 
         assertEquals(1, errors.size());
         assertEquals(HEARING_NUMBER_MISMATCH_ERROR_MESSAGE, errors.get(0));
@@ -188,14 +190,16 @@ public class EventValidationServiceTest {
 
     @Test
     public void shouldValidateHearingNumberMissing() {
-        List<String> errors = eventValidationService.validateHearingNumber(caseDetails3.getCaseData());
+        List<String> errors = eventValidationService.validateHearingNumber(caseDetails3.getCaseData(),
+                caseDetails3.getCaseData().getCorrespondenceType(), caseDetails3.getCaseData().getCorrespondenceScotType());
 
         assertEquals(0, errors.size());
     }
 
     @Test
     public void shouldValidateHearingNumberForEmptyHearings() {
-        List<String> errors = eventValidationService.validateHearingNumber(caseDetails4.getCaseData());
+        List<String> errors = eventValidationService.validateHearingNumber(caseDetails4.getCaseData(),
+                caseDetails4.getCaseData().getCorrespondenceType(), caseDetails4.getCaseData().getCorrespondenceScotType());
 
         assertEquals(1, errors.size());
         assertEquals(EMPTY_HEARING_COLLECTION_ERROR_MESSAGE, errors.get(0));

@@ -19,7 +19,6 @@
       "caseAccepted": "Yes",
       "dateAccepted": "25/02/2020",
       "rejectReason": [],
-      "caseReferred": "No",
       "caseEJReferredDate": "",
       "caseJudge": "Judge",
       "caseReferredDate": "None"
@@ -46,7 +45,6 @@
       "additional_live_appeal": "additional_live_appeal",
       "additional_sensitive": "string"
     },
-    "backFromJudge": "backFromJudge",
     "representativeClaimantType": {
       "resp_rep_name" : "RepresentativeNameClaimant",
       "name_of_organisation": "RepresentativeOrganisation",

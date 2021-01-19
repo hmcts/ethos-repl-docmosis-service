@@ -714,6 +714,32 @@ public class CaseActionsForCaseWorkerController {
                 .build());
     }
 
+    @PostMapping(value = "/hearingMidEventValidation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "validates the hearing number and the hearing days to prevent their creation.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> hearingMidEventValidation(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("HEARING MID EVENT VALIDATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors = Helper.hearingMidEventValidation(ccdRequest.getCaseDetails().getCaseData());
+
+        return ResponseEntity.ok(CCDCallbackResponse.builder()
+                .data(ccdRequest.getCaseDetails().getCaseData())
+                .errors(errors)
+                .build());
+    }
+
     private DefaultValues getPostDefaultValues(CaseDetails caseDetails) {
         String caseTypeId = caseDetails.getCaseTypeId();
         String managingOffice = caseDetails.getCaseData().getManagingOffice() != null ? caseDetails.getCaseData().getManagingOffice() : "";

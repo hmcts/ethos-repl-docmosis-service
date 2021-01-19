@@ -193,6 +193,9 @@ public class MultiplesHelper {
         multipleData.setBatchUpdateJurisdiction(null);
         multipleData.setBatchUpdateClaimantRep(null);
 
+        multipleData.setCorrespondenceType(null);
+        multipleData.setCorrespondenceScotType(null);
+
     }
 
     public static DynamicValueType getDynamicValue(String value) {
@@ -254,9 +257,9 @@ public class MultiplesHelper {
 
     }
 
-    public static String generateLeadMarkUp(String ccdGatewayBaseUrl, String caseId, String ethosCaseRef) {
+    public static String generateLeadMarkUp(String caseId, String ethosCaseRef) {
 
-        String url = ccdGatewayBaseUrl.replace("gateway","www").concat("/v2/case/" + caseId);
+        String url = "/v2/case/" + caseId;
 
         return "<a target=\"_blank\" href=\"" + url + "\">" + ethosCaseRef +"</a>";
 

@@ -162,7 +162,6 @@
         "claimant_work_phone_number": "077777777"
       },
       "preAcceptCase": {
-        "caseReferred": "No",
         "preAcceptOutcome": "Guilty",
         "preAcceptOutcomeDoc": {
           "document_url": "http://google.com",
@@ -215,23 +214,6 @@
           "value": {
             "broughtForwardDateReason": "1990-02-25",
             "broughtForwardDateComplete": "1990-02-25"
-          }
-        }
-      ],
-      "judgementDetailsCollection": [
-        {
-          "id": "12121",
-          "value": {
-            "folio_number": "32"
-          }
-        }
-      ],
-      "costsCollection": [
-        {
-          "id": "12121",
-          "value": {
-            "costs_question": "Yes",
-            "costs_expenses_awarded_to" : "Mike"
           }
         }
       ],
