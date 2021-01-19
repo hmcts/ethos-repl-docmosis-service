@@ -52,13 +52,9 @@ public class MultipleSingleMidEventValidationService {
 
         if (errors.isEmpty()) {
 
-            log.info("Populating dynamic lists");
-
             populateDynamicLists(userToken, multipleDetails.getCaseTypeId(), multipleData, caseToSearch);
 
         }
-
-        log.info("End of validation");
 
     }
 
@@ -108,8 +104,6 @@ public class MultipleSingleMidEventValidationService {
                 caseTypeId,
                 caseToSearch);
 
-        log.info("Reading case");
-
         log.info("Checking RepresentativeClaimantType");
 
         List<DynamicValueType> claimantDynamicList = new ArrayList<>();
@@ -125,8 +119,6 @@ public class MultipleSingleMidEventValidationService {
         }
 
         multipleData.setBatchUpdateClaimantRep(populateDynamicList(claimantDynamicList));
-
-        log.info("BatchUpdateClaimantRep: " + multipleData.getBatchUpdateClaimantRep());
 
         log.info("Checking JurCodesCollection");
 
@@ -144,15 +136,11 @@ public class MultipleSingleMidEventValidationService {
 
         multipleData.setBatchUpdateJurisdiction(populateDynamicList(jurCodesCollection));
 
-        log.info("BatchUpdateJurisdiction: " + multipleData.getBatchUpdateJurisdiction());
-
         log.info("Checking RespondentCollection");
 
         List<DynamicValueType> respondentCollection = new ArrayList<>();
 
         if (submitEvent.getCaseData().getRespondentCollection() != null) {
-
-            log.info("RespondentCollection: " + submitEvent.getCaseData().getRespondentCollection());
 
             respondentCollection = submitEvent.getCaseData().getRespondentCollection().stream()
                     .map(respondentSumTypeItem -> MultiplesHelper.getDynamicValue(respondentSumTypeItem.getValue().getRespondentName()))
