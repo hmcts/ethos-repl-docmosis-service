@@ -110,8 +110,6 @@ public class MultipleSingleMidEventValidationService {
 
         if (submitEvent.getCaseData().getRepresentativeClaimantType() != null) {
 
-            log.info("RepresentativeClaimantType: " + submitEvent.getCaseData().getRepresentativeClaimantType());
-
             claimantDynamicList = new ArrayList<>(Collections.singletonList(
                     MultiplesHelper.getDynamicValue(
                             submitEvent.getCaseData().getRepresentativeClaimantType().getNameOfRepresentative())));
@@ -125,8 +123,6 @@ public class MultipleSingleMidEventValidationService {
         List<DynamicValueType> jurCodesCollection = new ArrayList<>();
 
         if (submitEvent.getCaseData().getJurCodesCollection() != null) {
-
-            log.info("JurCodesCollection: " + submitEvent.getCaseData().getJurCodesCollection());
 
             jurCodesCollection = submitEvent.getCaseData().getJurCodesCollection().stream()
                     .map(jurCodesTypeItem -> MultiplesHelper.getDynamicValue(jurCodesTypeItem.getValue().getJuridictionCodesList()))
@@ -149,8 +145,6 @@ public class MultipleSingleMidEventValidationService {
         }
 
         multipleData.setBatchUpdateRespondent(populateDynamicList(respondentCollection));
-
-        log.info("BatchUpdateRespondent: " + multipleData.getBatchUpdateRespondent());
 
     }
 
