@@ -28,6 +28,7 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 
 @Slf4j
 @RestController
@@ -211,7 +212,7 @@ public class MultipleDocGenerationController {
         }
 
         List<String> errors = LabelsHelper.midValidateAddressLabelsErrors
-                (multipleRequest.getCaseDetails().getCaseData().getAddressLabelsAttributesType());
+                (multipleRequest.getCaseDetails().getCaseData().getAddressLabelsAttributesType(), MULTIPLE_CASE_TYPE);
 
         return ResponseEntity.ok(MultipleCallbackResponse.builder()
                 .data(multipleRequest.getCaseDetails().getCaseData())

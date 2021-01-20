@@ -14,11 +14,7 @@ import uk.gov.hmcts.ecm.common.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
 import uk.gov.hmcts.ecm.common.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.types.SearchType;
-import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,8 +29,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_DEV_BULK_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DocumentGenerationServiceTest {
@@ -272,13 +267,6 @@ public class DocumentGenerationServiceTest {
         CaseData caseData = caseDetails10.getCaseData();
         List<String> errors = documentGenerationService.midValidateAddressLabels(caseData);
         assertEquals(0, errors.size());
-    }
-
-    @Test
-    public void midValidateAddressLabelsWithErrors() {
-        CaseData caseData = caseDetails11.getCaseData();
-        List<String> errors = documentGenerationService.midValidateAddressLabels(caseData);
-        assertEquals(2, errors.size());
     }
 
     @Test

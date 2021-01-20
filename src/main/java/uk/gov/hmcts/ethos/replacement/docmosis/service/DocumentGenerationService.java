@@ -105,7 +105,7 @@ public class DocumentGenerationService {
 
     public List<String> midValidateAddressLabels(CaseData caseData) {
 
-        return LabelsHelper.midValidateAddressLabelsErrors(caseData.getAddressLabelsAttributesType());
+        return LabelsHelper.midValidateAddressLabelsErrors(caseData.getAddressLabelsAttributesType(), SINGLE_CASE_TYPE);
 
     }
 

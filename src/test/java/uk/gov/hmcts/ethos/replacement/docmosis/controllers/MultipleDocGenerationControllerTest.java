@@ -146,7 +146,7 @@ public class MultipleDocGenerationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", hasSize(2)))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 

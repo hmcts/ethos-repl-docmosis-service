@@ -22,12 +22,14 @@ import java.util.List;
 import java.util.TreeMap;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.MAX_NUMBER_LABELS;
 
 @Slf4j
 @Service("multipleLetterService")
 public class MultipleLetterService {
 
     private static final String MESSAGE = "Failed to generate document for case id : ";
+    private static final String NUMBER_CASES_LIMIT_ERROR = "Number of cases to generate labels should be less or equal than "  + MAX_NUMBER_LABELS;
 
     private final TornadoService tornadoService;
     private final ExcelReadingService excelReadingService;
@@ -94,7 +96,7 @@ public class MultipleLetterService {
 
         if (templateName.equals(ADDRESS_LABELS_TEMPLATE)) {
 
-            return generateLabelLogic(userToken, multipleDetails, multipleObjects, documentInfo, validation);
+            return generateLabelLogic(userToken, multipleDetails, multipleObjects, errors, documentInfo, validation);
 
         } else {
 
@@ -105,22 +107,30 @@ public class MultipleLetterService {
     }
 
     private DocumentInfo generateLabelLogic(String userToken, MultipleDetails multipleDetails,
-                                    TreeMap<String, Object> multipleObjects,
+                                    TreeMap<String, Object> multipleObjects, List<String> errors,
                                     DocumentInfo documentInfo, boolean validation) {
 
         MultipleData multipleData = multipleDetails.getCaseData();
 
         List<String> caseRefCollection = new ArrayList<>(multipleObjects.keySet());
 
-        List<LabelPayloadEvent> labelPayloadEvents = singleCasesReadingService.retrieveLabelCases(userToken,
-                multipleDetails.getCaseTypeId(), caseRefCollection);
+        if (caseRefCollection.size() > MAX_NUMBER_LABELS) {
 
-        log.info("Generating labels");
+            errors.add(NUMBER_CASES_LIMIT_ERROR);
 
-        multipleData.setAddressLabelCollection(
-                LabelsHelper.customiseSelectedAddressesMultiples(labelPayloadEvents, multipleData));
+        } else {
 
-        multipleDetails.setCaseData(multipleData);
+            List<LabelPayloadEvent> labelPayloadEvents = singleCasesReadingService.retrieveLabelCases(userToken,
+                    multipleDetails.getCaseTypeId(), caseRefCollection);
+
+            log.info("Generating labels");
+
+            multipleData.setAddressLabelCollection(
+                    LabelsHelper.customiseSelectedAddressesMultiples(labelPayloadEvents, multipleData));
+
+            multipleDetails.setCaseData(multipleData);
+
+        }
 
         log.info("Check if it needs to generate a letter or just to populate the number of labels");
 

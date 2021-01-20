@@ -24,6 +24,8 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRe
 @Slf4j
 public class LabelsHelper {
 
+    public static final int MAX_NUMBER_LABELS = 2000;
+
     public static AddressLabelTypeItem getClaimantAddressLabelData(LabelPayloadES labelPayloadES, String printClaimantLabel) {
 
         return getClaimantAddressLabel(labelPayloadES.getClaimantTypeOfClaimant(),
@@ -417,21 +419,33 @@ public class LabelsHelper {
         return selectedAddressLabels;
     }
 
-    public static List<String> midValidateAddressLabelsErrors(AddressLabelsAttributesType addressLabelsAttributesType) {
+    public static List<String> midValidateAddressLabelsErrors(AddressLabelsAttributesType addressLabelsAttributesType, String caseType) {
 
         List<String> errors = new ArrayList<>();
 
-        //TODO VALIDATE THE NUMBER OF CASES DEPENDING ON THE INVESTIGATION
-
         if (Integer.parseInt(addressLabelsAttributesType.getNumberOfSelectedLabels()) == 0) {
             errors.add(ADDRESS_LABELS_SELECT_ERROR);
-        }
 
-        if (addressLabelsAttributesType.getNumberOfCopies().contains(".")) {
+        } else if (addressLabelsAttributesType.getNumberOfCopies().contains(".")) {
             errors.add(ADDRESS_LABELS_COPIES_ERROR);
+
+        } else if (caseType.equals(SINGLE_CASE_TYPE) && Integer.parseInt(addressLabelsAttributesType.getNumberOfCopies()) > 10) {
+            errors.add(ADDRESS_LABELS_COPIES_LESS_10_ERROR);
+
+        } else if (caseType.equals(MULTIPLE_CASE_TYPE) && reachLimitOfTotalNumberLabels(addressLabelsAttributesType)) {
+            errors.add(ADDRESS_LABELS_LABELS_LIMIT_ERROR + " of " + MAX_NUMBER_LABELS);
+
         }
 
         return errors;
+
+    }
+
+    private static boolean reachLimitOfTotalNumberLabels(AddressLabelsAttributesType addressLabelsAttributesType) {
+
+        int selectedLabels = Integer.parseInt(addressLabelsAttributesType.getNumberOfSelectedLabels());
+        int numberOfCopies = Integer.parseInt(addressLabelsAttributesType.getNumberOfCopies());
+        return selectedLabels * numberOfCopies > MAX_NUMBER_LABELS;
 
     }
 
