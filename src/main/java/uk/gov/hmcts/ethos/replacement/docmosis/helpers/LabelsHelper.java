@@ -8,6 +8,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.*;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadES;
+import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
 import java.util.ArrayList;
@@ -328,6 +329,76 @@ public class LabelsHelper {
         sb.append(sb.length() > 0  ? "." : "");
 
         return sb;
+
+    }
+
+    public static List<AddressLabelTypeItem> customiseSelectedAddressesMultiples(List<LabelPayloadEvent> labelPayloadEvents,
+                                                                                 MultipleData multipleData) {
+
+        if (multipleData.getAddressLabelsSelectionTypeMSL() != null && !multipleData.getAddressLabelsSelectionTypeMSL().isEmpty()) {
+
+            return new ArrayList<>(getAddressLabelTypeItems(labelPayloadEvents, multipleData.getAddressLabelsSelectionTypeMSL()));
+
+        } else {
+
+            return null;
+
+        }
+
+    }
+
+    private static List<AddressLabelTypeItem> getAddressLabelTypeItems(List<LabelPayloadEvent> labelPayloadEvents,
+                                                                List<String> addressLabelsSelectionTypeMSL) {
+
+        List<AddressLabelTypeItem> addressLabelTypeItems = new ArrayList<>();
+
+        for (LabelPayloadEvent labelPayloadEvent : labelPayloadEvents) {
+
+            if (addressLabelsSelectionTypeMSL.contains(CLAIMANT_ADDRESS_LABEL)) {
+
+                log.info("Adding: CLAIMANT_ADDRESS_LABEL");
+
+                addressLabelTypeItems.add(LabelsHelper.getClaimantAddressLabelData(labelPayloadEvent.getLabelPayloadES(), YES));
+
+            }
+
+            if (addressLabelsSelectionTypeMSL.contains(CLAIMANT_REP_ADDRESS_LABEL)) {
+
+                log.info("Adding: CLAIMANT_REP_ADDRESS_LABEL");
+
+                AddressLabelTypeItem addressLabelTypeItem =
+                        LabelsHelper.getClaimantRepAddressLabelData(labelPayloadEvent.getLabelPayloadES(), YES);
+                if (addressLabelTypeItem != null) {
+                    addressLabelTypeItems.add(addressLabelTypeItem);
+                }
+
+            }
+
+            if (addressLabelsSelectionTypeMSL.contains(RESPONDENTS_ADDRESS__LABEL)) {
+
+                log.info("Adding: RESPONDENTS_ADDRESS__LABEL");
+
+                List<AddressLabelTypeItem> addressLabelTypeItemsAux =
+                        LabelsHelper.getRespondentsAddressLabelsData(labelPayloadEvent.getLabelPayloadES(), YES);
+                if (!addressLabelTypeItemsAux.isEmpty()) {
+                    addressLabelTypeItems.addAll(addressLabelTypeItemsAux);
+                }
+            }
+
+            if (addressLabelsSelectionTypeMSL.contains(RESPONDENTS_REPS_ADDRESS__LABEL)) {
+
+                log.info("Adding: RESPONDENTS_REPS_ADDRESS__LABEL");
+
+                List<AddressLabelTypeItem> addressLabelTypeItemsAux =
+                        LabelsHelper.getRespondentsRepsAddressLabelsData(labelPayloadEvent.getLabelPayloadES(), YES);
+                if (!addressLabelTypeItemsAux.isEmpty()) {
+                    addressLabelTypeItems.addAll(addressLabelTypeItemsAux);
+                }
+            }
+
+        }
+
+        return addressLabelTypeItems;
 
     }
 

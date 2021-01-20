@@ -37,8 +37,6 @@ public class MultipleLetterServiceTest {
     private TornadoService tornadoService;
     @Mock
     private EventValidationService eventValidationService;
-    @Mock
-    private MultipleDocGenerationService multipleDocGenerationService;
     @InjectMocks
     private MultipleLetterService multipleLetterService;
 

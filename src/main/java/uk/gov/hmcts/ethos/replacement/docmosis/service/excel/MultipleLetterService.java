@@ -12,6 +12,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.TornadoService;
@@ -32,19 +33,16 @@ public class MultipleLetterService {
     private final ExcelReadingService excelReadingService;
     private final SingleCasesReadingService singleCasesReadingService;
     private final EventValidationService eventValidationService;
-    private final MultipleDocGenerationService multipleDocGenerationService;
 
     @Autowired
     public MultipleLetterService(TornadoService tornadoService,
                                  ExcelReadingService excelReadingService,
                                  SingleCasesReadingService singleCasesReadingService,
-                                 EventValidationService eventValidationService,
-                                 MultipleDocGenerationService multipleDocGenerationService) {
+                                 EventValidationService eventValidationService) {
         this.tornadoService = tornadoService;
         this.excelReadingService = excelReadingService;
         this.singleCasesReadingService = singleCasesReadingService;
         this.eventValidationService = eventValidationService;
-        this.multipleDocGenerationService = multipleDocGenerationService;
     }
 
     public DocumentInfo bulkLetterLogic(String userToken, MultipleDetails multipleDetails, List<String> errors, boolean validation) {
@@ -120,7 +118,7 @@ public class MultipleLetterService {
         log.info("Generating labels");
 
         multipleData.setAddressLabelCollection(
-                multipleDocGenerationService.customiseSelectedAddresses(labelPayloadEvents, multipleData));
+                LabelsHelper.customiseSelectedAddressesMultiples(labelPayloadEvents, multipleData));
 
         multipleDetails.setCaseData(multipleData);
 
