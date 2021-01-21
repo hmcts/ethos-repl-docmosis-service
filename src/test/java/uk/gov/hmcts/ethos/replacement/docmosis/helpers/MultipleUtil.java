@@ -32,10 +32,8 @@ import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 import uk.gov.hmcts.ecm.common.model.schedule.ScheduleAddress;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
-import uk.gov.hmcts.ecm.common.model.schedule.items.ScheduleRespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantType;
-import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleRespondentSumType;
 
 import java.io.IOException;
 import java.util.*;
@@ -164,10 +162,13 @@ public class MultipleUtil {
         ScheduleClaimantIndType claimantIndType = new ScheduleClaimantIndType();
         claimantIndType.setClaimantLastName("Mike");
         schedulePayloadES.setClaimantIndType(claimantIndType);
-        ScheduleRespondentSumType respondentSumType = new ScheduleRespondentSumType();
+        RespondentSumType respondentSumType = new RespondentSumType();
         respondentSumType.setRespondentName("Andrew Smith");
-        respondentSumType.setRespondentAddress(address);
-        ScheduleRespondentSumTypeItem respondentSumTypeItem = new ScheduleRespondentSumTypeItem();
+        Address addressResp = new Address();
+        addressResp.setPostCode("M2 45GD");
+        addressResp.setAddressLine1("12 Sillavan Way");
+        respondentSumType.setRespondentAddress(addressResp);
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
         respondentSumTypeItem.setValue(respondentSumType);
         schedulePayloadES.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
         schedulePayloadES.setEthosCaseReference(ethosCaseReference);
@@ -291,6 +292,7 @@ public class MultipleUtil {
         caseIdTypeItem2.setValue(caseType2);
         caseIdCollection.add(caseIdTypeItem2);
 
+        multipleData.setSubMultiple(generateDynamicList("All"));
         multipleData.setFlag1(generateDynamicList("AA"));
         multipleData.setFlag2(generateDynamicList(""));
         multipleData.setFlag4(generateDynamicList(""));

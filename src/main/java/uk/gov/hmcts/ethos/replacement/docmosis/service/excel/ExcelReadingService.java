@@ -97,8 +97,9 @@ public class ExcelReadingService {
 
     }
 
-    private void getFlagObjects(TreeMap<String, Object> multipleObjects, String flag1, String flag2, String flag3, String flag4) {
+    private void getFlagObjects(TreeMap<String, Object> multipleObjects, String subMultiple, String flag1, String flag2, String flag3, String flag4) {
 
+        populateTreeMapWithSet(multipleObjects, HEADER_2, subMultiple);
         populateTreeMapWithSet(multipleObjects, HEADER_3, flag1);
         populateTreeMapWithSet(multipleObjects, HEADER_4, flag2);
         populateTreeMapWithSet(multipleObjects, HEADER_5, flag3);
@@ -150,6 +151,7 @@ public class ExcelReadingService {
 
             } else if (filter.equals(FilterExcelType.DL_FLAGS)) {
                 getFlagObjects(multipleObjects,
+                        getCellValue(currentRow.getCell(1)),
                         getCellValue(currentRow.getCell(2)),
                         getCellValue(currentRow.getCell(3)),
                         getCellValue(currentRow.getCell(4)),
@@ -196,7 +198,8 @@ public class ExcelReadingService {
 
     private boolean isMultipleInFlags(Row currentRow, MultipleData multipleData) {
 
-        return isFilterPassed(currentRow.getCell(2), multipleData.getFlag1())
+        return isFilterPassed(currentRow.getCell(1), multipleData.getSubMultiple())
+                && isFilterPassed(currentRow.getCell(2), multipleData.getFlag1())
                 && isFilterPassed(currentRow.getCell(3), multipleData.getFlag2())
                 && isFilterPassed(currentRow.getCell(4), multipleData.getFlag3())
                 && isFilterPassed(currentRow.getCell(5), multipleData.getFlag4());
@@ -204,8 +207,8 @@ public class ExcelReadingService {
 
     private boolean isMultipleInFlagsAndBelongsSubMultiple(Row currentRow, MultipleData multipleData) {
 
-        return !getCellValue(currentRow.getCell(1)).equals("") &&
-                isFilterPassed(currentRow.getCell(2), multipleData.getFlag1())
+        return !getCellValue(currentRow.getCell(1)).equals("")
+                && isFilterPassed(currentRow.getCell(2), multipleData.getFlag1())
                 && isFilterPassed(currentRow.getCell(3), multipleData.getFlag2())
                 && isFilterPassed(currentRow.getCell(4), multipleData.getFlag3())
                 && isFilterPassed(currentRow.getCell(5), multipleData.getFlag4());

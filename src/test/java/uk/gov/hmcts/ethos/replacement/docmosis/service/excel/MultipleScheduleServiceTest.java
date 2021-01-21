@@ -6,10 +6,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
-import uk.gov.hmcts.ecm.common.model.schedule.items.ScheduleRespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleRespondentSumType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 
@@ -88,8 +88,8 @@ public class MultipleScheduleServiceTest {
 
     @Test
     public void bulkScheduleLogicFlagsMultipleRespondents() {
-        ScheduleRespondentSumTypeItem respondentSumTypeItem = new ScheduleRespondentSumTypeItem();
-        respondentSumTypeItem.setValue(new ScheduleRespondentSumType());
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setValue(new RespondentSumType());
         schedulePayloadEvents.iterator().next().getSchedulePayloadES().getRespondentCollection().add(respondentSumTypeItem);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
