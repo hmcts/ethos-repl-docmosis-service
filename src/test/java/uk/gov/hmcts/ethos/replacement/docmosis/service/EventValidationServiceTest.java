@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -39,6 +40,7 @@ public class EventValidationServiceTest {
     private CaseDetails caseDetails4;
 
     private CaseData caseData;
+    private MultipleData multipleData;
 
     @Before
     public void setup() throws Exception {
@@ -50,6 +52,7 @@ public class EventValidationServiceTest {
         caseDetails4 = generateCaseDetails("caseDetailsTest4.json");
 
         caseData = new CaseData();
+        multipleData = new MultipleData();
     }
 
     @Test
@@ -77,6 +80,25 @@ public class EventValidationServiceTest {
         caseData.setReceiptDate(FUTURE_RECEIPT_DATE.toString());
 
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
+
+        assertEquals(1, errors.size());
+        assertEquals(FUTURE_RECEIPT_DATE_ERROR_MESSAGE, errors.get(0));
+    }
+
+    @Test
+    public void shouldValidatePastReceiptDateMultiple() {
+        multipleData.setReceiptDate(PAST_RECEIPT_DATE.toString());
+
+        List<String> errors = eventValidationService.validateReceiptDateMultiple(multipleData);
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateFutureReceiptDateMultiple() {
+        multipleData.setReceiptDate(FUTURE_RECEIPT_DATE.toString());
+
+        List<String> errors = eventValidationService.validateReceiptDateMultiple(multipleData);
 
         assertEquals(1, errors.size());
         assertEquals(FUTURE_RECEIPT_DATE_ERROR_MESSAGE, errors.get(0));

@@ -8,6 +8,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -28,6 +29,15 @@ public class EventValidationService {
         }
         else{
             caseData.setTargetHearingDate(dateOfReceipt.plusDays(TARGET_HEARING_DATE_INCREMENT).toString());
+        }
+        return errors;
+    }
+
+    public List<String> validateReceiptDateMultiple(MultipleData multipleData) {
+        List<String> errors = new ArrayList<>();
+        LocalDate dateOfReceipt = LocalDate.parse(multipleData.getReceiptDate());
+        if (dateOfReceipt.isAfter(LocalDate.now())) {
+            errors.add(FUTURE_RECEIPT_DATE_ERROR_MESSAGE);
         }
         return errors;
     }

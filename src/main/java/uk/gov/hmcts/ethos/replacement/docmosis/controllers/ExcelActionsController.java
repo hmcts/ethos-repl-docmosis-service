@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleRequest;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.*;
 
@@ -40,6 +41,7 @@ public class ExcelActionsController {
     private final SubMultipleMidEventValidationService subMultipleMidEventValidationService;
     private final MultipleCreationMidEventValidationService multipleCreationMidEventValidationService;
     private final MultipleSingleMidEventValidationService multipleSingleMidEventValidationService;
+    private final EventValidationService eventValidationService;
 
     @Autowired
     public ExcelActionsController(VerifyTokenService verifyTokenService,
@@ -53,7 +55,8 @@ public class ExcelActionsController {
                                   SubMultipleUpdateService subMultipleUpdateService,
                                   SubMultipleMidEventValidationService subMultipleMidEventValidationService,
                                   MultipleCreationMidEventValidationService multipleCreationMidEventValidationService,
-                                  MultipleSingleMidEventValidationService multipleSingleMidEventValidationService) {
+                                  MultipleSingleMidEventValidationService multipleSingleMidEventValidationService,
+                                  EventValidationService eventValidationService) {
         this.verifyTokenService = verifyTokenService;
         this.multipleCreationService = multipleCreationService;
         this.multiplePreAcceptService = multiplePreAcceptService;
@@ -66,6 +69,7 @@ public class ExcelActionsController {
         this.subMultipleMidEventValidationService = subMultipleMidEventValidationService;
         this.multipleCreationMidEventValidationService = multipleCreationMidEventValidationService;
         this.multipleSingleMidEventValidationService = multipleSingleMidEventValidationService;
+        this.eventValidationService = eventValidationService;
     }
 
     @PostMapping(value = "/createMultiple", consumes = APPLICATION_JSON_VALUE)
@@ -405,6 +409,33 @@ public class ExcelActionsController {
         MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
 
         multipleSingleMidEventValidationService.multipleSingleValidationLogic(userToken, multipleDetails, errors);
+
+        return ResponseEntity.ok(MultipleCallbackResponse.builder()
+                .errors(errors)
+                .data(multipleDetails.getCaseData())
+                .build());
+    }
+
+    @PostMapping(value = "/multipleMidBatch1Validation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "validates the receipts date introduce by the user.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = MultipleCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<MultipleCallbackResponse> multipleMidBatch1Validation(
+            @RequestBody MultipleRequest multipleRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MULTIPLE MID BATCH 1 VALIDATION ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
+        List<String> errors = eventValidationService.validateReceiptDateMultiple(multipleDetails.getCaseData());
 
         return ResponseEntity.ok(MultipleCallbackResponse.builder()
                 .errors(errors)
