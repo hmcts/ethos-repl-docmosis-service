@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 
+import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -95,10 +96,7 @@ public class ExcelActionsController {
 
         multipleCreationService.bulkCreationLogic(userToken, multipleDetails, errors);
 
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .errors(errors)
-                .data(multipleDetails.getCaseData())
-                .build());
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
 
     @PostMapping(value = "/amendMultiple", consumes = APPLICATION_JSON_VALUE)
@@ -149,10 +147,7 @@ public class ExcelActionsController {
 
         multipleUploadService.bulkUploadLogic(userToken, multipleDetails, errors);
 
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .errors(errors)
-                .data(multipleDetails.getCaseData())
-                .build());
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
 
     @PostMapping(value = "/preAcceptMultiple", consumes = APPLICATION_JSON_VALUE)
@@ -178,10 +173,7 @@ public class ExcelActionsController {
 
         multiplePreAcceptService.bulkPreAcceptLogic(userToken, multipleDetails, errors);
 
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .errors(errors)
-                .data(multipleDetails.getCaseData())
-                .build());
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
 
     @PostMapping(value = "/amendCaseIDs", consumes = APPLICATION_JSON_VALUE)
@@ -207,10 +199,7 @@ public class ExcelActionsController {
 
         multipleAmendCaseIdsService.bulkAmendCaseIdsLogic(userToken, multipleDetails, errors);
 
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .errors(errors)
-                .data(multipleDetails.getCaseData())
-                .build());
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
 
     @PostMapping(value = "/batchUpdate", consumes = APPLICATION_JSON_VALUE)
@@ -236,10 +225,7 @@ public class ExcelActionsController {
 
         multipleUpdateService.bulkUpdateLogic(userToken, multipleDetails, errors);
 
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .errors(errors)
-                .data(multipleDetails.getCaseData())
-                .build());
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
 
     @PostMapping(value = "/dynamicListFlags", consumes = APPLICATION_JSON_VALUE)
@@ -265,10 +251,7 @@ public class ExcelActionsController {
 
         multipleDynamicListFlagsService.populateDynamicListFlagsLogic(userToken, multipleDetails, errors);
 
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .errors(errors)
-                .data(multipleDetails.getCaseData())
-                .build());
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
 
     @PostMapping(value = "/multipleMidEventValidation", consumes = APPLICATION_JSON_VALUE)
@@ -294,10 +277,7 @@ public class ExcelActionsController {
 
         multipleMidEventValidationService.multipleValidationLogic(userToken, multipleDetails, errors);
 
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .errors(errors)
-                .data(multipleDetails.getCaseData())
-                .build());
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
 
     @PostMapping(value = "/subMultipleMidEventValidation", consumes = APPLICATION_JSON_VALUE)
@@ -323,10 +303,7 @@ public class ExcelActionsController {
 
         subMultipleMidEventValidationService.subMultipleValidationLogic(multipleDetails, errors);
 
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .errors(errors)
-                .data(multipleDetails.getCaseData())
-                .build());
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
 
     @PostMapping(value = "/updateSubMultiple", consumes = APPLICATION_JSON_VALUE)
@@ -352,10 +329,7 @@ public class ExcelActionsController {
 
         subMultipleUpdateService.subMultipleUpdateLogic(userToken, multipleDetails, errors);
 
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .errors(errors)
-                .data(multipleDetails.getCaseData())
-                .build());
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
 
     @PostMapping(value = "/multipleCreationMidEventValidation", consumes = APPLICATION_JSON_VALUE)
@@ -381,10 +355,7 @@ public class ExcelActionsController {
 
         multipleCreationMidEventValidationService.multipleCreationValidationLogic(userToken, multipleDetails, errors);
 
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .errors(errors)
-                .data(multipleDetails.getCaseData())
-                .build());
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
 
     @PostMapping(value = "/multipleSingleMidEventValidation", consumes = APPLICATION_JSON_VALUE)
@@ -410,10 +381,7 @@ public class ExcelActionsController {
 
         multipleSingleMidEventValidationService.multipleSingleValidationLogic(userToken, multipleDetails, errors);
 
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .errors(errors)
-                .data(multipleDetails.getCaseData())
-                .build());
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
 
     @PostMapping(value = "/multipleMidBatch1Validation", consumes = APPLICATION_JSON_VALUE)
@@ -437,6 +405,12 @@ public class ExcelActionsController {
         MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
         List<String> errors = eventValidationService.validateReceiptDateMultiple(multipleDetails.getCaseData());
 
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
+    }
+
+    @NotNull
+    private ResponseEntity<MultipleCallbackResponse> getMultipleCallbackResponseResponseEntity(List<String> errors,
+                                                                                               MultipleDetails multipleDetails) {
         return ResponseEntity.ok(MultipleCallbackResponse.builder()
                 .errors(errors)
                 .data(multipleDetails.getCaseData())

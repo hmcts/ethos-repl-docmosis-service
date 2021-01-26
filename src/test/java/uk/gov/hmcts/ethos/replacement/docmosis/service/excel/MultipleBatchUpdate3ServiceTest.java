@@ -57,7 +57,8 @@ public class MultipleBatchUpdate3ServiceTest {
 
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData().getBatchUpdateCase()))
+                multipleDetails.getCaseData().getBatchUpdateCase(),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(submitEvents.get(0));
 
         multipleBatchUpdate3Service.batchUpdate3Logic(userToken,
@@ -85,7 +86,8 @@ public class MultipleBatchUpdate3ServiceTest {
 
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData().getBatchUpdateCase()))
+                multipleDetails.getCaseData().getBatchUpdateCase(),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(submitEvents.get(0));
 
         multipleBatchUpdate3Service.batchUpdate3Logic(userToken,

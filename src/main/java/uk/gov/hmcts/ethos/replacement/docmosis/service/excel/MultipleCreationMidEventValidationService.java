@@ -57,7 +57,7 @@ public class MultipleCreationMidEventValidationService {
 
                 log.info("Validating lead case introduced by user: " + multipleData.getLeadCase());
 
-                validateCases(userToken, multipleDetails.getCaseTypeId(),
+                validateCases(userToken, multipleDetails.getCaseTypeId(), multipleData,
                         new ArrayList<>(Collections.singletonList(multipleData.getLeadCase())), errors, true);
 
             }
@@ -68,7 +68,7 @@ public class MultipleCreationMidEventValidationService {
 
             validateCaseReferenceCollectionSize(ethosCaseRefCollection, errors);
 
-            validateCases(userToken, multipleDetails.getCaseTypeId(), ethosCaseRefCollection, errors, false);
+            validateCases(userToken, multipleDetails.getCaseTypeId(), multipleData, ethosCaseRefCollection, errors, false);
 
         }
 
@@ -86,13 +86,13 @@ public class MultipleCreationMidEventValidationService {
 
     }
 
-    private void validateCases(String userToken, String multipleCaseTypeId, List<String> caseRefCollection,
-                               List<String> errors, boolean isLead) {
+    private void validateCases(String userToken, String multipleCaseTypeId, MultipleData multipleData,
+                               List<String> caseRefCollection, List<String> errors, boolean isLead) {
 
         if (errors.isEmpty() && !caseRefCollection.isEmpty()) {
 
             List<SubmitEvent> submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
-                    multipleCaseTypeId, caseRefCollection);
+                    multipleCaseTypeId, caseRefCollection, multipleData.getMultipleSource());
 
             log.info("Validate number of cases returned");
 

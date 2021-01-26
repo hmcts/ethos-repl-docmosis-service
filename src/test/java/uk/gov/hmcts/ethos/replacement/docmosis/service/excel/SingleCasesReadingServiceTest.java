@@ -50,28 +50,33 @@ public class SingleCasesReadingServiceTest {
 
     @Test
     public void retrieveSingleCase() throws IOException {
-        when(ccdClient.retrieveCasesElasticSearch(userToken,
+        when(ccdClient.retrieveCasesElasticSearchForCreation(userToken,
                 multipleDetails.getCaseTypeId(),
-                new ArrayList<>(Collections.singletonList("240001/2020"))))
+                new ArrayList<>(Collections.singletonList("240001/2020")),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(submitEventList);
         singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                "240001/2020");
-        verify(ccdClient, times(1)).retrieveCasesElasticSearch(userToken,
+                "240001/2020",
+                multipleDetails.getCaseData().getMultipleSource());
+        verify(ccdClient, times(1)).retrieveCasesElasticSearchForCreation(userToken,
                 "Manchester",
-                new ArrayList<>(Collections.singletonList("240001/2020")));
+                new ArrayList<>(Collections.singletonList("240001/2020")),
+                multipleDetails.getCaseData().getMultipleSource());
         verifyNoMoreInteractions(ccdClient);
     }
 
     @Test
     public void retrieveSingleCaseException() throws IOException {
-        when(ccdClient.retrieveCasesElasticSearch(anyString(),
+        when(ccdClient.retrieveCasesElasticSearchForCreation(anyString(),
                 anyString(),
-                anyList()))
+                anyList(),
+                anyString()))
                 .thenThrow(new RuntimeException());
         SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                "240001/2020");
+                "240001/2020",
+                multipleDetails.getCaseData().getMultipleSource());
         assertNull(submitEvent);
     }
 

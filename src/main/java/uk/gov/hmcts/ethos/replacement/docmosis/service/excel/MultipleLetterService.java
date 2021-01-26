@@ -143,7 +143,7 @@ public class MultipleLetterService {
             log.info("No validation then will generate a label document");
 
             SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
-                    multipleDetails.getCaseTypeId(), multipleObjects.firstKey());
+                    multipleDetails.getCaseTypeId(), multipleObjects.firstKey(), multipleData.getMultipleSource());
 
             return generateLetterOrLabel(userToken, multipleDetails, submitEvent);
 
@@ -158,7 +158,7 @@ public class MultipleLetterService {
         log.info("Pull information from first case filtered");
 
         SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
-                multipleDetails.getCaseTypeId(), multipleObjects.firstKey());
+                multipleDetails.getCaseTypeId(), multipleObjects.firstKey(), multipleDetails.getCaseData().getMultipleSource());
 
         log.info("Validating hearing number");
 

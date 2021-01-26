@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 
+import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -76,23 +77,7 @@ public class MultipleDocGenerationController {
 
         DocumentInfo documentInfo = multipleScheduleService.bulkScheduleLogic(userToken, multipleDetails, errors);
 
-        multipleDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
-
-        if (errors.isEmpty()) {
-
-            return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                    .data(multipleDetails.getCaseData())
-                    .significant_item(Helper.generateSignificantItem(documentInfo))
-                    .build());
-
-        } else {
-
-            return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                    .errors(errors)
-                    .data(multipleDetails.getCaseData())
-                    .build());
-
-        }
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails, documentInfo);
     }
 
     @PostMapping(value = "/printLetter", consumes = APPLICATION_JSON_VALUE)
@@ -118,23 +103,7 @@ public class MultipleDocGenerationController {
 
         DocumentInfo documentInfo = multipleLetterService.bulkLetterLogic(userToken, multipleDetails, errors, false);
 
-        if (errors.isEmpty()) {
-
-            multipleDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
-
-            return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                    .data(multipleDetails.getCaseData())
-                    .significant_item(Helper.generateSignificantItem(documentInfo))
-                    .build());
-
-        } else {
-
-            return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                    .errors(errors)
-                    .data(multipleDetails.getCaseData())
-                    .build());
-
-        }
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails, documentInfo);
     }
 
     @PostMapping(value = "/printDocumentConfirmation", consumes = APPLICATION_JSON_VALUE)
@@ -219,6 +188,29 @@ public class MultipleDocGenerationController {
                 .errors(errors)
                 .build());
 
+    }
+
+    @NotNull
+    private ResponseEntity<MultipleCallbackResponse> getMultipleCallbackResponseResponseEntity(List<String> errors,
+                                                                                               MultipleDetails multipleDetails,
+                                                                                               DocumentInfo documentInfo) {
+        if (errors.isEmpty()) {
+
+            multipleDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
+
+            return ResponseEntity.ok(MultipleCallbackResponse.builder()
+                    .data(multipleDetails.getCaseData())
+                    .significant_item(Helper.generateSignificantItem(documentInfo))
+                    .build());
+
+        } else {
+
+            return ResponseEntity.ok(MultipleCallbackResponse.builder()
+                    .errors(errors)
+                    .data(multipleDetails.getCaseData())
+                    .build());
+
+        }
     }
 
 }

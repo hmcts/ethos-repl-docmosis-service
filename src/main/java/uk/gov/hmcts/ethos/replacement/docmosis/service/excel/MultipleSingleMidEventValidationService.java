@@ -102,7 +102,8 @@ public class MultipleSingleMidEventValidationService {
         SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(
                 userToken,
                 caseTypeId,
-                caseToSearch);
+                caseToSearch,
+                multipleData.getMultipleSource());
 
         log.info("Checking RepresentativeClaimantType");
 

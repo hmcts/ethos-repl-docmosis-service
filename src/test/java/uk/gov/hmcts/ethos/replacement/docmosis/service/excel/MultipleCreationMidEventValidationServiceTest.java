@@ -60,7 +60,8 @@ public class MultipleCreationMidEventValidationServiceTest {
 
         when(singleCasesReadingService.retrieveSingleCases(userToken,
                 multipleDetails.getCaseTypeId(),
-                MultiplesHelper.getCaseIds(multipleDetails.getCaseData())))
+                MultiplesHelper.getCaseIds(multipleDetails.getCaseData()),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(new ArrayList<>(Collections.singletonList(submitEvent)));
 
         multipleCreationMidEventValidationService.multipleCreationValidationLogic(
@@ -96,7 +97,8 @@ public class MultipleCreationMidEventValidationServiceTest {
 
         when(singleCasesReadingService.retrieveSingleCases(userToken,
                 multipleDetails.getCaseTypeId(),
-                MultiplesHelper.getCaseIds(multipleDetails.getCaseData())))
+                MultiplesHelper.getCaseIds(multipleDetails.getCaseData()),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(getSubmitEvents());
 
         multipleCreationMidEventValidationService.multipleCreationValidationLogic(

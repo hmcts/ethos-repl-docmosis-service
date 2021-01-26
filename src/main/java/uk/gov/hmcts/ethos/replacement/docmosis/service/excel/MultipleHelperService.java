@@ -61,7 +61,8 @@ public class MultipleHelperService {
             SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(
                     userToken,
                     multipleCaseTypeId,
-                    newLeadCase);
+                    newLeadCase,
+                    multipleData.getMultipleSource());
 
             if (submitEvent != null) {
 

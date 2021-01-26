@@ -56,7 +56,8 @@ public class MultipleSingleMidEventValidationServiceTest {
 
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData().getBatchUpdateCase()))
+                multipleDetails.getCaseData().getBatchUpdateCase(),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(submitEventList.get(0));
 
         when(multipleHelperService.getEthosCaseRefCollection(userToken,
@@ -143,7 +144,8 @@ public class MultipleSingleMidEventValidationServiceTest {
 
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData().getBatchUpdateCase()))
+                multipleDetails.getCaseData().getBatchUpdateCase(),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(submitEventList.get(0));
 
         when(multipleHelperService.getEthosCaseRefCollection(userToken,

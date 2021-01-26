@@ -31,6 +31,7 @@ public class MultipleScheduleService {
 
     public static final int ES_PARTITION_SIZE = 500;
     public static final int THREAD_NUMBER = 20;
+    public static final int SCHEDULE_LIMIT_CASES = 10000;
 
     @Autowired
     public MultipleScheduleService(ExcelReadingService excelReadingService,
@@ -55,15 +56,29 @@ public class MultipleScheduleService {
                         multipleDetails.getCaseData(),
                         filterExcelType);
 
-        log.info("Pull information from single cases");
+        DocumentInfo documentInfo = new DocumentInfo();
 
-        List<SchedulePayload> schedulePayloads =
-                getSchedulePayloadCollection(userToken, multipleDetails.getCaseTypeId(),
-                        getCaseIdCollectionFromFilter(multipleObjects, filterExcelType), errors);
+        log.info("Validate limit of cases to generate schedules");
 
-        log.info("Generate schedule");
+        if (multipleObjects.keySet().size() > SCHEDULE_LIMIT_CASES) {
 
-        DocumentInfo documentInfo = generateSchedule(userToken, multipleObjects, multipleDetails, schedulePayloads, errors);
+            log.info("Number of cases exceed the limit of " + SCHEDULE_LIMIT_CASES);
+
+            errors.add("Number of cases exceed the limit of " + SCHEDULE_LIMIT_CASES);
+
+        } else {
+
+            log.info("Pull information from single cases");
+
+            List<SchedulePayload> schedulePayloads =
+                    getSchedulePayloadCollection(userToken, multipleDetails.getCaseTypeId(),
+                            getCaseIdCollectionFromFilter(multipleObjects, filterExcelType), errors);
+
+            log.info("Generate schedule");
+
+            documentInfo = generateSchedule(userToken, multipleObjects, multipleDetails, schedulePayloads, errors);
+
+        }
 
         log.info("Resetting mid fields");
 

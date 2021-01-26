@@ -65,7 +65,8 @@ public class MultipleLetterServiceTest {
                 .thenReturn(multipleObjectsFlags);
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleObjectsFlags.firstKey()))
+                multipleObjectsFlags.firstKey(),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(submitEvents.get(0));
         when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any()))
                 .thenReturn(new DocumentInfo());
@@ -75,7 +76,8 @@ public class MultipleLetterServiceTest {
                 false);
         verify(singleCasesReadingService, times(1)).retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleObjectsFlags.firstKey());
+                multipleObjectsFlags.firstKey(),
+                multipleDetails.getCaseData().getMultipleSource());
         verifyNoMoreInteractions(singleCasesReadingService);
     }
 
@@ -85,7 +87,8 @@ public class MultipleLetterServiceTest {
                 .thenReturn(multipleObjectsFlags);
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleObjectsFlags.firstKey()))
+                multipleObjectsFlags.firstKey(),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(submitEvents.get(0));
         when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any()))
                 .thenThrow(new IOException());
@@ -95,7 +98,8 @@ public class MultipleLetterServiceTest {
                 false);
         verify(singleCasesReadingService, times(1)).retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleObjectsFlags.firstKey());
+                multipleObjectsFlags.firstKey(),
+                multipleDetails.getCaseData().getMultipleSource());
         verifyNoMoreInteractions(singleCasesReadingService);
     }
 
@@ -123,7 +127,8 @@ public class MultipleLetterServiceTest {
                 .thenReturn(labelPayloadEvents);
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleObjectsFlags.firstKey()))
+                multipleObjectsFlags.firstKey(),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(submitEvents.get(0));
         when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any()))
                 .thenReturn(new DocumentInfo());
@@ -136,7 +141,8 @@ public class MultipleLetterServiceTest {
                 new ArrayList<>(multipleObjectsFlags.keySet()));
         verify(singleCasesReadingService, times(1)).retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleObjectsFlags.firstKey());
+                multipleObjectsFlags.firstKey(),
+                multipleDetails.getCaseData().getMultipleSource());
         verifyNoMoreInteractions(singleCasesReadingService);
     }
 
@@ -153,7 +159,8 @@ public class MultipleLetterServiceTest {
                 .thenReturn(labelPayloadEvents);
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleObjectsFlags.firstKey()))
+                multipleObjectsFlags.firstKey(),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(submitEvents.get(0));
         when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any()))
                 .thenReturn(new DocumentInfo());
@@ -166,7 +173,8 @@ public class MultipleLetterServiceTest {
                 new ArrayList<>(multipleObjectsFlags.keySet()));
         verify(singleCasesReadingService, times(1)).retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleObjectsFlags.firstKey());
+                multipleObjectsFlags.firstKey(),
+                multipleDetails.getCaseData().getMultipleSource());
         verifyNoMoreInteractions(singleCasesReadingService);
     }
 

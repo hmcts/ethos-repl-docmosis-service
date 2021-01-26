@@ -41,7 +41,8 @@ public class MultipleBatchUpdate3Service {
         SubmitEvent caseSearched = singleCasesReadingService.retrieveSingleCase(
                 userToken,
                 multipleDetails.getCaseTypeId(),
-                caseToSearch);
+                caseToSearch,
+                multipleData.getMultipleSource());
 
         log.info("Checking if there will be any change. Otherwise moving to open state");
 
