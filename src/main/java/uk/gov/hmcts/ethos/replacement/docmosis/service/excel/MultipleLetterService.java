@@ -10,10 +10,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.TornadoService;
 
@@ -89,7 +86,7 @@ public class MultipleLetterService {
                                                TreeMap<String, Object> multipleObjects,
                                                List<String> errors, DocumentInfo documentInfo, boolean validation) {
 
-        String templateName = Helper.getTemplateName(multipleDetails.getCaseData().getCorrespondenceType(),
+        String templateName = DocumentHelper.getTemplateName(multipleDetails.getCaseData().getCorrespondenceType(),
                 multipleDetails.getCaseData().getCorrespondenceScotType());
 
         log.info("midAddressLabels - templateName : " + templateName);

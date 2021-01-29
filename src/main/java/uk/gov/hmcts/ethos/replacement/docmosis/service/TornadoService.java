@@ -13,10 +13,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.*;
 
 import java.io.*;
 import java.net.ConnectException;
@@ -88,7 +85,7 @@ public class TornadoService {
                                   MultipleData multipleData) {
 
         try (InputStream venueAddressInputStream = getClass().getClassLoader().getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH)) {
-            StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(),
+            StringBuilder sb = DocumentHelper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(),
                     userDetails, caseTypeId, venueAddressInputStream, correspondenceType,
                     correspondenceScotType, multipleData);
             //log.info("Sending request: " + sb.toString());

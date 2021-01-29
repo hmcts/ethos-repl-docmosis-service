@@ -15,7 +15,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsAttributesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsSelectionType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper;
 
 import java.util.ArrayList;
@@ -39,13 +39,13 @@ public class DocumentGenerationService {
     }
 
     public CaseData midAddressLabels(CaseData caseData) {
-        String templateName = Helper.getTemplateName(caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType());
+        String templateName = DocumentHelper.getTemplateName(caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType());
         log.info("midAddressLabels - templateName : " + templateName);
         if (templateName.equals(ADDRESS_LABELS_TEMPLATE)) {
-            String ewSection = Helper.getEWSectionName(caseData.getCorrespondenceType());
+            String ewSection = DocumentHelper.getEWSectionName(caseData.getCorrespondenceType());
             caseData.setAddressLabelCollection(new ArrayList<>());
             String sectionName = ewSection.equals("")
-                    ? Helper.getScotSectionName(caseData.getCorrespondenceScotType())
+                    ? DocumentHelper.getScotSectionName(caseData.getCorrespondenceScotType())
                     : ewSection;
             log.info("midAddressLabels - sectionName : " + sectionName);
             switch (sectionName) {
@@ -98,7 +98,7 @@ public class DocumentGenerationService {
 
     public CaseData midSelectedAddressLabels(CaseData caseData) {
         caseData.setAddressLabelsAttributesType(new AddressLabelsAttributesType());
-        List<AddressLabelTypeItem> selectedAddressLabels = Helper.getSelectedAddressLabels(caseData.getAddressLabelCollection());
+        List<AddressLabelTypeItem> selectedAddressLabels = DocumentHelper.getSelectedAddressLabels(caseData.getAddressLabelCollection());
         caseData.getAddressLabelsAttributesType().setNumberOfSelectedLabels(String.valueOf(selectedAddressLabels.size()));
         return caseData;
     }

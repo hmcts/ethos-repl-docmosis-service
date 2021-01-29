@@ -376,7 +376,7 @@ public class DefaultValuesReaderServiceTest {
                 "receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, " +
                 "fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, depositCollection=null, judgementCollection=null, " +
-                "jurCodesCollection=null, broughtForwardCollection=null, clerkResponsible=null, " +
+                "jurCodesCollection=null, bfActionsCW=null, bfActionsAll=null, clerkResponsible=null, " +
                 "userLocation=null, documentCollection=null, additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, " +
                 "addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, caseNotes=null, claimantWorkAddress=null, " +
                 "claimantRepresentedQuestion=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, state=null, et3Received=null, " +
@@ -437,7 +437,7 @@ public class DefaultValuesReaderServiceTest {
                 "responseRespondentContactPreference=null, responseReceived=null, responseReceivedDate=null, responseRespondentNameQuestion=null, responseRespondentName=null, " +
                 "responseContinue=null, responseCounterClaim=null))], repCollection=null, positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, depositCollection=null, " +
-                "judgementCollection=null, jurCodesCollection=null, broughtForwardCollection=null, " +
+                "judgementCollection=null, jurCodesCollection=null, bfActionsCW=null, bfActionsAll=null, " +
                 "clerkResponsible=null, userLocation=null, documentCollection=null, additionalCaseInfoType=null, correspondenceScotType=null, " +
                 "correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, caseNotes=null, " +
                 "claimantWorkAddress=ClaimantWorkAddressType(claimantWorkAddress=null, claimantWorkPhoneNumber=null), claimantRepresentedQuestion=null, " +

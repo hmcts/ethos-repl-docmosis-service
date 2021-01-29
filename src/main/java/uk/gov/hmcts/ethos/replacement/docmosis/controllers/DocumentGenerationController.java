@@ -23,6 +23,8 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_EMPTY_ERROR;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.getCCDCallbackResponseResponseEntityWithErrors;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.getCCDCallbackResponseResponseEntityWithoutErrors;
 
 @Slf4j
 @RestController
@@ -70,10 +72,7 @@ public class DocumentGenerationController {
             log.info("Event fields validation: " + errors);
         }
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .errors(errors)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
     @PostMapping(value = "/midSelectedAddressLabels", consumes = APPLICATION_JSON_VALUE)
@@ -97,9 +96,7 @@ public class DocumentGenerationController {
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         caseData = documentGenerationService.midSelectedAddressLabels(caseData);
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
     @PostMapping(value = "/midValidateAddressLabels", consumes = APPLICATION_JSON_VALUE)
@@ -125,10 +122,7 @@ public class DocumentGenerationController {
         errors = documentGenerationService.midValidateAddressLabels(caseData);
         log.info("Event fields validation: " + errors);
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .errors(errors)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
     @PostMapping(value = "/generateDocument", consumes = APPLICATION_JSON_VALUE)
@@ -167,10 +161,8 @@ public class DocumentGenerationController {
                     .build());
         }
         else {
-            return ResponseEntity.ok(CCDCallbackResponse.builder()
-                    .data(caseDetails.getCaseData())
-                    .errors(errors)
-                    .build());
+
+            return getCCDCallbackResponseResponseEntityWithErrors(errors, caseDetails.getCaseData());
         }
     }
 

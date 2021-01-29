@@ -131,7 +131,7 @@ public class ReferenceServiceTest {
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
-                "broughtForwardCollection=null, clerkResponsible=null, userLocation=null, " +
+                "bfActionsCW=null, bfActionsAll=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
                 "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
@@ -163,7 +163,7 @@ public class ReferenceServiceTest {
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
-                "broughtForwardCollection=null, clerkResponsible=null, userLocation=null, " +
+                "bfActionsCW=null, bfActionsAll=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
                 "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
@@ -193,7 +193,7 @@ public class ReferenceServiceTest {
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
-                "broughtForwardCollection=null, clerkResponsible=null, userLocation=null, " +
+                "bfActionsCW=null, bfActionsAll=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
                 "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
@@ -230,7 +230,7 @@ public class ReferenceServiceTest {
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
-                "broughtForwardCollection=null, clerkResponsible=null, userLocation=null, " +
+                "bfActionsCW=null, bfActionsAll=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
                 "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
@@ -267,7 +267,7 @@ public class ReferenceServiceTest {
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
-                "broughtForwardCollection=null, clerkResponsible=null, userLocation=null, " +
+                "bfActionsCW=null, bfActionsAll=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
                 "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
@@ -301,7 +301,7 @@ public class ReferenceServiceTest {
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
-                "broughtForwardCollection=null, clerkResponsible=null, userLocation=null, " +
+                "bfActionsCW=null, bfActionsAll=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
                 "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
@@ -336,7 +336,7 @@ public class ReferenceServiceTest {
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
-                "broughtForwardCollection=null, clerkResponsible=null, userLocation=null, " +
+                "bfActionsCW=null, bfActionsAll=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
                 "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
@@ -372,7 +372,7 @@ public class ReferenceServiceTest {
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
-                "broughtForwardCollection=null, clerkResponsible=null, userLocation=null, " +
+                "bfActionsCW=null, bfActionsAll=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
                 "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
                 "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +

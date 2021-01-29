@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 
-import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -23,6 +22,7 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.getMultipleCallbackResponseResponseEntity;
 
 @Slf4j
 @RestController
@@ -406,15 +406,6 @@ public class ExcelActionsController {
         List<String> errors = eventValidationService.validateReceiptDateMultiple(multipleDetails.getCaseData());
 
         return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
-    }
-
-    @NotNull
-    private ResponseEntity<MultipleCallbackResponse> getMultipleCallbackResponseResponseEntity(List<String> errors,
-                                                                                               MultipleDetails multipleDetails) {
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .errors(errors)
-                .data(multipleDetails.getCaseData())
-                .build());
     }
 
 }

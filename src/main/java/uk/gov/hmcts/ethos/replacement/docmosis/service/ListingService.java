@@ -11,10 +11,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.BroughtForwardDatesTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.BroughtForwardDatesType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.BFActionType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
@@ -34,21 +34,7 @@ import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PRIVATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 @Service("listingService")
@@ -144,13 +130,13 @@ public class ListingService {
         try {
             //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
             List<SubmitEvent> submitEvents = getGenericReportSearch(listingDetails, authToken);
-            if (submitEvents != null || !submitEvents.isEmpty()) {
+            if (submitEvents != null && !submitEvents.isEmpty()) {
                 log.info("Cases searched: " + submitEvents.size());
                 List<BFDateTypeItem> bFDateTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
-                    if (submitEvent.getCaseData().getBroughtForwardCollection() != null && !submitEvent.getCaseData().getBroughtForwardCollection().isEmpty()) {
-                        for (BroughtForwardDatesTypeItem broughtForwardDatesTypeItem : submitEvent.getCaseData().getBroughtForwardCollection()) {
-                            BFDateTypeItem bFDateTypeItem = getBFDateTypeItem(broughtForwardDatesTypeItem, listingDetails.getCaseData(), submitEvent.getCaseData());
+                    if (submitEvent.getCaseData().getBfActionsCW() != null && !submitEvent.getCaseData().getBfActionsCW().isEmpty()) {
+                        for (BFActionTypeItem bfActionTypeItem : submitEvent.getCaseData().getBfActionsCW()) {
+                            BFDateTypeItem bFDateTypeItem = getBFDateTypeItem(bfActionTypeItem, listingDetails.getCaseData(), submitEvent.getCaseData());
                             if (bFDateTypeItem.getValue() != null) {
                                 bFDateTypeItems.add(bFDateTypeItem);
                             }
@@ -233,19 +219,19 @@ public class ListingService {
         return listingTypeItems;
     }
 
-    private BFDateTypeItem getBFDateTypeItem(BroughtForwardDatesTypeItem broughtForwardDatesTypeItem, ListingData listingData, CaseData caseData) {
+    private BFDateTypeItem getBFDateTypeItem(BFActionTypeItem bfActionTypeItem, ListingData listingData, CaseData caseData) {
         BFDateTypeItem bFDateTypeItem = new BFDateTypeItem();
-        BroughtForwardDatesType broughtForwardDatesType = broughtForwardDatesTypeItem.getValue();
-        if (!isNullOrEmpty(broughtForwardDatesType.getBroughtForwardDate()) && isNullOrEmpty(broughtForwardDatesType.getBroughtForwardDateCleared())) {
-            boolean matchingDateIsValid = validateMatchingDate(listingData, broughtForwardDatesType.getBroughtForwardDate());
+        BFActionType bfActionType = bfActionTypeItem.getValue();
+        if (!isNullOrEmpty(bfActionType.getBfDate()) && isNullOrEmpty(bfActionType.getCleared())) {
+            boolean matchingDateIsValid = validateMatchingDate(listingData, bfActionType.getBfDate());
             boolean clerkResponsibleIsValid = validateClerkResponsible(listingData, caseData);
             if (matchingDateIsValid && clerkResponsibleIsValid) {
                 BFDateType bFDateType = new BFDateType();
                 bFDateType.setCaseReference(caseData.getEthosCaseReference());
-                bFDateType.setBroughtForwardDate(broughtForwardDatesType.getBroughtForwardDate());
-                bFDateType.setBroughtForwardDateReason(broughtForwardDatesType.getBroughtForwardDateReason());
-                bFDateType.setBroughtForwardDateCleared(broughtForwardDatesType.getBroughtForwardDateCleared());
-                bFDateTypeItem.setId(String.valueOf(broughtForwardDatesTypeItem.getId()));
+                bFDateType.setBroughtForwardDate(bfActionType.getBfDate());
+                bFDateType.setBroughtForwardDateReason(bfActionType.getNotes());
+                bFDateType.setBroughtForwardDateCleared(bfActionType.getCleared());
+                bFDateTypeItem.setId(String.valueOf(bfActionTypeItem.getId()));
                 bFDateTypeItem.setValue(bFDateType);
             }
         }

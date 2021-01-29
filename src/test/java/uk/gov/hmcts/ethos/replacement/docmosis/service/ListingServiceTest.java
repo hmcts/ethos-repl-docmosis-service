@@ -8,11 +8,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.*;
-import uk.gov.hmcts.ecm.common.model.ccd.items.BroughtForwardDatesTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.*;
 import uk.gov.hmcts.ecm.common.model.ccd.types.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
@@ -117,45 +113,45 @@ public class ListingServiceTest {
         hearingTypeItem.setId("12345");
         hearingTypeItem.setValue(hearingType);
 
-        BroughtForwardDatesTypeItem broughtForwardDatesTypeItem = new BroughtForwardDatesTypeItem();
-        BroughtForwardDatesType broughtForwardDatesType = new BroughtForwardDatesType();
-        broughtForwardDatesType.setBroughtForwardDate("2019-12-10");
-        broughtForwardDatesType.setBroughtForwardDateCleared("020-12-30");
-        broughtForwardDatesType.setBroughtForwardDateReason("Test0");
-        broughtForwardDatesTypeItem.setId("0000");
-        broughtForwardDatesTypeItem.setValue(broughtForwardDatesType);
+        BFActionTypeItem bfActionTypeItem = new BFActionTypeItem();
+        BFActionType bfActionType = new BFActionType();
+        bfActionType.setBfDate("2019-12-10");
+        bfActionType.setCleared("020-12-30");
+        bfActionType.setCwActions("Test0");
+        bfActionTypeItem.setId("0000");
+        bfActionTypeItem.setValue(bfActionType);
 
-        BroughtForwardDatesTypeItem broughtForwardDatesTypeItem1 = new BroughtForwardDatesTypeItem();
-        BroughtForwardDatesType broughtForwardDatesType1 = new BroughtForwardDatesType();
-        broughtForwardDatesType1.setBroughtForwardDate("2019-12-11");
-        broughtForwardDatesType1.setBroughtForwardDateCleared("");
-        broughtForwardDatesType1.setBroughtForwardDateReason("Test1");
-        broughtForwardDatesTypeItem1.setId("111");
-        broughtForwardDatesTypeItem1.setValue(broughtForwardDatesType1);
+        BFActionTypeItem bfActionTypeItem1 = new BFActionTypeItem();
+        BFActionType bfActionType1 = new BFActionType();
+        bfActionType1.setBfDate("2019-12-11");
+        bfActionType1.setCleared("");
+        bfActionType1.setCwActions("Test1");
+        bfActionTypeItem1.setId("111");
+        bfActionTypeItem1.setValue(bfActionType1);
 
-        BroughtForwardDatesTypeItem broughtForwardDatesTypeItem2 = new BroughtForwardDatesTypeItem();
-        BroughtForwardDatesType broughtForwardDatesType2 = new BroughtForwardDatesType();
-        broughtForwardDatesType2.setBroughtForwardDate("2019-12-12");
-        broughtForwardDatesType2.setBroughtForwardDateCleared("");
-        broughtForwardDatesType2.setBroughtForwardDateReason("Test2");
-        broughtForwardDatesTypeItem2.setId("222");
-        broughtForwardDatesTypeItem2.setValue(broughtForwardDatesType2);
+        BFActionTypeItem bfActionTypeItem2 = new BFActionTypeItem();
+        BFActionType bfActionType2 = new BFActionType();
+        bfActionType2.setBfDate("2019-12-12");
+        bfActionType2.setCleared("");
+        bfActionType2.setCwActions("Test2");
+        bfActionTypeItem2.setId("222");
+        bfActionTypeItem2.setValue(bfActionType2);
 
-        BroughtForwardDatesTypeItem broughtForwardDatesTypeItem3 = new BroughtForwardDatesTypeItem();
-        BroughtForwardDatesType broughtForwardDatesType3 = new BroughtForwardDatesType();
-        broughtForwardDatesType3.setBroughtForwardDate("2019-12-13");
-        broughtForwardDatesType3.setBroughtForwardDateCleared("");
-        broughtForwardDatesType3.setBroughtForwardDateReason("Test3");
-        broughtForwardDatesTypeItem3.setId("333");
-        broughtForwardDatesTypeItem3.setValue(broughtForwardDatesType3);
+        BFActionTypeItem bfActionTypeItem3 = new BFActionTypeItem();
+        BFActionType bfActionType3 = new BFActionType();
+        bfActionType3.setBfDate("2019-12-13");
+        bfActionType3.setCleared("");
+        bfActionType3.setCwActions("Test3");
+        bfActionTypeItem3.setId("333");
+        bfActionTypeItem3.setValue(bfActionType3);
 
         SubmitEvent submitEvent1 = new SubmitEvent();
         submitEvent1.setCaseId(1);
         CaseData caseData = new CaseData();
         caseData.setEthosCaseReference("4210000/2019");
         caseData.setHearingCollection(new ArrayList<>(Collections.singleton(hearingTypeItem)));
-        caseData.setBroughtForwardCollection(new ArrayList<>(Arrays.asList(broughtForwardDatesTypeItem,
-                broughtForwardDatesTypeItem1, broughtForwardDatesTypeItem2, broughtForwardDatesTypeItem3)));
+        caseData.setBfActionsCW(new ArrayList<>(Arrays.asList(bfActionTypeItem,
+                bfActionTypeItem1, bfActionTypeItem2, bfActionTypeItem3)));
         caseData.setClerkResponsible("Steve Jones");
         submitEvent1.setCaseData(caseData);
         submitEvents = new ArrayList<>(Collections.singleton(submitEvent1));
@@ -466,11 +462,11 @@ public class ListingServiceTest {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, " +
-                "bfDateCollection=[BFDateTypeItem(id=222, value=BFDateType(caseReference=4210000/2019, " +
-                "broughtForwardDate=2019-12-12, broughtForwardDateReason=Test2, broughtForwardDateCleared=))], " +
-                "clerkResponsible=null, reportType=Brought Forward Report, documentName=null, localReportsSummaryHdr=null, localReportsSummary=null, " +
-                "localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
+                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=[BFDateTypeItem(id=222, " +
+                "value=BFDateType(caseReference=4210000/2019, broughtForwardAction=null, broughtForwardDate=2019-12-12, broughtForwardDateCleared=, " +
+                "broughtForwardDateReason=null))], clerkResponsible=null, reportType=Brought Forward Report, documentName=null, " +
+                "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, " +
+                "localReportsDetailHdr=null, localReportsDetail=null)";
         when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
@@ -496,11 +492,11 @@ public class ListingServiceTest {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Range, listingDate=null, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, " +
-                "bfDateCollection=[BFDateTypeItem(id=111, value=BFDateType(caseReference=4210000/2019, broughtForwardDate=2019-12-11, " +
-                "broughtForwardDateReason=Test1, broughtForwardDateCleared=)), BFDateTypeItem(id=222, value=BFDateType(caseReference=4210000/2019, " +
-                "broughtForwardDate=2019-12-12, broughtForwardDateReason=Test2, broughtForwardDateCleared=))], " +
-                "clerkResponsible=null, reportType=Brought Forward Report, documentName=null, localReportsSummaryHdr=null, localReportsSummary=null, " +
+                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=[BFDateTypeItem(id=111, " +
+                "value=BFDateType(caseReference=4210000/2019, broughtForwardAction=null, broughtForwardDate=2019-12-11, broughtForwardDateCleared=, " +
+                "broughtForwardDateReason=null)), BFDateTypeItem(id=222, value=BFDateType(caseReference=4210000/2019, broughtForwardAction=null, " +
+                "broughtForwardDate=2019-12-12, broughtForwardDateCleared=, broughtForwardDateReason=null))], clerkResponsible=null, " +
+                "reportType=Brought Forward Report, documentName=null, localReportsSummaryHdr=null, localReportsSummary=null, " +
                 "localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.generateReportData(listingDetailsRange, "authToken");

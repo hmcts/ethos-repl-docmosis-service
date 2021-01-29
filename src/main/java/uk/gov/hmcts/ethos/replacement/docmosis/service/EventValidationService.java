@@ -9,13 +9,14 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 
 import java.time.LocalDate;
 import java.util.*;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRespondents;
 
 @Slf4j
 @Service("eventValidationService")
@@ -95,10 +96,10 @@ public class EventValidationService {
     public List<String> validateHearingNumber(CaseData caseData, CorrespondenceType correspondenceType,
                                               CorrespondenceScotType correspondenceScotType) {
         List<String> errors = new ArrayList<>();
-        String correspondenceHearingNumber = getCorrespondenceHearingNumber(correspondenceType, correspondenceScotType);
+        String correspondenceHearingNumber = DocumentHelper.getCorrespondenceHearingNumber(correspondenceType, correspondenceScotType);
         if(correspondenceHearingNumber != null) {
             if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
-                HearingType hearingType = getHearingByNumber(caseData.getHearingCollection(), correspondenceHearingNumber);
+                HearingType hearingType = DocumentHelper.getHearingByNumber(caseData.getHearingCollection(), correspondenceHearingNumber);
                 if (hearingType.getHearingNumber() == null || !hearingType.getHearingNumber().equals(correspondenceHearingNumber)) {
                     errors.add(HEARING_NUMBER_MISMATCH_ERROR_MESSAGE);
                 }

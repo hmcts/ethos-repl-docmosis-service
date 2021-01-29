@@ -69,6 +69,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String LINK_ORIGINAL_CASE_ECC_URL = "/linkOriginalCaseECC";
     private static final String SINGLE_CASE_MULTIPLE_MID_EVENT_VALIDATION_URL = "/singleCaseMultipleMidEventValidation";
     private static final String HEARING_MID_EVENT_VALIDATION_URL = "/hearingMidEventValidation";
+    private static final String BF_ACTIONS_URL = "/bfActions";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -506,6 +507,19 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void bfActions() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(BF_ACTIONS_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void createCaseError400() throws Exception {
         mvc.perform(post(CREATION_CASE_URL)
                 .content("error")
@@ -706,6 +720,15 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void hearingMidEventValidationError400() throws Exception {
         mvc.perform(post(HEARING_MID_EVENT_VALIDATION_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void bfActionsError400() throws Exception {
+        mvc.perform(post(BF_ACTIONS_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -1112,6 +1135,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void hearingMidEventValidationForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(HEARING_MID_EVENT_VALIDATION_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void bfActionsForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(BF_ACTIONS_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
