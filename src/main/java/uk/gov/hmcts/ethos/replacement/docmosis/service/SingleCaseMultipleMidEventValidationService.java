@@ -30,9 +30,9 @@ public class SingleCaseMultipleMidEventValidationService {
 
             if (caseDetails.getCaseData().getMultipleFlag().equals(YES)) {
 
-                log.info("Case belongs to a multiple. It can not be moved to single");
+                log.info("Case belongs to a multiple. It cannot be moved to single");
 
-                errors.add("Case belongs to a multiple. It can not be moved to single");
+                errors.add("Case belongs to a multiple. It cannot be moved to single");
 
             } else {
 

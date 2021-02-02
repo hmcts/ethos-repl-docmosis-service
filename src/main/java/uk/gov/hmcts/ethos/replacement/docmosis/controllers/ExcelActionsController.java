@@ -385,7 +385,7 @@ public class ExcelActionsController {
     }
 
     @PostMapping(value = "/multipleMidBatch1Validation", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "validates the receipts date introduce by the user.")
+    @ApiOperation(value = "validates the receipts date introduced by the user.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = MultipleCallbackResponse.class),

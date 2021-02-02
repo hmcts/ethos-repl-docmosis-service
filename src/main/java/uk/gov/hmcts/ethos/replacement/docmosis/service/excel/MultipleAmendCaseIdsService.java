@@ -3,41 +3,30 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
-import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("multipleAmendCaseIdsService")
 public class MultipleAmendCaseIdsService {
 
-    private final CreateUpdatesBusSender createUpdatesBusSender;
-    private final UserService userService;
     private final ExcelReadingService excelReadingService;
     private final ExcelDocManagementService excelDocManagementService;
+    private final MultipleHelperService multipleHelperService;
 
     @Autowired
-    public MultipleAmendCaseIdsService(CreateUpdatesBusSender createUpdatesBusSender,
-                                       UserService userService,
-                                       ExcelReadingService excelReadingService,
-                                       ExcelDocManagementService excelDocManagementService) {
-        this.createUpdatesBusSender = createUpdatesBusSender;
-        this.userService = userService;
+    public MultipleAmendCaseIdsService(ExcelReadingService excelReadingService,
+                                       ExcelDocManagementService excelDocManagementService,
+                                       MultipleHelperService multipleHelperService) {
         this.excelReadingService = excelReadingService;
         this.excelDocManagementService = excelDocManagementService;
+        this.multipleHelperService = multipleHelperService;
     }
 
     public void bulkAmendCaseIdsLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
@@ -55,99 +44,92 @@ public class MultipleAmendCaseIdsService {
         log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
         log.info("MultipleObjectsValues: " + multipleObjects.values());
 
-        log.info("Calculate attached and detached cases");
+        List<String> newEthosCaseRefCollection = MultiplesHelper.getCaseIds(multipleDetails.getCaseData());
 
-        List<String> attachCasesList = new ArrayList<>();
-        List<String> detachCasesList = new ArrayList<>();
+        log.info("Calculate union new and old cases");
 
-        List<String> unionLists = calculateAttachAndDetachCases(multipleObjects, multipleDetails.getCaseData(), detachCasesList, attachCasesList);
+        List<String> unionLists = concatNewAndOldCases(multipleObjects, newEthosCaseRefCollection);
 
-        log.info("Send updates to single cases");
+        if (!newEthosCaseRefCollection.isEmpty()) {
 
-        if (!unionLists.isEmpty()) {
-            sendUpdatesToSingles(userToken, multipleDetails, errors, unionLists.get(0), detachCasesList, attachCasesList);
+            log.info("Send updates to single cases");
+
+            sendUpdatesToSinglesLogic(userToken, multipleDetails, errors, unionLists, multipleObjects, newEthosCaseRefCollection);
+
         }
 
         log.info("Create a new Excel");
 
-        List<MultipleObject> newMultipleObjects = generateMultipleObjects(unionLists, detachCasesList, multipleObjects);
+        List<MultipleObject> newMultipleObjects = generateMultipleObjects(unionLists, multipleObjects);
 
         log.info("New Multiple Objects: " + newMultipleObjects);
 
         excelDocManagementService.generateAndUploadExcel(newMultipleObjects, userToken, multipleDetails.getCaseData());
 
+        log.info("Clearing the payload");
+
+        multipleDetails.getCaseData().setCaseIdCollection(null);
+
     }
 
-    private List<String> calculateAttachAndDetachCases(TreeMap<String, Object> multipleObjects, MultipleData multipleData,
-                                                 List<String> detachCasesList, List<String> attachCasesList) {
+    private List<String> concatNewAndOldCases(TreeMap<String, Object> multipleObjects, List<String> newEthosCaseRefCollection) {
 
-        List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleData);
-        log.info("EthosCaseRefCollection: " + ethosCaseRefCollection);
+        log.info("EthosCaseRefCollection: " + newEthosCaseRefCollection);
 
-        List<String> unionLists = Stream.concat(ethosCaseRefCollection.stream(), multipleObjects.keySet().stream())
+        return Stream.concat(newEthosCaseRefCollection.stream(), multipleObjects.keySet().stream())
                 .distinct().collect(Collectors.toList());
 
-        for (String ethosCaseRef : unionLists) {
+    }
 
-            log.info("EthosCaseRef: " + ethosCaseRef);
+    private void sendUpdatesToSinglesLogic(String userToken, MultipleDetails multipleDetails, List<String> errors,
+                                           List<String> unionLists, TreeMap<String, Object> multipleObjects,
+                                           List<String> newEthosCaseRefCollection) {
 
-            if (!ethosCaseRefCollection.contains(ethosCaseRef) && multipleObjects.containsKey(ethosCaseRef)) {
-                detachCasesList.add(ethosCaseRef);
-            } else {
-                attachCasesList.add(ethosCaseRef);
-            }
+        String oldLeadCase = MultiplesHelper.getCurrentLead(multipleDetails.getCaseData().getLeadCase());
+
+        String newLeadCase = unionLists.get(0);
+
+        if (!oldLeadCase.equals(newLeadCase)) {
+
+            log.info("Sending update to old lead case as not lead any more: " + oldLeadCase);
+
+            sendUpdatesToSingles(userToken, multipleDetails, errors,
+                    new ArrayList<>(Collections.singletonList(oldLeadCase)), newLeadCase);
+
         }
 
-        log.info("DetachCaseList: " + detachCasesList);
-        log.info("AttachCaseList: " + attachCasesList);
+        if (multipleObjects.keySet().isEmpty() || !oldLeadCase.equals(newLeadCase)) {
 
-        return unionLists;
-    }
+            log.info("Adding new lead: " + newLeadCase);
 
-    private void sendUpdatesToSingles(String userToken, MultipleDetails multipleDetails,
-                                      List<String> errors, String leadId,
-                                      List<String> detachCasesList, List<String> attachCasesList) {
+            multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(),
+                    multipleDetails.getCaseData(), newLeadCase, "");
 
-        String updateSize = String.valueOf(detachCasesList.size() + attachCasesList.size());
+        }
 
-        log.info("UpdateSize: " + updateSize);
-
-        MultipleData multipleData = multipleDetails.getCaseData();
-        String username = userService.getUserDetails(userToken).getEmail();
-
-        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
-                multipleDetails.getJurisdiction(),
-                username,
-                detachCasesList,
-                PersistentQHelper.getDetachDataModel(),
-                errors,
-                multipleData.getMultipleReference(),
-                YES,
-                createUpdatesBusSender,
-                updateSize);
-
-        PersistentQHelper.sendSingleUpdatesPersistentQ(multipleDetails.getCaseTypeId(),
-                multipleDetails.getJurisdiction(),
-                username,
-                attachCasesList,
-                PersistentQHelper.getCreationDataModel(leadId,
-                        multipleData.getMultipleReference()),
-                errors,
-                multipleData.getMultipleReference(),
-                YES,
-                createUpdatesBusSender,
-                updateSize);
+        sendUpdatesToSingles(userToken, multipleDetails, errors, newEthosCaseRefCollection, newLeadCase);
 
     }
 
-    private List<MultipleObject> generateMultipleObjects(List<String> unionLists, List<String> detachCasesList,
-                                                         TreeMap<String, Object> multipleObjects) {
+
+    private void sendUpdatesToSingles(String userToken, MultipleDetails multipleDetails, List<String> errors,
+                                      List<String> newEthosCaseRefCollection, String leadCase) {
+
+        multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(),
+                multipleDetails.getCaseData(),
+                errors,
+                newEthosCaseRefCollection,
+                leadCase);
+
+    }
+
+    private List<MultipleObject> generateMultipleObjects(List<String> unionLists, TreeMap<String, Object> multipleObjects) {
 
         List<MultipleObject> multipleObjectList = new ArrayList<>();
 
         for (String ethosCaseRef : unionLists) {
-
-            if (!detachCasesList.contains(ethosCaseRef)) {
 
                 MultipleObject multipleObject;
 
@@ -163,11 +145,6 @@ public class MultipleAmendCaseIdsService {
 
                 multipleObjectList.add(multipleObject);
 
-            } else {
-
-                log.info("Case Id detached: " + ethosCaseRef);
-
-            }
         }
 
         return multipleObjectList;
