@@ -106,7 +106,7 @@ public class CaseManagementForCaseWorkerService {
         flagsImageFileNameDefaults(caseData);
     }
 
-    private void claimantDefaults(CaseData caseData) {
+    public void claimantDefaults(CaseData caseData) {
         String claimantTypeOfClaimant = caseData.getClaimantTypeOfClaimant();
         if (!isNullOrEmpty(claimantTypeOfClaimant)) {
             if(claimantTypeOfClaimant.equals(INDIVIDUAL_TYPE_CLAIMANT)) {

@@ -284,6 +284,32 @@ public class CaseActionsForCaseWorkerController {
         return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
+    @PostMapping(value = "/amendClaimantDetails", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "amend the case claimant details for a single case.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> amendClaimantDetails(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("AMEND CLAIMANT DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.claimantDefaults(caseData);
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+    }
+
+
+
     @PostMapping(value = "/amendRespondentDetails", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "amend respondent details for a single case.")
     @ApiResponses(value = {

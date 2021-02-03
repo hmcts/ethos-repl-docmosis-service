@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
 import java.nio.file.Files;
@@ -24,6 +25,7 @@ public class EventValidationServiceTest {
     private static final LocalDate PAST_RECEIPT_DATE = LocalDate.now().minusDays(1);
     private static final LocalDate CURRENT_RECEIPT_DATE = LocalDate.now();
     private static final LocalDate FUTURE_RECEIPT_DATE = LocalDate.now().plusDays(1);
+    private static final LocalDate PAST_ACCEPTED_DATE = LocalDate.now().minusDays(1);
 
     private static final LocalDate PAST_TARGET_HEARING_DATE = PAST_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
     private static final LocalDate CURRENT_TARGET_HEARING_DATE = CURRENT_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
@@ -83,6 +85,19 @@ public class EventValidationServiceTest {
 
         assertEquals(1, errors.size());
         assertEquals(FUTURE_RECEIPT_DATE_ERROR_MESSAGE, errors.get(0));
+    }
+
+    @Test
+    public void shouldValidateReceiptDateLaterThanAcceptedDate() {
+        caseData.setReceiptDate(CURRENT_RECEIPT_DATE.toString());
+        CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
+        casePreAcceptType.setCaseAccepted(PAST_ACCEPTED_DATE.toString());
+        caseData.setPreAcceptCase(casePreAcceptType);
+
+        List<String> errors = eventValidationService.validateReceiptDate(caseData);
+
+        assertEquals(1, errors.size());
+        assertEquals(RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE, errors.get(0));
     }
 
     @Test
