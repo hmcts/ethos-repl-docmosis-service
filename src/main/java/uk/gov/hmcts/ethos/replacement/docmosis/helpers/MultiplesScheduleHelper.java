@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
@@ -55,8 +56,9 @@ public class MultiplesScheduleHelper {
             }
 
             ScheduleAddress scheduleAddress = new ScheduleAddress();
-            scheduleAddress.setAddressLine1(respondentCollection.get(0).getValue().getRespondentAddress().getAddressLine1());
-            scheduleAddress.setPostCode(respondentCollection.get(0).getValue().getRespondentAddress().getPostCode());
+            Address address = DocumentHelper.getRespondentAddressET3(respondentCollection.get(0).getValue());
+            scheduleAddress.setAddressLine1(address.getAddressLine1());
+            scheduleAddress.setPostCode(address.getPostCode());
 
             return getScheduleAddress(field, scheduleAddress);
 

@@ -212,7 +212,7 @@ public class DocumentHelper {
             if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
                 RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
                 sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE);
-                sb.append(getRespondentOrRepAddressUK(respondentSumType.getRespondentAddress()));
+                sb.append(getRespondentOrRepAddressUK(getRespondentAddressET3(respondentSumType)));
             } else {
                 sb.append("\"respondent_or_rep_full_name\":\"").append(NEW_LINE);
                 sb.append(getRespondentOrRepAddressUK(new Address()));
@@ -221,7 +221,7 @@ public class DocumentHelper {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
             sb.append("\"respondent_full_name\":\"").append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE);
-            sb.append(getRespondentAddressUK(respondentSumType.getRespondentAddress()));
+            sb.append(getRespondentAddressUK(getRespondentAddressET3(respondentSumType)));
             sb.append("\"Respondent\":\"").append(caseData.getRespondentCollection().size() > 1 ? "1. " : "")
                     .append(respondentSumType.getRespondentName()).append(NEW_LINE);
             sb.append(getRespOthersName(caseData));
@@ -257,7 +257,7 @@ public class DocumentHelper {
                 .stream()
                 .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
                 .map(respondentSumTypeItem -> (size > 1 ? atomicInteger.getAndIncrement() + ". " : "")
-                        + respondentSumTypeItem.getValue().getRespondentAddress().toString())
+                        + getRespondentAddressET3(respondentSumTypeItem.getValue()))
                 .collect(Collectors.toList());
         sb.append("\"resp_address\":\"").append(String.join("\\n", respAddressList)).append(NEW_LINE);
         return sb;
@@ -690,6 +690,14 @@ public class DocumentHelper {
         }
 
         return copiedAddressLabels;
+    }
+
+    public static Address getRespondentAddressET3(RespondentSumType respondentSumType) {
+
+        return respondentSumType.getResponseRespondentAddress() != null
+                ? respondentSumType.getResponseRespondentAddress()
+                : respondentSumType.getRespondentAddress();
+
     }
 
 }

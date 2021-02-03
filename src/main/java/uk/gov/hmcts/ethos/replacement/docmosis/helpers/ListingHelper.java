@@ -178,9 +178,9 @@ public class ListingHelper {
                     caseData.getRespondentCollection().get(0).getValue().getRespondentName() : " ");
             listingType.setRespondentTown(caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty() &&
                     caseData.getRespondentCollection().get(0).getValue() != null &&
-                    caseData.getRespondentCollection().get(0).getValue().getRespondentAddress() != null &&
-                    caseData.getRespondentCollection().get(0).getValue().getRespondentAddress().getPostTown() != null ?
-                    caseData.getRespondentCollection().get(0).getValue().getRespondentAddress().getPostTown() : " ");
+                    DocumentHelper.getRespondentAddressET3(caseData.getRespondentCollection().get(0).getValue()) != null &&
+                    DocumentHelper.getRespondentAddressET3(caseData.getRespondentCollection().get(0).getValue()).getPostTown() != null ?
+                    DocumentHelper.getRespondentAddressET3(caseData.getRespondentCollection().get(0).getValue()).getPostTown() : " ");
             listingType.setRespondentOthers(!isNullOrEmpty(getRespOthersName(caseData)) ? getRespOthersName(caseData) : " ");
             listingType.setClaimantRepresentative(caseData.getRepresentativeClaimantType() != null && caseData.getRepresentativeClaimantType().getNameOfOrganisation() != null ?
                     caseData.getRepresentativeClaimantType().getNameOfOrganisation() : " ");

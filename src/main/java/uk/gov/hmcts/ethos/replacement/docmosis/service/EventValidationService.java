@@ -25,8 +25,8 @@ public class EventValidationService {
     public List<String> validateReceiptDate(CaseData caseData) {
         List<String> errors = new ArrayList<>();
         LocalDate dateOfReceipt = LocalDate.parse(caseData.getReceiptDate());
-        if (caseData.getPreAcceptCase() != null && !isNullOrEmpty(caseData.getPreAcceptCase().getCaseAccepted())) {
-            LocalDate dateAccepted = LocalDate.parse(caseData.getPreAcceptCase().getCaseAccepted());
+        if (caseData.getPreAcceptCase() != null && !isNullOrEmpty(caseData.getPreAcceptCase().getDateAccepted())) {
+            LocalDate dateAccepted = LocalDate.parse(caseData.getPreAcceptCase().getDateAccepted());
             if (dateOfReceipt.isAfter(dateAccepted)) {
                 errors.add(RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE);
                 return errors;

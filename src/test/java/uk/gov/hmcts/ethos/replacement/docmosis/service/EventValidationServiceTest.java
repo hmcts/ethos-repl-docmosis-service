@@ -91,7 +91,7 @@ public class EventValidationServiceTest {
     public void shouldValidateReceiptDateLaterThanAcceptedDate() {
         caseData.setReceiptDate(CURRENT_RECEIPT_DATE.toString());
         CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
-        casePreAcceptType.setCaseAccepted(PAST_ACCEPTED_DATE.toString());
+        casePreAcceptType.setDateAccepted(PAST_ACCEPTED_DATE.toString());
         caseData.setPreAcceptCase(casePreAcceptType);
 
         List<String> errors = eventValidationService.validateReceiptDate(caseData);

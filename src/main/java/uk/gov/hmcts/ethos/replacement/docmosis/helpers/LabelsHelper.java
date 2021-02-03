@@ -192,7 +192,7 @@ public class LabelsHelper {
             addressLabelType.setFullName(RESPONDENT + Helper.nullCheck(respondentSumType.getRespondentName()));
             addressLabelType.setLabelEntityName01(Helper.nullCheck(respondentSumType.getRespondentName()));
             addressLabelType.setLabelEntityName02("");
-            getEntityAddress(addressLabelType, respondentSumType.getRespondentAddress());
+            getEntityAddress(addressLabelType, DocumentHelper.getRespondentAddressET3(respondentSumType));
             getEntityTelephone(addressLabelType, respondentSumType.getRespondentPhone1());
             getEntityFax(addressLabelType, respondentSumType.getRespondentPhone2());
             addressLabelType.setLabelEntityReference(REF);
