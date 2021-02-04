@@ -287,6 +287,24 @@ public class EventValidationServiceTest {
         assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
     }
 
+    @Test
+    public void shouldValidateJurisdictionCodesWithinJudgement() {
+        List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(caseDetails1.getCaseData());
+
+        assertEquals(2, errors.size());
+        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, ADG, ADG, CCP, CCP", errors.get(0));
+        assertEquals(DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR + "Case Management - [COM] & Reserved - [CCP, ADG]", errors.get(1));
+    }
+
+    @Test
+    public void shouldValidateJurisdictionCodesWithinJudgementEmptyJurCodesCollection() {
+        List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(caseDetails3.getCaseData());
+
+        assertEquals(1, errors.size());
+        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, COM", errors.get(0));
+    }
+
+
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
         String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
                 .getResource(jsonFileName)).toURI())));

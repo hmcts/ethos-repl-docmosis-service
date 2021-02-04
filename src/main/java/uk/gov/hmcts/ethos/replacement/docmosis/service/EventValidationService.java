@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
@@ -13,8 +14,11 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.util.stream.Collectors.joining;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRespondents;
 
@@ -175,6 +179,69 @@ public class EventValidationService {
                 errors.add(FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE + " for respondent " + index + " (" + respondentName + ")");
             }
         }
+    }
+
+    private List<String> getJurCodesCollection(List<JurCodesTypeItem> jurCodesCollection) {
+        return jurCodesCollection != null
+                ? jurCodesCollection.stream()
+                .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
+                .collect(Collectors.toList())
+                : new ArrayList<>();
+    }
+
+    private void populateJurCodesDuplicatedWithinJudgement(List<String> jurCodesCollectionWithinJudgement,
+                                                           Map<String, List<String>> duplicatedJurCodesMap, String key) {
+        List<String> duplicatedJurCodes = jurCodesCollectionWithinJudgement.stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet()
+                .stream()
+                .filter(element -> element.getValue() > 1)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+        if (!duplicatedJurCodes.isEmpty()) {
+            duplicatedJurCodesMap.put(key, duplicatedJurCodes);
+        }
+    }
+
+    private void getJurisdictionCodesErrors(List<String> errors, List<String> jurCodesDoesNotExist, Map<String, List<String>> duplicatedJurCodesMap) {
+        if (!jurCodesDoesNotExist.isEmpty()) {
+            errors.add(JURISDICTION_CODES_EXISTENCE_ERROR + String.join(", ", jurCodesDoesNotExist));
+        }
+        if (!duplicatedJurCodesMap.isEmpty()) {
+            String duplicates = duplicatedJurCodesMap.entrySet()
+                    .stream()
+                    .map(e -> e.getKey() + " - " + e.getValue())
+                    .collect(joining(" & "));
+            errors.add(DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR + duplicates);
+        }
+    }
+
+    public List<String> validateJurisdictionCodesWithinJudgement(CaseData caseData) {
+        List<String> errors = new ArrayList<>();
+        if (caseData.getJudgementCollection() != null && !caseData.getJudgementCollection().isEmpty()) {
+
+            List<String> jurCodesCollection = getJurCodesCollection(caseData.getJurCodesCollection());
+            List<String> jurCodesDoesNotExist = new ArrayList<>();
+            Map<String, List<String>> duplicatedJurCodesMap = new HashMap<>();
+
+            for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
+                JudgementType judgementType = judgementTypeItem.getValue();
+                List<String> jurCodesCollectionWithinJudgement = getJurCodesCollection(judgementType.getJurisdictionCodes());
+
+                log.info("Check if jurCodes collection within judgement exist in jurCodesCollection");
+                jurCodesDoesNotExist.addAll(jurCodesCollectionWithinJudgement.stream()
+                        .filter(element -> !jurCodesCollection.contains(element))
+                        .collect(Collectors.toList()));
+
+                log.info("Check if jurCodes collection has duplicates");
+                populateJurCodesDuplicatedWithinJudgement(jurCodesCollectionWithinJudgement,
+                        duplicatedJurCodesMap,
+                        judgementType.getJudgementType());
+            }
+
+            getJurisdictionCodesErrors(errors, jurCodesDoesNotExist, duplicatedJurCodesMap);
+        }
+        return errors;
     }
 
 }

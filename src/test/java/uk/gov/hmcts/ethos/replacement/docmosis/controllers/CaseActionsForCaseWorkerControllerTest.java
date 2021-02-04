@@ -64,6 +64,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String AMEND_CASE_STATE_URL = "/amendCaseState";
     private static final String MID_RESPONDENT_ADDRESS_URL = "/midRespondentAddress";
     private static final String JURISDICTION_VALIDATION_URL = "/jurisdictionValidation";
+    private static final String JUDGEMENT_VALIDATION_URL = "/judgmentValidation";
     private static final String GENERATE_CASE_REF_NUMBERS_URL = "/generateCaseRefNumbers";
     private static final String MID_RESPONDENT_ECC_URL = "/midRespondentECC";
     private static final String CREATE_ECC_URL = "/createECC";
@@ -423,6 +424,19 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void judgementValidation() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(JUDGEMENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", notNullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void midRespondentAddressPopulated() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MID_RESPONDENT_ADDRESS_URL)
@@ -698,6 +712,15 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void jurisdictionValidationError400() throws Exception {
         mvc.perform(post(JURISDICTION_VALIDATION_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void judgementValidationError400() throws Exception {
+        mvc.perform(post(JUDGEMENT_VALIDATION_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -1098,6 +1121,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void jurisdictionValidationForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(JURISDICTION_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void judgementValidationForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(JUDGEMENT_VALIDATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

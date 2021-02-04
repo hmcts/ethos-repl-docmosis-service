@@ -300,6 +300,109 @@
         }
       }
     ],
+    "judgementCollection": [
+      {
+        "id": "a1e2b95e-4873-4f43-b7b4-65808c422de0",
+        "value": {
+          "judgement_type": "Case Management",
+          "judgment_notes": null,
+          "Judgement_costs": {
+            "costs_question": null
+          },
+          "reconsiderations": {
+            "reconsideration": null
+          },
+          "judgement_details": {
+            "awardMade": null,
+            "folio_number": null,
+            "reasons_given": null,
+            "non-financial_award": null,
+            "certificateOfCorrection": null
+          },
+          "jurisdictionCodes": [
+            {
+              "id": "046e289b-d7f2-4a67-8f45-f115926b136e",
+              "value": {
+                "judgmentOutcome": null,
+                "juridictionCodesList": "ADG"
+              }
+            },
+            {
+              "id": "2c46ec34-9bc5-4ff1-8b17-61d80f63b5dc",
+              "value": {
+                "judgmentOutcome": null,
+                "juridictionCodesList": "COM"
+              }
+            },
+            {
+              "id": "2c46ec34-9bc5-4ff1-8b17-61d80f63b5dc",
+              "value": {
+                "judgmentOutcome": null,
+                "juridictionCodesList": "COM"
+              }
+            }
+          ],
+          "date_judgment_made": "2000-01-01",
+          "date_judgment_sent": "2000-01-01",
+          "liability_optional": null,
+          "non_hearing_judgment": "Yes"
+        }
+      },
+      {
+        "id": "e8b77dfa-0b78-4501-9a31-8c22e87cf8b6",
+        "value": {
+          "judgement_type": "Reserved",
+          "judgment_notes": null,
+          "Judgement_costs": {
+            "costs_question": null
+          },
+          "reconsiderations": {
+            "reconsideration": null
+          },
+          "judgement_details": {
+            "awardMade": null,
+            "folio_number": null,
+            "reasons_given": null,
+            "non-financial_award": null,
+            "certificateOfCorrection": null
+          },
+          "jurisdictionCodes": [
+            {
+              "id": "b0158c04-f50c-4c3c-8c99-89378f31f8f5",
+              "value": {
+                "judgmentOutcome": null,
+                "juridictionCodesList": "ADG"
+              }
+            },
+            {
+              "id": "bfd10d10-5d4e-4974-84ee-b018836b9a98",
+              "value": {
+                "judgmentOutcome": null,
+                "juridictionCodesList": "ADG"
+              }
+            },
+            {
+              "id": "017e02ca-23c8-4c3b-9564-ba5e3d6bf576",
+              "value": {
+                "judgmentOutcome": null,
+                "juridictionCodesList": "CCP"
+              }
+            },
+            {
+              "id": "017e02ca-23c8-4c3b-9564-ba5e3d6bf576",
+              "value": {
+                "judgmentOutcome": null,
+                "juridictionCodesList": "CCP"
+              }
+            }
+          ],
+          "date_judgment_made": "2000-01-01",
+          "date_judgment_sent": "2000-02-12",
+          "liability_optional": null,
+          "non_hearing_judgment": "Yes"
+        }
+      }
+    ],
     "locationType": "Manchester",
     "multipleReference": "No",
     "multipleType": "No",

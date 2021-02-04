@@ -735,6 +735,31 @@ public class CaseActionsForCaseWorkerController {
         return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
+    @PostMapping(value = "/judgmentValidation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "validates jurisdiction codes within judgement collection.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> judgmentValidation(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("JUDGEMENT VALIDATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData =  ccdRequest.getCaseDetails().getCaseData();
+        List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(caseData);
+        log.info("Event fields validation: " + errors);
+
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
+    }
+
     private DefaultValues getPostDefaultValues(CaseDetails caseDetails) {
         String caseTypeId = caseDetails.getCaseTypeId();
         String managingOffice = caseDetails.getCaseData().getManagingOffice() != null ? caseDetails.getCaseData().getManagingOffice() : "";
