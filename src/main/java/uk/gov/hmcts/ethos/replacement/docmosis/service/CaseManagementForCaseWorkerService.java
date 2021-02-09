@@ -121,7 +121,7 @@ public class CaseManagementForCaseWorkerService {
         }
     }
 
-    private void respondentDefaults (CaseData caseData) {
+    private void respondentDefaults(CaseData caseData) {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
             caseData.setRespondent(nullCheck(respondentSumType.getRespondentName()));
@@ -572,6 +572,9 @@ public class CaseManagementForCaseWorkerService {
         } else {
             errors.add(CASE_NOT_FOUND_MESSAGE);
         }
+        log.info("Add claimant and respondent defaults");
+        claimantDefaults(currentCaseData);
+        respondentDefaults(currentCaseData);
         return currentCaseData;
     }
 

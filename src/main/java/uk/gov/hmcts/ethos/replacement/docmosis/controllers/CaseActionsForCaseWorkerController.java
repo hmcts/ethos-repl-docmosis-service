@@ -632,7 +632,8 @@ public class CaseActionsForCaseWorkerController {
         }
 
         List<String> errors = new ArrayList<>();
-        CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(), userToken, errors, ABOUT_TO_SUBMIT_EVENT_CALLBACK);
+        CaseData caseData = caseManagementForCaseWorkerService.createECC(
+                ccdRequest.getCaseDetails(), userToken, errors, ABOUT_TO_SUBMIT_EVENT_CALLBACK);
         generateEthosCaseReference(caseData, ccdRequest);
 
         return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
