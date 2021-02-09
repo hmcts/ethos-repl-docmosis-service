@@ -13,11 +13,13 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService.JURISDICTION_CODES_DELETED_ERROR;
 
 @RunWith(SpringRunner.class)
 public class EventValidationServiceTest {
@@ -243,23 +245,27 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateJurisdictionCodesWithDuplicatesCodes() {
-        List<String> errors = eventValidationService.validateJurisdictionCodes(caseDetails1.getCaseData());
+    public void shouldValidateJurisdictionCodesWithDuplicatesCodesAndExistenceJudgement() {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionCodes(caseDetails1.getCaseData(), errors);
 
-        assertEquals(1, errors.size());
+        assertEquals(2, errors.size());
         assertEquals(DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE + " \"COM\" in Jurisdiction 3 - \"DOD\" in Jurisdiction 5 ", errors.get(0));
+        assertEquals(JURISDICTION_CODES_DELETED_ERROR + "[CCP, ADG]", errors.get(1));
     }
 
     @Test
     public void shouldValidateJurisdictionCodesWithUniqueCodes() {
-        List<String> errors = eventValidationService.validateJurisdictionCodes(caseDetails2.getCaseData());
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionCodes(caseDetails2.getCaseData(), errors);
 
         assertEquals(0, errors.size());
     }
 
     @Test
     public void shouldValidateJurisdictionCodesWithEmptyCodes() {
-        List<String> errors = eventValidationService.validateJurisdictionCodes(caseDetails3.getCaseData());
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionCodes(caseDetails3.getCaseData(), errors);
 
         assertEquals(0, errors.size());
     }

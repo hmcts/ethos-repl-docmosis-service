@@ -559,8 +559,9 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
+        List<String> errors = new ArrayList<>();
         CaseData caseData =  ccdRequest.getCaseDetails().getCaseData();
-        List<String> errors = eventValidationService.validateJurisdictionCodes(caseData);
+        eventValidationService.validateJurisdictionCodes(caseData, errors);
         log.info("Event fields validation: " + errors);
 
         return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);

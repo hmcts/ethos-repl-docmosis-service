@@ -26,6 +26,9 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRe
 @Service("eventValidationService")
 public class EventValidationService {
 
+    public static final String JURISDICTION_CODES_DELETED_ERROR = "The following jurisdiction codes cannot be deleted as " +
+            "they have been selected in judgements: ";
+
     public List<String> validateReceiptDate(CaseData caseData) {
         List<String> errors = new ArrayList<>();
         LocalDate dateOfReceipt = LocalDate.parse(caseData.getReceiptDate());
@@ -122,8 +125,37 @@ public class EventValidationService {
         return errors;
     }
 
-    public List<String> validateJurisdictionCodes(CaseData caseData) {
-        List<String> errors = new ArrayList<>();
+    public void validateJurisdictionCodes(CaseData caseData, List<String> errors) {
+        validateDuplicatedJurisdictionCodes(caseData, errors);
+        validateJurisdictionCodesExistenceInJudgement(caseData, errors);
+    }
+
+    private void validateJurisdictionCodesExistenceInJudgement(CaseData caseData, List<String> errors) {
+
+        if (caseData.getJurCodesCollection() != null && !caseData.getJurCodesCollection().isEmpty()) {
+            Set<String> jurCodesCollectionWithinJudgement = new HashSet<>();
+            List<String> jurCodesCollection = getJurCodesCollection(caseData.getJurCodesCollection());
+
+            if (caseData.getJudgementCollection() != null && !caseData.getJudgementCollection().isEmpty()) {
+                for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
+                    jurCodesCollectionWithinJudgement.addAll(getJurCodesCollection(judgementTypeItem.getValue().getJurisdictionCodes()));
+                }
+            }
+
+            log.info("Check if all jurCodesCollectionWithinJudgement are in jurCodesCollection");
+            Set<String> result = jurCodesCollectionWithinJudgement.stream()
+                    .distinct()
+                    .filter(jurCode -> !jurCodesCollection.contains(jurCode))
+                    .collect(Collectors.toSet());
+
+            if (!result.isEmpty()) {
+                log.info("jurCodesCollectionWithinJudgement are not in jurCodesCollection: " + result);
+                errors.add(JURISDICTION_CODES_DELETED_ERROR + result);
+            }
+        }
+    }
+
+    private void validateDuplicatedJurisdictionCodes(CaseData caseData, List<String> errors) {
         if (caseData.getJurCodesCollection() != null && !caseData.getJurCodesCollection().isEmpty()) {
             int counter = 0;
             Set<String> uniqueCodes = new HashSet<>();
@@ -135,11 +167,10 @@ public class EventValidationService {
                     duplicateCodes.add(" \"" + code + "\" " + "in Jurisdiction" + " " + counter + " ");
                 }
             }
-            if(!duplicateCodes.isEmpty()) {
+            if (!duplicateCodes.isEmpty()) {
                 errors.add(DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE + StringUtils.join(duplicateCodes, '-'));
             }
         }
-        return errors;
     }
 
     public List<String> validateJurisdictionOutcome(CaseData caseData) {
