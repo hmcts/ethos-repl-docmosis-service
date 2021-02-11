@@ -14,8 +14,11 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.BroughtForwardDatesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.BroughtForwardDatesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
@@ -28,9 +31,13 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -38,14 +45,32 @@ import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NUMBER_FOUR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NUMBER_ONE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NUMBER_THREE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NUMBER_TWO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_DISMISSED_AT_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_UNSUCCESSFUL_AT_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_CLOSED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_INPUT_IN_ERROR;
@@ -55,6 +80,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_REJEC
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("listingService")
@@ -62,6 +88,8 @@ public class ListingService {
 
     private final TornadoService tornadoService;
     private final CcdClient ccdClient;
+
+    private static final String CASES_SEARCHED = "Cases searched: ";
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
@@ -119,7 +147,7 @@ public class ListingService {
             //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
             List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
             if (submitEvents != null) {
-                log.info("Cases searched: " + submitEvents.size());
+                log.info(CASES_SEARCHED + submitEvents.size());
                 List<ListingTypeItem> listingTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null && !submitEvent.getCaseData().getHearingCollection().isEmpty()) {
@@ -147,6 +175,8 @@ public class ListingService {
                 return processClaimsAcceptedRequest(listingDetails, authToken);
             case LIVE_CASELOAD_REPORT:
                 return processLiveCaseloadRequest(listingDetails, authToken);
+            case CASES_COMPLETED_REPORT:
+                return processCasesCompletedRequest(listingDetails, authToken);
             default:
                 return listingDetails.getCaseData();
         }
@@ -156,8 +186,8 @@ public class ListingService {
         try {
             //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
             List<SubmitEvent> submitEvents = getGenericReportSearch(listingDetails, authToken);
-            if (submitEvents != null || !submitEvents.isEmpty()) {
-                log.info("Cases searched: " + submitEvents.size());
+            if (submitEvents != null && !submitEvents.isEmpty()) {
+                log.info(CASES_SEARCHED + submitEvents.size());
                 List<BFDateTypeItem> bFDateTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getBroughtForwardCollection() != null && !submitEvent.getCaseData().getBroughtForwardCollection().isEmpty()) {
@@ -181,10 +211,12 @@ public class ListingService {
         try {
             //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
             List<SubmitEvent> submitEvents = getGenericReportSearch(listingDetails, authToken);
-            if (submitEvents != null || !submitEvents.isEmpty()) {
-                log.info("Cases searched: " + submitEvents.size());
-                int totalCases = 0; int totalSingles = 0; int totalMultiples = 0;
-                AdhocReportType localReportsSummaryHdr = new AdhocReportType();
+            if (submitEvents != null && !submitEvents.isEmpty()) {
+                log.info(CASES_SEARCHED + submitEvents.size());
+                int totalCases = 0;
+                int totalSingles = 0;
+                int totalMultiples = 0;
+                AdhocReportType localReportsDetailHdr = new AdhocReportType();
                 List<AdhocReportTypeItem> localReportsDetailList = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
                     AdhocReportTypeItem localReportsDetailItem = getClaimsAcceptedDetailItem(listingDetails, submitEvent.getCaseData());
@@ -195,10 +227,10 @@ public class ListingService {
                         localReportsDetailList.add(localReportsDetailItem);
                     }
                 }
-                localReportsSummaryHdr.setTotal(Integer.toString(totalCases));
-                localReportsSummaryHdr.setSinglesTotal(Integer.toString(totalSingles));
-                localReportsSummaryHdr.setMultiplesTotal(Integer.toString(totalMultiples));
-                listingDetails.getCaseData().setLocalReportsSummaryHdr(localReportsSummaryHdr);
+                localReportsDetailHdr.setTotal(Integer.toString(totalCases));
+                localReportsDetailHdr.setSinglesTotal(Integer.toString(totalSingles));
+                localReportsDetailHdr.setMultiplesTotal(Integer.toString(totalMultiples));
+                listingDetails.getCaseData().setLocalReportsDetailHdr(localReportsDetailHdr);
                 listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
             }
             return clearListingFields(listingDetails.getCaseData());
@@ -211,8 +243,8 @@ public class ListingService {
         try {
             //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
             List<SubmitEvent> submitEvents = getGenericReportSearch(listingDetails, authToken);
-            if (submitEvents != null || !submitEvents.isEmpty()) {
-                log.info("Cases searched: " + submitEvents.size());
+            if (submitEvents != null && !submitEvents.isEmpty()) {
+                log.info(CASES_SEARCHED + submitEvents.size());
                 List<AdhocReportTypeItem> localReportsDetailList = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
                     AdhocReportTypeItem localReportsDetailItem = getLiveCaseloadDetailItem(listingDetails, submitEvent.getCaseData());
@@ -220,6 +252,32 @@ public class ListingService {
                         localReportsDetailList.add(localReportsDetailItem);
                     }
                 }
+                listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
+            }
+            return clearListingFields(listingDetails.getCaseData());
+        } catch (Exception ex) {
+            throw new CaseRetrievalException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
+        }
+    }
+
+    private ListingData processCasesCompletedRequest(ListingDetails listingDetails, String authToken) {
+        try {
+            //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
+            List<SubmitEvent> submitEvents = getGenericReportSearch(listingDetails, authToken);
+            if (submitEvents != null && !submitEvents.isEmpty()) {
+                log.info(CASES_SEARCHED + submitEvents.size());
+                AdhocReportType localReportsDetailHdr = new AdhocReportType();
+                List<AdhocReportTypeItem> localReportsDetailList = new ArrayList<>();
+                for (SubmitEvent submitEvent : submitEvents) {
+                    if (validCaseForCasesCompetedReport(submitEvent) && caseContainsHearings(submitEvent.getCaseData())) {
+                        AdhocReportTypeItem localReportsDetailItem = getCasesCompletedDetailItem(listingDetails, submitEvent.getCaseData());
+                        if (localReportsDetailItem.getValue() != null) {
+                            updateCasesCompletedDetailHdr(localReportsDetailItem, localReportsDetailHdr);
+                            localReportsDetailList.add(localReportsDetailItem);
+                        }
+                    }
+                }
+                listingDetails.getCaseData().setLocalReportsDetailHdr(localReportsDetailHdr);
                 listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
             }
             return clearListingFields(listingDetails.getCaseData());
@@ -333,8 +391,8 @@ public class ListingService {
         ListingData listingData = listingDetails.getCaseData();
         if (caseData.getPreAcceptCase() != null && caseData.getPreAcceptCase().getDateAccepted() != null) {
             boolean matchingDateIsValid = validateMatchingDate(listingData, caseData.getPreAcceptCase().getDateAccepted());
-            boolean isPositionTypeValid = isPositionTypeValid(caseData);
-            if (matchingDateIsValid && isPositionTypeValid) {
+            boolean liveCaseloadIsValid = liveCaseloadIsValid(caseData);
+            if (matchingDateIsValid && liveCaseloadIsValid) {
                 AdhocReportType adhocReportType = new AdhocReportType();
                 adhocReportType.setReportOffice(getTribunalOffice(listingDetails, caseData));
                 // TODO : hearingCollection.Hearing_stage implementation
@@ -343,6 +401,112 @@ public class ListingService {
             }
         }
         return adhocReportTypeItem;
+    }
+
+    private AdhocReportTypeItem getCasesCompletedDetailItem(ListingDetails listingDetails, CaseData caseData) {
+        AdhocReportTypeItem adhocReportTypeItem = new AdhocReportTypeItem();
+        for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+            if (validHearingForCasesCompetedReport(hearingTypeItem) && caseContainsHearingDates(hearingTypeItem)) {
+                HearingType hearingType = hearingTypeItem.getValue();
+                ListingData listingData = listingDetails.getCaseData();
+                DateListedType maxDateListedType = Collections.max(hearingType.getHearingDateCollection(), Comparator.comparing(c -> c.getValue().getListedDate())).getValue();
+                if (maxDateListedType != null) {
+                    String listedDate =  LocalDateTime.parse(maxDateListedType.getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate().toString();
+                    boolean matchingDateIsValid = validateMatchingDate(listingData, listedDate);
+                    boolean casesCompletedIsValid = casesCompletedIsValid(adhocReportTypeItem, maxDateListedType);
+                    if (matchingDateIsValid && casesCompletedIsValid) {
+                        AdhocReportType adhocReportType = new AdhocReportType();
+                        adhocReportType.setCaseReference(caseData.getEthosCaseReference());
+                        adhocReportType.setPosition(caseData.getCurrentPosition());
+                        adhocReportType.setConciliationTrackNo(getConciliationTrackNumber(caseData.getConciliationTrack()));
+                        adhocReportType.setSessionDays(String.valueOf(hearingType.getHearingDateCollection().size()));
+                        adhocReportType.setHearingNumber(hearingType.getHearingNumber());
+                        adhocReportType.setHearingDate(maxDateListedType.getListedDate());
+                        adhocReportType.setHearingType(hearingType.getHearingType());
+                        adhocReportType.setHearingJudge(maxDateListedType.getHearingJudgeName());
+                        adhocReportType.setHearingClerk(maxDateListedType.getHearingClerk());
+                        adhocReportTypeItem.setValue(adhocReportType);
+                    }
+                }
+            }
+        }
+        return adhocReportTypeItem;
+    }
+
+    private void updateCasesCompletedDetailHdr(AdhocReportTypeItem localReportsDetailItem, AdhocReportType localReportsDetailHdr) {
+        AdhocReportType adhocReportType = localReportsDetailItem.getValue();
+
+        int completedAtHearingTotal;
+        int sessionDaysTakenTotal;
+        double completedPerSessionDayTotal;
+
+        int completedAtHearingPerTrack;
+        int sessionDaysTakenPerTrack;
+        double completedPerSessionDayPerTrack;
+
+        switch (adhocReportType.getConciliationTrackNo()) {
+            case CONCILIATION_TRACK_NUMBER_ONE:
+                completedAtHearingPerTrack = isNullOrEmpty(localReportsDetailHdr.getConNoneCasesCompletedHearing()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConNoneCasesCompletedHearing());
+                sessionDaysTakenPerTrack = isNullOrEmpty(localReportsDetailHdr.getConNoneSessionDays()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConNoneSessionDays());
+
+                completedAtHearingPerTrack++;
+                sessionDaysTakenPerTrack += Integer.parseInt(adhocReportType.getSessionDays());
+                completedPerSessionDayPerTrack = (double)completedAtHearingPerTrack / sessionDaysTakenPerTrack;
+
+                localReportsDetailHdr.setConNoneCasesCompletedHearing(Integer.toString(completedAtHearingPerTrack));
+                localReportsDetailHdr.setConNoneSessionDays(Integer.toString(sessionDaysTakenPerTrack));
+                localReportsDetailHdr.setConNoneCompletedPerSession(Double.toString(completedPerSessionDayPerTrack));
+                break;
+            case CONCILIATION_TRACK_NUMBER_TWO:
+                completedAtHearingPerTrack = isNullOrEmpty(localReportsDetailHdr.getConFastCasesCompletedHearing()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConFastCasesCompletedHearing());
+                sessionDaysTakenPerTrack = isNullOrEmpty(localReportsDetailHdr.getConFastSessionDays()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConFastSessionDays());
+
+                completedAtHearingPerTrack++;
+                sessionDaysTakenPerTrack += Integer.parseInt(adhocReportType.getSessionDays());
+                completedPerSessionDayPerTrack = (double)completedAtHearingPerTrack / sessionDaysTakenPerTrack;
+
+                localReportsDetailHdr.setConFastCasesCompletedHearing(Integer.toString(completedAtHearingPerTrack));
+                localReportsDetailHdr.setConFastSessionDays(Integer.toString(sessionDaysTakenPerTrack));
+                localReportsDetailHdr.setConFastCompletedPerSession(Double.toString(completedPerSessionDayPerTrack));
+                break;
+            case CONCILIATION_TRACK_NUMBER_THREE:
+                completedAtHearingPerTrack = isNullOrEmpty(localReportsDetailHdr.getConStdCasesCompletedHearing()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConStdCasesCompletedHearing());
+                sessionDaysTakenPerTrack = isNullOrEmpty(localReportsDetailHdr.getConStdSessionDays()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConStdSessionDays());
+
+                completedAtHearingPerTrack++;
+                sessionDaysTakenPerTrack += Integer.parseInt(adhocReportType.getSessionDays());
+                completedPerSessionDayPerTrack = (double)completedAtHearingPerTrack / sessionDaysTakenPerTrack;
+
+                localReportsDetailHdr.setConStdCasesCompletedHearing(Integer.toString(completedAtHearingPerTrack));
+                localReportsDetailHdr.setConStdSessionDays(Integer.toString(sessionDaysTakenPerTrack));
+                localReportsDetailHdr.setConStdCompletedPerSession(Double.toString(completedPerSessionDayPerTrack));
+                break;
+            case CONCILIATION_TRACK_NUMBER_FOUR:
+                completedAtHearingPerTrack = isNullOrEmpty(localReportsDetailHdr.getConOpenCasesCompletedHearing()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConOpenCasesCompletedHearing());
+                sessionDaysTakenPerTrack = isNullOrEmpty(localReportsDetailHdr.getConOpenSessionDays()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConOpenSessionDays());
+
+                completedAtHearingPerTrack++;
+                sessionDaysTakenPerTrack += Integer.parseInt(adhocReportType.getSessionDays());
+                completedPerSessionDayPerTrack = (double)completedAtHearingPerTrack / sessionDaysTakenPerTrack;
+
+                localReportsDetailHdr.setConOpenCasesCompletedHearing(Integer.toString(completedAtHearingPerTrack));
+                localReportsDetailHdr.setConOpenSessionDays(Integer.toString(sessionDaysTakenPerTrack));
+                localReportsDetailHdr.setConOpenCompletedPerSession(Double.toString(completedPerSessionDayPerTrack));
+                break;
+            default:
+                return;
+        }
+
+        completedAtHearingTotal = isNullOrEmpty(localReportsDetailHdr.getCasesCompletedHearingTotal()) ? 0 : Integer.parseInt(localReportsDetailHdr.getCasesCompletedHearingTotal());
+        sessionDaysTakenTotal = isNullOrEmpty(localReportsDetailHdr.getSessionDaysTotal()) ? 0 : Integer.parseInt(localReportsDetailHdr.getSessionDaysTotal());
+
+        completedAtHearingTotal++;
+        sessionDaysTakenTotal += Integer.parseInt(adhocReportType.getSessionDays());
+        completedPerSessionDayTotal = (double)completedAtHearingTotal / sessionDaysTakenTotal;
+
+        localReportsDetailHdr.setCasesCompletedHearingTotal(Integer.toString(completedAtHearingTotal));
+        localReportsDetailHdr.setSessionDaysTotal(Integer.toString(sessionDaysTakenTotal));
+        localReportsDetailHdr.setCompletedPerSessionTotal(Double.toString(completedPerSessionDayTotal));
     }
 
     private boolean isAllVenuesGlasgowAndAberdeen(ListingData listingData) {
@@ -460,7 +624,30 @@ public class ListingService {
         }
     }
 
-    private boolean isPositionTypeValid(CaseData caseData) {
+    private String getTribunalOffice(ListingDetails listingDetails, CaseData caseData) {
+        String caseTypeId = ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId());
+        return caseTypeId.equals(SCOTLAND_CASE_TYPE_ID) ? caseData.getManagingOffice() : caseTypeId;
+    }
+
+    private String getConciliationTrackNumber(String conciliationTrack) {
+        if (!isNullOrEmpty(conciliationTrack)) {
+            switch (conciliationTrack) {
+                case CONCILIATION_TRACK_NO_CONCILIATION:
+                    return CONCILIATION_TRACK_NUMBER_ONE ;
+                case CONCILIATION_TRACK_FAST_TRACK:
+                    return CONCILIATION_TRACK_NUMBER_TWO;
+                case CONCILIATION_TRACK_STANDARD_TRACK:
+                    return CONCILIATION_TRACK_NUMBER_THREE;
+                case CONCILIATION_TRACK_OPEN_TRACK:
+                    return CONCILIATION_TRACK_NUMBER_FOUR;
+                default:
+                    return "0";
+            }
+        }
+        return "0";
+    }
+
+    private boolean liveCaseloadIsValid(CaseData caseData) {
         if (caseData.getPositionType() != null) {
             List<String> invalidPositionTypes = Arrays.asList(POSITION_TYPE_REJECTED,
                     POSITION_TYPE_CASE_CLOSED,
@@ -472,11 +659,74 @@ public class ListingService {
         return true;
     }
 
-    private String getTribunalOffice(ListingDetails listingDetails, CaseData caseData) {
-        String caseTypeId = ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId());
-        return caseTypeId.equals(SCOTLAND_CASE_TYPE_ID) ? caseData.getManagingOffice() : caseTypeId;
+    private boolean validCaseForCasesCompetedReport(SubmitEvent submitEvent) {
+        CaseData caseData = submitEvent.getCaseData();
+        return (submitEvent.getState() != null &&
+                submitEvent.getState().equals(CLOSED_STATE) &&
+                validPositionTypeForCasesCompetedReport(caseData) &&
+                validJurisdictionOutcomeForCasesCompetedReport(caseData));
     }
 
+    private boolean validPositionTypeForCasesCompetedReport(CaseData caseData) {
+        if (caseData.getPositionType() != null) {
+            List<String> invalidPositionTypes = Arrays.asList(POSITION_TYPE_CASE_INPUT_IN_ERROR,
+                    POSITION_TYPE_CASE_TRANSFERRED_SAME_COUNTRY,
+                    POSITION_TYPE_CASE_TRANSFERRED_OTHER_COUNTRY);
+            return invalidPositionTypes.stream().noneMatch(str -> str.equals(caseData.getPositionType()));
+        }
+        return true;
+    }
+
+    private boolean validJurisdictionOutcomeForCasesCompetedReport(CaseData caseData) {
+        if (caseData.getJurCodesCollection() != null && !caseData.getJurCodesCollection().isEmpty()) {
+            ListIterator<JurCodesTypeItem> itr = caseData.getJurCodesCollection().listIterator();
+            while (itr.hasNext()) {
+                JurCodesType jurCodesType = itr.next().getValue();
+                if (jurCodesType.getJudgmentOutcome() != null &&
+                        (jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING) ||
+                                jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_UNSUCCESSFUL_AT_HEARING) ||
+                                jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_DISMISSED_AT_HEARING))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean validHearingForCasesCompetedReport(HearingTypeItem hearingTypeItem) {
+        if (hearingTypeItem.getValue().getHearingType() != null) {
+            List<String> validHearingTypes = Arrays.asList(HEARING_TYPE_JUDICIAL_HEARING,
+                    HEARING_TYPE_PERLIMINARY_HEARING,
+                    HEARING_TYPE_PERLIMINARY_HEARING_CM,
+                    HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC);
+            return validHearingTypes.stream().anyMatch(str -> str.equals(hearingTypeItem.getValue().getHearingType()));
+        }
+        return false;
+    }
+
+    private boolean casesCompletedIsValid(AdhocReportTypeItem adhocReportTypeItem, DateListedType dateListedType) {
+        AdhocReportType adhocReportType = adhocReportTypeItem.getValue();
+        if (dateListedType.getHearingCaseDisposed() != null && dateListedType.getHearingCaseDisposed().equals(YES)) {
+            if (adhocReportType != null) {
+                LocalDateTime currentHearingDate = LocalDateTime.parse(adhocReportType.getHearingDate());
+                LocalDateTime newHearingDate = LocalDateTime.parse(dateListedType.getListedDate());
+                if (newHearingDate.isAfter(currentHearingDate)) {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean caseContainsHearings(CaseData caseData) {
+        return (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty());
+    }
+
+    private boolean caseContainsHearingDates(HearingTypeItem hearingTypeItem) {
+        return (hearingTypeItem.getValue().getHearingDateCollection() != null && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty());
+    }
     public DocumentInfo processHearingDocument(ListingData listingData, String caseTypeId, String authToken) {
         try {
             return tornadoService.listingGeneration(authToken, listingData, caseTypeId);
