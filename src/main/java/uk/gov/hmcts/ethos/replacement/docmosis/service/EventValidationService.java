@@ -132,26 +132,22 @@ public class EventValidationService {
 
     private void validateJurisdictionCodesExistenceInJudgement(CaseData caseData, List<String> errors) {
 
-        if (caseData.getJurCodesCollection() != null && !caseData.getJurCodesCollection().isEmpty()) {
-            Set<String> jurCodesCollectionWithinJudgement = new HashSet<>();
-            List<String> jurCodesCollection = getJurCodesCollection(caseData.getJurCodesCollection());
-
-            if (caseData.getJudgementCollection() != null && !caseData.getJudgementCollection().isEmpty()) {
-                for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
-                    jurCodesCollectionWithinJudgement.addAll(getJurCodesCollection(judgementTypeItem.getValue().getJurisdictionCodes()));
-                }
+        Set<String> jurCodesCollectionWithinJudgement = new HashSet<>();
+        List<String> jurCodesCollection = getJurCodesCollection(caseData.getJurCodesCollection());
+        if (caseData.getJudgementCollection() != null && !caseData.getJudgementCollection().isEmpty()) {
+            for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
+                jurCodesCollectionWithinJudgement.addAll(getJurCodesCollection(judgementTypeItem.getValue().getJurisdictionCodes()));
             }
+        }
+        log.info("Check if all jurCodesCollectionWithinJudgement are in jurCodesCollection");
+        Set<String> result = jurCodesCollectionWithinJudgement.stream()
+                .distinct()
+                .filter(jurCode -> !jurCodesCollection.contains(jurCode))
+                .collect(Collectors.toSet());
 
-            log.info("Check if all jurCodesCollectionWithinJudgement are in jurCodesCollection");
-            Set<String> result = jurCodesCollectionWithinJudgement.stream()
-                    .distinct()
-                    .filter(jurCode -> !jurCodesCollection.contains(jurCode))
-                    .collect(Collectors.toSet());
-
-            if (!result.isEmpty()) {
-                log.info("jurCodesCollectionWithinJudgement are not in jurCodesCollection: " + result);
-                errors.add(JURISDICTION_CODES_DELETED_ERROR + result);
-            }
+        if (!result.isEmpty()) {
+            log.info("jurCodesCollectionWithinJudgement are not in jurCodesCollection: " + result);
+            errors.add(JURISDICTION_CODES_DELETED_ERROR + result);
         }
     }
 

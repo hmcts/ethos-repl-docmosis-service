@@ -265,6 +265,7 @@ public class EventValidationServiceTest {
     @Test
     public void shouldValidateJurisdictionCodesWithEmptyCodes() {
         List<String> errors = new ArrayList<>();
+        caseDetails3.getCaseData().setJudgementCollection(new ArrayList<>());
         eventValidationService.validateJurisdictionCodes(caseDetails3.getCaseData(), errors);
 
         assertEquals(0, errors.size());
