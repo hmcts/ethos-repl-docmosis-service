@@ -25,6 +25,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRe
 public class LabelsHelper {
 
     public static final int MAX_NUMBER_LABELS = 2000;
+    public static final String ADDRESS_LABELS_RESULT_SELECTION_ERROR = "There are no address labels associated with your selection";
 
     public static AddressLabelTypeItem getClaimantAddressLabelData(LabelPayloadES labelPayloadES, String printClaimantLabel) {
 
@@ -424,7 +425,7 @@ public class LabelsHelper {
         if (errors.isEmpty()
                 && templateName.equals(ADDRESS_LABELS_TEMPLATE)
                 && Integer.parseInt(multipleData.getAddressLabelsAttributesType().getNumberOfSelectedLabels()) == 0) {
-            errors.add(ADDRESS_LABELS_SELECT_ERROR);
+            errors.add(ADDRESS_LABELS_RESULT_SELECTION_ERROR);
         }
     }
 

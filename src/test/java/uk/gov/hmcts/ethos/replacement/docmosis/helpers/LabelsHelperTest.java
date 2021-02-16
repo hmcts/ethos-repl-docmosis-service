@@ -15,6 +15,7 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.ADDRESS_LABELS_RESULT_SELECTION_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.MAX_NUMBER_LABELS;
 
 public class LabelsHelperTest {
@@ -108,7 +109,7 @@ public class LabelsHelperTest {
         multipleDetails.getCaseData().setAddressLabelsAttributesType(addressLabelsAttributesType);
         LabelsHelper.validateNumberOfSelectedLabels(multipleDetails.getCaseData(), errors);
         assertEquals(1, errors.size());
-        assertEquals(ADDRESS_LABELS_SELECT_ERROR, errors.get(0));
+        assertEquals(ADDRESS_LABELS_RESULT_SELECTION_ERROR, errors.get(0));
     }
 
     @Test
