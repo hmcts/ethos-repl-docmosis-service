@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsAttributesType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
@@ -95,6 +96,19 @@ public class LabelsHelperTest {
         assertEquals(3,
                 Objects.requireNonNull(
                         LabelsHelper.customiseSelectedAddressesMultiples(labelPayloadEvents, multipleDetails.getCaseData())).size());
+    }
+
+    @Test
+    public void validateNumberOfSelectedLabels() {
+        List<String> errors = new ArrayList<>();
+        CorrespondenceType correspondenceType = new CorrespondenceType();
+        correspondenceType.setTopLevelDocuments(ADDRESS_LABELS_TEMPLATE);
+        multipleDetails.getCaseData().setCorrespondenceType(correspondenceType);
+        addressLabelsAttributesType.setNumberOfSelectedLabels("0");
+        multipleDetails.getCaseData().setAddressLabelsAttributesType(addressLabelsAttributesType);
+        LabelsHelper.validateNumberOfSelectedLabels(multipleDetails.getCaseData(), errors);
+        assertEquals(1, errors.size());
+        assertEquals(ADDRESS_LABELS_SELECT_ERROR, errors.get(0));
     }
 
     @Test

@@ -419,8 +419,11 @@ public class LabelsHelper {
         return selectedAddressLabels;
     }
 
-    public static void validateNumberOfSelectedLabels(AddressLabelsAttributesType addressLabelsAttributesType, List<String> errors) {
-        if (errors.isEmpty() && Integer.parseInt(addressLabelsAttributesType.getNumberOfSelectedLabels()) == 0) {
+    public static void validateNumberOfSelectedLabels(MultipleData multipleData, List<String> errors) {
+        String templateName = DocumentHelper.getTemplateName(multipleData.getCorrespondenceType(), multipleData.getCorrespondenceScotType());
+        if (errors.isEmpty()
+                && templateName.equals(ADDRESS_LABELS_TEMPLATE)
+                && Integer.parseInt(multipleData.getAddressLabelsAttributesType().getNumberOfSelectedLabels()) == 0) {
             errors.add(ADDRESS_LABELS_SELECT_ERROR);
         }
     }

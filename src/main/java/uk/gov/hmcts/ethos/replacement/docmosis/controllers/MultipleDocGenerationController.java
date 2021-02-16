@@ -154,7 +154,7 @@ public class MultipleDocGenerationController {
         MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
 
         multipleDocGenerationService.midSelectedAddressLabelsMultiple(userToken, multipleDetails, errors);
-        LabelsHelper.validateNumberOfSelectedLabels(multipleDetails.getCaseData().getAddressLabelsAttributesType(), errors);
+        LabelsHelper.validateNumberOfSelectedLabels(multipleDetails.getCaseData(), errors);
 
         return getMultipleCallbackResponseResponseEntity(errors, multipleRequest.getCaseDetails());
     }
