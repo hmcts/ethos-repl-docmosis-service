@@ -420,7 +420,7 @@ public class LabelsHelper {
     }
 
     public static void validateNumberOfSelectedLabels(AddressLabelsAttributesType addressLabelsAttributesType, List<String> errors) {
-        if (Integer.parseInt(addressLabelsAttributesType.getNumberOfSelectedLabels()) == 0) {
+        if (errors.isEmpty() && Integer.parseInt(addressLabelsAttributesType.getNumberOfSelectedLabels()) == 0) {
             errors.add(ADDRESS_LABELS_SELECT_ERROR);
         }
     }
