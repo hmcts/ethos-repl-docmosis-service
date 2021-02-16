@@ -419,11 +419,17 @@ public class LabelsHelper {
         return selectedAddressLabels;
     }
 
+    public static void validateNumberOfSelectedLabels(AddressLabelsAttributesType addressLabelsAttributesType, List<String> errors) {
+        if (Integer.parseInt(addressLabelsAttributesType.getNumberOfSelectedLabels()) == 0) {
+            errors.add(ADDRESS_LABELS_SELECT_ERROR);
+        }
+    }
+
     public static List<String> midValidateAddressLabelsErrors(AddressLabelsAttributesType addressLabelsAttributesType, String caseType) {
 
         List<String> errors = new ArrayList<>();
 
-        if (Integer.parseInt(addressLabelsAttributesType.getNumberOfSelectedLabels()) == 0) {
+        if (caseType.equals(SINGLE_CASE_TYPE) && Integer.parseInt(addressLabelsAttributesType.getNumberOfSelectedLabels()) == 0) {
             errors.add(ADDRESS_LABELS_SELECT_ERROR);
 
         } else if (addressLabelsAttributesType.getNumberOfCopies().contains(".")) {

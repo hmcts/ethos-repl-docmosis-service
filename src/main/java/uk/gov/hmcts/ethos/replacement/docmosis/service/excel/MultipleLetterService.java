@@ -27,6 +27,7 @@ public class MultipleLetterService {
 
     private static final String MESSAGE = "Failed to generate document for case id : ";
     private static final String NUMBER_CASES_LIMIT_ERROR = "Number of cases to generate labels should be less or equal than "  + MAX_NUMBER_LABELS;
+    public static final String NO_CASES_SEARCHED = "No cases searched";
 
     private final TornadoService tornadoService;
     private final ExcelReadingService excelReadingService;
@@ -66,7 +67,7 @@ public class MultipleLetterService {
 
         } else {
 
-            errors.add("No cases searched to generate schedules");
+            errors.add(NO_CASES_SEARCHED);
 
         }
 

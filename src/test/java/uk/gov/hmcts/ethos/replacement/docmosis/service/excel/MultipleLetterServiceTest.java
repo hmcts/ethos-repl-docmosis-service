@@ -25,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleLetterService.NO_CASES_SEARCHED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleLetterServiceTest {
@@ -111,7 +112,7 @@ public class MultipleLetterServiceTest {
                 multipleDetails,
                 errors,
                 false);
-        assertEquals("No cases searched to generate schedules", errors.get(0));
+        assertEquals(NO_CASES_SEARCHED, errors.get(0));
     }
 
     @Test

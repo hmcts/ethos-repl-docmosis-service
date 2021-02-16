@@ -21,6 +21,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleLetterService.NO_CASES_SEARCHED;
+
 @Slf4j
 @Service("multipleScheduleService")
 public class MultipleScheduleService {
@@ -163,7 +165,7 @@ public class MultipleScheduleService {
 
         } else {
 
-            errors.add("No cases searched to generate schedules");
+            errors.add(NO_CASES_SEARCHED);
 
         }
 
