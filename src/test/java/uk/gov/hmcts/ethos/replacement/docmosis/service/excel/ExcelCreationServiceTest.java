@@ -19,6 +19,8 @@ public class ExcelCreationServiceTest {
     @InjectMocks
     private ExcelCreationService excelCreationService;
 
+    String leadLink = "<a target=\"_blank\" href=\"https://www-ccd.perftest.platform.hmcts.net/v2/case/1604313560561842\">245000/2020</a>";
+
     private TreeMap<String, Object> multipleObjects;
 
     @Before
@@ -30,27 +32,31 @@ public class ExcelCreationServiceTest {
     public void writeExcelObjects() {
         assertNotNull(excelCreationService.writeExcel(
                 new ArrayList<>(multipleObjects.values()),
-                new ArrayList<>(Arrays.asList("245000/1", "245000/1"))));
+                new ArrayList<>(Arrays.asList("245000/1", "245000/1")),
+                leadLink));
     }
 
     @Test
     public void writeExcelObjectsEmptySubMultiples() {
         assertNotNull(excelCreationService.writeExcel(
                 new ArrayList<>(multipleObjects.values()),
-                new ArrayList<>()));
+                new ArrayList<>(),
+                leadLink));
     }
 
     @Test
     public void writeExcelString() {
         assertNotNull(excelCreationService.writeExcel(
                 new ArrayList<>(Arrays.asList("245000/2020", "245001/2020", "245002/2020")),
-                new ArrayList<>()));
+                new ArrayList<>(),
+                leadLink));
     }
 
     @Test
     public void writeExcelStringEmpty() {
         assertNotNull(excelCreationService.writeExcel(
                 new ArrayList<>(),
-                new ArrayList<>()));
+                new ArrayList<>(),
+                leadLink));
     }
 }

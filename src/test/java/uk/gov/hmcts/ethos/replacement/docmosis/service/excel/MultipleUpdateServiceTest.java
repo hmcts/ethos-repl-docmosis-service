@@ -91,7 +91,7 @@ public class MultipleUpdateServiceTest {
     }
 
     @Test
-    public void bulkUpdateLogicEmptyOpenState() {
+    public void bulkUpdateLogicEmptyAcceptedState() {
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(new TreeMap<>());
         multipleUpdateService.bulkUpdateLogic(userToken,

@@ -20,6 +20,9 @@ public class CaseCreationForCaseWorkerService {
     private final SingleReferenceService singleReferenceService;
     private final MultipleReferenceService multipleReferenceService;
 
+    public static final String TRANSFERRED_IN_STATE = "Transferred_In";
+    public static final String TRANSFERRED_OUT_STATE = "Transferred_Out";
+
     @Autowired
     public CaseCreationForCaseWorkerService(CcdClient ccdClient, SingleReferenceService singleReferenceService,
                                             MultipleReferenceService multipleReferenceService) {
@@ -50,4 +53,40 @@ public class CaseCreationForCaseWorkerService {
         }
         return caseData;
     }
+
+    public void createCaseTransfer(CaseData caseData, String jurisdiction, String authToken) {
+
+//        try {
+//            log.info("Create a new case details. Transferred in");
+//            CaseDetails newCaseTransferCaseDetails = createCaseDetailsCaseTransfer(caseData, jurisdiction);
+//            log.info("Send this case to the new office");
+//            ccdClient.submitCaseCreation(authToken,
+//                    newCaseTransferCaseDetails,
+//                    ccdClient.startCaseCreation(authToken, newCaseTransferCaseDetails));
+//        } catch (Exception ex) {
+//            throw new CaseCreationException(MESSAGE + caseData.getEthosCaseReference() + ex.getMessage());
+//        }
+//
+//        log.info("Update the current caseDetails state to transferred out");
+//        caseData.setState(TRANSFERRED_OUT_STATE);
+
+    }
+
+//    private CaseDetails createCaseDetailsCaseTransfer(CaseData caseData, String jurisdiction) {
+//        CaseDetails newCaseTransferCaseDetails = new CaseDetails();
+//        //newCaseTransferCaseDetails.setCaseTypeId(caseDetails.getCaseData().getCaseTransferOffice());
+//        newCaseTransferCaseDetails.setJurisdiction(jurisdiction);
+//        newCaseTransferCaseDetails.setCaseData(generateCaseDataCaseTransfer(caseData));
+//        return newCaseTransferCaseDetails;
+//    }
+
+//    private CaseData generateCaseDataCaseTransfer(CaseData caseData) {
+//        CaseData newCaseData = new CaseData();
+//        newCaseData.setState(TRANSFERRED_IN_STATE);
+//        newCaseData.setEthosCaseReference(caseData.getEthosCaseReference());
+//        newCaseData.setClaimantType(caseData.getClaimantType());
+//        newCaseData.setClaimant(caseData.getClaimant());
+//        return newCaseData;
+//    }
+
 }

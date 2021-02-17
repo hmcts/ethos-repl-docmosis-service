@@ -103,8 +103,8 @@ public class MultipleAmendCaseIdsServiceTest {
                         .flag4("")
                         .build(),
                 MultipleObject.builder()
-                        .subMultiple("SubMultiple")
                         .ethosCaseRef("245005/2020")
+                        .subMultiple("SubMultiple")
                         .flag1("AA")
                         .flag2("BB")
                         .flag3("")

@@ -17,6 +17,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -310,6 +311,52 @@ public class MultipleHelperService {
         List<String> ethosCaseRefCollection = getEthosCaseRefCollection(userToken, newMultipleData, errors);
 
         return ethosCaseRefCollection.isEmpty() ? "" : ethosCaseRefCollection.get(0);
+
+    }
+
+    private void sendUpdatesToSinglesLogicCheckingLead(String userToken, MultipleDetails multipleDetails, List<String> errors,
+                                                      String newLeadCase, TreeMap<String, Object> multipleObjects) {
+
+        String oldLeadCase = MultiplesHelper.getCurrentLead(multipleDetails.getCaseData().getLeadCase());
+
+        if (!oldLeadCase.equals(newLeadCase)) {
+
+            log.info("Sending update to old lead case as not lead any more: " + oldLeadCase);
+
+            sendCreationUpdatesToSinglesWithoutConfirmation(userToken,
+                    multipleDetails.getCaseTypeId(),
+                    multipleDetails.getJurisdiction(),
+                    multipleDetails.getCaseData(),
+                    errors,
+                    new ArrayList<>(Collections.singletonList(oldLeadCase)),
+                    newLeadCase);
+
+        }
+
+        if (multipleObjects.keySet().isEmpty() || !oldLeadCase.equals(newLeadCase)) {
+
+            log.info("Adding new lead: " + newLeadCase);
+
+            addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(),
+                    multipleDetails.getCaseData(), newLeadCase, "");
+
+        }
+
+    }
+
+    public void sendUpdatesToSinglesLogic(String userToken, MultipleDetails multipleDetails, List<String> errors,
+                                           String newLeadCase, TreeMap<String, Object> multipleObjects,
+                                           List<String> newEthosCaseRefCollection) {
+
+        sendUpdatesToSinglesLogicCheckingLead(userToken, multipleDetails, errors, newLeadCase, multipleObjects);
+
+        sendCreationUpdatesToSinglesWithoutConfirmation(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(),
+                multipleDetails.getCaseData(),
+                errors,
+                newEthosCaseRefCollection,
+                newLeadCase);
 
     }
 

@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleLetterService.NO_CASES_SEARCHED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleLetterServiceTest {

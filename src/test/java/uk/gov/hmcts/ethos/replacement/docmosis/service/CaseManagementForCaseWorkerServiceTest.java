@@ -24,6 +24,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -299,7 +300,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void buildFlagsImageFileNameForNullFlagsTypes() {
         CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
         assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
     }
@@ -307,7 +308,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void buildFlagsImageFileNameForNullFlagsFields() {
         CaseData caseData = ccdRequest12.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
         assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
     }
@@ -315,7 +316,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void buildFlagsImageFileNameForEmptyFlagsFields() {
         CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
         assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
     }
@@ -323,7 +324,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void buildFlagsImageFileNameForFalseFlagsFields() {
         CaseData caseData = ccdRequest14.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
         assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
     }
@@ -331,7 +332,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void buildFlagsImageFileNameForTrueFlagsFields() {
         CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        FlagsImageHelper.buildFlagsImageFileName(caseData);
         String expected = "" +
                 "<font color='Black'>DO NOT POSTPONE</font> - " +
                 "<font color='Green'>LIVE APPEAL</font> - " +

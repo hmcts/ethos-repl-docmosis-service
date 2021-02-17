@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.MAX_NUMBER_LABELS;
 
 @Slf4j
@@ -27,7 +28,6 @@ public class MultipleLetterService {
 
     private static final String MESSAGE = "Failed to generate document for case id : ";
     private static final String NUMBER_CASES_LIMIT_ERROR = "Number of cases to generate labels should be less or equal than "  + MAX_NUMBER_LABELS;
-    public static final String NO_CASES_SEARCHED = "No cases searched";
 
     private final TornadoService tornadoService;
     private final ExcelReadingService excelReadingService;

@@ -391,4 +391,48 @@ public class MultipleHelperServiceTest {
 
     }
 
+    @Test
+    public void sendUpdatesToSinglesLogicCheckingLead() {
+
+        String leadLink = "<a target=\"_blank\" href=\"https://www-ccd.perftest.platform.hmcts.net/v2/case/1604313560561842\">245007/2020</a>";
+        multipleDetails.getCaseData().setLeadCase(leadLink);
+        String newLeadCase = "245000/2020";
+        SubmitEvent submitEvent = new SubmitEvent();
+        submitEvent.setCaseId(10561843);
+        when(singleCasesReadingService.retrieveSingleCase(userToken, multipleDetails.getCaseTypeId(),
+                newLeadCase, multipleDetails.getCaseData().getMultipleSource()))
+                .thenReturn(submitEvent);
+
+        multipleHelperService.sendUpdatesToSinglesLogic(
+                userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                newLeadCase,
+                multipleObjects,
+                new ArrayList<>(Arrays.asList("245008/2020", "245009/2020")));
+
+        assertEquals("<a target=\"_blank\" href=\"/v2/case/10561843\">245000/2020</a>",
+                multipleDetails.getCaseData().getLeadCase());
+
+    }
+
+    @Test
+    public void sendUpdatesToSinglesLogicCheckingSameLead() {
+
+        String leadLink = "<a target=\"_blank\" href=\"https://www-ccd.perftest.platform.hmcts.net/v2/case/1604313560561842\">245007/2020</a>";
+        multipleDetails.getCaseData().setLeadCase(leadLink);
+        String newLeadCase = "245007/2020";
+
+        multipleHelperService.sendUpdatesToSinglesLogic(
+                userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                newLeadCase,
+                multipleObjects,
+                new ArrayList<>());
+
+        assertEquals(leadLink, multipleDetails.getCaseData().getLeadCase());
+
+    }
+
 }

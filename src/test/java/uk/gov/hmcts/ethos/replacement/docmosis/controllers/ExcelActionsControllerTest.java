@@ -47,12 +47,14 @@ public class ExcelActionsControllerTest {
     private static final String IMPORT_MULTIPLE_URL = "/importMultiple";
     private static final String PRE_ACCEPT_MULTIPLE_URL = "/preAcceptMultiple";
     private static final String AMEND_CASE_IDS_URL = "/amendCaseIDs";
+    private static final String AMEND_LEAD_CASE_URL = "/amendLeadCase";
     private static final String BATCH_UPDATE_URL = "/batchUpdate";
     private static final String UPDATE_SUB_MULTIPLE_URL = "/updateSubMultiple";
     private static final String DYNAMIC_LIST_FLAGS_URL = "/dynamicListFlags";
     private static final String MULTIPLE_MID_EVENT_VALIDATION_URL = "/multipleMidEventValidation";
     private static final String SUB_MULTIPLE_MID_EVENT_VALIDATION_URL = "/subMultipleMidEventValidation";
     private static final String MULTIPLE_CREATION_MID_EVENT_VALIDATION_URL = "/multipleCreationMidEventValidation";
+    private static final String MULTIPLE_AMEND_CASE_IDS_MID_EVENT_VALIDATION_URL = "/multipleAmendCaseIdsMidEventValidation";
     private static final String MULTIPLE_SINGLE_MID_EVENT_VALIDATION_URL = "/multipleSingleMidEventValidation";
     private static final String MULTIPLE_MID_BATCH_1_VALIDATION_URL = "/multipleMidBatch1Validation";
 
@@ -73,6 +75,9 @@ public class ExcelActionsControllerTest {
 
     @MockBean
     private MultipleAmendCaseIdsService multipleAmendCaseIdsService;
+
+    @MockBean
+    private MultipleAmendLeadCaseService multipleAmendLeadCaseService;
 
     @MockBean
     private MultipleUploadService multipleUploadService;
@@ -181,6 +186,19 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void amendLeadCase() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(AMEND_LEAD_CASE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void batchUpdate() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(BATCH_UPDATE_URL)
@@ -249,6 +267,19 @@ public class ExcelActionsControllerTest {
     public void multipleCreationMidEventValidation() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MULTIPLE_CREATION_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void multipleAmendCaseIdsMidEventValidation() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(MULTIPLE_AMEND_CASE_IDS_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -330,6 +361,15 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void amendLeadCaseError400() throws Exception {
+        mvc.perform(post(AMEND_LEAD_CASE_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void batchUpdateError400() throws Exception {
         mvc.perform(post(BATCH_UPDATE_URL)
                 .content("error")
@@ -377,6 +417,15 @@ public class ExcelActionsControllerTest {
     @Test
     public void multipleCreationMidEventValidationError400() throws Exception {
         mvc.perform(post(MULTIPLE_CREATION_MID_EVENT_VALIDATION_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void multipleAmendCaseIdsMidEventValidationError400() throws Exception {
+        mvc.perform(post(MULTIPLE_AMEND_CASE_IDS_MID_EVENT_VALIDATION_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -450,6 +499,18 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void amendLeadCaseError500() throws Exception {
+        doThrow(feignError()).when(multipleAmendLeadCaseService).bulkAmendLeadCaseLogic(
+                eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(AMEND_LEAD_CASE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
     public void batchUpdateError500() throws Exception {
         doThrow(feignError()).when(multipleUpdateService).bulkUpdateLogic(
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
@@ -512,9 +573,21 @@ public class ExcelActionsControllerTest {
     @Test
     public void multipleCreationMidEventValidationError500() throws Exception {
         doThrow(feignError()).when(multipleCreationMidEventValidationService).multipleCreationValidationLogic(
-                eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
+                eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class), isA(Boolean.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MULTIPLE_CREATION_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void multipleAmendCaseIdsMidEventValidationError500() throws Exception {
+        doThrow(feignError()).when(multipleCreationMidEventValidationService).multipleCreationValidationLogic(
+                eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class), isA(Boolean.class));
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(MULTIPLE_AMEND_CASE_IDS_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -584,6 +657,16 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void amendLeadCaseForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(AMEND_LEAD_CASE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void batchUpdateForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(BATCH_UPDATE_URL)
@@ -637,6 +720,16 @@ public class ExcelActionsControllerTest {
     public void multipleCreationMidEventValidationForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(MULTIPLE_CREATION_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void multipleAmendCaseIdsMidEventValidationForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(MULTIPLE_AMEND_CASE_IDS_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

@@ -54,7 +54,8 @@ public class MultipleAmendCaseIdsService {
 
             log.info("Send updates to single cases");
 
-            sendUpdatesToSinglesLogic(userToken, multipleDetails, errors, unionLists, multipleObjects, newEthosCaseRefCollection);
+            multipleHelperService.sendUpdatesToSinglesLogic(userToken, multipleDetails, errors, unionLists.get(0),
+                    multipleObjects, newEthosCaseRefCollection);
 
         }
 
@@ -78,50 +79,6 @@ public class MultipleAmendCaseIdsService {
 
         return Stream.concat(newEthosCaseRefCollection.stream(), multipleObjects.keySet().stream())
                 .distinct().collect(Collectors.toList());
-
-    }
-
-    private void sendUpdatesToSinglesLogic(String userToken, MultipleDetails multipleDetails, List<String> errors,
-                                           List<String> unionLists, TreeMap<String, Object> multipleObjects,
-                                           List<String> newEthosCaseRefCollection) {
-
-        String oldLeadCase = MultiplesHelper.getCurrentLead(multipleDetails.getCaseData().getLeadCase());
-
-        String newLeadCase = unionLists.get(0);
-
-        if (!oldLeadCase.equals(newLeadCase)) {
-
-            log.info("Sending update to old lead case as not lead any more: " + oldLeadCase);
-
-            sendUpdatesToSingles(userToken, multipleDetails, errors,
-                    new ArrayList<>(Collections.singletonList(oldLeadCase)), newLeadCase);
-
-        }
-
-        if (multipleObjects.keySet().isEmpty() || !oldLeadCase.equals(newLeadCase)) {
-
-            log.info("Adding new lead: " + newLeadCase);
-
-            multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(),
-                    multipleDetails.getCaseData(), newLeadCase, "");
-
-        }
-
-        sendUpdatesToSingles(userToken, multipleDetails, errors, newEthosCaseRefCollection, newLeadCase);
-
-    }
-
-
-    private void sendUpdatesToSingles(String userToken, MultipleDetails multipleDetails, List<String> errors,
-                                      List<String> newEthosCaseRefCollection, String leadCase) {
-
-        multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken,
-                multipleDetails.getCaseTypeId(),
-                multipleDetails.getJurisdiction(),
-                multipleDetails.getCaseData(),
-                errors,
-                newEthosCaseRefCollection,
-                leadCase);
 
     }
 

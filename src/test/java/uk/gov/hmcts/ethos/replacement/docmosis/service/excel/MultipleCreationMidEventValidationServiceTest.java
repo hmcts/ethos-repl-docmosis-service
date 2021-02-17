@@ -67,7 +67,8 @@ public class MultipleCreationMidEventValidationServiceTest {
         multipleCreationMidEventValidationService.multipleCreationValidationLogic(
                 userToken,
                 multipleDetails,
-                errors);
+                errors,
+                false);
 
         assertEquals(1, errors.size());
         assertEquals("[245000/2020, 245001/2020] cases do not exist.", errors.get(0));
@@ -82,7 +83,8 @@ public class MultipleCreationMidEventValidationServiceTest {
         multipleCreationMidEventValidationService.multipleCreationValidationLogic(
                 userToken,
                 multipleDetails,
-                errors);
+                errors,
+                false);
 
         assertEquals(2, errors.size());
         assertEquals("[21006/2020] lead case does not exist.", errors.get(0));
@@ -104,7 +106,8 @@ public class MultipleCreationMidEventValidationServiceTest {
         multipleCreationMidEventValidationService.multipleCreationValidationLogic(
                 userToken,
                 multipleDetails,
-                errors);
+                errors,
+                false);
 
         assertEquals(2, errors.size());
         assertEquals("[245000/2020, 245001/2020] cases have not been Accepted.", errors.get(0));
@@ -120,7 +123,8 @@ public class MultipleCreationMidEventValidationServiceTest {
         multipleCreationMidEventValidationService.multipleCreationValidationLogic(
                 userToken,
                 multipleDetails,
-                errors);
+                errors,
+                false);
 
         assertEquals(0, errors.size());
 
@@ -134,9 +138,41 @@ public class MultipleCreationMidEventValidationServiceTest {
         multipleCreationMidEventValidationService.multipleCreationValidationLogic(
                 userToken,
                 multipleDetails,
-                errors);
+                errors,
+                false);
 
         assertEquals(0, errors.size());
+
+    }
+
+    @Test
+    public void multipleAmendCaseIdsValidationLogicCaseDoesNotExist() {
+
+        CaseData caseData = new CaseData();
+        caseData.setState(ACCEPTED_STATE);
+        caseData.setEthosCaseReference("245004/2020");
+
+        SubmitEvent submitEvent = new SubmitEvent();
+        submitEvent.setCaseData(caseData);
+        submitEvent.setState(ACCEPTED_STATE);
+        submitEvent.setCaseId(1232121232);
+
+        multipleDetails.getCaseData().setLeadCase(null);
+
+        when(singleCasesReadingService.retrieveSingleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                MultiplesHelper.getCaseIds(multipleDetails.getCaseData()),
+                multipleDetails.getCaseData().getMultipleSource()))
+                .thenReturn(new ArrayList<>(Collections.singletonList(submitEvent)));
+
+        multipleCreationMidEventValidationService.multipleCreationValidationLogic(
+                userToken,
+                multipleDetails,
+                errors,
+                true);
+
+        assertEquals(1, errors.size());
+        assertEquals("[245000/2020, 245001/2020] cases do not exist.", errors.get(0));
 
     }
 

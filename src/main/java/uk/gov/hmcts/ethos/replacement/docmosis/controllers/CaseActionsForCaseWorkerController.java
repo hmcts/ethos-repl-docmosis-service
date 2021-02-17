@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.ccd.*;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 
@@ -272,7 +273,7 @@ public class CaseActionsForCaseWorkerController {
             log.info("Post Default values loaded: " + defaultValues);
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
-            caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+            FlagsImageHelper.buildFlagsImageFileName(caseData);
 
             addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
                     userToken, caseData, ccdRequest.getCaseDetails().getCaseTypeId(),
@@ -307,8 +308,6 @@ public class CaseActionsForCaseWorkerController {
 
         return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
-
-
 
     @PostMapping(value = "/amendRespondentDetails", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "amend respondent details for a single case.")
@@ -387,7 +386,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
-        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseDetails.getCaseData());
+        FlagsImageHelper.buildFlagsImageFileName(caseDetails.getCaseData());
 
         return getCCDCallbackResponseResponseEntityWithoutErrors(caseDetails.getCaseData());
     }
@@ -411,7 +410,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
+        FlagsImageHelper.buildFlagsImageFileName(caseData);
 
         return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
@@ -760,6 +759,30 @@ public class CaseActionsForCaseWorkerController {
         log.info("Event fields validation: " + errors);
 
         return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
+    }
+
+    @PostMapping(value = "/createCaseTransfer", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "create a new Case in a different office.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> createCaseTransfer(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("CREATE CASE TRANSFER ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        caseCreationForCaseWorkerService.createCaseTransfer(caseData, ccdRequest.getCaseDetails().getJurisdiction(), userToken);
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
     private DefaultValues getPostDefaultValues(CaseDetails caseDetails) {
