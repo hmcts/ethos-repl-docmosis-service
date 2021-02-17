@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.ccd.*;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 
@@ -21,6 +22,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.*;
 
 @Slf4j
 @RestController
@@ -29,23 +31,14 @@ public class CaseActionsForCaseWorkerController {
     private static final String LOG_MESSAGE = "received notification request for case reference :    ";
 
     private final CaseCreationForCaseWorkerService caseCreationForCaseWorkerService;
-
     private final CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
-
     private final CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService;
-
     private final CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
-
     private final DefaultValuesReaderService defaultValuesReaderService;
-
     private final SingleReferenceService singleReferenceService;
-
     private final VerifyTokenService verifyTokenService;
-
     private final EventValidationService eventValidationService;
-
     private final SingleCaseMultipleMidEventValidationService singleCaseMultipleMidEventValidationService;
-
     private final AddSingleCaseToMultipleService addSingleCaseToMultipleService;
 
     @Autowired
@@ -91,9 +84,8 @@ public class CaseActionsForCaseWorkerController {
 
         SubmitEvent submitEvent = caseCreationForCaseWorkerService.caseCreationRequest(ccdRequest, userToken);
         log.info("Case created correctly with case Id: " + submitEvent.getCaseId());
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(ccdRequest.getCaseDetails().getCaseData())
-                .build());
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(ccdRequest.getCaseDetails().getCaseData());
     }
 
     @PostMapping(value = "/retrieveCase", consumes = APPLICATION_JSON_VALUE)
@@ -117,9 +109,8 @@ public class CaseActionsForCaseWorkerController {
         SubmitEvent submitEvent = caseRetrievalForCaseWorkerService.caseRetrievalRequest(userToken, ccdRequest.getCaseDetails().getCaseTypeId(),
                 ccdRequest.getCaseDetails().getJurisdiction(),"1550576532211563");
         log.info("Case received correctly with id: " + submitEvent.getCaseId());
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(ccdRequest.getCaseDetails().getCaseData())
-                .build());
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(ccdRequest.getCaseDetails().getCaseData());
     }
 
     @PostMapping(value = "/retrieveCases", consumes = APPLICATION_JSON_VALUE)
@@ -143,9 +134,8 @@ public class CaseActionsForCaseWorkerController {
         List<SubmitEvent> submitEvents = caseRetrievalForCaseWorkerService.casesRetrievalRequest(ccdRequest, userToken);
         log.info("Cases received: " + submitEvents.size());
         submitEvents.forEach(submitEvent -> System.out.println(submitEvent.getCaseId()));
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(ccdRequest.getCaseDetails().getCaseData())
-                .build());
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(ccdRequest.getCaseDetails().getCaseData());
     }
 
     @PostMapping(value = "/updateCase", consumes = APPLICATION_JSON_VALUE)
@@ -168,9 +158,8 @@ public class CaseActionsForCaseWorkerController {
 
         SubmitEvent submitEvent = caseUpdateForCaseWorkerService.caseUpdateRequest(ccdRequest, userToken);
         log.info("Case updated correctly with id: " + submitEvent.getCaseId());
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(ccdRequest.getCaseDetails().getCaseData())
-                .build());
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(ccdRequest.getCaseDetails().getCaseData());
     }
 
     @PostMapping(value = "/preDefaultValues", consumes = APPLICATION_JSON_VALUE)
@@ -193,9 +182,8 @@ public class CaseActionsForCaseWorkerController {
 
         DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, "", "");
         ccdRequest.getCaseDetails().getCaseData().setClaimantTypeOfClaimant(defaultValues.getClaimantTypeOfClaimant());
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(ccdRequest.getCaseDetails().getCaseData())
-                .build());
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(ccdRequest.getCaseDetails().getCaseData());
     }
 
     @PostMapping(value = "/postDefaultValues", consumes = APPLICATION_JSON_VALUE)
@@ -231,10 +219,7 @@ public class CaseActionsForCaseWorkerController {
 
         log.info("PostDefaultValues for case: " + caseData.getEthosCaseReference());
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .errors(errors)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
     @PostMapping(value = "/preAcceptCase", consumes = APPLICATION_JSON_VALUE)
@@ -256,9 +241,8 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = caseManagementForCaseWorkerService.preAcceptCase(ccdRequest);
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .build());
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
     @PostMapping(value = "/amendCaseDetails", consumes = APPLICATION_JSON_VALUE)
@@ -297,11 +281,34 @@ public class CaseActionsForCaseWorkerController {
 
         }
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .errors(errors)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
+
+    @PostMapping(value = "/amendClaimantDetails", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "amend the case claimant details for a single case.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> amendClaimantDetails(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("AMEND CLAIMANT DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.claimantDefaults(caseData);
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+    }
+
+
 
     @PostMapping(value = "/amendRespondentDetails", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "amend respondent details for a single case.")
@@ -332,10 +339,7 @@ public class CaseActionsForCaseWorkerController {
 
         log.info("Event fields validation: " + errors);
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .errors(errors)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
     @PostMapping(value = "/amendRespondentRepresentative", consumes = APPLICATION_JSON_VALUE)
@@ -361,10 +365,7 @@ public class CaseActionsForCaseWorkerController {
 
         log.info("Event fields validation: " + errors);
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .errors(errors)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
     @PostMapping(value = "/updateHearing", consumes = APPLICATION_JSON_VALUE)
@@ -385,11 +386,10 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        caseManagementForCaseWorkerService.buildFlagsImageFileName(ccdRequest.getCaseDetails().getCaseData());
+        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+        caseManagementForCaseWorkerService.buildFlagsImageFileName(caseDetails.getCaseData());
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(ccdRequest.getCaseDetails().getCaseData())
-                .build());
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseDetails.getCaseData());
     }
 
     @PostMapping(value = "/restrictedCases", consumes = APPLICATION_JSON_VALUE)
@@ -413,9 +413,7 @@ public class CaseActionsForCaseWorkerController {
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.buildFlagsImageFileName(caseData);
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
     @PostMapping(value = "/addHearing", consumes = APPLICATION_JSON_VALUE)
@@ -438,9 +436,7 @@ public class CaseActionsForCaseWorkerController {
 
         CaseData caseData = caseManagementForCaseWorkerService.addNewHearingItem(ccdRequest);
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
     @PostMapping(value = "/hearingItemData", consumes = APPLICATION_JSON_VALUE)
@@ -463,9 +459,7 @@ public class CaseActionsForCaseWorkerController {
 
         CaseData caseData = caseManagementForCaseWorkerService.fetchHearingItemData(ccdRequest);
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
     @PostMapping(value = "/amendHearing", consumes = APPLICATION_JSON_VALUE)
@@ -488,9 +482,7 @@ public class CaseActionsForCaseWorkerController {
 
         CaseData caseData = caseManagementForCaseWorkerService.amendHearingItemDetails(ccdRequest);
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
     @PostMapping(value = "/amendCaseState", consumes = APPLICATION_JSON_VALUE)
@@ -523,10 +515,7 @@ public class CaseActionsForCaseWorkerController {
             caseData.setState(ccdRequest.getCaseDetails().getState());
         }
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .errors(errors)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
     @PostMapping(value = "/midRespondentAddress", consumes = APPLICATION_JSON_VALUE)
@@ -548,9 +537,8 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = Helper.midRespondentAddress(ccdRequest.getCaseDetails().getCaseData());
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .build());
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
     @PostMapping(value = "/jurisdictionValidation", consumes = APPLICATION_JSON_VALUE)
@@ -571,14 +559,12 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
+        List<String> errors = new ArrayList<>();
         CaseData caseData =  ccdRequest.getCaseDetails().getCaseData();
-        List<String> errors = eventValidationService.validateJurisdictionCodes(caseData);
+        eventValidationService.validateJurisdictionCodes(caseData, errors);
         log.info("Event fields validation: " + errors);
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .errors(errors)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
     @PostMapping(value = "/generateCaseRefNumbers", consumes = APPLICATION_JSON_VALUE)
@@ -601,9 +587,7 @@ public class CaseActionsForCaseWorkerController {
 
         CaseData caseData = caseCreationForCaseWorkerService.generateCaseRefNumbers(ccdRequest);
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
     @PostMapping(value = "/midRespondentECC", consumes = APPLICATION_JSON_VALUE)
@@ -625,10 +609,8 @@ public class CaseActionsForCaseWorkerController {
         }
         List<String> errors = new ArrayList<>();
         CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(), userToken, errors, MID_EVENT_CALLBACK);
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .errors(errors)
-                .build());
+
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
     @PostMapping(value = "/createECC", consumes = APPLICATION_JSON_VALUE)
@@ -650,13 +632,11 @@ public class CaseActionsForCaseWorkerController {
         }
 
         List<String> errors = new ArrayList<>();
-        CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(), userToken, errors, ABOUT_TO_SUBMIT_EVENT_CALLBACK);
+        CaseData caseData = caseManagementForCaseWorkerService.createECC(
+                ccdRequest.getCaseDetails(), userToken, errors, ABOUT_TO_SUBMIT_EVENT_CALLBACK);
         generateEthosCaseReference(caseData, ccdRequest);
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .errors(errors)
-                .build());
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
     @PostMapping(value = "/linkOriginalCaseECC", consumes = APPLICATION_JSON_VALUE)
@@ -678,10 +658,8 @@ public class CaseActionsForCaseWorkerController {
         }
         List<String> errors = new ArrayList<>();
         CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(), userToken, errors, SUBMITTED_CALLBACK);
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .errors(errors)
-                .build());
+
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
     @PostMapping(value = "/singleCaseMultipleMidEventValidation", consumes = APPLICATION_JSON_VALUE)
@@ -708,10 +686,7 @@ public class CaseActionsForCaseWorkerController {
         singleCaseMultipleMidEventValidationService.singleCaseMultipleValidationLogic(
                 userToken, caseDetails, errors);
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseDetails.getCaseData())
-                .errors(errors)
-                .build());
+        return getCCDCallbackResponseResponseEntity(errors, caseDetails);
     }
 
     @PostMapping(value = "/hearingMidEventValidation", consumes = APPLICATION_JSON_VALUE)
@@ -732,12 +707,59 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        List<String> errors = Helper.hearingMidEventValidation(ccdRequest.getCaseDetails().getCaseData());
+        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+        List<String> errors = Helper.hearingMidEventValidation(caseDetails.getCaseData());
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(ccdRequest.getCaseDetails().getCaseData())
-                .errors(errors)
-                .build());
+        return getCCDCallbackResponseResponseEntity(errors, caseDetails);
+    }
+
+    @PostMapping(value = "/bfActions", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "copy bf actions from bfActionsCW to bfActionsAll and generate a dateTime as ID.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> bfActions(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("BF ACTIONS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        BFHelper.copyBFActionsCollections(caseData);
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+    }
+
+    @PostMapping(value = "/judgmentValidation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "validates jurisdiction codes within judgement collection.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> judgmentValidation(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("JUDGEMENT VALIDATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData =  ccdRequest.getCaseDetails().getCaseData();
+        List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(caseData);
+        log.info("Event fields validation: " + errors);
+
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
     private DefaultValues getPostDefaultValues(CaseDetails caseDetails) {

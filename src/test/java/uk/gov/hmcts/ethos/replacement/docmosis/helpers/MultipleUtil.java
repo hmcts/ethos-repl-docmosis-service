@@ -15,11 +15,11 @@ import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
+import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadES;
+import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
@@ -32,10 +32,8 @@ import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 import uk.gov.hmcts.ecm.common.model.schedule.ScheduleAddress;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
-import uk.gov.hmcts.ecm.common.model.schedule.items.ScheduleRespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantType;
-import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleRespondentSumType;
 
 import java.io.IOException;
 import java.util.*;
@@ -110,6 +108,26 @@ public class MultipleUtil {
         return multipleObjectTreeMap;
     }
 
+    public static LabelPayloadES getLabelPayloadES(String ethosCaseReference) {
+        LabelPayloadES labelPayloadES = new LabelPayloadES();
+        ClaimantType claimantType = new ClaimantType();
+        Address address = new Address();
+        address.setPostCode("M2 45GD");
+        claimantType.setClaimantAddressUK(address);
+        labelPayloadES.setClaimantType(claimantType);
+        ClaimantIndType claimantIndType = new ClaimantIndType();
+        claimantIndType.setClaimantLastName("Mike");
+        labelPayloadES.setClaimantIndType(claimantIndType);
+        RespondentSumType respondentSumType = new RespondentSumType();
+        respondentSumType.setRespondentName("Andrew Smith");
+        respondentSumType.setRespondentAddress(address);
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setValue(respondentSumType);
+        labelPayloadES.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
+        labelPayloadES.setEthosCaseReference(ethosCaseReference);
+        return labelPayloadES;
+    }
+
     public static CaseData getCaseData(String ethosCaseReference) {
         CaseData caseData = new CaseData();
         caseData.setClerkResponsible("JuanFran");
@@ -144,10 +162,13 @@ public class MultipleUtil {
         ScheduleClaimantIndType claimantIndType = new ScheduleClaimantIndType();
         claimantIndType.setClaimantLastName("Mike");
         schedulePayloadES.setClaimantIndType(claimantIndType);
-        ScheduleRespondentSumType respondentSumType = new ScheduleRespondentSumType();
+        RespondentSumType respondentSumType = new RespondentSumType();
         respondentSumType.setRespondentName("Andrew Smith");
-        respondentSumType.setRespondentAddress(address);
-        ScheduleRespondentSumTypeItem respondentSumTypeItem = new ScheduleRespondentSumTypeItem();
+        Address addressResp = new Address();
+        addressResp.setPostCode("M2 45GD");
+        addressResp.setAddressLine1("12 Sillavan Way");
+        respondentSumType.setRespondentAddress(addressResp);
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
         respondentSumTypeItem.setValue(respondentSumType);
         schedulePayloadES.setRespondentCollection(new ArrayList<>(Collections.singletonList(respondentSumTypeItem)));
         schedulePayloadES.setEthosCaseReference(ethosCaseReference);
@@ -165,6 +186,16 @@ public class MultipleUtil {
         submitEvent2.setCaseData(getCaseData("245003/2020"));
         submitEvent2.setCaseId(1232121233);
         return new ArrayList<>(Arrays.asList(submitEvent1, submitEvent2));
+    }
+
+    public static List<LabelPayloadEvent> getLabelPayloadEvents() {
+        LabelPayloadEvent labelPayloadEvent1 = new LabelPayloadEvent();
+        labelPayloadEvent1.setLabelPayloadES(getLabelPayloadES("245000/2020"));
+        labelPayloadEvent1.setCaseId(1232121232);
+        LabelPayloadEvent labelPayloadEvent2 = new LabelPayloadEvent();
+        labelPayloadEvent2.setLabelPayloadES(getLabelPayloadES("245003/2020"));
+        labelPayloadEvent2.setCaseId(1232121233);
+        return new ArrayList<>(Arrays.asList(labelPayloadEvent1, labelPayloadEvent2));
     }
 
     public static HashSet<SchedulePayloadEvent> getSchedulePayloadEvents() {
@@ -261,6 +292,7 @@ public class MultipleUtil {
         caseIdTypeItem2.setValue(caseType2);
         caseIdCollection.add(caseIdTypeItem2);
 
+        multipleData.setSubMultiple(generateDynamicList("All"));
         multipleData.setFlag1(generateDynamicList("AA"));
         multipleData.setFlag2(generateDynamicList(""));
         multipleData.setFlag4(generateDynamicList(""));
@@ -344,4 +376,38 @@ public class MultipleUtil {
         return caseData;
 
     }
+
+    public static List<AddressLabelTypeItem> getAddressLabelTypeItemList() {
+
+        AddressLabelTypeItem addressLabelTypeItem = new AddressLabelTypeItem();
+        AddressLabelType addressLabelType = new AddressLabelType();
+        addressLabelType.setFullAddress("Full Address");
+        addressLabelType.setPrintLabel(YES);
+        addressLabelType.setLabelEntityAddress(new Address());
+        addressLabelTypeItem.setId("123");
+        addressLabelTypeItem.setValue(addressLabelType);
+
+        AddressLabelTypeItem addressLabelTypeItem1 = new AddressLabelTypeItem();
+        AddressLabelType addressLabelType1 = new AddressLabelType();
+        addressLabelType1.setFullName("Full Name1");
+        addressLabelType1.setFullAddress("Full Address1");
+        addressLabelType1.setPrintLabel(YES);
+        addressLabelType1.setLabelEntityAddress(new Address());
+        addressLabelType1.setLabelEntityName01("Label Entity1 Name");
+        addressLabelType1.setLabelEntityName02("Label Entity2 Name");
+        addressLabelType1.setLabelEntityFax("21232132");
+        addressLabelType1.setLabelCaseReference("Reference01345");
+        Address address = new Address();
+        address.setPostCode("M2 45GD");
+        address.setAddressLine1("Address Line1");
+        address.setAddressLine2("Address Line2");
+        address.setCountry("Country");
+        addressLabelType1.setLabelEntityAddress(address);
+        addressLabelTypeItem1.setId("1234");
+        addressLabelTypeItem1.setValue(addressLabelType1);
+
+        return new ArrayList<>(Arrays.asList(addressLabelTypeItem, addressLabelTypeItem1));
+
+    }
+
 }

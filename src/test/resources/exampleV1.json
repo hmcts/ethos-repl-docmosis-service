@@ -12,6 +12,10 @@
       "tribunalCorrespondenceFax" : "07577126570",
       "tribunalCorrespondenceDX" : "123456",
       "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
+      "addressLabelsAttributesType": {
+        "numberOfSelectedLabels": "0",
+        "numberOfCopies": "."
+      },
       "caseNotes": "Example note",
       "caseType": "Single",
       "claimant_TypeOfClaimant" : "Individual",

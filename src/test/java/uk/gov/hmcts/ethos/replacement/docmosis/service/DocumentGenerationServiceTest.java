@@ -14,11 +14,7 @@ import uk.gov.hmcts.ecm.common.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
 import uk.gov.hmcts.ecm.common.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.types.SearchType;
-import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,8 +29,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_DEV_BULK_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DocumentGenerationServiceTest {
@@ -275,13 +270,6 @@ public class DocumentGenerationServiceTest {
     }
 
     @Test
-    public void midValidateAddressLabelsWithErrors() {
-        CaseData caseData = caseDetails11.getCaseData();
-        List<String> errors = documentGenerationService.midValidateAddressLabels(caseData);
-        assertEquals(2, errors.size());
-    }
-
-    @Test
     public void clearUserChoicesScotland() {
         CaseDetails caseDetails = caseDetailsScot1;
         caseDetails.setCaseTypeId("Scotland");
@@ -321,14 +309,14 @@ public class DocumentGenerationServiceTest {
 
     @Test
     public void processDocumentRequest() throws IOException {
-        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any())).thenReturn(documentInfo);
+        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any())).thenReturn(documentInfo);
         DocumentInfo documentInfo1 = documentGenerationService.processDocumentRequest(ccdRequest, "authToken");
         assertEquals(documentInfo, documentInfo1);
     }
 
     @Test(expected = Exception.class)
     public void processDocumentRequestException() throws IOException {
-        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any())).thenThrow(new RuntimeException());
+        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any())).thenThrow(new RuntimeException());
         documentGenerationService.processDocumentRequest(ccdRequest, "authToken");
     }
 
@@ -338,7 +326,7 @@ public class DocumentGenerationServiceTest {
         submitEvent.setCaseId(1);
         submitEvent.setCaseData(new CaseData());
         List<SubmitEvent> submitEvents = Collections.singletonList(submitEvent);
-        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any())).thenReturn(documentInfo);
+        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any())).thenReturn(documentInfo);
         when(ccdClient.retrieveCasesElasticSearch(anyString(), any(), any())).thenReturn(submitEvents);
         BulkDocumentInfo bulkDocumentInfo1 = documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");
         assertEquals(bulkDocumentInfo.toString(), bulkDocumentInfo1.toString());
@@ -351,7 +339,7 @@ public class DocumentGenerationServiceTest {
         submitEvent.setCaseData(new CaseData());
         bulkRequest.getCaseDetails().getCaseData().setSearchCollection(null);
         List<SubmitEvent> submitEvents = Collections.singletonList(submitEvent);
-        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any())).thenReturn(documentInfo);
+        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any())).thenReturn(documentInfo);
         when(ccdClient.retrieveCasesElasticSearch(anyString(), any(), any())).thenReturn(submitEvents);
 
         BulkDocumentInfo bulkDocumentInfo1 = documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");
@@ -365,7 +353,7 @@ public class DocumentGenerationServiceTest {
         submitEvent.setCaseId(1);
         submitEvent.setCaseData(new CaseData());
         List<SubmitEvent> submitEvents = Collections.singletonList(submitEvent);
-        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any())).thenThrow(new RuntimeException());
+        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any())).thenThrow(new RuntimeException());
         when(ccdClient.retrieveCasesElasticSearch(anyString(), any(), any())).thenReturn(submitEvents);
 
         documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");

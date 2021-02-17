@@ -68,7 +68,8 @@ public class MultipleHelperServiceTest {
     public void addLeadMarkUp() {
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData().getLeadCase()))
+                multipleDetails.getCaseData().getLeadCase(),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(submitEventList.get(0));
         multipleHelperService.addLeadMarkUp(userToken,
                 multipleDetails.getCaseTypeId(),
@@ -84,7 +85,8 @@ public class MultipleHelperServiceTest {
         submitEventList.get(0).setCaseId(12345L);
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData().getLeadCase()))
+                multipleDetails.getCaseData().getLeadCase(),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(submitEventList.get(0));
         multipleHelperService.addLeadMarkUp(userToken,
                 multipleDetails.getCaseTypeId(),
@@ -99,7 +101,8 @@ public class MultipleHelperServiceTest {
     public void addLeadMarkUpEmptyCase() {
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
-                multipleDetails.getCaseData().getLeadCase()))
+                multipleDetails.getCaseData().getLeadCase(),
+                multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(null);
         multipleHelperService.addLeadMarkUp(userToken,
                 multipleDetails.getCaseTypeId(),

@@ -6,6 +6,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -138,7 +139,7 @@ public class DocumentUtil {
             if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
                 RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
                 sb.append("\"respondent_full_name\":\"").append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE);
-                sb.append(getRespondentAddressUK(respondentSumType.getRespondentAddress()));
+                sb.append(getRespondentAddressUK(DocumentHelper.getRespondentAddressET3(respondentSumType)));
             } else {
                 sb.append("\"respondent_full_name\":\"").append(NEW_LINE);
             }
@@ -177,7 +178,7 @@ public class DocumentUtil {
         List<String> respAddressList = caseData.getRespondentCollection()
                 .stream()
                 .map(respondentSumTypeItem -> (size > 1 ? atomicInteger.getAndIncrement() + ". " : "")
-                        + respondentSumTypeItem.getValue().getRespondentAddress().toString())
+                        + DocumentHelper.getRespondentAddressET3(respondentSumTypeItem.getValue()).toString())
                 .collect(Collectors.toList());
         sb.append("\"resp_address\":\"").append(String.join("\\n", respAddressList)).append(NEW_LINE);
         return sb;

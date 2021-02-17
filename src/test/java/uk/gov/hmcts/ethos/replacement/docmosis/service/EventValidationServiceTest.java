@@ -7,15 +7,19 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService.JURISDICTION_CODES_DELETED_ERROR;
 
 @RunWith(SpringRunner.class)
 public class EventValidationServiceTest {
@@ -23,6 +27,7 @@ public class EventValidationServiceTest {
     private static final LocalDate PAST_RECEIPT_DATE = LocalDate.now().minusDays(1);
     private static final LocalDate CURRENT_RECEIPT_DATE = LocalDate.now();
     private static final LocalDate FUTURE_RECEIPT_DATE = LocalDate.now().plusDays(1);
+    private static final LocalDate PAST_ACCEPTED_DATE = LocalDate.now().minusDays(1);
 
     private static final LocalDate PAST_TARGET_HEARING_DATE = PAST_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
     private static final LocalDate CURRENT_TARGET_HEARING_DATE = CURRENT_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
@@ -39,6 +44,7 @@ public class EventValidationServiceTest {
     private CaseDetails caseDetails4;
 
     private CaseData caseData;
+    private MultipleData multipleData;
 
     @Before
     public void setup() throws Exception {
@@ -50,6 +56,7 @@ public class EventValidationServiceTest {
         caseDetails4 = generateCaseDetails("caseDetailsTest4.json");
 
         caseData = new CaseData();
+        multipleData = new MultipleData();
     }
 
     @Test
@@ -77,6 +84,38 @@ public class EventValidationServiceTest {
         caseData.setReceiptDate(FUTURE_RECEIPT_DATE.toString());
 
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
+
+        assertEquals(1, errors.size());
+        assertEquals(FUTURE_RECEIPT_DATE_ERROR_MESSAGE, errors.get(0));
+    }
+
+    @Test
+    public void shouldValidateReceiptDateLaterThanAcceptedDate() {
+        caseData.setReceiptDate(CURRENT_RECEIPT_DATE.toString());
+        CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
+        casePreAcceptType.setDateAccepted(PAST_ACCEPTED_DATE.toString());
+        caseData.setPreAcceptCase(casePreAcceptType);
+
+        List<String> errors = eventValidationService.validateReceiptDate(caseData);
+
+        assertEquals(1, errors.size());
+        assertEquals(RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE, errors.get(0));
+    }
+
+    @Test
+    public void shouldValidatePastReceiptDateMultiple() {
+        multipleData.setReceiptDate(PAST_RECEIPT_DATE.toString());
+
+        List<String> errors = eventValidationService.validateReceiptDateMultiple(multipleData);
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateFutureReceiptDateMultiple() {
+        multipleData.setReceiptDate(FUTURE_RECEIPT_DATE.toString());
+
+        List<String> errors = eventValidationService.validateReceiptDateMultiple(multipleData);
 
         assertEquals(1, errors.size());
         assertEquals(FUTURE_RECEIPT_DATE_ERROR_MESSAGE, errors.get(0));
@@ -206,23 +245,28 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateJurisdictionCodesWithDuplicatesCodes() {
-        List<String> errors = eventValidationService.validateJurisdictionCodes(caseDetails1.getCaseData());
+    public void shouldValidateJurisdictionCodesWithDuplicatesCodesAndExistenceJudgement() {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionCodes(caseDetails1.getCaseData(), errors);
 
-        assertEquals(1, errors.size());
+        assertEquals(2, errors.size());
         assertEquals(DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE + " \"COM\" in Jurisdiction 3 - \"DOD\" in Jurisdiction 5 ", errors.get(0));
+        assertEquals(JURISDICTION_CODES_DELETED_ERROR + "[CCP, ADG]", errors.get(1));
     }
 
     @Test
     public void shouldValidateJurisdictionCodesWithUniqueCodes() {
-        List<String> errors = eventValidationService.validateJurisdictionCodes(caseDetails2.getCaseData());
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionCodes(caseDetails2.getCaseData(), errors);
 
         assertEquals(0, errors.size());
     }
 
     @Test
     public void shouldValidateJurisdictionCodesWithEmptyCodes() {
-        List<String> errors = eventValidationService.validateJurisdictionCodes(caseDetails3.getCaseData());
+        List<String> errors = new ArrayList<>();
+        caseDetails3.getCaseData().setJudgementCollection(new ArrayList<>());
+        eventValidationService.validateJurisdictionCodes(caseDetails3.getCaseData(), errors);
 
         assertEquals(0, errors.size());
     }
@@ -249,6 +293,24 @@ public class EventValidationServiceTest {
         assertEquals(1, errors.size());
         assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
     }
+
+    @Test
+    public void shouldValidateJurisdictionCodesWithinJudgement() {
+        List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(caseDetails1.getCaseData());
+
+        assertEquals(2, errors.size());
+        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, ADG, ADG, CCP, CCP", errors.get(0));
+        assertEquals(DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR + "Case Management - [COM] & Reserved - [CCP, ADG]", errors.get(1));
+    }
+
+    @Test
+    public void shouldValidateJurisdictionCodesWithinJudgementEmptyJurCodesCollection() {
+        List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(caseDetails3.getCaseData());
+
+        assertEquals(1, errors.size());
+        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, COM", errors.get(0));
+    }
+
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
         String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()

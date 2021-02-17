@@ -53,6 +53,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String POST_DEFAULT_VALUES_URL = "/postDefaultValues";
     private static final String PRE_ACCEPT_CASE_URL = "/preAcceptCase";
     private static final String AMEND_CASE_DETAILS_URL = "/amendCaseDetails";
+    private static final String AMEND_CLAIMANT_DETAILS_URL = "/amendClaimantDetails";
     private static final String AMEND_RESPONDENT_DETAILS_URL = "/amendRespondentDetails";
     private static final String AMEND_RESPONDENT_REPRESENTATIVE_URL = "/amendRespondentRepresentative";
     private static final String UPDATE_HEARING_URL = "/updateHearing";
@@ -63,12 +64,14 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String AMEND_CASE_STATE_URL = "/amendCaseState";
     private static final String MID_RESPONDENT_ADDRESS_URL = "/midRespondentAddress";
     private static final String JURISDICTION_VALIDATION_URL = "/jurisdictionValidation";
+    private static final String JUDGEMENT_VALIDATION_URL = "/judgmentValidation";
     private static final String GENERATE_CASE_REF_NUMBERS_URL = "/generateCaseRefNumbers";
     private static final String MID_RESPONDENT_ECC_URL = "/midRespondentECC";
     private static final String CREATE_ECC_URL = "/createECC";
     private static final String LINK_ORIGINAL_CASE_ECC_URL = "/linkOriginalCaseECC";
     private static final String SINGLE_CASE_MULTIPLE_MID_EVENT_VALIDATION_URL = "/singleCaseMultipleMidEventValidation";
     private static final String HEARING_MID_EVENT_VALIDATION_URL = "/hearingMidEventValidation";
+    private static final String BF_ACTIONS_URL = "/bfActions";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -274,6 +277,19 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void amendClaimantDetails() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(AMEND_CLAIMANT_DETAILS_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void amendRespondentDetails() throws Exception {
         when(caseManagementForCaseWorkerService.struckOutRespondents(isA(CCDRequest.class))).thenReturn(submitEvent.getCaseData());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
@@ -408,6 +424,19 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void judgementValidation() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(JUDGEMENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", notNullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void midRespondentAddressPopulated() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MID_RESPONDENT_ADDRESS_URL)
@@ -506,6 +535,19 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void bfActions() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(BF_ACTIONS_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void createCaseError400() throws Exception {
         mvc.perform(post(CREATION_CASE_URL)
                 .content("error")
@@ -571,6 +613,15 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void amendCaseDetailsError400() throws Exception {
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void amendClaimantDetailsError400() throws Exception {
+        mvc.perform(post(AMEND_CLAIMANT_DETAILS_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -668,6 +719,15 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void judgementValidationError400() throws Exception {
+        mvc.perform(post(JUDGEMENT_VALIDATION_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void midRespondentECCError400() throws Exception {
         mvc.perform(post(MID_RESPONDENT_ECC_URL)
                 .content("error")
@@ -706,6 +766,15 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void hearingMidEventValidationError400() throws Exception {
         mvc.perform(post(HEARING_MID_EVENT_VALIDATION_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void bfActionsError400() throws Exception {
+        mvc.perform(post(BF_ACTIONS_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -949,6 +1018,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void amendClaimantDetailsForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(AMEND_CLAIMANT_DETAILS_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void amendRespondentDetailsForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(AMEND_RESPONDENT_DETAILS_URL)
@@ -1049,6 +1128,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void judgementValidationForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(JUDGEMENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void midRespondentAddressPopulatedForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(MID_RESPONDENT_ADDRESS_URL)
@@ -1112,6 +1201,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void hearingMidEventValidationForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(HEARING_MID_EVENT_VALIDATION_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void bfActionsForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(BF_ACTIONS_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

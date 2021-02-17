@@ -6,13 +6,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
-import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,13 +22,11 @@ import static org.mockito.Mockito.*;
 public class MultipleAmendCaseIdsServiceTest {
 
     @Mock
-    private CreateUpdatesBusSender createUpdatesBusSender;
-    @Mock
     private ExcelReadingService excelReadingService;
     @Mock
     private ExcelDocManagementService excelDocManagementService;
     @Mock
-    private UserService userService;
+    private MultipleHelperService multipleHelperService;
     @InjectMocks
     private MultipleAmendCaseIdsService multipleAmendCaseIdsService;
 
@@ -45,8 +39,6 @@ public class MultipleAmendCaseIdsServiceTest {
         multipleObjects = MultipleUtil.getMultipleObjectsAll();
         multipleDetails = new MultipleDetails();
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
-        UserDetails userDetails = HelperTest.getUserDetails();
-        when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         userToken = "authString";
     }
 
@@ -63,6 +55,19 @@ public class MultipleAmendCaseIdsServiceTest {
         verifyNoMoreInteractions(excelDocManagementService);
     }
 
+    @Test
+    public void bulkAmendCaseIdsLogicNewLeadAsEmptyExcel() {
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(new TreeMap<>());
+        multipleAmendCaseIdsService.bulkAmendCaseIdsLogic(userToken,
+                multipleDetails,
+                new ArrayList<>());
+        verify(excelDocManagementService, times(1)).generateAndUploadExcel(getNewMultipleObjectsList(),
+                userToken,
+                multipleDetails.getCaseData());
+        verifyNoMoreInteractions(excelDocManagementService);
+    }
+
     private List<MultipleObject> getMultipleObjectsList() {
         return new ArrayList<>(Arrays.asList(
                 MultipleObject.builder()
@@ -70,6 +75,50 @@ public class MultipleAmendCaseIdsServiceTest {
                         .ethosCaseRef("245000/2020")
                         .flag1("AA")
                         .flag2("BB")
+                        .flag3("")
+                        .flag4("")
+                        .build(),
+                MultipleObject.builder()
+                        .subMultiple("")
+                        .ethosCaseRef("245001/2020")
+                        .flag1("")
+                        .flag2("")
+                        .flag3("")
+                        .flag4("")
+                        .build(),
+                MultipleObject.builder()
+                        .subMultiple("245003")
+                        .ethosCaseRef("245003/2020")
+                        .flag1("AA")
+                        .flag2("EE")
+                        .flag3("")
+                        .flag4("")
+                        .build(),
+                MultipleObject.builder()
+                        .subMultiple("245002")
+                        .ethosCaseRef("245004/2020")
+                        .flag1("AA")
+                        .flag2("BB")
+                        .flag3("")
+                        .flag4("")
+                        .build(),
+                MultipleObject.builder()
+                        .subMultiple("SubMultiple")
+                        .ethosCaseRef("245005/2020")
+                        .flag1("AA")
+                        .flag2("BB")
+                        .flag3("")
+                        .flag4("")
+                        .build()));
+    }
+
+    private List<MultipleObject> getNewMultipleObjectsList() {
+        return new ArrayList<>(Arrays.asList(
+                MultipleObject.builder()
+                        .subMultiple("")
+                        .ethosCaseRef("245000/2020")
+                        .flag1("")
+                        .flag2("")
                         .flag3("")
                         .flag4("")
                         .build(),

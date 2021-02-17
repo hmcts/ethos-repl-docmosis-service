@@ -97,6 +97,48 @@
         }
       }
     ],
+    "judgementCollection": [
+      {
+        "id": "a1e2b95e-4873-4f43-b7b4-65808c422de0",
+        "value": {
+          "judgement_type": "Case Management",
+          "judgment_notes": null,
+          "Judgement_costs": {
+            "costs_question": null
+          },
+          "reconsiderations": {
+            "reconsideration": null
+          },
+          "judgement_details": {
+            "awardMade": null,
+            "folio_number": null,
+            "reasons_given": null,
+            "non-financial_award": null,
+            "certificateOfCorrection": null
+          },
+          "jurisdictionCodes": [
+            {
+              "id": "046e289b-d7f2-4a67-8f45-f115926b136e",
+              "value": {
+                "judgmentOutcome": null,
+                "juridictionCodesList": "ADG"
+              }
+            },
+            {
+              "id": "2c46ec34-9bc5-4ff1-8b17-61d80f63b5dc",
+              "value": {
+                "judgmentOutcome": null,
+                "juridictionCodesList": "COM"
+              }
+            }
+          ],
+          "date_judgment_made": "2000-01-01",
+          "date_judgment_sent": "2000-01-01",
+          "liability_optional": null,
+          "non_hearing_judgment": "Yes"
+        }
+      }
+    ],
     "locationType": "Manchester",
     "multipleReference": "No",
     "multipleType": "No",

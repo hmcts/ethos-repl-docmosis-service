@@ -6,20 +6,23 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
-import uk.gov.hmcts.ecm.common.model.schedule.items.ScheduleRespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleRespondentSumType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.TreeMap;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIST_CASES_CONFIG;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleScheduleService.SCHEDULE_LIMIT_CASES;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleScheduleServiceTest {
@@ -88,8 +91,8 @@ public class MultipleScheduleServiceTest {
 
     @Test
     public void bulkScheduleLogicFlagsMultipleRespondents() {
-        ScheduleRespondentSumTypeItem respondentSumTypeItem = new ScheduleRespondentSumTypeItem();
-        respondentSumTypeItem.setValue(new ScheduleRespondentSumType());
+        RespondentSumTypeItem respondentSumTypeItem = new RespondentSumTypeItem();
+        respondentSumTypeItem.setValue(new RespondentSumType());
         schedulePayloadEvents.iterator().next().getSchedulePayloadES().getRespondentCollection().add(respondentSumTypeItem);
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjectsFlags);
@@ -137,6 +140,31 @@ public class MultipleScheduleServiceTest {
                 multipleDetails,
                 new ArrayList<>());
         verifyNoMoreInteractions(excelDocManagementService);
+    }
+
+    @Test
+    public void bulkScheduleLogicCasesFilteredExceeded() {
+        List<String> errors = new ArrayList<>();
+        multipleDetails.getCaseData().setScheduleDocName(LIST_CASES_CONFIG);
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(createBigTreeMap());
+        multipleScheduleService.bulkScheduleLogic(userToken,
+                multipleDetails,
+                errors);
+        assertEquals(1, errors.size());
+        assertEquals("Number of cases exceed the limit of " + SCHEDULE_LIMIT_CASES, errors.get(0));
+
+    }
+
+    private TreeMap<String, Object> createBigTreeMap() {
+
+        TreeMap<String, Object> treeMap= new TreeMap<>();
+
+        for (int i = 0; i < SCHEDULE_LIMIT_CASES+1 ; i++) {
+            treeMap.put(String.valueOf(i), "Dummy");
+        }
+
+        return treeMap;
     }
 
 }

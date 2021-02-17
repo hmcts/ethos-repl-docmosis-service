@@ -10,6 +10,8 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -120,9 +122,25 @@ public class ListingHelper {
 
         listingType.setHearingNotes(!isNullOrEmpty(hearingType.getHearingNotes()) ? hearingType.getHearingNotes() : " ");
         listingType.setHearingDay(index+1 + " of " + hearingCollectionSize);
-        listingType.setEstHearingLength(!isNullOrEmpty(Helper.getHearingDuration(hearingType)) ? Helper.getHearingDuration(hearingType) : " ");
+        listingType.setEstHearingLength(!isNullOrEmpty(DocumentHelper.getHearingDuration(hearingType)) ? DocumentHelper.getHearingDuration(hearingType) : " ");
 
         return getClaimantRespondentDetails(listingType, listingData, caseData);
+    }
+
+    private static String getHearingRoom(DateListedType dateListedType) {
+        for (Method m: dateListedType.getClass().getDeclaredMethods()) {
+            if (m.getName().startsWith("getHearingRoom")) {
+                try {
+                    String room = (String)m.invoke(dateListedType);
+                    if (!isNullOrEmpty(room)) {
+                        return room;
+                    }
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    log.error("Error getting hearing room:", e);
+                }
+            }
+        }
+        return " ";
     }
 
     private static ListingType getClaimantRespondentDetails(ListingType listingType, ListingData listingData, CaseData caseData) {
@@ -160,9 +178,9 @@ public class ListingHelper {
                     caseData.getRespondentCollection().get(0).getValue().getRespondentName() : " ");
             listingType.setRespondentTown(caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty() &&
                     caseData.getRespondentCollection().get(0).getValue() != null &&
-                    caseData.getRespondentCollection().get(0).getValue().getRespondentAddress() != null &&
-                    caseData.getRespondentCollection().get(0).getValue().getRespondentAddress().getPostTown() != null ?
-                    caseData.getRespondentCollection().get(0).getValue().getRespondentAddress().getPostTown() : " ");
+                    DocumentHelper.getRespondentAddressET3(caseData.getRespondentCollection().get(0).getValue()) != null &&
+                    DocumentHelper.getRespondentAddressET3(caseData.getRespondentCollection().get(0).getValue()).getPostTown() != null ?
+                    DocumentHelper.getRespondentAddressET3(caseData.getRespondentCollection().get(0).getValue()).getPostTown() : " ");
             listingType.setRespondentOthers(!isNullOrEmpty(getRespOthersName(caseData)) ? getRespOthersName(caseData) : " ");
             listingType.setClaimantRepresentative(caseData.getRepresentativeClaimantType() != null && caseData.getRepresentativeClaimantType().getNameOfOrganisation() != null ?
                     caseData.getRepresentativeClaimantType().getNameOfOrganisation() : " ");
@@ -359,62 +377,6 @@ public class ListingHelper {
             return IT57_TEMPLATE;
         }
         return "No document found";
-    }
-
-    private static String getHearingRoom(DateListedType dateListedType) {
-        if (!isNullOrEmpty(dateListedType.getHearingRoomGlasgow())) {
-            return dateListedType.getHearingRoomGlasgow();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomCambeltown())) {
-            return dateListedType.getHearingRoomCambeltown();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomDumfries())) {
-            return dateListedType.getHearingRoomDumfries();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomOban())) {
-            return dateListedType.getHearingRoomOban();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomFortWilliam())) {
-            return dateListedType.getHearingRoomFortWilliam();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomKirkcubright())) {
-            return dateListedType.getHearingRoomKirkcubright();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomLockmaddy())) {
-            return dateListedType.getHearingRoomLockmaddy();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomPortree())) {
-            return dateListedType.getHearingRoomPortree();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomStirling())) {
-            return dateListedType.getHearingRoomStirling();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomStornowaySC())) {
-            return dateListedType.getHearingRoomStornowaySC();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomStranraer())) {
-            return dateListedType.getHearingRoomStranraer();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomAberdeen())) {
-            return dateListedType.getHearingRoomAberdeen();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomLerwick())) {
-            return dateListedType.getHearingRoomLerwick();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomRRShetland())) {
-            return dateListedType.getHearingRoomRRShetland();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomStornoway())) {
-            return dateListedType.getHearingRoomStornoway();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomWick())) {
-            return dateListedType.getHearingRoomWick();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomInverness())) {
-            return dateListedType.getHearingRoomInverness();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomKirkawall())) {
-            return dateListedType.getHearingRoomKirkawall();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomM())) {
-            return dateListedType.getHearingRoomM();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomL())) {
-            return dateListedType.getHearingRoomL();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomCM())) {
-            return dateListedType.getHearingRoomCM();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomCC())) {
-            return dateListedType.getHearingRoomCC();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomCrownCourt())) {
-            return dateListedType.getHearingRoomCrownCourt();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomKendal())) {
-            return dateListedType.getHearingRoomKendal();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomMinshullSt())) {
-            return dateListedType.getHearingRoomMinshullSt();
-        } else if (!isNullOrEmpty(dateListedType.getHearingRoomMancMagistrate())) {
-            return dateListedType.getHearingRoomMancMagistrate();
-        } return " ";
     }
 
     public static Map<String, String> createMap(String key, String value) {

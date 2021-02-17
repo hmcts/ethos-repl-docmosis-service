@@ -11,11 +11,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.*;
 
 import java.io.*;
 import java.net.ConnectException;
@@ -44,7 +42,8 @@ public class TornadoService {
 
     public DocumentInfo documentGeneration(String authToken, CaseData caseData, String caseTypeId,
                                            CorrespondenceType correspondenceType,
-                                           CorrespondenceScotType correspondenceScotType) throws IOException {
+                                           CorrespondenceScotType correspondenceScotType,
+                                           MultipleData multipleData) throws IOException {
         HttpURLConnection conn = null;
         DocumentInfo documentInfo = new DocumentInfo();
         try {
@@ -52,7 +51,7 @@ public class TornadoService {
             log.info("Connected");
             UserDetails userDetails = userService.getUserDetails(authToken);
             String documentName = Helper.getDocumentName(correspondenceType, correspondenceScotType);
-            buildInstruction(conn, caseData, userDetails, caseTypeId, correspondenceType, correspondenceScotType);
+            buildInstruction(conn, caseData, userDetails, caseTypeId, correspondenceType, correspondenceScotType, multipleData);
             documentInfo = checkResponseStatus(authToken, conn, documentName);
         } catch (ConnectException e) {
             log.error("Unable to connect to Docmosis: " + e.getMessage());
@@ -82,11 +81,13 @@ public class TornadoService {
 
     private void buildInstruction(HttpURLConnection conn, CaseData caseData, UserDetails userDetails,
                                   String caseTypeId, CorrespondenceType correspondenceType,
-                                  CorrespondenceScotType correspondenceScotType) {
+                                  CorrespondenceScotType correspondenceScotType,
+                                  MultipleData multipleData) {
 
         try (InputStream venueAddressInputStream = getClass().getClassLoader().getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH)) {
-            StringBuilder sb = Helper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(),
-                    userDetails, caseTypeId, venueAddressInputStream, correspondenceType, correspondenceScotType);
+            StringBuilder sb = DocumentHelper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(),
+                    userDetails, caseTypeId, venueAddressInputStream, correspondenceType,
+                    correspondenceScotType, multipleData);
             //log.info("Sending request: " + sb.toString());
             // send the instruction in UTF-8 encoding so that most character sets are available
             OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);

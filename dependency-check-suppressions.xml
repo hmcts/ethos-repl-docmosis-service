@@ -455,4 +455,8 @@
         <notes><![CDATA[ CVE-2020-29244  ]]></notes>
         <cve>CVE-2020-29244</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2021-24122  ]]></notes>
+        <cve>CVE-2021-24122</cve>
+    </suppress>
 </suppressions>

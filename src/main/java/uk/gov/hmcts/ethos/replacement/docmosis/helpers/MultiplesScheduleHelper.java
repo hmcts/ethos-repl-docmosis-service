@@ -1,11 +1,12 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.gov.hmcts.ecm.common.model.ccd.Address;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.schedule.ScheduleAddress;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
-import uk.gov.hmcts.ecm.common.model.schedule.items.ScheduleRespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantType;
 
@@ -40,7 +41,7 @@ public class MultiplesScheduleHelper {
 
     }
 
-    private static String getRespondentData(List<ScheduleRespondentSumTypeItem> respondentCollection, String field) {
+    private static String getRespondentData(List<RespondentSumTypeItem> respondentCollection, String field) {
 
         if (respondentCollection != null && !respondentCollection.isEmpty()) {
 
@@ -54,7 +55,10 @@ public class MultiplesScheduleHelper {
 
             }
 
-            ScheduleAddress scheduleAddress = respondentCollection.get(0).getValue().getRespondentAddress();
+            ScheduleAddress scheduleAddress = new ScheduleAddress();
+            Address address = DocumentHelper.getRespondentAddressET3(respondentCollection.get(0).getValue());
+            scheduleAddress.setAddressLine1(address.getAddressLine1());
+            scheduleAddress.setPostCode(address.getPostCode());
 
             return getScheduleAddress(field, scheduleAddress);
 
