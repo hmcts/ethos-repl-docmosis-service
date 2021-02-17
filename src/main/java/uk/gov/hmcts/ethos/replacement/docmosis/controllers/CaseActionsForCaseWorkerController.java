@@ -756,7 +756,30 @@ public class CaseActionsForCaseWorkerController {
 
         CaseData caseData =  ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(caseData);
-        log.info("Event fields validation: " + errors);
+
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
+    }
+
+    @PostMapping(value = "/depositValidation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "validates deposit amount and deposit refunded.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> depositValidation(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DEPOSIT VALIDATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData =  ccdRequest.getCaseDetails().getCaseData();
+        List<String> errors = eventValidationService.validateDepositRefunded(caseData);
 
         return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }

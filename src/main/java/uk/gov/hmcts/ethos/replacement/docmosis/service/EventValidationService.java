@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.*;
 import uk.gov.hmcts.ecm.common.model.ccd.types.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
@@ -26,6 +23,9 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRe
 @Service("eventValidationService")
 public class EventValidationService {
 
+    public static final String DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR = "The amount entered for the refund " +
+            "cannot be more than the amount that was deposited";
+
     public List<String> validateReceiptDate(CaseData caseData) {
         List<String> errors = new ArrayList<>();
         LocalDate dateOfReceipt = LocalDate.parse(caseData.getReceiptDate());
@@ -38,8 +38,7 @@ public class EventValidationService {
         }
         if (dateOfReceipt.isAfter(LocalDate.now())) {
             errors.add(FUTURE_RECEIPT_DATE_ERROR_MESSAGE);
-        }
-        else{
+        } else {
             caseData.setTargetHearingDate(dateOfReceipt.plusDays(TARGET_HEARING_DATE_INCREMENT).toString());
         }
         return errors;
@@ -56,7 +55,7 @@ public class EventValidationService {
 
     public List<String> validateActiveRespondents(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        if(getActiveRespondents(caseData).isEmpty()) {
+        if (getActiveRespondents(caseData).isEmpty()) {
             errors.add(EMPTY_RESPONDENT_COLLECTION_ERROR_MESSAGE);
         }
         return errors;
@@ -78,7 +77,7 @@ public class EventValidationService {
 
     public List<String> validateRespRepNames(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        if(caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty()) {
+        if (caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty()) {
             ListIterator<RepresentedTypeRItem> repItr = caseData.getRepCollection().listIterator();
             int index;
             while (repItr.hasNext()) {
@@ -108,14 +107,13 @@ public class EventValidationService {
                                               CorrespondenceScotType correspondenceScotType) {
         List<String> errors = new ArrayList<>();
         String correspondenceHearingNumber = DocumentHelper.getCorrespondenceHearingNumber(correspondenceType, correspondenceScotType);
-        if(correspondenceHearingNumber != null) {
+        if (correspondenceHearingNumber != null) {
             if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
                 HearingType hearingType = DocumentHelper.getHearingByNumber(caseData.getHearingCollection(), correspondenceHearingNumber);
                 if (hearingType.getHearingNumber() == null || !hearingType.getHearingNumber().equals(correspondenceHearingNumber)) {
                     errors.add(HEARING_NUMBER_MISMATCH_ERROR_MESSAGE);
                 }
-            }
-            else {
+            } else {
                 errors.add(EMPTY_HEARING_COLLECTION_ERROR_MESSAGE);
             }
         }
@@ -156,7 +154,7 @@ public class EventValidationService {
             for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
                 counter++;
                 String code = jurCodesTypeItem.getValue().getJuridictionCodesList();
-                if(!uniqueCodes.add(code)){
+                if (!uniqueCodes.add(code)) {
                     duplicateCodes.add(" \"" + code + "\" " + "in Jurisdiction" + " " + counter + " ");
                 }
             }
@@ -177,8 +175,7 @@ public class EventValidationService {
                     break;
                 }
             }
-        }
-        else {
+        } else {
             errors.add(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
         }
         return errors;
@@ -198,7 +195,7 @@ public class EventValidationService {
     private void validateResponseReceivedDateDate(RespondentSumType respondentSumType, List<String> errors, int index) {
         if (respondentSumType.getResponseReceivedDate() != null) {
             LocalDate responseReceivedDate = LocalDate.parse(respondentSumType.getResponseReceivedDate());
-            if(responseReceivedDate.isAfter(LocalDate.now())) {
+            if (responseReceivedDate.isAfter(LocalDate.now())) {
                 String respondentName = respondentSumType.getRespondentName() != null ? respondentSumType.getRespondentName() : "missing name";
                 errors.add(FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE + " for respondent " + index + " (" + respondentName + ")");
             }
@@ -264,6 +261,23 @@ public class EventValidationService {
             }
 
             getJurisdictionCodesErrors(errors, jurCodesDoesNotExist, duplicatedJurCodesMap);
+        }
+        return errors;
+    }
+
+    public List<String> validateDepositRefunded(CaseData caseData) {
+        List<String> errors = new ArrayList<>();
+        if (caseData.getDepositCollection() != null && !caseData.getDepositCollection().isEmpty()) {
+
+            for (DepositTypeItem depositTypeItem : caseData.getDepositCollection()) {
+                if (!isNullOrEmpty(depositTypeItem.getValue().getDepositAmountRefunded())) {
+                    if (isNullOrEmpty(depositTypeItem.getValue().getDepositAmount()) ||
+                            Integer.parseInt(depositTypeItem.getValue().getDepositAmountRefunded())
+                            > Integer.parseInt(depositTypeItem.getValue().getDepositAmount())) {
+                        errors.add(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR);
+                    }
+                }
+            }
         }
         return errors;
     }

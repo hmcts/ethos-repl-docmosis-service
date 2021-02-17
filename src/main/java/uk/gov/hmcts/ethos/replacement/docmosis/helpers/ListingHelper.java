@@ -111,7 +111,7 @@ public class ListingHelper {
         listingType.setJurisdictionCodesList(BulkHelper.getJurCodesCollection(caseData.getJurCodesCollection()));
         listingType.setHearingType(!isNullOrEmpty(hearingType.getHearingType()) ? hearingType.getHearingType() : " ");
         listingType.setPositionType(!isNullOrEmpty(caseData.getPositionType()) ? caseData.getPositionType() : " ");
-        listingType.setHearingJudgeName(!isNullOrEmpty(dateListedType.getHearingJudgeName()) ? dateListedType.getHearingJudgeName() : " ");
+        listingType.setHearingJudgeName(!isNullOrEmpty(hearingType.getJudge()) ? hearingType.getJudge() : " ");
         listingType.setHearingEEMember(!isNullOrEmpty(hearingType.getHearingEEMember()) ? hearingType.getHearingEEMember() : " ");
         listingType.setHearingERMember(!isNullOrEmpty(hearingType.getHearingERMember()) ? hearingType.getHearingERMember() : " ");
         listingType.setHearingClerk(!isNullOrEmpty(dateListedType.getHearingClerk()) ? dateListedType.getHearingClerk() : " ");
