@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -37,6 +38,9 @@ public class MultipleHelperService {
     private final CreateUpdatesBusSender createUpdatesBusSender;
     private final UserService userService;
 
+    @Value("${ccd_gateway_base_url}")
+    private String ccdGatewayBaseUrl;
+
     @Autowired
     public MultipleHelperService(SingleCasesReadingService singleCasesReadingService,
                                  MultipleCasesReadingService multipleCasesReadingService,
@@ -68,6 +72,7 @@ public class MultipleHelperService {
             if (submitEvent != null) {
 
                 multipleData.setLeadCase(MultiplesHelper.generateLeadMarkUp(
+                        ccdGatewayBaseUrl,
                         String.valueOf(submitEvent.getCaseId()),
                         newLeadCase));
 
@@ -80,6 +85,7 @@ public class MultipleHelperService {
         } else {
 
             multipleData.setLeadCase(MultiplesHelper.generateLeadMarkUp(
+                    ccdGatewayBaseUrl,
                     caseId,
                     newLeadCase));
 
