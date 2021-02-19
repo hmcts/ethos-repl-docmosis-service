@@ -98,7 +98,7 @@ public class MultipleCreationMidEventValidationServiceTest {
         when(singleCasesReadingService.retrieveSingleCases(userToken,
                 multipleDetails.getCaseTypeId(),
                 MultiplesHelper.getCaseIds(multipleDetails.getCaseData()),
-                multipleDetails.getCaseData().getMultipleSource()))
+                MANUALLY_CREATED_POSITION))
                 .thenReturn(getSubmitEvents());
 
         multipleCreationMidEventValidationService.multipleCreationValidationLogic(
