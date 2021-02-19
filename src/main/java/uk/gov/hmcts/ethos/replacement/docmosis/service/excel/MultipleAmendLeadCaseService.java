@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.TreeMap;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_IS_NOT_IN_MULTIPLE_ERROR;
 
@@ -16,30 +18,15 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_IS_NOT_IN_MULT
 @Service("multipleAmendLeadCaseService")
 public class MultipleAmendLeadCaseService {
 
-    private final ExcelReadingService excelReadingService;
-    private final ExcelDocManagementService excelDocManagementService;
     private final MultipleHelperService multipleHelperService;
 
     @Autowired
-    public MultipleAmendLeadCaseService(ExcelReadingService excelReadingService,
-                                        ExcelDocManagementService excelDocManagementService,
-                                        MultipleHelperService multipleHelperService) {
-        this.excelReadingService = excelReadingService;
-        this.excelDocManagementService = excelDocManagementService;
+    public MultipleAmendLeadCaseService(MultipleHelperService multipleHelperService) {
         this.multipleHelperService = multipleHelperService;
     }
 
-    public void bulkAmendLeadCaseLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
-
-        log.info("Read excel to amend lead case");
-
-        TreeMap<String, Object> multipleObjects =
-                excelReadingService.readExcel(
-                        userToken,
-                        MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
-                        errors,
-                        multipleDetails.getCaseData(),
-                        FilterExcelType.ALL);
+    public List<?> bulkAmendLeadCaseLogic(String userToken, MultipleDetails multipleDetails,
+                                          List<String> errors, TreeMap<String, Object> multipleObjects) {
 
         String amendLeadCase  = multipleDetails.getCaseData().getAmendLeadCase();
 
@@ -50,11 +37,6 @@ public class MultipleAmendLeadCaseService {
             multipleHelperService.sendUpdatesToSinglesLogic(userToken, multipleDetails,
                     errors, amendLeadCase, multipleObjects, new ArrayList<>(Collections.singletonList(amendLeadCase)));
 
-            log.info("Create a new Excel updating the new lead case");
-
-            excelDocManagementService.generateAndUploadExcel(new ArrayList<>(multipleObjects.values()),
-                    userToken, multipleDetails.getCaseData());
-
         } else {
 
             log.info("Case is not part of the multiple");
@@ -63,9 +45,7 @@ public class MultipleAmendLeadCaseService {
 
         }
 
-        log.info("Clearing the payload");
-
-        multipleDetails.getCaseData().setAmendLeadCase(null);
+        return new ArrayList<>(multipleObjects.values());
 
     }
 

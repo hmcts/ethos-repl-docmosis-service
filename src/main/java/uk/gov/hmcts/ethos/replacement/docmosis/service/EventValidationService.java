@@ -23,9 +23,6 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRe
 @Service("eventValidationService")
 public class EventValidationService {
 
-    public static final String DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR = "The amount entered for the refund " +
-            "cannot be more than the amount that was deposited";
-
     public List<String> validateReceiptDate(CaseData caseData) {
         List<String> errors = new ArrayList<>();
         LocalDate dateOfReceipt = LocalDate.parse(caseData.getReceiptDate());

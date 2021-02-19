@@ -5,10 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -16,33 +17,15 @@ import java.util.stream.Stream;
 @Service("multipleAmendCaseIdsService")
 public class MultipleAmendCaseIdsService {
 
-    private final ExcelReadingService excelReadingService;
-    private final ExcelDocManagementService excelDocManagementService;
     private final MultipleHelperService multipleHelperService;
 
     @Autowired
-    public MultipleAmendCaseIdsService(ExcelReadingService excelReadingService,
-                                       ExcelDocManagementService excelDocManagementService,
-                                       MultipleHelperService multipleHelperService) {
-        this.excelReadingService = excelReadingService;
-        this.excelDocManagementService = excelDocManagementService;
+    public MultipleAmendCaseIdsService(MultipleHelperService multipleHelperService) {
         this.multipleHelperService = multipleHelperService;
     }
 
-    public void bulkAmendCaseIdsLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
-
-        log.info("Read excel to amend caseIds");
-
-        TreeMap<String, Object> multipleObjects =
-                excelReadingService.readExcel(
-                        userToken,
-                        MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
-                        errors,
-                        multipleDetails.getCaseData(),
-                        FilterExcelType.ALL);
-
-        log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
-        log.info("MultipleObjectsValues: " + multipleObjects.values());
+    public List<MultipleObject> bulkAmendCaseIdsLogic(String userToken, MultipleDetails multipleDetails,
+                                                      List<String> errors, TreeMap<String, Object> multipleObjects) {
 
         List<String> newEthosCaseRefCollection = MultiplesHelper.getCaseIds(multipleDetails.getCaseData());
 
@@ -61,15 +44,7 @@ public class MultipleAmendCaseIdsService {
 
         log.info("Create a new Excel");
 
-        List<MultipleObject> newMultipleObjects = generateMultipleObjects(unionLists, multipleObjects);
-
-        log.info("New Multiple Objects: " + newMultipleObjects);
-
-        excelDocManagementService.generateAndUploadExcel(newMultipleObjects, userToken, multipleDetails.getCaseData());
-
-        log.info("Clearing the payload");
-
-        multipleDetails.getCaseData().setCaseIdCollection(null);
+        return generateMultipleObjects(unionLists, multipleObjects);
 
     }
 

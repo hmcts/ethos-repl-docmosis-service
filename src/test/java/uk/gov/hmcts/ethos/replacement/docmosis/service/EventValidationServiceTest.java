@@ -19,7 +19,6 @@ import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
 
 @RunWith(SpringRunner.class)
 public class EventValidationServiceTest {

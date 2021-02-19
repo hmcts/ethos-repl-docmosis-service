@@ -10,21 +10,17 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_IS_NOT_IN_MULTIPLE_ERROR;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleAmendLeadCaseServiceTest {
 
-    @Mock
-    private ExcelReadingService excelReadingService;
-    @Mock
-    private ExcelDocManagementService excelDocManagementService;
     @Mock
     private MultipleHelperService multipleHelperService;
     @InjectMocks
@@ -46,27 +42,30 @@ public class MultipleAmendLeadCaseServiceTest {
     public void bulkAmendLeadCaseLogicDoesNotExist() {
         List<String> errors = new ArrayList<>();
         multipleDetails.getCaseData().setAmendLeadCase("245020/2020");
-        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
-                .thenReturn(multipleObjects);
         multipleAmendLeadCaseService.bulkAmendLeadCaseLogic(userToken,
                 multipleDetails,
-                errors);
+                errors,
+                multipleObjects);
         assertEquals(1, errors.size());
         assertEquals(CASE_IS_NOT_IN_MULTIPLE_ERROR, errors.get(0));
     }
 
     @Test
     public void bulkAmendLeadCaseLogicDifferentLead() {
-        multipleDetails.getCaseData().setAmendLeadCase("245000/2020");
-        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
-                .thenReturn(multipleObjects);
+        String amendLeadCase = "245000/2020";
+        multipleDetails.getCaseData().setAmendLeadCase(amendLeadCase);
         multipleAmendLeadCaseService.bulkAmendLeadCaseLogic(userToken,
                 multipleDetails,
-                new ArrayList<>());
-        verify(excelDocManagementService, times(1)).generateAndUploadExcel(new ArrayList<>(multipleObjects.values()),
+                new ArrayList<>(),
+                multipleObjects);
+        verify(multipleHelperService, times(1)).sendUpdatesToSinglesLogic(
                 userToken,
-                multipleDetails.getCaseData());
-        verifyNoMoreInteractions(excelDocManagementService);
+                multipleDetails,
+                new ArrayList<>(),
+                amendLeadCase,
+                multipleObjects,
+                new ArrayList<>(Collections.singletonList(amendLeadCase)));
+        verifyNoMoreInteractions(multipleHelperService);
     }
 
 }

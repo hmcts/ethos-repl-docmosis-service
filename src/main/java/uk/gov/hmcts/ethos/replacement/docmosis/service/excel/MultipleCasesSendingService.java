@@ -21,7 +21,6 @@ public class MultipleCasesSendingService {
     public void sendUpdateToMultiple(String userToken, String caseTypeId, String jurisdiction,
                                      MultipleData multipleData, String caseId) {
 
-
         try {
             CCDRequest returnedRequest = ccdClient.startBulkAmendEventForCase(
                     userToken,
