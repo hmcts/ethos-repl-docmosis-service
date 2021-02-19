@@ -82,6 +82,7 @@ public class MultipleAmendService {
 
         multipleDetails.getCaseData().setAmendLeadCase(null);
         multipleDetails.getCaseData().setCaseIdCollection(null);
+        multipleDetails.getCaseData().setTypeOfAmendmentMSL(null);
 
     }
 
