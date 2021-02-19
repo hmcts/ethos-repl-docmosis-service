@@ -83,7 +83,13 @@ public class ExcelCreationService {
     private static CellStyle getStyleForLocking(XSSFWorkbook workbook, boolean lead) {
         CellStyle styleForLocking = workbook.createCellStyle();
         Font font = workbook.createFont();
-        font.setColor(lead ? IndexedColors.GREEN.getIndex() : IndexedColors.BLACK.getIndex());
+        font.setColor(IndexedColors.BLACK.getIndex());
+
+        if (lead) {
+            font.setColor(IndexedColors.WHITE.getIndex());
+            styleForLocking.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+            styleForLocking.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        }
 
         styleForLocking.setAlignment(HorizontalAlignment.CENTER);
         styleForLocking.setFont(font);

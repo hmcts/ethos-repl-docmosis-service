@@ -122,9 +122,7 @@ public class ExcelActionsController {
 
         multipleAmendService.bulkAmendMultipleLogic(userToken, multipleDetails, errors);
 
-        return ResponseEntity.ok(MultipleCallbackResponse.builder()
-                .data(multipleDetails.getCaseData())
-                .build());
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
 
     @PostMapping(value = "/amendMultipleAPI", consumes = APPLICATION_JSON_VALUE)
