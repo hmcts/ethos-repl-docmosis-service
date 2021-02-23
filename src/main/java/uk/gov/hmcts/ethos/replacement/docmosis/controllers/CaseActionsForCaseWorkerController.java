@@ -415,52 +415,6 @@ public class CaseActionsForCaseWorkerController {
         return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
-    @PostMapping(value = "/addHearing", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "add hearing details for a single case.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<CCDCallbackResponse> addHearing(
-            @RequestBody CCDRequest ccdRequest,
-            @RequestHeader(value = "Authorization") String userToken) {
-        log.info("ADD HEARING ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        CaseData caseData = caseManagementForCaseWorkerService.addNewHearingItem(ccdRequest);
-
-        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
-    }
-
-    @PostMapping(value = "/hearingItemData", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "fetches hearing details for a single hearing item.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<CCDCallbackResponse> hearingItemData(
-            @RequestBody CCDRequest ccdRequest,
-            @RequestHeader(value = "Authorization") String userToken) {
-        log.info("HEARING ITEM DATA ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        CaseData caseData = caseManagementForCaseWorkerService.fetchHearingItemData(ccdRequest);
-
-        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
-    }
-
     @PostMapping(value = "/amendHearing", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "amend hearing details for a single case.")
     @ApiResponses(value = {
@@ -479,7 +433,8 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = caseManagementForCaseWorkerService.amendHearingItemDetails(ccdRequest);
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.amendHearing(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
 
         return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }

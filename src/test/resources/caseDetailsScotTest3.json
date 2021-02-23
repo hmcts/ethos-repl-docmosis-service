@@ -72,6 +72,46 @@
         }
       }
     ],
+    "hearingCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "1",
+          "Hearing_Aberdeen": "Aberdeen",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-01T12:11:00.000",
+                "Hearing_reserved_judgement": ""
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "2",
+          "Hearing_Glasgow": "Glasgow",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-01T12:11:00.000",
+                "Hearing_reserved_judgement": ""
+              }
+            }
+          ]
+        }
+      }
+    ],
     "locationType": "Manchester",
     "multipleReference": "No",
     "multipleType": "No",

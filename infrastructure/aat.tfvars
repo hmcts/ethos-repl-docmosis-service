@@ -1,4 +1,4 @@
-tornado_url = "https://docmosis-development.platform.hmcts.net/rs/render"
+tornado_url = "https://docmosis.aat.platform.hmcts.net/rs/render"
 idam_api_url = "https://idam-api.aat.platform.hmcts.net"
 ccd_data_store_api_url = "http://ccd-data-store-api-aat.service.core-compute-aat.internal"
 dm_url = "http://dm-store-aat.service.core-compute-aat.internal"

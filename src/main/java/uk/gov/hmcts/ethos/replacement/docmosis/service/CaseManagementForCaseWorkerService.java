@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
-import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
-import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
@@ -41,9 +39,6 @@ public class CaseManagementForCaseWorkerService {
 
     private static final String MISSING_CLAIMANT = "Missing claimant";
     private static final String MISSING_RESPONDENT = "Missing respondent";
-    private static final String EDIT_HEARING = "Edit hearing";
-    private static final String DELETE_HEARING = "Delete hearing";
-    private static final String ADD_NEW_HEARING_DATE = "Add a new hearing date";
     private static final String MESSAGE = "Failed to link ECC case for case id : ";
     private static final String CASE_NOT_FOUND_MESSAGE = "Case Reference Number not found.";
 
@@ -101,7 +96,7 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public CaseData preAcceptCase(CCDRequest ccdRequest) {
-        CaseData caseData = getCaseData(ccdRequest);
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         if (caseData.getPreAcceptCase() != null) {
             if (caseData.getPreAcceptCase().getCaseAccepted().equals(YES)) {
                 log.info("Accepting preAcceptCase");
@@ -121,7 +116,7 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public CaseData struckOutRespondents(CCDRequest ccdRequest) {
-        CaseData caseData = getCaseData(ccdRequest);
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             List<RespondentSumTypeItem> activeRespondent = new ArrayList<>();
             List<RespondentSumTypeItem> struckRespondent = new ArrayList<>();
@@ -148,239 +143,42 @@ public class CaseManagementForCaseWorkerService {
         return (isNullOrEmpty(caseData.getCurrentPosition()) || !caseData.getPositionType().equals(caseData.getCurrentPosition()));
     }
 
-    public CaseData addNewHearingItem(CCDRequest ccdRequest) {
-        CaseData caseData = getCaseData(ccdRequest);
-
-        List<HearingTypeItem> hearingCollection = (caseData.getHearingCollection() != null ? caseData.getHearingCollection() : new ArrayList<>());
-        HearingTypeItem hearingTypeItem = new HearingTypeItem();
-        HearingType hearingType = createNewHearingItem(caseData);
-        hearingTypeItem.setValue(hearingType);
-        hearingCollection.add(hearingTypeItem);
-        caseData.setHearingCollection(hearingCollection);
-        clearAddHearingFields(caseData);
-        populateHearingSelectionItems(caseData);
-
-        return caseData;
-    }
-
-    public CaseData fetchHearingItemData(CCDRequest ccdRequest) {
-        CaseData caseData = getCaseData(ccdRequest);
-        if(caseData.getHearingActions().equals(EDIT_HEARING) && validHearingCollection(caseData.getHearingCollection())) {
-            String hearingSelectionChoice = caseData.getHearingSelection().getValue().getCode();
+    public void amendHearing(CaseData caseData, String caseTypeId) {
+        if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                HearingType hearingType = hearingTypeItem.getValue();
-                if (hearingType.getHearingNumber() != null && hearingType.getHearingNumber().equals(hearingSelectionChoice)) {
-                    populateTempHearingFields(caseData, hearingType);
-                    break;
+                HearingType hearingType =  hearingTypeItem.getValue();
+                if (hearingTypeItem.getValue().getHearingDateCollection() != null && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty()) {
+                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                        DateListedType dateListedType = dateListedTypeItem.getValue();
+                        if (dateListedType.getHearingStatus() == null) {
+                            dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
+                        }
+                        populateHearingVenueFromHearingLevelToDayLevel(dateListedType, hearingType, caseTypeId);
+                    }
                 }
             }
         }
-
-        return caseData;
     }
 
-    public CaseData amendHearingItemDetails(CCDRequest ccdRequest) {
-        CaseData caseData = getCaseData(ccdRequest);
-
-        switch (caseData.getHearingActions()) {
-            case EDIT_HEARING:
-                editHearingItem(caseData);
-                break;
-            case DELETE_HEARING:
-                deleteHearingItem(caseData);
-                break;
-            default:
-                log.info("Missing action!");
-        }
-        clearAmendHearingFields(caseData);
-        return caseData;
-    }
-
-    private HearingType createNewHearingItem(CaseData caseData) {
-        HearingType hearingType = new HearingType();
-
-        List<DateListedTypeItem> hearingDateCollection = new ArrayList<>() ;
-        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
-        DateListedType dateListedType = new DateListedType();
-        dateListedType.setListedDate(caseData.getListedDate());
-        dateListedTypeItem.setValue(dateListedType);
-        hearingDateCollection.add(dateListedTypeItem);
-
-        hearingType.setHearingNumber(caseData.getHearingNumbers());
-        hearingType.setHearingType(caseData.getHearingTypes());
-        hearingType.setHearingPublicPrivate(caseData.getHearingPublicPrivate());
-        hearingType.setHearingVenue(caseData.getHearingVenue().getValue().getLabel());
-        hearingType.setHearingEstLengthNum(caseData.getHearingEstLengthNum());
-        hearingType.setHearingEstLengthNumType(caseData.getHearingEstLengthNumType());
-        hearingType.setHearingSitAlone(caseData.getHearingSitAlone());
-        hearingType.setHearingStage(caseData.getHearingStage());
-        hearingType.setHearingDateCollection(hearingDateCollection);
-        hearingType.setHearingNotes(caseData.getHearingNotes());
-
-        return  hearingType;
-    }
-
-    private void clearAddHearingFields(CaseData caseData) {
-        caseData.setHearingNumbers(null);
-        caseData.setHearingTypes(null);
-        caseData.setHearingPublicPrivate(null);
-        caseData.setHearingVenue(null);
-        caseData.setHearingEstLengthNum(null);
-        caseData.setHearingEstLengthNumType(null);
-        caseData.setHearingSitAlone(null);
-        caseData.setHearingStage(null);
-        caseData.setListedDate(null);
-        caseData.setHearingNotes(null);
-    }
-
-    private void populateHearingSelectionItems(CaseData caseData) {
-        if (validHearingCollection(caseData.getHearingCollection())) {
-            List<DynamicValueType> hearingsListItems = createDynamicHearingSelectionFixedList(caseData.getHearingCollection());
-
-            if (!hearingsListItems.isEmpty()) {
-                caseData.setHearingSelection(bindDynamicSelectionFixedList(hearingsListItems));
-            }
-        }
-    }
-
-    private void populateTempHearingFields(CaseData caseData, HearingType hearingType) {
-
-        caseData.setHearingTypes(hearingType.getHearingType());
-        caseData.setHearingSitAlone(hearingType.getHearingSitAlone());
-        caseData.setHearingEEMember(hearingType.getHearingEEMember());
-        caseData.setHearingERMember(hearingType.getHearingERMember());
-
-        if (hearingType.getHearingDateCollection() != null && !hearingType.getHearingDateCollection().isEmpty()) {
-            List<DynamicValueType> hearingDatesListItems = createDynamicHearingDateSelectionFixedList(hearingType.getHearingDateCollection());
-
-            if (!hearingDatesListItems.isEmpty()) {
-                caseData.setHearingDateSelection(bindDynamicSelectionFixedList(hearingDatesListItems));
-            }
-        }
-    }
-
-    private List<DynamicValueType> createDynamicHearingSelectionFixedList(List<HearingTypeItem> hearingCollection) {
-        List<DynamicValueType> listItems = new ArrayList<>();
-
-        for (HearingTypeItem hearingTypeItem : hearingCollection) {
-            HearingType hearingType = hearingTypeItem.getValue();
-            if (hearingType.getHearingNumber() != null) {
-                DynamicValueType dynamicValueType = new DynamicValueType();
-                dynamicValueType.setCode(hearingType.getHearingNumber());
-                dynamicValueType.setLabel(hearingType.getHearingNumber());
-                listItems.add(dynamicValueType);
-            }
-        }
-
-        return listItems;
-    }
-
-    private List<DynamicValueType> createDynamicHearingDateSelectionFixedList(List<DateListedTypeItem> hearingDateCollection) {
-        List<DynamicValueType> listItems = new ArrayList<>();
-
-        DynamicValueType firstDynamicValueType = new DynamicValueType();
-        firstDynamicValueType.setCode(ADD_NEW_HEARING_DATE);
-        firstDynamicValueType.setLabel(ADD_NEW_HEARING_DATE);
-        listItems.add(firstDynamicValueType);
-
-        for (DateListedTypeItem dateListedTypeItem : hearingDateCollection) {
-            DateListedType dateListedType = dateListedTypeItem.getValue();
-            if (dateListedType.getListedDate() != null) {
-                DynamicValueType dynamicValueType = new DynamicValueType();
-                dynamicValueType.setCode(dateListedType.getListedDate());
-                dynamicValueType.setLabel(dateListedType.getListedDate());
-                listItems.add(dynamicValueType);
-            }
-        }
-        return listItems;
-    }
-
-    private DynamicFixedListType bindDynamicSelectionFixedList(List<DynamicValueType> listItems) {
-        DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
-        dynamicFixedListType.setValue(listItems.get(0));
-        dynamicFixedListType.setListItems(listItems);
-        return dynamicFixedListType;
-    }
-
-    private void editHearingItem(CaseData caseData) {
-        HearingTypeItem matchingHearingItem = getMatchingHearingItem(caseData);
-
-        if (matchingHearingItem.getValue() != null) {
-            matchingHearingItem.getValue().setHearingSitAlone(caseData.getHearingSitAlone());
-            matchingHearingItem.getValue().setHearingERMember(caseData.getHearingERMember());
-            matchingHearingItem.getValue().setHearingEEMember(caseData.getHearingEEMember());
-        }
-
-        caseData.getHearingSelection().setValue(caseData.getHearingSelection().getListItems().get(0));
-    }
-
-    private void deleteHearingItem(CaseData caseData) {
-        HearingTypeItem matchingHearingItem = getMatchingHearingItem(caseData);
-
-        if (matchingHearingItem.getValue() != null) {
-            caseData.getHearingCollection().remove(matchingHearingItem);
-        }
-
-        populateHearingSelectionItems(caseData);
-    }
-
-    private HearingTypeItem getMatchingHearingItem(CaseData caseData) {
-        HearingTypeItem matchingHearingItem = new HearingTypeItem();
-        if (validHearingCollection(caseData.getHearingCollection())) {
-            String hearingSelectionChoice = caseData.getHearingSelection().getValue().getCode();
-            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                HearingType hearingType = hearingTypeItem.getValue();
-                if (hearingType.getHearingNumber() != null && hearingType.getHearingNumber().equals(hearingSelectionChoice)) {
-                    return hearingTypeItem;
+    private void populateHearingVenueFromHearingLevelToDayLevel(DateListedType dateListedType, HearingType hearingType, String caseTypeId) {
+        if (caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)) {
+            if (hearingType.getHearingAberdeen() != null) {
+                if (dateListedType.getHearingAberdeen() == null) {
+                    log.info("Adding hearing day level Aberdeen");
+                    dateListedType.setHearingAberdeen(hearingType.getHearingAberdeen());
+                }
+            } else {
+                if (dateListedType.getHearingGlasgow() == null) {
+                    log.info("Adding hearing day level Glasgow");
+                    dateListedType.setHearingGlasgow(hearingType.getHearingGlasgow());
                 }
             }
+        } else {
+            if (dateListedType.getHearingVenueDay() == null) {
+                log.info("Adding hearing day level non Scotland");
+                dateListedType.setHearingVenueDay(hearingType.getHearingVenue());
+            }
         }
-        return matchingHearingItem;
-    }
-
-    private void clearAmendHearingFields(CaseData caseData) {
-        caseData.setHearingActions(null);
-
-        caseData.setHearingTypes(null);
-        caseData.setHearingSitAlone(null);
-        caseData.setHearingERMember(null);
-        caseData.setHearingEEMember(null);
-        caseData.setHearingDatesRequireAmending(null);
-        caseData.setHearingDateSelection(null);
-
-        caseData.setHearingDateActions(null);
-
-        caseData.setListedDate(null);
-        caseData.setHearingStatus(null);
-        caseData.setPostponed_by(null);
-        caseData.setHearingVenue(null);
-        caseData.setHearingRoom(null);
-        caseData.setHearingClerk(null);
-        caseData.setHearingJudge(null);
-
-        caseData.setHearingCaseDisposed(null);
-        caseData.setHearingPartHeard(null);
-        caseData.setHearingReservedJudgement(null);
-        caseData.setAttendeeClaimant(null);
-        caseData.setAttendeeNonAttendees(null);
-        caseData.setAttendeeRespNoRep(null);
-        caseData.setAttendeeRespAndRep(null);
-        caseData.setAttendeeRepOnly(null);
-        caseData.setHearingTimingStart(null);
-        caseData.setHearingTimingBreak(null);
-        caseData.setHearingTimingResume(null);
-        caseData.setHearingTimingFinish(null);
-        caseData.setHearingTimingDuration(null);
-        caseData.setCaseNotes(null);
-    }
-
-    private boolean validHearingCollection(List<HearingTypeItem> hearingCollection) {
-        return hearingCollection != null && !hearingCollection.isEmpty();
-    }
-
-    private CaseData getCaseData(CCDRequest ccdRequest) {
-        CaseDetails caseDetails = ccdRequest.getCaseDetails();
-        return caseDetails.getCaseData();
     }
 
     public CaseData createECC(CaseDetails caseDetails, String authToken, List<String> errors, String callback) {
