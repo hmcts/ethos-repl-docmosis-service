@@ -110,6 +110,44 @@
             }
           ]
         }
+      },
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "3",
+          "Hearing_Edinburgh": "Edinburgh",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-01T12:11:00.000",
+                "Hearing_reserved_judgement": ""
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "4",
+          "Hearing_Dundee": "Dundee",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-01T12:11:00.000",
+                "Hearing_reserved_judgement": ""
+              }
+            }
+          ]
+        }
       }
     ],
     "locationType": "Manchester",

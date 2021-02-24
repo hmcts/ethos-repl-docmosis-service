@@ -167,6 +167,16 @@ public class CaseManagementForCaseWorkerService {
                     log.info("Adding hearing day level Aberdeen");
                     dateListedType.setHearingAberdeen(hearingType.getHearingAberdeen());
                 }
+            } else if (hearingType.getHearingDundee() != null) {
+                if (dateListedType.getHearingDundee() == null) {
+                    log.info("Adding hearing day level Dundee");
+                    dateListedType.setHearingDundee(hearingType.getHearingDundee());
+                }
+            } else if (hearingType.getHearingEdinburgh() != null) {
+                if (dateListedType.getHearingEdinburgh() == null) {
+                    log.info("Adding hearing day level Edinburgh");
+                    dateListedType.setHearingEdinburgh(hearingType.getHearingEdinburgh());
+                }
             } else {
                 if (dateListedType.getHearingGlasgow() == null) {
                     log.info("Adding hearing day level Glasgow");
