@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
@@ -12,6 +13,8 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 @Slf4j
 @Service("multipleAmendCaseIdsService")
@@ -33,11 +36,13 @@ public class MultipleAmendCaseIdsService {
 
         List<String> unionLists = concatNewAndOldCases(multipleObjects, newEthosCaseRefCollection);
 
+        String multipleLeadCase = getCurrentLead(multipleDetails.getCaseData(), unionLists.get(0));
+
         if (!newEthosCaseRefCollection.isEmpty()) {
 
             log.info("Send updates to single cases");
 
-            multipleHelperService.sendUpdatesToSinglesLogic(userToken, multipleDetails, errors, unionLists.get(0),
+            multipleHelperService.sendUpdatesToSinglesLogic(userToken, multipleDetails, errors, multipleLeadCase,
                     multipleObjects, newEthosCaseRefCollection);
 
         }
@@ -45,6 +50,18 @@ public class MultipleAmendCaseIdsService {
         log.info("Create a new Excel");
 
         return generateMultipleObjects(unionLists, multipleObjects);
+
+    }
+
+    private String getCurrentLead(MultipleData multipleData, String newLead) {
+
+        if (!isNullOrEmpty(multipleData.getLeadCase())) {
+
+            return MultiplesHelper.getCurrentLead(multipleData.getLeadCase());
+
+        }
+
+        return newLead;
 
     }
 

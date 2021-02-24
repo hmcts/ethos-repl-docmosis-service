@@ -183,11 +183,9 @@ public class CaseManagementForCaseWorkerService {
                     dateListedType.setHearingGlasgow(hearingType.getHearingGlasgow());
                 }
             }
-        } else {
-            if (dateListedType.getHearingVenueDay() == null) {
-                log.info("Adding hearing day level non Scotland");
-                dateListedType.setHearingVenueDay(hearingType.getHearingVenue());
-            }
+        }
+        if (dateListedType.getHearingVenueDay() == null) {
+            dateListedType.setHearingVenueDay(hearingType.getHearingVenue());
         }
     }
 

@@ -378,7 +378,8 @@ public class CaseManagementForCaseWorkerServiceTest {
         assertNull(caseData.getHearingCollection().get(0).getValue().getHearingDateCollection().get(0).getValue().getHearingGlasgow());
         assertEquals(DUNDEE_OFFICE, caseData.getHearingCollection().get(3).getValue()
                 .getHearingDateCollection().get(0).getValue().getHearingDundee());
-
+        assertEquals(DUNDEE_OFFICE, caseData.getHearingCollection().get(3).getValue()
+                .getHearingDateCollection().get(0).getValue().getHearingVenueDay());
     }
 
     @Test

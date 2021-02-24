@@ -47,6 +47,17 @@ public class MultipleAmendCaseIdsServiceTest {
         assertEquals(multipleObjectList, getMultipleObjectsList());
     }
 
+    @Test
+    public void bulkAmendCaseIdsLogicEmptyLead() {
+        multipleDetails.getCaseData().setLeadCase(null);
+        List<MultipleObject>  multipleObjectList = multipleAmendCaseIdsService.bulkAmendCaseIdsLogic(userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                multipleObjects);
+
+        assertEquals(multipleObjectList, getMultipleObjectsList());
+    }
+
     private List<MultipleObject> getMultipleObjectsList() {
         return new ArrayList<>(Arrays.asList(
                 MultipleObject.builder()

@@ -93,6 +93,7 @@
           "Hearing_type": "Single",
           "hearingNumber": "1",
           "Hearing_venue": "Glasgow",
+          "Hearing_Glasgow": "Glasgow",
           "hearingSitAlone" : "Full Panel",
           "hearingERMember" : "J Lee",
           "hearingEEMember" : "L Hill",
