@@ -120,6 +120,27 @@ public class MultipleBatchUpdate2ServiceTest {
     }
 
     @Test
+    public void batchUpdate2LogicDifferentEmptyMultiple() {
+        when(multipleCasesReadingService.retrieveMultipleCasesWithRetries(userToken,
+                multipleDetails.getCaseTypeId(),
+                "246001")
+        ).thenReturn(submitMultipleEvents);
+        when(multipleHelperService.getLeadCaseFromExcel(anyString(), any(), anyList()))
+                .thenReturn("");
+        multipleDetails.getCaseData().getMoveCases().setConvertToSingle(NO);
+        multipleDetails.getCaseData().getMoveCases().setUpdatedMultipleRef("246001");
+        multipleBatchUpdate2Service.batchUpdate2Logic(userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                multipleObjectsFlags);
+        verify(excelDocManagementService, times(1)).generateAndUploadExcel(
+                anyList(),
+                anyString(),
+                any());
+        verifyNoMoreInteractions(excelDocManagementService);
+    }
+
+    @Test
     public void batchUpdate2LogicDifferentMultipleEmptySubMultiple() {
         when(multipleCasesReadingService.retrieveMultipleCasesWithRetries(userToken,
                 multipleDetails.getCaseTypeId(),

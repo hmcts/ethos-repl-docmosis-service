@@ -170,6 +170,7 @@ public class MultiplesHelper {
         multipleData.setFlag2(null);
         multipleData.setFlag3(null);
         multipleData.setFlag4(null);
+        multipleData.setSubMultiple(null);
 
         multipleData.setManagingOffice(null);
         multipleData.setFileLocation(null);
