@@ -19,7 +19,6 @@ import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService.JURISDICTION_CODES_DELETED_ERROR;
 
 @RunWith(SpringRunner.class)
 public class EventValidationServiceTest {
@@ -311,6 +310,28 @@ public class EventValidationServiceTest {
         assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, COM", errors.get(0));
     }
 
+    @Test
+    public void shouldValidateDepositRefunded() {
+        List<String> errors = eventValidationService.validateDepositRefunded(caseDetails3.getCaseData());
+
+        assertEquals(1, errors.size());
+        assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.get(0));
+    }
+
+    @Test
+    public void shouldValidateNullDepositRefunded() {
+        List<String> errors = eventValidationService.validateDepositRefunded(caseDetails2.getCaseData());
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateDepositRefundedWithNullAmount() {
+        List<String> errors = eventValidationService.validateDepositRefunded(caseDetails1.getCaseData());
+
+        assertEquals(1, errors.size());
+        assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.get(0));
+    }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
         String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()

@@ -90,7 +90,8 @@ public class ExcelDocManagementServiceTest {
                 MultiplesHelper.generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE))
                 .thenReturn(uri);
         when(excelCreationService.writeExcel(multipleCollection,
-                subMultipleCollection))
+                subMultipleCollection,
+                multipleDetails.getCaseData().getLeadCase()))
                 .thenReturn(bytes);
         excelDocManagementService.generateAndUploadExcel(multipleCollection,
                 userToken, multipleDetails.getCaseData());
@@ -98,7 +99,9 @@ public class ExcelDocManagementServiceTest {
                 bytes,
                 MultiplesHelper.generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE);
         verifyNoMoreInteractions(documentManagementService);
-        verify(excelCreationService, times(1)).writeExcel(multipleCollection, subMultipleCollection);
+        verify(excelCreationService, times(1)).writeExcel(multipleCollection,
+                subMultipleCollection,
+                multipleDetails.getCaseData().getLeadCase());
         verifyNoMoreInteractions(excelCreationService);
         assertEquals("3", multipleDetails.getCaseData().getCaseCounter());
     }
@@ -113,7 +116,8 @@ public class ExcelDocManagementServiceTest {
                 MultiplesHelper.generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE))
                 .thenReturn(uri);
         when(excelCreationService.writeExcel(multipleCollection,
-                new ArrayList<>()))
+                new ArrayList<>(),
+                multipleDetails.getCaseData().getLeadCase()))
                 .thenReturn(bytes);
         excelDocManagementService.generateAndUploadExcel(multipleCollection,
                 userToken, multipleDetails.getCaseData());
@@ -121,7 +125,10 @@ public class ExcelDocManagementServiceTest {
                 bytes,
                 MultiplesHelper.generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE);
         verifyNoMoreInteractions(documentManagementService);
-        verify(excelCreationService, times(1)).writeExcel(multipleCollection, new ArrayList<>());
+        verify(excelCreationService, times(1)).writeExcel(
+                multipleCollection,
+                new ArrayList<>(),
+                multipleDetails.getCaseData().getLeadCase());
         verifyNoMoreInteractions(excelCreationService);
     }
 

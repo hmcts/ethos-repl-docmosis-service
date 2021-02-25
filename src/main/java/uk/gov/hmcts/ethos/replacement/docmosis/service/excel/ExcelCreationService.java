@@ -21,7 +21,7 @@ import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NA
 @Service("excelCreationService")
 public class ExcelCreationService {
 
-    public byte[] writeExcel(List<?> multipleCollection, List<String> subMultipleCollection) {
+    public byte[] writeExcel(List<?> multipleCollection, List<String> subMultipleCollection, String leadCaseString) {
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet(SHEET_NAME);
@@ -30,7 +30,7 @@ public class ExcelCreationService {
 
         initializeHeaders(workbook, sheet);
 
-        initializeData(workbook, sheet, multipleCollection, subMultipleCollection);
+        initializeData(workbook, sheet, multipleCollection, subMultipleCollection, leadCaseString);
 
         adjustColumnSize(sheet);
 
@@ -80,10 +80,16 @@ public class ExcelCreationService {
         return styleForUnLocking;
     }
 
-    private static CellStyle getStyleForLocking(XSSFWorkbook workbook) {
+    private static CellStyle getStyleForLocking(XSSFWorkbook workbook, boolean lead) {
         CellStyle styleForLocking = workbook.createCellStyle();
         Font font = workbook.createFont();
         font.setColor(IndexedColors.BLACK.getIndex());
+
+        if (lead) {
+            font.setColor(IndexedColors.WHITE.getIndex());
+            styleForLocking.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+            styleForLocking.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        }
 
         styleForLocking.setAlignment(HorizontalAlignment.CENTER);
         styleForLocking.setFont(font);
@@ -125,7 +131,7 @@ public class ExcelCreationService {
     private void initializeHeaders(XSSFWorkbook workbook, XSSFSheet sheet) {
 
         XSSFRow rowHead = sheet.createRow(0);
-        CellStyle styleForLocking = getStyleForLocking(workbook);
+        CellStyle styleForLocking = getStyleForLocking(workbook, false);
 
         for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
             rowHead.createCell(j).setCellValue(MultiplesHelper.HEADERS.get(j));
@@ -140,10 +146,13 @@ public class ExcelCreationService {
         cell.setCellStyle(style);
     }
 
-    private void initializeData(XSSFWorkbook workbook, XSSFSheet sheet, List<?> multipleCollection, List<String> subMultipleCollection) {
+    private void initializeData(XSSFWorkbook workbook, XSSFSheet sheet, List<?> multipleCollection,
+                                List<String> subMultipleCollection, String leadCaseString) {
 
         CellStyle styleForUnLocking = getStyleForUnLocking(workbook);
-        CellStyle styleForLocking = getStyleForLocking(workbook);
+        CellStyle styleForLocking = getStyleForLocking(workbook, false);
+        CellStyle styleForLockingLead = getStyleForLocking(workbook, true);
+        String leadCase = MultiplesHelper.getCurrentLead(leadCaseString);
 
         if (!multipleCollection.isEmpty()) {
             if (multipleCollection.get(0) instanceof String) {
@@ -172,8 +181,11 @@ public class ExcelCreationService {
                     MultipleObject multipleObject = (MultipleObject) multipleCollection.get(i - 1);
                     for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
                         XSSFRow row = sheet.createRow(i);
-                        createCell(row, j++, multipleObject.getEthosCaseRef(), styleForLocking);
-
+                        if (multipleObject.getEthosCaseRef().equals(leadCase)) {
+                            createCell(row, j++, multipleObject.getEthosCaseRef(), styleForLockingLead);
+                        } else {
+                            createCell(row, j++, multipleObject.getEthosCaseRef(), styleForLocking);
+                        }
                         if (subMultipleCollection.isEmpty()) {
                             createCell(row, j++, multipleObject.getSubMultiple(), styleForLocking);
                         } else {

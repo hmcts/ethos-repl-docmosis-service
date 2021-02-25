@@ -306,12 +306,13 @@ public class DocumentHelper {
     public static HearingType getHearingByNumber(List<HearingTypeItem> hearingCollection, String correspondenceHearingNumber) {
 
         HearingType hearingType = new HearingType();
-        Iterator<HearingTypeItem> itr = hearingCollection.iterator();
 
-        while (itr.hasNext()) {
-            hearingType = itr.next().getValue();
-            if(hearingType.getHearingNumber() != null) {
-                if (hearingType.getHearingNumber().equals(correspondenceHearingNumber)) { break; }
+        for (HearingTypeItem hearingTypeItem : hearingCollection) {
+            hearingType = hearingTypeItem.getValue();
+            if (hearingType.getHearingNumber() != null) {
+                if (hearingType.getHearingNumber().equals(correspondenceHearingNumber)) {
+                    break;
+                }
             }
         }
 
@@ -352,6 +353,7 @@ public class DocumentHelper {
 
     private static String getVenueAddress(HearingType hearingType, String caseTypeId, InputStream venueAddressInputStream) {
 
+        String hearingVenue = getHearingVenue(hearingType, caseTypeId);
         try (Workbook workbook = new XSSFWorkbook(venueAddressInputStream)) {
             Sheet datatypeSheet = workbook.getSheet(caseTypeId);
             if (datatypeSheet != null) {
@@ -360,8 +362,8 @@ public class DocumentHelper {
                     if (currentRow.getRowNum() == 0) {
                         continue;
                     }
-                    String hearingVenue = getCellValue(currentRow.getCell(0));
-                    if (!isNullOrEmpty(hearingVenue) && hearingVenue.equals(hearingType.getHearingVenue())) {
+                    String excelHearingVenue = getCellValue(currentRow.getCell(0));
+                    if (!isNullOrEmpty(excelHearingVenue) && excelHearingVenue.equals(hearingVenue)) {
                         return getCellValue(currentRow.getCell(1));
                     }
                 }
@@ -371,7 +373,25 @@ public class DocumentHelper {
             log.error(VENUE_ADDRESS_OPENING_PROCESSING_ERROR + ex.getMessage());
         }
 
-        return hearingType.getHearingVenue();
+        return hearingVenue;
+    }
+
+    private static String getHearingVenue(HearingType hearingType, String caseTypeId) {
+        String hearingVenueToSearch = hearingType.getHearingVenue();
+        if (caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)) {
+            switch (hearingVenueToSearch) {
+                case ABERDEEN_OFFICE:
+                    return hearingType.getHearingAberdeen();
+                case DUNDEE_OFFICE:
+                    return hearingType.getHearingDundee();
+                case EDINBURGH_OFFICE:
+                    return hearingType.getHearingEdinburgh();
+                default:
+                    return hearingType.getHearingGlasgow();
+            }
+        } else {
+            return hearingVenueToSearch;
+        }
     }
 
     private static String getCellValue(Cell currentCell) {

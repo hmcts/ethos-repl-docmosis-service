@@ -96,7 +96,7 @@ public class ExcelDocManagementService {
     public void writeAndUploadExcelDocument(List<?> multipleCollection, String userToken,
                                             MultipleData multipleData, List<String> subMultipleCollection) {
 
-        byte[] excelBytes = excelCreationService.writeExcel(multipleCollection, subMultipleCollection);
+        byte[] excelBytes = excelCreationService.writeExcel(multipleCollection, subMultipleCollection, multipleData.getLeadCase());
 
         uploadExcelDocument(userToken, multipleData, excelBytes);
 

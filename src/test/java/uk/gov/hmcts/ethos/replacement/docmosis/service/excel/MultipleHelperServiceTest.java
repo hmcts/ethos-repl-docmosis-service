@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
@@ -49,9 +50,12 @@ public class MultipleHelperServiceTest {
     private List<SubmitEvent> submitEventList;
     private List<SubmitMultipleEvent> submitMultipleEvents;
     private TreeMap<String, Object> multipleObjects;
+    private String gatewayURL;
 
     @Before
     public void setUp() {
+        gatewayURL = "https://manage-case.test.platform.hmcts.net";
+        ReflectionTestUtils.setField(multipleHelperService, "ccdGatewayBaseUrl", gatewayURL);
         multipleDetails = new MultipleDetails();
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
         multipleDetails.setCaseTypeId("Manchester_Multiple");
@@ -76,7 +80,7 @@ public class MultipleHelperServiceTest {
                 multipleDetails.getCaseData(),
                 multipleDetails.getCaseData().getLeadCase(),
                 "");
-        assertEquals("<a target=\"_blank\" href=\"/v2/case/1232121232\">21006/2020</a>",
+        assertEquals("<a target=\"_blank\" href=\""+ gatewayURL + "/cases/case-details/1232121232\">21006/2020</a>",
                 multipleDetails.getCaseData().getLeadCase());
     }
 
@@ -93,7 +97,7 @@ public class MultipleHelperServiceTest {
                 multipleDetails.getCaseData(),
                 multipleDetails.getCaseData().getLeadCase(),
                 "12345");
-        assertEquals("<a target=\"_blank\" href=\"/v2/case/12345\">21006/2020</a>",
+        assertEquals("<a target=\"_blank\" href=\""+ gatewayURL + "/cases/case-details/12345\">21006/2020</a>",
                 multipleDetails.getCaseData().getLeadCase());
     }
 
@@ -388,6 +392,50 @@ public class MultipleHelperServiceTest {
                 userToken,
                 multipleDetails.getCaseData(),
                 new ArrayList<>()));
+
+    }
+
+    @Test
+    public void sendUpdatesToSinglesLogicCheckingLead() {
+
+        String leadLink = "<a target=\"_blank\" href=\"https://www-ccd.perftest.platform.hmcts.net/v2/case/1604313560561842\">245007/2020</a>";
+        multipleDetails.getCaseData().setLeadCase(leadLink);
+        String newLeadCase = "245000/2020";
+        SubmitEvent submitEvent = new SubmitEvent();
+        submitEvent.setCaseId(10561843);
+        when(singleCasesReadingService.retrieveSingleCase(userToken, multipleDetails.getCaseTypeId(),
+                newLeadCase, multipleDetails.getCaseData().getMultipleSource()))
+                .thenReturn(submitEvent);
+
+        multipleHelperService.sendUpdatesToSinglesLogic(
+                userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                newLeadCase,
+                multipleObjects,
+                new ArrayList<>(Arrays.asList("245008/2020", "245009/2020")));
+
+        assertEquals("<a target=\"_blank\" href=\""+ gatewayURL + "/cases/case-details/10561843\">245000/2020</a>",
+                multipleDetails.getCaseData().getLeadCase());
+
+    }
+
+    @Test
+    public void sendUpdatesToSinglesLogicCheckingSameLead() {
+
+        String leadLink = "<a target=\"_blank\" href=\"https://www-ccd.perftest.platform.hmcts.net/v2/case/1604313560561842\">245007/2020</a>";
+        multipleDetails.getCaseData().setLeadCase(leadLink);
+        String newLeadCase = "245007/2020";
+
+        multipleHelperService.sendUpdatesToSinglesLogic(
+                userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                newLeadCase,
+                multipleObjects,
+                new ArrayList<>());
+
+        assertEquals(leadLink, multipleDetails.getCaseData().getLeadCase());
 
     }
 

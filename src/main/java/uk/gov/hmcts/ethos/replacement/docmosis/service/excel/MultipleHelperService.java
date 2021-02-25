@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -17,6 +18,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -35,6 +37,9 @@ public class MultipleHelperService {
     private final MultipleCasesSendingService multipleCasesSendingService;
     private final CreateUpdatesBusSender createUpdatesBusSender;
     private final UserService userService;
+
+    @Value("${ccd_gateway_base_url}")
+    private String ccdGatewayBaseUrl;
 
     @Autowired
     public MultipleHelperService(SingleCasesReadingService singleCasesReadingService,
@@ -67,6 +72,7 @@ public class MultipleHelperService {
             if (submitEvent != null) {
 
                 multipleData.setLeadCase(MultiplesHelper.generateLeadMarkUp(
+                        ccdGatewayBaseUrl,
                         String.valueOf(submitEvent.getCaseId()),
                         newLeadCase));
 
@@ -79,6 +85,7 @@ public class MultipleHelperService {
         } else {
 
             multipleData.setLeadCase(MultiplesHelper.generateLeadMarkUp(
+                    ccdGatewayBaseUrl,
                     caseId,
                     newLeadCase));
 
@@ -310,6 +317,52 @@ public class MultipleHelperService {
         List<String> ethosCaseRefCollection = getEthosCaseRefCollection(userToken, newMultipleData, errors);
 
         return ethosCaseRefCollection.isEmpty() ? "" : ethosCaseRefCollection.get(0);
+
+    }
+
+    private void sendUpdatesToSinglesLogicCheckingLead(String userToken, MultipleDetails multipleDetails, List<String> errors,
+                                                      String newLeadCase, TreeMap<String, Object> multipleObjects) {
+
+        String oldLeadCase = MultiplesHelper.getCurrentLead(multipleDetails.getCaseData().getLeadCase());
+
+        if (!oldLeadCase.equals(newLeadCase)) {
+
+            log.info("Sending update to old lead case as not lead any more: " + oldLeadCase);
+
+            sendCreationUpdatesToSinglesWithoutConfirmation(userToken,
+                    multipleDetails.getCaseTypeId(),
+                    multipleDetails.getJurisdiction(),
+                    multipleDetails.getCaseData(),
+                    errors,
+                    new ArrayList<>(Collections.singletonList(oldLeadCase)),
+                    newLeadCase);
+
+        }
+
+        if (multipleObjects.keySet().isEmpty() || !oldLeadCase.equals(newLeadCase)) {
+
+            log.info("Adding new lead: " + newLeadCase);
+
+            addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(),
+                    multipleDetails.getCaseData(), newLeadCase, "");
+
+        }
+
+    }
+
+    public void sendUpdatesToSinglesLogic(String userToken, MultipleDetails multipleDetails, List<String> errors,
+                                           String newLeadCase, TreeMap<String, Object> multipleObjects,
+                                           List<String> newEthosCaseRefCollection) {
+
+        sendUpdatesToSinglesLogicCheckingLead(userToken, multipleDetails, errors, newLeadCase, multipleObjects);
+
+        sendCreationUpdatesToSinglesWithoutConfirmation(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(),
+                multipleDetails.getCaseData(),
+                errors,
+                newEthosCaseRefCollection,
+                newLeadCase);
 
     }
 

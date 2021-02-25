@@ -47,7 +47,8 @@
     },
     "correspondenceScotType": {
       "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-00044",
-      "part_3_Scot_Documents": "34"
+      "part_3_Scot_Documents": "34",
+      "hearingNumber": "1"
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
@@ -69,6 +70,88 @@
           "respondent_phone1": "07577136570",
           "respondent_phone2": "07577136570",
           "responseStruckOut": "No"
+        }
+      }
+    ],
+    "hearingCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "1",
+          "Hearing_venue": "Aberdeen",
+          "Hearing_Aberdeen": "Aberdeen",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-01T12:11:00.000",
+                "Hearing_reserved_judgement": ""
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "2",
+          "Hearing_venue": "Glasgow",
+          "Hearing_Glasgow": "Glasgow",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-01T12:11:00.000",
+                "Hearing_reserved_judgement": ""
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "3",
+          "Hearing_venue": "Edinburgh",
+          "Hearing_Edinburgh": "Edinburgh",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-01T12:11:00.000",
+                "Hearing_reserved_judgement": ""
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "4",
+          "Hearing_venue": "Dundee",
+          "Hearing_Dundee": "Dundee",
+          "hearingDateCollection": [
+            {
+              "id" : "123345",
+              "value" : {
+                "listedDate": "2019-11-01T12:11:00.000",
+                "Hearing_reserved_judgement": ""
+              }
+            }
+          ]
         }
       }
     ],

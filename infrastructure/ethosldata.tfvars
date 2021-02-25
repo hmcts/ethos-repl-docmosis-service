@@ -1,5 +1,5 @@
 capacity = "2"
-tornado_url = "https://docmosis-testing.platform.hmcts.net/rs/render"
+tornado_url = "https://docmosis.perftest.platform.hmcts.net/rs/render"
 idam_api_url = "https://idam-api-ethosldata.platform.hmcts.net"
 ccd_data_store_api_url = "http://ccd-data-store-api-ethosldata.service.core-compute-ethosldata.internal"
 dm_url = "http://dm-store-ethosldata.service.core-compute-ethosldata.internal"

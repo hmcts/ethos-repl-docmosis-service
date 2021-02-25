@@ -137,6 +137,19 @@
         }
       }
     ],
+    "depositType": [
+      {
+        "id": "a1e2b95e-4873-4f43-b7b4-65808c422de0",
+        "value": {
+          "Deposit_amount": "1100",
+          "depositAmountRefunded": null,
+          "depositNotes": null,
+          "deposit_due": null,
+          "deposit_order_sent": null,
+          "deposit_refund": null
+        }
+      }
+    ],
     "locationType": "Manchester",
     "multipleReference": "No",
     "multipleType": "No",

@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleLetterService.NO_CASES_SEARCHED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
 
 @Slf4j
 @Service("multipleScheduleService")

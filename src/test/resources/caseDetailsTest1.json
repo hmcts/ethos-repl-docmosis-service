@@ -23,20 +23,7 @@
       "caseJudge": "Judge",
       "caseReferredDate": "None"
     },
-    "depositType": [
-      {
-        "id" : "1234565",
-        "value" : {
-          "Deposit_amount": "£25",
-          "deposit_covers": "No",
-          "deposit_due": "£25",
-          "deposit_time_ext": "No",
-          "deposit_refund": "",
-          "deposit_refund_date": "25/02/2020",
-          "depositNotes": "None"
-        }
-      }
-    ], "additionalCaseInfo": {
+    "additionalCaseInfo": {
       "additional_accepted1": "additional_accepted1",
       "additional_accepted2": "additional_accepted2",
       "additional_conciliation_track": "additional_conciliation_track",
@@ -400,6 +387,19 @@
           "date_judgment_sent": "2000-02-12",
           "liability_optional": null,
           "non_hearing_judgment": "Yes"
+        }
+      }
+    ],
+    "depositType": [
+      {
+        "id": "a1e2b95e-4873-4f43-b7b4-65808c422de0",
+        "value": {
+          "Deposit_amount": null,
+          "depositAmountRefunded": "222",
+          "depositNotes": null,
+          "deposit_due": null,
+          "deposit_order_sent": null,
+          "deposit_refund": null
         }
       }
     ],

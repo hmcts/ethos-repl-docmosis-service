@@ -1487,10 +1487,10 @@ public class DocumentHelperTest {
                 "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Hearing_date\":\"\",\n" +
-                "\"Hearing_date_time\":\"\",\n" +
-                "\"Hearing_venue\":\"\",\n" +
-                "\"Hearing_duration\":\"\",\n" +
+                "\"Hearing_date\":\"1 November 2019\",\n" +
+                "\"Hearing_date_time\":\"1 November 2019 at 12:11\",\n" +
+                "\"Hearing_venue\":\"Ground Floor, AB1, 48 Huntly Street, Aberdeen, AB10 1SH\",\n" +
+                "\"Hearing_duration\":\"1 days\",\n" +
                 "\"t_Scot_34\":\"true\",\n" +
                 "\"Court_addressLine1\":\"Eagle Building,\",\n" +
                 "\"Court_addressLine2\":\"215 Bothwell Street,\",\n" +

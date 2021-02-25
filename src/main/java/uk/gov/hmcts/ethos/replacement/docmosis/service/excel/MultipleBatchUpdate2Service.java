@@ -167,7 +167,9 @@ public class MultipleBatchUpdate2Service {
 
         log.info("Add the lead case markUp");
 
-        String updatedLeadCase = multipleHelperService.getLeadCaseFromExcel(userToken, updatedMultipleData, errors);
+        String getCurrentNewMultipleLeadCase = multipleHelperService.getLeadCaseFromExcel(userToken, updatedMultipleData, errors);
+
+        String updatedLeadCase = checkIfNewMultipleWasEmpty(getCurrentNewMultipleLeadCase, new ArrayList<>(multipleObjects.keySet()));
 
         multipleHelperService.addLeadMarkUp(userToken, updatedCaseTypeId, updatedMultipleData, updatedLeadCase, "");
 
@@ -182,6 +184,21 @@ public class MultipleBatchUpdate2Service {
 
     }
 
+    private String checkIfNewMultipleWasEmpty(String updatedLeadCase, List<String> multipleObjectsFiltered) {
+
+        if (updatedLeadCase.isEmpty()) {
+
+            if (!multipleObjectsFiltered.isEmpty()) {
+
+                return multipleObjectsFiltered.get(0);
+
+            }
+
+        }
+
+        return updatedLeadCase;
+
+    }
 
     private void readExcelAndAddSubMultipleRef(String userToken, MultipleData multipleData,
                                                List<String> errors, List<String> multipleObjectsFiltered,

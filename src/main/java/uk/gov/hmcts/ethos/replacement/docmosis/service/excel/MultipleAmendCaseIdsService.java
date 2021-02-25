@@ -3,46 +3,32 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 @Slf4j
 @Service("multipleAmendCaseIdsService")
 public class MultipleAmendCaseIdsService {
 
-    private final ExcelReadingService excelReadingService;
-    private final ExcelDocManagementService excelDocManagementService;
     private final MultipleHelperService multipleHelperService;
 
     @Autowired
-    public MultipleAmendCaseIdsService(ExcelReadingService excelReadingService,
-                                       ExcelDocManagementService excelDocManagementService,
-                                       MultipleHelperService multipleHelperService) {
-        this.excelReadingService = excelReadingService;
-        this.excelDocManagementService = excelDocManagementService;
+    public MultipleAmendCaseIdsService(MultipleHelperService multipleHelperService) {
         this.multipleHelperService = multipleHelperService;
     }
 
-    public void bulkAmendCaseIdsLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
-
-        log.info("Read excel to amend caseIds");
-
-        TreeMap<String, Object> multipleObjects =
-                excelReadingService.readExcel(
-                        userToken,
-                        MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
-                        errors,
-                        multipleDetails.getCaseData(),
-                        FilterExcelType.ALL);
-
-        log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
-        log.info("MultipleObjectsValues: " + multipleObjects.values());
+    public List<MultipleObject> bulkAmendCaseIdsLogic(String userToken, MultipleDetails multipleDetails,
+                                                      List<String> errors, TreeMap<String, Object> multipleObjects) {
 
         List<String> newEthosCaseRefCollection = MultiplesHelper.getCaseIds(multipleDetails.getCaseData());
 
@@ -50,25 +36,32 @@ public class MultipleAmendCaseIdsService {
 
         List<String> unionLists = concatNewAndOldCases(multipleObjects, newEthosCaseRefCollection);
 
+        String multipleLeadCase = getCurrentLead(multipleDetails.getCaseData(), unionLists.get(0));
+
         if (!newEthosCaseRefCollection.isEmpty()) {
 
             log.info("Send updates to single cases");
 
-            sendUpdatesToSinglesLogic(userToken, multipleDetails, errors, unionLists, multipleObjects, newEthosCaseRefCollection);
+            multipleHelperService.sendUpdatesToSinglesLogic(userToken, multipleDetails, errors, multipleLeadCase,
+                    multipleObjects, newEthosCaseRefCollection);
 
         }
 
         log.info("Create a new Excel");
 
-        List<MultipleObject> newMultipleObjects = generateMultipleObjects(unionLists, multipleObjects);
+        return generateMultipleObjects(unionLists, multipleObjects);
 
-        log.info("New Multiple Objects: " + newMultipleObjects);
+    }
 
-        excelDocManagementService.generateAndUploadExcel(newMultipleObjects, userToken, multipleDetails.getCaseData());
+    private String getCurrentLead(MultipleData multipleData, String newLead) {
 
-        log.info("Clearing the payload");
+        if (!isNullOrEmpty(multipleData.getLeadCase())) {
 
-        multipleDetails.getCaseData().setCaseIdCollection(null);
+            return MultiplesHelper.getCurrentLead(multipleData.getLeadCase());
+
+        }
+
+        return newLead;
 
     }
 
@@ -78,50 +71,6 @@ public class MultipleAmendCaseIdsService {
 
         return Stream.concat(newEthosCaseRefCollection.stream(), multipleObjects.keySet().stream())
                 .distinct().collect(Collectors.toList());
-
-    }
-
-    private void sendUpdatesToSinglesLogic(String userToken, MultipleDetails multipleDetails, List<String> errors,
-                                           List<String> unionLists, TreeMap<String, Object> multipleObjects,
-                                           List<String> newEthosCaseRefCollection) {
-
-        String oldLeadCase = MultiplesHelper.getCurrentLead(multipleDetails.getCaseData().getLeadCase());
-
-        String newLeadCase = unionLists.get(0);
-
-        if (!oldLeadCase.equals(newLeadCase)) {
-
-            log.info("Sending update to old lead case as not lead any more: " + oldLeadCase);
-
-            sendUpdatesToSingles(userToken, multipleDetails, errors,
-                    new ArrayList<>(Collections.singletonList(oldLeadCase)), newLeadCase);
-
-        }
-
-        if (multipleObjects.keySet().isEmpty() || !oldLeadCase.equals(newLeadCase)) {
-
-            log.info("Adding new lead: " + newLeadCase);
-
-            multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(),
-                    multipleDetails.getCaseData(), newLeadCase, "");
-
-        }
-
-        sendUpdatesToSingles(userToken, multipleDetails, errors, newEthosCaseRefCollection, newLeadCase);
-
-    }
-
-
-    private void sendUpdatesToSingles(String userToken, MultipleDetails multipleDetails, List<String> errors,
-                                      List<String> newEthosCaseRefCollection, String leadCase) {
-
-        multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken,
-                multipleDetails.getCaseTypeId(),
-                multipleDetails.getJurisdiction(),
-                multipleDetails.getCaseData(),
-                errors,
-                newEthosCaseRefCollection,
-                leadCase);
 
     }
 

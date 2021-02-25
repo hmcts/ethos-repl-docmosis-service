@@ -10,27 +10,35 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TYPE_AMENDMENT_ADDITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TYPE_AMENDMENT_LEAD;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class MultipleAmendCaseIdsServiceTest {
+public class MultipleAmendServiceTest {
 
     @Mock
-    private MultipleHelperService multipleHelperService;
-    @InjectMocks
+    private ExcelReadingService excelReadingService;
+    @Mock
+    private ExcelDocManagementService excelDocManagementService;
+    @Mock
+    private MultipleAmendLeadCaseService multipleAmendLeadCaseService;
+    @Mock
     private MultipleAmendCaseIdsService multipleAmendCaseIdsService;
+    @InjectMocks
+    private MultipleAmendService multipleAmendService;
 
     private TreeMap<String, Object> multipleObjects;
     private MultipleDetails multipleDetails;
     private String userToken;
+    private List<String> typeOfAmendmentMSL;
 
     @Before
     public void setUp() {
+        typeOfAmendmentMSL = new ArrayList<>(Arrays.asList(TYPE_AMENDMENT_LEAD, TYPE_AMENDMENT_ADDITION));
         multipleObjects = MultipleUtil.getMultipleObjectsAll();
         multipleDetails = new MultipleDetails();
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
@@ -38,24 +46,20 @@ public class MultipleAmendCaseIdsServiceTest {
     }
 
     @Test
-    public void bulkAmendCaseIdsLogic() {
-        List<MultipleObject>  multipleObjectList = multipleAmendCaseIdsService.bulkAmendCaseIdsLogic(userToken,
+    public void bulkAmendMultipleLogic() {
+        multipleDetails.getCaseData().setTypeOfAmendmentMSL(typeOfAmendmentMSL);
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjects);
+        when(multipleAmendCaseIdsService.bulkAmendCaseIdsLogic(anyString(), any(), anyList(), any()))
+                .thenReturn((getMultipleObjectsList()));
+        multipleAmendService.bulkAmendMultipleLogic(userToken,
                 multipleDetails,
-                new ArrayList<>(),
-                multipleObjects);
-
-        assertEquals(multipleObjectList, getMultipleObjectsList());
-    }
-
-    @Test
-    public void bulkAmendCaseIdsLogicEmptyLead() {
-        multipleDetails.getCaseData().setLeadCase(null);
-        List<MultipleObject>  multipleObjectList = multipleAmendCaseIdsService.bulkAmendCaseIdsLogic(userToken,
-                multipleDetails,
-                new ArrayList<>(),
-                multipleObjects);
-
-        assertEquals(multipleObjectList, getMultipleObjectsList());
+                new ArrayList<>());
+        verify(excelDocManagementService, times(1)).generateAndUploadExcel(
+                getMultipleObjectsList(),
+                userToken,
+                multipleDetails.getCaseData());
+        verifyNoMoreInteractions(excelDocManagementService);
     }
 
     private List<MultipleObject> getMultipleObjectsList() {
@@ -93,8 +97,8 @@ public class MultipleAmendCaseIdsServiceTest {
                         .flag4("")
                         .build(),
                 MultipleObject.builder()
-                        .subMultiple("SubMultiple")
                         .ethosCaseRef("245005/2020")
+                        .subMultiple("SubMultiple")
                         .flag1("AA")
                         .flag2("BB")
                         .flag3("")

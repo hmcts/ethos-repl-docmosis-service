@@ -35,9 +35,11 @@ public class MultipleCreationMidEventValidationService {
         this.singleCasesReadingService = singleCasesReadingService;
     }
 
-    public void multipleCreationValidationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
+    public void multipleCreationValidationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors, boolean amendAction) {
 
         if (multipleDetails.getCaseData().getMultipleSource() != null
+                &&
+                !amendAction
                 &&
                 ( multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
                         || multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)
@@ -53,7 +55,7 @@ public class MultipleCreationMidEventValidationService {
 
             log.info("Checking lead case");
 
-            if (!isNullOrEmpty(multipleData.getLeadCase())) {
+            if (!isNullOrEmpty(multipleData.getLeadCase()) && !amendAction) {
 
                 log.info("Validating lead case introduced by user: " + multipleData.getLeadCase());
 

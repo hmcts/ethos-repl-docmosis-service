@@ -33,7 +33,7 @@ public class ExcelActionsController {
     private final VerifyTokenService verifyTokenService;
     private final MultipleCreationService multipleCreationService;
     private final MultiplePreAcceptService multiplePreAcceptService;
-    private final MultipleAmendCaseIdsService multipleAmendCaseIdsService;
+    private final MultipleAmendService multipleAmendService;
     private final MultipleUpdateService multipleUpdateService;
     private final MultipleUploadService multipleUploadService;
     private final MultipleDynamicListFlagsService multipleDynamicListFlagsService;
@@ -48,7 +48,7 @@ public class ExcelActionsController {
     public ExcelActionsController(VerifyTokenService verifyTokenService,
                                   MultipleCreationService multipleCreationService,
                                   MultiplePreAcceptService multiplePreAcceptService,
-                                  MultipleAmendCaseIdsService multipleAmendCaseIdsService,
+                                  MultipleAmendService multipleAmendService,
                                   MultipleUpdateService multipleUpdateService,
                                   MultipleUploadService multipleUploadService,
                                   MultipleDynamicListFlagsService multipleDynamicListFlagsService,
@@ -61,7 +61,7 @@ public class ExcelActionsController {
         this.verifyTokenService = verifyTokenService;
         this.multipleCreationService = multipleCreationService;
         this.multiplePreAcceptService = multiplePreAcceptService;
-        this.multipleAmendCaseIdsService = multipleAmendCaseIdsService;
+        this.multipleAmendService = multipleAmendService;
         this.multipleUpdateService = multipleUpdateService;
         this.multipleUploadService = multipleUploadService;
         this.multipleDynamicListFlagsService = multipleDynamicListFlagsService;
@@ -111,6 +111,32 @@ public class ExcelActionsController {
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("AMEND MULTIPLE ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors = new ArrayList<>();
+        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
+
+        multipleAmendService.bulkAmendMultipleLogic(userToken, multipleDetails, errors);
+
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
+    }
+
+    @PostMapping(value = "/amendMultipleAPI", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Update the state of the multiple")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = MultipleCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<MultipleCallbackResponse> amendMultipleAPI(
+            @RequestBody MultipleRequest multipleRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("AMEND MULTIPLE API ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -172,32 +198,6 @@ public class ExcelActionsController {
         MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
 
         multiplePreAcceptService.bulkPreAcceptLogic(userToken, multipleDetails, errors);
-
-        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
-    }
-
-    @PostMapping(value = "/amendCaseIDs", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Update the collection of caseIds in a multiple.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = MultipleCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    @Deprecated public ResponseEntity<MultipleCallbackResponse> amendCaseIDs(
-            @RequestBody MultipleRequest multipleRequest,
-            @RequestHeader(value = "Authorization") String userToken) {
-        log.info("AMEND CASE IDS ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        List<String> errors = new ArrayList<>();
-        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
-
-        multipleAmendCaseIdsService.bulkAmendCaseIdsLogic(userToken, multipleDetails, errors);
 
         return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
@@ -353,7 +353,33 @@ public class ExcelActionsController {
         List<String> errors = new ArrayList<>();
         MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
 
-        multipleCreationMidEventValidationService.multipleCreationValidationLogic(userToken, multipleDetails, errors);
+        multipleCreationMidEventValidationService.multipleCreationValidationLogic(userToken, multipleDetails, errors, false);
+
+        return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
+    }
+
+    @PostMapping(value = "/multipleAmendCaseIdsMidEventValidation", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "validates if single cases are right on the multiple amend case ids.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = MultipleCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<MultipleCallbackResponse> multipleAmendCaseIdsMidEventValidation(
+            @RequestBody MultipleRequest multipleRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MULTIPLE AMEND CASE IDS MID EVENT VALIDATION ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors = new ArrayList<>();
+        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
+
+        multipleCreationMidEventValidationService.multipleCreationValidationLogic(userToken, multipleDetails, errors, true);
 
         return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
