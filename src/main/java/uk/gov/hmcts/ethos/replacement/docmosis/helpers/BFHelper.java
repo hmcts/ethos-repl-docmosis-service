@@ -43,26 +43,25 @@ public class BFHelper {
 
     public static void populateDynamicListBfActions(CaseData caseData) {
 
-//        if (caseData.getBfActions() != null && !caseData.getBfActions().isEmpty()){
-//
-//            List<BFActionTypeItem> bfActionTypeItemList = caseData.getBfActions();
-//
-//            for (BFActionTypeItem bfActionTypeItem : bfActionTypeItemList) {
-//
-//                DynamicFixedListType dynamicFixedListType = bfActionTypeItem.getValue().getAction();
-//
-//                if (dynamicFixedListType == null) {
-//
-//                    dynamicFixedListType = new DynamicFixedListType();
-//                    dynamicFixedListType.setListItems(Helper.getDefaultBfListItems());
-//                    dynamicFixedListType.setValue(Helper.getDynamicValue(BF_ACTION_ACAS));
-//
-//                }
-//            }
-//
-//        } else {
+        if (caseData.getBfActions() != null && !caseData.getBfActions().isEmpty()){
 
-        if (caseData.getBfActions() == null || caseData.getBfActions().isEmpty()){
+            List<BFActionTypeItem> bfActionTypeItemList = caseData.getBfActions();
+
+            for (BFActionTypeItem bfActionTypeItem : bfActionTypeItemList) {
+
+                DynamicFixedListType dynamicFixedListType = bfActionTypeItem.getValue().getAction();
+
+                if (dynamicFixedListType != null) {
+
+                    log.info("Updating the value of bfActionDynamicLists");
+
+                    bfActionTypeItem.getValue().getAction().setValue(dynamicFixedListType.getValue());
+
+                }
+
+            }
+
+        } else {
 
             log.info("BF Actions is empty. Creating a dummy one");
 
@@ -76,8 +75,7 @@ public class BFHelper {
             bfActionTypeItem.setId(UUID.randomUUID().toString());
             bfActionTypeItem.setValue(bfActionType);
 
-            List<BFActionTypeItem> bfActionTypeItemList = new ArrayList<>(Collections.singletonList(bfActionTypeItem));
-            caseData.setBfActions(bfActionTypeItemList);
+            caseData.setBfActions(new ArrayList<>(Collections.singletonList(bfActionTypeItem)));
 
         }
     }
