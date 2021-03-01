@@ -692,7 +692,7 @@ public class CaseActionsForCaseWorkerController {
     }
 
     @PostMapping(value = "/bfActions", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "copy bf actions from bfActionsCW to bfActionsAll and generate a dateTime as ID.")
+    @ApiOperation(value = "updates the dateEntered by the user with the current date.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = CCDCallbackResponse.class),
@@ -710,7 +710,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        BFHelper.copyBFActionsCollections(caseData);
+        BFHelper.updateBfActionItems(caseData);
 
         return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
@@ -783,6 +783,30 @@ public class CaseActionsForCaseWorkerController {
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         caseCreationForCaseWorkerService.createCaseTransfer(caseData, ccdRequest.getCaseDetails().getJurisdiction(), userToken);
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+    }
+
+    @PostMapping(value = "/aboutToStartDisposal", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "update the position type to case closed.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> aboutToStartDisposal(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("ABOUT TO START DISPOSAL ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        Helper.updatePositionTypeToClosed(caseData);
 
         return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
