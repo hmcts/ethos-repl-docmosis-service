@@ -787,6 +787,30 @@ public class CaseActionsForCaseWorkerController {
         return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
+    @PostMapping(value = "/aboutToStartDisposal", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "update the position type to case closed.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> aboutToStartDisposal(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("ABOUT TO START DISPOSAL ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        Helper.updatePositionTypeToClosed(caseData);
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+    }
+
     private DefaultValues getPostDefaultValues(CaseDetails caseDetails) {
         String caseTypeId = caseDetails.getCaseTypeId();
         String managingOffice = caseDetails.getCaseData().getManagingOffice() != null ? caseDetails.getCaseData().getManagingOffice() : "";

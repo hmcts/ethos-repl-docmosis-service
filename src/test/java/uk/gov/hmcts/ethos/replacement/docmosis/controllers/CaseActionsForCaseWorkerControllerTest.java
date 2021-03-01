@@ -73,6 +73,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String BF_ACTIONS_URL = "/bfActions";
     private static final String DYNAMIC_LIST_BF_ACTIONS_URL = "/dynamicListBfActions";
     private static final String CREATE_CASE_TRANSFER_URL = "/createCaseTransfer";
+    private static final String ABOUT_TO_START_DISPOSAL_URL = "/aboutToStartDisposal";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -559,6 +560,19 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void aboutToStartDisposal() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(ABOUT_TO_START_DISPOSAL_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void createCaseError400() throws Exception {
         mvc.perform(post(CREATION_CASE_URL)
                 .content("error")
@@ -795,6 +809,15 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void createCaseTransferError400() throws Exception {
         mvc.perform(post(CREATE_CASE_TRANSFER_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void aboutToStartDisposalError400() throws Exception {
+        mvc.perform(post(ABOUT_TO_START_DISPOSAL_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -1208,6 +1231,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void createCaseTransferForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(CREATE_CASE_TRANSFER_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void aboutToStartDisposalForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(ABOUT_TO_START_DISPOSAL_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
