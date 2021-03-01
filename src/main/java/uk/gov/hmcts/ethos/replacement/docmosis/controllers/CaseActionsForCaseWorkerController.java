@@ -667,6 +667,30 @@ public class CaseActionsForCaseWorkerController {
         return getCCDCallbackResponseResponseEntity(errors, caseDetails);
     }
 
+    @PostMapping(value = "/dynamicListBfActions", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populate bf actions in dynamic lists.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> dynamicListBfActions(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DYNAMIC LIST BF ACTIONS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        BFHelper.populateDynamicListBfActions(caseData);
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+    }
+
     @PostMapping(value = "/bfActions", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "copy bf actions from bfActionsCW to bfActionsAll and generate a dateTime as ID.")
     @ApiResponses(value = {

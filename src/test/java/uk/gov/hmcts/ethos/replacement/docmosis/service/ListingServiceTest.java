@@ -117,7 +117,7 @@ public class ListingServiceTest {
         BFActionType bfActionType = new BFActionType();
         bfActionType.setBfDate("2019-12-10");
         bfActionType.setCleared("020-12-30");
-        bfActionType.setCwActions("Test0");
+        //bfActionType.setCwActions("Test0");
         bfActionTypeItem.setId("0000");
         bfActionTypeItem.setValue(bfActionType);
 
@@ -125,7 +125,7 @@ public class ListingServiceTest {
         BFActionType bfActionType1 = new BFActionType();
         bfActionType1.setBfDate("2019-12-11");
         bfActionType1.setCleared("");
-        bfActionType1.setCwActions("Test1");
+        //bfActionType1.setCwActions("Test1");
         bfActionTypeItem1.setId("111");
         bfActionTypeItem1.setValue(bfActionType1);
 
@@ -133,7 +133,7 @@ public class ListingServiceTest {
         BFActionType bfActionType2 = new BFActionType();
         bfActionType2.setBfDate("2019-12-12");
         bfActionType2.setCleared("");
-        bfActionType2.setCwActions("Test2");
+        //bfActionType2.setCwActions("Test2");
         bfActionTypeItem2.setId("222");
         bfActionTypeItem2.setValue(bfActionType2);
 
@@ -141,7 +141,8 @@ public class ListingServiceTest {
         BFActionType bfActionType3 = new BFActionType();
         bfActionType3.setBfDate("2019-12-13");
         bfActionType3.setCleared("");
-        bfActionType3.setCwActions("Test3");
+        //TODO
+        //bfActionType3.setCwActions("Test3");
         bfActionTypeItem3.setId("333");
         bfActionTypeItem3.setValue(bfActionType3);
 
@@ -150,7 +151,7 @@ public class ListingServiceTest {
         CaseData caseData = new CaseData();
         caseData.setEthosCaseReference("4210000/2019");
         caseData.setHearingCollection(new ArrayList<>(Collections.singleton(hearingTypeItem)));
-        caseData.setBfActionsCW(new ArrayList<>(Arrays.asList(bfActionTypeItem,
+        caseData.setBfActions(new ArrayList<>(Arrays.asList(bfActionTypeItem,
                 bfActionTypeItem1, bfActionTypeItem2, bfActionTypeItem3)));
         caseData.setClerkResponsible("Steve Jones");
         submitEvent1.setCaseData(caseData);

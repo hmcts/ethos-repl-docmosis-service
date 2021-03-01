@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.types.MoveCasesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class MultipleDynamicListFlagsService {
         Set<String> values = (Set<String>) multipleObjects.get(key);
         List<DynamicValueType> listItems = new ArrayList<>();
 
-        listItems.add(MultiplesHelper.getDynamicValue(SELECT_ALL));
+        listItems.add(Helper.getDynamicValue(SELECT_ALL));
 
         if (values != null && !values.isEmpty()) {
 
@@ -73,7 +74,7 @@ public class MultipleDynamicListFlagsService {
 
                 if (!flag.isEmpty()) {
 
-                    listItems.add(MultiplesHelper.getDynamicValue(flag));
+                    listItems.add(Helper.getDynamicValue(flag));
                 }
             }
         }
@@ -95,7 +96,7 @@ public class MultipleDynamicListFlagsService {
         }
 
         //Default dynamic list
-        dynamicListFlag.setValue(MultiplesHelper.getDynamicValue(SELECT_ALL));
+        dynamicListFlag.setValue(Helper.getDynamicValue(SELECT_ALL));
 
         return dynamicListFlag;
 

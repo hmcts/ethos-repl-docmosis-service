@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
-import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.items.CaseMultipleTypeItem;
@@ -199,16 +198,6 @@ public class MultiplesHelper {
         multipleData.setAddressLabelsSelectionTypeMSL(null);
         multipleData.setAddressLabelCollection(null);
         multipleData.setAddressLabelsAttributesType(null);
-
-    }
-
-    public static DynamicValueType getDynamicValue(String value) {
-
-        DynamicValueType dynamicValueType = new DynamicValueType();
-        dynamicValueType.setCode(value);
-        dynamicValueType.setLabel(value);
-
-        return dynamicValueType;
 
     }
 

@@ -138,6 +138,16 @@ public class Helper {
         }
     }
 
+    public static DynamicValueType getDynamicValue(String value) {
+
+        DynamicValueType dynamicValueType = new DynamicValueType();
+        dynamicValueType.setCode(value);
+        dynamicValueType.setLabel(value);
+
+        return dynamicValueType;
+
+    }
+
     public static List<String> hearingMidEventValidation(CaseData caseData) {
 
         List<String> errors = new ArrayList<>();
