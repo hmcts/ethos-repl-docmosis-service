@@ -72,6 +72,22 @@ public class BFHelperTest {
 
     @Test
     public void populateDynamicListBfActions() {
+        caseData.setBfActions(generateBFActionTypeItems());
+        BFHelper.populateDynamicListBfActions(caseData);
+        assertEquals(1, caseData.getBfActions().size());
+    }
+
+    @Test
+    public void populateDynamicListBfActionsEmptyActions() {
+        List<BFActionTypeItem> bfActionTypeItemList = generateBFActionTypeItems();
+        bfActionTypeItemList.get(0).getValue().setAction(null);
+        caseData.setBfActions(bfActionTypeItemList);
+        BFHelper.populateDynamicListBfActions(caseData);
+        assertEquals(1, caseData.getBfActions().size());
+    }
+
+    @Test
+    public void populateDynamicListBfActionsEmpty() {
         BFHelper.populateDynamicListBfActions(caseData);
         assertEquals(2, caseData.getBfActions().size());
      }
