@@ -71,6 +71,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String SINGLE_CASE_MULTIPLE_MID_EVENT_VALIDATION_URL = "/singleCaseMultipleMidEventValidation";
     private static final String HEARING_MID_EVENT_VALIDATION_URL = "/hearingMidEventValidation";
     private static final String BF_ACTIONS_URL = "/bfActions";
+    private static final String DYNAMIC_LIST_BF_ACTIONS_URL = "/dynamicListBfActions";
     private static final String CREATE_CASE_TRANSFER_URL = "/createCaseTransfer";
 
     @Autowired
@@ -532,6 +533,19 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void dynamicListBfActions() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(DYNAMIC_LIST_BF_ACTIONS_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void createCaseTransfer() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(CREATE_CASE_TRANSFER_URL)
@@ -763,6 +777,15 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void bfActionsError400() throws Exception {
         mvc.perform(post(BF_ACTIONS_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void dynamicListBfActionsError400() throws Exception {
+        mvc.perform(post(DYNAMIC_LIST_BF_ACTIONS_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -1165,6 +1188,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void bfActionsForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(BF_ACTIONS_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void dynamicListBfActionsForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(DYNAMIC_LIST_BF_ACTIONS_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
