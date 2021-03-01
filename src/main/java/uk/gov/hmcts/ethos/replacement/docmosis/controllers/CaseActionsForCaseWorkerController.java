@@ -692,7 +692,7 @@ public class CaseActionsForCaseWorkerController {
     }
 
     @PostMapping(value = "/bfActions", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "copy bf actions from bfActionsCW to bfActionsAll and generate a dateTime as ID.")
+    @ApiOperation(value = "updates the dateEntered by the user with the current date.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = CCDCallbackResponse.class),
@@ -710,7 +710,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        BFHelper.copyBFActionsCollections(caseData);
+        BFHelper.updateBfActionItems(caseData);
 
         return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }

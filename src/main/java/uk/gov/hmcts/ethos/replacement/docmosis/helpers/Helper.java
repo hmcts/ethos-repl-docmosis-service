@@ -15,11 +15,12 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadES;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 public class Helper {
@@ -146,6 +147,25 @@ public class Helper {
 
         return dynamicValueType;
 
+    }
+
+    public static List<DynamicValueType> getDefaultBfListItems() {
+        return new ArrayList<>(Arrays.asList(
+                getDynamicValue(BF_ACTION_ACAS),
+                getDynamicValue(BF_ACTION_CASE_LISTED),
+                getDynamicValue(BF_ACTION_CASE_PAPERS),
+                getDynamicValue(BF_ACTION_CASE_TRANSFERRED),
+                getDynamicValue(BF_ACTION_DRAFT),
+                getDynamicValue(BF_ACTION_ENQUIRY_ISSUED),
+                getDynamicValue(BF_ACTION_ENQUIRY_RECEIVED),
+                getDynamicValue(BF_ACTION_EXHIBITS),
+                getDynamicValue(BF_ACTION_INTERLOCUTORY),
+                getDynamicValue(BF_ACTION_IT3_RECEIVED),
+                getDynamicValue(BF_ACTION_OTHER_ACTION),
+                getDynamicValue(BF_ACTION_POSTPONEMENT_REQUESTED),
+                getDynamicValue(BF_ACTION_REFER_CHAIRMAN),
+                getDynamicValue(BF_ACTION_REPLY_TO_ENQUIRY),
+                getDynamicValue(BF_ACTION_STRIKING_OUT_WARNING)));
     }
 
     public static List<String> hearingMidEventValidation(CaseData caseData) {
