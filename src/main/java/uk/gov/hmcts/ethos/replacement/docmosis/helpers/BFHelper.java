@@ -43,6 +43,8 @@ public class BFHelper {
 
     public static void populateDynamicListBfActions(CaseData caseData) {
 
+        List<BFActionTypeItem> bfActionTypeItemListAux = new ArrayList<>();
+
         if (caseData.getBfActions() != null && !caseData.getBfActions().isEmpty()){
 
             List<BFActionTypeItem> bfActionTypeItemList = caseData.getBfActions();
@@ -53,9 +55,12 @@ public class BFHelper {
 
                 if (dynamicFixedListType != null) {
 
-                    log.info("Updating the value of bfActionDynamicLists");
+                    log.info("Updating the value of bfActionDynamicLists: " + dynamicFixedListType.getValue());
 
-                    bfActionTypeItem.getValue().getAction().setValue(dynamicFixedListType.getValue());
+                    BFActionTypeItem bfActionTypeItemAux = new BFActionTypeItem();
+                    bfActionTypeItemAux.setId(bfActionTypeItem.getId());
+                    bfActionTypeItemAux.setValue(bfActionTypeItem.getValue());
+                    bfActionTypeItemListAux.add(bfActionTypeItemAux);
 
                 }
 
@@ -75,9 +80,12 @@ public class BFHelper {
             bfActionTypeItem.setId(UUID.randomUUID().toString());
             bfActionTypeItem.setValue(bfActionType);
 
-            caseData.setBfActions(new ArrayList<>(Collections.singletonList(bfActionTypeItem)));
+            bfActionTypeItemListAux = new ArrayList<>(Collections.singletonList(bfActionTypeItem));
 
         }
+
+        caseData.setBfActions(bfActionTypeItemListAux);
+
     }
 
 }

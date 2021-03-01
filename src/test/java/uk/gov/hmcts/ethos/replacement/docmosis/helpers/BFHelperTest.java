@@ -40,14 +40,6 @@ public class BFHelperTest {
     }
 
     @Test
-    public void populateDynamicListBfActionsEmptyActions() {
-        bfActionTypeItemList.get(0).getValue().setAction(null);
-        caseData.setBfActions(bfActionTypeItemList);
-        BFHelper.populateDynamicListBfActions(caseData);
-        assertEquals(1, caseData.getBfActions().size());
-    }
-
-    @Test
     public void populateDynamicListBfActionsEmpty() {
         caseData.setBfActions(null);
         BFHelper.populateDynamicListBfActions(caseData);
