@@ -392,7 +392,7 @@ public class CaseActionsForCaseWorkerController {
     }
 
     @PostMapping(value = "/allocateHearing", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "update postponed date for hearing.")
+    @ApiOperation(value = "update postponed date when allocating a hearing.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = CCDCallbackResponse.class),
