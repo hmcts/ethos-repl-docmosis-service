@@ -391,6 +391,30 @@ public class CaseActionsForCaseWorkerController {
         return getCCDCallbackResponseResponseEntityWithoutErrors(caseDetails.getCaseData());
     }
 
+    @PostMapping(value = "/allocateHearing", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "update postponed date for hearing.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> allocateHearing(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("ALLOCATE HEARING ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        Helper.updatePostponedDate(caseData);
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+    }
+
     @PostMapping(value = "/restrictedCases", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "change restricted reporting for a single case.")
     @ApiResponses(value = {
