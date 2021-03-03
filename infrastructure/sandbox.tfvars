@@ -1,4 +1,4 @@
-tornado_url = "https://docmosis-development.platform.hmcts.net/rs/render"
+tornado_url = "https://docmosis.sandbox.platform.hmcts.net/rs/render"
 idam_api_url = "http://idam-api-idam-sandbox.service.core-compute-idam-sandbox.internal"
 ccd_data_store_api_url = "http://ccd-data-store-api-sandbox.service.core-compute-sandbox.internal"
 dm_url = "http://dm-store-sandbox.service.core-compute-sandbox.internal"

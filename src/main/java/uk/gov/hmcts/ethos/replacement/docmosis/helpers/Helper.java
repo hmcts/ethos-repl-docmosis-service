@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -11,15 +12,18 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadES;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 public class Helper {
@@ -138,6 +142,35 @@ public class Helper {
         }
     }
 
+    public static DynamicValueType getDynamicValue(String value) {
+
+        DynamicValueType dynamicValueType = new DynamicValueType();
+        dynamicValueType.setCode(value);
+        dynamicValueType.setLabel(value);
+
+        return dynamicValueType;
+
+    }
+
+    public static List<DynamicValueType> getDefaultBfListItems() {
+        return new ArrayList<>(Arrays.asList(
+                getDynamicValue(BF_ACTION_ACAS),
+                getDynamicValue(BF_ACTION_CASE_LISTED),
+                getDynamicValue(BF_ACTION_CASE_PAPERS),
+                getDynamicValue(BF_ACTION_CASE_TRANSFERRED),
+                getDynamicValue(BF_ACTION_DRAFT),
+                getDynamicValue(BF_ACTION_ENQUIRY_ISSUED),
+                getDynamicValue(BF_ACTION_ENQUIRY_RECEIVED),
+                getDynamicValue(BF_ACTION_EXHIBITS),
+                getDynamicValue(BF_ACTION_INTERLOCUTORY),
+                getDynamicValue(BF_ACTION_IT3_RECEIVED),
+                getDynamicValue(BF_ACTION_OTHER_ACTION),
+                getDynamicValue(BF_ACTION_POSTPONEMENT_REQUESTED),
+                getDynamicValue(BF_ACTION_REFER_CHAIRMAN),
+                getDynamicValue(BF_ACTION_REPLY_TO_ENQUIRY),
+                getDynamicValue(BF_ACTION_STRIKING_OUT_WARNING)));
+    }
+
     public static List<String> hearingMidEventValidation(CaseData caseData) {
 
         List<String> errors = new ArrayList<>();
@@ -162,5 +195,54 @@ public class Helper {
         }
         return errors;
     }
+
+    public static void updatePositionTypeToClosed(CaseData caseData) {
+
+        caseData.setPositionType(CASE_CLOSED_POSITION);
+
+    }
+
+    public static void updatePostponedDate(CaseData caseData) {
+
+        if (caseData.getHearingCollection() != null) {
+            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+
+                if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
+                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+
+                        DateListedType dateListedType = dateListedTypeItem.getValue();
+                        if (isHearingStatusPostponed(dateListedType) && dateListedType.getPostponedDate() == null) {
+                            dateListedType.setPostponedDate(UtilHelper.formatCurrentDate2(LocalDate.now()));
+                        }
+                        if (dateListedType.getPostponedDate() != null
+                                &&
+                                (!isHearingStatusPostponed(dateListedType) || dateListedType.getHearingStatus() == null)) {
+                            dateListedType.setPostponedDate(null);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    private static boolean isHearingStatusPostponed(DateListedType dateListedType) {
+        return dateListedType.getHearingStatus() != null
+                && dateListedType.getHearingStatus().equals(HEARING_STATUS_POSTPONED);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

@@ -1,112 +1,90 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.BFActionType;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_ACAS;
 
 @Slf4j
 public class BFHelper {
 
-    public static void copyBFActionsCollections(CaseData caseData) {
+    public static void updateBfActionItems(CaseData caseData) {
 
-        List<BFActionTypeItem> bfActionTypeItemsCW = caseData.getBfActionsCW();
-        List<BFActionTypeItem> bfActionTypeItemsCWAux = new ArrayList<>();
+        List<BFActionTypeItem> bfActions = caseData.getBfActions();
 
-        if (bfActionTypeItemsCW != null && !bfActionTypeItemsCW.isEmpty()) {
+        if (bfActions != null && !bfActions.isEmpty()) {
 
-            log.info("Iterate through the bfActionTypeItemsCW");
+            for (BFActionTypeItem bfActionTypeItem : bfActions) {
 
-            for (BFActionTypeItem bfActionTypeItemCW : bfActionTypeItemsCW) {
+                BFActionType bfActionType = bfActionTypeItem.getValue();
 
-                BFActionType bfActionTypeCW = bfActionTypeItemCW.getValue();
-                List<BFActionTypeItem> bfActionTypeItemsAll =
-                        caseData.getBfActionsAll() == null
-                                ? new ArrayList<>()
-                                : caseData.getBfActionsAll();
+                if (isNullOrEmpty(bfActionType.getDateEntered())) {
 
-                if (isNullOrEmpty(bfActionTypeCW.getDateEntered())) {
-
-                    log.info("New bfAction");
-                    updateBFActionsAll(bfActionTypeCW, bfActionTypeItemsAll, CREATE_ACTION);
-
-                } else {
-
-                    log.info("Update bfAction");
-                    updateBFActionsAll(bfActionTypeCW, bfActionTypeItemsAll, AMEND_ACTION);
+                    bfActionType.setDateEntered(UtilHelper.formatCurrentDate2(LocalDate.now()));
 
                 }
 
-                caseData.setBfActionsAll(bfActionTypeItemsAll);
-                bfActionTypeItemCW.setValue(bfActionTypeCW);
-                bfActionTypeItemsCWAux.add(bfActionTypeItemCW);
+            }
+
+        }
+
+    }
+
+    public static void populateDynamicListBfActions(CaseData caseData) {
+
+        List<BFActionTypeItem> bfActionTypeItemListAux = new ArrayList<>();
+
+        if (caseData.getBfActions() != null && !caseData.getBfActions().isEmpty()){
+
+            List<BFActionTypeItem> bfActionTypeItemList = caseData.getBfActions();
+
+            for (BFActionTypeItem bfActionTypeItem : bfActionTypeItemList) {
+
+                DynamicFixedListType dynamicFixedListType = bfActionTypeItem.getValue().getAction();
+
+                if (dynamicFixedListType != null) {
+
+                    log.info("Updating the value of bfActionDynamicLists: " + dynamicFixedListType.getValue());
+
+                    BFActionTypeItem bfActionTypeItemAux = new BFActionTypeItem();
+                    bfActionTypeItemAux.setId(bfActionTypeItem.getId());
+                    bfActionTypeItemAux.setValue(bfActionTypeItem.getValue());
+                    bfActionTypeItemListAux.add(bfActionTypeItemAux);
+
+                }
 
             }
 
-            caseData.setBfActionsCW(bfActionTypeItemsCWAux);
-
-        }
-
-    }
-
-    private static void updateBFActionsAll(BFActionType bfActionTypeCW,
-                                           List<BFActionTypeItem> bfActionTypeItemsAll,
-                                           String action) {
-
-        if (action.equals(CREATE_ACTION)) {
-
-            BFActionType bfActionTypeAll = new BFActionType();
-            BFActionTypeItem bfActionTypeItemAll = new BFActionTypeItem();
-            log.info("Generate new date time id");
-            generateNewDateTimeId(bfActionTypeCW);
-            log.info("Create new entry for bfActionAll");
-            updateBFActionTypeAll(bfActionTypeCW, bfActionTypeAll);
-            bfActionTypeItemAll.setId(UUID.randomUUID().toString());
-            bfActionTypeItemAll.setValue(bfActionTypeAll);
-            bfActionTypeItemsAll.add(bfActionTypeItemAll);
-
         } else {
 
-            String dateEntered = bfActionTypeCW.getDateEntered();
-            log.info("Updating bfActionAll for: " + dateEntered);
-            bfActionTypeItemsAll.stream()
-                    .filter(bfActionTypeItemAll ->
-                            bfActionTypeItemAll.getValue().getDateEntered().equals(dateEntered))
-                    .findAny()
-                    .ifPresent(bfActionTypeItemAll ->
-                            updateBFActionTypeAll(bfActionTypeCW,
-                                    bfActionTypeItemAll.getValue()));
+            log.info("BF Actions is empty. Creating a dummy one");
+
+            DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+            dynamicFixedListType.setListItems(Helper.getDefaultBfListItems());
+            dynamicFixedListType.setValue(Helper.getDynamicValue(BF_ACTION_ACAS));
+
+            BFActionTypeItem bfActionTypeItem = new BFActionTypeItem();
+            BFActionType bfActionType = new BFActionType();
+            bfActionType.setAction(dynamicFixedListType);
+            bfActionTypeItem.setId(UUID.randomUUID().toString());
+            bfActionTypeItem.setValue(bfActionType);
+
+            bfActionTypeItemListAux = new ArrayList<>(Collections.singletonList(bfActionTypeItem));
 
         }
 
-    }
-
-    private static void generateNewDateTimeId(BFActionType bfActionTypeCW) {
-
-        log.info("Generate ID: " + bfActionTypeCW.getCwActions());
-
-        LocalDateTime dateTime = LocalDateTime.now();
-        String dateTimeID = dateTime.format(DATE_TIME_USER_FRIENDLY_PATTERN);
-        bfActionTypeCW.setDateEntered(dateTimeID);
-
-    }
-
-    private static void updateBFActionTypeAll(BFActionType bfActionTypeCW, BFActionType bfActionTypeAll) {
-
-        bfActionTypeAll.setDateEntered(bfActionTypeCW.getDateEntered());
-        bfActionTypeAll.setAllActions(bfActionTypeCW.getAllActions());
-        bfActionTypeAll.setBfDate(bfActionTypeCW.getBfDate());
-        bfActionTypeAll.setCleared(bfActionTypeCW.getCleared());
-        bfActionTypeAll.setCwActions(bfActionTypeCW.getCwActions());
-        bfActionTypeAll.setNotes(bfActionTypeCW.getNotes());
+        caseData.setBfActions(bfActionTypeItemListAux);
 
     }
 

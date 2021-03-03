@@ -84,7 +84,9 @@ public class CaseManagementForCaseWorkerService {
     private void struckOutDefaults(CaseData caseData) {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
-                respondentSumTypeItem.getValue().setResponseStruckOut(NO);
+                if (respondentSumTypeItem.getValue().getResponseStruckOut() == null) {
+                    respondentSumTypeItem.getValue().setResponseStruckOut(NO);
+                }
             }
         }
     }

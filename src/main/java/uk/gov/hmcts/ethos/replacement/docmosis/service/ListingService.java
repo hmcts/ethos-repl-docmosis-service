@@ -134,8 +134,8 @@ public class ListingService {
                 log.info("Cases searched: " + submitEvents.size());
                 List<BFDateTypeItem> bFDateTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
-                    if (submitEvent.getCaseData().getBfActionsCW() != null && !submitEvent.getCaseData().getBfActionsCW().isEmpty()) {
-                        for (BFActionTypeItem bfActionTypeItem : submitEvent.getCaseData().getBfActionsCW()) {
+                    if (submitEvent.getCaseData().getBfActions() != null && !submitEvent.getCaseData().getBfActions().isEmpty()) {
+                        for (BFActionTypeItem bfActionTypeItem : submitEvent.getCaseData().getBfActions()) {
                             BFDateTypeItem bFDateTypeItem = getBFDateTypeItem(bfActionTypeItem, listingDetails.getCaseData(), submitEvent.getCaseData());
                             if (bFDateTypeItem.getValue() != null) {
                                 bFDateTypeItems.add(bFDateTypeItem);
