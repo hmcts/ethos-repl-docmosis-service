@@ -57,6 +57,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String AMEND_RESPONDENT_DETAILS_URL = "/amendRespondentDetails";
     private static final String AMEND_RESPONDENT_REPRESENTATIVE_URL = "/amendRespondentRepresentative";
     private static final String UPDATE_HEARING_URL = "/updateHearing";
+    private static final String ALLOCATE_HEARING_URL = "/allocateHearing";
     private static final String RESTRICTED_CASES_URL = "/restrictedCases";
     private static final String AMEND_HEARING_URL = "/amendHearing";
     private static final String AMEND_CASE_STATE_URL = "/amendCaseState";
@@ -322,6 +323,19 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void updateHearing() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(UPDATE_HEARING_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void allocateHearing() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(ALLOCATE_HEARING_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -674,6 +688,15 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void updateHearingError400() throws Exception {
         mvc.perform(post(UPDATE_HEARING_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void allocateHearingError400() throws Exception {
+        mvc.perform(post(ALLOCATE_HEARING_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -1061,6 +1084,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void updateHearingForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(UPDATE_HEARING_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void allocateHearingForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(ALLOCATE_HEARING_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

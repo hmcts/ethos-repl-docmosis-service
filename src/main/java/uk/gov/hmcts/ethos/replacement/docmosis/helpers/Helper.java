@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -11,9 +12,11 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadES;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -198,5 +201,48 @@ public class Helper {
         caseData.setPositionType(CASE_CLOSED_POSITION);
 
     }
+
+    public static void updatePostponedDate(CaseData caseData) {
+
+        if (caseData.getHearingCollection() != null) {
+            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+
+                if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
+                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+
+                        DateListedType dateListedType = dateListedTypeItem.getValue();
+                        if (isHearingStatusPostponed(dateListedType) && dateListedType.getPostponedDate() == null) {
+                            dateListedType.setPostponedDate(UtilHelper.formatCurrentDate2(LocalDate.now()));
+                        }
+                        if (dateListedType.getPostponedDate() != null
+                                &&
+                                (!isHearingStatusPostponed(dateListedType) || dateListedType.getHearingStatus() == null)) {
+                            dateListedType.setPostponedDate(null);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    private static boolean isHearingStatusPostponed(DateListedType dateListedType) {
+        return dateListedType.getHearingStatus() != null
+                && dateListedType.getHearingStatus().equals(HEARING_STATUS_POSTPONED);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
