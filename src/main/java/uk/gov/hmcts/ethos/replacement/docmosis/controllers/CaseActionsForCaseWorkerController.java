@@ -416,7 +416,7 @@ public class CaseActionsForCaseWorkerController {
     }
 
     @PostMapping(value = "/restrictedCases", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "change restricted reporting for a single case.")
+    @ApiOperation(value = "change restricted reporting for a single case")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = CCDCallbackResponse.class),
