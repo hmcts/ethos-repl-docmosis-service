@@ -61,9 +61,7 @@ public class BFHelper {
                     bfActionTypeItemAux.setId(bfActionTypeItem.getId());
                     bfActionTypeItemAux.setValue(bfActionTypeItem.getValue());
                     bfActionTypeItemListAux.add(bfActionTypeItemAux);
-
                 }
-
             }
 
         } else {

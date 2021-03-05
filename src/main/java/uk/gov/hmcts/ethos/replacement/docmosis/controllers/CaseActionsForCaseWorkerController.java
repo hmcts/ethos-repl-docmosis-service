@@ -787,6 +787,30 @@ public class CaseActionsForCaseWorkerController {
         return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
+    @PostMapping(value = "/dynamicListOffices", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates all offices except the current one in dynamic lists.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> dynamicListOffices(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DYNAMIC LIST OFFICES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        Helper.populateDynamicListOffices(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+    }
+
     @PostMapping(value = "/createCaseTransfer", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "create a new Case in a different office.")
     @ApiResponses(value = {

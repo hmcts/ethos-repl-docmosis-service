@@ -32,7 +32,19 @@ public class MultiplePreAcceptService {
 
             log.info("Send updates to single cases");
 
-            multipleHelperService.sendPreAcceptToSinglesWithConfirmation(userToken, multipleDetails, errors);
+            if (multipleDetails.getCaseData().getPreAcceptCase().getCaseAccepted().equals(YES)) {
+
+                log.info("Accepting cases");
+
+                preAcceptLogic(userToken, multipleDetails, errors);
+
+            } else {
+
+                log.info("Rejecting cases");
+
+                rejectLogic(userToken, multipleDetails, errors);
+
+            }
 
         } else {
 
@@ -47,6 +59,18 @@ public class MultiplePreAcceptService {
     private boolean checkPreAcceptAlreadyDone(MultipleData multipleData) {
 
         return multipleData.getPreAcceptDone() != null && multipleData.getPreAcceptDone().equals(YES);
+
+    }
+
+    private void preAcceptLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
+
+        multipleHelperService.sendPreAcceptToSinglesWithConfirmation(userToken, multipleDetails, errors);
+
+    }
+
+    private void rejectLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
+
+        multipleHelperService.sendRejectToSinglesWithConfirmation(userToken, multipleDetails, errors);
 
     }
 

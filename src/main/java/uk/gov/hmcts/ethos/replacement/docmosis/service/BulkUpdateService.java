@@ -518,7 +518,7 @@ public class BulkUpdateService {
                 PersistentQHelper.sendUpdatesPersistentQ(bulkDetails,
                         userService.getUserDetails(userToken).getEmail(),
                         ethosCaseRefCollection,
-                        PersistentQHelper.getPreAcceptDataModel(),
+                        PersistentQHelper.getPreAcceptDataModel("dateAccepted"),
                         errors,
                         bulkDetails.getCaseData().getMultipleReference(),
                         createUpdatesBusSender,

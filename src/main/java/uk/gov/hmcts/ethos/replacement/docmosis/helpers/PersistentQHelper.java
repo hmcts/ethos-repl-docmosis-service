@@ -95,8 +95,24 @@ public class PersistentQHelper {
                 .build();
     }
 
-    public static PreAcceptDataModel getPreAcceptDataModel() {
+    public static PreAcceptDataModel getPreAcceptDataModel(String dateAccepted) {
         return PreAcceptDataModel.builder()
+                .dateAccepted(dateAccepted)
+                .build();
+    }
+
+    public static RejectDataModel getRejectDataModel(String dateRejected, List<String> rejectedReason) {
+        return RejectDataModel.builder()
+                .dateRejected(dateRejected)
+                .rejectReason(rejectedReason)
+                .build();
+    }
+
+    public static CloseDataModel getCloseDataModel(String clerkResponsible, String fileLocation, String notes) {
+        return CloseDataModel.builder()
+                .clerkResponsible(clerkResponsible)
+                .fileLocation(fileLocation)
+                .notes(notes)
                 .build();
     }
 
