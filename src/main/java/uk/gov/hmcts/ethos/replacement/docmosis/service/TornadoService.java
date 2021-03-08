@@ -88,7 +88,7 @@ public class TornadoService {
             StringBuilder sb = DocumentHelper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(),
                     userDetails, caseTypeId, venueAddressInputStream, correspondenceType,
                     correspondenceScotType, multipleData);
-            //log.info("Sending request: " + sb.toString());
+            log.info("Sending request: " + sb.toString());
             // send the instruction in UTF-8 encoding so that most character sets are available
             OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
             os.write(sb.toString());
