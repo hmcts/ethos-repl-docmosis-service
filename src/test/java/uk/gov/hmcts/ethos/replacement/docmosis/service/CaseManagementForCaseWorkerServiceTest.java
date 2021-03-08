@@ -327,13 +327,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         String expected = "" +
-                "<font style='background-color:Black; padding:5px; color:White; font-size:25px'>DO NOT POSTPONE</font>" +
-                "<font style='background-color:Green; padding:5px; color:White; font-size:25px'>LIVE APPEAL</font>" +
-                "<font style='background-color:Red; padding:5px; color:White; font-size:25px'>RULE 50(3)b</font>" +
-                "<font style='background-color:Turquoise; padding:5px; color:White; font-size:25px'>REPORTING</font>" +
-                "<font style='background-color:Orange; padding:5px; color:White; font-size:25px'>SENSITIVE</font>" +
-                "<font style='background-color:Purple; padding:5px; color:White; font-size:25px'>RESERVED</font>" +
-                "<font style='background-color:Blue; padding:5px; color:White; font-size:25px'>ECC</font>";
+                "<font style='Black'> DO NOT POSTPONE </font><font style='Green'> LIVE APPEAL </font><font style='Red'> RULE 50(3)b </font><font style='Turquoise'> REPORTING </font><font style='Orange'> SENSITIVE </font><font style='Purple'> RESERVED </font><font style='Blue'> ECC </font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
         assertEquals("EMP-TRIB-11111110.jpg", caseData.getFlagsImageFileName());
     }
@@ -343,7 +337,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         String expected = "" +
-                "<font style='background-color:Gray; padding:5px; color:White; font-size:25px'>WITH OUTSTATION</font>";
+                "<font style='Gray'> WITH OUTSTATION </font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
         assertEquals("EMP-TRIB-00000001.jpg", caseData.getFlagsImageFileName());
     }

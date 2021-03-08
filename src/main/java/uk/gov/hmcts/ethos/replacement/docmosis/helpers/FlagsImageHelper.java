@@ -86,8 +86,10 @@ public class FlagsImageHelper {
         }
 
         flagsImageFileName.append(flagRequired ? ONE : ZERO);
-        flagsImageAltText.append(flagRequired ? "<font style='background-color:" + flagColor
-                + "; padding:5px; color:White; font-size:25px'>" + flagName + "</font>" : "");
+//        flagsImageAltText.append(flagRequired ? "<font style='background-color:" + flagColor
+//                + "; padding:5px; color:White; font-size:25px'>" + flagName + "</font>" : "");
+        flagsImageAltText.append(flagRequired ? "<font style='" + flagColor
+                + "'> " + flagName + " </font>" : "");
 
     }
 
