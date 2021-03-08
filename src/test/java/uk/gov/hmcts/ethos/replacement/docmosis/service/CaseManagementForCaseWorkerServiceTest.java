@@ -327,7 +327,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         String expected = "" +
-                "<font style='Black'> DO NOT POSTPONE </font><font style='Green'> LIVE APPEAL </font><font style='Red'> RULE 50(3)b </font><font style='Turquoise'> REPORTING </font><font style='Orange'> SENSITIVE </font><font style='Purple'> RESERVED </font><font style='Blue'> ECC </font>";
+                "<span style='background-color:Black; padding:5px; color:White; font-size:25px'>DO NOT POSTPONE</span><span style='background-color:Green; padding:5px; color:White; font-size:25px'>LIVE APPEAL</span><span style='background-color:Red; padding:5px; color:White; font-size:25px'>RULE 50(3)b</span><span style='background-color:Turquoise; padding:5px; color:White; font-size:25px'>REPORTING</span><span style='background-color:Orange; padding:5px; color:White; font-size:25px'>SENSITIVE</span><span style='background-color:Purple; padding:5px; color:White; font-size:25px'>RESERVED</span><span style='background-color:Blue; padding:5px; color:White; font-size:25px'>ECC</span>";
         assertEquals(expected, caseData.getFlagsImageAltText());
         assertEquals("EMP-TRIB-11111110.jpg", caseData.getFlagsImageFileName());
     }
@@ -337,7 +337,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         String expected = "" +
-                "<font style='Gray'> WITH OUTSTATION </font>";
+                "<span style='background-color:Gray; padding:5px; color:White; font-size:25px'>WITH OUTSTATION</span>";
         assertEquals(expected, caseData.getFlagsImageAltText());
         assertEquals("EMP-TRIB-00000001.jpg", caseData.getFlagsImageFileName());
     }

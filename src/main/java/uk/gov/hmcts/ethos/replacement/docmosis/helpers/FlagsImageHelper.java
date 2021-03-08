@@ -88,9 +88,12 @@ public class FlagsImageHelper {
         flagsImageFileName.append(flagRequired ? ONE : ZERO);
 //        flagsImageAltText.append(flagRequired ? "<font style='background-color:" + flagColor
 //                + "; padding:5px; color:White; font-size:25px'>" + flagName + "</font>" : "");
-        flagsImageAltText.append(flagRequired ? "<font style='" + flagColor
-                + "'> " + flagName + " </font>" : "");
-
+//        flagsImageAltText.append(flagRequired ? "<font style='" + flagColor
+//                + "'> " + flagName + " </font>" : "");
+//        flagsImageAltText.append(flagRequired ? "<p style='display:inline; background-color:" + flagColor
+//                + "; padding:5px; color:White; font-size:25px'>" + flagName + "</p>" : "");
+        flagsImageAltText.append(flagRequired ? "<span style='background-color:" + flagColor
+                + "; padding:5px; color:White; font-size:25px'>" + flagName + "</span>" : "");
     }
 
     private static boolean sensitiveCase(CaseData caseData) {
