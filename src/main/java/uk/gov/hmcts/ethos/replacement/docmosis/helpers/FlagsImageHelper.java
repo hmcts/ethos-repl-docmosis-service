@@ -12,14 +12,14 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 public class FlagsImageHelper {
 
     private static final String COLOR_ORANGE = "Orange";
-    private static final String COLOR_TURQUOISE = "Turquoise";
+    private static final String COLOR_LIGHT_BLACK = "LightBlack";
     private static final String COLOR_RED = "Red";
     private static final String COLOR_PURPLE = "Purple";
-    private static final String COLOR_BLUE = "Blue";
+    private static final String COLOR_OLIVE = "Olive";
     private static final String COLOR_GREEN = "Green";
-    private static final String COLOR_BLACK = "Black";
+    private static final String COLOR_DARK_RED = "DarkRed";
     private static final String COLOR_WHITE = "White";
-    private static final String COLOR_GRAY = "Gray";
+    private static final String COLOR_DEEP_PINK = "DeepPink";
 
     //TODO MOVE TO CONSTANTS
     public static final String FLAG_WITH_OUTSTATION = "WITH OUTSTATION";
@@ -29,6 +29,7 @@ public class FlagsImageHelper {
         StringBuilder flagsImageAltText = new StringBuilder();
 
         flagsImageFileName.append(IMAGE_FILE_PRECEDING);
+        setFlagImageFor(FLAG_WITH_OUTSTATION, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_DO_NOT_POSTPONE, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_LIVE_APPEAL, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_RULE_503B, flagsImageFileName, flagsImageAltText, caseData);
@@ -36,7 +37,6 @@ public class FlagsImageHelper {
         setFlagImageFor(FLAG_SENSITIVE, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_ECC, flagsImageFileName, flagsImageAltText, caseData);
-        setFlagImageFor(FLAG_WITH_OUTSTATION, flagsImageFileName, flagsImageAltText, caseData);
         flagsImageFileName.append(IMAGE_FILE_EXTENSION);
 
         caseData.setFlagsImageAltText(flagsImageAltText.toString());
@@ -48,9 +48,13 @@ public class FlagsImageHelper {
         String flagColor;
 
         switch (flagName) {
+            case FLAG_WITH_OUTSTATION:
+                flagRequired = withOutstation(caseData);
+                flagColor = COLOR_DEEP_PINK;
+                break;
             case FLAG_DO_NOT_POSTPONE:
                 flagRequired = doNotPostpone(caseData);
-                flagColor = COLOR_BLACK;
+                flagColor = COLOR_DARK_RED;
                 break;
             case FLAG_LIVE_APPEAL:
                 flagRequired = liveAppeal(caseData);
@@ -62,7 +66,7 @@ public class FlagsImageHelper {
                 break;
             case FLAG_REPORTING:
                 flagRequired = rule503dApplies(caseData);
-                flagColor = COLOR_TURQUOISE;
+                flagColor = COLOR_LIGHT_BLACK;
                 break;
             case FLAG_SENSITIVE:
                 flagRequired = sensitiveCase(caseData);
@@ -74,18 +78,15 @@ public class FlagsImageHelper {
                 break;
             case FLAG_ECC:
                 flagRequired = counterClaimMade(caseData);
-                flagColor = COLOR_BLUE;
-                break;
-            case FLAG_WITH_OUTSTATION:
-                flagRequired = withOutstation(caseData);
-                flagColor = COLOR_GRAY;
+                flagColor = COLOR_OLIVE;
                 break;
             default:
                 flagRequired = false;
                 flagColor = COLOR_WHITE;
         }
         flagsImageFileName.append(flagRequired ? ONE : ZERO);
-        flagsImageAltText.append(flagRequired ? "<font color='" + flagColor + "' size='6'> " + flagName + " </font>" : "");
+        flagsImageAltText.append(flagRequired && flagsImageAltText.length() > 0 ? " - " : "");
+        flagsImageAltText.append(flagRequired ? "<font color='" + flagColor + "' size='5'> " + flagName + " </font>" : "");
     }
 
     private static boolean sensitiveCase(CaseData caseData) {

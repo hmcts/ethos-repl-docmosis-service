@@ -327,24 +327,24 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         String expected = "" +
-                "<font color='Black' size='6'> DO NOT POSTPONE </font>" +
-                "<font color='Green' size='6'> LIVE APPEAL </font>" +
-                "<font color='Red' size='6'> RULE 50(3)b </font>" +
-                "<font color='Turquoise' size='6'> REPORTING </font>" +
-                "<font color='Orange' size='6'> SENSITIVE </font>" +
-                "<font color='Purple' size='6'> RESERVED </font>" +
-                "<font color='Blue' size='6'> ECC </font>";
+                "<font color='DarkRed' size='5'> DO NOT POSTPONE </font> - " +
+                "<font color='Green' size='5'> LIVE APPEAL </font> - " +
+                "<font color='Red' size='5'> RULE 50(3)b </font> - " +
+                "<font color='LightBlack' size='5'> REPORTING </font> - " +
+                "<font color='Orange' size='5'> SENSITIVE </font> - " +
+                "<font color='Purple' size='5'> RESERVED </font> - " +
+                "<font color='Olive' size='5'> ECC </font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-11111110.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-01111111.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
     public void buildFlagsImageFileNameForTrueFlagsFieldsScotland() {
         CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
-        String expected = "<font color='Gray' size='6'> WITH OUTSTATION </font>";
+        String expected = "<font color='DeepPink' size='5'> WITH OUTSTATION </font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-00000001.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-10000000.jpg", caseData.getFlagsImageFileName());
     }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
