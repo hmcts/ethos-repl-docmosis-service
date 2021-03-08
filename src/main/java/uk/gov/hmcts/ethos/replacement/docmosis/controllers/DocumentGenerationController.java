@@ -154,11 +154,17 @@ public class DocumentGenerationController {
 
             documentGenerationService.clearUserChoices(caseDetails);
 
-            return ResponseEntity.ok(CCDCallbackResponse.builder()
-                    .data(caseDetails.getCaseData())
-                    .errors(errors)
-                    .significant_item(Helper.generateSignificantItem(documentInfo))
-                    .build());
+            SignificantItem significantItem = Helper.generateSignificantItem(documentInfo, errors);
+
+            if (errors.isEmpty()) {
+                return ResponseEntity.ok(CCDCallbackResponse.builder()
+                        .data(caseDetails.getCaseData())
+                        .errors(errors)
+                        .significant_item(significantItem)
+                        .build());
+            } else {
+                return getCCDCallbackResponseResponseEntityWithErrors(errors, caseDetails.getCaseData());
+            }
         }
         else {
 

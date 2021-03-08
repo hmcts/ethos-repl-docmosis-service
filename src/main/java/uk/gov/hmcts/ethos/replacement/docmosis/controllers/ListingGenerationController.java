@@ -186,7 +186,7 @@ public class ListingGenerationController {
             ccdRequest.getCaseDetails().getCaseData().setDocMarkUp(documentInfo.getMarkUp());
             return ResponseEntity.ok(CCDCallbackResponse.builder()
                     .data(ccdRequest.getCaseDetails().getCaseData())
-                    .significant_item(Helper.generateSignificantItem(documentInfo))
+                    .significant_item(Helper.generateSignificantItem(documentInfo, errors))
                     .build());
         } else {
             errors.add("No hearings have been found for your search criteria");
@@ -246,7 +246,7 @@ public class ListingGenerationController {
             listingData.setDocMarkUp(documentInfo.getMarkUp());
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .data(listingData)
-                    .significant_item(Helper.generateSignificantItem(documentInfo))
+                    .significant_item(Helper.generateSignificantItem(documentInfo, errors))
                     .build());
         } else {
             errors.add("No hearings have been found for your search criteria");
