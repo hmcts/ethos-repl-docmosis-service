@@ -327,7 +327,13 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         String expected = "" +
-                "<span style='background-color:Black; padding:5px; color:White; font-size:25px'>DO NOT POSTPONE</span><span style='background-color:Green; padding:5px; color:White; font-size:25px'>LIVE APPEAL</span><span style='background-color:Red; padding:5px; color:White; font-size:25px'>RULE 50(3)b</span><span style='background-color:Turquoise; padding:5px; color:White; font-size:25px'>REPORTING</span><span style='background-color:Orange; padding:5px; color:White; font-size:25px'>SENSITIVE</span><span style='background-color:Purple; padding:5px; color:White; font-size:25px'>RESERVED</span><span style='background-color:Blue; padding:5px; color:White; font-size:25px'>ECC</span>";
+                "<font color='Black' size='6'> DO NOT POSTPONE </font>" +
+                "<font color='Green' size='6'> LIVE APPEAL </font>" +
+                "<font color='Red' size='6'> RULE 50(3)b </font>" +
+                "<font color='Turquoise' size='6'> REPORTING </font>" +
+                "<font color='Orange' size='6'> SENSITIVE </font>" +
+                "<font color='Purple' size='6'> RESERVED </font>" +
+                "<font color='Blue' size='6'> ECC </font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
         assertEquals("EMP-TRIB-11111110.jpg", caseData.getFlagsImageFileName());
     }
@@ -336,8 +342,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void buildFlagsImageFileNameForTrueFlagsFieldsScotland() {
         CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
-        String expected = "" +
-                "<span style='background-color:Gray; padding:5px; color:White; font-size:25px'>WITH OUTSTATION</span>";
+        String expected = "<font color='Gray' size='6'> WITH OUTSTATION </font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
         assertEquals("EMP-TRIB-00000001.jpg", caseData.getFlagsImageFileName());
     }
