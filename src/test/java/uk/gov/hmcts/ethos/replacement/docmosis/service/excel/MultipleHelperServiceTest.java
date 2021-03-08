@@ -404,7 +404,7 @@ public class MultipleHelperServiceTest {
         multipleDetails.getCaseData().setFileLocation("FileLocation");
         multipleDetails.getCaseData().setNotes("Notes");
 
-        multipleHelperService.sendCloseToSinglesWithConfirmation(
+        multipleHelperService.sendCloseToSinglesWithoutConfirmation(
                 userToken,
                 multipleDetails,
                 new ArrayList<>()

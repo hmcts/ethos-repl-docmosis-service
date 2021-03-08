@@ -19,6 +19,10 @@ public class FlagsImageHelper {
     private static final String COLOR_GREEN = "Green";
     private static final String COLOR_BLACK = "Black";
     private static final String COLOR_WHITE = "White";
+    private static final String COLOR_GRAY = "Gray";
+
+    //TODO MOVE TO CONSTANTS
+    public static final String FLAG_WITH_OUTSTATION = "WITH OUTSTATION";
 
     public static void buildFlagsImageFileName(CaseData caseData) {
         StringBuilder flagsImageFileName = new StringBuilder();
@@ -32,6 +36,7 @@ public class FlagsImageHelper {
         setFlagImageFor(FLAG_SENSITIVE, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_ECC, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_WITH_OUTSTATION, flagsImageFileName, flagsImageAltText, caseData);
         flagsImageFileName.append(IMAGE_FILE_EXTENSION);
 
         caseData.setFlagsImageAltText(flagsImageAltText.toString());
@@ -71,14 +76,19 @@ public class FlagsImageHelper {
                 flagRequired = counterClaimMade(caseData);
                 flagColor = COLOR_BLUE;
                 break;
+            case FLAG_WITH_OUTSTATION:
+                flagRequired = withOutstation(caseData);
+                flagColor = COLOR_GRAY;
+                break;
             default:
                 flagRequired = false;
                 flagColor = COLOR_WHITE;
         }
 
         flagsImageFileName.append(flagRequired ? ONE : ZERO);
-        flagsImageAltText.append(flagRequired && flagsImageAltText.length() > 0 ? " - " : "");
-        flagsImageAltText.append(flagRequired ? "<font color='" + flagColor + "'>" + flagName + "</font>" : "");
+        flagsImageAltText.append(flagRequired ? "<font style='background-color:" + flagColor
+                + "; padding:5px; color:White; font-size:25px'>" + flagName + "</font>" : "");
+
     }
 
     private static boolean sensitiveCase(CaseData caseData) {
@@ -162,6 +172,10 @@ public class FlagsImageHelper {
         } else {
             return false;
         }
+    }
+
+    private static boolean withOutstation(CaseData caseData) {
+        return caseData.getManagingOffice() != null && !caseData.getManagingOffice().equals(GLASGOW_OFFICE);
     }
 
 }

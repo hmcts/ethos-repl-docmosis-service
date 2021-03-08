@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 import java.util.List;
 
@@ -48,11 +49,15 @@ public class MultiplePreAcceptService {
 
         } else {
 
-            log.info("All cases are in Accepted state");
+            log.info("All cases are in Accepted/Rejected state");
 
-            errors.add("All cases are in Accepted state");
+            errors.add("All cases are in Accepted/Rejected state");
 
         }
+
+        log.info("Resetting mid fields");
+
+        MultiplesHelper.resetMidFields(multipleDetails.getCaseData());
 
     }
 

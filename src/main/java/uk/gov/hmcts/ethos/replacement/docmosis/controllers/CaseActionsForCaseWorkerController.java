@@ -484,7 +484,7 @@ public class CaseActionsForCaseWorkerController {
         List<String> errors = new ArrayList<>();
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
 
-        if(ccdRequest.getCaseDetails().getState().equals(CLOSED_STATE)) {
+        if (ccdRequest.getCaseDetails().getState().equals(CLOSED_STATE)) {
             errors = eventValidationService.validateJurisdictionOutcome(caseData);
             log.info("Event fields validation: " + errors);
         }

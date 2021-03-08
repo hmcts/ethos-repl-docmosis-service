@@ -288,7 +288,8 @@ public class MultipleHelperService {
 
         sendTaskToSinglesWithConfirmation(userToken, multipleDetails,
                 PersistentQHelper.getPreAcceptDataModel(casePreAcceptType.getDateAccepted()),
-                errors);
+                errors,
+                YES);
 
     }
 
@@ -300,23 +301,25 @@ public class MultipleHelperService {
 
         sendTaskToSinglesWithConfirmation(userToken, multipleDetails,
                 PersistentQHelper.getRejectDataModel(casePreAcceptType.getDateRejected(), casePreAcceptType.getRejectReason()),
-                errors);
+                errors,
+                YES);
 
     }
 
-    public void sendCloseToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails,
+    public void sendCloseToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails,
                                                    List<String> errors) {
 
         MultipleData multipleData = multipleDetails.getCaseData();
 
         sendTaskToSinglesWithConfirmation(userToken, multipleDetails,
                 PersistentQHelper.getCloseDataModel(multipleData.getClerkResponsible(), multipleData.getFileLocation(), multipleData.getNotes()),
-                errors);
+                errors,
+                NO);
 
     }
 
-    private void sendTaskToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails,
-                                                   DataModelParent dataModelParent, List<String> errors) {
+    private void sendTaskToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails, DataModelParent dataModelParent,
+                                                   List<String> errors, String confirmation) {
 
         MultipleData multipleData = multipleDetails.getCaseData();
         List<String> ethosCaseRefCollection = getEthosCaseRefCollection(userToken, multipleData, errors);
@@ -329,7 +332,7 @@ public class MultipleHelperService {
                 dataModelParent,
                 errors,
                 multipleData.getMultipleReference(),
-                YES,
+                confirmation,
                 createUpdatesBusSender,
                 String.valueOf(ethosCaseRefCollection.size()));
 

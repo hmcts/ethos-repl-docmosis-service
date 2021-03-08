@@ -166,9 +166,8 @@ public class EventValidationService {
     public List<String> validateJurisdictionOutcome(CaseData caseData) {
         List<String> errors = new ArrayList<>();
         if (caseData.getJurCodesCollection() != null && !caseData.getJurCodesCollection().isEmpty()) {
-            ListIterator<JurCodesTypeItem> itr = caseData.getJurCodesCollection().listIterator();
-            while (itr.hasNext()) {
-                JurCodesType jurCodesType = itr.next().getValue();
+            for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
+                JurCodesType jurCodesType = jurCodesTypeItem.getValue();
                 if (jurCodesType.getJudgmentOutcome() == null) {
                     errors.add(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
                     break;

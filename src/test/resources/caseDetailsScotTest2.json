@@ -104,7 +104,8 @@
     "currentPosition": "First",
     "receiptDate": "2019-03-12",
     "responseReceived": "none",
-    "userLocation": "Liverpool"
+    "userLocation": "Liverpool",
+    "managingOffice" : "Glasgow"
   },
   "id": "123456789",
   "jurisdiction": "English",

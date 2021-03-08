@@ -56,6 +56,7 @@ public class ExcelActionsControllerTest {
     private static final String MULTIPLE_AMEND_CASE_IDS_MID_EVENT_VALIDATION_URL = "/multipleAmendCaseIdsMidEventValidation";
     private static final String MULTIPLE_SINGLE_MID_EVENT_VALIDATION_URL = "/multipleSingleMidEventValidation";
     private static final String MULTIPLE_MID_BATCH_1_VALIDATION_URL = "/multipleMidBatch1Validation";
+    private static final String CLOSE_MULTIPLE_URL = "/closeMultiple";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -98,6 +99,9 @@ public class ExcelActionsControllerTest {
 
     @MockBean
     private EventValidationService eventValidationService;
+
+    @MockBean
+    private MultipleHelperService multipleHelperService;
 
     private MockMvc mvc;
     private JsonNode requestContent;
@@ -299,6 +303,19 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void closeMultiple() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(CLOSE_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void createMultipleError400() throws Exception {
         mvc.perform(post(CREATE_MULTIPLE_URL)
                 .content("error")
@@ -418,6 +435,15 @@ public class ExcelActionsControllerTest {
     @Test
     public void multipleMidBatch1tValidationError400() throws Exception {
         mvc.perform(post(MULTIPLE_MID_BATCH_1_VALIDATION_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void closeMultipleError400() throws Exception {
+        mvc.perform(post(CLOSE_MULTIPLE_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -702,6 +728,16 @@ public class ExcelActionsControllerTest {
     public void multipleMidBatch1ValidationForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(MULTIPLE_MID_BATCH_1_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void closeMultipleForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(CLOSE_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

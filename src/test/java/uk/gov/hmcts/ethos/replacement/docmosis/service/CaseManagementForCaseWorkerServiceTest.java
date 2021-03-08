@@ -295,7 +295,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-00000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -303,7 +303,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest12.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-00000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -311,7 +311,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-00000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -319,7 +319,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest14.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         assertEquals("", caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-0000000.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-00000000.jpg", caseData.getFlagsImageFileName());
     }
 
     @Test
@@ -327,15 +327,25 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         String expected = "" +
-                "<font color='Black'>DO NOT POSTPONE</font> - " +
-                "<font color='Green'>LIVE APPEAL</font> - " +
-                "<font color='Red'>RULE 50(3)b</font> - " +
-                "<font color='Turquoise'>REPORTING</font> - " +
-                "<font color='Orange'>SENSITIVE</font> - " +
-                "<font color='Purple'>RESERVED</font> - " +
-                "<font color='Blue'>ECC</font>";
+                "<font style='background-color:Black; padding:5px; color:White; font-size:25px'>DO NOT POSTPONE</font>" +
+                "<font style='background-color:Green; padding:5px; color:White; font-size:25px'>LIVE APPEAL</font>" +
+                "<font style='background-color:Red; padding:5px; color:White; font-size:25px'>RULE 50(3)b</font>" +
+                "<font style='background-color:Turquoise; padding:5px; color:White; font-size:25px'>REPORTING</font>" +
+                "<font style='background-color:Orange; padding:5px; color:White; font-size:25px'>SENSITIVE</font>" +
+                "<font style='background-color:Purple; padding:5px; color:White; font-size:25px'>RESERVED</font>" +
+                "<font style='background-color:Blue; padding:5px; color:White; font-size:25px'>ECC</font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
-        assertEquals("EMP-TRIB-1111111.jpg", caseData.getFlagsImageFileName());
+        assertEquals("EMP-TRIB-11111110.jpg", caseData.getFlagsImageFileName());
+    }
+
+    @Test
+    public void buildFlagsImageFileNameForTrueFlagsFieldsScotland() {
+        CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
+        FlagsImageHelper.buildFlagsImageFileName(caseData);
+        String expected = "" +
+                "<font style='background-color:Gray; padding:5px; color:White; font-size:25px'>WITH OUTSTATION</font>";
+        assertEquals(expected, caseData.getFlagsImageAltText());
+        assertEquals("EMP-TRIB-00000001.jpg", caseData.getFlagsImageFileName());
     }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
