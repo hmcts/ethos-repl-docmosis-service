@@ -21,6 +21,7 @@ import uk.gov.hmcts.ecm.common.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -540,7 +541,7 @@ public class BulkActionsController {
             return ResponseEntity.ok(BulkCallbackResponse.builder()
                     .data(bulkRequest.getCaseDetails().getCaseData())
                     .significant_item(Helper.generateSignificantItem(bulkDocumentInfo.getDocumentInfo() != null ?
-                            bulkDocumentInfo.getDocumentInfo() : new DocumentInfo()))
+                            bulkDocumentInfo.getDocumentInfo() : new DocumentInfo(), new ArrayList<>()))
                     .build());
         } else {
             return ResponseEntity.ok(BulkCallbackResponse.builder()

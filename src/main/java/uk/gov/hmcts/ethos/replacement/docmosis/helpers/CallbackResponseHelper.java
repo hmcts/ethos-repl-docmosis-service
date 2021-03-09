@@ -59,7 +59,7 @@ public class CallbackResponseHelper {
 
             return ResponseEntity.ok(MultipleCallbackResponse.builder()
                     .data(multipleDetails.getCaseData())
-                    .significant_item(Helper.generateSignificantItem(documentInfo))
+                    .significant_item(Helper.generateSignificantItem(documentInfo, errors))
                     .build());
 
         } else {

@@ -35,13 +35,18 @@ public class Helper {
         return Optional.ofNullable(value).orElse("");
     }
 
-    public static SignificantItem generateSignificantItem(DocumentInfo documentInfo) {
+    public static SignificantItem generateSignificantItem(DocumentInfo documentInfo, List<String> errors) {
         log.info("generateSignificantItem for document: " + documentInfo);
-        return SignificantItem.builder()
-                .url(documentInfo.getUrl())
-                .description(documentInfo.getDescription())
-                .type(SignificantItemType.DOCUMENT.name())
-                .build();
+        if (documentInfo == null) {
+            errors.add("Error processing document");
+            return new SignificantItem();
+        } else {
+            return SignificantItem.builder()
+                    .url(documentInfo.getUrl())
+                    .description(documentInfo.getDescription())
+                    .type(SignificantItemType.DOCUMENT.name())
+                    .build();
+        }
     }
 
     private static List<DynamicValueType> createDynamicRespondentAddressFixedList(List<RespondentSumTypeItem> respondentCollection) {
