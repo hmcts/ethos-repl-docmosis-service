@@ -14,6 +14,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
@@ -91,6 +92,17 @@ public class TornadoServiceTest {
         caseData.setCorrespondenceScotType(correspondenceScotType);
         DocumentInfo documentInfo1 = tornadoService.documentGeneration(userToken, caseData, SCOTLAND_CASE_TYPE_ID,
                 caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
+        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    }
+
+    @Test
+    public void documentGenerationAllocatedOfficeMultiples() throws IOException {
+        caseData.setAllocatedOffice(GLASGOW_OFFICE);
+        CorrespondenceScotType correspondenceScotType = new CorrespondenceScotType();
+        correspondenceScotType.setLetterAddress(LETTER_ADDRESS_ALLOCATED_OFFICE);
+        caseData.setCorrespondenceScotType(correspondenceScotType);
+        DocumentInfo documentInfo1 = tornadoService.documentGeneration(userToken, caseData, SCOTLAND_CASE_TYPE_ID,
+                caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), new MultipleData());
         assertEquals(documentInfo.toString(), documentInfo1.toString());
     }
 

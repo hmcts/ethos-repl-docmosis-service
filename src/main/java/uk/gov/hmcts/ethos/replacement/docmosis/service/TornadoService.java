@@ -92,14 +92,16 @@ public class TornadoService {
         return conn;
     }
 
-    private DefaultValues getAllocatedCourtAddress(CaseData caseData, String caseTypeId) {
-        if (caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)
-                && caseData.getCorrespondenceScotType() != null
-                && caseData.getCorrespondenceScotType().getLetterAddress().equals(LETTER_ADDRESS_ALLOCATED_OFFICE)) {
-            if (caseData.getAllocatedOffice() != null) {
-                return defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH,
-                        caseData.getAllocatedOffice(), caseTypeId);
-            }
+    private boolean isAllocatedOffice(String caseTypeId, CorrespondenceScotType correspondenceScotType) {
+        return caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)
+                && correspondenceScotType != null
+                && correspondenceScotType.getLetterAddress().equals(LETTER_ADDRESS_ALLOCATED_OFFICE);
+    }
+
+    private DefaultValues getAllocatedCourtAddress(CaseData caseData, String caseTypeId, MultipleData multipleData) {
+        if ( (multipleData != null && isAllocatedOffice(caseTypeId, multipleData.getCorrespondenceScotType()))
+                || isAllocatedOffice(caseTypeId, caseData.getCorrespondenceScotType()) ) {
+            return defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, caseData.getAllocatedOffice(), caseTypeId);
         }
         return null;
     }
@@ -110,7 +112,7 @@ public class TornadoService {
                                   MultipleData multipleData) {
 
         try (InputStream venueAddressInputStream = getClass().getClassLoader().getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH)) {
-            DefaultValues allocatedCourtAddress = getAllocatedCourtAddress(caseData, caseTypeId);
+            DefaultValues allocatedCourtAddress = getAllocatedCourtAddress(caseData, caseTypeId, multipleData);
             StringBuilder sb = DocumentHelper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(),
                     userDetails, caseTypeId, venueAddressInputStream, correspondenceType,
                     correspondenceScotType, multipleData, allocatedCourtAddress);
