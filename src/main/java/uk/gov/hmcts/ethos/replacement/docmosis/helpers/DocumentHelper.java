@@ -12,6 +12,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
 import java.io.InputStream;
@@ -39,7 +40,8 @@ public class DocumentHelper {
                                                      InputStream venueAddressInputStream,
                                                      CorrespondenceType correspondenceType,
                                                      CorrespondenceScotType correspondenceScotType,
-                                                     MultipleData multipleData) {
+                                                     MultipleData multipleData,
+                                                     DefaultValues allocatedCourtAddress) {
         StringBuilder sb = new StringBuilder();
         String templateName = getTemplateName(correspondenceType, correspondenceScotType);
 
@@ -65,7 +67,7 @@ public class DocumentHelper {
             sb.append(getHearingData(caseData, caseTypeId, venueAddressInputStream, correspondenceType, correspondenceScotType));
             sb.append(getCorrespondenceData(correspondenceType));
             sb.append(getCorrespondenceScotData(correspondenceScotType));
-            sb.append(getCourtData(caseData));
+            sb.append(getCourtData(caseData, allocatedCourtAddress));
         }
 
         log.info("Check template names");
@@ -522,21 +524,34 @@ public class DocumentHelper {
         return sb;
     }
 
-    private static StringBuilder getCourtData(CaseData caseData) {
+    private static StringBuilder getCourtData(CaseData caseData, DefaultValues allocatedCourtAddress) {
         StringBuilder sb = new StringBuilder();
         log.info("Court data");
-        if (caseData.getTribunalCorrespondenceAddress() != null) {
-            sb.append("\"Court_addressLine1\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getAddressLine1())).append(NEW_LINE);
-            sb.append("\"Court_addressLine2\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getAddressLine2())).append(NEW_LINE);
-            sb.append("\"Court_addressLine3\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getAddressLine3())).append(NEW_LINE);
-            sb.append("\"Court_town\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getPostTown())).append(NEW_LINE);
-            sb.append("\"Court_county\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getCounty())).append(NEW_LINE);
-            sb.append("\"Court_postCode\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getPostCode())).append(NEW_LINE);
+        if (allocatedCourtAddress != null) {
+            sb.append("\"Court_addressLine1\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceAddressLine1())).append(NEW_LINE);
+            sb.append("\"Court_addressLine2\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceAddressLine2())).append(NEW_LINE);
+            sb.append("\"Court_addressLine3\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceAddressLine3())).append(NEW_LINE);
+            sb.append("\"Court_town\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceTown())).append(NEW_LINE);
+            sb.append("\"Court_county\":\"").append(NEW_LINE);
+            sb.append("\"Court_postCode\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondencePostCode())).append(NEW_LINE);
+            sb.append("\"Court_telephone\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceTelephone())).append(NEW_LINE);
+            sb.append("\"Court_fax\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceFax())).append(NEW_LINE);
+            sb.append("\"Court_DX\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceDX())).append(NEW_LINE);
+            sb.append("\"Court_Email\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceEmail())).append(NEW_LINE);
+        } else {
+            if (caseData.getTribunalCorrespondenceAddress() != null) {
+                sb.append("\"Court_addressLine1\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getAddressLine1())).append(NEW_LINE);
+                sb.append("\"Court_addressLine2\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getAddressLine2())).append(NEW_LINE);
+                sb.append("\"Court_addressLine3\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getAddressLine3())).append(NEW_LINE);
+                sb.append("\"Court_town\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getPostTown())).append(NEW_LINE);
+                sb.append("\"Court_county\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getCounty())).append(NEW_LINE);
+                sb.append("\"Court_postCode\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getPostCode())).append(NEW_LINE);
+            }
+            sb.append("\"Court_telephone\":\"").append(nullCheck(caseData.getTribunalCorrespondenceTelephone())).append(NEW_LINE);
+            sb.append("\"Court_fax\":\"").append(nullCheck(caseData.getTribunalCorrespondenceFax())).append(NEW_LINE);
+            sb.append("\"Court_DX\":\"").append(nullCheck(caseData.getTribunalCorrespondenceDX())).append(NEW_LINE);
+            sb.append("\"Court_Email\":\"").append(nullCheck(caseData.getTribunalCorrespondenceEmail())).append(NEW_LINE);
         }
-        sb.append("\"Court_telephone\":\"").append(nullCheck(caseData.getTribunalCorrespondenceTelephone())).append(NEW_LINE);
-        sb.append("\"Court_fax\":\"").append(nullCheck(caseData.getTribunalCorrespondenceFax())).append(NEW_LINE);
-        sb.append("\"Court_DX\":\"").append(nullCheck(caseData.getTribunalCorrespondenceDX())).append(NEW_LINE);
-        sb.append("\"Court_Email\":\"").append(nullCheck(caseData.getTribunalCorrespondenceEmail())).append(NEW_LINE);
         return sb;
     }
 
