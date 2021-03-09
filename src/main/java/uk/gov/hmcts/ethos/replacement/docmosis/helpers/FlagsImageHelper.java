@@ -21,9 +21,6 @@ public class FlagsImageHelper {
     private static final String COLOR_WHITE = "White";
     private static final String COLOR_DEEP_PINK = "DeepPink";
 
-    //TODO MOVE TO CONSTANTS
-    public static final String FLAG_WITH_OUTSTATION = "WITH OUTSTATION";
-
     public static void buildFlagsImageFileName(CaseData caseData) {
         StringBuilder flagsImageFileName = new StringBuilder();
         StringBuilder flagsImageAltText = new StringBuilder();
