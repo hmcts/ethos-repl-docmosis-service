@@ -194,8 +194,8 @@ public class DocumentHelperTest {
                 "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"\",\n" +
-                "\"Hearing_date\":\"25 November 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester Employment Tribunals, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t2_2A\":\"true\",\n" +
@@ -1345,8 +1345,8 @@ public class DocumentHelperTest {
                 "\"Respondent\":\"1. Antonio Vazquez\",\n" +
                 "\"resp_others\":\"2. Roberto Dondini\",\n" +
                 "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 13 Small Street, 26 House, Scotland, North West, SC13 4ED, UK\",\n" +
-                "\"Hearing_date\":\"25 November 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Glasgow Tribunal Centre, Atlantic Quay, 20 York Street, Glasgow, G2 8GT\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t_Scot_7_1\":\"true\",\n" +

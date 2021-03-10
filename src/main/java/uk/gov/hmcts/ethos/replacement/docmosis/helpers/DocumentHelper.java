@@ -19,10 +19,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -296,6 +293,7 @@ public class DocumentHelper {
             HearingType hearingType = getHearingByNumber(caseData.getHearingCollection(), correspondenceHearingNumber);
             log.info("Hearing type info by number");
             if (hearingType.getHearingDateCollection() != null && !hearingType.getHearingDateCollection().isEmpty()) {
+                log.info("Check if at least 1 is LISTED");
                 log.info("Hearing dates collection");
                 sb.append("\"Hearing_date\":\"").append(nullCheck(getHearingDates(hearingType.getHearingDateCollection()))).append(NEW_LINE);
                 sb.append("\"Hearing_date_time\":\"").append(nullCheck(getHearingDatesAndTime(hearingType.getHearingDateCollection()))).append(NEW_LINE);
@@ -347,12 +345,15 @@ public class DocumentHelper {
     private static String getHearingDates(List<DateListedTypeItem> hearingDateCollection) {
 
         StringBuilder sb = new StringBuilder();
-        Iterator<DateListedTypeItem> itr = hearingDateCollection.iterator();
 
-        while (itr.hasNext()) {
-            sb.append(UtilHelper.formatLocalDate(itr.next().getValue().getListedDate()));
-            sb.append(itr.hasNext() ? ", " : "");
+        List<String> dateListedList = new ArrayList<>();
+        for (DateListedTypeItem dateListedTypeItem : hearingDateCollection) {
+            if (dateListedTypeItem.getValue().getHearingStatus() != null
+                    && dateListedTypeItem.getValue().getHearingStatus().equals(HEARING_STATUS_LISTED)) {
+                dateListedList.add(UtilHelper.formatLocalDate(dateListedTypeItem.getValue().getListedDate()));
+            }
         }
+        sb.append(String.join(", ", dateListedList));
 
         return sb.toString();
     }
@@ -362,16 +363,21 @@ public class DocumentHelper {
         StringBuilder sb = new StringBuilder(getHearingDates(hearingDateCollection));
         Iterator<DateListedTypeItem> itr = hearingDateCollection.iterator();
         LocalTime earliestTime = LocalTime.of(23,59);
+        boolean isEmpty = true;
 
         while (itr.hasNext()) {
-            LocalDateTime listedDate = LocalDateTime.parse(itr.next().getValue().getListedDate());
-            LocalTime listedTime = LocalTime.of(listedDate.getHour(),listedDate.getMinute());
-            earliestTime = listedTime.isBefore(earliestTime) ? listedTime : earliestTime;
+            DateListedType dateListedType = itr.next().getValue();
+            if (dateListedType.getHearingStatus() != null && dateListedType.getHearingStatus().equals(HEARING_STATUS_LISTED)) {
+                LocalDateTime listedDate = LocalDateTime.parse(dateListedType.getListedDate());
+                LocalTime listedTime = LocalTime.of(listedDate.getHour(), listedDate.getMinute());
+                earliestTime = listedTime.isBefore(earliestTime) ? listedTime : earliestTime;
+                isEmpty = false;
+            }
         }
-
-        sb.append(" at ");
-
-        sb.append(earliestTime.toString());
+        if (!isEmpty) {
+            sb.append(" at ");
+            sb.append(earliestTime.toString());
+        }
 
         return sb.toString();
     }
