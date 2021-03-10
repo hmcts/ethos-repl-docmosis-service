@@ -293,7 +293,6 @@ public class DocumentHelper {
             HearingType hearingType = getHearingByNumber(caseData.getHearingCollection(), correspondenceHearingNumber);
             log.info("Hearing type info by number");
             if (hearingType.getHearingDateCollection() != null && !hearingType.getHearingDateCollection().isEmpty()) {
-                log.info("Check if at least 1 is LISTED");
                 log.info("Hearing dates collection");
                 sb.append("\"Hearing_date\":\"").append(nullCheck(getHearingDates(hearingType.getHearingDateCollection()))).append(NEW_LINE);
                 sb.append("\"Hearing_date_time\":\"").append(nullCheck(getHearingDatesAndTime(hearingType.getHearingDateCollection()))).append(NEW_LINE);
