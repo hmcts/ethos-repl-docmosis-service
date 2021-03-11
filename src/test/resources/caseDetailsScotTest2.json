@@ -61,6 +61,7 @@
             {
               "id" : "123345",
               "value" : {
+                "Hearing_status": "Listed",
                 "listedDate": "2019-11-25T12:11:00.000"
               }
             }
@@ -104,7 +105,8 @@
     "currentPosition": "First",
     "receiptDate": "2019-03-12",
     "responseReceived": "none",
-    "userLocation": "Liverpool"
+    "userLocation": "Liverpool",
+    "managingOffice" : "Glasgow"
   },
   "id": "123456789",
   "jurisdiction": "English",

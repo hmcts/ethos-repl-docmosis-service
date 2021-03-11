@@ -214,6 +214,7 @@ public class CaseActionsForCaseWorkerController {
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.caseDataDefaults(caseData);
             generateEthosCaseReference(caseData, ccdRequest);
+            FlagsImageHelper.buildFlagsImageFileName(caseData);
             caseData.setMultipleFlag(caseData.getCaseType() != null
                     && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
         }
@@ -392,7 +393,7 @@ public class CaseActionsForCaseWorkerController {
     }
 
     @PostMapping(value = "/allocateHearing", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "update postponed date for hearing.")
+    @ApiOperation(value = "update postponed date when allocating a hearing.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = CCDCallbackResponse.class),
@@ -416,7 +417,7 @@ public class CaseActionsForCaseWorkerController {
     }
 
     @PostMapping(value = "/restrictedCases", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "change restricted reporting for a single case.")
+    @ApiOperation(value = "change restricted reporting for a single case")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = CCDCallbackResponse.class),
@@ -484,7 +485,7 @@ public class CaseActionsForCaseWorkerController {
         List<String> errors = new ArrayList<>();
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
 
-        if(ccdRequest.getCaseDetails().getState().equals(CLOSED_STATE)) {
+        if (ccdRequest.getCaseDetails().getState().equals(CLOSED_STATE)) {
             errors = eventValidationService.validateJurisdictionOutcome(caseData);
             log.info("Event fields validation: " + errors);
         }
@@ -785,6 +786,30 @@ public class CaseActionsForCaseWorkerController {
         List<String> errors = eventValidationService.validateDepositRefunded(caseData);
 
         return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
+    }
+
+    @PostMapping(value = "/dynamicListOffices", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates all offices except the current one in dynamic lists.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> dynamicListOffices(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DYNAMIC LIST OFFICES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        Helper.populateDynamicListOffices(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
+
+        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
     @PostMapping(value = "/createCaseTransfer", consumes = APPLICATION_JSON_VALUE)

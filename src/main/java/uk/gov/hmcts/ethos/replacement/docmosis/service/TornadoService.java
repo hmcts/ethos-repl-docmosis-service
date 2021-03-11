@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
@@ -10,6 +10,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
@@ -23,22 +24,33 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static java.net.HttpURLConnection.HTTP_OK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService.APPLICATION_DOCX_VALUE;
 
 @Slf4j
 @Service("tornadoService")
-@RequiredArgsConstructor
 public class TornadoService {
 
     private static final String VENUE_ADDRESS_INPUT_STREAM_ERROR = "Failed to get an inputStream for the venueAddressValues.xlsx file : ---> ";
 
     private final TornadoConfiguration tornadoConfiguration;
     private final DocumentManagementService documentManagementService;
+    private final UserService userService;
+    private final DefaultValuesReaderService defaultValuesReaderService;
+
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
-    private final UserService userService;
+
+    @Autowired
+    public TornadoService(TornadoConfiguration tornadoConfiguration,
+                          DocumentManagementService documentManagementService,
+                          UserService userService,
+                          DefaultValuesReaderService defaultValuesReaderService) {
+        this.tornadoConfiguration = tornadoConfiguration;
+        this.documentManagementService = documentManagementService;
+        this.userService = userService;
+        this.defaultValuesReaderService = defaultValuesReaderService;
+    }
 
     public DocumentInfo documentGeneration(String authToken, CaseData caseData, String caseTypeId,
                                            CorrespondenceType correspondenceType,
@@ -51,7 +63,8 @@ public class TornadoService {
             log.info("Connected");
             UserDetails userDetails = userService.getUserDetails(authToken);
             String documentName = Helper.getDocumentName(correspondenceType, correspondenceScotType);
-            buildInstruction(conn, caseData, userDetails, caseTypeId, correspondenceType, correspondenceScotType, multipleData);
+            buildInstruction(conn, caseData, userDetails, caseTypeId,
+                    correspondenceType, correspondenceScotType, multipleData);
             documentInfo = checkResponseStatus(authToken, conn, documentName);
         } catch (ConnectException e) {
             log.error("Unable to connect to Docmosis: " + e.getMessage());
@@ -79,15 +92,30 @@ public class TornadoService {
         return conn;
     }
 
+    private boolean isAllocatedOffice(String caseTypeId, CorrespondenceScotType correspondenceScotType) {
+        return caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)
+                && correspondenceScotType != null
+                && correspondenceScotType.getLetterAddress().equals(LETTER_ADDRESS_ALLOCATED_OFFICE);
+    }
+
+    private DefaultValues getAllocatedCourtAddress(CaseData caseData, String caseTypeId, MultipleData multipleData) {
+        if ( (multipleData != null && isAllocatedOffice(caseTypeId, multipleData.getCorrespondenceScotType()))
+                || isAllocatedOffice(caseTypeId, caseData.getCorrespondenceScotType()) ) {
+            return defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, caseData.getAllocatedOffice(), caseTypeId);
+        }
+        return null;
+    }
+
     private void buildInstruction(HttpURLConnection conn, CaseData caseData, UserDetails userDetails,
                                   String caseTypeId, CorrespondenceType correspondenceType,
                                   CorrespondenceScotType correspondenceScotType,
                                   MultipleData multipleData) {
 
         try (InputStream venueAddressInputStream = getClass().getClassLoader().getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH)) {
+            DefaultValues allocatedCourtAddress = getAllocatedCourtAddress(caseData, caseTypeId, multipleData);
             StringBuilder sb = DocumentHelper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(),
                     userDetails, caseTypeId, venueAddressInputStream, correspondenceType,
-                    correspondenceScotType, multipleData);
+                    correspondenceScotType, multipleData, allocatedCourtAddress);
             //log.info("Sending request: " + sb.toString());
             // send the instruction in UTF-8 encoding so that most character sets are available
             OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);

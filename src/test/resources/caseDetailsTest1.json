@@ -107,6 +107,7 @@
             {
               "id" : "123345",
               "value" : {
+                "Hearing_status": "Listed",
                 "listedDate": "2019-11-01T12:11:00.000"
               }
             },
@@ -137,18 +138,21 @@
             {
               "id" : "123345",
               "value" : {
+                "Hearing_status": "Listed",
                 "listedDate": "2019-11-25T12:11:00.000"
               }
             },
             {
               "id" : "123346",
               "value" : {
+                "Hearing_status": "Listed",
                 "listedDate": "2019-12-14T10:30:00.000"
               }
             },
             {
               "id" : "123347",
               "value" : {
+                "Hearing_status": "Listed",
                 "listedDate": "2019-12-28T11:15:00.000"
               }
             }

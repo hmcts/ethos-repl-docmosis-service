@@ -1,16 +1,18 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
+import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.DataModelParent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
@@ -282,6 +284,44 @@ public class MultipleHelperService {
                                                        List<String> errors) {
 
         MultipleData multipleData = multipleDetails.getCaseData();
+        CasePreAcceptType casePreAcceptType = multipleData.getPreAcceptCase();
+
+        sendTaskToSinglesWithConfirmation(userToken, multipleDetails,
+                PersistentQHelper.getPreAcceptDataModel(casePreAcceptType.getDateAccepted()),
+                errors,
+                YES);
+
+    }
+
+    public void sendRejectToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails,
+                                                    List<String> errors) {
+
+        MultipleData multipleData = multipleDetails.getCaseData();
+        CasePreAcceptType casePreAcceptType = multipleData.getPreAcceptCase();
+
+        sendTaskToSinglesWithConfirmation(userToken, multipleDetails,
+                PersistentQHelper.getRejectDataModel(casePreAcceptType.getDateRejected(), casePreAcceptType.getRejectReason()),
+                errors,
+                YES);
+
+    }
+
+    public void sendCloseToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails,
+                                                   List<String> errors) {
+
+        MultipleData multipleData = multipleDetails.getCaseData();
+
+        sendTaskToSinglesWithConfirmation(userToken, multipleDetails,
+                PersistentQHelper.getCloseDataModel(multipleData.getClerkResponsible(), multipleData.getFileLocation(), multipleData.getNotes()),
+                errors,
+                NO);
+
+    }
+
+    private void sendTaskToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails, DataModelParent dataModelParent,
+                                                   List<String> errors, String confirmation) {
+
+        MultipleData multipleData = multipleDetails.getCaseData();
         List<String> ethosCaseRefCollection = getEthosCaseRefCollection(userToken, multipleData, errors);
         String username = userService.getUserDetails(userToken).getEmail();
 
@@ -289,10 +329,10 @@ public class MultipleHelperService {
                 multipleDetails.getJurisdiction(),
                 username,
                 ethosCaseRefCollection,
-                PersistentQHelper.getPreAcceptDataModel(),
+                dataModelParent,
                 errors,
                 multipleData.getMultipleReference(),
-                YES,
+                confirmation,
                 createUpdatesBusSender,
                 String.valueOf(ethosCaseRefCollection.size()));
 

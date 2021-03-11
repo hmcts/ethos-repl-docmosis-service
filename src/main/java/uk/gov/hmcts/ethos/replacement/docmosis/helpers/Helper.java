@@ -236,18 +236,48 @@ public class Helper {
                 && dateListedType.getHearingStatus().equals(HEARING_STATUS_POSTPONED);
     }
 
+    public static List<String> getAllOffices() {
 
+        return new ArrayList<>(Arrays.asList(
+                MANCHESTER_CASE_TYPE_ID,
+                SCOTLAND_CASE_TYPE_ID,
+                BRISTOL_CASE_TYPE_ID,
+                LEEDS_CASE_TYPE_ID,
+                LONDON_CENTRAL_CASE_TYPE_ID,
+                LONDON_EAST_CASE_TYPE_ID,
+                LONDON_SOUTH_CASE_TYPE_ID,
+                MIDLANDS_EAST_CASE_TYPE_ID,
+                MIDLANDS_WEST_CASE_TYPE_ID,
+                NEWCASTLE_CASE_TYPE_ID,
+                WALES_CASE_TYPE_ID,
+                WATFORD_CASE_TYPE_ID));
+    }
 
+    public static List<DynamicValueType> getAvailableOffices(String currentOffice) {
 
+        List<DynamicValueType> offices = new ArrayList<>();
 
+        for (String office : getAllOffices()) {
 
+            if (!currentOffice.equals(office)) {
 
+                offices.add(getDynamicValue(office));
+            }
+        }
 
+        return offices;
+    }
 
+    public static void populateDynamicListOffices(CaseData caseData, String caseTypeId) {
 
+        log.info("Populating dynamic list with offices");
 
+        DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+        dynamicFixedListType.setListItems(getAvailableOffices(caseTypeId));
 
+        caseData.setHearingClerk(dynamicFixedListType);
 
-
+        //TODO CLEAR UP THE DYNAMIC LIST
+    }
 
 }

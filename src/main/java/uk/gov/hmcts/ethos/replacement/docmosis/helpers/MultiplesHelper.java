@@ -181,6 +181,7 @@ public class MultiplesHelper {
         multipleData.setPositionType(null);
         multipleData.setReceiptDate(null);
         multipleData.setHearingStage(null);
+        multipleData.setNotes(null);
 
         multipleData.setBatchUpdateCase(null);
         multipleData.setBatchUpdateType(null);
@@ -198,6 +199,8 @@ public class MultiplesHelper {
         multipleData.setAddressLabelsSelectionTypeMSL(null);
         multipleData.setAddressLabelCollection(null);
         multipleData.setAddressLabelsAttributesType(null);
+
+        multipleData.setPreAcceptCase(null);
 
     }
 

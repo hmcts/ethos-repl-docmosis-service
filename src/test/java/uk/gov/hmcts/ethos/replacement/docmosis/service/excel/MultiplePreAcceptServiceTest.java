@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
@@ -14,8 +15,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultiplePreAcceptServiceTest {
@@ -35,6 +35,10 @@ public class MultiplePreAcceptServiceTest {
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
         userToken = "authString";
         errors = new ArrayList<>();
+        CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
+        casePreAcceptType.setCaseAccepted(YES);
+        casePreAcceptType.setDateAccepted("2021-02-23");
+        multipleDetails.getCaseData().setPreAcceptCase(casePreAcceptType);
     }
 
     @Test
@@ -57,6 +61,19 @@ public class MultiplePreAcceptServiceTest {
                 errors);
         verifyNoMoreInteractions(multipleHelperService);
         assertEquals(1, errors.size());
+    }
+
+    @Test
+    public void bulkPreAcceptLogicRejected() {
+        multipleDetails.getCaseData().getPreAcceptCase().setCaseAccepted(NO);
+        multipleDetails.getCaseData().setMultipleSource(ET1_ONLINE_CASE_SOURCE);
+        multiplePreAcceptService.bulkPreAcceptLogic(userToken,
+                multipleDetails,
+                errors);
+        verify(multipleHelperService, times(1))
+                .sendRejectToSinglesWithConfirmation(userToken, multipleDetails, errors);
+        verifyNoMoreInteractions(multipleHelperService);
+        assertEquals(0, errors.size());
     }
 
 }

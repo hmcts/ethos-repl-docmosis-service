@@ -10,6 +10,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
@@ -23,6 +24,8 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleHelperServiceTest {
@@ -358,7 +361,50 @@ public class MultipleHelperServiceTest {
     @Test
     public void sendPreAcceptToSinglesWithConfirmation() {
 
+        CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
+        casePreAcceptType.setCaseAccepted(YES);
+        casePreAcceptType.setDateAccepted("2021-02-23");
+        multipleDetails.getCaseData().setPreAcceptCase(casePreAcceptType);
+
         multipleHelperService.sendPreAcceptToSinglesWithConfirmation(
+                userToken,
+                multipleDetails,
+                new ArrayList<>()
+        );
+
+        verify(userService).getUserDetails(userToken);
+        verifyNoMoreInteractions(userService);
+
+    }
+
+    @Test
+    public void sendPreAcceptRejectedToSinglesWithConfirmation() {
+
+        CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
+        casePreAcceptType.setCaseAccepted(NO);
+        casePreAcceptType.setDateRejected("2021-02-23");
+        casePreAcceptType.setRejectReason(new ArrayList<>());
+        multipleDetails.getCaseData().setPreAcceptCase(casePreAcceptType);
+
+        multipleHelperService.sendRejectToSinglesWithConfirmation(
+                userToken,
+                multipleDetails,
+                new ArrayList<>()
+        );
+
+        verify(userService).getUserDetails(userToken);
+        verifyNoMoreInteractions(userService);
+
+    }
+
+    @Test
+    public void sendCloseToSinglesWithConfirmation() {
+
+        multipleDetails.getCaseData().setClerkResponsible("Clerk");
+        multipleDetails.getCaseData().setFileLocation("FileLocation");
+        multipleDetails.getCaseData().setNotes("Notes");
+
+        multipleHelperService.sendCloseToSinglesWithoutConfirmation(
                 userToken,
                 multipleDetails,
                 new ArrayList<>()

@@ -128,6 +128,7 @@ public class ECCHelper {
         caseData.setCcdID(originalId);
         caseData.setManagingOffice(originalCaseData.getManagingOffice() != null ? originalCaseData.getManagingOffice() : "");
         caseData.setAllocatedOffice(originalCaseData.getAllocatedOffice() != null ? originalCaseData.getAllocatedOffice() : "");
+        caseData.setMultipleFlag(NO);
         caseData.setState(ACCEPTED_STATE);
     }
 

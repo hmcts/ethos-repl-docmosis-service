@@ -10,9 +10,11 @@ import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
@@ -64,7 +66,7 @@ public class TornadoServiceTest {
         userDetails = HelperTest.getUserDetails();
         IdamApi idamApi = authorisation -> userDetails;
         userService = new UserService(idamApi);
-        tornadoService = new TornadoService(tornadoConfiguration, documentManagementService, userService);
+        tornadoService = new TornadoService(tornadoConfiguration, documentManagementService, userService, null);
         userToken = "authToken";
     }
 
@@ -79,6 +81,28 @@ public class TornadoServiceTest {
     public void documentGeneration() throws IOException {
         DocumentInfo documentInfo1 = tornadoService.documentGeneration(userToken, caseData, MANCHESTER_CASE_TYPE_ID,
                 caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
+        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    }
+
+    @Test
+    public void documentGenerationAllocatedOffice() throws IOException {
+        caseData.setAllocatedOffice(GLASGOW_OFFICE);
+        CorrespondenceScotType correspondenceScotType = new CorrespondenceScotType();
+        correspondenceScotType.setLetterAddress(LETTER_ADDRESS_ALLOCATED_OFFICE);
+        caseData.setCorrespondenceScotType(correspondenceScotType);
+        DocumentInfo documentInfo1 = tornadoService.documentGeneration(userToken, caseData, SCOTLAND_CASE_TYPE_ID,
+                caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
+        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    }
+
+    @Test
+    public void documentGenerationAllocatedOfficeMultiples() throws IOException {
+        caseData.setAllocatedOffice(GLASGOW_OFFICE);
+        CorrespondenceScotType correspondenceScotType = new CorrespondenceScotType();
+        correspondenceScotType.setLetterAddress(LETTER_ADDRESS_ALLOCATED_OFFICE);
+        caseData.setCorrespondenceScotType(correspondenceScotType);
+        DocumentInfo documentInfo1 = tornadoService.documentGeneration(userToken, caseData, SCOTLAND_CASE_TYPE_ID,
+                caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), new MultipleData());
         assertEquals(documentInfo.toString(), documentInfo1.toString());
     }
 

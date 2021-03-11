@@ -10,6 +10,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsAttributesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
 import java.io.InputStream;
@@ -150,7 +151,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails1.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails1.getCaseData().getCorrespondenceType(),
-                caseDetails1.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails1.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -193,8 +194,8 @@ public class DocumentHelperTest {
                 "\"Respondent\":\"Antonio Vazquez\",\n" +
                 "\"resp_others\":\"\",\n" +
                 "\"resp_address\":\"\",\n" +
-                "\"Hearing_date\":\"25 November 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Manchester Employment Tribunals, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t2_2A\":\"true\",\n" +
@@ -222,7 +223,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails2.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails2.getCaseData().getCorrespondenceType(),
-                caseDetails2.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails2.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -294,7 +295,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails3.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails3.getCaseData().getCorrespondenceType(),
-                caseDetails3.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails3.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -366,7 +367,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails4.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails4.getCaseData().getCorrespondenceType(),
-                caseDetails4.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails4.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -439,7 +440,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails5.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails5.getCaseData().getCorrespondenceType(),
-                caseDetails5.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails5.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -512,7 +513,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails6.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails6.getCaseData().getCorrespondenceType(),
-                caseDetails6.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails6.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -585,7 +586,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails7.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails7.getCaseData().getCorrespondenceType(),
-                caseDetails7.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails7.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -657,7 +658,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails8.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails8.getCaseData().getCorrespondenceType(),
-                caseDetails8.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails8.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -729,7 +730,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails9.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails9.getCaseData().getCorrespondenceType(),
-                caseDetails9.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails9.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -755,7 +756,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails10.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails10.getCaseData().getCorrespondenceType(),
-                caseDetails10.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails10.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -805,7 +806,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails12.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails12.getCaseData().getCorrespondenceType(),
-                caseDetails12.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails12.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -847,7 +848,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails13.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails13.getCaseData().getCorrespondenceType(),
-                caseDetails13.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails13.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -1007,7 +1008,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails14.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails14.getCaseData().getCorrespondenceType(),
-                caseDetails14.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails14.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -1237,7 +1238,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails15.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails15.getCaseData().getCorrespondenceType(),
-                caseDetails15.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetails15.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -1301,7 +1302,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetailsEmpty.getCaseData(), "", userDetails,
                 "", venueAddressInputStream, caseDetailsEmpty.getCaseData().getCorrespondenceType(),
-                caseDetailsEmpty.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetailsEmpty.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -1344,8 +1345,8 @@ public class DocumentHelperTest {
                 "\"Respondent\":\"1. Antonio Vazquez\",\n" +
                 "\"resp_others\":\"2. Roberto Dondini\",\n" +
                 "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 13 Small Street, 26 House, Scotland, North West, SC13 4ED, UK\",\n" +
-                "\"Hearing_date\":\"25 November 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019 at 12:11\",\n" +
+                "\"Hearing_date\":\"\",\n" +
+                "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"Glasgow Tribunal Centre, Atlantic Quay, 20 York Street, Glasgow, G2 8GT\",\n" +
                 "\"Hearing_duration\":\"2 days\",\n" +
                 "\"t_Scot_7_1\":\"true\",\n" +
@@ -1373,7 +1374,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetailsScot1.getCaseData(), "", userDetails,
                 SCOTLAND_CASE_TYPE_ID, venueAddressInputStream, caseDetailsScot1.getCaseData().getCorrespondenceType(),
-                caseDetailsScot1.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetailsScot1.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -1445,7 +1446,7 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetailsScot2.getCaseData(), "", userDetails,
                 DUMMY_CASE_TYPE_ID, venueAddressInputStream, caseDetailsScot2.getCaseData().getCorrespondenceType(),
-                caseDetailsScot2.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetailsScot2.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -1516,7 +1517,85 @@ public class DocumentHelperTest {
                 "}\n";
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetailsScot3.getCaseData(), "", userDetails,
                 SCOTLAND_CASE_TYPE_ID, venueAddressInputStream, caseDetailsScot3.getCaseData().getCorrespondenceType(),
-                caseDetailsScot3.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetailsScot3.getCaseData().getCorrespondenceScotType(), null, null).toString());
+    }
+
+    @Test
+    public void buildDocumentContentScot3AllocatedOffice() {
+        String expected = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"EM-TRB-SCO-ENG-00044.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
+                "\"data\":{\n" +
+                "\"claimant_or_rep_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
+                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
+                "\"claimant_or_rep_addressLine1\":\"34\",\n" +
+                "\"claimant_or_rep_addressLine2\":\"Low Street\",\n" +
+                "\"claimant_or_rep_addressLine3\":\"\",\n" +
+                "\"claimant_or_rep_town\":\"Manchester\",\n" +
+                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
+                "\"claimant_or_rep_postCode\":\"M3 6gw\",\n" +
+                "\"claimant_addressLine1\":\"34\",\n" +
+                "\"claimant_addressLine2\":\"Low Street\",\n" +
+                "\"claimant_addressLine3\":\"\",\n" +
+                "\"claimant_town\":\"Manchester\",\n" +
+                "\"claimant_county\":\"Lancashire\",\n" +
+                "\"claimant_postCode\":\"M3 6gw\",\n" +
+                "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_or_rep_addressLine2\":\"22 House\",\n" +
+                "\"respondent_or_rep_addressLine3\":\"\",\n" +
+                "\"respondent_or_rep_town\":\"Manchester\",\n" +
+                "\"respondent_or_rep_county\":\"North West\",\n" +
+                "\"respondent_or_rep_postCode\":\"M12 42R\",\n" +
+                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
+                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
+                "\"respondent_addressLine2\":\"22 House\",\n" +
+                "\"respondent_addressLine3\":\"\",\n" +
+                "\"respondent_town\":\"Manchester\",\n" +
+                "\"respondent_county\":\"North West\",\n" +
+                "\"respondent_postCode\":\"M12 42R\",\n" +
+                "\"Respondent\":\"Antonio Vazquez\",\n" +
+                "\"resp_others\":\"\",\n" +
+                "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
+                "\"Hearing_date\":\"1 November 2019\",\n" +
+                "\"Hearing_date_time\":\"1 November 2019 at 12:11\",\n" +
+                "\"Hearing_venue\":\"Ground Floor, AB1, 48 Huntly Street, Aberdeen, AB10 1SH\",\n" +
+                "\"Hearing_duration\":\"1 days\",\n" +
+                "\"t_Scot_34\":\"true\",\n" +
+                "\"Court_addressLine1\":\"Aberdeen Address Line1\",\n" +
+                "\"Court_addressLine2\":\"Aberdeen Address Line2\",\n" +
+                "\"Court_addressLine3\":\"\",\n" +
+                "\"Court_town\":\"Aberdeen\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"BA 3453\",\n" +
+                "\"Court_telephone\":\"\",\n" +
+                "\"Court_fax\":\"\",\n" +
+                "\"Court_DX\":\"\",\n" +
+                "\"Court_Email\":\"aberdeen@gmail.com\",\n" +
+                "\"i_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
+                "\"i_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
+                "\"iScot34_schmcts\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot34_schmcts1\":\"[userImage:schmcts.png]\",\n" +
+                "\"iScot34_schmcts2\":\"[userImage:schmcts.png]\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
+                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
+                "\"Case_No\":\"123456\",\n" +
+                "}\n" +
+                "}\n";
+        DefaultValues allocatedCourtAddress = DefaultValues.builder()
+                .tribunalCorrespondenceAddressLine1("Aberdeen Address Line1")
+                .tribunalCorrespondenceAddressLine2("Aberdeen Address Line2")
+                .tribunalCorrespondencePostCode("BA 3453")
+                .tribunalCorrespondenceEmail("aberdeen@gmail.com")
+                .tribunalCorrespondenceTown("Aberdeen")
+                .build();
+        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetailsScot3.getCaseData(), "", userDetails,
+                SCOTLAND_CASE_TYPE_ID, venueAddressInputStream, caseDetailsScot3.getCaseData().getCorrespondenceType(),
+                caseDetailsScot3.getCaseData().getCorrespondenceScotType(), null, allocatedCourtAddress).toString());
     }
 
     @Test
@@ -1533,7 +1612,7 @@ public class DocumentHelperTest {
         assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
-                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null, null).toString());
         topLevel = "Part_4_Scot";
         part = "42";
         correspondenceScotType = new CorrespondenceScotType();
@@ -1544,7 +1623,7 @@ public class DocumentHelperTest {
         assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
-                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null, null).toString());
         topLevel = "Part_5_Scot";
         part = "52";
         correspondenceScotType = new CorrespondenceScotType();
@@ -1555,7 +1634,7 @@ public class DocumentHelperTest {
         assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
-                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null, null).toString());
         topLevel = "Part_6_Scot";
         part = "62";
         correspondenceScotType = new CorrespondenceScotType();
@@ -1566,7 +1645,7 @@ public class DocumentHelperTest {
         assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
-                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null, null).toString());
         topLevel = "Part_7_Scot";
         part = "72";
         correspondenceScotType = new CorrespondenceScotType();
@@ -1577,7 +1656,7 @@ public class DocumentHelperTest {
         assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
-                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null, null).toString());
         topLevel = "Part_15_Scot";
         part = "152";
         correspondenceScotType = new CorrespondenceScotType();
@@ -1588,7 +1667,7 @@ public class DocumentHelperTest {
         assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
-                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null, null).toString());
         topLevel = "Part_9_Scot";
         part = "162";
         correspondenceScotType = new CorrespondenceScotType();
@@ -1599,7 +1678,7 @@ public class DocumentHelperTest {
         assertEquals(getJson(topLevel, part), DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, SCOTLAND_CASE_TYPE_ID, venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
-                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     @Test
@@ -1674,7 +1753,7 @@ public class DocumentHelperTest {
         assertEquals(result, DocumentHelper.buildDocumentContent(caseDetailsTemplates.getCaseData(),
                 "", userDetails, "", venueAddressInputStream,
                 caseDetailsTemplates.getCaseData().getCorrespondenceType(),
-                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null).toString());
+                caseDetailsTemplates.getCaseData().getCorrespondenceScotType(), null, null).toString());
     }
 
     private String getJson(String topLevel, String part) {
@@ -1781,7 +1860,7 @@ public class DocumentHelperTest {
         multipleData.setAddressLabelCollection(MultipleUtil.getAddressLabelTypeItemList());
         assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails2.getCaseData(), "", userDetails,
                 MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, multipleData.getCorrespondenceType(),
-                multipleData.getCorrespondenceScotType(), multipleData).toString());
+                multipleData.getCorrespondenceScotType(), multipleData, null).toString());
     }
 
     @Test
