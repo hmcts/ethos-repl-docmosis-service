@@ -276,7 +276,7 @@ public class MultiplesHelper {
 
     }
 
-    public static void amendPayloadMultiple(MultipleData multipleData) {
+    public static void updatePayloadMultiple(MultipleData multipleData) {
 
         if (multipleData.getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
                 && multipleData.getPreAcceptCase() == null) {

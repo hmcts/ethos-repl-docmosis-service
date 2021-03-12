@@ -57,7 +57,7 @@ public class ExcelActionsControllerTest {
     private static final String MULTIPLE_SINGLE_MID_EVENT_VALIDATION_URL = "/multipleSingleMidEventValidation";
     private static final String MULTIPLE_MID_BATCH_1_VALIDATION_URL = "/multipleMidBatch1Validation";
     private static final String CLOSE_MULTIPLE_URL = "/closeMultiple";
-    private static final String AMEND_PAYLOAD_MULTIPLE_URL = "/amendPayloadMultiple";
+    private static final String UPDATE_PAYLOAD_MULTIPLE_URL = "/updatePayloadMultiple";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -317,9 +317,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void amendPayloadMultiple() throws Exception {
+    public void updatePayloadMultiple() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(AMEND_PAYLOAD_MULTIPLE_URL)
+        mvc.perform(post(UPDATE_PAYLOAD_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -465,8 +465,8 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void amendPayloadMultipleError400() throws Exception {
-        mvc.perform(post(AMEND_PAYLOAD_MULTIPLE_URL)
+    public void updatePayloadMultipleError400() throws Exception {
+        mvc.perform(post(UPDATE_PAYLOAD_MULTIPLE_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -768,9 +768,9 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void amendPayloadMultipleForbidden() throws Exception {
+    public void updatePayloadMultipleForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(AMEND_PAYLOAD_MULTIPLE_URL)
+        mvc.perform(post(UPDATE_PAYLOAD_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
