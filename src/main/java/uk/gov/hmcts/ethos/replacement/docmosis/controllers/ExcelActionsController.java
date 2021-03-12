@@ -466,4 +466,31 @@ public class ExcelActionsController {
         return getMultipleCallbackResponseResponseEntity(errors, multipleDetails);
     }
 
+    @PostMapping(value = "/amendPayloadMultiple", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Amend the payload to fix issues on it.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = MultipleCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<MultipleCallbackResponse> amendPayloadMultiple(
+            @RequestBody MultipleRequest multipleRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("AMEND PAYLOAD MULTIPLE ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
+
+        MultiplesHelper.amendPayloadMultiple(multipleDetails.getCaseData());
+
+        return ResponseEntity.ok(MultipleCallbackResponse.builder()
+                .data(multipleDetails.getCaseData())
+                .build());
+    }
+
 }
