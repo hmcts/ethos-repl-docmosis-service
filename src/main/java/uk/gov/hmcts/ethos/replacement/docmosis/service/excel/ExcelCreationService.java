@@ -161,7 +161,12 @@ public class ExcelCreationService {
                 for (int i = 1; i < multipleCollection.size() + 1; i++) {
                     for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
                         XSSFRow row = sheet.createRow(i);
-                        createCell(row, j++, multipleCollection.get(i - 1).toString(), styleForLocking);
+                        String ethosCaseRef =  multipleCollection.get(i - 1).toString();
+                        if (ethosCaseRef.equals(leadCase)) {
+                            createCell(row, j++, ethosCaseRef, styleForLockingLead);
+                        } else {
+                            createCell(row, j++, ethosCaseRef, styleForLocking);
+                        }
 
                         for (int k = 0; k < MultiplesHelper.HEADERS.size()-1; k++) {
                             if (k == 0 && subMultipleCollection.isEmpty()) {
