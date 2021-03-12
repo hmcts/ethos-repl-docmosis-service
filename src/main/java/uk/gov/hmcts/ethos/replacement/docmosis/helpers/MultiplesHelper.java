@@ -15,6 +15,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 
 @Slf4j
@@ -273,6 +274,19 @@ public class MultiplesHelper {
                 ? leadCaseLink.substring(leadCaseLink.indexOf(">") + 1).replace("</a>", "")
                 : "";
 
+    }
+
+    public static void amendPayloadMultiple(MultipleData multipleData) {
+
+        if (multipleData.getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
+                && multipleData.getPreAcceptCase() == null) {
+            multipleData.setPreAcceptDone(NO);
+        }
+        if ( (multipleData.getMultipleSource().equals(MANUALLY_CREATED_POSITION)
+                || multipleData.getMultipleSource().equals(MIGRATION_CASE_SOURCE))
+                && multipleData.getPreAcceptCase() == null) {
+            multipleData.setPreAcceptDone(YES);
+        }
     }
 
 }

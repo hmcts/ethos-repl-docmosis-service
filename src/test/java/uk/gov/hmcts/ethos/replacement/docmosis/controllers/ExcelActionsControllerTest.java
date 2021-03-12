@@ -57,6 +57,7 @@ public class ExcelActionsControllerTest {
     private static final String MULTIPLE_SINGLE_MID_EVENT_VALIDATION_URL = "/multipleSingleMidEventValidation";
     private static final String MULTIPLE_MID_BATCH_1_VALIDATION_URL = "/multipleMidBatch1Validation";
     private static final String CLOSE_MULTIPLE_URL = "/closeMultiple";
+    private static final String AMEND_PAYLOAD_MULTIPLE_URL = "/amendPayloadMultiple";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -316,6 +317,19 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void amendPayloadMultiple() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(AMEND_PAYLOAD_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void createMultipleError400() throws Exception {
         mvc.perform(post(CREATE_MULTIPLE_URL)
                 .content("error")
@@ -444,6 +458,15 @@ public class ExcelActionsControllerTest {
     @Test
     public void closeMultipleError400() throws Exception {
         mvc.perform(post(CLOSE_MULTIPLE_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void amendPayloadMultipleError400() throws Exception {
+        mvc.perform(post(AMEND_PAYLOAD_MULTIPLE_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -738,6 +761,16 @@ public class ExcelActionsControllerTest {
     public void closeMultipleForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(CLOSE_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void amendPayloadMultipleForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(AMEND_PAYLOAD_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
