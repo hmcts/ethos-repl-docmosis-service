@@ -87,7 +87,10 @@ public class EventValidationService {
                         ListIterator<RespondentSumTypeItem> respItr = caseData.getRespondentCollection().listIterator();
                         boolean validLink = false;
                         while (respItr.hasNext()) {
-                            if (respRepName.equals(respItr.next().getValue().getRespondentName())) {
+                            RespondentSumType respondentSumType = respItr.next().getValue();
+                            if ( (respRepName.equals(respondentSumType.getRespondentName()))
+                                    || (respondentSumType.getResponseRespondentName() != null &&
+                                    respRepName.equals(respondentSumType.getResponseRespondentName())) ) {
                                 validLink = true;
                                 break;
                             }
