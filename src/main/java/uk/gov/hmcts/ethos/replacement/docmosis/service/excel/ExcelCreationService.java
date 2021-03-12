@@ -184,6 +184,7 @@ public class ExcelCreationService {
                     for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
                         XSSFRow row = sheet.createRow(i);
                         if (multipleObject.getEthosCaseRef().equals(leadCase)) {
+                            log.info("Lead: " + leadCase);
                             createCell(row, j++, multipleObject.getEthosCaseRef(), styleForLockingLead);
                         } else {
                             createCell(row, j++, multipleObject.getEthosCaseRef(), styleForLocking);
