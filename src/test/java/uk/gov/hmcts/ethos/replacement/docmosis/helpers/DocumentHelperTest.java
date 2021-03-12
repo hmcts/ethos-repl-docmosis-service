@@ -408,9 +408,10 @@ public class DocumentHelperTest {
                 "\"respondent_town\":\"Manchester\",\n" +
                 "\"respondent_county\":\"North West\",\n" +
                 "\"respondent_postCode\":\"M12 42R\",\n" +
-                "\"Respondent\":\"Antonio Vazquez\",\n" +
-                "\"resp_others\":\"\",\n" +
-                "\"resp_address\":\"11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
+                "\"Respondent\":\"1. Antonio Vazquez\",\n" +
+                "\"resp_others\":\"2. Antonio Vazquez2\",\n" +
+                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK" +
+                "\\n2. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
                 "\"Hearing_date\":\"\",\n" +
                 "\"Hearing_date_time\":\"\",\n" +
                 "\"Hearing_venue\":\"\",\n" +
