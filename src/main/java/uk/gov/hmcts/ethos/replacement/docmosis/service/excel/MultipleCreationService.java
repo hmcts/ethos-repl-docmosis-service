@@ -76,7 +76,7 @@ public class MultipleCreationService {
 
         MultipleData multipleData = multipleDetails.getCaseData();
 
-        multipleData.setPreAcceptDone(YES);
+        //multipleData.setPreAcceptDone(YES);
 
         log.info("Filter duplicated and empty caseIds");
 
@@ -104,7 +104,7 @@ public class MultipleCreationService {
 
             log.info("Multiple Creation Migration Logic");
 
-            multipleDetails.getCaseData().setPreAcceptDone(YES);
+            //multipleDetails.getCaseData().setPreAcceptDone(YES);
 
             List<MultipleObject> multipleObjectList = new ArrayList<>();
 
@@ -122,7 +122,7 @@ public class MultipleCreationService {
 
         } else {
 
-            multipleDetails.getCaseData().setPreAcceptDone(NO);
+            //multipleDetails.getCaseData().setPreAcceptDone(NO);
 
             log.info("Generating the excel document for ET1 Online");
 
