@@ -153,6 +153,8 @@ public class ExcelCreationService {
         CellStyle styleForLocking = getStyleForLocking(workbook, false);
         CellStyle styleForLockingLead = getStyleForLocking(workbook, true);
         String leadCase = MultiplesHelper.getCurrentLead(leadCaseString);
+        log.info("Creating lead case EXCEL STRING: " + leadCaseString);
+        log.info("Creating lead case EXCEL: " + leadCase);
 
         if (!multipleCollection.isEmpty()) {
             if (multipleCollection.get(0) instanceof String) {

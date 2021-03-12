@@ -53,6 +53,9 @@ public class MultipleCreationService {
 
         getLeadMarkUpAndAddLeadToCaseIds(userToken, multipleDetails);
 
+        log.info("CasesXXX: " + multipleDetails.getCaseData().getCaseIdCollection());
+        log.info("LeadCaseXXX: " + multipleDetails.getCaseData().getLeadCase());
+
         if (!multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
                 && !multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)) {
 
@@ -82,7 +85,13 @@ public class MultipleCreationService {
 
         multipleData.setCaseIdCollection(MultiplesHelper.filterDuplicatedAndEmptyCaseIds(multipleData));
 
+        log.info("CasesXXXFiltered: " + multipleDetails.getCaseData().getCaseIdCollection());
+        log.info("LeadCaseXXXFiltered: " + multipleDetails.getCaseData().getLeadCase());
+
         List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleData);
+
+        log.info("CasesXXXFiltered2: " + multipleDetails.getCaseData().getCaseIdCollection());
+        log.info("LeadCaseXXXFiltered2: " + multipleDetails.getCaseData().getLeadCase());
 
         log.info("Create multiple reference number");
 
