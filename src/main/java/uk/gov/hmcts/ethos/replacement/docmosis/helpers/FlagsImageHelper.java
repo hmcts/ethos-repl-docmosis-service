@@ -170,7 +170,7 @@ public class FlagsImageHelper {
     }
 
     private static boolean withOutstation(CaseData caseData) {
-        return caseData.getManagingOffice() != null && !caseData.getManagingOffice().equals(GLASGOW_OFFICE);
+        return !isNullOrEmpty(caseData.getManagingOffice()) && !caseData.getManagingOffice().equals(GLASGOW_OFFICE);
     }
 
 }
