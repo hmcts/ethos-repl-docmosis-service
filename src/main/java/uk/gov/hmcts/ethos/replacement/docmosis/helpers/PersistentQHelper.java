@@ -121,6 +121,11 @@ public class PersistentQHelper {
                 .build();
     }
 
+    public static ResetStateDataModel getResetStateModel() {
+        return ResetStateDataModel.builder()
+                .build();
+    }
+
     public static UpdateDataModel getUpdateDataModel(MultipleData multipleData, CaseData caseData) {
         return UpdateDataModel.builder()
                 .managingOffice(multipleData.getManagingOffice())

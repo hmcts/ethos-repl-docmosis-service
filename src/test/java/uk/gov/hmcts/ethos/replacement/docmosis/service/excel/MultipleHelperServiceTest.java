@@ -313,6 +313,22 @@ public class MultipleHelperServiceTest {
     }
 
     @Test
+    public void sendResetMultipleStateWithoutConfirmation() {
+
+        multipleHelperService.sendResetMultipleStateWithoutConfirmation(
+                userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(),
+                multipleDetails.getCaseData(),
+                new ArrayList<>()
+        );
+
+        verify(userService).getUserDetails(userToken);
+        verifyNoMoreInteractions(userService);
+
+    }
+
+    @Test
     public void sendUpdatesToSinglesWithConfirmationNullCaseData() {
 
         multipleHelperService.sendUpdatesToSinglesWithConfirmation(
