@@ -182,7 +182,9 @@ public class ListingGenerationController {
         ListingData listingData = ccdRequest.getCaseDetails().getCaseData().getPrintHearingCollection();
         if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
             listingData = listingService.setCourtAddressFromCaseData(ccdRequest.getCaseDetails().getCaseData());
+            log.info("ListingData: " + listingData);
             DocumentInfo documentInfo = listingService.processHearingDocument(listingData, ccdRequest.getCaseDetails().getCaseTypeId(), userToken);
+            log.info("DocumentInfo: " + documentInfo);
             ccdRequest.getCaseDetails().getCaseData().setDocMarkUp(documentInfo.getMarkUp());
             return ResponseEntity.ok(CCDCallbackResponse.builder()
                     .data(ccdRequest.getCaseDetails().getCaseData())
