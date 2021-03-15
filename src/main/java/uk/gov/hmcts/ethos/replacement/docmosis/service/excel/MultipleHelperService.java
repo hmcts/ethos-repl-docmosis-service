@@ -19,10 +19,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
@@ -335,6 +332,25 @@ public class MultipleHelperService {
                 confirmation,
                 createUpdatesBusSender,
                 String.valueOf(ethosCaseRefCollection.size()));
+
+    }
+
+    public void sendResetMultipleStateWithoutConfirmation(String userToken, String caseTypeId, String jurisdiction,
+                                                          MultipleData multipleData, List<String> errors) {
+
+        String caseToSend = MultiplesHelper.getCurrentLead(multipleData.getLeadCase());
+        String username = userService.getUserDetails(userToken).getEmail();
+
+        PersistentQHelper.sendSingleUpdatesPersistentQ(caseTypeId,
+                jurisdiction,
+                username,
+                new ArrayList<>(Collections.singletonList(caseToSend)),
+                PersistentQHelper.getResetStateModel(),
+                errors,
+                multipleData.getMultipleReference(),
+                NO,
+                createUpdatesBusSender,
+                "1");
 
     }
 

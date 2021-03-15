@@ -58,6 +58,7 @@ public class ExcelActionsControllerTest {
     private static final String MULTIPLE_MID_BATCH_1_VALIDATION_URL = "/multipleMidBatch1Validation";
     private static final String CLOSE_MULTIPLE_URL = "/closeMultiple";
     private static final String UPDATE_PAYLOAD_MULTIPLE_URL = "/updatePayloadMultiple";
+    private static final String RESET_MULTIPLE_STATE_URL = "/resetMultipleState";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -330,6 +331,19 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void resetMultipleState() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(RESET_MULTIPLE_STATE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void createMultipleError400() throws Exception {
         mvc.perform(post(CREATE_MULTIPLE_URL)
                 .content("error")
@@ -467,6 +481,15 @@ public class ExcelActionsControllerTest {
     @Test
     public void updatePayloadMultipleError400() throws Exception {
         mvc.perform(post(UPDATE_PAYLOAD_MULTIPLE_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void resetMultipleStateError400() throws Exception {
+        mvc.perform(post(RESET_MULTIPLE_STATE_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -771,6 +794,16 @@ public class ExcelActionsControllerTest {
     public void updatePayloadMultipleForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(UPDATE_PAYLOAD_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void resetMultipleStateForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(RESET_MULTIPLE_STATE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
