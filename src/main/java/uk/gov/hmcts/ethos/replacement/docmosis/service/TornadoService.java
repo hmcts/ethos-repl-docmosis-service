@@ -178,7 +178,6 @@ public class TornadoService {
             log.info("Connected");
             UserDetails userDetails = userService.getUserDetails(authToken);
             String documentName = ListingHelper.getListingDocName(listingData);
-            log.info("DocumentName: " + documentName);
             buildListingInstruction(conn, listingData, documentName, userDetails, caseType);
             documentInfo = checkResponseStatus(authToken, conn, documentName);
         } catch (ConnectException e) {

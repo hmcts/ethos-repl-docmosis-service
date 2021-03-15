@@ -211,7 +211,6 @@ public class ListingHelper {
             sb.append("\"Listed_date\":\"").append(listingData.getListingCollection().get(0).getValue().getCauseListDate()).append(NEW_LINE);
             sb.append("\"Hearing_location\":\"").append(!listingData.getListingVenue().equals(ALL_VENUES) ?
                     listingData.getListingCollection().get(0).getValue().getCauseListVenue() : ALL_VENUES).append(NEW_LINE);
-            log.info("Date and Venue: " + sb.toString());
         }
         log.info("Listings range dates");
         sb.append(getListingRangeDates(listingData));
@@ -226,7 +225,6 @@ public class ListingHelper {
         sb.append("\"Today_date\":\"").append(UtilHelper.formatCurrentDate(LocalDate.now())).append("\"\n");
         sb.append("}\n");
         sb.append("}\n");
-        log.info("Finished sb: " + sb.toString());
         return sb;
     }
 
@@ -303,7 +301,6 @@ public class ListingHelper {
 
     private static StringBuilder getListingTypeRow(ListingType listingType, String caseType, ListingData listingData) {
         StringBuilder sb = new StringBuilder();
-        log.info("Hearing judge name");
         sb.append("{\"Judge\":\"").append(nullCheck(extractHearingJudgeName(listingType))).append(NEW_LINE);
         sb.append(getCourtListingData(listingData));
         log.info("Court listing data");
