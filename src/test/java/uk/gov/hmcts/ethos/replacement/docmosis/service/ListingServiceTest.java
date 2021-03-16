@@ -230,6 +230,77 @@ public class ListingServiceTest {
     }
 
     @Test
+    public void processListingHearingsRequestGlasgow() throws IOException {
+        listingDetails.getCaseData().setVenueAberdeen(null);
+        listingDetails.getCaseData().setVenueGlasgow("GlasgowVenue");
+        listingDetails.getCaseData().setListingVenue("Glasgow");
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "listingDateTo=null, listingVenue=Glasgow, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
+                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, " +
+                "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, " +
+                "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, " +
+                "localReportsDetailHdr=null, localReportsDetail=null)";
+        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
+        assertEquals(result, listingDataResult.toString());
+    }
+
+    @Test
+    public void processListingHearingsRequestEdinburgh() throws IOException {
+        listingDetails.getCaseData().setVenueAberdeen(null);
+        listingDetails.getCaseData().setVenueEdinburgh("EdinburghVenue");
+        listingDetails.getCaseData().setListingVenue("Edinburgh");
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "listingDateTo=null, listingVenue=Edinburgh, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
+                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, " +
+                "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, " +
+                "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, " +
+                "localReportsDetailHdr=null, localReportsDetail=null)";
+        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
+        assertEquals(result, listingDataResult.toString());
+    }
+
+    @Test
+    public void processListingHearingsRequestDundee() throws IOException {
+        listingDetails.getCaseData().setVenueAberdeen(null);
+        listingDetails.getCaseData().setVenueDundee("DundeeVenue");
+        listingDetails.getCaseData().setListingVenue("Dundee");
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "listingDateTo=null, listingVenue=Dundee, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
+                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, " +
+                "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, " +
+                "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, " +
+                "localReportsDetailHdr=null, localReportsDetail=null)";
+        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
+        assertEquals(result, listingDataResult.toString());
+    }
+
+    @Test
+    public void processListingHearingsRequestNonScottish() throws IOException {
+        listingDetails.getCaseData().setVenueAberdeen(null);
+        listingDetails.getCaseData().setListingVenue("Leeds");
+        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "listingDateTo=null, listingVenue=Leeds, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
+                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, " +
+                "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, " +
+                "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, " +
+                "localReportsDetailHdr=null, localReportsDetail=null)";
+        submitEvents.get(0).getCaseData().setClaimantCompany("RYAN AIR LTD");
+        when(ccdClient.retrieveCasesVenueAndDateElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        ListingData listingDataResult = listingService.processListingHearingsRequest(listingDetails, "authToken");
+        assertEquals(result, listingDataResult.toString());
+    }
+
+    @Test
     public void processListingHearingsRequestAberdeenWithValidHearingType() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +

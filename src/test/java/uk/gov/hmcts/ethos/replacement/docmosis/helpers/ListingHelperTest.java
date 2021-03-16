@@ -25,11 +25,13 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 public class ListingHelperTest {
 
     private ListingDetails listingDetails;
+    private ListingDetails listingDetails2;
     private UserDetails userDetails;
 
     @Before
     public void setUp() throws Exception {
         listingDetails = generateListingDetails("listingDetailsTest1.json");
+        listingDetails2 = generateListingDetails("listingDetailsTest2.json");
         userDetails = HelperTest.getUserDetails();
     }
 
@@ -450,6 +452,142 @@ public class ListingHelperTest {
     }
 
     @Test
+    public void buildCaseCauseList2() {
+        String expected = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"EM-TRB-SCO-ENG-00212.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
+                "\"data\":{\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
+                "\"Listed_date\":\"12 October 2020\",\n" +
+                "\"Hearing_location\":\"Manchester\",\n" +
+                "\"Clerk\":\"Mike Jordan\",\n" +
+                "\"listing\":[\n" +
+                "{\"Judge\":\"\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
+                "\"ERMember\":\" \",\n" +
+                "\"EEMember\":\" \",\n" +
+                "\"Case_No\":\"1112\",\n" +
+                "\"Hearing_type\":\"Hearing\",\n" +
+                "\"Jurisdictions\":\"ADG, COM\",\n" +
+                "\"Hearing_date\":\"12 October 2020\",\n" +
+                "\"Hearing_date_time\":\"12 October 2020 at 00:00\",\n" +
+                "\"Hearing_time\":\"00:00\",\n" +
+                "\"Hearing_duration\":\"12 Days\",\n" +
+                "\"Hearing_clerk\":\"Anne Fox\",\n" +
+                "\"Claimant\":\"Mr s sdfs\",\n" +
+                "\"claimant_town\":\"claimantTown\",\n" +
+                "\"claimant_representative\":\"Rep\",\n" +
+                "\"Respondent\":\"sdf\",\n" +
+                "\"resp_others\":\"Mark Taylor\\nTony Jones\\nSteve Thomas\",\n" +
+                "\"respondent_town\":\"respondentTown\",\n" +
+                "\"Hearing_location\":\"Manchester\",\n" +
+                "\"Hearing_room\":\"Tribunal 2\",\n" +
+                "\"Hearing_dayofdays\":\"1 of 3\",\n" +
+                "\"Hearing_panel\":\"Panel\",\n" +
+                "\"Hearing_notes\":\"Notes1\",\n" +
+                "\"respondent_representative\":\"Org\"},\n" +
+                "{\"Judge\":\"\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
+                "\"ERMember\":\" \",\n" +
+                "\"EEMember\":\" \",\n" +
+                "\"Case_No\":\"1112\",\n" +
+                "\"Hearing_type\":\"Hearing\",\n" +
+                "\"Jurisdictions\":\"ADG, DCD\",\n" +
+                "\"Hearing_date\":\"12 October 2020\",\n" +
+                "\"Hearing_date_time\":\"12 October 2020 at 00:00\",\n" +
+                "\"Hearing_time\":\"00:00\",\n" +
+                "\"Hearing_duration\":\"12 Days\",\n" +
+                "\"Hearing_clerk\":\"Andrew Pearl\",\n" +
+                "\"Claimant\":\"Mr s sdfs\",\n" +
+                "\"claimant_town\":\"claimantTown1\",\n" +
+                "\"claimant_representative\":\"Rep2\",\n" +
+                "\"Respondent\":\"sdf2\",\n" +
+                "\"resp_others\":\"Mark Taylor\\nTony Jones\",\n" +
+                "\"respondent_town\":\"respondentTown1\",\n" +
+                "\"Hearing_location\":\"Manchester\",\n" +
+                "\"Hearing_room\":\"Tribunal 2\",\n" +
+                "\"Hearing_dayofdays\":\"2 of 3\",\n" +
+                "\"Hearing_panel\":\"\",\n" +
+                "\"Hearing_notes\":\"Notes2\",\n" +
+                "\"respondent_representative\":\"Org2\"},\n" +
+                "{\"Judge\":\"\",\n" +
+                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
+                "\"Court_addressLine2\":\"Alexandra House\",\n" +
+                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
+                "\"Court_town\":\"Manchester\",\n" +
+                "\"Court_county\":\"\",\n" +
+                "\"Court_postCode\":\"M3 2JA\",\n" +
+                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
+                "\"Court_telephone\":\"03577131270\",\n" +
+                "\"Court_fax\":\"07577126570\",\n" +
+                "\"Court_DX\":\"123456\",\n" +
+                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
+                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
+                "\"ERMember\":\" \",\n" +
+                "\"EEMember\":\" \",\n" +
+                "\"Case_No\":\"1112\",\n" +
+                "\"Hearing_type\":\"Preliminary Hearing (CM)\",\n" +
+                "\"Jurisdictions\":\"ADG, COM\",\n" +
+                "\"Hearing_date\":\"12 October 2020\",\n" +
+                "\"Hearing_date_time\":\"12 October 2020 at 00:00\",\n" +
+                "\"Hearing_time\":\"00:00\",\n" +
+                "\"Hearing_duration\":\"12 Minutes\",\n" +
+                "\"Hearing_clerk\":\"Anne Fox\",\n" +
+                "\"Claimant\":\"Mr s sdfs\",\n" +
+                "\"claimant_town\":\"claimantTown2\",\n" +
+                "\"claimant_representative\":\"Rep\",\n" +
+                "\"Respondent\":\"sdf\",\n" +
+                "\"resp_others\":\"Mark Taylor\",\n" +
+                "\"respondent_town\":\"respondentTown2\",\n" +
+                "\"Hearing_location\":\"Manchester\",\n" +
+                "\"Hearing_room\":\"Tribunal 4\",\n" +
+                "\"Hearing_dayofdays\":\"2 of 3\",\n" +
+                "\"Hearing_panel\":\"\",\n" +
+                "\"Hearing_notes\":\"Notes3\",\n" +
+                "\"respondent_representative\":\"Org\"}],\n" +
+                "\"case_total\":\"1\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(expected, ListingHelper.buildListingDocumentContent(listingDetails2.getCaseData(), "",
+                PUBLIC_CASE_CAUSE_LIST_TEMPLATE, userDetails, MANCHESTER_LISTING_CASE_TYPE_ID).toString());
+    }
+
+    @Test
     public void getCaseTypeId() {
         assertEquals(MANCHESTER_DEV_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MANCHESTER_DEV_LISTING_CASE_TYPE_ID));
         assertEquals(MANCHESTER_USERS_CASE_TYPE_ID, ListingHelper.getCaseTypeId(MANCHESTER_USERS_LISTING_CASE_TYPE_ID));
@@ -636,6 +774,14 @@ public class ListingHelperTest {
                 "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
                 "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
                 "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom=Tribunal Manc Magistrate, respondentOthers= , hearingNotes= )";
+        assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
+        dateListedType.setHearingRoomMancMagistrate(null);
+
+        dateListedType.setHearingVenueDay(null);
+        expected = "ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue= , elmoCaseReference=null, " +
+                "jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, " +
+                "hearingDay=2 of 3, claimantName=Rodriguez, claimantTown= , claimantRepresentative= , respondent=Juan Pedro, respondentTown= , " +
+                "respondentRepresentative= , estHearingLength=2 hours, hearingPanel= , hearingRoom= , respondentOthers= , hearingNotes= )";
         assertEquals(expected, ListingHelper.getListingTypeFromCaseData(listingDetails.getCaseData(), caseData, hearingType, dateListedType, 1, 3).toString());
         dateListedType.setHearingRoomMancMagistrate(null);
     }
