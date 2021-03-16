@@ -326,7 +326,9 @@ public class ListingHelper {
     }
 
     private static String extractHearingJudgeName(ListingType listingType) {
-        return listingType.getHearingJudgeName().substring(listingType.getHearingJudgeName().indexOf('_') + 1);
+        if (listingType.getHearingJudgeName() != null) {
+            return listingType.getHearingJudgeName().substring(listingType.getHearingJudgeName().indexOf('_') + 1);
+        } return "";
     }
 
     public static String getRespondentOthersWithLineBreaks(ListingType listingType) {
