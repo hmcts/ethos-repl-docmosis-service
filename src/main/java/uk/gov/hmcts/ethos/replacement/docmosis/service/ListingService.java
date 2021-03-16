@@ -74,6 +74,7 @@ public class ListingService {
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
                 if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
+                    log.info("Processing listing single cases");
                     listingTypeItems.addAll(getListingTypeItems(hearingTypeItem, caseData.getPrintHearingDetails(), caseData));
                 }
             }
@@ -187,6 +188,10 @@ public class ListingService {
     private ListingData clearListingFields(ListingData listingData) {
         listingData.setListingVenueOfficeAber(null);
         listingData.setListingVenueOfficeGlas(null);
+        listingData.setVenueGlasgow(null);
+        listingData.setVenueAberdeen(null);
+        listingData.setVenueDundee(null);
+        listingData.setVenueEdinburgh(null);
         boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
         if (dateRange) {
             listingData.setListingDateFrom(null);
@@ -205,8 +210,11 @@ public class ListingService {
             for (int i = 0; i < hearingDateCollectionSize; i++) {
                 DateListedTypeItem dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
                 boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
+                log.info("isListingVenueValid: " + isListingVenueValid);
                 boolean isListingDateValid = isListingDateValid(listingData, dateListedTypeItem);
+                log.info("isListingDateValid: " + isListingDateValid);
                 boolean isListingStatusValid = isListingStatusValid(dateListedTypeItem);
+                log.info("isListingStatusValid: " + isListingStatusValid);
                 if (isListingDateValid && isListingVenueValid && isListingStatusValid) {
                     ListingTypeItem listingTypeItem = new ListingTypeItem();
                     ListingType listingType = ListingHelper.getListingTypeFromCaseData(listingData, caseData, hearingTypeItem.getValue(), dateListedTypeItem.getValue(), i, hearingDateCollectionSize);
@@ -238,20 +246,25 @@ public class ListingService {
         return bFDateTypeItem;
     }
 
-    private boolean isAllVenuesGlasgowAndAberdeen(ListingData listingData) {
-        boolean allVenuesGlasgow = !isNullOrEmpty(listingData.getListingVenueOfficeGlas()) && listingData.getListingVenueOfficeGlas().equals(ALL_VENUES);
-        boolean allVenuesAberdeen = !isNullOrEmpty(listingData.getListingVenueOfficeAber()) && listingData.getListingVenueOfficeAber().equals(ALL_VENUES);
-        return !allVenuesGlasgow && !allVenuesAberdeen;
+    private boolean isAllScottishVenues(ListingData listingData) {
+        boolean allVenuesGlasgow = !isNullOrEmpty(listingData.getVenueGlasgow()) && listingData.getVenueGlasgow().equals(ALL_VENUES);
+        boolean allVenuesAberdeen = !isNullOrEmpty(listingData.getVenueAberdeen()) && listingData.getVenueAberdeen().equals(ALL_VENUES);
+        boolean allVenuesDundee = !isNullOrEmpty(listingData.getVenueDundee()) && listingData.getVenueDundee().equals(ALL_VENUES);
+        boolean allVenuesEdinburgh = !isNullOrEmpty(listingData.getVenueEdinburgh()) && listingData.getVenueEdinburgh().equals(ALL_VENUES);
+        return !allVenuesGlasgow && !allVenuesAberdeen && !allVenuesDundee && !allVenuesEdinburgh;
     }
 
     private Map<String, String> getListingVenueToSearch(ListingData listingData) {
         boolean allLocations = listingData.getListingVenue().equals(ALL_VENUES);
         if (allLocations) {
+            log.info("All locations");
             return ListingHelper.createMap(ALL_VENUES, ALL_VENUES);
         } else {
-            if (isAllVenuesGlasgowAndAberdeen(listingData)) {
+            if (isAllScottishVenues(listingData)) {
+                log.info("Scottish Venues checking");
                 return ListingHelper.getVenueToSearch(listingData);
             } else {
+                log.info("Other");
                 return !isNullOrEmpty(listingData.getListingVenue())
                         ? ListingHelper.createMap(LISTING_VENUE_FIELD_NAME, listingData.getListingVenue())
                         : ListingHelper.createMap("","");
@@ -262,11 +275,13 @@ public class ListingService {
     private boolean isListingVenueValid(ListingData listingData, DateListedTypeItem dateListedTypeItem) {
         Map<String, String> venueToSearchMap = getListingVenueToSearch(listingData);
         String venueToSearch = venueToSearchMap.entrySet().iterator().next().getValue();
+        log.info("VENUE TO SEARCH: " + venueToSearch);
         if (ALL_VENUES.equals(venueToSearch)) {
             return true;
         } else {
             String venueSearched;
-            if (isAllVenuesGlasgowAndAberdeen(listingData)) {
+            if (isAllScottishVenues(listingData)) {
+                log.info("Scottish checking venue valid");
                 venueSearched = ListingHelper.getVenueFromDateListedType(dateListedTypeItem.getValue());
             } else {
                 venueSearched = !isNullOrEmpty(dateListedTypeItem.getValue().getHearingVenueDay()) ? dateListedTypeItem.getValue().getHearingVenueDay() : " ";
