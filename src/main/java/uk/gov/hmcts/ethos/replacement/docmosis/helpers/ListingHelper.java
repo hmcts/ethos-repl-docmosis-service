@@ -388,23 +388,32 @@ public class ListingHelper {
     }
 
     public static Map<String, String> getVenueToSearch(ListingData listingData) {
-        if (!isNullOrEmpty(listingData.getListingVenueOfficeGlas())) {
-            return createMap(LISTING_GLASGOW_VENUE_FIELD_NAME, listingData.getListingVenueOfficeGlas());
-        } else if (!isNullOrEmpty(listingData.getListingVenueOfficeAber())) {
-            return createMap(LISTING_ABERDEEN_VENUE_FIELD_NAME, listingData.getListingVenueOfficeAber());
+        if (!isNullOrEmpty(listingData.getVenueGlasgow())) {
+            return createMap(LISTING_GLASGOW_VENUE_FIELD_NAME, listingData.getVenueGlasgow());
+        } else if (!isNullOrEmpty(listingData.getVenueAberdeen())) {
+            return createMap(LISTING_ABERDEEN_VENUE_FIELD_NAME, listingData.getVenueAberdeen());
+        } else if (!isNullOrEmpty(listingData.getVenueDundee())) {
+            return createMap(LISTING_DUNDEE_VENUE_FIELD_NAME, listingData.getVenueDundee());
+        } else if (!isNullOrEmpty(listingData.getVenueEdinburgh())) {
+            return createMap(LISTING_EDINBURGH_VENUE_FIELD_NAME, listingData.getVenueEdinburgh());
         } return !isNullOrEmpty(listingData.getListingVenue()) ? createMap(LISTING_VENUE_FIELD_NAME, listingData.getListingVenue()) : createMap("","");
     }
 
     public static String getVenueFromDateListedType(DateListedType dateListedType) {
-        if (!isNullOrEmpty(dateListedType.getHearingGlasgow())) {
-            return dateListedType.getHearingGlasgow();
-        } else if (!isNullOrEmpty(dateListedType.getHearingDundee())) {
-            return dateListedType.getHearingDundee();
-        } else if (!isNullOrEmpty(dateListedType.getHearingEdinburgh())) {
-            return dateListedType.getHearingEdinburgh();
-        } else if (!isNullOrEmpty(dateListedType.getHearingAberdeen())) {
-            return dateListedType.getHearingAberdeen();
-        } return !isNullOrEmpty(dateListedType.getHearingVenueDay()) ? dateListedType.getHearingVenueDay() : " ";
+        if (dateListedType.getHearingVenueDay() != null) {
+            switch (dateListedType.getHearingVenueDay()) {
+                case GLASGOW_OFFICE:
+                    return dateListedType.getHearingGlasgow();
+                case DUNDEE_OFFICE:
+                    return dateListedType.getHearingDundee();
+                case EDINBURGH_OFFICE:
+                    return dateListedType.getHearingEdinburgh();
+                case ABERDEEN_OFFICE:
+                    return dateListedType.getHearingAberdeen();
+                default:
+                    return dateListedType.getHearingVenueDay();
+            }
+        } return " ";
     }
 
     private static String getRespOthersName(CaseData caseData) {
