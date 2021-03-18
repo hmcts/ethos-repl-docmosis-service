@@ -30,6 +30,7 @@ public class ExcelCreationService {
         XSSFSheet hiddenSheet = workbook.createSheet(HIDDEN_SHEET_NAME);
 
         enableLocking(sheet);
+        enableLocking(hiddenSheet);
 
         initializeHeaders(workbook, sheet);
 
@@ -37,7 +38,7 @@ public class ExcelCreationService {
 
         adjustColumnSize(sheet);
 
-        createHiddenSheet(hiddenSheet, subMultipleCollection);
+        createHiddenSheet(workbook, hiddenSheet, subMultipleCollection);
 
         addSubMultiplesValidation(workbook, sheet, multipleCollection, subMultipleCollection);
 
@@ -112,14 +113,14 @@ public class ExcelCreationService {
         }
     }
 
-    private void createHiddenSheet(XSSFSheet hiddenSheet, List<String> subMultipleCollection) {
+    private void createHiddenSheet(XSSFWorkbook workbook, XSSFSheet hiddenSheet, List<String> subMultipleCollection) {
 
         if (!subMultipleCollection.isEmpty()) {
 
+            CellStyle styleForLocking = getStyleForLocking(workbook, false);
             for (int i = 0; i < subMultipleCollection.size(); i++) {
                 XSSFRow row = hiddenSheet.createRow(i);
-                Cell cell = row.createCell(0);
-                cell.setCellValue(subMultipleCollection.get(i));
+                createCell(row, 0, subMultipleCollection.get(i), styleForLocking);
             }
         }
 
