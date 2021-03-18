@@ -97,19 +97,6 @@ public class CaseManagementForCaseWorkerService {
         }
     }
 
-    public CaseData preAcceptCase(CCDRequest ccdRequest) {
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        if (caseData.getPreAcceptCase() != null) {
-            if (caseData.getPreAcceptCase().getCaseAccepted().equals(YES)) {
-                log.info("Accepting preAcceptCase");
-                caseData.setState(ACCEPTED_STATE);
-            } else {
-                caseData.setState(REJECTED_STATE);
-            }
-        }
-        return caseData;
-    }
-
     public void dateToCurrentPosition(CaseData caseData) {
         if (!isNullOrEmpty(caseData.getPositionType()) && positionChanged(caseData)) {
             caseData.setDateToPosition(LocalDate.now().toString());

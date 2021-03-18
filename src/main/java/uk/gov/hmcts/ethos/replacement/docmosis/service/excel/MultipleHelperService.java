@@ -303,13 +303,12 @@ public class MultipleHelperService {
 
     }
 
-    public void sendCloseToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails,
-                                                   List<String> errors) {
+    public void sendCloseToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
         MultipleData multipleData = multipleDetails.getCaseData();
 
         sendTaskToSinglesWithConfirmation(userToken, multipleDetails,
-                PersistentQHelper.getCloseDataModel(multipleData.getClerkResponsible(), multipleData.getFileLocation(), multipleData.getNotes()),
+                PersistentQHelper.getCloseDataModel(multipleData),
                 errors,
                 NO);
 

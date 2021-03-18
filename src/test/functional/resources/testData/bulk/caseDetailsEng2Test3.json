@@ -8,7 +8,6 @@
     "case_type_id": "Manchester_Dev",
     "security_classification": "PUBLIC",
     "case_data": {
-      "state": "Accepted",
       "claimantWorkAddress": {
         "claimant_work_address": {
           "AddressLine1": "Library & Community Centre",

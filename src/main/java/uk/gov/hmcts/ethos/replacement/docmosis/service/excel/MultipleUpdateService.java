@@ -44,9 +44,6 @@ public class MultipleUpdateService {
                         multipleDetails.getCaseData(),
                         FilterExcelType.FLAGS);
 
-        log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
-        log.info("MultipleObjectsValues: " + multipleObjects.values());
-
         if (multipleObjects.keySet().isEmpty()) {
 
             log.info("No cases filtered");

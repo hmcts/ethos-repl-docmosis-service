@@ -21,10 +21,13 @@ import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NA
 @Service("excelCreationService")
 public class ExcelCreationService {
 
+    private static final String HIDDEN_SHEET_NAME = "Hidden";
+
     public byte[] writeExcel(List<?> multipleCollection, List<String> subMultipleCollection, String leadCaseString) {
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet(SHEET_NAME);
+        XSSFSheet hiddenSheet = workbook.createSheet(HIDDEN_SHEET_NAME);
 
         enableLocking(sheet);
 
@@ -34,7 +37,9 @@ public class ExcelCreationService {
 
         adjustColumnSize(sheet);
 
-        addSubMultiplesValidation(sheet, multipleCollection, subMultipleCollection);
+        createHiddenSheet(hiddenSheet, subMultipleCollection);
+
+        addSubMultiplesValidation(workbook, sheet, multipleCollection, subMultipleCollection);
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -107,21 +112,36 @@ public class ExcelCreationService {
         }
     }
 
-    private void addSubMultiplesValidation(XSSFSheet sheet, List<?> multipleCollection, List<String> subMultipleCollection) {
+    private void createHiddenSheet(XSSFSheet hiddenSheet, List<String> subMultipleCollection) {
+
+        if (!subMultipleCollection.isEmpty()) {
+
+            for (int i = 0; i < subMultipleCollection.size(); i++) {
+                XSSFRow row = hiddenSheet.createRow(i);
+                Cell cell = row.createCell(0);
+                cell.setCellValue(subMultipleCollection.get(i));
+            }
+        }
+
+    }
+
+    private void addSubMultiplesValidation(XSSFWorkbook workbook, XSSFSheet sheet, List<?> multipleCollection,
+                                           List<String> subMultipleCollection) {
 
         if (!subMultipleCollection.isEmpty() && !multipleCollection.isEmpty()) {
 
-            CellRangeAddressList addressList = new CellRangeAddressList(
-                1, multipleCollection.size(), 1, 1);
+            Name namedCell = workbook.createName();
+            namedCell.setNameName(HIDDEN_SHEET_NAME);
+            namedCell.setRefersToFormula(HIDDEN_SHEET_NAME + "!$A$1:$A$" + subMultipleCollection.size());
 
-            String[] stringArray = subMultipleCollection.toArray(new String[0]);
-
+            CellRangeAddressList cellRangeAddressList = new CellRangeAddressList(1, multipleCollection.size(), 1, 1);
             DataValidationHelper helper = sheet.getDataValidationHelper();
-            DataValidationConstraint constraint = helper.createExplicitListConstraint(stringArray);
-            DataValidation dataValidation = helper.createValidation(constraint, addressList);
+            DataValidationConstraint constraint = helper.createFormulaListConstraint(HIDDEN_SHEET_NAME);
+            DataValidation dataValidation = helper.createValidation(constraint, cellRangeAddressList);
             dataValidation.setSuppressDropDownArrow(true);
             dataValidation.setShowErrorBox(true);
 
+            workbook.setSheetHidden(1, true);
             sheet.addValidationData(dataValidation);
 
         }

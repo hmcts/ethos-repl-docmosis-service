@@ -129,7 +129,6 @@ public class ECCHelper {
         caseData.setManagingOffice(originalCaseData.getManagingOffice() != null ? originalCaseData.getManagingOffice() : "");
         caseData.setAllocatedOffice(originalCaseData.getAllocatedOffice() != null ? originalCaseData.getAllocatedOffice() : "");
         caseData.setMultipleFlag(NO);
-        caseData.setState(ACCEPTED_STATE);
     }
 
     private static void populateRepresentativeClaimantDetails (CaseData caseData, CaseData originalCaseData) {

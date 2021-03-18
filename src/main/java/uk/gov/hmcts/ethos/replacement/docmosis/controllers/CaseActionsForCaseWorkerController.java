@@ -224,29 +224,6 @@ public class CaseActionsForCaseWorkerController {
         return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
-    @PostMapping(value = "/preAcceptCase", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "update the case state to Accepted or Rejected.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<CCDCallbackResponse> preAcceptCase(
-            @RequestBody CCDRequest ccdRequest,
-            @RequestHeader(value = "Authorization") String userToken) {
-        log.info("PRE ACCEPT CASE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        CaseData caseData = caseManagementForCaseWorkerService.preAcceptCase(ccdRequest);
-
-        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
-    }
-
     @PostMapping(value = "/amendCaseDetails", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "amend the case details for a single case.")
     @ApiResponses(value = {
@@ -488,10 +465,6 @@ public class CaseActionsForCaseWorkerController {
         if (ccdRequest.getCaseDetails().getState().equals(CLOSED_STATE)) {
             errors = eventValidationService.validateJurisdictionOutcome(caseData);
             log.info("Event fields validation: " + errors);
-        }
-
-        if (errors.isEmpty()) {
-            caseData.setState(ccdRequest.getCaseDetails().getState());
         }
 
         return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);

@@ -61,6 +61,10 @@ public class MultipleUploadService {
                                 userToken,
                                 multipleData.getCaseImporterFile().getUploadedDocument()));
 
+            } else {
+
+                log.info("Errors uploading excel: " + errors);
+
             }
 
         } catch (IOException e) {

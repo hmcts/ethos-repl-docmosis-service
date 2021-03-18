@@ -48,9 +48,6 @@ public class SubMultipleUpdateService {
                         multipleDetails.getCaseData(),
                         FilterExcelType.ALL);
 
-        log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
-        log.info("MultipleObjectsValues: " + multipleObjects.values());
-
         log.info("Logic depending on batch update type");
 
         actionTypeLogic(userToken, multipleDetails, multipleObjects);

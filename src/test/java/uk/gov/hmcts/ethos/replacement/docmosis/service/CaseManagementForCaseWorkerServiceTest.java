@@ -224,17 +224,6 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    public void preAcceptCaseAccepted() {
-        assertEquals(ACCEPTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
-    }
-
-    @Test
-    public void preAcceptCaseRejected() {
-        manchesterCcdRequest.getCaseDetails().getCaseData().getPreAcceptCase().setCaseAccepted(NO);
-        assertEquals(REJECTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
-    }
-
-    @Test
     public void dateToCurrentPositionChanged() {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);

@@ -56,6 +56,7 @@ public class CaseCreationForCaseWorkerService {
 
     public void createCaseTransfer(CaseData caseData, String jurisdiction, String authToken) {
 
+        //TODO WIPE OFFICE_CT DYNAMIC LIST AT THE  END
 //        try {
 //            log.info("Create a new case details. Transferred in");
 //            CaseDetails newCaseTransferCaseDetails = createCaseDetailsCaseTransfer(caseData, jurisdiction);

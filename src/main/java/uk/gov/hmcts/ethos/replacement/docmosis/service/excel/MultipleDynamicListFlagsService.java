@@ -45,9 +45,6 @@ public class MultipleDynamicListFlagsService {
                         multipleData,
                         FilterExcelType.DL_FLAGS);
 
-        log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
-        log.info("MultipleObjectsValues: " + multipleObjects.values());
-
         log.info("Populates the dynamic list with flags from Excel");
 
         multipleData.setSubMultiple(populateDynamicList(multipleData.getSubMultiple(), getDynamicList(multipleObjects, HEADER_2)));

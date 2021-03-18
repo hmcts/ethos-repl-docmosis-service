@@ -275,9 +275,8 @@ public class Helper {
         DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
         dynamicFixedListType.setListItems(getAvailableOffices(caseTypeId));
 
-        caseData.setHearingClerk(dynamicFixedListType);
+        caseData.setOfficeCT(dynamicFixedListType);
 
-        //TODO CLEAR UP THE DYNAMIC LIST
     }
 
 }

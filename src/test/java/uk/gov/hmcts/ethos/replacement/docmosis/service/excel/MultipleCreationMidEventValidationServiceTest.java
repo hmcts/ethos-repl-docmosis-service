@@ -48,7 +48,6 @@ public class MultipleCreationMidEventValidationServiceTest {
     public void multipleCreationValidationLogicCaseDoesNotExist() {
 
         CaseData caseData = new CaseData();
-        caseData.setState(ACCEPTED_STATE);
         caseData.setEthosCaseReference("245004/2020");
 
         SubmitEvent submitEvent = new SubmitEvent();
@@ -149,7 +148,6 @@ public class MultipleCreationMidEventValidationServiceTest {
     public void multipleAmendCaseIdsValidationLogicCaseDoesNotExist() {
 
         CaseData caseData = new CaseData();
-        caseData.setState(ACCEPTED_STATE);
         caseData.setEthosCaseReference("245004/2020");
 
         SubmitEvent submitEvent = new SubmitEvent();
@@ -206,7 +204,6 @@ public class MultipleCreationMidEventValidationServiceTest {
     private static List<SubmitEvent> getSubmitEvents() {
 
         CaseData caseData = new CaseData();
-        caseData.setState(SUBMITTED_STATE);
         caseData.setEthosCaseReference("245000/2020");
         caseData.setMultipleReference("245000");
 
@@ -216,7 +213,6 @@ public class MultipleCreationMidEventValidationServiceTest {
         submitEvent.setCaseId(1232121232);
 
         CaseData caseData1 = new CaseData();
-        caseData1.setState(SUBMITTED_STATE);
         caseData1.setEthosCaseReference("245001/2020");
 
         SubmitEvent submitEvent1 = new SubmitEvent();
