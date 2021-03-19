@@ -29,13 +29,13 @@ public class MultiplePreAcceptService {
 
             multipleDetails.getCaseData().setState(UPDATING_STATE);
 
-            multipleDetails.getCaseData().setPreAcceptDone(YES);
-
             log.info("Send updates to single cases");
 
             if (multipleDetails.getCaseData().getPreAcceptCase().getCaseAccepted().equals(YES)) {
 
                 log.info("Accepting cases");
+
+                multipleDetails.getCaseData().setPreAcceptDone(YES);
 
                 preAcceptLogic(userToken, multipleDetails, errors);
 
