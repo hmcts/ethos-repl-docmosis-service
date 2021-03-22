@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
@@ -10,6 +11,11 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
+
+import java.io.IOException;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 
 @Slf4j
 @Service("caseCreationForCaseWorkerService")
@@ -20,8 +26,8 @@ public class CaseCreationForCaseWorkerService {
     private final SingleReferenceService singleReferenceService;
     private final MultipleReferenceService multipleReferenceService;
 
-    public static final String TRANSFERRED_IN_STATE = "Transferred_In";
-    public static final String TRANSFERRED_OUT_STATE = "Transferred_Out";
+    @Value("${ccd_gateway_base_url}")
+    private String ccdGatewayBaseUrl;
 
     @Autowired
     public CaseCreationForCaseWorkerService(CcdClient ccdClient, SingleReferenceService singleReferenceService,
@@ -54,40 +60,115 @@ public class CaseCreationForCaseWorkerService {
         return caseData;
     }
 
-    public void createCaseTransfer(CaseData caseData, String jurisdiction, String authToken) {
+    public void createCaseTransfer(CaseDetails caseDetails, String authToken) {
 
-        //TODO WIPE OFFICE_CT DYNAMIC LIST AT THE  END
-//        try {
-//            log.info("Create a new case details. Transferred in");
-//            CaseDetails newCaseTransferCaseDetails = createCaseDetailsCaseTransfer(caseData, jurisdiction);
-//            log.info("Send this case to the new office");
-//            ccdClient.submitCaseCreation(authToken,
-//                    newCaseTransferCaseDetails,
-//                    ccdClient.startCaseCreation(authToken, newCaseTransferCaseDetails));
-//        } catch (Exception ex) {
-//            throw new CaseCreationException(MESSAGE + caseData.getEthosCaseReference() + ex.getMessage());
-//        }
-//
-//        log.info("Update the current caseDetails state to transferred out");
-//        caseData.setState(TRANSFERRED_OUT_STATE);
+        CaseData caseData = caseDetails.getCaseData();
+
+        SubmitEvent submitEvent;
+
+        try {
+
+            log.info("Create a new case details to move to the new office");
+
+            CaseDetails newCaseTransferCaseDetails = createCaseDetailsCaseTransfer(caseDetails);
+
+            log.info("Send this case to the new office");
+
+            submitEvent = ccdClient.submitCaseCreation(authToken, newCaseTransferCaseDetails,
+                    getStartCaseCreationByState(authToken, caseDetails.getState(), newCaseTransferCaseDetails));
+
+        } catch (Exception ex) {
+
+            log.error("Error creating new case transfer: " + ex.getMessage());
+
+            throw new CaseCreationException(MESSAGE + caseData.getEthosCaseReference() + ex.getMessage());
+        }
+
+        log.info("submitEvent.getCaseId(): " + submitEvent.getCaseId());
+        caseData.setRelatedCaseCT("Transferred to " + caseData.getOfficeCT().getValue().getCode());
+        caseData.setPositionType(caseData.getPositionTypeCT());
+
+        log.info("Clearing the CT payload");
+
+        caseData.setOfficeCT(null);
+        caseData.setPositionTypeCT(null);
+        caseData.setReasonForCT(null);
 
     }
 
-//    private CaseDetails createCaseDetailsCaseTransfer(CaseData caseData, String jurisdiction) {
-//        CaseDetails newCaseTransferCaseDetails = new CaseDetails();
-//        //newCaseTransferCaseDetails.setCaseTypeId(caseDetails.getCaseData().getCaseTransferOffice());
-//        newCaseTransferCaseDetails.setJurisdiction(jurisdiction);
-//        newCaseTransferCaseDetails.setCaseData(generateCaseDataCaseTransfer(caseData));
-//        return newCaseTransferCaseDetails;
-//    }
+    private CaseDetails createCaseDetailsCaseTransfer(CaseDetails caseDetails) {
 
-//    private CaseData generateCaseDataCaseTransfer(CaseData caseData) {
-//        CaseData newCaseData = new CaseData();
-//        newCaseData.setState(TRANSFERRED_IN_STATE);
-//        newCaseData.setEthosCaseReference(caseData.getEthosCaseReference());
-//        newCaseData.setClaimantType(caseData.getClaimantType());
-//        newCaseData.setClaimant(caseData.getClaimant());
-//        return newCaseData;
-//    }
+        CaseData caseData = caseDetails.getCaseData();
+        CaseDetails newCaseTransferCaseDetails = new CaseDetails();
+        newCaseTransferCaseDetails.setCaseTypeId(caseData.getOfficeCT().getValue().getCode());
+        newCaseTransferCaseDetails.setJurisdiction(caseDetails.getJurisdiction());
+        newCaseTransferCaseDetails.setCaseData(generateCaseDataCaseTransfer(caseData, caseDetails.getCaseId()));
+
+        return newCaseTransferCaseDetails;
+
+    }
+
+    private CaseData generateCaseDataCaseTransfer(CaseData caseData, String caseId) {
+
+        CaseData newCaseData = new CaseData();
+        newCaseData.setEthosCaseReference(caseData.getEthosCaseReference());
+        newCaseData.setCaseType(caseData.getCaseType());
+        newCaseData.setClaimantTypeOfClaimant(caseData.getClaimantTypeOfClaimant());
+        newCaseData.setClaimantCompany(caseData.getClaimantCompany());
+        newCaseData.setClaimantIndType(caseData.getClaimantIndType());
+        newCaseData.setClaimantType(caseData.getClaimantType());
+        newCaseData.setClaimantOtherType(caseData.getClaimantOtherType());
+        newCaseData.setPreAcceptCase(caseData.getPreAcceptCase());
+        newCaseData.setReceiptDate(caseData.getReceiptDate());
+        newCaseData.setFeeGroupReference(caseData.getFeeGroupReference());
+        newCaseData.setClaimantWorkAddressQuestion(caseData.getClaimantWorkAddressQuestion());
+        newCaseData.setClaimantWorkAddressQRespondent(caseData.getClaimantWorkAddressQRespondent());
+        newCaseData.setRepresentativeClaimantType(caseData.getRepresentativeClaimantType());
+        newCaseData.setRespondentCollection(caseData.getRespondentCollection());
+        newCaseData.setRepCollection(caseData.getRepCollection());
+        newCaseData.setPositionType(caseData.getPositionTypeCT());
+        newCaseData.setDateToPosition(caseData.getDateToPosition());
+        newCaseData.setCurrentPosition(caseData.getCurrentPosition());
+        newCaseData.setDepositCollection(caseData.getDepositCollection());
+        newCaseData.setJudgementCollection(caseData.getJudgementCollection());
+        newCaseData.setJurCodesCollection(caseData.getJurCodesCollection());
+        newCaseData.setBfActions(caseData.getBfActions());
+        newCaseData.setUserLocation(caseData.getUserLocation());
+        newCaseData.setDocumentCollection(caseData.getDocumentCollection());
+        newCaseData.setAdditionalCaseInfoType(caseData.getAdditionalCaseInfoType());
+        newCaseData.setCaseNotes(caseData.getCaseNotes());
+        newCaseData.setClaimantWorkAddress(caseData.getClaimantWorkAddress());
+        newCaseData.setClaimantRepresentedQuestion(caseData.getClaimantRepresentedQuestion());
+        newCaseData.setCaseSource(caseData.getCaseSource());
+        newCaseData.setEt3Received(caseData.getEt3Received());
+        newCaseData.setConciliationTrack(caseData.getConciliationTrack());
+        newCaseData.setCounterClaim(caseData.getCounterClaim());
+        newCaseData.setRestrictedReporting(caseData.getRestrictedReporting());
+        newCaseData.setRespondent(caseData.getRespondent());
+        newCaseData.setClaimant(caseData.getClaimant());
+        newCaseData.setCaseRefECC(caseData.getCaseRefECC());
+        newCaseData.setCcdID(caseData.getCcdID());
+        newCaseData.setFlagsImageAltText(caseData.getFlagsImageAltText());
+        newCaseData.setCompanyPremises(caseData.getCompanyPremises());
+
+        newCaseData.setLinkedCaseCT(MultiplesHelper.generateMarkUp(ccdGatewayBaseUrl, caseId, caseData.getEthosCaseReference()));
+
+        return newCaseData;
+
+    }
+
+    private CCDRequest getStartCaseCreationByState(String authToken, String state,
+                                                   CaseDetails newCaseTransferCaseDetails) throws IOException {
+
+        if (state.equals(ACCEPTED_STATE)) {
+
+            return ccdClient.startCaseCreationAccepted(authToken, newCaseTransferCaseDetails);
+
+        } else {
+
+            return ccdClient.startCaseCreation(authToken, newCaseTransferCaseDetails);
+
+        }
+    }
 
 }

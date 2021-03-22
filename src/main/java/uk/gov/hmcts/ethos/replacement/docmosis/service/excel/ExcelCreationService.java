@@ -14,14 +14,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.CONSTRAINT_KEY;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NAME;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 
 @Slf4j
 @Service("excelCreationService")
 public class ExcelCreationService {
-
-    private static final String HIDDEN_SHEET_NAME = "Hidden";
 
     public byte[] writeExcel(List<?> multipleCollection, List<String> subMultipleCollection, String leadCaseString) {
 

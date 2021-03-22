@@ -388,7 +388,8 @@ public class DefaultValuesReaderServiceTest {
                 "hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, Postponed_by=null, hearingRoom=null, " +
                 "hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, hearingPartHeard=null, hearingReservedJudgement=null, attendeeClaimant=null, " +
                 "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, " +
-                "hearingTimingResume=null, hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null)";
+                "hearingTimingResume=null, hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, " +
+                "relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null)";
         defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -450,7 +451,7 @@ public class DefaultValuesReaderServiceTest {
                 "hearingDateActions=null, hearingStatus=null, Postponed_by=null, hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, " +
                 "hearingPartHeard=null, hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, " +
                 "attendeeRespAndRep=null, attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, " +
-                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null)";
+                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }

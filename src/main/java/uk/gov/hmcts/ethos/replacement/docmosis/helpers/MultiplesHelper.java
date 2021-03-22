@@ -254,7 +254,7 @@ public class MultiplesHelper {
 
     }
 
-    public static String generateLeadMarkUp(String ccdGatewayBaseUrl, String caseId, String ethosCaseRef) {
+    public static String generateMarkUp(String ccdGatewayBaseUrl, String caseId, String ethosCaseRef) {
 
         String url = ccdGatewayBaseUrl + "/cases/case-details/" + caseId;
 
