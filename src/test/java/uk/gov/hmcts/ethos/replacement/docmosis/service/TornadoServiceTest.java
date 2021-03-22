@@ -118,4 +118,10 @@ public class TornadoServiceTest {
         assertEquals(documentInfo.toString(), documentInfo1.toString());
     }
 
+    @Test
+    public void reportGeneration() throws IOException {
+        listingData.setReportType(CLAIMS_ACCEPTED_REPORT);
+        DocumentInfo documentInfo1 = tornadoService.listingGeneration(userToken, listingData, MANCHESTER_LISTING_CASE_TYPE_ID);
+        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    }
 }

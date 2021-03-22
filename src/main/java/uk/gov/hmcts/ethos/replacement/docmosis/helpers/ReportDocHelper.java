@@ -34,7 +34,9 @@ public class ReportDocHelper {
 
         sb.append(ListingHelper.getListingRangeDates(listingData));
 
-        sb.append("\"Report_Office\":\"").append(nullCheck(listingData.getLocalReportsDetailHdr().getReportOffice())).append(NEW_LINE);
+        if (listingData.getLocalReportsDetailHdr() != null ) {
+            sb.append("\"Report_Office\":\"").append(nullCheck(listingData.getLocalReportsDetailHdr().getReportOffice())).append(NEW_LINE);
+        }
 
         switch (listingData.getReportType()) {
             case CLAIMS_ACCEPTED_REPORT:
@@ -61,7 +63,7 @@ public class ReportDocHelper {
         }
 
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
-        sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
+        sb.append("\"Report_Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
 
         sb.append("\"Today_date\":\"").append(UtilHelper.formatCurrentDate(LocalDate.now())).append("\"\n");
 
@@ -73,9 +75,11 @@ public class ReportDocHelper {
     private static StringBuilder getCasesAcceptedReport(ListingData listingData) {
         StringBuilder sb = new StringBuilder();
         AdhocReportType localReportDetailHdr = listingData.getLocalReportsDetailHdr();
-        sb.append("\"Multiple_Claims_Accepted\":\"").append(nullCheck(localReportDetailHdr.getMultiplesTotal())).append(NEW_LINE);
-        sb.append("\"Singles_Claims_Accepted\":\"").append(nullCheck(localReportDetailHdr.getSinglesTotal())).append(NEW_LINE);
-        sb.append("\"Total_Claims_Accepted\":\"").append(nullCheck(localReportDetailHdr.getTotal())).append(NEW_LINE);
+        if (localReportDetailHdr != null) {
+            sb.append("\"Multiple_Claims_Accepted\":\"").append(nullCheck(localReportDetailHdr.getMultiplesTotal())).append(NEW_LINE);
+            sb.append("\"Singles_Claims_Accepted\":\"").append(nullCheck(localReportDetailHdr.getSinglesTotal())).append(NEW_LINE);
+            sb.append("\"Total_Claims_Accepted\":\"").append(nullCheck(localReportDetailHdr.getTotal())).append(NEW_LINE);
+        }
 
         if (listingData.getLocalReportsDetail() != null && !listingData.getLocalReportsDetail().isEmpty()) {
             sb.append(getClaimsAcceptedByCaseType(listingData));
@@ -86,13 +90,13 @@ public class ReportDocHelper {
     private static StringBuilder getClaimsAcceptedByCaseType(ListingData listingData) {
         StringBuilder sb = new StringBuilder();
         Map<Boolean, List<AdhocReportTypeItem>> unsortedMap = listingData.getLocalReportsDetail().stream()
-                .collect(Collectors.partitioningBy(localReportDetail -> localReportDetail.getValue().getMultipleRef() == null));
+                .collect(Collectors.partitioningBy(localReportDetail -> localReportDetail.getValue().getMultipleRef() != null));
         sb.append("\"Local_Report_By_Type\":[\n");
         Iterator<Map.Entry<Boolean, List<AdhocReportTypeItem>>> entries = new TreeMap<>(unsortedMap).entrySet().iterator();
         while (entries.hasNext()) {
             Map.Entry<Boolean, List<AdhocReportTypeItem>> localReportEntry = entries.next();
             String singleOrMultiple = localReportEntry.getKey() ? "Multiples" : "Singles";
-            sb.append("{\"").append(singleOrMultiple).append("\":\"").append(localReportEntry.getKey()).append(NEW_LINE);
+            sb.append("{\"Case_Type\":\"").append(singleOrMultiple).append(NEW_LINE);
             sb.append("\"Report_List\":[\n");
             for (int i = 0; i < localReportEntry.getValue().size(); i++) {
                 sb.append(getAdhocReportCommonTypeRow(localReportEntry.getValue().get(i).getValue()));
@@ -126,25 +130,27 @@ public class ReportDocHelper {
     private static StringBuilder getCasesCompletedReport(ListingData listingData) {
         StringBuilder sb = new StringBuilder();
         AdhocReportType localReportDetailHdr = listingData.getLocalReportsDetailHdr();
-        sb.append("\"Cases_Completed_Hearing\":\"").append(nullCheck(localReportDetailHdr.getConNoneCasesCompletedHearing())).append(NEW_LINE);
-        sb.append("\"Session_Days_Taken\":\"").append(nullCheck(localReportDetailHdr.getConNoneSessionDays())).append(NEW_LINE);
-        sb.append("\"Completed_Per_Session_Day\":\"").append(nullCheck(localReportDetailHdr.getConNoneCompletedPerSession())).append(NEW_LINE);
+        if (localReportDetailHdr != null) {
+            sb.append("\"Cases_Completed_Hearing\":\"").append(nullCheck(localReportDetailHdr.getConNoneCasesCompletedHearing())).append(NEW_LINE);
+            sb.append("\"Session_Days_Taken\":\"").append(nullCheck(localReportDetailHdr.getConNoneSessionDays())).append(NEW_LINE);
+            sb.append("\"Completed_Per_Session_Day\":\"").append(nullCheck(localReportDetailHdr.getConNoneCompletedPerSession())).append(NEW_LINE);
 
-        sb.append("\"No_Conciliation_1\":\"").append(nullCheck(localReportDetailHdr.getConNoneCasesCompletedHearing())).append(NEW_LINE);
-        sb.append("\"No_Conciliation_2\":\"").append(nullCheck(localReportDetailHdr.getConNoneSessionDays())).append(NEW_LINE);
-        sb.append("\"No_Conciliation_3\":\"").append(nullCheck(localReportDetailHdr.getConNoneCompletedPerSession())).append(NEW_LINE);
+            sb.append("\"No_Conciliation_1\":\"").append(nullCheck(localReportDetailHdr.getConNoneCasesCompletedHearing())).append(NEW_LINE);
+            sb.append("\"No_Conciliation_2\":\"").append(nullCheck(localReportDetailHdr.getConNoneSessionDays())).append(NEW_LINE);
+            sb.append("\"No_Conciliation_3\":\"").append(nullCheck(localReportDetailHdr.getConNoneCompletedPerSession())).append(NEW_LINE);
 
-        sb.append("\"Fast_Track_1\":\"").append(nullCheck(localReportDetailHdr.getConFastCasesCompletedHearing())).append(NEW_LINE);
-        sb.append("\"Fast_Track_2\":\"").append(nullCheck(localReportDetailHdr.getConFastSessionDays())).append(NEW_LINE);
-        sb.append("\"Fast_Track_3\":\"").append(nullCheck(localReportDetailHdr.getConFastCompletedPerSession())).append(NEW_LINE);
+            sb.append("\"Fast_Track_1\":\"").append(nullCheck(localReportDetailHdr.getConFastCasesCompletedHearing())).append(NEW_LINE);
+            sb.append("\"Fast_Track_2\":\"").append(nullCheck(localReportDetailHdr.getConFastSessionDays())).append(NEW_LINE);
+            sb.append("\"Fast_Track_3\":\"").append(nullCheck(localReportDetailHdr.getConFastCompletedPerSession())).append(NEW_LINE);
 
-        sb.append("\"Standard_Track_1\":\"").append(nullCheck(localReportDetailHdr.getConStdCasesCompletedHearing())).append(NEW_LINE);
-        sb.append("\"Standard_Track_2\":\"").append(nullCheck(localReportDetailHdr.getConStdSessionDays())).append(NEW_LINE);
-        sb.append("\"Standard_Track_3\":\"").append(nullCheck(localReportDetailHdr.getConStdCompletedPerSession())).append(NEW_LINE);
+            sb.append("\"Standard_Track_1\":\"").append(nullCheck(localReportDetailHdr.getConStdCasesCompletedHearing())).append(NEW_LINE);
+            sb.append("\"Standard_Track_2\":\"").append(nullCheck(localReportDetailHdr.getConStdSessionDays())).append(NEW_LINE);
+            sb.append("\"Standard_Track_3\":\"").append(nullCheck(localReportDetailHdr.getConStdCompletedPerSession())).append(NEW_LINE);
 
-        sb.append("\"Open_Track_1\":\"").append(nullCheck(localReportDetailHdr.getConOpenCasesCompletedHearing())).append(NEW_LINE);
-        sb.append("\"Open_Track_2\":\"").append(nullCheck(localReportDetailHdr.getConOpenSessionDays())).append(NEW_LINE);
-        sb.append("\"Open_Track_3\":\"").append(nullCheck(localReportDetailHdr.getConOpenCompletedPerSession())).append(NEW_LINE);
+            sb.append("\"Open_Track_1\":\"").append(nullCheck(localReportDetailHdr.getConOpenCasesCompletedHearing())).append(NEW_LINE);
+            sb.append("\"Open_Track_2\":\"").append(nullCheck(localReportDetailHdr.getConOpenSessionDays())).append(NEW_LINE);
+            sb.append("\"Open_Track_3\":\"").append(nullCheck(localReportDetailHdr.getConOpenCompletedPerSession())).append(NEW_LINE);
+        }
 
         if (listingData.getLocalReportsDetail() != null && !listingData.getLocalReportsDetail().isEmpty()) {
             List<AdhocReportTypeItem> adhocReportTypeItems = listingData.getLocalReportsDetail();

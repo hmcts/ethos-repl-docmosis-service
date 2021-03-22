@@ -387,15 +387,14 @@ public class ListingHelper {
             return IT56_TEMPLATE;
         } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT57)) {
             return IT57_TEMPLATE;
-            //TODO
         } else if (listingData.getHearingDocType().equals(BROUGHT_FORWARD_REPORT)) {
-            return BROUGHT_FORWARD_REPORT;
+            return "EM-TRB-SCO-ENG-00218";
         } else if (listingData.getHearingDocType().equals(CLAIMS_ACCEPTED_REPORT)) {
-            return CLAIMS_ACCEPTED_REPORT;
+            return "EM-TRB-SCO-ENG-00219";
         } else if (listingData.getHearingDocType().equals(LIVE_CASELOAD_REPORT)) {
-            return LIVE_CASELOAD_REPORT;
+            return "EM-TRB-SCO-ENG-00220";
         } else if (listingData.getHearingDocType().equals(CASES_COMPLETED_REPORT)) {
-            return CASES_COMPLETED_REPORT;
+            return "EM-TRB-SCO-ENG-00221";
         }
         return "No document found";
     }

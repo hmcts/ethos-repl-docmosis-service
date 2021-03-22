@@ -1,0 +1,172 @@
+{
+  "case_data": {
+    "tribunalCorrespondenceAddress": {
+      "AddressLine1": "Manchester Employment Tribunal",
+      "AddressLine2": "Alexandra House",
+      "AddressLine3": "14-22 The Parsonage",
+      "PostCode": "M3 2JA",
+      "PostTown": "Manchester"
+    },
+    "tribunalCorrespondenceTelephone" : "03577131270",
+    "tribunalCorrespondenceFax" : "07577126570",
+    "tribunalCorrespondenceDX" : "123456",
+    "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
+    "listingDate": "2020-10-12",
+    "hearingDocType": "Claims Accepted",
+    "listingCollection": [
+      {
+        "value": {
+          "causeListDate": "12 October 2020",
+          "causeListTime": "00:00",
+          "causeListVenue": "Manchester",
+          "elmoCaseReference": "1112",
+          "jurisdictionCodesList": "ADG, COM",
+          "hearingType": "Hearing",
+          "positionType": "Manually Created",
+          "hearingJudgeName": "itcoRef123_Ms AM Aspden",
+          "hearingEEMember": " ",
+          "hearingERMember": " ",
+          "hearingClerk": "Anne Fox",
+          "Hearing_room": "Tribunal 2",
+          "hearingDay": "1 of 3",
+          "claimantName": "Mr s sdfs",
+          "claimantTown": "claimantTown",
+          "claimantRepresentative": "Rep",
+          "respondent": "sdf",
+          "respondentTown": "respondentTown",
+          "respondentRepresentative": "Org",
+          "Hearing_panel": "Panel",
+          "Hearing_notes": "Notes1",
+          "estHearingLength": "12 Days",
+          "resp_others": "Mark Taylor, Tony Jones, Steve Thomas"
+        },
+        "id": "97087d19-795a-4886-8cdb-06489b8b2ef5"
+      },
+      {
+        "value": {
+          "causeListDate": "12 October 2020",
+          "causeListTime": "00:00",
+          "causeListVenue": "Manchester",
+          "elmoCaseReference": "1112",
+          "jurisdictionCodesList": "ADG, DCD",
+          "hearingType": "Hearing",
+          "positionType": "Manually Created",
+          "hearingJudgeName": "Ms AM Judge",
+          "hearingEEMember": " ",
+          "hearingERMember": " ",
+          "hearingClerk": "Andrew Pearl",
+          "Hearing_room": "Tribunal 2",
+          "hearingDay": "2 of 3",
+          "claimantName": "Mr s sdfs",
+          "claimantTown": "claimantTown1",
+          "claimantRepresentative": "Rep2",
+          "respondent": "sdf2",
+          "respondentTown": "respondentTown1",
+          "respondentRepresentative": "Org2",
+          "Hearing_notes": "Notes2",
+          "estHearingLength": "12 Days",
+          "resp_others": "Mark Taylor, Tony Jones"
+        },
+        "id": "97087d19-795a-4886-8cdb-06489b8b2ef7"
+      },
+      {
+        "value": {
+          "causeListDate": "12 October 2020",
+          "causeListTime": "00:00",
+          "causeListVenue": "Manchester",
+          "elmoCaseReference": "1112",
+          "jurisdictionCodesList": "ADG, COM",
+          "hearingType": "Preliminary Hearing (CM)",
+          "positionType": "Manually Created",
+          "hearingJudgeName": "Judge For Tribunal4",
+          "hearingEEMember": " ",
+          "hearingERMember": " ",
+          "hearingClerk": "Anne Fox",
+          "Hearing_room": "Tribunal 4",
+          "hearingDay": "2 of 3",
+          "claimantName": "Mr s sdfs",
+          "claimantTown": "claimantTown2",
+          "claimantRepresentative": "Rep",
+          "respondent": "sdf",
+          "respondentTown": "respondentTown2",
+          "respondentRepresentative": "Org",
+          "Hearing_notes": "Notes3",
+          "estHearingLength": "12 Minutes",
+          "resp_others": "Mark Taylor"
+        },
+        "id": "f4ef21b6-df93-4835-972b-ddcb6ac4992e"
+      },
+      {
+        "value": {
+          "causeListDate": "12 October 2020",
+          "causeListTime": "00:00",
+          "causeListVenue": "Manchester",
+          "elmoCaseReference": "1112",
+          "jurisdictionCodesList": "ADG, COM",
+          "hearingType": "Preliminary Hearing (CM)",
+          "positionType": "Manually Created",
+          "hearingJudgeName": "Another Judge",
+          "hearingEEMember": " ",
+          "hearingERMember": " ",
+          "hearingClerk": "Juan Fox",
+          "Hearing_room": "Tribunal 4",
+          "hearingDay": "2 of 3",
+          "claimantName": "Mr s Dominguez",
+          "claimantRepresentative": "Representative",
+          "respondent": "Respondent",
+          "respondentRepresentative": "Organization",
+          "Hearing_panel": "Panel",
+          "Hearing_notes": "Notes4",
+          "estHearingLength": "3 Minutes"
+        },
+        "id": "f4ef21b6-df93-4835-972b-ddcb6ac4122e"
+      }
+    ],
+    "localReportsDetailHdr": {
+      "hearingDate": "20 October 2020",
+      "reportOffice": "Manchester",
+      "elmoCaseReference": "111222",
+      "multiplesTotal": "1",
+      "singlesTotal": "2",
+      "total": "0",
+      "clerk": "Anne Fox",
+      "hearingNumber": "1",
+      "resp_others": "Mark Taylor2, Tony Jones, Steve Thomas"
+    },
+    "localReportsDetail": [
+      {
+        "value": {
+          "hearingDate": "12 October 2020",
+          "reportOffice": "Manchester",
+          "elmoCaseReference": "1112",
+          "multipleRef": "212323",
+          "caseReference": "2122324/2020",
+          "leadCase": "Yes",
+          "position": "Position2",
+          "clerk": "Anne Fox",
+          "hearingNumber": "3",
+          "resp_others": "Mark Taylor, Tony Jones, Steve Thomas"
+        },
+        "id": "97087d19-795a-4886-8cdb-06489b8b2ef5"
+      },
+      {
+        "value": {
+          "hearingDate": "15 October 2020",
+          "reportOffice": "Manchester",
+          "caseReference": "2122323/2020",
+          "elmoCaseReference": "111332",
+          "position": "Position5",
+          "clerk": "Anne Fox2",
+          "hearingNumber": "5",
+          "resp_others": "Mark Taylor, Juan Miguel, Steve Thomas"
+        },
+        "id": "97087d19-795a-4886-8cdb-06489b8b2ef7"
+      }
+    ],
+    "listingDateFrom": "2021-12-01",
+    "listingDateTo": "2021-12-03",
+    "hearingDateType": "Range",
+    "reportType": "Claims Accepted",
+    "listingVenue": "Manchester"
+  }
+}

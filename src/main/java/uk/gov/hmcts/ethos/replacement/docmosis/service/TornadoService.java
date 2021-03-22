@@ -195,7 +195,6 @@ public class TornadoService {
 
     private void buildListingInstruction(HttpURLConnection conn, ListingData listingData, String documentName, UserDetails userDetails,
                                          String caseType) throws IOException {
-        //TODO
         StringBuilder sb;
         if (Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT, LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT).contains(listingData.getReportType())) {
             sb = ReportDocHelper.buildReportDocumentContent(listingData, tornadoConfiguration.getAccessKey(), documentName, userDetails);
