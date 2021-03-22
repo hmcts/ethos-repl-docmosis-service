@@ -208,20 +208,22 @@ public class ListingService {
         if (isHearingTypeValid(listingData, hearingTypeItem)) {
             int hearingDateCollectionSize = hearingTypeItem.getValue().getHearingDateCollection().size();
             for (int i = 0; i < hearingDateCollectionSize; i++) {
+                log.info("EthosCaseRef Listing: " + caseData.getEthosCaseReference());
                 DateListedTypeItem dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
                 boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
                 log.info("isListingVenueValid: " + isListingVenueValid);
+                if (!isListingVenueValid) continue;
                 boolean isListingDateValid = isListingDateValid(listingData, dateListedTypeItem);
                 log.info("isListingDateValid: " + isListingDateValid);
+                if (!isListingDateValid) continue;
                 boolean isListingStatusValid = isListingStatusValid(dateListedTypeItem);
                 log.info("isListingStatusValid: " + isListingStatusValid);
-                if (isListingDateValid && isListingVenueValid && isListingStatusValid) {
-                    ListingTypeItem listingTypeItem = new ListingTypeItem();
-                    ListingType listingType = ListingHelper.getListingTypeFromCaseData(listingData, caseData, hearingTypeItem.getValue(), dateListedTypeItem.getValue(), i, hearingDateCollectionSize);
-                    listingTypeItem.setId(String.valueOf(dateListedTypeItem.getId()));
-                    listingTypeItem.setValue(listingType);
-                    listingTypeItems.add(listingTypeItem);
-                }
+                if (!isListingStatusValid) continue;
+                ListingTypeItem listingTypeItem = new ListingTypeItem();
+                ListingType listingType = ListingHelper.getListingTypeFromCaseData(listingData, caseData, hearingTypeItem.getValue(), dateListedTypeItem.getValue(), i, hearingDateCollectionSize);
+                listingTypeItem.setId(String.valueOf(dateListedTypeItem.getId()));
+                listingTypeItem.setValue(listingType);
+                listingTypeItems.add(listingTypeItem);
             }
         }
         return listingTypeItems;

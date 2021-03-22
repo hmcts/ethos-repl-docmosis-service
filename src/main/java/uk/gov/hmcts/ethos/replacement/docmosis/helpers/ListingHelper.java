@@ -202,6 +202,7 @@ public class ListingHelper {
 
         // Building the document data
         sb.append("\"data\":{\n");
+        log.info("Checking cour listing data");
         sb.append(getCourtListingData(listingData));
         sb.append(getLogo(caseType));
         if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
@@ -209,13 +210,16 @@ public class ListingHelper {
             sb.append("\"Hearing_location\":\"").append(!listingData.getListingVenue().equals(ALL_VENUES) ?
                     listingData.getListingCollection().get(0).getValue().getCauseListVenue() : ALL_VENUES).append(NEW_LINE);
         }
+        log.info("Checking listing ranges");
         sb.append(getListingRangeDates(listingData));
 
+        log.info("Checking clerk");
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
 
         sb.append(getDocumentData(listingData, templateName, caseType));
 
+        log.info("Checking case total");
         sb.append("\"case_total\":\"").append(getCaseTotal(listingData.getListingCollection())).append(NEW_LINE);
         sb.append("\"Today_date\":\"").append(UtilHelper.formatCurrentDate(LocalDate.now())).append("\"\n");
         sb.append("}\n");
