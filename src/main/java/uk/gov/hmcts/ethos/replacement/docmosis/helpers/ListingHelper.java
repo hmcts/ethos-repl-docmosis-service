@@ -249,7 +249,7 @@ public class ListingHelper {
         }
     }
 
-    private static StringBuilder getListingRangeDates(ListingData listingData) {
+    public static StringBuilder getListingRangeDates(ListingData listingData) {
         StringBuilder sb = new StringBuilder();
         if (listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
             sb.append("\"Listed_date_from\":\"").append(UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
@@ -385,8 +385,15 @@ public class ListingHelper {
             return PRESS_LIST_CAUSE_LIST_SINGLE_TEMPLATE;
         } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT56)) {
             return IT56_TEMPLATE;
-        } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT57)) {
-            return IT57_TEMPLATE;
+            //TODO
+        } else if (listingData.getHearingDocType().equals(BROUGHT_FORWARD_REPORT)) {
+            return BROUGHT_FORWARD_REPORT;
+        } else if (listingData.getHearingDocType().equals(CLAIMS_ACCEPTED_REPORT)) {
+            return CLAIMS_ACCEPTED_REPORT;
+        } else if (listingData.getHearingDocType().equals(LIVE_CASELOAD_REPORT)) {
+            return LIVE_CASELOAD_REPORT;
+        } else if (listingData.getHearingDocType().equals(CASES_COMPLETED_REPORT)) {
+            return CASES_COMPLETED_REPORT;
         }
         return "No document found";
     }
