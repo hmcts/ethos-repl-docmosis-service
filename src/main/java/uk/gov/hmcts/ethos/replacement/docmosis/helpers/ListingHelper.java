@@ -385,6 +385,8 @@ public class ListingHelper {
             return PRESS_LIST_CAUSE_LIST_SINGLE_TEMPLATE;
         } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT56)) {
             return IT56_TEMPLATE;
+        } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT57)) {
+            return IT57_TEMPLATE;
             //TODO
         } else if (listingData.getHearingDocType().equals(BROUGHT_FORWARD_REPORT)) {
             return BROUGHT_FORWARD_REPORT;

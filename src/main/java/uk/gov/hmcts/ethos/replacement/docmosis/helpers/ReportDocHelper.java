@@ -48,6 +48,8 @@ public class ReportDocHelper {
 
                 log.info("Live case load report");
 
+                sb.append(getLiveCaseLoadReport(listingData));
+
                 break;
             case CASES_COMPLETED_REPORT:
 
@@ -85,7 +87,7 @@ public class ReportDocHelper {
         StringBuilder sb = new StringBuilder();
         Map<Boolean, List<AdhocReportTypeItem>> unsortedMap = listingData.getLocalReportsDetail().stream()
                 .collect(Collectors.partitioningBy(localReportDetail -> localReportDetail.getValue().getMultipleRef() == null));
-        sb.append("\"Local_Report_Accepted_List\":[\n");
+        sb.append("\"Local_Report_By_Type\":[\n");
         Iterator<Map.Entry<Boolean, List<AdhocReportTypeItem>>> entries = new TreeMap<>(unsortedMap).entrySet().iterator();
         while (entries.hasNext()) {
             Map.Entry<Boolean, List<AdhocReportTypeItem>> localReportEntry = entries.next();
@@ -93,7 +95,7 @@ public class ReportDocHelper {
             sb.append("{\"").append(singleOrMultiple).append("\":\"").append(localReportEntry.getKey()).append(NEW_LINE);
             sb.append("\"Report_List\":[\n");
             for (int i = 0; i < localReportEntry.getValue().size(); i++) {
-                sb.append(getAdhocReportAcceptedTypeRow(localReportEntry.getValue().get(i).getValue()));
+                sb.append(getAdhocReportCommonTypeRow(localReportEntry.getValue().get(i).getValue()));
                 if (i != localReportEntry.getValue().size() - 1) {
                     sb.append(",\n");
                 }
@@ -108,7 +110,7 @@ public class ReportDocHelper {
         return sb;
     }
 
-    private static StringBuilder getAdhocReportAcceptedTypeRow(AdhocReportType adhocReportType) {
+    private static StringBuilder getAdhocReportCommonTypeRow(AdhocReportType adhocReportType) {
         StringBuilder sb = new StringBuilder();
         sb.append("{\"Case_Reference\":\"").append(nullCheck(adhocReportType.getCaseReference())).append(NEW_LINE);
         sb.append("\"Date_Of_Acceptance\":\"").append(nullCheck(adhocReportType.getDateOfAcceptance())).append(NEW_LINE);
@@ -169,6 +171,23 @@ public class ReportDocHelper {
         sb.append("\"Hearing_Type\":\"").append(nullCheck(adhocReportType.getHearingType())).append(NEW_LINE);
         sb.append("\"Hearing_Judge\":\"").append(nullCheck(adhocReportType.getHearingJudge())).append(NEW_LINE);
         sb.append("\"Hearing_Clerk\":\"").append(nullCheck(adhocReportType.getHearingClerk())).append("\"}");
+        return sb;
+    }
+
+    private static StringBuilder getLiveCaseLoadReport(ListingData listingData) {
+        StringBuilder sb = new StringBuilder();
+
+        if (listingData.getLocalReportsDetail() != null && !listingData.getLocalReportsDetail().isEmpty()) {
+            List<AdhocReportTypeItem> adhocReportTypeItems = listingData.getLocalReportsDetail();
+            sb.append("\"Report_List\":[\n");
+            for (int i = 0; i < adhocReportTypeItems.size(); i++) {
+                sb.append(getAdhocReportCommonTypeRow(adhocReportTypeItems.get(i).getValue()));
+                if (i != adhocReportTypeItems.size() - 1) {
+                    sb.append(",\n");
+                }
+            }
+            sb.append("],\n");
+        }
         return sb;
     }
 
