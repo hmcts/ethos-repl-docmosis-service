@@ -89,7 +89,8 @@ public class CaseCreationForCaseWorkerServiceTest {
         when(ccdClient.startCaseCreationAccepted(anyString(), any())).thenReturn(ccdRequest);
         when(ccdClient.submitCaseCreation(anyString(), any(), any())).thenReturn(submitEvent);
         caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), authToken);
-        assertEquals("Transferred to Leeds", ccdRequest.getCaseDetails().getCaseData().getRelatedCaseCT());
+        assertEquals("<a target=\"_blank\" href=\"null/cases/case-details/0\">2123456/2020</a>",
+                ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
     }
 
     @Test
@@ -98,7 +99,8 @@ public class CaseCreationForCaseWorkerServiceTest {
         when(ccdClient.startCaseCreation(anyString(), any())).thenReturn(ccdRequest);
         when(ccdClient.submitCaseCreation(anyString(), any(), any())).thenReturn(submitEvent);
         caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), authToken);
-        assertEquals("Transferred to Leeds", ccdRequest.getCaseDetails().getCaseData().getRelatedCaseCT());
+        assertEquals("<a target=\"_blank\" href=\"null/cases/case-details/0\">2123456/2020</a>",
+                ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
     }
 
     @Test(expected = Exception.class)

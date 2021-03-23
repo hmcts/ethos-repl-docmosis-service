@@ -15,7 +15,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 import java.io.IOException;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("caseCreationForCaseWorkerService")
@@ -75,9 +75,10 @@ public class CaseCreationForCaseWorkerService {
             log.info("caseDetails: " + caseDetails);
             log.info("newCaseTransferCaseDetails: " + newCaseTransferCaseDetails);
             log.info("Send this case to the new office");
-
-            submitEvent = ccdClient.submitCaseCreation(authToken, newCaseTransferCaseDetails,
-                    getStartCaseCreationByState(authToken, caseDetails.getState(), newCaseTransferCaseDetails));
+            log.info("State: " + caseDetails.getState());
+            log.info("Jurisdiction: " + caseDetails.getJurisdiction());
+            CCDRequest ccdRequest = getStartCaseCreationByState(authToken, caseData, newCaseTransferCaseDetails);
+            submitEvent = ccdClient.submitCaseCreation(authToken, newCaseTransferCaseDetails, ccdRequest);
 
         } catch (Exception ex) {
 
@@ -87,7 +88,9 @@ public class CaseCreationForCaseWorkerService {
         }
 
         log.info("submitEvent.getCaseId(): " + submitEvent.getCaseId());
-        caseData.setRelatedCaseCT("Transferred to " + caseData.getOfficeCT().getValue().getCode());
+        //caseData.setRelatedCaseCT("Transferred to " + caseData.getOfficeCT().getValue().getCode());
+        caseData.setLinkedCaseCT(MultiplesHelper.generateMarkUp(
+                ccdGatewayBaseUrl, String.valueOf(submitEvent.getCaseId()), caseData.getEthosCaseReference()));
         caseData.setPositionType(caseData.getPositionTypeCT());
 
         log.info("Clearing the CT payload");
@@ -162,10 +165,12 @@ public class CaseCreationForCaseWorkerService {
 
     }
 
-    private CCDRequest getStartCaseCreationByState(String authToken, String state,
+    private CCDRequest getStartCaseCreationByState(String authToken, CaseData caseData,
                                                    CaseDetails newCaseTransferCaseDetails) throws IOException {
 
-        if (state.equals(ACCEPTED_STATE)) {
+        if (caseData.getPreAcceptCase() != null
+                && caseData.getPreAcceptCase().getCaseAccepted() != null
+                && caseData.getPreAcceptCase().getCaseAccepted().equals(YES)) {
 
             log.info("ACCEPTED STATE");
             return ccdClient.startCaseCreationAccepted(authToken, newCaseTransferCaseDetails);
