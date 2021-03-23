@@ -72,6 +72,8 @@ public class CaseCreationForCaseWorkerService {
 
             CaseDetails newCaseTransferCaseDetails = createCaseDetailsCaseTransfer(caseDetails);
 
+            log.info("caseDetails: " + caseDetails);
+            log.info("newCaseTransferCaseDetails: " + newCaseTransferCaseDetails);
             log.info("Send this case to the new office");
 
             submitEvent = ccdClient.submitCaseCreation(authToken, newCaseTransferCaseDetails,
@@ -99,11 +101,12 @@ public class CaseCreationForCaseWorkerService {
     private CaseDetails createCaseDetailsCaseTransfer(CaseDetails caseDetails) {
 
         CaseData caseData = caseDetails.getCaseData();
+        log.info("Create case starts");
         CaseDetails newCaseTransferCaseDetails = new CaseDetails();
         newCaseTransferCaseDetails.setCaseTypeId(caseData.getOfficeCT().getValue().getCode());
         newCaseTransferCaseDetails.setJurisdiction(caseDetails.getJurisdiction());
         newCaseTransferCaseDetails.setCaseData(generateCaseDataCaseTransfer(caseData, caseDetails.getCaseId()));
-
+        log.info("Create case finishes");
         return newCaseTransferCaseDetails;
 
     }
@@ -111,6 +114,7 @@ public class CaseCreationForCaseWorkerService {
     private CaseData generateCaseDataCaseTransfer(CaseData caseData, String caseId) {
 
         CaseData newCaseData = new CaseData();
+        log.info("Copying all fields");
         newCaseData.setEthosCaseReference(caseData.getEthosCaseReference());
         newCaseData.setCaseType(caseData.getCaseType());
         newCaseData.setClaimantTypeOfClaimant(caseData.getClaimantTypeOfClaimant());
@@ -153,6 +157,7 @@ public class CaseCreationForCaseWorkerService {
 
         newCaseData.setLinkedCaseCT(MultiplesHelper.generateMarkUp(ccdGatewayBaseUrl, caseId, caseData.getEthosCaseReference()));
 
+        log.info("Finish copying all fields");
         return newCaseData;
 
     }
@@ -162,10 +167,12 @@ public class CaseCreationForCaseWorkerService {
 
         if (state.equals(ACCEPTED_STATE)) {
 
+            log.info("ACCEPTED STATE");
             return ccdClient.startCaseCreationAccepted(authToken, newCaseTransferCaseDetails);
 
         } else {
 
+            log.info("SUBMITTED STATE");
             return ccdClient.startCaseCreation(authToken, newCaseTransferCaseDetails);
 
         }
