@@ -72,11 +72,8 @@ public class CaseCreationForCaseWorkerService {
 
             CaseDetails newCaseTransferCaseDetails = createCaseDetailsCaseTransfer(caseDetails);
 
-            log.info("caseDetails: " + caseDetails);
-            log.info("newCaseTransferCaseDetails: " + newCaseTransferCaseDetails);
             log.info("Send this case to the new office");
-            log.info("State: " + caseDetails.getState());
-            log.info("Jurisdiction: " + caseDetails.getJurisdiction());
+
             CCDRequest ccdRequest = getStartCaseCreationByState(authToken, caseData, newCaseTransferCaseDetails);
             submitEvent = ccdClient.submitCaseCreation(authToken, newCaseTransferCaseDetails, ccdRequest);
 
@@ -87,8 +84,6 @@ public class CaseCreationForCaseWorkerService {
             throw new CaseCreationException(MESSAGE + caseData.getEthosCaseReference() + ex.getMessage());
         }
 
-        log.info("submitEvent.getCaseId(): " + submitEvent.getCaseId());
-        //caseData.setRelatedCaseCT("Transferred to " + caseData.getOfficeCT().getValue().getCode());
         caseData.setLinkedCaseCT(MultiplesHelper.generateMarkUp(
                 ccdGatewayBaseUrl, String.valueOf(submitEvent.getCaseId()), caseData.getEthosCaseReference()));
         caseData.setPositionType(caseData.getPositionTypeCT());
@@ -104,12 +99,10 @@ public class CaseCreationForCaseWorkerService {
     private CaseDetails createCaseDetailsCaseTransfer(CaseDetails caseDetails) {
 
         CaseData caseData = caseDetails.getCaseData();
-        log.info("Create case starts");
         CaseDetails newCaseTransferCaseDetails = new CaseDetails();
         newCaseTransferCaseDetails.setCaseTypeId(caseData.getOfficeCT().getValue().getCode());
         newCaseTransferCaseDetails.setJurisdiction(caseDetails.getJurisdiction());
         newCaseTransferCaseDetails.setCaseData(generateCaseDataCaseTransfer(caseData, caseDetails.getCaseId()));
-        log.info("Create case finishes");
         return newCaseTransferCaseDetails;
 
     }
@@ -117,7 +110,6 @@ public class CaseCreationForCaseWorkerService {
     private CaseData generateCaseDataCaseTransfer(CaseData caseData, String caseId) {
 
         CaseData newCaseData = new CaseData();
-        log.info("Copying all fields");
         newCaseData.setEthosCaseReference(caseData.getEthosCaseReference());
         newCaseData.setCaseType(caseData.getCaseType());
         newCaseData.setClaimantTypeOfClaimant(caseData.getClaimantTypeOfClaimant());
@@ -160,7 +152,6 @@ public class CaseCreationForCaseWorkerService {
 
         newCaseData.setLinkedCaseCT(MultiplesHelper.generateMarkUp(ccdGatewayBaseUrl, caseId, caseData.getEthosCaseReference()));
 
-        log.info("Finish copying all fields");
         return newCaseData;
 
     }
@@ -172,12 +163,12 @@ public class CaseCreationForCaseWorkerService {
                 && caseData.getPreAcceptCase().getCaseAccepted() != null
                 && caseData.getPreAcceptCase().getCaseAccepted().equals(YES)) {
 
-            log.info("ACCEPTED STATE");
+            log.info("MOVING TO ACCEPTED STATE");
             return ccdClient.startCaseCreationAccepted(authToken, newCaseTransferCaseDetails);
 
         } else {
 
-            log.info("SUBMITTED STATE");
+            log.info("MOVING TO SUBMITTED STATE");
             return ccdClient.startCaseCreation(authToken, newCaseTransferCaseDetails);
 
         }
