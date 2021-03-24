@@ -781,9 +781,11 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), userToken);
+        List<String> errors = new ArrayList<>();
 
-        return getCCDCallbackResponseResponseEntityWithoutErrors(ccdRequest.getCaseDetails().getCaseData());
+        caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, userToken);
+
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, ccdRequest.getCaseDetails().getCaseData());
     }
 
     @PostMapping(value = "/aboutToStartDisposal", consumes = APPLICATION_JSON_VALUE)

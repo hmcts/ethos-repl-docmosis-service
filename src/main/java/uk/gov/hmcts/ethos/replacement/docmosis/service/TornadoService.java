@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
@@ -28,6 +28,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService.APPLICATION_DOCX_VALUE;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("tornadoService")
 public class TornadoService {
 
@@ -40,17 +41,6 @@ public class TornadoService {
 
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
-
-    @Autowired
-    public TornadoService(TornadoConfiguration tornadoConfiguration,
-                          DocumentManagementService documentManagementService,
-                          UserService userService,
-                          DefaultValuesReaderService defaultValuesReaderService) {
-        this.tornadoConfiguration = tornadoConfiguration;
-        this.documentManagementService = documentManagementService;
-        this.userService = userService;
-        this.defaultValuesReaderService = defaultValuesReaderService;
-    }
 
     public DocumentInfo documentGeneration(String authToken, CaseData caseData, String caseTypeId,
                                            CorrespondenceType correspondenceType,

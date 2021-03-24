@@ -3,8 +3,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,12 +21,12 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_EMPTY_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.getCCDCallbackResponseResponseEntityWithErrors;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.getCCDCallbackResponseResponseEntityWithoutErrors;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class DocumentGenerationController {
 
@@ -36,14 +36,6 @@ public class DocumentGenerationController {
     private final DocumentGenerationService documentGenerationService;
     private final VerifyTokenService verifyTokenService;
     private final EventValidationService eventValidationService;
-
-    @Autowired
-    public DocumentGenerationController(DocumentGenerationService documentGenerationService, VerifyTokenService verifyTokenService,
-                                        EventValidationService eventValidationService) {
-        this.documentGenerationService = documentGenerationService;
-        this.verifyTokenService = verifyTokenService;
-        this.eventValidationService = eventValidationService;
-    }
 
     @PostMapping(value = "/midAddressLabels", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "populates the address labels list with the user selected addresses.")

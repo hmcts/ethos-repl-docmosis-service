@@ -16,12 +16,15 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CaseCreationForCaseWorkerServiceTest {
@@ -37,6 +40,8 @@ public class CaseCreationForCaseWorkerServiceTest {
     private SingleReferenceService singleReferenceService;
     @Mock
     private MultipleReferenceService multipleReferenceService;
+    @Mock
+    private PersistentQHelperService persistentQHelperService;
 
     @Before
     public void setUp() {
@@ -44,6 +49,7 @@ public class CaseCreationForCaseWorkerServiceTest {
         CaseDetails caseDetails = new CaseDetails();
         CaseData caseData = MultipleUtil.getCaseData("2123456/2020");
         caseData.setCaseRefNumberCount("2");
+        caseData.setPositionTypeCT("PositionTypeCT");
         DynamicFixedListType officeCT = new DynamicFixedListType();
         DynamicValueType valueType = new DynamicValueType();
         valueType.setCode(LEEDS_CASE_TYPE_ID);
@@ -55,7 +61,6 @@ public class CaseCreationForCaseWorkerServiceTest {
         caseDetails.setState(ACCEPTED_STATE);
         ccdRequest.setCaseDetails(caseDetails);
         submitEvent = new SubmitEvent();
-        caseCreationForCaseWorkerService = new CaseCreationForCaseWorkerService(ccdClient, singleReferenceService, multipleReferenceService);
         authToken = "authToken";
     }
 
@@ -85,29 +90,13 @@ public class CaseCreationForCaseWorkerServiceTest {
     }
 
     @Test
-    public void createCaseTransferAccepted() throws IOException {
+    public void createCaseTransfer() throws IOException {
+        List<String> errors = new ArrayList<>();
         when(ccdClient.startCaseCreationAccepted(anyString(), any())).thenReturn(ccdRequest);
         when(ccdClient.submitCaseCreation(anyString(), any(), any())).thenReturn(submitEvent);
-        caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), authToken);
-        assertEquals("<a target=\"_blank\" href=\"null/cases/case-details/0\">2123456/2020</a>",
-                ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
+        caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
+        assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
+        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
     }
 
-    @Test
-    public void createCaseTransferSubmitted() throws IOException {
-        ccdRequest.getCaseDetails().setState(SUBMITTED_STATE);
-        when(ccdClient.startCaseCreation(anyString(), any())).thenReturn(ccdRequest);
-        when(ccdClient.submitCaseCreation(anyString(), any(), any())).thenReturn(submitEvent);
-        caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), authToken);
-        assertEquals("<a target=\"_blank\" href=\"null/cases/case-details/0\">2123456/2020</a>",
-                ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
-    }
-
-    @Test(expected = Exception.class)
-    public void createCaseTransferSubmittedException() throws IOException {
-        ccdRequest.getCaseDetails().setState(SUBMITTED_STATE);
-        when(ccdClient.startCaseCreation(anyString(), any())).thenThrow(new RuntimeException());
-        when(ccdClient.submitCaseCreation(anyString(), any(), any())).thenReturn(submitEvent);
-        caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), authToken);
-    }
 }

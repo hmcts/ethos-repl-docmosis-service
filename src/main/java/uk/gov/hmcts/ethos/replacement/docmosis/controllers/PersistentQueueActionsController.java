@@ -3,8 +3,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +16,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ecm.common.model.helper.BulkRequestPayload;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.BulkCreationService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.BulkSearchService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.BulkUpdateService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
 import java.util.List;
 
@@ -26,6 +29,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOU
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.BulkCreationService.UPDATE_SINGLES_PQ_STEP;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class PersistentQueueActionsController {
 
@@ -35,15 +39,6 @@ public class PersistentQueueActionsController {
     private final BulkUpdateService bulkUpdateService;
     private final BulkSearchService bulkSearchService;
     private final VerifyTokenService verifyTokenService;
-
-    @Autowired
-    public PersistentQueueActionsController(BulkCreationService bulkCreationService, BulkUpdateService bulkUpdateService,
-                                            BulkSearchService bulkSearchService, VerifyTokenService verifyTokenService) {
-        this.bulkCreationService = bulkCreationService;
-        this.bulkUpdateService = bulkUpdateService;
-        this.bulkSearchService = bulkSearchService;
-        this.verifyTokenService = verifyTokenService;
-    }
 
     @PostMapping(value = "/afterSubmittedBulkPQ", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "display the bulk info.")

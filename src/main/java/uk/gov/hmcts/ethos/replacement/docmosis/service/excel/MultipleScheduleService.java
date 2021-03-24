@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import com.google.common.collect.Lists;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
@@ -24,6 +24,7 @@ import java.util.concurrent.Future;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("multipleScheduleService")
 public class MultipleScheduleService {
 
@@ -34,15 +35,6 @@ public class MultipleScheduleService {
     public static final int ES_PARTITION_SIZE = 500;
     public static final int THREAD_NUMBER = 20;
     public static final int SCHEDULE_LIMIT_CASES = 10000;
-
-    @Autowired
-    public MultipleScheduleService(ExcelReadingService excelReadingService,
-                                   SingleCasesReadingService singleCasesReadingService,
-                                   ExcelDocManagementService excelDocManagementService) {
-        this.excelReadingService = excelReadingService;
-        this.singleCasesReadingService = singleCasesReadingService;
-        this.excelDocManagementService = excelDocManagementService;
-    }
 
     public DocumentInfo bulkScheduleLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
