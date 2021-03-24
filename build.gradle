@@ -136,7 +136,7 @@ task functional(type: Test, description: 'Runs the functional tests.', group: 'V
 }
 
 project.ext {
-    pacticipant = 'ecm_consumer'
+    pacticipant = 'ethos_replDocmosisService'
     pacticipantVersion = getCheckedOutGitCommitHash()
 }
 
