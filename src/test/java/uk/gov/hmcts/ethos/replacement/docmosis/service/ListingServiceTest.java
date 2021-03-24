@@ -213,7 +213,7 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestAberdeen() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
                 "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , " +
                 "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , " +
@@ -235,7 +235,7 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setVenueGlasgow("GlasgowVenue");
         listingDetails.getCaseData().setListingVenue("Glasgow");
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Glasgow, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, " +
                 "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, " +
@@ -253,7 +253,7 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setVenueEdinburgh("EdinburghVenue");
         listingDetails.getCaseData().setListingVenue("Edinburgh");
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Edinburgh, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, " +
                 "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, " +
@@ -271,7 +271,7 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setVenueDundee("DundeeVenue");
         listingDetails.getCaseData().setListingVenue("Dundee");
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Dundee, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, " +
                 "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, " +
@@ -288,7 +288,7 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setVenueAberdeen(null);
         listingDetails.getCaseData().setListingVenue("Leeds");
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Leeds, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, " +
                 "roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=Brought Forward Report, documentName=null, " +
@@ -303,7 +303,7 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestAberdeenWithValidHearingType() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
                 "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType=Valid Hearing, positionType= , " +
                 "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , " +
@@ -325,7 +325,7 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestAberdeenWithInValidHearingType() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, hearingDocType=ETCL - Cause List, hearingDocETCL=Public, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
                 "reportType=Brought Forward Report, documentName=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
@@ -342,7 +342,7 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestAberdeenWithPrivateHearingType() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
                 "hearingDocType=ETCL - Cause List, hearingDocETCL=Press List, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
@@ -361,7 +361,7 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestAberdeenWithALL() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[" +
                 "ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
@@ -387,8 +387,8 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestRange() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Range, listingDate=null, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=" +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Range, listingDate=null, listingDateFrom=2019-12-09, " +
+                "listingDateTo=2019-12-12, listingVenue=Aberdeen, listingCollection=" +
                 "[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
                 "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
@@ -412,8 +412,8 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestRangeAndAllVenues() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Range, listingDate=null, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=All, listingCollection=" +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Range, listingDate=null, listingDateFrom=2019-12-09, " +
+                "listingDateTo=2019-12-12, listingVenue=All, listingCollection=" +
                 "[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, causeListTime=12:11, causeListVenue=AberdeenVenue, " +
                 "elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , hearingJudgeName= , hearingEEMember= , " +
                 "hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=RYAN AIR LTD, claimantTown= , claimantRepresentative= , " +
@@ -462,7 +462,7 @@ public class ListingServiceTest {
     @Test
     public void processListingHearingsRequestWithAdditionalInfo() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
                 "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , positionType= , " +
                 "hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName=Juan Pedro, " +
@@ -511,7 +511,7 @@ public class ListingServiceTest {
     @Test
     public void processListingSingleCasesRequest() {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[ListingTypeItem(id=123, value=ListingType(causeListDate=12 December 2019, " +
                 "causeListTime=12:11, causeListVenue=AberdeenVenue, elmoCaseReference=4210000/2019, jurisdictionCodesList= , hearingType= , " +
                 "positionType= , hearingJudgeName= , hearingEEMember= , hearingERMember= , hearingClerk=Clerk, hearingDay=1 of 3, claimantName= , " +
@@ -543,7 +543,7 @@ public class ListingServiceTest {
     @Test
     public void generateReportDataSingleDateMatch() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
                 "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=[BFDateTypeItem(id=222, " +
@@ -560,7 +560,7 @@ public class ListingServiceTest {
     public void generateReportDataSingleDateMisMatch() throws IOException {
         listingDetails.getCaseData().setListingDate("2019-12-30");
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=null, listingDateFrom=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-30, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, " +
                 "bfDateCollection=[], clerkResponsible=null, reportType=Brought Forward Report, documentName=null, localReportsSummaryHdr=null, localReportsSummary=null, " +
@@ -574,8 +574,8 @@ public class ListingServiceTest {
     @Test
     public void generateReportDataRangeDatesWithMatchingClerkResponsible() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Range, listingDate=null, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Range, listingDate=null, listingDateFrom=2019-12-09, " +
+                "listingDateTo=2019-12-12, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
                 "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=[BFDateTypeItem(id=111, " +
                 "value=BFDateType(caseReference=4210000/2019, broughtForwardAction=null, broughtForwardDate=2019-12-11, broughtForwardDateCleared=, " +
@@ -592,8 +592,8 @@ public class ListingServiceTest {
     public void generateReportDataRangeDatesWithMisMatchedClerkResponsible() throws IOException {
         listingDetailsRange.getCaseData().setClerkResponsible("not there");
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Range, listingDate=null, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
+                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Range, listingDate=null, listingDateFrom=2019-12-09, " +
+                "listingDateTo=2019-12-12, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, " +
                 "bfDateCollection=[], clerkResponsible=null, reportType=Brought Forward Report, documentName=null, localReportsSummaryHdr=null, " +
                 "localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";

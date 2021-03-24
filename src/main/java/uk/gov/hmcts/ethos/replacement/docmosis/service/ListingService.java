@@ -192,13 +192,6 @@ public class ListingService {
         listingData.setVenueAberdeen(null);
         listingData.setVenueDundee(null);
         listingData.setVenueEdinburgh(null);
-        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
-        if (dateRange) {
-            listingData.setListingDateFrom(null);
-            listingData.setListingDateTo(null);
-        } else {
-            listingData.setListingDate(null);
-        }
         listingData.setClerkResponsible(null);
         return listingData;
     }
