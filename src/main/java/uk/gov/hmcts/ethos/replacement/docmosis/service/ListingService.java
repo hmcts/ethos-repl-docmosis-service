@@ -318,7 +318,9 @@ public class ListingService {
             HearingType hearingType = hearingTypeItem.getValue();
 
             if (hearingType.getHearingType() != null) {
-                if (hearingType.getHearingType().equals(HEARING_TYPE_PERLIMINARY_HEARING) && hearingType.getHearingPublicPrivate().equals(HEARING_TYPE_PRIVATE)) {
+                if (hearingType.getHearingType().equals(HEARING_TYPE_PERLIMINARY_HEARING)
+                        && hearingType.getHearingPublicPrivate() != null
+                        && hearingType.getHearingPublicPrivate().equals(HEARING_TYPE_PRIVATE)) {
                     return false;
                 } else {
                     List<String> invalidHearingTypes = Arrays.asList(HEARING_TYPE_JUDICIAL_MEDIATION, HEARING_TYPE_JUDICIAL_MEDIATION_TCC, HEARING_TYPE_PERLIMINARY_HEARING_CM, HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC);
