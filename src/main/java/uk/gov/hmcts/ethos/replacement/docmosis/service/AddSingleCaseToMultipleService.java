@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -18,18 +18,12 @@ import java.util.List;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("addSingleCaseToMultipleService")
 public class AddSingleCaseToMultipleService {
 
     private final MultipleHelperService multipleHelperService;
     private final MultipleCasesReadingService multipleCasesReadingService;
-
-    @Autowired
-    public AddSingleCaseToMultipleService(MultipleHelperService multipleHelperService,
-                                          MultipleCasesReadingService multipleCasesReadingService) {
-        this.multipleHelperService = multipleHelperService;
-        this.multipleCasesReadingService = multipleCasesReadingService;
-    }
 
     public void addSingleCaseToMultipleLogic(String userToken, CaseData caseData, String caseTypeId,
                                              String jurisdiction, String caseId, List<String> errors) {

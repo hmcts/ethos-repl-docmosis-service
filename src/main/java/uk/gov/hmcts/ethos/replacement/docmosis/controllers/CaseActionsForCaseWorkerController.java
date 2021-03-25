@@ -3,8 +3,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +26,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.*;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class CaseActionsForCaseWorkerController {
 
@@ -41,29 +42,6 @@ public class CaseActionsForCaseWorkerController {
     private final EventValidationService eventValidationService;
     private final SingleCaseMultipleMidEventValidationService singleCaseMultipleMidEventValidationService;
     private final AddSingleCaseToMultipleService addSingleCaseToMultipleService;
-
-    @Autowired
-    public CaseActionsForCaseWorkerController(VerifyTokenService verifyTokenService,
-                                              CaseCreationForCaseWorkerService caseCreationForCaseWorkerService,
-                                              CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
-                                              CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService,
-                                              DefaultValuesReaderService defaultValuesReaderService,
-                                              CaseManagementForCaseWorkerService caseManagementForCaseWorkerService,
-                                              SingleReferenceService singleReferenceService,
-                                              EventValidationService eventValidationService,
-                                              SingleCaseMultipleMidEventValidationService singleCaseMultipleMidEventValidationService,
-                                              AddSingleCaseToMultipleService addSingleCaseToMultipleService) {
-        this.verifyTokenService = verifyTokenService;
-        this.caseCreationForCaseWorkerService = caseCreationForCaseWorkerService;
-        this.caseRetrievalForCaseWorkerService = caseRetrievalForCaseWorkerService;
-        this.caseUpdateForCaseWorkerService = caseUpdateForCaseWorkerService;
-        this.defaultValuesReaderService = defaultValuesReaderService;
-        this.caseManagementForCaseWorkerService = caseManagementForCaseWorkerService;
-        this.singleReferenceService = singleReferenceService;
-        this.eventValidationService = eventValidationService;
-        this.singleCaseMultipleMidEventValidationService = singleCaseMultipleMidEventValidationService;
-        this.addSingleCaseToMultipleService = addSingleCaseToMultipleService;
-    }
 
     @PostMapping(value = "/createCase", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "create a case for a caseWorker.")
@@ -222,29 +200,6 @@ public class CaseActionsForCaseWorkerController {
         log.info("PostDefaultValues for case: " + caseData.getEthosCaseReference());
 
         return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
-    }
-
-    @PostMapping(value = "/preAcceptCase", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "update the case state to Accepted or Rejected.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<CCDCallbackResponse> preAcceptCase(
-            @RequestBody CCDRequest ccdRequest,
-            @RequestHeader(value = "Authorization") String userToken) {
-        log.info("PRE ACCEPT CASE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        CaseData caseData = caseManagementForCaseWorkerService.preAcceptCase(ccdRequest);
-
-        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
     }
 
     @PostMapping(value = "/amendCaseDetails", consumes = APPLICATION_JSON_VALUE)
@@ -488,10 +443,6 @@ public class CaseActionsForCaseWorkerController {
         if (ccdRequest.getCaseDetails().getState().equals(CLOSED_STATE)) {
             errors = eventValidationService.validateJurisdictionOutcome(caseData);
             log.info("Event fields validation: " + errors);
-        }
-
-        if (errors.isEmpty()) {
-            caseData.setState(ccdRequest.getCaseDetails().getState());
         }
 
         return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
@@ -830,10 +781,11 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        caseCreationForCaseWorkerService.createCaseTransfer(caseData, ccdRequest.getCaseDetails().getJurisdiction(), userToken);
+        List<String> errors = new ArrayList<>();
 
-        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+        caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, userToken);
+
+        return getCCDCallbackResponseResponseEntityWithErrors(errors, ccdRequest.getCaseDetails().getCaseData());
     }
 
     @PostMapping(value = "/aboutToStartDisposal", consumes = APPLICATION_JSON_VALUE)

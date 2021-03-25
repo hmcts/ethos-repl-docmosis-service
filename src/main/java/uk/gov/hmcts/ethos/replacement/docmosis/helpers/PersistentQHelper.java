@@ -108,11 +108,16 @@ public class PersistentQHelper {
                 .build();
     }
 
-    public static CloseDataModel getCloseDataModel(String clerkResponsible, String fileLocation, String notes) {
+    public static CloseDataModel getCloseDataModel(MultipleData multipleData) {
         return CloseDataModel.builder()
-                .clerkResponsible(clerkResponsible)
-                .fileLocation(fileLocation)
-                .notes(notes)
+                .clerkResponsible(multipleData.getClerkResponsible())
+                .fileLocation(multipleData.getFileLocation())
+                .notes(multipleData.getNotes())
+                .managingOffice(multipleData.getManagingOffice())
+                .fileLocationGlasgow(multipleData.getFileLocationGlasgow())
+                .fileLocationAberdeen(multipleData.getFileLocationAberdeen())
+                .fileLocationDundee(multipleData.getFileLocationDundee())
+                .fileLocationEdinburgh(multipleData.getFileLocationEdinburgh())
                 .build();
     }
 
@@ -123,6 +128,14 @@ public class PersistentQHelper {
 
     public static ResetStateDataModel getResetStateModel() {
         return ResetStateDataModel.builder()
+                .build();
+    }
+
+    public static CreationSingleDataModel getCreationSingleDataModel(String ccdGatewayBaseUrl, String officeCT, String positionTypeCT) {
+        return CreationSingleDataModel.builder()
+                .officeCT(officeCT)
+                .positionTypeCT(positionTypeCT)
+                .ccdGatewayBaseUrl(ccdGatewayBaseUrl)
                 .build();
     }
 

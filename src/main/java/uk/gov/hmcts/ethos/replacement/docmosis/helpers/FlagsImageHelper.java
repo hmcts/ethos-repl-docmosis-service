@@ -82,7 +82,7 @@ public class FlagsImageHelper {
                 flagColor = COLOR_WHITE;
         }
         flagsImageFileName.append(flagRequired ? ONE : ZERO);
-        flagsImageAltText.append(flagRequired && flagsImageAltText.length() > 0 ? " - " : "");
+        flagsImageAltText.append(flagRequired && flagsImageAltText.length() > 0 ? "<font size='5'> - </font>" : "");
         flagsImageAltText.append(flagRequired ? "<font color='" + flagColor + "' size='5'> " + flagName + " </font>" : "");
     }
 
@@ -170,7 +170,7 @@ public class FlagsImageHelper {
     }
 
     private static boolean withOutstation(CaseData caseData) {
-        return caseData.getManagingOffice() != null && !caseData.getManagingOffice().equals(GLASGOW_OFFICE);
+        return !isNullOrEmpty(caseData.getManagingOffice()) && !caseData.getManagingOffice().equals(GLASGOW_OFFICE);
     }
 
 }

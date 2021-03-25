@@ -10,7 +10,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import java.io.IOException;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.PENDING_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 
 @Slf4j
 public class BulkCreationTask implements Runnable {
@@ -42,7 +41,6 @@ public class BulkCreationTask implements Runnable {
                 // Moving to submitted_state
                 log.info("Moving from pending to submitted");
                     returnedRequest = ccdClient.startEventForCaseBulkSingle(authToken, UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
-                submitEvent.getCaseData().setState(SUBMITTED_STATE);
             } else {
                 // Moving to accepted_state
                 log.info("Moving to accepted state");

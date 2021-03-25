@@ -3,8 +3,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +32,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHe
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.getMultipleCallbackResponseResponseEntityWithDocInfo;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class MultipleDocGenerationController {
 
@@ -42,17 +43,6 @@ public class MultipleDocGenerationController {
     private final MultipleLetterService multipleLetterService;
     private final MultipleDocGenerationService multipleDocGenerationService;
     private final VerifyTokenService verifyTokenService;
-
-    @Autowired
-    public MultipleDocGenerationController(MultipleLetterService multipleLetterService,
-                                           MultipleScheduleService multipleScheduleService,
-                                           MultipleDocGenerationService multipleDocGenerationService,
-                                           VerifyTokenService verifyTokenService) {
-        this.multipleScheduleService = multipleScheduleService;
-        this.multipleLetterService = multipleLetterService;
-        this.multipleDocGenerationService = multipleDocGenerationService;
-        this.verifyTokenService = verifyTokenService;
-    }
 
     @PostMapping(value = "/printSchedule", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "generate a multiple schedule.")

@@ -14,14 +14,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.CONSTRAINT_KEY;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NAME;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 
 @Slf4j
 @Service("excelCreationService")
 public class ExcelCreationService {
-
-    private static final String HIDDEN_SHEET_NAME = "Hidden";
 
     public byte[] writeExcel(List<?> multipleCollection, List<String> subMultipleCollection, String leadCaseString) {
 
@@ -174,6 +171,8 @@ public class ExcelCreationService {
         CellStyle styleForLocking = getStyleForLocking(workbook, false);
         CellStyle styleForLockingLead = getStyleForLocking(workbook, true);
         String leadCase = MultiplesHelper.getCurrentLead(leadCaseString);
+        log.info("Creating lead case EXCEL STRING: " + leadCaseString);
+        log.info("Creating lead case EXCEL: " + leadCase);
 
         if (!multipleCollection.isEmpty()) {
             if (multipleCollection.get(0) instanceof String) {
@@ -208,6 +207,7 @@ public class ExcelCreationService {
                     for (int j = 0; j < MultiplesHelper.HEADERS.size(); j++) {
                         XSSFRow row = sheet.createRow(i);
                         if (multipleObject.getEthosCaseRef().equals(leadCase)) {
+                            log.info("Lead: " + leadCase);
                             createCell(row, j++, multipleObject.getEthosCaseRef(), styleForLockingLead);
                         } else {
                             createCell(row, j++, multipleObject.getEthosCaseRef(), styleForLocking);

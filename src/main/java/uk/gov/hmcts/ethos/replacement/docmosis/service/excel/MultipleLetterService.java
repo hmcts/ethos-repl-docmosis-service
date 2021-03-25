@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
@@ -10,7 +10,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.TornadoService;
 
@@ -23,6 +26,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.MAX_NUMBER_LABELS;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("multipleLetterService")
 public class MultipleLetterService {
 
@@ -33,17 +37,6 @@ public class MultipleLetterService {
     private final ExcelReadingService excelReadingService;
     private final SingleCasesReadingService singleCasesReadingService;
     private final EventValidationService eventValidationService;
-
-    @Autowired
-    public MultipleLetterService(TornadoService tornadoService,
-                                 ExcelReadingService excelReadingService,
-                                 SingleCasesReadingService singleCasesReadingService,
-                                 EventValidationService eventValidationService) {
-        this.tornadoService = tornadoService;
-        this.excelReadingService = excelReadingService;
-        this.singleCasesReadingService = singleCasesReadingService;
-        this.eventValidationService = eventValidationService;
-    }
 
     public DocumentInfo bulkLetterLogic(String userToken, MultipleDetails multipleDetails, List<String> errors, boolean validation) {
 

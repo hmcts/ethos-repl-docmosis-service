@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
@@ -20,21 +20,13 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.AMEND_ACTION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CREATE_ACTION;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("subMultipleUpdateService")
 public class SubMultipleUpdateService {
 
     private final ExcelReadingService excelReadingService;
     private final SubMultipleReferenceService subMultipleReferenceService;
     private final ExcelDocManagementService excelDocManagementService;
-
-    @Autowired
-    public SubMultipleUpdateService(ExcelReadingService excelReadingService,
-                                    SubMultipleReferenceService subMultipleReferenceService,
-                                    ExcelDocManagementService excelDocManagementService) {
-        this.excelReadingService = excelReadingService;
-        this.subMultipleReferenceService = subMultipleReferenceService;
-        this.excelDocManagementService = excelDocManagementService;
-    }
 
     public void subMultipleUpdateLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
@@ -47,9 +39,6 @@ public class SubMultipleUpdateService {
                         errors,
                         multipleDetails.getCaseData(),
                         FilterExcelType.ALL);
-
-        log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
-        log.info("MultipleObjectsValues: " + multipleObjects.values());
 
         log.info("Logic depending on batch update type");
 

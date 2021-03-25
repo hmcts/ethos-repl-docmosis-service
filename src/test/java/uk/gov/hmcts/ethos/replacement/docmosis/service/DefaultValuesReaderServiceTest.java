@@ -379,7 +379,7 @@ public class DefaultValuesReaderServiceTest {
                 "jurCodesCollection=null, bfActions=null, clerkResponsible=null, " +
                 "userLocation=null, documentCollection=null, additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, " +
                 "addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, caseNotes=null, claimantWorkAddress=null, " +
-                "claimantRepresentedQuestion=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, state=null, et3Received=null, " +
+                "claimantRepresentedQuestion=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, et3Received=null, " +
                 "conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, targetHearingDate=null, " +
                 "claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, " +
                 "multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, hearingNumbers=null, " +
@@ -388,7 +388,8 @@ public class DefaultValuesReaderServiceTest {
                 "hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, Postponed_by=null, hearingRoom=null, " +
                 "hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, hearingPartHeard=null, hearingReservedJudgement=null, attendeeClaimant=null, " +
                 "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, " +
-                "hearingTimingResume=null, hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null)";
+                "hearingTimingResume=null, hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, " +
+                "relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null)";
         defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -441,7 +442,7 @@ public class DefaultValuesReaderServiceTest {
                 "clerkResponsible=null, userLocation=null, documentCollection=null, additionalCaseInfoType=null, correspondenceScotType=null, " +
                 "correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, caseNotes=null, " +
                 "claimantWorkAddress=ClaimantWorkAddressType(claimantWorkAddress=null, claimantWorkPhoneNumber=null), claimantRepresentedQuestion=null, " +
-                "managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, state=null, et3Received=null, conciliationTrack=null, counterClaim=null, " +
+                "managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, et3Received=null, conciliationTrack=null, counterClaim=null, " +
                 "restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, EQP=null, " +
                 "flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null," +
                 " ccdID=null, flagsImageFileName=null, flagsImageAltText=null, hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, " +
@@ -450,7 +451,7 @@ public class DefaultValuesReaderServiceTest {
                 "hearingDateActions=null, hearingStatus=null, Postponed_by=null, hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, " +
                 "hearingPartHeard=null, hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, " +
                 "attendeeRespAndRep=null, attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, " +
-                "hearingTimingDuration=null, companyPremises=null)";
+                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }

@@ -224,17 +224,6 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    public void preAcceptCaseAccepted() {
-        assertEquals(ACCEPTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
-    }
-
-    @Test
-    public void preAcceptCaseRejected() {
-        manchesterCcdRequest.getCaseDetails().getCaseData().getPreAcceptCase().setCaseAccepted(NO);
-        assertEquals(REJECTED_STATE, caseManagementForCaseWorkerService.preAcceptCase(manchesterCcdRequest).getState());
-    }
-
-    @Test
     public void dateToCurrentPositionChanged() {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
@@ -327,12 +316,18 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest15.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
         String expected = "" +
-                "<font color='DarkRed' size='5'> DO NOT POSTPONE </font> - " +
-                "<font color='Green' size='5'> LIVE APPEAL </font> - " +
-                "<font color='Red' size='5'> RULE 50(3)b </font> - " +
-                "<font color='LightBlack' size='5'> REPORTING </font> - " +
-                "<font color='Orange' size='5'> SENSITIVE </font> - " +
-                "<font color='Purple' size='5'> RESERVED </font> - " +
+                "<font color='DarkRed' size='5'> DO NOT POSTPONE </font>" +
+                "<font size='5'> - </font>" +
+                "<font color='Green' size='5'> LIVE APPEAL </font>" +
+                "<font size='5'> - </font>" +
+                "<font color='Red' size='5'> RULE 50(3)b </font>" +
+                "<font size='5'> - </font>" +
+                "<font color='LightBlack' size='5'> REPORTING </font>" +
+                "<font size='5'> - </font>" +
+                "<font color='Orange' size='5'> SENSITIVE </font>" +
+                "<font size='5'> - </font>" +
+                "<font color='Purple' size='5'> RESERVED </font>" +
+                "<font size='5'> - </font>" +
                 "<font color='Olive' size='5'> ECC </font>";
         assertEquals(expected, caseData.getFlagsImageAltText());
         assertEquals("EMP-TRIB-01111111.jpg", caseData.getFlagsImageFileName());

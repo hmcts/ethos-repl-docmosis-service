@@ -3,8 +3,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +27,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.getMultipleCallbackResponseResponseEntity;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class ExcelActionsController {
 
@@ -46,37 +47,6 @@ public class ExcelActionsController {
     private final MultipleSingleMidEventValidationService multipleSingleMidEventValidationService;
     private final EventValidationService eventValidationService;
     private final MultipleHelperService multipleHelperService;
-
-    @Autowired
-    public ExcelActionsController(VerifyTokenService verifyTokenService,
-                                  MultipleCreationService multipleCreationService,
-                                  MultiplePreAcceptService multiplePreAcceptService,
-                                  MultipleAmendService multipleAmendService,
-                                  MultipleUpdateService multipleUpdateService,
-                                  MultipleUploadService multipleUploadService,
-                                  MultipleDynamicListFlagsService multipleDynamicListFlagsService,
-                                  MultipleMidEventValidationService multipleMidEventValidationService,
-                                  SubMultipleUpdateService subMultipleUpdateService,
-                                  SubMultipleMidEventValidationService subMultipleMidEventValidationService,
-                                  MultipleCreationMidEventValidationService multipleCreationMidEventValidationService,
-                                  MultipleSingleMidEventValidationService multipleSingleMidEventValidationService,
-                                  EventValidationService eventValidationService,
-                                  MultipleHelperService multipleHelperService) {
-        this.verifyTokenService = verifyTokenService;
-        this.multipleCreationService = multipleCreationService;
-        this.multiplePreAcceptService = multiplePreAcceptService;
-        this.multipleAmendService = multipleAmendService;
-        this.multipleUpdateService = multipleUpdateService;
-        this.multipleUploadService = multipleUploadService;
-        this.multipleDynamicListFlagsService = multipleDynamicListFlagsService;
-        this.multipleMidEventValidationService = multipleMidEventValidationService;
-        this.subMultipleUpdateService = subMultipleUpdateService;
-        this.subMultipleMidEventValidationService = subMultipleMidEventValidationService;
-        this.multipleCreationMidEventValidationService = multipleCreationMidEventValidationService;
-        this.multipleSingleMidEventValidationService = multipleSingleMidEventValidationService;
-        this.eventValidationService = eventValidationService;
-        this.multipleHelperService = multipleHelperService;
-    }
 
     @PostMapping(value = "/createMultiple", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Creates a multiple case. Retrieves cases by ethos case reference. Creates an Excel")

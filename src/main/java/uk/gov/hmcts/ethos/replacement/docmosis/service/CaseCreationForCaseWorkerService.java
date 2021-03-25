@@ -1,7 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
@@ -11,7 +12,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 
+import java.util.List;
+
 @Slf4j
+@RequiredArgsConstructor
 @Service("caseCreationForCaseWorkerService")
 public class CaseCreationForCaseWorkerService {
 
@@ -19,24 +23,17 @@ public class CaseCreationForCaseWorkerService {
     private final CcdClient ccdClient;
     private final SingleReferenceService singleReferenceService;
     private final MultipleReferenceService multipleReferenceService;
+    private final PersistentQHelperService persistentQHelperService;
 
-    public static final String TRANSFERRED_IN_STATE = "Transferred_In";
-    public static final String TRANSFERRED_OUT_STATE = "Transferred_Out";
+    @Value("${ccd_gateway_base_url}")
+    private String ccdGatewayBaseUrl;
 
-    @Autowired
-    public CaseCreationForCaseWorkerService(CcdClient ccdClient, SingleReferenceService singleReferenceService,
-                                            MultipleReferenceService multipleReferenceService) {
-        this.ccdClient = ccdClient;
-        this.singleReferenceService = singleReferenceService;
-        this.multipleReferenceService = multipleReferenceService;
-    }
-
-    public SubmitEvent caseCreationRequest(CCDRequest ccdRequest, String authToken) {
+    public SubmitEvent caseCreationRequest(CCDRequest ccdRequest, String userToken) {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
         log.info("EventId: " + ccdRequest.getEventId());
         try {
-            return ccdClient.submitCaseCreation(authToken, caseDetails,
-                    ccdClient.startCaseCreation(authToken, caseDetails));
+            return ccdClient.submitCaseCreation(userToken, caseDetails,
+                    ccdClient.startCaseCreation(userToken, caseDetails));
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }
@@ -54,39 +51,30 @@ public class CaseCreationForCaseWorkerService {
         return caseData;
     }
 
-    public void createCaseTransfer(CaseData caseData, String jurisdiction, String authToken) {
+    public void createCaseTransfer(CaseDetails caseDetails, List<String> errors, String userToken) {
 
-//        try {
-//            log.info("Create a new case details. Transferred in");
-//            CaseDetails newCaseTransferCaseDetails = createCaseDetailsCaseTransfer(caseData, jurisdiction);
-//            log.info("Send this case to the new office");
-//            ccdClient.submitCaseCreation(authToken,
-//                    newCaseTransferCaseDetails,
-//                    ccdClient.startCaseCreation(authToken, newCaseTransferCaseDetails));
-//        } catch (Exception ex) {
-//            throw new CaseCreationException(MESSAGE + caseData.getEthosCaseReference() + ex.getMessage());
-//        }
-//
-//        log.info("Update the current caseDetails state to transferred out");
-//        caseData.setState(TRANSFERRED_OUT_STATE);
+        CaseData caseData = caseDetails.getCaseData();
+
+        persistentQHelperService.sendCreationEventToSinglesWithoutConfirmation(
+                userToken,
+                caseDetails.getCaseTypeId(),
+                caseDetails.getJurisdiction(),
+                errors,
+                caseData.getEthosCaseReference(),
+                caseData.getOfficeCT().getValue().getCode(),
+                caseData.getPositionTypeCT(),
+                ccdGatewayBaseUrl
+        );
+
+        caseData.setLinkedCaseCT("Transferred to " + caseData.getOfficeCT().getValue().getCode());
+        caseData.setPositionType(caseData.getPositionTypeCT());
+
+        log.info("Clearing the CT payload");
+
+        caseData.setOfficeCT(null);
+        caseData.setPositionTypeCT(null);
+        caseData.setReasonForCT(null);
 
     }
-
-//    private CaseDetails createCaseDetailsCaseTransfer(CaseData caseData, String jurisdiction) {
-//        CaseDetails newCaseTransferCaseDetails = new CaseDetails();
-//        //newCaseTransferCaseDetails.setCaseTypeId(caseDetails.getCaseData().getCaseTransferOffice());
-//        newCaseTransferCaseDetails.setJurisdiction(jurisdiction);
-//        newCaseTransferCaseDetails.setCaseData(generateCaseDataCaseTransfer(caseData));
-//        return newCaseTransferCaseDetails;
-//    }
-
-//    private CaseData generateCaseDataCaseTransfer(CaseData caseData) {
-//        CaseData newCaseData = new CaseData();
-//        newCaseData.setState(TRANSFERRED_IN_STATE);
-//        newCaseData.setEthosCaseReference(caseData.getEthosCaseReference());
-//        newCaseData.setClaimantType(caseData.getClaimantType());
-//        newCaseData.setClaimant(caseData.getClaimant());
-//        return newCaseData;
-//    }
 
 }

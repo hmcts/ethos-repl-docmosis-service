@@ -1,13 +1,14 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.*;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("subMultipleReferenceService")
 public class SubMultipleReferenceService {
 
@@ -23,27 +24,6 @@ public class SubMultipleReferenceService {
     private final SubMultipleRefLondonCentralRepository subMultipleRefLondonCentralRepository;
     private final SubMultipleRefLondonSouthRepository subMultipleRefLondonSouthRepository;
     private final SubMultipleRefLondonEastRepository subMultipleRefLondonEastRepository;
-
-    @Autowired
-    public SubMultipleReferenceService(SubMultipleRefManchesterRepository subMultipleRefManchesterRepository, SubMultipleRefScotlandRepository subMultipleRefScotlandRepository,
-                                       SubMultipleRefLeedsRepository subMultipleRefLeedsRepository, SubMultipleRefMidlandsWestRepository subMultipleRefMidlandsWestRepository,
-                                       SubMultipleRefMidlandsEastRepository subMultipleRefMidlandsEastRepository, SubMultipleRefBristolRepository subMultipleRefBristolRepository,
-                                       SubMultipleRefWalesRepository subMultipleRefWalesRepository, SubMultipleRefNewcastleRepository subMultipleRefNewcastleRepository,
-                                       SubMultipleRefWatfordRepository subMultipleRefWatfordRepository, SubMultipleRefLondonCentralRepository subMultipleRefLondonCentralRepository,
-                                       SubMultipleRefLondonSouthRepository subMultipleRefLondonSouthRepository, SubMultipleRefLondonEastRepository subMultipleRefLondonEastRepository) {
-        this.subMultipleRefManchesterRepository = subMultipleRefManchesterRepository;
-        this.subMultipleRefScotlandRepository = subMultipleRefScotlandRepository;
-        this.subMultipleRefLeedsRepository = subMultipleRefLeedsRepository;
-        this.subMultipleRefMidlandsWestRepository = subMultipleRefMidlandsWestRepository;
-        this.subMultipleRefMidlandsEastRepository = subMultipleRefMidlandsEastRepository;
-        this.subMultipleRefBristolRepository = subMultipleRefBristolRepository;
-        this.subMultipleRefWalesRepository = subMultipleRefWalesRepository;
-        this.subMultipleRefNewcastleRepository = subMultipleRefNewcastleRepository;
-        this.subMultipleRefWatfordRepository = subMultipleRefWatfordRepository;
-        this.subMultipleRefLondonCentralRepository = subMultipleRefLondonCentralRepository;
-        this.subMultipleRefLondonSouthRepository = subMultipleRefLondonSouthRepository;
-        this.subMultipleRefLondonEastRepository = subMultipleRefLondonEastRepository;
-    }
 
     public synchronized String createReference(String caseTypeId, String multipleReference, int numberCases) {
         switch (caseTypeId) {

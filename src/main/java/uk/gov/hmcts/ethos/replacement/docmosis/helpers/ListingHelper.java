@@ -200,31 +200,31 @@ public class ListingHelper {
         sb.append("\"templateName\":\"").append(templateName).append(FILE_EXTENSION).append(NEW_LINE);
         sb.append("\"outputName\":\"").append(OUTPUT_FILE_NAME).append(NEW_LINE);
 
+        log.info("Building document data");
         // Building the document data
         sb.append("\"data\":{\n");
-        log.info("Checking cour listing data");
+        log.info("Getting court listing");
         sb.append(getCourtListingData(listingData));
+        log.info("Getting logo");
         sb.append(getLogo(caseType));
         if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
             sb.append("\"Listed_date\":\"").append(listingData.getListingCollection().get(0).getValue().getCauseListDate()).append(NEW_LINE);
             sb.append("\"Hearing_location\":\"").append(!listingData.getListingVenue().equals(ALL_VENUES) ?
                     listingData.getListingCollection().get(0).getValue().getCauseListVenue() : ALL_VENUES).append(NEW_LINE);
         }
-        log.info("Checking listing ranges");
+        log.info("Listings range dates");
         sb.append(getListingRangeDates(listingData));
-
-        log.info("Checking clerk");
+        log.info("Clerk");
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
 
         sb.append(getDocumentData(listingData, templateName, caseType));
 
-        log.info("Checking case total");
+        log.info("Document data ends");
         sb.append("\"case_total\":\"").append(getCaseTotal(listingData.getListingCollection())).append(NEW_LINE);
         sb.append("\"Today_date\":\"").append(UtilHelper.formatCurrentDate(LocalDate.now())).append("\"\n");
         sb.append("}\n");
         sb.append("}\n");
-
         return sb;
     }
 
@@ -303,7 +303,9 @@ public class ListingHelper {
         StringBuilder sb = new StringBuilder();
         sb.append("{\"Judge\":\"").append(nullCheck(extractHearingJudgeName(listingType))).append(NEW_LINE);
         sb.append(getCourtListingData(listingData));
+        log.info("Court listing data");
         sb.append(getLogo(caseType));
+        log.info("Logo listing data");
         sb.append("\"ERMember\":\"").append(nullCheck(listingType.getHearingERMember())).append(NEW_LINE);
         sb.append("\"EEMember\":\"").append(nullCheck(listingType.getHearingEEMember())).append(NEW_LINE);
         sb.append("\"Case_No\":\"").append(nullCheck(listingType.getElmoCaseReference())).append(NEW_LINE);
@@ -313,12 +315,16 @@ public class ListingHelper {
         sb.append("\"Hearing_date_time\":\"").append(nullCheck(listingType.getCauseListDate())).append(" at ").append(nullCheck(listingType.getCauseListTime())).append(NEW_LINE);
         sb.append("\"Hearing_time\":\"").append(nullCheck(listingType.getCauseListTime())).append(NEW_LINE);
         sb.append("\"Hearing_duration\":\"").append(nullCheck(listingType.getEstHearingLength())).append(NEW_LINE);
+        log.info("Hearing clerk");
         sb.append("\"Hearing_clerk\":\"").append(nullCheck(listingType.getHearingClerk())).append(NEW_LINE);
+        log.info("Hearing clerk ends");
         sb.append("\"Claimant\":\"").append(nullCheck(listingType.getClaimantName())).append(NEW_LINE);
         sb.append("\"claimant_town\":\"").append(nullCheck(listingType.getClaimantTown())).append(NEW_LINE);
         sb.append("\"claimant_representative\":\"").append(nullCheck(listingType.getClaimantRepresentative())).append(NEW_LINE);
         sb.append("\"Respondent\":\"").append(nullCheck(listingType.getRespondent())).append(NEW_LINE);
+        log.info("Resp others");
         sb.append("\"resp_others\":\"").append(nullCheck(getRespondentOthersWithLineBreaks(listingType))).append(NEW_LINE);
+        log.info("End Resp others");
         sb.append("\"respondent_town\":\"").append(nullCheck(listingType.getRespondentTown())).append(NEW_LINE);
         sb.append("\"Hearing_location\":\"").append(nullCheck(listingType.getCauseListVenue())).append(NEW_LINE);
         sb.append("\"Hearing_room\":\"").append(nullCheck(listingType.getHearingRoom())).append(NEW_LINE);

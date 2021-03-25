@@ -51,7 +51,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String UPDATE_CASE_URL = "/updateCase";
     private static final String PRE_DEFAULT_VALUES_URL = "/preDefaultValues";
     private static final String POST_DEFAULT_VALUES_URL = "/postDefaultValues";
-    private static final String PRE_ACCEPT_CASE_URL = "/preAcceptCase";
     private static final String AMEND_CASE_DETAILS_URL = "/amendCaseDetails";
     private static final String AMEND_CLAIMANT_DETAILS_URL = "/amendClaimantDetails";
     private static final String AMEND_RESPONDENT_DETAILS_URL = "/amendRespondentDetails";
@@ -249,20 +248,6 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors", hasSize(0)))
-                .andExpect(jsonPath("$.warnings", nullValue()));
-    }
-
-    @Test
-    public void preAcceptCase() throws Exception {
-        when(caseManagementForCaseWorkerService.preAcceptCase(isA(CCDRequest.class))).thenReturn(submitEvent.getCaseData());
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(PRE_ACCEPT_CASE_URL)
-                .content(requestContent2.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", nullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
@@ -583,7 +568,7 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
@@ -648,15 +633,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void postDefaultValuesError400() throws Exception {
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
-                .content("error")
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void preAcceptCaseError400() throws Exception {
-        mvc.perform(post(PRE_ACCEPT_CASE_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -938,17 +914,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
-    public void preAcceptCaseError500() throws Exception {
-        when(caseManagementForCaseWorkerService.preAcceptCase(isA(CCDRequest.class))).thenThrow(feignError());
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(PRE_ACCEPT_CASE_URL)
-                .content(requestContent.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
     public void amendCaseDetailsError500() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenThrow(feignError());
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
@@ -1047,16 +1012,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void postDefaultValuesForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
-                .content(requestContent2.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    public void preAcceptCaseForbidden() throws Exception {
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
-        mvc.perform(post(PRE_ACCEPT_CASE_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

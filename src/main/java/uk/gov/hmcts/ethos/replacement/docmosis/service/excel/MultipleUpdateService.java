@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("multipleUpdateService")
 public class MultipleUpdateService {
 
@@ -20,17 +21,6 @@ public class MultipleUpdateService {
     private final MultipleBatchUpdate1Service multipleBatchUpdate1Service;
     private final MultipleBatchUpdate2Service multipleBatchUpdate2Service;
     private final MultipleBatchUpdate3Service multipleBatchUpdate3Service;
-
-    @Autowired
-    public MultipleUpdateService(ExcelReadingService excelReadingService,
-                                 MultipleBatchUpdate1Service multipleBatchUpdate1Service,
-                                 MultipleBatchUpdate2Service multipleBatchUpdate2Service,
-                                 MultipleBatchUpdate3Service multipleBatchUpdate3Service) {
-        this.excelReadingService = excelReadingService;
-        this.multipleBatchUpdate1Service = multipleBatchUpdate1Service;
-        this.multipleBatchUpdate2Service = multipleBatchUpdate2Service;
-        this.multipleBatchUpdate3Service = multipleBatchUpdate3Service;
-    }
 
     public void bulkUpdateLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
@@ -43,9 +33,6 @@ public class MultipleUpdateService {
                         errors,
                         multipleDetails.getCaseData(),
                         FilterExcelType.FLAGS);
-
-        log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
-        log.info("MultipleObjectsValues: " + multipleObjects.values());
 
         if (multipleObjects.keySet().isEmpty()) {
 

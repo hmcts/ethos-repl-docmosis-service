@@ -3,8 +3,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +32,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POST_DEFAULT_XLSX_FILE_PATH;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class ListingGenerationController {
 
@@ -44,14 +45,6 @@ public class ListingGenerationController {
     private final DefaultValuesReaderService defaultValuesReaderService;
 
     private final VerifyTokenService verifyTokenService;
-
-    @Autowired
-    public ListingGenerationController(ListingService listingService, DefaultValuesReaderService defaultValuesReaderService,
-                                       VerifyTokenService verifyTokenService) {
-        this.listingService = listingService;
-        this.defaultValuesReaderService = defaultValuesReaderService;
-        this.verifyTokenService = verifyTokenService;
-    }
 
     @PostMapping(value = "/listingCaseCreation", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "handles logic related to the creation of listing cases.")

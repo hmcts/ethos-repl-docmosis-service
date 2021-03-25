@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -19,13 +19,17 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.TreeMap;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("multipleHelperService")
 public class MultipleHelperService {
 
@@ -40,23 +44,6 @@ public class MultipleHelperService {
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
 
-    @Autowired
-    public MultipleHelperService(SingleCasesReadingService singleCasesReadingService,
-                                 MultipleCasesReadingService multipleCasesReadingService,
-                                 ExcelReadingService excelReadingService,
-                                 ExcelDocManagementService excelDocManagementService,
-                                 MultipleCasesSendingService multipleCasesSendingService,
-                                 CreateUpdatesBusSender createUpdatesBusSender,
-                                 UserService userService) {
-        this.singleCasesReadingService = singleCasesReadingService;
-        this.multipleCasesReadingService = multipleCasesReadingService;
-        this.excelReadingService = excelReadingService;
-        this.excelDocManagementService = excelDocManagementService;
-        this.multipleCasesSendingService = multipleCasesSendingService;
-        this.createUpdatesBusSender = createUpdatesBusSender;
-        this.userService = userService;
-    }
-
     public void addLeadMarkUp(String userToken, String multipleCaseTypeId, MultipleData multipleData,
                               String newLeadCase, String caseId) {
 
@@ -70,7 +57,7 @@ public class MultipleHelperService {
 
             if (submitEvent != null) {
 
-                multipleData.setLeadCase(MultiplesHelper.generateLeadMarkUp(
+                multipleData.setLeadCase(MultiplesHelper.generateMarkUp(
                         ccdGatewayBaseUrl,
                         String.valueOf(submitEvent.getCaseId()),
                         newLeadCase));
@@ -83,7 +70,7 @@ public class MultipleHelperService {
 
         } else {
 
-            multipleData.setLeadCase(MultiplesHelper.generateLeadMarkUp(
+            multipleData.setLeadCase(MultiplesHelper.generateMarkUp(
                     ccdGatewayBaseUrl,
                     caseId,
                     newLeadCase));
@@ -303,13 +290,12 @@ public class MultipleHelperService {
 
     }
 
-    public void sendCloseToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails,
-                                                   List<String> errors) {
+    public void sendCloseToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
         MultipleData multipleData = multipleDetails.getCaseData();
 
         sendTaskToSinglesWithConfirmation(userToken, multipleDetails,
-                PersistentQHelper.getCloseDataModel(multipleData.getClerkResponsible(), multipleData.getFileLocation(), multipleData.getNotes()),
+                PersistentQHelper.getCloseDataModel(multipleData),
                 errors,
                 NO);
 
