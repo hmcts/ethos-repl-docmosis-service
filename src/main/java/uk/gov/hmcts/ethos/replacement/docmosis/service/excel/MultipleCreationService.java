@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
@@ -20,6 +20,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("multipleCreationService")
 public class MultipleCreationService {
 
@@ -27,17 +28,6 @@ public class MultipleCreationService {
     private final MultipleReferenceService multipleReferenceService;
     private final MultipleHelperService multipleHelperService;
     private final SubMultipleUpdateService subMultipleUpdateService;
-
-    @Autowired
-    public MultipleCreationService(ExcelDocManagementService excelDocManagementService,
-                                   MultipleReferenceService multipleReferenceService,
-                                   MultipleHelperService multipleHelperService,
-                                   SubMultipleUpdateService subMultipleUpdateService) {
-        this.excelDocManagementService = excelDocManagementService;
-        this.multipleReferenceService = multipleReferenceService;
-        this.multipleHelperService = multipleHelperService;
-        this.subMultipleUpdateService = subMultipleUpdateService;
-    }
 
     public void bulkCreationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 

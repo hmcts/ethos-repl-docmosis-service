@@ -1,14 +1,16 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.*;
 
 import java.time.LocalDate;
+
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("singleReferenceService")
 public class SingleReferenceService {
 
@@ -24,27 +26,6 @@ public class SingleReferenceService {
     private final SingleRefLondonCentralRepository singleRefLondonCentralRepository;
     private final SingleRefLondonSouthRepository singleRefLondonSouthRepository;
     private final SingleRefLondonEastRepository singleRefLondonEastRepository;
-
-    @Autowired
-    public SingleReferenceService(SingleRefManchesterRepository singleRefManchesterRepository, SingleRefScotlandRepository singleRefScotlandRepository,
-                                  SingleRefLeedsRepository singleRefLeedsRepository, SingleRefMidlandsWestRepository singleRefMidlandsWestRepository,
-                                  SingleRefMidlandsEastRepository singleRefMidlandsEastRepository, SingleRefBristolRepository singleRefBristolRepository,
-                                  SingleRefWalesRepository singleRefWalesRepository, SingleRefNewcastleRepository singleRefNewcastleRepository,
-                                  SingleRefWatfordRepository singleRefWatfordRepository, SingleRefLondonCentralRepository singleRefLondonCentralRepository,
-                                  SingleRefLondonSouthRepository singleRefLondonSouthRepository, SingleRefLondonEastRepository singleRefLondonEastRepository) {
-        this.singleRefManchesterRepository = singleRefManchesterRepository;
-        this.singleRefScotlandRepository = singleRefScotlandRepository;
-        this.singleRefLeedsRepository = singleRefLeedsRepository;
-        this.singleRefMidlandsWestRepository = singleRefMidlandsWestRepository;
-        this.singleRefMidlandsEastRepository = singleRefMidlandsEastRepository;
-        this.singleRefBristolRepository = singleRefBristolRepository;
-        this.singleRefWalesRepository = singleRefWalesRepository;
-        this.singleRefNewcastleRepository = singleRefNewcastleRepository;
-        this.singleRefWatfordRepository = singleRefWatfordRepository;
-        this.singleRefLondonCentralRepository = singleRefLondonCentralRepository;
-        this.singleRefLondonSouthRepository = singleRefLondonSouthRepository;
-        this.singleRefLondonEastRepository = singleRefLondonEastRepository;
-    }
 
     public synchronized String createReference(String caseTypeId, int numberCases) {
         String currentYear = String.valueOf(LocalDate.now().getYear());

@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
@@ -28,6 +28,7 @@ import java.util.TreeMap;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DATE_TIME_USER_FRIENDLY_PATTERN;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("excelDocManagementService")
 public class ExcelDocManagementService {
 
@@ -40,17 +41,6 @@ public class ExcelDocManagementService {
     private final ExcelCreationService excelCreationService;
     private final UserService userService;
     private final ScheduleCreationService scheduleCreationService;
-
-    @Autowired
-    public ExcelDocManagementService(DocumentManagementService documentManagementService,
-                                     ExcelCreationService excelCreationService,
-                                     UserService userService,
-                                     ScheduleCreationService scheduleCreationService) {
-        this.documentManagementService = documentManagementService;
-        this.excelCreationService = excelCreationService;
-        this.userService = userService;
-        this.scheduleCreationService = scheduleCreationService;
-    }
 
     public void uploadExcelDocument(String userToken, MultipleData multipleData, byte[] excelBytes) {
 
