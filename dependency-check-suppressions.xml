@@ -479,4 +479,8 @@
         <notes><![CDATA[ CVE-2021-25122  ]]></notes>
         <cve>CVE-2021-25122</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2021-21295  ]]></notes>
+        <cve>CVE-2021-21295</cve>
+    </suppress>
 </suppressions>
