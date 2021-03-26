@@ -148,7 +148,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-configuration-processor")
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
 
-    compile('org.postgresql:postgresql')
+    compile ('org.postgresql:postgresql:42.2.2')
 
     compileOnly 'org.projectlombok:lombok:1.18.18'
     annotationProcessor 'org.projectlombok:lombok:1.18.18'
