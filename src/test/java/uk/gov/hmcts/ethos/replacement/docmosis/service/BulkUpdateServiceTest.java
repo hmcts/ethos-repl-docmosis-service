@@ -29,6 +29,7 @@ import uk.gov.hmcts.ecm.common.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ecm.common.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class BulkUpdateServiceTest {
@@ -124,7 +126,7 @@ public class BulkUpdateServiceTest {
 
     @Test(expected = Exception.class)
     public void caseUpdateFieldsRequestException() throws IOException {
-        when(ccdClient.retrieveCase("authToken", MANCHESTER_DEV_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenThrow(new RuntimeException());
+        when(ccdClient.retrieveCase("authToken", MANCHESTER_DEV_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenThrow(new InternalException(ERROR_MESSAGE));
         when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenReturn(ccdRequest);
         when(ccdClient.submitEventForCase(anyString(), any(), anyString(), anyString(), any(), anyString())).thenReturn(submitEvent);
         bulkUpdateService.caseUpdateFieldsRequest(bulkRequest.getCaseDetails(), searchTypeItem, "authToken",
@@ -204,7 +206,7 @@ public class BulkUpdateServiceTest {
         when(ccdClient.retrieveBulkCases("authToken", MANCHESTER_DEV_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_DEV_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_DEV_CASE_TYPE_ID, bulkDetails.getJurisdiction(), null)).thenReturn(submitEvent);
-        when(ccdClient.retrieveBulkCasesElasticSearch("authToken", MANCHESTER_DEV_BULK_CASE_TYPE_ID, bulkData.getMultipleReference())).thenThrow(new RuntimeException());
+        when(ccdClient.retrieveBulkCasesElasticSearch("authToken", MANCHESTER_DEV_BULK_CASE_TYPE_ID, bulkData.getMultipleReference())).thenThrow(new InternalException(ERROR_MESSAGE));
         bulkUpdateService.bulkUpdateLogic(getBulkDetailsCompleteWithValues(getBulkDetailsWithValues()), "authToken");
     }
 
@@ -229,7 +231,7 @@ public class BulkUpdateServiceTest {
         List<SubmitBulkEvent> submitBulkEventList = new ArrayList<>(Collections.singletonList(submitBulkEvent));
         BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
         bulkCasesPayload.setSubmitEvents(new ArrayList<>(Collections.singleton(submitEvent)));
-        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenThrow(new RuntimeException());
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
         when(ccdClient.retrieveBulkCases("authToken", MANCHESTER_DEV_BULK_CASE_TYPE_ID, bulkDetails.getJurisdiction())).thenReturn(submitBulkEventList);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_DEV_CASE_TYPE_ID, bulkDetails.getJurisdiction(), searchTypeItem.getId())).thenReturn(submitEvent);
         when(ccdClient.retrieveCase("authToken", MANCHESTER_DEV_CASE_TYPE_ID, bulkDetails.getJurisdiction(), null)).thenReturn(submitEvent);

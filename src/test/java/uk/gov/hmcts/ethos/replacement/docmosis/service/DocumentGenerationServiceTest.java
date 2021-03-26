@@ -15,6 +15,7 @@ import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
 import uk.gov.hmcts.ecm.common.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.types.SearchType;
 import uk.gov.hmcts.ecm.common.model.ccd.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,7 +30,9 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_DEV_BULK_CASE_TYPE_ID;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DocumentGenerationServiceTest {
@@ -316,7 +319,7 @@ public class DocumentGenerationServiceTest {
 
     @Test(expected = Exception.class)
     public void processDocumentRequestException() throws IOException {
-        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any())).thenThrow(new RuntimeException());
+        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any())).thenThrow(new InternalException(ERROR_MESSAGE));
         documentGenerationService.processDocumentRequest(ccdRequest, "authToken");
     }
 
@@ -353,7 +356,7 @@ public class DocumentGenerationServiceTest {
         submitEvent.setCaseId(1);
         submitEvent.setCaseData(new CaseData());
         List<SubmitEvent> submitEvents = Collections.singletonList(submitEvent);
-        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any())).thenThrow(new RuntimeException());
+        when(tornadoService.documentGeneration(anyString(), any(), anyString(), any(), any(), any())).thenThrow(new InternalException(ERROR_MESSAGE));
         when(ccdClient.retrieveCasesElasticSearch(anyString(), any(), any())).thenReturn(submitEvents);
 
         documentGenerationService.processBulkDocumentRequest(bulkRequest, "authToken");
@@ -378,7 +381,7 @@ public class DocumentGenerationServiceTest {
 
     @Test(expected = Exception.class)
     public void processBulkScheduleRequestException() throws IOException {
-        when(tornadoService.scheduleGeneration(anyString(), any())).thenThrow(new RuntimeException());
+        when(tornadoService.scheduleGeneration(anyString(), any())).thenThrow(new InternalException(ERROR_MESSAGE));
         documentGenerationService.processBulkScheduleRequest(bulkRequest, "authToken");
     }
 

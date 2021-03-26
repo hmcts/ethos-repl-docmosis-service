@@ -10,10 +10,12 @@ import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleCasesSendingServiceTest {
@@ -67,7 +69,7 @@ public class MultipleCasesSendingServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getJurisdiction(),
                 multipleDetails.getCaseId()))
-                .thenThrow(new RuntimeException());
+                .thenThrow(new InternalException(ERROR_MESSAGE));
         multipleCasesSendingService.sendUpdateToMultiple(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getJurisdiction(),

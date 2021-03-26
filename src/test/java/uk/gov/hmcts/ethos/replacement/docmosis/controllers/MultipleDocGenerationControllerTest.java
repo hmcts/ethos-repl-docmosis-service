@@ -21,6 +21,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleDocGenerationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleLetterService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleScheduleService;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +36,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MultipleDocGenerationController.class)
@@ -197,7 +198,7 @@ public class MultipleDocGenerationControllerTest {
 
     @Test
     public void printScheduleError500() throws Exception {
-        doThrow(feignError()).when(multipleScheduleService).bulkScheduleLogic(
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleScheduleService).bulkScheduleLogic(
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(PRINT_SCHEDULE_URL)
@@ -210,7 +211,7 @@ public class MultipleDocGenerationControllerTest {
     @Test
     public void printLetterError500() throws Exception {
         when(multipleLetterService.bulkLetterLogic(eq(AUTH_TOKEN), isA(MultipleDetails.class),
-                isA(List.class), isA(Boolean.class))).thenThrow(feignError());
+                isA(List.class), isA(Boolean.class))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(PRINT_LETTER_URL)
                 .content(requestContent.toString())

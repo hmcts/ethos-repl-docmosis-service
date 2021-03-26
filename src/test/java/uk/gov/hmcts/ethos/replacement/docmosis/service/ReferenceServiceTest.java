@@ -15,6 +15,7 @@ import uk.gov.hmcts.ecm.common.model.reference.ReferenceSubmitEvent;
 import uk.gov.hmcts.ecm.common.model.reference.types.ClerkType;
 import uk.gov.hmcts.ecm.common.model.reference.types.JudgeType;
 import uk.gov.hmcts.ecm.common.model.reference.types.VenueType;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ReferenceServiceTest {
@@ -215,7 +217,7 @@ public class ReferenceServiceTest {
 
     @Test(expected = Exception.class)
     public void fetchHearingVenueRefDataException() throws IOException {
-        when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenThrow(new RuntimeException());
+        when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
         referenceService.fetchHearingVenueRefData(caseDetails, "authToken");
     }
 
@@ -395,7 +397,7 @@ public class ReferenceServiceTest {
 
     @Test(expected = Exception.class)
     public void fetchDateListedRefDataException() throws IOException {
-        when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenThrow(new RuntimeException());
+        when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
         referenceService.fetchDateListedRefData(caseDetails, "authToken");
     }
 
