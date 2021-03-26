@@ -507,4 +507,8 @@
         <notes><![CDATA[ CVE-2021-21295  ]]></notes>
         <cve>CVE-2021-21295</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2018-10936  ]]></notes>
+        <cve>CVE-2018-10936</cve>
+    </suppress>
 </suppressions>
