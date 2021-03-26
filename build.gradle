@@ -141,9 +141,9 @@ dependencies {
 
     compile group: 'uk.gov.hmcts.reform', name: 'ecm-common', version: '0.1.53'
 
-    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.5.RELEASE'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.0.2'
     compile group: 'io.github.openfeign', name: 'feign-httpclient', version: '11.1'
-    compile group: 'io.github.openfeign', name: 'feign-core', version: '11.1'
+    compile group: 'io.github.openfeign', name: 'feign-jackson', version: '11.1'
 
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
