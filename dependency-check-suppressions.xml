@@ -483,4 +483,20 @@
         <notes><![CDATA[ CVE-2021-21295  ]]></notes>
         <cve>CVE-2021-21295</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-11987  ]]></notes>
+        <cve>CVE-2020-11987</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2021-27807  ]]></notes>
+        <cve>CVE-2021-27807</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2021-27906  ]]></notes>
+        <cve>CVE-2021-27906</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2020-11988  ]]></notes>
+        <cve>CVE-2020-11988</cve>
+    </suppress>
 </suppressions>
