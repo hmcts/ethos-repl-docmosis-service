@@ -199,6 +199,8 @@ public class CaseActionsForCaseWorkerController {
 
         log.info("PostDefaultValues for case: " + caseData.getEthosCaseReference());
 
+        log.info("caseData stateAPI: " + caseData.getStateAPI());
+
         return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
     }
 
