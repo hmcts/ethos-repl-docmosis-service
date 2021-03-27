@@ -857,6 +857,14 @@ public class ListingHelperTest {
         assertEquals(IT56_TEMPLATE, ListingHelper.getListingDocName(listingData));
         listingData.setHearingDocType(HEARING_DOC_IT57);
         assertEquals(IT57_TEMPLATE, ListingHelper.getListingDocName(listingData));
+        listingData.setHearingDocType(BROUGHT_FORWARD_REPORT);
+        assertEquals("EM-TRB-SCO-ENG-00218", ListingHelper.getListingDocName(listingData));
+        listingData.setHearingDocType(CLAIMS_ACCEPTED_REPORT);
+        assertEquals("EM-TRB-SCO-ENG-00219", ListingHelper.getListingDocName(listingData));
+        listingData.setHearingDocType(LIVE_CASELOAD_REPORT);
+        assertEquals("EM-TRB-SCO-ENG-00220", ListingHelper.getListingDocName(listingData));
+        listingData.setHearingDocType(CASES_COMPLETED_REPORT);
+        assertEquals("EM-TRB-SCO-ENG-00221", ListingHelper.getListingDocName(listingData));
         listingData.setHearingDocType("");
         assertEquals("No document found", ListingHelper.getListingDocName(listingData));
     }

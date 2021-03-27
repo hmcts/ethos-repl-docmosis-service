@@ -12,6 +12,7 @@ import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SingleCasesReadingServiceTest {
@@ -72,7 +74,7 @@ public class SingleCasesReadingServiceTest {
                 anyString(),
                 anyList(),
                 anyString()))
-                .thenThrow(new RuntimeException());
+                .thenThrow(new InternalException(ERROR_MESSAGE));
         SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
                 "240001/2020",
@@ -100,7 +102,7 @@ public class SingleCasesReadingServiceTest {
         when(ccdClient.retrieveCasesElasticSearchSchedule(anyString(),
                 anyString(),
                 anyList()))
-                .thenThrow(new RuntimeException());
+                .thenThrow(new InternalException(ERROR_MESSAGE));
         HashSet<SchedulePayloadEvent> schedulePayloadEventList = singleCasesReadingService.retrieveScheduleCases(userToken,
                 multipleDetails.getCaseTypeId(),
                 new ArrayList<>(Collections.singletonList("240001/2020")));
@@ -127,7 +129,7 @@ public class SingleCasesReadingServiceTest {
         when(ccdClient.retrieveCasesElasticSearchLabels(anyString(),
                 anyString(),
                 anyList()))
-                .thenThrow(new RuntimeException());
+                .thenThrow(new InternalException(ERROR_MESSAGE));
         List<LabelPayloadEvent> labelPayloadEvents = singleCasesReadingService.retrieveLabelCases(userToken,
                 multipleDetails.getCaseTypeId(),
                 new ArrayList<>(Collections.singletonList("240001/2020")));

@@ -10,6 +10,7 @@ import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CaseRetrievalForCaseWorkerServiceTest {
@@ -46,7 +47,7 @@ public class CaseRetrievalForCaseWorkerServiceTest {
 
     @Test(expected = Exception.class)
     public void caseRetrievalRequestException() throws IOException {
-        when(ccdClient.retrieveCase(anyString(), anyString(), anyString(), any())).thenThrow(new RuntimeException());
+        when(ccdClient.retrieveCase(anyString(), anyString(), anyString(), any())).thenThrow(new InternalException(ERROR_MESSAGE));
         caseRetrievalForCaseWorkerService.caseRetrievalRequest("authToken", ccdRequest.getCaseDetails().getCaseTypeId(),
                 ccdRequest.getCaseDetails().getJurisdiction(), "11111");
     }
@@ -61,7 +62,7 @@ public class CaseRetrievalForCaseWorkerServiceTest {
 
     @Test(expected = Exception.class)
     public void casesRetrievalRequestException() throws IOException {
-        when(ccdClient.retrieveCases(anyString(), any(), any())).thenThrow(new RuntimeException());
+        when(ccdClient.retrieveCases(anyString(), any(), any())).thenThrow(new InternalException(ERROR_MESSAGE));
         caseRetrievalForCaseWorkerService.casesRetrievalRequest(ccdRequest, "authToken");
     }
 
@@ -75,7 +76,7 @@ public class CaseRetrievalForCaseWorkerServiceTest {
 
     @Test(expected = Exception.class)
     public void casesRetrievalESRequestException() throws IOException {
-        when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), any())).thenThrow(feignError());
+        when(ccdClient.retrieveCasesElasticSearch(anyString(), anyString(), any())).thenThrow(new InternalException(ERROR_MESSAGE));
         caseRetrievalForCaseWorkerService.casesRetrievalESRequest("1111", "authToken",
                 ccdRequest.getCaseDetails().getCaseTypeId(), new ArrayList<>(Collections.singleton("1")));
     }

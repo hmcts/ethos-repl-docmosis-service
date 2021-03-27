@@ -11,19 +11,16 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.BFActionType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
-import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
-import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -35,6 +32,7 @@ import java.util.Map;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
 
 @Slf4j
 @Service("listingService")
@@ -42,6 +40,7 @@ public class ListingService {
 
     private final TornadoService tornadoService;
     private final CcdClient ccdClient;
+
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
@@ -81,7 +80,7 @@ public class ListingService {
         }
         caseData.setPrintHearingCollection(caseData.getPrintHearingDetails());
         caseData.getPrintHearingCollection().setListingCollection(listingTypeItems);
-        caseData.setPrintHearingCollection(clearListingFields(caseData.getPrintHearingCollection()));
+        caseData.setPrintHearingCollection(ReportHelper.clearListingFields(caseData.getPrintHearingCollection()));
         return caseData;
     }
 
@@ -97,10 +96,9 @@ public class ListingService {
 
     public ListingData processListingHearingsRequest(ListingDetails listingDetails, String authToken) {
         try {
-            //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
             List<SubmitEvent> submitEvents = getListingHearingsSearch(listingDetails, authToken);
             if (submitEvents != null) {
-                log.info("Cases searched: " + submitEvents.size());
+                log.info(CASES_SEARCHED + submitEvents.size());
                 List<ListingTypeItem> listingTypeItems = new ArrayList<>();
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null && !submitEvent.getCaseData().getHearingCollection().isEmpty()) {
@@ -113,42 +111,9 @@ public class ListingService {
                 }
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
             }
-            return clearListingFields(listingDetails.getCaseData());
+            return ReportHelper.clearListingFields(listingDetails.getCaseData());
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
-        }
-    }
-
-    public ListingData generateReportData(ListingDetails listingDetails, String authToken) {
-        if (listingDetails.getCaseData().getReportType().equals(BROUGHT_FORWARD_REPORT)) {
-            return processBroughtForwardDatesRequest(listingDetails, authToken);
-        } else {
-            return listingDetails.getCaseData();
-        }
-    }
-
-    private ListingData processBroughtForwardDatesRequest(ListingDetails listingDetails, String authToken) {
-        try {
-            //List<SubmitEvent> submitEvents = ccdClient.retrieveCases(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()), listingDetails.getJurisdiction());
-            List<SubmitEvent> submitEvents = getGenericReportSearch(listingDetails, authToken);
-            if (submitEvents != null && !submitEvents.isEmpty()) {
-                log.info("Cases searched: " + submitEvents.size());
-                List<BFDateTypeItem> bFDateTypeItems = new ArrayList<>();
-                for (SubmitEvent submitEvent : submitEvents) {
-                    if (submitEvent.getCaseData().getBfActions() != null && !submitEvent.getCaseData().getBfActions().isEmpty()) {
-                        for (BFActionTypeItem bfActionTypeItem : submitEvent.getCaseData().getBfActions()) {
-                            BFDateTypeItem bFDateTypeItem = getBFDateTypeItem(bfActionTypeItem, listingDetails.getCaseData(), submitEvent.getCaseData());
-                            if (bFDateTypeItem.getValue() != null) {
-                                bFDateTypeItems.add(bFDateTypeItem);
-                            }
-                        }
-                    }
-                }
-                listingDetails.getCaseData().setBfDateCollection(bFDateTypeItems);
-            }
-            return clearListingFields(listingDetails.getCaseData());
-        } catch (Exception ex) {
-            throw new CaseRetrievalException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
         }
     }
 
@@ -168,32 +133,6 @@ public class ListingService {
             return ccdClient.retrieveCasesVenueAndDateElasticSearch(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()),
                     dateToSearch, dateToSearch, venueToSearch, venueToSearchMapping);
         }
-    }
-
-    private List<SubmitEvent> getGenericReportSearch(ListingDetails listingDetails, String authToken) throws IOException {
-        ListingData listingData = listingDetails.getCaseData();
-        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
-        if (!dateRange) {
-            String dateToSearch = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2).toString();
-            return ccdClient.retrieveCasesGenericReportElasticSearch(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()),
-                    dateToSearch, dateToSearch, listingData.getReportType());
-        } else {
-            String dateToSearchFrom = LocalDate.parse(listingData.getListingDateFrom(), OLD_DATE_TIME_PATTERN2).toString();
-            String dateToSearchTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2).toString();
-            return ccdClient.retrieveCasesGenericReportElasticSearch(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()),
-                    dateToSearchFrom, dateToSearchTo, listingData.getReportType());
-        }
-    }
-
-    private ListingData clearListingFields(ListingData listingData) {
-        listingData.setListingVenueOfficeAber(null);
-        listingData.setListingVenueOfficeGlas(null);
-        listingData.setVenueGlasgow(null);
-        listingData.setVenueAberdeen(null);
-        listingData.setVenueDundee(null);
-        listingData.setVenueEdinburgh(null);
-        listingData.setClerkResponsible(null);
-        return listingData;
     }
 
     private List<ListingTypeItem> getListingTypeItems(HearingTypeItem hearingTypeItem, ListingData listingData, CaseData caseData) {
@@ -222,23 +161,41 @@ public class ListingService {
         return listingTypeItems;
     }
 
-    private BFDateTypeItem getBFDateTypeItem(BFActionTypeItem bfActionTypeItem, ListingData listingData, CaseData caseData) {
-        BFDateTypeItem bFDateTypeItem = new BFDateTypeItem();
-        BFActionType bfActionType = bfActionTypeItem.getValue();
-        if (!isNullOrEmpty(bfActionType.getBfDate()) && isNullOrEmpty(bfActionType.getCleared())) {
-            boolean matchingDateIsValid = validateMatchingDate(listingData, bfActionType.getBfDate());
-            boolean clerkResponsibleIsValid = validateClerkResponsible(listingData, caseData);
-            if (matchingDateIsValid && clerkResponsibleIsValid) {
-                BFDateType bFDateType = new BFDateType();
-                bFDateType.setCaseReference(caseData.getEthosCaseReference());
-                bFDateType.setBroughtForwardDate(bfActionType.getBfDate());
-                bFDateType.setBroughtForwardDateReason(bfActionType.getNotes());
-                bFDateType.setBroughtForwardDateCleared(bfActionType.getCleared());
-                bFDateTypeItem.setId(String.valueOf(bfActionTypeItem.getId()));
-                bFDateTypeItem.setValue(bFDateType);
+    public ListingData generateReportData(ListingDetails listingDetails, String authToken) {
+
+        try {
+            List<SubmitEvent> submitEvents = getGenericReportSearch(listingDetails, authToken);
+            switch (listingDetails.getCaseData().getReportType()) {
+                case BROUGHT_FORWARD_REPORT:
+                    return ReportHelper.processBroughtForwardDatesRequest(listingDetails, submitEvents);
+                case CLAIMS_ACCEPTED_REPORT:
+                    return ReportHelper.processClaimsAcceptedRequest(listingDetails, submitEvents);
+                case LIVE_CASELOAD_REPORT:
+                    return ReportHelper.processLiveCaseloadRequest(listingDetails, submitEvents);
+                case CASES_COMPLETED_REPORT:
+                    return ReportHelper.processCasesCompletedRequest(listingDetails, submitEvents);
+                default:
+                    return listingDetails.getCaseData();
             }
+
+        } catch (Exception ex) {
+            throw new CaseRetrievalException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
         }
-        return bFDateTypeItem;
+    }
+
+    private List<SubmitEvent> getGenericReportSearch(ListingDetails listingDetails, String authToken) throws IOException {
+        ListingData listingData = listingDetails.getCaseData();
+        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
+        if (!dateRange) {
+            String dateToSearch = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2).toString();
+            return ccdClient.retrieveCasesGenericReportElasticSearch(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()),
+                    dateToSearch, dateToSearch, listingData.getReportType());
+        } else {
+            String dateToSearchFrom = LocalDate.parse(listingData.getListingDateFrom(), OLD_DATE_TIME_PATTERN2).toString();
+            String dateToSearchTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2).toString();
+            return ccdClient.retrieveCasesGenericReportElasticSearch(authToken, ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId()),
+                    dateToSearchFrom, dateToSearchTo, listingData.getReportType());
+        }
     }
 
     private boolean isAllScottishVenues(ListingData listingData) {
@@ -327,28 +284,6 @@ public class ListingService {
                     return invalidHearingTypes.stream().noneMatch(str -> str.equals(hearingType.getHearingType()));
                 }
             }
-        }
-        return true;
-    }
-
-    private boolean validateMatchingDate(ListingData listingData, String matchingDate) {
-        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
-        if (!dateRange) {
-            String dateToSearch = listingData.getListingDate();
-            return ListingHelper.getMatchingDateBetween(dateToSearch, "", matchingDate, false);
-        } else {
-            String dateToSearchFrom = listingData.getListingDateFrom();
-            String dateToSearchTo = listingData.getListingDateTo();
-            return ListingHelper.getMatchingDateBetween(dateToSearchFrom, dateToSearchTo, matchingDate, true);
-        }
-    }
-
-    private boolean validateClerkResponsible(ListingData listingData, CaseData caseData) {
-        if (listingData.getClerkResponsible() != null) {
-            if (caseData.getClerkResponsible() != null) {
-                return listingData.getClerkResponsible().equals(caseData.getClerkResponsible());
-            }
-            return false;
         }
         return true;
     }

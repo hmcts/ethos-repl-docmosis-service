@@ -22,6 +22,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +37,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(DocumentGenerationController.class)
@@ -108,7 +109,7 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void midAddressLabelsError500() throws Exception {
-        when(documentGenerationService.midAddressLabels(isA(CaseData.class))).thenThrow(feignError());
+        when(documentGenerationService.midAddressLabels(isA(CaseData.class))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MID_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
@@ -153,7 +154,7 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void midSelectedAddressLabelsError500() throws Exception {
-        when(documentGenerationService.midSelectedAddressLabels(isA(CaseData.class))).thenThrow(feignError());
+        when(documentGenerationService.midSelectedAddressLabels(isA(CaseData.class))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MID_SELECTED_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
@@ -212,7 +213,7 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void midValidateAddressLabelsError500() throws Exception {
-        when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class))).thenThrow(feignError());
+        when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MID_VALIDATE_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
@@ -272,7 +273,7 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void generateDocumentError500() throws Exception {
-        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenThrow(feignError());
+        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())

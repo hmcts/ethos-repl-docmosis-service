@@ -249,7 +249,7 @@ public class ListingHelper {
         }
     }
 
-    private static StringBuilder getListingRangeDates(ListingData listingData) {
+    public static StringBuilder getListingRangeDates(ListingData listingData) {
         StringBuilder sb = new StringBuilder();
         if (listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
             sb.append("\"Listed_date_from\":\"").append(UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
@@ -387,7 +387,16 @@ public class ListingHelper {
             return IT56_TEMPLATE;
         } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT57)) {
             return IT57_TEMPLATE;
+        } else if (listingData.getHearingDocType().equals(BROUGHT_FORWARD_REPORT)) {
+            return "EM-TRB-SCO-ENG-00218";
+        } else if (listingData.getHearingDocType().equals(CLAIMS_ACCEPTED_REPORT)) {
+            return "EM-TRB-SCO-ENG-00219";
+        } else if (listingData.getHearingDocType().equals(LIVE_CASELOAD_REPORT)) {
+            return "EM-TRB-SCO-ENG-00220";
+        } else if (listingData.getHearingDocType().equals(CASES_COMPLETED_REPORT)) {
+            return "EM-TRB-SCO-ENG-00221";
         }
+        //TODO
         return "No document found";
     }
 
