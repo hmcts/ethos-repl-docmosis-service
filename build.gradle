@@ -6,7 +6,7 @@ plugins {
     id 'org.springframework.boot' version '2.3.9.RELEASE'
     id 'org.owasp.dependencycheck' version '6.1.2'
     id 'net.ltgt.apt' version '0.10'
-    id 'com.github.ben-manes.versions' version '0.36.0'
+    id 'com.github.ben-manes.versions' version '0.38.0'
     id 'org.sonarqube' version '3.1.1'
 }
 
