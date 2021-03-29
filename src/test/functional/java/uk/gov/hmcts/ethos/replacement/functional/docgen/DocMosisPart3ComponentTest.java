@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisPart3ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -122,7 +121,8 @@ public class DocMosisPart3ComponentTest {
 
     @Test
     public void generateDocument_Part3_19() throws Exception {
-        testUtil.executeGenerateDocumentTest("3", "19", "has ordered that it be treated as an amendment to the response to the employer’s contract claim");
+        testUtil.executeGenerateDocumentTest("3", "19",
+                "has ordered that it be treated as an amendment to the response to the employer’s contract claim");
     }
 
     @Test

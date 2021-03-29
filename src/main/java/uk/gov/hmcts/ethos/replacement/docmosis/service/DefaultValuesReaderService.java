@@ -19,7 +19,47 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BRISTOL_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BRISTOL_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BRISTOL_USERS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_USERS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_CENTRAL_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_CENTRAL_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_CENTRAL_USERS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_EAST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_EAST_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_EAST_USERS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_SOUTH_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_SOUTH_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_SOUTH_USERS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_USERS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_EAST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_EAST_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_EAST_USERS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_WEST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_WEST_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_WEST_USERS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_USERS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.PRE_DEFAULT_XLSX_FILE_PATH;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_USERS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.WALES_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.WALES_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.WALES_USERS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.WATFORD_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.WATFORD_DEV_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.WATFORD_USERS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("defaultValuesReaderService")
@@ -38,8 +78,7 @@ public class DefaultValuesReaderService {
                         if (cell.getColumnIndex() == 1) {
                             if (cell.getCellType() == CellType.STRING) {
                                 values.add(cell.getStringCellValue());
-                            }
-                            else if(cell.getCellType() == CellType.NUMERIC) {
+                            } else if (cell.getCellType() == CellType.NUMERIC) {
                                 values.add(NumberToTextConverter.toText(cell.getNumericCellValue()));
                             }
                         }
@@ -49,9 +88,9 @@ public class DefaultValuesReaderService {
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + ex.getMessage());
         }
-        if (filePath.equals(PRE_DEFAULT_XLSX_FILE_PATH))
+        if (filePath.equals(PRE_DEFAULT_XLSX_FILE_PATH)) {
             return populatePreDefaultValues(values);
-        else {
+        } else {
             return populatePostDefaultValues(values, managingOffice, caseTypeId);
         }
     }
@@ -171,9 +210,12 @@ public class DefaultValuesReaderService {
             ClaimantWorkAddressType claimantWorkAddressType = new ClaimantWorkAddressType();
             String respondentName = caseData.getClaimantWorkAddressQRespondent().getValue().getCode();
             if (caseData.getRespondentCollection() != null) {
-                Optional<RespondentSumTypeItem> respondentChosen = caseData.getRespondentCollection().stream().filter(respondentSumTypeItem ->
+                Optional<RespondentSumTypeItem> respondentChosen =
+                        caseData.getRespondentCollection().stream().filter(respondentSumTypeItem ->
                         respondentSumTypeItem.getValue().getRespondentName().equals(respondentName)).findFirst();
-                respondentChosen.ifPresent(respondentSumTypeItem -> claimantWorkAddressType.setClaimantWorkAddress(respondentSumTypeItem.getValue().getRespondentAddress()));
+                respondentChosen.ifPresent(respondentSumTypeItem ->
+                        claimantWorkAddressType.setClaimantWorkAddress(
+                                respondentSumTypeItem.getValue().getRespondentAddress()));
             }
             caseData.setClaimantWorkAddressQRespondent(null);
             caseData.setClaimantWorkAddress(claimantWorkAddressType);
@@ -191,11 +233,16 @@ public class DefaultValuesReaderService {
 
     private Address getTribunalCorrespondenceAddress(DefaultValues defaultValues) {
         Address address = new Address();
-        address.setAddressLine1(Optional.ofNullable(defaultValues.getTribunalCorrespondenceAddressLine1()).orElse(""));
-        address.setAddressLine2(Optional.ofNullable(defaultValues.getTribunalCorrespondenceAddressLine2()).orElse(""));
-        address.setAddressLine3(Optional.ofNullable(defaultValues.getTribunalCorrespondenceAddressLine3()).orElse(""));
-        address.setPostTown(Optional.ofNullable(defaultValues.getTribunalCorrespondenceTown()).orElse(""));
-        address.setPostCode(Optional.ofNullable(defaultValues.getTribunalCorrespondencePostCode()).orElse(""));
+        address.setAddressLine1(
+                Optional.ofNullable(defaultValues.getTribunalCorrespondenceAddressLine1()).orElse(""));
+        address.setAddressLine2(
+                Optional.ofNullable(defaultValues.getTribunalCorrespondenceAddressLine2()).orElse(""));
+        address.setAddressLine3(
+                Optional.ofNullable(defaultValues.getTribunalCorrespondenceAddressLine3()).orElse(""));
+        address.setPostTown(
+                Optional.ofNullable(defaultValues.getTribunalCorrespondenceTown()).orElse(""));
+        address.setPostCode(
+                Optional.ofNullable(defaultValues.getTribunalCorrespondencePostCode()).orElse(""));
         return address;
     }
 
@@ -259,8 +306,6 @@ public class DefaultValuesReaderService {
                 .tribunalCorrespondenceEmail(values.get(42))
                 .build();
     }
-
-
 
     private DefaultValues getBristolPostDefaultValues(List<String> values) {
         return DefaultValues.builder()

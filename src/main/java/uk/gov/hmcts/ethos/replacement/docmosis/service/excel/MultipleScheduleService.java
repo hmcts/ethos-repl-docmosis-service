@@ -40,7 +40,8 @@ public class MultipleScheduleService {
 
         log.info("Read excel for schedule logic");
 
-        FilterExcelType filterExcelType = MultiplesScheduleHelper.getFilterExcelTypeByScheduleDoc(multipleDetails.getCaseData());
+        FilterExcelType filterExcelType =
+                MultiplesScheduleHelper.getFilterExcelTypeByScheduleDoc(multipleDetails.getCaseData());
 
         TreeMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
@@ -82,7 +83,8 @@ public class MultipleScheduleService {
 
     }
 
-    private List<String> getCaseIdCollectionFromFilter(TreeMap<String, Object> multipleObjects, FilterExcelType filterExcelType) {
+    private List<String> getCaseIdCollectionFromFilter(TreeMap<String, Object> multipleObjects,
+                                                       FilterExcelType filterExcelType) {
 
         if (filterExcelType.equals(FilterExcelType.FLAGS)) {
 
@@ -96,7 +98,8 @@ public class MultipleScheduleService {
 
     }
 
-    private List<SchedulePayload> getSchedulePayloadCollection(String userToken, String caseTypeId, List<String> caseIdCollection, List<String> errors) {
+    private List<SchedulePayload> getSchedulePayloadCollection(String userToken, String caseTypeId,
+                                                               List<String> caseIdCollection, List<String> errors) {
 
         ExecutorService executor = Executors.newFixedThreadPool(THREAD_NUMBER);
 
@@ -106,7 +109,8 @@ public class MultipleScheduleService {
 
         for (List<String> partitionCaseIds : Lists.partition(caseIdCollection, ES_PARTITION_SIZE)) {
 
-            ScheduleCallable scheduleCallable = new ScheduleCallable(singleCasesReadingService, userToken, caseTypeId, partitionCaseIds);
+            ScheduleCallable scheduleCallable =
+                    new ScheduleCallable(singleCasesReadingService, userToken, caseTypeId, partitionCaseIds);
 
             resultList.add(executor.submit(scheduleCallable));
 
@@ -114,7 +118,7 @@ public class MultipleScheduleService {
 
         List<SchedulePayload> result = new ArrayList<>();
 
-        for (Future<HashSet<SchedulePayload>> fut : resultList){
+        for (Future<HashSet<SchedulePayload>> fut : resultList) {
 
             try {
 

@@ -17,20 +17,43 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIST_CASES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIST_CASES_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_DETAILED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_DETAILED_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.PENDING_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
 public class BulkHelper {
 
-    public static BulkDetails setMultipleCollection(BulkDetails bulkDetails, List<MultipleTypeItem> multipleTypeItemList) {
+    private BulkHelper() {
+    }
+
+    public static BulkDetails setMultipleCollection(BulkDetails bulkDetails,
+                                                    List<MultipleTypeItem> multipleTypeItemList) {
         if (multipleTypeItemList != null && !multipleTypeItemList.isEmpty()) {
             bulkDetails.getCaseData().setMultipleCollectionCount(String.valueOf(multipleTypeItemList.size()));
             bulkDetails.getCaseData().setMultipleCollection(multipleTypeItemList);
@@ -38,7 +61,8 @@ public class BulkHelper {
             bulkDetails.getCaseData().setMultipleCollection(new ArrayList<>());
             bulkDetails.getCaseData().setMultipleCollectionCount(null);
         }
-        bulkDetails.getCaseData().setCaseIdCollection(BulkHelper.getCaseIdTypeItems(bulkDetails, BulkHelper.getMultipleCaseIds(bulkDetails)));
+        bulkDetails.getCaseData().setCaseIdCollection(BulkHelper.getCaseIdTypeItems(bulkDetails,
+                BulkHelper.getMultipleCaseIds(bulkDetails)));
         return bulkDetails;
     }
 
@@ -57,14 +81,14 @@ public class BulkHelper {
         } else {
             multipleType.setClaimantSurnameM(" ");
         }
-        if (caseData.getClaimantType() != null && caseData.getClaimantType().getClaimantAddressUK() != null &&
-                caseData.getClaimantType().getClaimantAddressUK().getAddressLine1() != null) {
+        if (caseData.getClaimantType() != null && caseData.getClaimantType().getClaimantAddressUK() != null
+                && caseData.getClaimantType().getClaimantAddressUK().getAddressLine1() != null) {
             multipleType.setClaimantAddressLine1M(caseData.getClaimantType().getClaimantAddressUK().getAddressLine1());
         } else {
             multipleType.setClaimantAddressLine1M(" ");
         }
-        if (caseData.getClaimantType() != null && caseData.getClaimantType().getClaimantAddressUK() != null &&
-                caseData.getClaimantType().getClaimantAddressUK().getPostCode() != null) {
+        if (caseData.getClaimantType() != null && caseData.getClaimantType().getClaimantAddressUK() != null
+                && caseData.getClaimantType().getClaimantAddressUK().getPostCode() != null) {
             multipleType.setClaimantPostCodeM(caseData.getClaimantType().getClaimantAddressUK().getPostCode());
         } else {
             multipleType.setClaimantPostCodeM(" ");
@@ -75,30 +99,34 @@ public class BulkHelper {
         } else {
             multipleType.setRespondentSurnameM(" ");
         }
-        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty() &&
-                caseData.getRespondentCollection().get(0).getValue().getRespondentAddress() != null &&
-                caseData.getRespondentCollection().get(0).getValue().getRespondentAddress().getAddressLine1() != null) {
+        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()
+                && caseData.getRespondentCollection().get(0).getValue().getRespondentAddress() != null
+                && caseData.getRespondentCollection().get(0).getValue()
+                .getRespondentAddress().getAddressLine1() != null) {
             RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
             multipleType.setRespondentAddressLine1M(respondentSumType.getRespondentAddress().getAddressLine1());
         } else {
             multipleType.setRespondentAddressLine1M(" ");
         }
-        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty() &&
-                caseData.getRespondentCollection().get(0).getValue().getRespondentAddress() != null &&
-                caseData.getRespondentCollection().get(0).getValue().getRespondentAddress().getPostCode() != null) {
+        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()
+                && caseData.getRespondentCollection().get(0).getValue().getRespondentAddress() != null
+                && caseData.getRespondentCollection().get(0).getValue().getRespondentAddress().getPostCode() != null) {
             RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
             multipleType.setRespondentPostCodeM(respondentSumType.getRespondentAddress().getPostCode());
         } else {
             multipleType.setRespondentPostCodeM(" ");
         }
-        if (caseData.getRepresentativeClaimantType() != null && caseData.getRepresentativeClaimantType().getNameOfRepresentative() != null) {
+        if (caseData.getRepresentativeClaimantType() != null
+                && caseData.getRepresentativeClaimantType().getNameOfRepresentative() != null) {
             multipleType.setClaimantRepM(caseData.getRepresentativeClaimantType().getNameOfRepresentative());
             multipleType.setClaimantRepOrgM(caseData.getRepresentativeClaimantType().getNameOfOrganisation());
         } else {
             multipleType.setClaimantRepM(" ");
             multipleType.setClaimantRepOrgM(" ");
         }
-        if (caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty() && caseData.getRepCollection().get(0).getValue() != null) {
+        if (caseData.getRepCollection() != null
+                && !caseData.getRepCollection().isEmpty()
+                && caseData.getRepCollection().get(0).getValue() != null) {
             multipleType.setRespondentRepM(caseData.getRepCollection().get(0).getValue().getNameOfRepresentative());
             multipleType.setRespondentRepOrgM(caseData.getRepCollection().get(0).getValue().getNameOfOrganisation());
         } else {
@@ -120,7 +148,8 @@ public class BulkHelper {
         return multipleType;
     }
 
-    public static List<MultipleTypeItem> getMultipleTypeListBySubmitEventList(List<SubmitEvent> submitEvents, String multipleReference) {
+    public static List<MultipleTypeItem> getMultipleTypeListBySubmitEventList(List<SubmitEvent> submitEvents,
+                                                                              String multipleReference) {
         List<MultipleTypeItem> multipleTypeItemList = new ArrayList<>();
         for (SubmitEvent submitEvent : submitEvents) {
             CaseData caseData = submitEvent.getCaseData();
@@ -138,9 +167,9 @@ public class BulkHelper {
     }
 
     private static String getSubmitEventState(SubmitEvent submitEvent) {
-        return submitEvent.getState() != null ?
-                (submitEvent.getState().equals(PENDING_STATE) ? SUBMITTED_STATE : submitEvent.getState()) :
-                " ";
+        return submitEvent.getState() != null
+                ? (submitEvent.getState().equals(PENDING_STATE) ? SUBMITTED_STATE : submitEvent.getState())
+                : " ";
     }
 
     public static SearchType getSearchTypeFromMultipleType(MultipleType multipleType) {
@@ -176,12 +205,14 @@ public class BulkHelper {
         CaseData caseData = submitEvent.getCaseData();
         MultipleType multipleType = getMultipleTypeFromCaseData(caseData);
         multipleType.setCaseIDM(String.valueOf(submitEvent.getCaseId()));
-        multipleType.setMultipleReferenceM(!isNullOrEmpty(caseData.getMultipleReference()) ? caseData.getMultipleReference() : " ");
+        multipleType.setMultipleReferenceM(!isNullOrEmpty(
+                caseData.getMultipleReference()) ? caseData.getMultipleReference() : " ");
         multipleType.setStateM(!isNullOrEmpty(submitEvent.getState()) ? submitEvent.getState() : " ");
         return multipleType;
     }
 
-    public static MultipleTypeItem getMultipleTypeItemFromSubmitEvent(SubmitEvent submitEvent, String multipleReference) {
+    public static MultipleTypeItem getMultipleTypeItemFromSubmitEvent(SubmitEvent submitEvent,
+                                                                      String multipleReference) {
         MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
         multipleTypeItem.setId(String.valueOf(submitEvent.getCaseId()));
         MultipleType multipleType = BulkHelper.getMultipleTypeFromSubmitEvent(submitEvent);
@@ -202,7 +233,8 @@ public class BulkHelper {
     }
 
     public static List<String> getCaseIds(BulkDetails bulkDetails) {
-        if (bulkDetails.getCaseData().getCaseIdCollection() != null && !bulkDetails.getCaseData().getCaseIdCollection().isEmpty()) {
+        if (bulkDetails.getCaseData().getCaseIdCollection() != null
+                && !bulkDetails.getCaseData().getCaseIdCollection().isEmpty()) {
             return bulkDetails.getCaseData().getCaseIdCollection().stream()
                     .filter(key -> key.getId() != null && !key.getId().equals("null"))
                     .map(caseId -> caseId.getValue().getEthosCaseReference())
@@ -222,37 +254,39 @@ public class BulkHelper {
     }
 
     private static List<CaseIdTypeItem> getCaseIdTypeItems(BulkDetails bulkDetails, List<String> multipleTypeItems) {
-        return bulkDetails.getCaseData().getCaseIdCollection() != null ?
-                bulkDetails.getCaseData().getCaseIdCollection().stream()
-                        .filter(p -> p.getValue().getEthosCaseReference() != null)
-                        .filter(distinctByKey(p -> p.getValue().getEthosCaseReference()))
-                        .filter(p -> multipleTypeItems.contains(p.getValue().getEthosCaseReference()))
-                        .collect(Collectors.toList()) :
-                new ArrayList<>();
+        return bulkDetails.getCaseData().getCaseIdCollection() != null
+                ? bulkDetails.getCaseData().getCaseIdCollection().stream()
+                .filter(p -> p.getValue().getEthosCaseReference() != null)
+                .filter(distinctByKey(p -> p.getValue().getEthosCaseReference()))
+                .filter(p -> multipleTypeItems.contains(p.getValue().getEthosCaseReference()))
+                .collect(Collectors.toList())
+                : new ArrayList<>();
     }
 
     public static List<String> getMultipleCaseIds(BulkDetails bulkDetails) {
-        return bulkDetails.getCaseData().getMultipleCollection() != null ?
-                bulkDetails.getCaseData().getMultipleCollection().stream()
-                    .map(caseId -> caseId.getValue().getEthosCaseReferenceM())
-                    .distinct()
-                    .collect(Collectors.toList()) :
-                new ArrayList<>();
+        return bulkDetails.getCaseData().getMultipleCollection() != null
+                ? bulkDetails.getCaseData().getMultipleCollection().stream()
+                .map(caseId -> caseId.getValue().getEthosCaseReferenceM())
+                .distinct()
+                .collect(Collectors.toList())
+                : new ArrayList<>();
     }
 
     private static List<String> getJurCodesValues(List<JurCodesTypeItem> jurCodesTypeItems) {
-        return jurCodesTypeItems != null && !jurCodesTypeItems.isEmpty() ?
-                jurCodesTypeItems.stream()
-                        .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
-                        .distinct()
-                        .collect(Collectors.toList()) :
-                new ArrayList<>();
+        return jurCodesTypeItems != null && !jurCodesTypeItems.isEmpty()
+                ? jurCodesTypeItems.stream()
+                .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
+                .distinct()
+                .collect(Collectors.toList())
+                : new ArrayList<>();
     }
 
-    public static boolean containsAllJurCodes(List<JurCodesTypeItem> jurCodesTypeItems1, List<JurCodesTypeItem> jurCodesTypeItems2) {
+    public static boolean containsAllJurCodes(List<JurCodesTypeItem> jurCodesTypeItems1,
+                                              List<JurCodesTypeItem> jurCodesTypeItems2) {
         if (jurCodesTypeItems1 != null && !jurCodesTypeItems1.isEmpty()) {
             return getJurCodesValues(jurCodesTypeItems2).containsAll(getJurCodesValues(jurCodesTypeItems1));
-        } return false;
+        }
+        return false;
     }
 
     public static List<JurCodesTypeItem> getJurCodesListFromString(String jurCodesStringList) {
@@ -283,7 +317,8 @@ public class BulkHelper {
         // Start building the instruction
         sb.append("{\n");
         sb.append("\"accessKey\":\"").append(accessKey).append(NEW_LINE);
-        sb.append("\"templateName\":\"").append(BulkHelper.getScheduleDocName(bulkData.getScheduleDocName())).append(FILE_EXTENSION).append(NEW_LINE);
+        sb.append("\"templateName\":\"").append(BulkHelper.getScheduleDocName(bulkData.getScheduleDocName()))
+                .append(FILE_EXTENSION).append(NEW_LINE);
         sb.append("\"outputName\":\"").append(OUTPUT_FILE_NAME).append(NEW_LINE);
         // Building the document data
         sb.append("\"data\":{\n");
@@ -299,7 +334,8 @@ public class BulkHelper {
     private static StringBuilder getDocumentData(BulkData bulkData) {
         if (LIST_CASES_CONFIG.equals(bulkData.getScheduleDocName())) {
             return getScheduleBySubMultipleData(bulkData);
-        } else if (Arrays.asList(MULTIPLE_SCHEDULE_CONFIG, MULTIPLE_SCHEDULE_DETAILED_CONFIG).contains(bulkData.getScheduleDocName())) {
+        } else if (Arrays.asList(MULTIPLE_SCHEDULE_CONFIG, MULTIPLE_SCHEDULE_DETAILED_CONFIG)
+                .contains(bulkData.getScheduleDocName())) {
             return getScheduleData(bulkData.getSearchCollection());
         } else {
             return new StringBuilder();
@@ -321,15 +357,24 @@ public class BulkHelper {
 
     private static StringBuilder getMultipleTypeRow(SearchType searchType) {
         StringBuilder sb = new StringBuilder();
-        sb.append("{\"Claimant\":\"").append(nullCheck(searchType.getClaimantSurnameS())).append(NEW_LINE);
-        sb.append("\"Current_position\":\"").append(nullCheck(searchType.getCurrentPositionS())).append(NEW_LINE);
-        sb.append("\"Case_No\":\"").append(nullCheck(searchType.getEthosCaseReferenceS())).append(NEW_LINE);
-        sb.append("\"claimant_full_name\":\"").append(nullCheck(searchType.getClaimantSurnameS())).append(NEW_LINE);
-        sb.append("\"claimant_addressLine1\":\"").append(nullCheck(searchType.getClaimantAddressLine1S())).append(NEW_LINE);
-        sb.append("\"claimant_postCode\":\"").append(nullCheck(searchType.getClaimantPostCodeS())).append(NEW_LINE);
-        sb.append("\"respondent_full_name\":\"").append(nullCheck(searchType.getRespondentSurnameS())).append(NEW_LINE);
-        sb.append("\"respondent_addressLine1\":\"").append(nullCheck(searchType.getRespondentAddressLine1S())).append(NEW_LINE);
-        sb.append("\"respondent_postCode\":\"").append(nullCheck(searchType.getRespondentPostCodeS())).append("\"}");
+        sb.append("{\"Claimant\":\"").append(
+                nullCheck(searchType.getClaimantSurnameS())).append(NEW_LINE);
+        sb.append("\"Current_position\":\"").append(
+                nullCheck(searchType.getCurrentPositionS())).append(NEW_LINE);
+        sb.append("\"Case_No\":\"").append(
+                nullCheck(searchType.getEthosCaseReferenceS())).append(NEW_LINE);
+        sb.append("\"claimant_full_name\":\"").append(
+                nullCheck(searchType.getClaimantSurnameS())).append(NEW_LINE);
+        sb.append("\"claimant_addressLine1\":\"").append(
+                nullCheck(searchType.getClaimantAddressLine1S())).append(NEW_LINE);
+        sb.append("\"claimant_postCode\":\"").append(
+                nullCheck(searchType.getClaimantPostCodeS())).append(NEW_LINE);
+        sb.append("\"respondent_full_name\":\"").append(
+                nullCheck(searchType.getRespondentSurnameS())).append(NEW_LINE);
+        sb.append("\"respondent_addressLine1\":\"").append(
+                nullCheck(searchType.getRespondentAddressLine1S())).append(NEW_LINE);
+        sb.append("\"respondent_postCode\":\"").append(
+                nullCheck(searchType.getRespondentPostCodeS())).append("\"}");
         return sb;
     }
 
@@ -342,7 +387,8 @@ public class BulkHelper {
             while (entries.hasNext()) {
                 Map.Entry<String, List<SearchType>> subMultipleEntry = entries.next();
                 sb.append("{\"SubMultiple_No\":\"").append(subMultipleEntry.getKey()).append(NEW_LINE);
-                sb.append("\"SubMultiple_title\":\"").append(getSubMultipleTitle(subMultipleEntry.getKey(), bulkData)).append(NEW_LINE);
+                sb.append("\"SubMultiple_title\":\"").append(getSubMultipleTitle(subMultipleEntry.getKey(), bulkData))
+                        .append(NEW_LINE);
                 sb.append("\"multiple\":[\n");
                 for (int i = 0; i < subMultipleEntry.getValue().size(); i++) {
                     sb.append(getMultipleTypeRow(subMultipleEntry.getValue().get(i)));
@@ -366,9 +412,12 @@ public class BulkHelper {
         for (SearchTypeItem searchTypeItem : bulkData.getSearchCollection()) {
             if (bulkData.getMultipleCollection() != null) {
                 for (MultipleTypeItem multipleTypeItem : bulkData.getMultipleCollection()) {
-                    if (searchTypeItem.getValue().getEthosCaseReferenceS().equals(multipleTypeItem.getValue().getEthosCaseReferenceM()) &&
-                            (multipleTypeItem.getValue().getSubMultipleM() != null && !multipleTypeItem.getValue().getSubMultipleM().equals(" "))) {
-                        multipleMap.computeIfAbsent(multipleTypeItem.getValue().getSubMultipleM(), k -> new ArrayList<>()).add(searchTypeItem.getValue());
+                    if (searchTypeItem.getValue().getEthosCaseReferenceS()
+                            .equals(multipleTypeItem.getValue().getEthosCaseReferenceM())
+                            && (multipleTypeItem.getValue().getSubMultipleM() != null
+                            && !multipleTypeItem.getValue().getSubMultipleM().equals(" "))) {
+                        multipleMap.computeIfAbsent(multipleTypeItem.getValue()
+                                .getSubMultipleM(), k -> new ArrayList<>()).add(searchTypeItem.getValue());
                     }
                 }
             }
@@ -382,7 +431,8 @@ public class BulkHelper {
                 .findFirst();
         if (subMultipleTypeItem.isPresent()) {
             return subMultipleTypeItem.get().getValue().getSubMultipleNameT();
-        } return " ";
+        }
+        return " ";
     }
 
     public static String getScheduleDocName(String scheduleDocName) {

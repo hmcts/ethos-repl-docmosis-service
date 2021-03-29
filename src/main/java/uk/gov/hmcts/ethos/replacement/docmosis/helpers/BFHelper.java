@@ -19,6 +19,9 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_ACAS;
 @Slf4j
 public class BFHelper {
 
+    private BFHelper() {
+    }
+
     public static void updateBfActionItems(CaseData caseData) {
 
         List<BFActionTypeItem> bfActions = caseData.getBfActions();
@@ -45,7 +48,7 @@ public class BFHelper {
 
         List<BFActionTypeItem> bfActionTypeItemListAux = new ArrayList<>();
 
-        if (caseData.getBfActions() != null && !caseData.getBfActions().isEmpty()){
+        if (caseData.getBfActions() != null && !caseData.getBfActions().isEmpty()) {
 
             List<BFActionTypeItem> bfActionTypeItemList = caseData.getBfActions();
 

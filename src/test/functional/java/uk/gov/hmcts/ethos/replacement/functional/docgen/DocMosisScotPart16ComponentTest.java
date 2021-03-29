@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisScotPart16ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -47,17 +46,22 @@ public class DocMosisScotPart16ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_183() throws Exception {
-        testUtil.executeGenerateDocumentTest("183", "", "ACKNOWLEDGMENT OF APPLICATION FOR DIRECTION SUSPENDING", true);
+        testUtil.executeGenerateDocumentTest("183", "", "ACKNOWLEDGMENT OF APPLICATION FOR "
+                + "DIRECTION SUSPENDING", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_184() throws Exception {
-        testUtil.executeGenerateDocumentTest("184", "", "The Tribunal has received an application by the appellant under section 24\\(3\\)\\(b\\) of the Health", true);
+        testUtil.executeGenerateDocumentTest("184", "",
+                "The Tribunal has received an application by the appellant under section 24\\(3\\)\\(b\\) "
+                        + "of the Health", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_185() throws Exception {
-        testUtil.executeGenerateDocumentTest("185", "", "Upon the appellant’s application under section 24\\(3\\)\\(b\\) of the Health and Safety at Work etc", true);
+        testUtil.executeGenerateDocumentTest("185", "",
+                "Upon the appellant’s application under section 24\\(3\\)\\(b\\) of the Health and Safety "
+                        + "at Work etc", true);
     }
 
     @Test
@@ -72,7 +76,8 @@ public class DocMosisScotPart16ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_190() throws Exception {
-        testUtil.executeGenerateDocumentTest("190", "", "A member of the panel of independent experts designated by the Advisory Conciliation and", true);
+        testUtil.executeGenerateDocumentTest("190", "",
+                "A member of the panel of independent experts designated by the Advisory Conciliation and", true);
     }
 
     @Test
@@ -82,7 +87,8 @@ public class DocMosisScotPart16ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_192() throws Exception {
-        testUtil.executeGenerateDocumentTest("192", "", "The final hearing of this claim shall take place at", true);
+        testUtil.executeGenerateDocumentTest("192", "", "The final hearing of this claim "
+                + "shall take place at", true);
     }
 
     @Test

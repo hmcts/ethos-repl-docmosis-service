@@ -10,7 +10,11 @@ import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
@@ -25,6 +29,9 @@ public class MultiplesScheduleHelper {
     public static final String RESPONDENT_NAME = "RespondentName";
     public static final String ADDRESS_LINE1 = "AddressLine1";
     public static final String POSTCODE = "PostCode";
+
+    private MultiplesScheduleHelper() {
+    }
 
     public static SchedulePayload getSchedulePayloadFromSchedulePayloadES(SchedulePayloadES submitEventES) {
 
@@ -94,9 +101,7 @@ public class MultiplesScheduleHelper {
                     ? scheduleAddress.getAddressLine1()
                     : "";
 
-        }
-
-        else {
+        } else {
 
             return scheduleAddress != null
                     ? scheduleAddress.getPostCode()
@@ -142,8 +147,8 @@ public class MultiplesScheduleHelper {
 
     }
 
-    public static TreeMap<String, List<SchedulePayload>> getMultipleTreeMap(TreeMap<String, Object> multipleObjectsFiltered,
-                                                                            Map<String, SchedulePayload> scheduleEventMap) {
+    public static TreeMap<String, List<SchedulePayload>> getMultipleTreeMap(
+            TreeMap<String, Object> multipleObjectsFiltered, Map<String, SchedulePayload> scheduleEventMap) {
 
         TreeMap<String, List<SchedulePayload>> subMultipleTreeMap = new TreeMap<>();
 

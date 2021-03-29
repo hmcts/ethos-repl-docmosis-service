@@ -1,7 +1,11 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
@@ -11,7 +15,16 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
@@ -19,18 +32,40 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_PAGE_SIZE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LABEL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LBL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
 public class DocumentHelper {
 
-    private static final String VENUE_ADDRESS_OPENING_PROCESSING_ERROR = "Failed while opening or processing the entries for the venueAddressValues.xlsx file : ---> ";
+    private DocumentHelper() {
+    }
+
+    private static final String VENUE_ADDRESS_OPENING_PROCESSING_ERROR = "Failed while opening or "
+            + "processing the entries for the venueAddressValues.xlsx file : ---> ";
 
     public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey,
                                                      UserDetails userDetails, String caseTypeId,
@@ -61,7 +96,8 @@ public class DocumentHelper {
             log.info("Single template");
             sb.append(getClaimantData(caseData));
             sb.append(getRespondentData(caseData));
-            sb.append(getHearingData(caseData, caseTypeId, venueAddressInputStream, correspondenceType, correspondenceScotType));
+            sb.append(getHearingData(caseData, caseTypeId, venueAddressInputStream, correspondenceType,
+                    correspondenceScotType));
             sb.append(getCorrespondenceData(correspondenceType));
             sb.append(getCorrespondenceScotData(correspondenceScotType));
             sb.append(getCourtData(caseData, allocatedCourtAddress));
@@ -91,7 +127,8 @@ public class DocumentHelper {
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
         sb.append("\"Today_date\":\"").append(UtilHelper.formatCurrentDate(LocalDate.now())).append(NEW_LINE);
-        sb.append("\"TodayPlus28Days\":\"").append(UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28)).append(NEW_LINE);
+        sb.append("\"TodayPlus28Days\":\"").append(UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28))
+                .append(NEW_LINE);
         sb.append("\"Case_No\":\"").append(nullCheck(caseData.getEthosCaseReference())).append(NEW_LINE);
         log.info("End document");
         sb.append("}\n");
@@ -127,22 +164,29 @@ public class DocumentHelper {
         StringBuilder sb = new StringBuilder();
         RepresentedTypeC representedTypeC = caseData.getRepresentativeClaimantType();
         Optional<ClaimantIndType> claimantIndType = Optional.ofNullable(caseData.getClaimantIndType());
-        if (representedTypeC != null && caseData.getClaimantRepresentedQuestion() != null &&  caseData.getClaimantRepresentedQuestion().equals(YES)) {
+        if (representedTypeC != null && caseData.getClaimantRepresentedQuestion() != null &&  caseData
+                .getClaimantRepresentedQuestion().equals(YES)) {
             log.info("Claimant represented");
-            sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(representedTypeC.getNameOfRepresentative())).append(NEW_LINE);
-            if (representedTypeC.getRepresentativeAddress()!= null) {
+            sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(representedTypeC.getNameOfRepresentative()))
+                    .append(NEW_LINE);
+            if (representedTypeC.getRepresentativeAddress() != null) {
                 sb.append(getClaimantOrRepAddressUK(representedTypeC.getRepresentativeAddress()));
             } else {
                 sb.append(getClaimantOrRepAddressUK(new Address()));
             }
-            sb.append("\"claimant_reference\":\"").append(nullCheck(representedTypeC.getRepresentativeReference())).append(NEW_LINE);
+            sb.append("\"claimant_reference\":\"").append(nullCheck(representedTypeC.getRepresentativeReference()))
+                    .append(NEW_LINE);
             Optional<String> claimantTypeOfClaimant = Optional.ofNullable(caseData.getClaimantTypeOfClaimant());
             if (claimantIndType.isPresent()) {
-                sb.append("\"claimant_full_name\":\"").append(nullCheck(claimantIndType.get().claimantFullName())).append(NEW_LINE);
-                sb.append("\"Claimant\":\"").append(nullCheck(claimantIndType.get().claimantFullName())).append(NEW_LINE);
-            } else if (claimantTypeOfClaimant.isPresent() && caseData.getClaimantTypeOfClaimant().equals(COMPANY_TYPE_CLAIMANT)) {
+                sb.append("\"claimant_full_name\":\"").append(nullCheck(claimantIndType.get().claimantFullName()))
+                        .append(NEW_LINE);
+                sb.append("\"Claimant\":\"").append(nullCheck(claimantIndType.get().claimantFullName()))
+                        .append(NEW_LINE);
+            } else if (claimantTypeOfClaimant.isPresent() && caseData.getClaimantTypeOfClaimant()
+                    .equals(COMPANY_TYPE_CLAIMANT)) {
                 log.info("Claimant Company");
-                sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantCompany())).append(NEW_LINE);
+                sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantCompany()))
+                        .append(NEW_LINE);
                 sb.append("\"Claimant\":\"").append(nullCheck(caseData.getClaimantCompany())).append(NEW_LINE);
             } else {
                 sb.append("\"claimant_full_name\":\"").append(NEW_LINE);
@@ -151,17 +195,23 @@ public class DocumentHelper {
         } else {
             log.info("Claimant not represented");
             Optional<String> claimantTypeOfClaimant = Optional.ofNullable(caseData.getClaimantTypeOfClaimant());
-            if (claimantTypeOfClaimant.isPresent() && caseData.getClaimantTypeOfClaimant().equals(COMPANY_TYPE_CLAIMANT)) {
+            if (claimantTypeOfClaimant.isPresent() && caseData.getClaimantTypeOfClaimant()
+                    .equals(COMPANY_TYPE_CLAIMANT)) {
                 log.info("Claimant Company");
-                sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(caseData.getClaimantCompany())).append(NEW_LINE);
-                sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantCompany())).append(NEW_LINE);
+                sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(caseData.getClaimantCompany()))
+                        .append(NEW_LINE);
+                sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantCompany()))
+                        .append(NEW_LINE);
                 sb.append("\"Claimant\":\"").append(nullCheck(caseData.getClaimantCompany())).append(NEW_LINE);
             } else {
                 log.info("Claimant data");
                 if (claimantIndType.isPresent()) {
-                    sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(claimantIndType.get().claimantFullName())).append(NEW_LINE);
-                    sb.append("\"claimant_full_name\":\"").append(nullCheck(claimantIndType.get().claimantFullName())).append(NEW_LINE);
-                    sb.append("\"Claimant\":\"").append(nullCheck(claimantIndType.get().claimantFullName())).append(NEW_LINE);
+                    sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(claimantIndType.get()
+                            .claimantFullName())).append(NEW_LINE);
+                    sb.append("\"claimant_full_name\":\"").append(nullCheck(claimantIndType.get().claimantFullName()))
+                            .append(NEW_LINE);
+                    sb.append("\"Claimant\":\"").append(nullCheck(claimantIndType.get().claimantFullName()))
+                            .append(NEW_LINE);
                 } else {
                     sb.append("\"claimant_or_rep_full_name\":\"").append(NEW_LINE);
                     sb.append("\"claimant_full_name\":\"").append(NEW_LINE);
@@ -198,9 +248,12 @@ public class DocumentHelper {
 
     private static StringBuilder getRespondentOrRepAddressUK(Address address) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\"respondent_or_rep_addressLine1\":\"").append(nullCheck(address.getAddressLine1())).append(NEW_LINE);
-        sb.append("\"respondent_or_rep_addressLine2\":\"").append(nullCheck(address.getAddressLine2())).append(NEW_LINE);
-        sb.append("\"respondent_or_rep_addressLine3\":\"").append(nullCheck(address.getAddressLine3())).append(NEW_LINE);
+        sb.append("\"respondent_or_rep_addressLine1\":\"").append(nullCheck(address.getAddressLine1()))
+                .append(NEW_LINE);
+        sb.append("\"respondent_or_rep_addressLine2\":\"").append(nullCheck(address.getAddressLine2()))
+                .append(NEW_LINE);
+        sb.append("\"respondent_or_rep_addressLine3\":\"").append(nullCheck(address.getAddressLine3()))
+                .append(NEW_LINE);
         sb.append("\"respondent_or_rep_town\":\"").append(nullCheck(address.getPostTown())).append(NEW_LINE);
         sb.append("\"respondent_or_rep_county\":\"").append(nullCheck(address.getCounty())).append(NEW_LINE);
         sb.append("\"respondent_or_rep_postCode\":\"").append(nullCheck(address.getPostCode())).append(NEW_LINE);
@@ -214,18 +267,21 @@ public class DocumentHelper {
         if (representedTypeRList != null && !representedTypeRList.isEmpty()) {
             log.info("Respondent represented");
             RepresentedTypeR representedTypeR = representedTypeRList.get(0).getValue();
-            sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(representedTypeR.getNameOfRepresentative())).append(NEW_LINE);
+            sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(representedTypeR
+                    .getNameOfRepresentative())).append(NEW_LINE);
             if (representedTypeR.getRepresentativeAddress() != null) {
                 sb.append(getRespondentOrRepAddressUK(representedTypeR.getRepresentativeAddress()));
             } else {
                 sb.append(getRespondentOrRepAddressUK(new Address()));
             }
-            sb.append("\"respondent_reference\":\"").append(nullCheck(representedTypeR.getRepresentativeReference())).append(NEW_LINE);
+            sb.append("\"respondent_reference\":\"").append(nullCheck(representedTypeR.getRepresentativeReference()))
+                    .append(NEW_LINE);
         } else {
             log.info("Respondent not represented");
             if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
                 RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
-                sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE);
+                sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(respondentSumType
+                        .getRespondentName())).append(NEW_LINE);
                 sb.append(getRespondentOrRepAddressUK(getRespondentAddressET3(respondentSumType)));
             } else {
                 sb.append("\"respondent_or_rep_full_name\":\"").append(NEW_LINE);
@@ -235,7 +291,8 @@ public class DocumentHelper {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             log.info("Respondent collection");
             RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
-            sb.append("\"respondent_full_name\":\"").append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE);
+            sb.append("\"respondent_full_name\":\"").append(nullCheck(respondentSumType.getRespondentName()))
+                    .append(NEW_LINE);
             sb.append(getRespondentAddressUK(getRespondentAddressET3(respondentSumType)));
             sb.append("\"Respondent\":\"").append(caseData.getRespondentCollection().size() > 1 ? "1. " : "")
                     .append(respondentSumType.getRespondentName()).append(NEW_LINE);
@@ -258,8 +315,10 @@ public class DocumentHelper {
         List<String> respOthers = caseData.getRespondentCollection()
                 .stream()
                 .skip(1)
-                .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
-                .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". " + respondentSumTypeItem.getValue().getRespondentName())
+                .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null
+                        || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
+                .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". "
+                        + respondentSumTypeItem.getValue().getRespondentName())
                 .collect(Collectors.toList());
         sb.append("\"resp_others\":\"").append(String.join("\\n", respOthers)).append(NEW_LINE);
         return sb;
@@ -272,7 +331,8 @@ public class DocumentHelper {
         int size = caseData.getRespondentCollection().size();
         List<String> respAddressList = caseData.getRespondentCollection()
                 .stream()
-                .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
+                .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null
+                        || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
                 .map(respondentSumTypeItem -> (size > 1 ? atomicInteger.getAndIncrement() + ". " : "")
                         + getRespondentAddressET3(respondentSumTypeItem.getValue()))
                 .collect(Collectors.toList());
@@ -288,20 +348,24 @@ public class DocumentHelper {
         StringBuilder sb = new StringBuilder();
         //Currently checking collection not the HearingType
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
-            String correspondenceHearingNumber = getCorrespondenceHearingNumber(correspondenceType, correspondenceScotType);
+            String correspondenceHearingNumber = getCorrespondenceHearingNumber(
+                    correspondenceType, correspondenceScotType);
             log.info("Hearing Number: " + correspondenceHearingNumber);
             HearingType hearingType = getHearingByNumber(caseData.getHearingCollection(), correspondenceHearingNumber);
             log.info("Hearing type info by number");
             if (hearingType.getHearingDateCollection() != null && !hearingType.getHearingDateCollection().isEmpty()) {
                 log.info("Hearing dates collection");
-                sb.append("\"Hearing_date\":\"").append(nullCheck(getHearingDates(hearingType.getHearingDateCollection()))).append(NEW_LINE);
-                sb.append("\"Hearing_date_time\":\"").append(nullCheck(getHearingDatesAndTime(hearingType.getHearingDateCollection()))).append(NEW_LINE);
+                sb.append("\"Hearing_date\":\"").append(nullCheck(getHearingDates(hearingType
+                        .getHearingDateCollection()))).append(NEW_LINE);
+                sb.append("\"Hearing_date_time\":\"").append(nullCheck(getHearingDatesAndTime(hearingType
+                        .getHearingDateCollection()))).append(NEW_LINE);
             } else {
                 sb.append("\"Hearing_date\":\"").append(NEW_LINE);
                 sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
             }
             log.info("Checking hearing venue and duration");
-            sb.append("\"Hearing_venue\":\"").append(nullCheck(getVenueAddress(hearingType, caseTypeId, venueAddressInputStream))).append(NEW_LINE);
+            sb.append("\"Hearing_venue\":\"").append(nullCheck(getVenueAddress(
+                    hearingType, caseTypeId, venueAddressInputStream))).append(NEW_LINE);
             sb.append("\"Hearing_duration\":\"").append(nullCheck(getHearingDuration(hearingType))).append(NEW_LINE);
         } else {
             sb.append("\"Hearing_date\":\"").append(NEW_LINE);
@@ -325,7 +389,8 @@ public class DocumentHelper {
         }
     }
 
-    public static HearingType getHearingByNumber(List<HearingTypeItem> hearingCollection, String correspondenceHearingNumber) {
+    public static HearingType getHearingByNumber(List<HearingTypeItem> hearingCollection,
+                                                 String correspondenceHearingNumber) {
 
         HearingType hearingType = new HearingType();
 
@@ -361,12 +426,13 @@ public class DocumentHelper {
 
         StringBuilder sb = new StringBuilder(getHearingDates(hearingDateCollection));
         Iterator<DateListedTypeItem> itr = hearingDateCollection.iterator();
-        LocalTime earliestTime = LocalTime.of(23,59);
+        LocalTime earliestTime = LocalTime.of(23, 59);
         boolean isEmpty = true;
 
         while (itr.hasNext()) {
             DateListedType dateListedType = itr.next().getValue();
-            if (dateListedType.getHearingStatus() != null && dateListedType.getHearingStatus().equals(HEARING_STATUS_LISTED)) {
+            if (dateListedType.getHearingStatus() != null && dateListedType.getHearingStatus()
+                    .equals(HEARING_STATUS_LISTED)) {
                 LocalDateTime listedDate = LocalDateTime.parse(dateListedType.getListedDate());
                 LocalTime listedTime = LocalTime.of(listedDate.getHour(), listedDate.getMinute());
                 earliestTime = listedTime.isBefore(earliestTime) ? listedTime : earliestTime;
@@ -381,14 +447,16 @@ public class DocumentHelper {
         return sb.toString();
     }
 
-    private static String getVenueAddress(HearingType hearingType, String caseTypeId, InputStream venueAddressInputStream) {
+    private static String getVenueAddress(HearingType hearingType, String caseTypeId,
+                                          InputStream venueAddressInputStream) {
 
         String hearingVenue = getHearingVenue(hearingType, caseTypeId);
         log.info("HearingVenue: " + hearingVenue);
         try (Workbook workbook = new XSSFWorkbook(venueAddressInputStream)) {
             Sheet datatypeSheet = workbook.getSheet(caseTypeId);
             if (datatypeSheet != null) {
-                log.info("Processing venue addresses for tab : " + caseTypeId + " within file : " + VENUE_ADDRESS_VALUES_FILE_PATH);
+                log.info("Processing venue addresses for tab : " + caseTypeId + " within file : "
+                        + VENUE_ADDRESS_VALUES_FILE_PATH);
                 for (Row currentRow : datatypeSheet) {
                     if (currentRow.getRowNum() == 0) {
                         continue;
@@ -467,45 +535,115 @@ public class DocumentHelper {
     }
 
     private static String getEWPartDocument(CorrespondenceType correspondence) {
-        if (correspondence.getPart0Documents() != null) return correspondence.getPart0Documents();
-        if (correspondence.getPart1Documents() != null) return correspondence.getPart1Documents();
-        if (correspondence.getPart2Documents() != null) return correspondence.getPart2Documents();
-        if (correspondence.getPart3Documents() != null) return correspondence.getPart3Documents();
-        if (correspondence.getPart4Documents() != null) return correspondence.getPart4Documents();
-        if (correspondence.getPart5Documents() != null) return correspondence.getPart5Documents();
-        if (correspondence.getPart6Documents() != null) return correspondence.getPart6Documents();
-        if (correspondence.getPart7Documents() != null) return correspondence.getPart7Documents();
-        if (correspondence.getPart8Documents() != null) return correspondence.getPart8Documents();
-        if (correspondence.getPart9Documents() != null) return correspondence.getPart9Documents();
-        if (correspondence.getPart10Documents() != null) return correspondence.getPart10Documents();
-        if (correspondence.getPart11Documents() != null) return correspondence.getPart11Documents();
-        if (correspondence.getPart12Documents() != null) return correspondence.getPart12Documents();
-        if (correspondence.getPart13Documents() != null) return correspondence.getPart13Documents();
-        if (correspondence.getPart14Documents() != null) return correspondence.getPart14Documents();
-        if (correspondence.getPart15Documents() != null) return correspondence.getPart15Documents();
-        if (correspondence.getPart16Documents() != null) return correspondence.getPart16Documents();
-        if (correspondence.getPart17Documents() != null) return correspondence.getPart17Documents();
-        if (correspondence.getPart18Documents() != null) return correspondence.getPart18Documents();
+        if (correspondence.getPart0Documents() != null) {
+            return correspondence.getPart0Documents();
+        }
+        if (correspondence.getPart1Documents() != null) {
+            return correspondence.getPart1Documents();
+        }
+        if (correspondence.getPart2Documents() != null) {
+            return correspondence.getPart2Documents();
+        }
+        if (correspondence.getPart3Documents() != null) {
+            return correspondence.getPart3Documents();
+        }
+        if (correspondence.getPart4Documents() != null) {
+            return correspondence.getPart4Documents();
+        }
+        if (correspondence.getPart5Documents() != null) {
+            return correspondence.getPart5Documents();
+        }
+        if (correspondence.getPart6Documents() != null) {
+            return correspondence.getPart6Documents();
+        }
+        if (correspondence.getPart7Documents() != null) {
+            return correspondence.getPart7Documents();
+        }
+        if (correspondence.getPart8Documents() != null) {
+            return correspondence.getPart8Documents();
+        }
+        if (correspondence.getPart9Documents() != null) {
+            return correspondence.getPart9Documents();
+        }
+        if (correspondence.getPart10Documents() != null) {
+            return correspondence.getPart10Documents();
+        }
+        if (correspondence.getPart11Documents() != null) {
+            return correspondence.getPart11Documents();
+        }
+        if (correspondence.getPart12Documents() != null) {
+            return correspondence.getPart12Documents();
+        }
+        if (correspondence.getPart13Documents() != null) {
+            return correspondence.getPart13Documents();
+        }
+        if (correspondence.getPart14Documents() != null) {
+            return correspondence.getPart14Documents();
+        }
+        if (correspondence.getPart15Documents() != null) {
+            return correspondence.getPart15Documents();
+        }
+        if (correspondence.getPart16Documents() != null) {
+            return correspondence.getPart16Documents();
+        }
+        if (correspondence.getPart17Documents() != null) {
+            return correspondence.getPart17Documents();
+        }
+        if (correspondence.getPart18Documents() != null) {
+            return correspondence.getPart18Documents();
+        }
         return "";
     }
 
     private static String getScotPartDocument(CorrespondenceScotType correspondenceScotType) {
-        if (correspondenceScotType.getPart0ScotDocuments() != null) return correspondenceScotType.getPart0ScotDocuments();
-        if (correspondenceScotType.getPart1ScotDocuments() != null) return correspondenceScotType.getPart1ScotDocuments();
-        if (correspondenceScotType.getPart2ScotDocuments() != null) return correspondenceScotType.getPart2ScotDocuments();
-        if (correspondenceScotType.getPart3ScotDocuments() != null) return correspondenceScotType.getPart3ScotDocuments();
-        if (correspondenceScotType.getPart4ScotDocuments() != null) return correspondenceScotType.getPart4ScotDocuments();
-        if (correspondenceScotType.getPart5ScotDocuments() != null) return correspondenceScotType.getPart5ScotDocuments();
-        if (correspondenceScotType.getPart6ScotDocuments() != null) return correspondenceScotType.getPart6ScotDocuments();
-        if (correspondenceScotType.getPart7ScotDocuments() != null) return correspondenceScotType.getPart7ScotDocuments();
-        if (correspondenceScotType.getPart8ScotDocuments() != null) return correspondenceScotType.getPart8ScotDocuments();
-        if (correspondenceScotType.getPart9ScotDocuments() != null) return correspondenceScotType.getPart9ScotDocuments();
-        if (correspondenceScotType.getPart10ScotDocuments() != null) return correspondenceScotType.getPart10ScotDocuments();
-        if (correspondenceScotType.getPart11ScotDocuments() != null) return correspondenceScotType.getPart11ScotDocuments();
-        if (correspondenceScotType.getPart12ScotDocuments() != null) return correspondenceScotType.getPart12ScotDocuments();
-        if (correspondenceScotType.getPart13ScotDocuments() != null) return correspondenceScotType.getPart13ScotDocuments();
-        if (correspondenceScotType.getPart14ScotDocuments() != null) return correspondenceScotType.getPart14ScotDocuments();
-        if (correspondenceScotType.getPart15ScotDocuments() != null) return correspondenceScotType.getPart15ScotDocuments();
+        if (correspondenceScotType.getPart0ScotDocuments() != null) {
+            return correspondenceScotType.getPart0ScotDocuments();
+        }
+        if (correspondenceScotType.getPart1ScotDocuments() != null) {
+            return correspondenceScotType.getPart1ScotDocuments();
+        }
+        if (correspondenceScotType.getPart2ScotDocuments() != null) {
+            return correspondenceScotType.getPart2ScotDocuments();
+        }
+        if (correspondenceScotType.getPart3ScotDocuments() != null) {
+            return correspondenceScotType.getPart3ScotDocuments();
+        }
+        if (correspondenceScotType.getPart4ScotDocuments() != null) {
+            return correspondenceScotType.getPart4ScotDocuments();
+        }
+        if (correspondenceScotType.getPart5ScotDocuments() != null) {
+            return correspondenceScotType.getPart5ScotDocuments();
+        }
+        if (correspondenceScotType.getPart6ScotDocuments() != null) {
+            return correspondenceScotType.getPart6ScotDocuments();
+        }
+        if (correspondenceScotType.getPart7ScotDocuments() != null) {
+            return correspondenceScotType.getPart7ScotDocuments();
+        }
+        if (correspondenceScotType.getPart8ScotDocuments() != null) {
+            return correspondenceScotType.getPart8ScotDocuments();
+        }
+        if (correspondenceScotType.getPart9ScotDocuments() != null) {
+            return correspondenceScotType.getPart9ScotDocuments();
+        }
+        if (correspondenceScotType.getPart10ScotDocuments() != null) {
+            return correspondenceScotType.getPart10ScotDocuments();
+        }
+        if (correspondenceScotType.getPart11ScotDocuments() != null) {
+            return correspondenceScotType.getPart11ScotDocuments();
+        }
+        if (correspondenceScotType.getPart12ScotDocuments() != null) {
+            return correspondenceScotType.getPart12ScotDocuments();
+        }
+        if (correspondenceScotType.getPart13ScotDocuments() != null) {
+            return correspondenceScotType.getPart13ScotDocuments();
+        }
+        if (correspondenceScotType.getPart14ScotDocuments() != null) {
+            return correspondenceScotType.getPart14ScotDocuments();
+        }
+        if (correspondenceScotType.getPart15ScotDocuments() != null) {
+            return correspondenceScotType.getPart15ScotDocuments();
+        }
         return "";
     }
 
@@ -514,7 +652,8 @@ public class DocumentHelper {
         String sectionName = getEWSectionName(correspondence);
         StringBuilder sb = new StringBuilder();
         if (!sectionName.equals("")) {
-            sb.append("\"").append("t").append(sectionName.replace(".", "_")).append("\":\"").append("true").append(NEW_LINE);
+            sb.append("\"").append("t").append(sectionName.replace(".", "_"))
+                    .append("\":\"").append("true").append(NEW_LINE);
         }
         return sb;
     }
@@ -524,7 +663,8 @@ public class DocumentHelper {
         String scotSectionName = getScotSectionName(correspondenceScotType);
         StringBuilder sb = new StringBuilder();
         if (!scotSectionName.equals("")) {
-            sb.append("\"").append("t_Scot_").append(scotSectionName.replace(".", "_")).append("\":\"").append("true").append(NEW_LINE);
+            sb.append("\"").append("t_Scot_").append(scotSectionName.replace(".", "_"))
+                    .append("\":\"").append("true").append(NEW_LINE);
         }
         return sb;
     }
@@ -533,29 +673,48 @@ public class DocumentHelper {
         StringBuilder sb = new StringBuilder();
         log.info("Court data");
         if (allocatedCourtAddress != null) {
-            sb.append("\"Court_addressLine1\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceAddressLine1())).append(NEW_LINE);
-            sb.append("\"Court_addressLine2\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceAddressLine2())).append(NEW_LINE);
-            sb.append("\"Court_addressLine3\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceAddressLine3())).append(NEW_LINE);
-            sb.append("\"Court_town\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceTown())).append(NEW_LINE);
+            sb.append("\"Court_addressLine1\":\"").append(nullCheck(allocatedCourtAddress
+                    .getTribunalCorrespondenceAddressLine1())).append(NEW_LINE);
+            sb.append("\"Court_addressLine2\":\"").append(nullCheck(allocatedCourtAddress
+                    .getTribunalCorrespondenceAddressLine2())).append(NEW_LINE);
+            sb.append("\"Court_addressLine3\":\"").append(nullCheck(allocatedCourtAddress
+                    .getTribunalCorrespondenceAddressLine3())).append(NEW_LINE);
+            sb.append("\"Court_town\":\"").append(nullCheck(allocatedCourtAddress
+                    .getTribunalCorrespondenceTown())).append(NEW_LINE);
             sb.append("\"Court_county\":\"").append(NEW_LINE);
-            sb.append("\"Court_postCode\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondencePostCode())).append(NEW_LINE);
-            sb.append("\"Court_telephone\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceTelephone())).append(NEW_LINE);
-            sb.append("\"Court_fax\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceFax())).append(NEW_LINE);
-            sb.append("\"Court_DX\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceDX())).append(NEW_LINE);
-            sb.append("\"Court_Email\":\"").append(nullCheck(allocatedCourtAddress.getTribunalCorrespondenceEmail())).append(NEW_LINE);
+            sb.append("\"Court_postCode\":\"").append(nullCheck(allocatedCourtAddress
+                    .getTribunalCorrespondencePostCode())).append(NEW_LINE);
+            sb.append("\"Court_telephone\":\"").append(nullCheck(allocatedCourtAddress
+                    .getTribunalCorrespondenceTelephone())).append(NEW_LINE);
+            sb.append("\"Court_fax\":\"").append(nullCheck(allocatedCourtAddress
+                    .getTribunalCorrespondenceFax())).append(NEW_LINE);
+            sb.append("\"Court_DX\":\"").append(nullCheck(allocatedCourtAddress
+                    .getTribunalCorrespondenceDX())).append(NEW_LINE);
+            sb.append("\"Court_Email\":\"").append(nullCheck(allocatedCourtAddress
+                    .getTribunalCorrespondenceEmail())).append(NEW_LINE);
         } else {
             if (caseData.getTribunalCorrespondenceAddress() != null) {
-                sb.append("\"Court_addressLine1\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getAddressLine1())).append(NEW_LINE);
-                sb.append("\"Court_addressLine2\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getAddressLine2())).append(NEW_LINE);
-                sb.append("\"Court_addressLine3\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getAddressLine3())).append(NEW_LINE);
-                sb.append("\"Court_town\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getPostTown())).append(NEW_LINE);
-                sb.append("\"Court_county\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getCounty())).append(NEW_LINE);
-                sb.append("\"Court_postCode\":\"").append(nullCheck(caseData.getTribunalCorrespondenceAddress().getPostCode())).append(NEW_LINE);
+                sb.append("\"Court_addressLine1\":\"").append(nullCheck(caseData
+                        .getTribunalCorrespondenceAddress().getAddressLine1())).append(NEW_LINE);
+                sb.append("\"Court_addressLine2\":\"").append(nullCheck(caseData
+                        .getTribunalCorrespondenceAddress().getAddressLine2())).append(NEW_LINE);
+                sb.append("\"Court_addressLine3\":\"").append(nullCheck(caseData
+                        .getTribunalCorrespondenceAddress().getAddressLine3())).append(NEW_LINE);
+                sb.append("\"Court_town\":\"").append(nullCheck(caseData
+                        .getTribunalCorrespondenceAddress().getPostTown())).append(NEW_LINE);
+                sb.append("\"Court_county\":\"").append(nullCheck(caseData
+                        .getTribunalCorrespondenceAddress().getCounty())).append(NEW_LINE);
+                sb.append("\"Court_postCode\":\"").append(nullCheck(caseData
+                        .getTribunalCorrespondenceAddress().getPostCode())).append(NEW_LINE);
             }
-            sb.append("\"Court_telephone\":\"").append(nullCheck(caseData.getTribunalCorrespondenceTelephone())).append(NEW_LINE);
-            sb.append("\"Court_fax\":\"").append(nullCheck(caseData.getTribunalCorrespondenceFax())).append(NEW_LINE);
-            sb.append("\"Court_DX\":\"").append(nullCheck(caseData.getTribunalCorrespondenceDX())).append(NEW_LINE);
-            sb.append("\"Court_Email\":\"").append(nullCheck(caseData.getTribunalCorrespondenceEmail())).append(NEW_LINE);
+            sb.append("\"Court_telephone\":\"").append(nullCheck(caseData
+                    .getTribunalCorrespondenceTelephone())).append(NEW_LINE);
+            sb.append("\"Court_fax\":\"").append(nullCheck(caseData
+                    .getTribunalCorrespondenceFax())).append(NEW_LINE);
+            sb.append("\"Court_DX\":\"").append(nullCheck(caseData
+                    .getTribunalCorrespondenceDX())).append(NEW_LINE);
+            sb.append("\"Court_Email\":\"").append(nullCheck(caseData
+                    .getTribunalCorrespondenceEmail())).append(NEW_LINE);
         }
         return sb;
     }
@@ -586,7 +745,8 @@ public class DocumentHelper {
                                                       List<AddressLabelTypeItem> addressLabelCollection) {
 
         List<AddressLabelTypeItem> selectedAddressLabelCollection = getSelectedAddressLabels(addressLabelCollection);
-        List<AddressLabelTypeItem> copiedAddressLabelCollection = getCopiedAddressLabels(selectedAddressLabelCollection, numberOfCopies);
+        List<AddressLabelTypeItem> copiedAddressLabelCollection =
+                getCopiedAddressLabels(selectedAddressLabelCollection, numberOfCopies);
 
         StringBuilder sb = new StringBuilder();
         sb.append("\"address_labels_page\":[\n");
@@ -612,7 +772,8 @@ public class DocumentHelper {
                 sb.append("{");
             }
 
-            String templateLabelNumber = (pageLabelNumber < 10) ? "0" + pageLabelNumber : String.valueOf(pageLabelNumber) ;
+            String templateLabelNumber = (pageLabelNumber < 10)
+                    ? "0" + pageLabelNumber : String.valueOf(pageLabelNumber);
             sb.append(getAddressLabel(copiedAddressLabelCollection.get(i).getValue(), templateLabelNumber, showTelFax));
 
             if (pageLabelNumber == ADDRESS_LABELS_PAGE_SIZE || i == copiedAddressLabelCollection.size() - 1) {
@@ -627,7 +788,8 @@ public class DocumentHelper {
         return sb;
     }
 
-    private static StringBuilder getAddressLabel(AddressLabelType addressLabelType, String labelNumber, String showTelFax) {
+    private static StringBuilder getAddressLabel(AddressLabelType addressLabelType,
+                                                 String labelNumber, String showTelFax) {
         StringBuilder sb = new StringBuilder();
         sb.append("\"").append(LABEL).append(labelNumber).append("_Entity_Name_01\":\"")
                 .append(nullCheck(addressLabelType.getLabelEntityName01())).append(NEW_LINE);
@@ -695,11 +857,13 @@ public class DocumentHelper {
     private static StringBuilder getAddressLine(String addressLine, String labelNumber, int lineNum) {
         StringBuilder sb = new StringBuilder();
         String lineNumber = "0" + lineNum;
-        sb.append("\"").append(LABEL).append(labelNumber).append("_Address_Line_").append(lineNumber).append("\":\"").append(addressLine).append(NEW_LINE);
+        sb.append("\"").append(LABEL).append(labelNumber).append("_Address_Line_").append(lineNumber)
+                .append("\":\"").append(addressLine).append(NEW_LINE);
         return sb;
     }
 
-    private static StringBuilder getTelFaxLine(AddressLabelType addressLabelType, String labelNumber, String showTelFax) {
+    private static StringBuilder getTelFaxLine(AddressLabelType addressLabelType, String labelNumber,
+                                               String showTelFax) {
         StringBuilder sb = new StringBuilder();
         if (showTelFax.equals(YES)) {
             String tel = "";
@@ -725,22 +889,26 @@ public class DocumentHelper {
         return sb;
     }
 
-    public static List<AddressLabelTypeItem> getSelectedAddressLabels(List<AddressLabelTypeItem> addressLabelCollection) {
+    public static List<AddressLabelTypeItem> getSelectedAddressLabels(
+            List<AddressLabelTypeItem> addressLabelCollection) {
 
         List<AddressLabelTypeItem> selectedAddressLabels = new ArrayList<>();
 
         if (addressLabelCollection != null && !addressLabelCollection.isEmpty()) {
             selectedAddressLabels = addressLabelCollection
                     .stream()
-                    .filter(addressLabelTypeItem -> addressLabelTypeItem.getValue().getPrintLabel() != null && addressLabelTypeItem.getValue().getPrintLabel().equals(YES))
-                    .filter(addressLabelTypeItem -> addressLabelTypeItem.getValue().getFullName() != null || addressLabelTypeItem.getValue().getFullAddress() != null)
+                    .filter(addressLabelTypeItem -> addressLabelTypeItem.getValue().getPrintLabel() != null
+                            && addressLabelTypeItem.getValue().getPrintLabel().equals(YES))
+                    .filter(addressLabelTypeItem -> addressLabelTypeItem.getValue().getFullName() != null
+                            || addressLabelTypeItem.getValue().getFullAddress() != null)
                     .collect(Collectors.toList());
         }
 
         return selectedAddressLabels;
     }
 
-    private static List<AddressLabelTypeItem> getCopiedAddressLabels(List<AddressLabelTypeItem> selectedAddressLabels, int numberOfCopies) {
+    private static List<AddressLabelTypeItem> getCopiedAddressLabels(List<AddressLabelTypeItem> selectedAddressLabels,
+                                                                     int numberOfCopies) {
 
         List<AddressLabelTypeItem> copiedAddressLabels = new ArrayList<>();
         if (!selectedAddressLabels.isEmpty() && numberOfCopies > 1) {

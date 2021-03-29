@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisScotPart4ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -42,7 +41,8 @@ public class DocMosisScotPart4ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_19_A() throws Exception {
-        testUtil.executeGenerateDocumentTest("19", "A", "RECONSIDERATION OF DECISION TO REJECT EMPLOYER’S CONTRACT CLAIM", true);
+        testUtil.executeGenerateDocumentTest("19", "A",
+                "RECONSIDERATION OF DECISION TO REJECT EMPLOYER’S CONTRACT CLAIM", true);
     }
 
     @Test
@@ -67,12 +67,14 @@ public class DocMosisScotPart4ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_24() throws Exception {
-        testUtil.executeGenerateDocumentTest("24", "", "EXTENSION OF TIME FOR RESPONSE TO EMPLOYER’S CONTRACT CLAIM", true);
+        testUtil.executeGenerateDocumentTest("24", "", "EXTENSION "
+                + "OF TIME FOR RESPONSE TO EMPLOYER’S CONTRACT CLAIM", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_25() throws Exception {
-        testUtil.executeGenerateDocumentTest("25", "", "EXTENSION OF TIME FOR RESPONSE TO CONTRACT CLAIM REFUSED", true);
+        testUtil.executeGenerateDocumentTest("25", "", "EXTENSION "
+                + "OF TIME FOR RESPONSE TO CONTRACT CLAIM REFUSED", true);
     }
 
     @After

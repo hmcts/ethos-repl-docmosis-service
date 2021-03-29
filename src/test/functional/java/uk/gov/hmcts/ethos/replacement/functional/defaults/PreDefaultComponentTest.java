@@ -40,23 +40,27 @@ public class PreDefaultComponentTest {
     @Test
     @WithTag("SmokeTest")
     public void claimant_type_individual_with_england_template() throws IOException {
-        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", INDIVIDUAL_TYPE_CLAIMANT, false, Constants.TEST_DATA_PRE_DEFAULT1);
+        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", INDIVIDUAL_TYPE_CLAIMANT, false,
+                Constants.TEST_DATA_PRE_DEFAULT1);
     }
 
     @Test
     public void claimant_type_company_with_england_template() throws IOException {
-        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", INDIVIDUAL_TYPE_CLAIMANT, false, Constants.TEST_DATA_PRE_DEFAULT2);
+        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", INDIVIDUAL_TYPE_CLAIMANT, false,
+                Constants.TEST_DATA_PRE_DEFAULT2);
     }
 
     @Test
     @WithTag("SmokeTest")
     public void claimant_type_individual_with_scotland_template() throws IOException {
-        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", INDIVIDUAL_TYPE_CLAIMANT, true, Constants.TEST_DATA_SCOT_PRE_DEFAULT1);
+        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", INDIVIDUAL_TYPE_CLAIMANT, true,
+                Constants.TEST_DATA_SCOT_PRE_DEFAULT1);
     }
 
     @Test
     public void claimant_type_company_with_scotland_template() throws IOException {
-        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", INDIVIDUAL_TYPE_CLAIMANT, true, Constants.TEST_DATA_SCOT_PRE_DEFAULT2);
+        testUtil.executePreDefaultValuesTest("claimant_TypeOfClaimant", INDIVIDUAL_TYPE_CLAIMANT, true,
+                Constants.TEST_DATA_SCOT_PRE_DEFAULT2);
     }
 
     @Ignore
@@ -87,7 +91,6 @@ public class PreDefaultComponentTest {
         String docmosisUrl = ResponseUtil.getProperty(testUtil.getEnvironment().toLowerCase() + ".docmosis.api.url");
         SerenityRest.given().get(new URL(docmosisUrl + Constants.PRE_DEFAULT_URI)).then().statusCode(405);
     }
-
 
     @After
     public void tearDown() {

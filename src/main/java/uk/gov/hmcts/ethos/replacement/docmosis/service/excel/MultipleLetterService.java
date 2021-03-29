@@ -31,14 +31,16 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.MAX_N
 public class MultipleLetterService {
 
     private static final String MESSAGE = "Failed to generate document for case id : ";
-    private static final String NUMBER_CASES_LIMIT_ERROR = "Number of cases to generate labels should be less or equal than "  + MAX_NUMBER_LABELS;
+    private static final String NUMBER_CASES_LIMIT_ERROR =
+            "Number of cases to generate labels should be less or equal than "  + MAX_NUMBER_LABELS;
 
     private final TornadoService tornadoService;
     private final ExcelReadingService excelReadingService;
     private final SingleCasesReadingService singleCasesReadingService;
     private final EventValidationService eventValidationService;
 
-    public DocumentInfo bulkLetterLogic(String userToken, MultipleDetails multipleDetails, List<String> errors, boolean validation) {
+    public DocumentInfo bulkLetterLogic(String userToken, MultipleDetails multipleDetails, List<String> errors,
+                                        boolean validation) {
 
         log.info("Read excel for letter logic");
 
@@ -56,7 +58,8 @@ public class MultipleLetterService {
 
             log.info("Check top level document to generate");
 
-            documentInfo = generateLetterOrLabel(userToken, multipleDetails, multipleObjects, errors, documentInfo, validation);
+            documentInfo = checkGenerationLetterOrLabel(userToken, multipleDetails,
+                    multipleObjects, errors, documentInfo, validation);
 
         } else {
 
@@ -76,9 +79,10 @@ public class MultipleLetterService {
 
     }
 
-    private DocumentInfo generateLetterOrLabel(String userToken, MultipleDetails multipleDetails,
-                                               TreeMap<String, Object> multipleObjects,
-                                               List<String> errors, DocumentInfo documentInfo, boolean validation) {
+    private DocumentInfo checkGenerationLetterOrLabel(String userToken, MultipleDetails multipleDetails,
+                                                      TreeMap<String, Object> multipleObjects,
+                                                      List<String> errors, DocumentInfo documentInfo,
+                                                      boolean validation) {
 
         String templateName = DocumentHelper.getTemplateName(multipleDetails.getCaseData().getCorrespondenceType(),
                 multipleDetails.getCaseData().getCorrespondenceScotType());
@@ -149,7 +153,8 @@ public class MultipleLetterService {
         log.info("Pull information from first case filtered");
 
         SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
-                multipleDetails.getCaseTypeId(), multipleObjects.firstKey(), multipleDetails.getCaseData().getMultipleSource());
+                multipleDetails.getCaseTypeId(), multipleObjects.firstKey(),
+                multipleDetails.getCaseData().getMultipleSource());
 
         log.info("Validating hearing number");
 
@@ -169,7 +174,8 @@ public class MultipleLetterService {
 
     }
 
-    private DocumentInfo generateLetterOrLabel(String userToken, MultipleDetails multipleDetails, SubmitEvent submitEvent) {
+    private DocumentInfo generateLetterOrLabel(String userToken, MultipleDetails multipleDetails,
+                                               SubmitEvent submitEvent) {
 
         DocumentInfo documentInfo;
 

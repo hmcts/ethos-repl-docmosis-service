@@ -20,7 +20,9 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 
 public class DocumentHelperTest {
 
@@ -84,146 +86,154 @@ public class DocumentHelperTest {
 
     @Test
     public void buildDocumentContent1() {
-        String expected = "{\n" +
-                "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-EGW-ENG-00026.docx\",\n" +
-                "\"outputName\":\"document.docx\",\n" +
-                "\"data\":{\n" +
-                "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n" +
-                "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n" +
-                "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
-                "\"claimant_or_rep_addressLine3\":\"\",\n" +
-                "\"claimant_or_rep_town\":\"Manchester\",\n" +
-                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
-                "\"claimant_or_rep_postCode\":\"M3 KJR\",\n" +
-                "\"claimant_reference\":\"1111111\",\n" +
-                "\"claimant_full_name\":\"Mr A J Rodriguez\",\n" +
-                "\"Claimant\":\"Mr A J Rodriguez\",\n" +
-                "\"claimant_addressLine1\":\"34\",\n" +
-                "\"claimant_addressLine2\":\"Low Street\",\n" +
-                "\"claimant_addressLine3\":\"\",\n" +
-                "\"claimant_town\":\"Manchester\",\n" +
-                "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 6gw\",\n" +
-                "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n" +
-                "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n" +
-                "\"respondent_or_rep_addressLine2\":\"22 House\",\n" +
-                "\"respondent_or_rep_addressLine3\":\"\",\n" +
-                "\"respondent_or_rep_town\":\"Manchester\",\n" +
-                "\"respondent_or_rep_county\":\"North West\",\n" +
-                "\"respondent_or_rep_postCode\":\"M12 42R\",\n" +
-                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
-                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
-                "\"respondent_addressLine2\":\"22 House\",\n" +
-                "\"respondent_addressLine3\":\"\",\n" +
-                "\"respondent_town\":\"Manchester\",\n" +
-                "\"respondent_county\":\"North West\",\n" +
-                "\"respondent_postCode\":\"M12 42R\",\n" +
-                "\"Respondent\":\"1. Antonio Vazquez\",\n" +
-                "\"resp_others\":\"2. Juan Garcia\\n3. Mike Jordan\",\n" +
-                "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. 12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n3. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\",\n" +
-                "\"Hearing_date\":\"25 November 2019, 14 December 2019, 28 December 2019\",\n" +
-                "\"Hearing_date_time\":\"25 November 2019, 14 December 2019, 28 December 2019 at 10:30\",\n" +
-                "\"Hearing_venue\":\"Manchester Employment Tribunals, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
-                "\"Hearing_duration\":\"2 days\",\n" +
-                "\"t1_2\":\"true\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
-                "\"Court_town\":\"Manchester,\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"i1_2_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
-                "\"i1_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
-                "\"i1_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
-                "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
-                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
-                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"Case_No\":\"123456\",\n" +
-                "}\n" +
-                "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails1.getCaseData(), "", userDetails,
-                MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails1.getCaseData().getCorrespondenceType(),
-                caseDetails1.getCaseData().getCorrespondenceScotType(), null, null).toString());
+        String expected = "{\n"
+                + "\"accessKey\":\"\",\n"
+                + "\"templateName\":\"EM-TRB-EGW-ENG-00026.docx\",\n"
+                + "\"outputName\":\"document.docx\",\n"
+                + "\"data\":{\n"
+                + "\"claimant_or_rep_full_name\":\"RepresentativeNameClaimant\",\n"
+                + "\"claimant_or_rep_addressLine1\":\"56 Block C\",\n"
+                + "\"claimant_or_rep_addressLine2\":\"Ellesmere Street\",\n"
+                + "\"claimant_or_rep_addressLine3\":\"\",\n"
+                + "\"claimant_or_rep_town\":\"Manchester\",\n"
+                + "\"claimant_or_rep_county\":\"Lancashire\",\n"
+                + "\"claimant_or_rep_postCode\":\"M3 KJR\",\n"
+                + "\"claimant_reference\":\"1111111\",\n"
+                + "\"claimant_full_name\":\"Mr A J Rodriguez\",\n"
+                + "\"Claimant\":\"Mr A J Rodriguez\",\n"
+                + "\"claimant_addressLine1\":\"34\",\n"
+                + "\"claimant_addressLine2\":\"Low Street\",\n"
+                + "\"claimant_addressLine3\":\"\",\n"
+                + "\"claimant_town\":\"Manchester\",\n"
+                + "\"claimant_county\":\"Lancashire\",\n"
+                + "\"claimant_postCode\":\"M3 6gw\",\n"
+                + "\"respondent_or_rep_full_name\":\"Antonio Vazquez\",\n"
+                + "\"respondent_or_rep_addressLine1\":\"11 Small Street\",\n"
+                + "\"respondent_or_rep_addressLine2\":\"22 House\",\n"
+                + "\"respondent_or_rep_addressLine3\":\"\",\n"
+                + "\"respondent_or_rep_town\":\"Manchester\",\n"
+                + "\"respondent_or_rep_county\":\"North West\",\n"
+                + "\"respondent_or_rep_postCode\":\"M12 42R\",\n"
+                + "\"respondent_full_name\":\"Antonio Vazquez\",\n"
+                + "\"respondent_addressLine1\":\"11 Small Street\",\n"
+                + "\"respondent_addressLine2\":\"22 House\",\n"
+                + "\"respondent_addressLine3\":\"\",\n"
+                + "\"respondent_town\":\"Manchester\",\n"
+                + "\"respondent_county\":\"North West\",\n"
+                + "\"respondent_postCode\":\"M12 42R\",\n"
+                + "\"Respondent\":\"1. Antonio Vazquez\",\n"
+                + "\"resp_others\":\"2. Juan Garcia\\n3. Mike Jordan\",\n"
+                + "\"resp_address\":\"1. 11 Small Street, 22 House, Manchester, North West, M12 42R, UK\\n2. "
+                + "12 Small Street, 24 House, Manchester, North West, M12 4ED, UK\\n3. 11 Small Street, 22 House, "
+                + "Manchester, North West, M12 42R, UK\",\n"
+                + "\"Hearing_date\":\"25 November 2019, 14 December 2019, 28 December 2019\",\n"
+                + "\"Hearing_date_time\":\"25 November 2019, 14 December 2019, 28 December 2019 at 10:30\",\n"
+                + "\"Hearing_venue\":\"Manchester Employment Tribunals, Alexandra House, 14-22 The Parsonage, "
+                + "Manchester, M3 2JA\",\n"
+                + "\"Hearing_duration\":\"2 days\",\n"
+                + "\"t1_2\":\"true\",\n"
+                + "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n"
+                + "\"Court_addressLine2\":\"Alexandra House,\",\n"
+                + "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n"
+                + "\"Court_town\":\"Manchester,\",\n"
+                + "\"Court_county\":\"\",\n"
+                + "\"Court_postCode\":\"M3 2JA\",\n"
+                + "\"Court_telephone\":\"03577131270\",\n"
+                + "\"Court_fax\":\"07577126570\",\n"
+                + "\"Court_DX\":\"123456\",\n"
+                + "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n"
+                + "\"i1_2_enhmcts\":\"[userImage:enhmcts.png]\",\n"
+                + "\"i1_2_enhmcts1\":\"[userImage:enhmcts.png]\",\n"
+                + "\"i1_2_enhmcts2\":\"[userImage:enhmcts.png]\",\n"
+                + "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n"
+                + "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n"
+                + "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n"
+                + "\"Clerk\":\"Mike Jordan\",\n"
+                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n"
+                + "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n"
+                + "\"Case_No\":\"123456\",\n"
+                + "}\n"
+                + "}\n";
+        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails1.getCaseData(), "",
+                userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
+                caseDetails1.getCaseData().getCorrespondenceType(),
+                caseDetails1.getCaseData().getCorrespondenceScotType(), null,
+                null).toString());
     }
 
     @Test
     public void buildDocumentContent2() {
-        String expected = "{\n" +
-                "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-EGW-ENG-00027.docx\",\n" +
-                "\"outputName\":\"document.docx\",\n" +
-                "\"data\":{\n" +
-                "\"claimant_or_rep_full_name\":\"Orlando LTD\",\n" +
-                "\"claimant_full_name\":\"Orlando LTD\",\n" +
-                "\"Claimant\":\"Orlando LTD\",\n" +
-                "\"claimant_or_rep_addressLine1\":\"34\",\n" +
-                "\"claimant_or_rep_addressLine2\":\"Low Street\",\n" +
-                "\"claimant_or_rep_addressLine3\":\"\",\n" +
-                "\"claimant_or_rep_town\":\"Manchester\",\n" +
-                "\"claimant_or_rep_county\":\"Lancashire\",\n" +
-                "\"claimant_or_rep_postCode\":\"M3 6gw\",\n" +
-                "\"claimant_addressLine1\":\"34\",\n" +
-                "\"claimant_addressLine2\":\"Low Street\",\n" +
-                "\"claimant_addressLine3\":\"\",\n" +
-                "\"claimant_town\":\"Manchester\",\n" +
-                "\"claimant_county\":\"Lancashire\",\n" +
-                "\"claimant_postCode\":\"M3 6gw\",\n" +
-                "\"respondent_or_rep_full_name\":\"RepresentativeNameRespondent\",\n" +
-                "\"respondent_or_rep_addressLine1\":\"56 Block C\",\n" +
-                "\"respondent_or_rep_addressLine2\":\"Ellesmere Street\",\n" +
-                "\"respondent_or_rep_addressLine3\":\"\",\n" +
-                "\"respondent_or_rep_town\":\"Manchester\",\n" +
-                "\"respondent_or_rep_county\":\"Lancashire\",\n" +
-                "\"respondent_or_rep_postCode\":\"M3 KJR\",\n" +
-                "\"respondent_reference\":\"1111111\",\n" +
-                "\"respondent_full_name\":\"Antonio Vazquez\",\n" +
-                "\"respondent_addressLine1\":\"11 Small Street\",\n" +
-                "\"respondent_addressLine2\":\"22 House\",\n" +
-                "\"respondent_addressLine3\":\"\",\n" +
-                "\"respondent_town\":\"Manchester\",\n" +
-                "\"respondent_county\":\"North West\",\n" +
-                "\"respondent_postCode\":\"M12 42R\",\n" +
-                "\"Respondent\":\"Antonio Vazquez\",\n" +
-                "\"resp_others\":\"\",\n" +
-                "\"resp_address\":\"\",\n" +
-                "\"Hearing_date\":\"\",\n" +
-                "\"Hearing_date_time\":\"\",\n" +
-                "\"Hearing_venue\":\"Manchester Employment Tribunals, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
-                "\"Hearing_duration\":\"2 days\",\n" +
-                "\"t2_2A\":\"true\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House,\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n" +
-                "\"Court_town\":\"Manchester,\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"i2_2A_enhmcts\":\"[userImage:enhmcts.png]\",\n" +
-                "\"i2_2A_enhmcts1\":\"[userImage:enhmcts.png]\",\n" +
-                "\"i2_2A_enhmcts2\":\"[userImage:enhmcts.png]\",\n" +
-                "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n" +
-                "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n" +
-                "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n" +
-                "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n" +
-                "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n" +
-                "\"Case_No\":\"123456\",\n" +
-                "}\n" +
-                "}\n";
-        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails2.getCaseData(), "", userDetails,
-                MANCHESTER_CASE_TYPE_ID, venueAddressInputStream, caseDetails2.getCaseData().getCorrespondenceType(),
-                caseDetails2.getCaseData().getCorrespondenceScotType(), null, null).toString());
+        String expected = "{\n"
+                + "\"accessKey\":\"\",\n"
+                + "\"templateName\":\"EM-TRB-EGW-ENG-00027.docx\",\n"
+                + "\"outputName\":\"document.docx\",\n"
+                + "\"data\":{\n"
+                + "\"claimant_or_rep_full_name\":\"Orlando LTD\",\n"
+                + "\"claimant_full_name\":\"Orlando LTD\",\n"
+                + "\"Claimant\":\"Orlando LTD\",\n"
+                + "\"claimant_or_rep_addressLine1\":\"34\",\n"
+                + "\"claimant_or_rep_addressLine2\":\"Low Street\",\n"
+                + "\"claimant_or_rep_addressLine3\":\"\",\n"
+                + "\"claimant_or_rep_town\":\"Manchester\",\n"
+                + "\"claimant_or_rep_county\":\"Lancashire\",\n"
+                + "\"claimant_or_rep_postCode\":\"M3 6gw\",\n"
+                + "\"claimant_addressLine1\":\"34\",\n"
+                + "\"claimant_addressLine2\":\"Low Street\",\n"
+                + "\"claimant_addressLine3\":\"\",\n"
+                + "\"claimant_town\":\"Manchester\",\n"
+                + "\"claimant_county\":\"Lancashire\",\n"
+                + "\"claimant_postCode\":\"M3 6gw\",\n"
+                + "\"respondent_or_rep_full_name\":\"RepresentativeNameRespondent\",\n"
+                + "\"respondent_or_rep_addressLine1\":\"56 Block C\",\n"
+                + "\"respondent_or_rep_addressLine2\":\"Ellesmere Street\",\n"
+                + "\"respondent_or_rep_addressLine3\":\"\",\n"
+                + "\"respondent_or_rep_town\":\"Manchester\",\n"
+                + "\"respondent_or_rep_county\":\"Lancashire\",\n"
+                + "\"respondent_or_rep_postCode\":\"M3 KJR\",\n"
+                + "\"respondent_reference\":\"1111111\",\n"
+                + "\"respondent_full_name\":\"Antonio Vazquez\",\n"
+                + "\"respondent_addressLine1\":\"11 Small Street\",\n"
+                + "\"respondent_addressLine2\":\"22 House\",\n"
+                + "\"respondent_addressLine3\":\"\",\n"
+                + "\"respondent_town\":\"Manchester\",\n"
+                + "\"respondent_county\":\"North West\",\n"
+                + "\"respondent_postCode\":\"M12 42R\",\n"
+                + "\"Respondent\":\"Antonio Vazquez\",\n"
+                + "\"resp_others\":\"\",\n"
+                + "\"resp_address\":\"\",\n"
+                + "\"Hearing_date\":\"\",\n"
+                + "\"Hearing_date_time\":\"\",\n"
+                + "\"Hearing_venue\":\"Manchester Employment Tribunals, Alexandra House, 14-22 The Parsonage, "
+                + "Manchester, M3 2JA\",\n"
+                + "\"Hearing_duration\":\"2 days\",\n"
+                + "\"t2_2A\":\"true\",\n"
+                + "\"Court_addressLine1\":\"Manchester Employment Tribunal,\",\n"
+                + "\"Court_addressLine2\":\"Alexandra House,\",\n"
+                + "\"Court_addressLine3\":\"14-22 The Parsonage,\",\n"
+                + "\"Court_town\":\"Manchester,\",\n"
+                + "\"Court_county\":\"\",\n"
+                + "\"Court_postCode\":\"M3 2JA\",\n"
+                + "\"Court_telephone\":\"03577131270\",\n"
+                + "\"Court_fax\":\"07577126570\",\n"
+                + "\"Court_DX\":\"123456\",\n"
+                + "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n"
+                + "\"i2_2A_enhmcts\":\"[userImage:enhmcts.png]\",\n"
+                + "\"i2_2A_enhmcts1\":\"[userImage:enhmcts.png]\",\n"
+                + "\"i2_2A_enhmcts2\":\"[userImage:enhmcts.png]\",\n"
+                + "\"iScot_schmcts\":\"[userImage:schmcts.png]\",\n"
+                + "\"iScot_schmcts1\":\"[userImage:schmcts.png]\",\n"
+                + "\"iScot_schmcts2\":\"[userImage:schmcts.png]\",\n"
+                + "\"Clerk\":\"Mike Jordan\",\n"
+                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\",\n"
+                + "\"TodayPlus28Days\":\"" + UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28) + "\",\n"
+                + "\"Case_No\":\"123456\",\n"
+                + "}\n"
+                + "}\n";
+        assertEquals(expected, DocumentHelper.buildDocumentContent(caseDetails2.getCaseData(), "",
+                userDetails, MANCHESTER_CASE_TYPE_ID, venueAddressInputStream,
+                caseDetails2.getCaseData().getCorrespondenceType(),
+                caseDetails2.getCaseData().getCorrespondenceScotType(), null,
+                null).toString());
     }
 
     @Test

@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisPart6ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -47,7 +46,9 @@ public class DocMosisPart6ComponentTest {
 
     @Test
     public void generateDocument_Part6_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "3", "the Tribunal gave the claimant an opportunity to make representations or to request a hearing, as to why the the complaint of");
+        testUtil.executeGenerateDocumentTest("6", "3",
+                "the Tribunal gave the claimant an opportunity to make "
+                        + "representations or to request a hearing, as to why the the complaint of");
     }
 
     @Test
@@ -62,7 +63,8 @@ public class DocMosisPart6ComponentTest {
 
     @Test
     public void generateDocument_Part6_6() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "6", "Thank you for informing the Tribunal that you have withdrawn your claim");
+        testUtil.executeGenerateDocumentTest("6", "6",
+                "Thank you for informing the Tribunal that you have withdrawn your claim");
     }
 
     @Test
@@ -72,7 +74,8 @@ public class DocMosisPart6ComponentTest {
 
     @Test
     public void generateDocument_Part6_8() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "8", "The proceedings are dismissed following a withdrawal of the claim by the claimant");
+        testUtil.executeGenerateDocumentTest("6", "8",
+                "The proceedings are dismissed following a withdrawal of the claim by the claimant");
     }
 
     @Test
@@ -82,7 +85,8 @@ public class DocMosisPart6ComponentTest {
 
     @Test
     public void generateDocument_Part6_10() throws Exception {
-        testUtil.executeGenerateDocumentTest("6", "10", "has directed that a judgment dismissing the claim is not issued");
+        testUtil.executeGenerateDocumentTest("6", "10",
+                "has directed that a judgment dismissing the claim is not issued");
     }
 
     @Test

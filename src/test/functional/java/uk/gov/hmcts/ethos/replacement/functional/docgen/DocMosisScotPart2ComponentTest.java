@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisScotPart2ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -42,12 +41,15 @@ public class DocMosisScotPart2ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_10() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "", "I have decided in accordance with Rule 17 that your response cannot be accepted because of the following defect", true);
+        testUtil.executeGenerateDocumentTest("10", "",
+                "I have decided in accordance with Rule 17 that your response "
+                        + "cannot be accepted because of the following defect", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_11() throws Exception {
-        testUtil.executeGenerateDocumentTest("11", "", "We have received your response to the claim shown above in this office", true);
+        testUtil.executeGenerateDocumentTest("11", "",
+                "We have received your response to the claim shown above in this office", true);
     }
 
     @Test

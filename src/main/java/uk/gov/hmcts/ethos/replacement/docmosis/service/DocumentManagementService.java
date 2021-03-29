@@ -36,7 +36,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 public class DocumentManagementService {
 
     private static final String FILES_NAME = "files";
-    public static final String APPLICATION_DOCX_VALUE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    public static final String APPLICATION_DOCX_VALUE =
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     private final DocumentUploadClientApi documentUploadClient;
     private final AuthTokenGenerator authTokenGenerator;
     private final DocumentDownloadClientApi documentDownloadClientApi;
@@ -48,8 +49,9 @@ public class DocumentManagementService {
     private String ccdDMStoreBaseUrl;
 
     @Autowired
-    public DocumentManagementService(DocumentUploadClientApi documentUploadClient, AuthTokenGenerator authTokenGenerator,
-                                     UserService userService, DocumentDownloadClientApi documentDownloadClientApi) {
+    public DocumentManagementService(DocumentUploadClientApi documentUploadClient,
+                                     AuthTokenGenerator authTokenGenerator, UserService userService,
+                                     DocumentDownloadClientApi documentDownloadClientApi) {
         this.documentUploadClient = documentUploadClient;
         this.authTokenGenerator = authTokenGenerator;
         this.userService = userService;
@@ -72,7 +74,8 @@ public class DocumentManagementService {
             Document document = response.getEmbedded().getDocuments().stream()
                     .findFirst()
                     .orElseThrow(() ->
-                            new DocumentManagementException("Document management failed uploading file" + OUTPUT_FILE_NAME));
+                            new DocumentManagementException("Document management failed uploading file"
+                                    + OUTPUT_FILE_NAME));
 
             log.info("Uploaded document successful");
             return URI.create(document.links.self.href);
@@ -107,8 +110,8 @@ public class DocumentManagementService {
                     .contentType(Objects.requireNonNull(response.getHeaders().get(HttpHeaders.CONTENT_TYPE)).get(0))
                     .build();
         } else {
-            throw new IllegalStateException("Cannot download document that is stored in CCD got " +
-                    "[" + response.getStatusCode() + "] " + response.getBody());
+            throw new IllegalStateException("Cannot download document that is stored in CCD got "
+                    + "[" + response.getStatusCode() + "] " + response.getBody());
         }
     }
 

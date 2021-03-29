@@ -17,7 +17,12 @@ import java.util.HashSet;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -75,19 +80,13 @@ public class MultipleCreationService {
 
         multipleData.setCaseIdCollection(MultiplesHelper.filterDuplicatedAndEmptyCaseIds(multipleData));
 
-        log.info("CasesXXXFiltered: " + multipleDetails.getCaseData().getCaseIdCollection());
-        log.info("LeadCaseXXXFiltered: " + multipleDetails.getCaseData().getLeadCase());
-
-        List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleData);
-
-        log.info("CasesXXXFiltered2: " + multipleDetails.getCaseData().getCaseIdCollection());
-        log.info("LeadCaseXXXFiltered2: " + multipleDetails.getCaseData().getLeadCase());
-
         log.info("Create multiple reference number");
 
         multipleData.setMultipleReference(generateMultipleRef(multipleDetails));
 
         log.info("Create the EXCEL");
+
+        List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleData);
 
         excelDocManagementService.generateAndUploadExcel(ethosCaseRefCollection, userToken, multipleData);
 
@@ -252,7 +251,8 @@ public class MultipleCreationService {
 
         }
 
-        multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(), multipleData, leadCase, "");
+        multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(),
+                multipleData, leadCase, "");
 
     }
 

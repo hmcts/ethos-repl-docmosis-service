@@ -10,7 +10,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import java.util.List;
 import java.util.TreeMap;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BATCH_UPDATE_TYPE_1;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BATCH_UPDATE_TYPE_2;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.UPDATING_STATE;
 
 @Slf4j
 @RequiredArgsConstructor

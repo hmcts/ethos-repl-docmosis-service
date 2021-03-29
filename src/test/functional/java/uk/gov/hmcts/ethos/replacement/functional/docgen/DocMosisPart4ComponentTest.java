@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisPart4ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -57,12 +56,14 @@ public class DocMosisPart4ComponentTest {
 
     @Test
     public void generateDocument_Part4_6() throws Exception {
-        testUtil.executeGenerateDocumentTest("4", "6", "a judgment may be issued and the respondent will only be entitled to participate in any hearing");
+        testUtil.executeGenerateDocumentTest("4", "6",
+                "a judgment may be issued and the respondent will only be entitled to participate in any hearing");
     }
 
     @Test
     public void generateDocument_Part4_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("4", "7", "a judgment may be issued in respect of that part and the respondent will only be");
+        testUtil.executeGenerateDocumentTest("4", "7",
+                "a judgment may be issued in respect of that part and the respondent will only be");
     }
 
     @Test
@@ -77,7 +78,8 @@ public class DocMosisPart4ComponentTest {
 
     @Test
     public void generateDocument_Part4_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("4", "9", "You should provide the full and correct name of your former employer");
+        testUtil.executeGenerateDocumentTest("4", "9",
+                "You should provide the full and correct name of your former employer");
     }
 
     @Test
@@ -92,12 +94,14 @@ public class DocMosisPart4ComponentTest {
 
     @Test
     public void generateDocument_Part4_11() throws Exception {
-        testUtil.executeGenerateDocumentTest("4", "11", "Your application for a reconsideration of the judgment has been accepted");
+        testUtil.executeGenerateDocumentTest("4", "11",
+                "Your application for a reconsideration of the judgment has been accepted");
     }
 
     @Test
     public void generateDocument_Part4_12() throws Exception {
-        testUtil.executeGenerateDocumentTest("4", "12", "RECONSIDERATION OF RULE 21 JUDGMENT -  EXTENSION OF TIME GRANTED");
+        testUtil.executeGenerateDocumentTest("4", "12",
+                "RECONSIDERATION OF RULE 21 JUDGMENT -  EXTENSION OF TIME GRANTED");
     }
 
     @Test
@@ -122,7 +126,8 @@ public class DocMosisPart4ComponentTest {
 
     @Test
     public void generateDocument_Part4_17() throws Exception {
-        testUtil.executeGenerateDocumentTest("4", "17", "The respondent has made an unauthorised deduction from the claimant's wages");
+        testUtil.executeGenerateDocumentTest("4", "17",
+                "The respondent has made an unauthorised deduction from the claimant's wages");
     }
 
     @Test

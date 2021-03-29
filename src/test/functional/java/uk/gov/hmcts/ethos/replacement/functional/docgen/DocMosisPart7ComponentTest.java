@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisPart7ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -82,7 +81,8 @@ public class DocMosisPart7ComponentTest {
 
     @Test
     public void generateDocument_Part7_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("7", "9", "Please ensure that you attend so that the discussion can start on time");
+        testUtil.executeGenerateDocumentTest("7", "9",
+                "Please ensure that you attend so that the discussion can start on time");
     }
 
     @Test

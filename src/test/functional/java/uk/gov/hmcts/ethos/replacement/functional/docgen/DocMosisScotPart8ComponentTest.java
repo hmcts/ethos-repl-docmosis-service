@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisScotPart8ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -47,12 +46,14 @@ public class DocMosisScotPart8ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_67() throws Exception {
-        testUtil.executeGenerateDocumentTest("67", "", "We have received notice from both parties that they have reached an agreement", true);
+        testUtil.executeGenerateDocumentTest("67", "",
+                "We have received notice from both parties that they have reached an agreement", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_68() throws Exception {
-        testUtil.executeGenerateDocumentTest("68", "", "Acas have sent us notice that terms of settlement have been agreed between the parties", true);
+        testUtil.executeGenerateDocumentTest("68", "",
+                "Acas have sent us notice that terms of settlement have been agreed between the parties", true);
     }
 
     public void generateDocument_Part_Scot_69() throws Exception {

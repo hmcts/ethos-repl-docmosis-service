@@ -9,20 +9,38 @@ import uk.gov.hmcts.ecm.common.model.multiples.items.CaseMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_1;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_2;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_3;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_4;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_5;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_6;
 
 @Slf4j
 public class MultiplesHelper {
 
-    public static List<String> HEADERS = new ArrayList<>(Arrays.asList(HEADER_1, HEADER_2, HEADER_3, HEADER_4, HEADER_5, HEADER_6));
+    public static List<String> HEADERS = new ArrayList<>(Arrays.asList(
+            HEADER_1, HEADER_2, HEADER_3, HEADER_4, HEADER_5, HEADER_6));
     public static String SELECT_ALL = "All";
+
+    private MultiplesHelper() {
+    }
 
     public static List<String> getCaseIds(MultipleData multipleData) {
 
@@ -258,7 +276,7 @@ public class MultiplesHelper {
 
         String url = ccdGatewayBaseUrl + "/cases/case-details/" + caseId;
 
-        return "<a target=\"_blank\" href=\"" + url + "\">" + ethosCaseRef +"</a>";
+        return "<a target=\"_blank\" href=\"" + url + "\">" + ethosCaseRef + "</a>";
 
     }
 
@@ -282,7 +300,7 @@ public class MultiplesHelper {
                 && multipleData.getPreAcceptCase() == null) {
             multipleData.setPreAcceptDone(NO);
         }
-        if ( (multipleData.getMultipleSource().equals(MANUALLY_CREATED_POSITION)
+        if ((multipleData.getMultipleSource().equals(MANUALLY_CREATED_POSITION)
                 || multipleData.getMultipleSource().equals(MIGRATION_CASE_SOURCE))
                 && multipleData.getPreAcceptCase() == null) {
             multipleData.setPreAcceptDone(YES);

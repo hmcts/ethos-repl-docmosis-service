@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisPart12ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -32,52 +31,64 @@ public class DocMosisPart12ComponentTest {
     @Test
     @WithTag("SmokeTest")
     public void generateDocument_Part12_1C() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "1C", "Please see the enclosed letter which contains an application for a costs order to be made against you");
+        testUtil.executeGenerateDocumentTest("12", "1C",
+                "Please see the enclosed letter which contains an application for a costs order "
+                        + "to be made against you");
     }
 
     @Test
     public void generateDocument_Part12_1R() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "1R", "Please see the enclosed letter which contains an application for a costs order to be made against you");
+        testUtil.executeGenerateDocumentTest("12", "1R",
+                "Please see the enclosed letter which contains an application for a costs order "
+                        + "to be made against you");
     }
 
     @Test
     public void generateDocument_Part12_2C() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "2C", "Your application for a costs order cannot be accepted as it was received more than 28 days");
+        testUtil.executeGenerateDocumentTest("12", "2C",
+                "Your application for a costs order cannot be accepted as it was received more than 28 days");
     }
 
     @Test
     public void generateDocument_Part12_2R() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "2R", "Your application for a costs order cannot be accepted as it was received more than 28 days");
+        testUtil.executeGenerateDocumentTest("12", "2R",
+                "Your application for a costs order cannot be accepted as it was received more than 28 days");
     }
 
     @Test
     public void generateDocument_Part12_3C() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "3C", "Please see the enclosed letter which contains an application for a preparation time order to be");
+        testUtil.executeGenerateDocumentTest("12", "3C",
+                "Please see the enclosed letter which contains an application for a preparation time order to be");
     }
 
     @Test
     public void generateDocument_Part12_3R() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "3R", "Please see the enclosed letter which contains an application for a preparation time order to be");
+        testUtil.executeGenerateDocumentTest("12", "3R",
+                "Please see the enclosed letter which contains an application for a preparation time order to be");
     }
 
     @Test
     public void generateDocument_Part12_4C() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "4C", "Your application for a preparation time order cannot be accepted as it was received more than");
+        testUtil.executeGenerateDocumentTest("12", "4C",
+                "Your application for a preparation time order cannot be accepted as it was received more than");
     }
 
     @Test
     public void generateDocument_Part12_4R() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "4R", "Your application for a preparation time order cannot be accepted as it was received more than");
+        testUtil.executeGenerateDocumentTest("12", "4R",
+                "Your application for a preparation time order cannot be accepted as it was received more than");
     }
 
     @Test
     public void generateDocument_Part12_5C() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "5C", "Please see the enclosed letter which contains an application for a wasted costs order to be");
+        testUtil.executeGenerateDocumentTest("12", "5C",
+                "Please see the enclosed letter which contains an application for a wasted costs order to be");
     }
 
     @Test
     public void generateDocument_Part12_5R() throws Exception {
-        testUtil.executeGenerateDocumentTest("12", "5R", "Please see the enclosed letter which contains an application for a wasted costs order to be");
+        testUtil.executeGenerateDocumentTest("12", "5R",
+                "Please see the enclosed letter which contains an application for a wasted costs order to be");
     }
 
     @Test

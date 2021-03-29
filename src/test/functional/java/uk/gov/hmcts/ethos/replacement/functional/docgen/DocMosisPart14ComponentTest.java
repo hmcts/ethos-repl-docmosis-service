@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisPart14ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -37,32 +36,41 @@ public class DocMosisPart14ComponentTest {
 
     @Test
     public void generateDocument_Part14_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "2", "RESPONDENT COMPANY IN ADMINISTRATION");
+        testUtil.executeGenerateDocumentTest("14", "2",
+                "RESPONDENT COMPANY IN ADMINISTRATION");
     }
 
     @Test
     public void generateDocument_Part14_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "3", "You have not told us that you have obtained the consent of the Administrator or the permission");
+        testUtil.executeGenerateDocumentTest("14", "3",
+                "You have not told us that you have obtained the consent of the Administrator or the permission");
     }
 
     @Test
     public void generateDocument_Part14_4() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "4", "The respondent company is in administration. Neither the consent of the Administrator nor the permission");
+        testUtil.executeGenerateDocumentTest("14", "4",
+                "The respondent company is in administration. Neither the consent "
+                        + "of the Administrator nor the permission");
     }
 
     @Test
     public void generateDocument_Part14_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "5", "RESPONDENT COMPANY IN COMPULSORY LIQUIDATION");
+        testUtil.executeGenerateDocumentTest("14", "5",
+                "RESPONDENT COMPANY IN COMPULSORY LIQUIDATION");
     }
 
     @Test
     public void generateDocument_Part14_6() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "6", "You have not told us that you have obtained the permission of the court to allow your claim to proceed");
+        testUtil.executeGenerateDocumentTest("14", "6",
+                "You have not told us that you have obtained the permission of the court "
+                        + "to allow your claim to proceed");
     }
 
     @Test
     public void generateDocument_Part14_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "7", "The permission of the court has not been obtained for these proceedings to be instituted or continued");
+        testUtil.executeGenerateDocumentTest("14", "7",
+                "The permission of the court has not been obtained for these proceedings "
+                        + "to be instituted or continued");
     }
 
     @Test
@@ -72,12 +80,14 @@ public class DocMosisPart14ComponentTest {
 
     @Test
     public void generateDocument_Part14_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "9", "You have not informed us that you have applied to have the Respondent company restored");
+        testUtil.executeGenerateDocumentTest("14", "9",
+                "You have not informed us that you have applied to have the Respondent company restored");
     }
 
     @Test
     public void generateDocument_Part14_10() throws Exception {
-        testUtil.executeGenerateDocumentTest("14", "10", "The respondent company has been dissolved and the claimant");
+        testUtil.executeGenerateDocumentTest("14", "10",
+                "The respondent company has been dissolved and the claimant");
     }
 
     @After

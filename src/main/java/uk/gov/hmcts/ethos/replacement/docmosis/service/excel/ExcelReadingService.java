@@ -1,7 +1,9 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -14,9 +16,19 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.TreeMap;
 
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.CONSTRAINT_KEY;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_2;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_3;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_4;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_5;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_6;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.SELECT_ALL;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
 
@@ -61,7 +73,8 @@ public class ExcelReadingService {
 
     }
 
-    public XSSFSheet checkExcelErrors(String userToken, String documentBinaryUrl, List<String> errors) throws IOException {
+    public XSSFSheet checkExcelErrors(String userToken, String documentBinaryUrl, List<String> errors)
+            throws IOException {
 
         InputStream excelInputStream =
                 excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl);
@@ -84,7 +97,8 @@ public class ExcelReadingService {
 
     }
 
-    private void getSubMultipleObjects(TreeMap<String, Object> multipleObjects, String ethosCaseRef, String subMultiple) {
+    private void getSubMultipleObjects(TreeMap<String, Object> multipleObjects, String ethosCaseRef,
+                                       String subMultiple) {
 
         if (multipleObjects.containsKey(subMultiple)) {
             List<String> list = (List<String>) multipleObjects.get(subMultiple);
@@ -97,7 +111,8 @@ public class ExcelReadingService {
 
     }
 
-    private void getFlagObjects(TreeMap<String, Object> multipleObjects, String subMultiple, String flag1, String flag2, String flag3, String flag4) {
+    private void getFlagObjects(TreeMap<String, Object> multipleObjects, String subMultiple,
+                                String flag1, String flag2, String flag3, String flag4) {
 
         populateTreeMapWithSet(multipleObjects, HEADER_2, subMultiple);
         populateTreeMapWithSet(multipleObjects, HEADER_3, flag1);

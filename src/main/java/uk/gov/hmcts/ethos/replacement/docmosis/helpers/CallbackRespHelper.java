@@ -11,11 +11,14 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
 import java.util.List;
 
-public class CallbackResponseHelper {
+public class CallbackRespHelper {
+
+    private CallbackRespHelper() {
+    }
 
     @NotNull
-    public static ResponseEntity<CCDCallbackResponse> getCCDCallbackResponseResponseEntity(List<String> errors,
-                                                                                     CaseDetails caseDetails) {
+    public static ResponseEntity<CCDCallbackResponse> getCallbackRespEntity(
+            List<String> errors, CaseDetails caseDetails) {
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .errors(errors)
                 .data(caseDetails.getCaseData())
@@ -23,7 +26,8 @@ public class CallbackResponseHelper {
     }
 
     @NotNull
-    public static ResponseEntity<CCDCallbackResponse> getCCDCallbackResponseResponseEntityWithoutErrors(CaseData caseData) {
+    public static ResponseEntity<CCDCallbackResponse> getCallbackRespEntityNoErrors(
+            CaseData caseData) {
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
@@ -31,8 +35,8 @@ public class CallbackResponseHelper {
     }
 
     @NotNull
-    public static ResponseEntity<CCDCallbackResponse> getCCDCallbackResponseResponseEntityWithErrors(List<String> errors,
-                                                                                               CaseData caseData) {
+    public static ResponseEntity<CCDCallbackResponse> getCallbackRespEntityErrors(
+            List<String> errors, CaseData caseData) {
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
@@ -41,8 +45,8 @@ public class CallbackResponseHelper {
     }
 
     @NotNull
-    public static ResponseEntity<MultipleCallbackResponse> getMultipleCallbackResponseResponseEntity(List<String> errors,
-                                                                                               MultipleDetails multipleDetails) {
+    public static ResponseEntity<MultipleCallbackResponse> getMultipleCallbackRespEntity(
+            List<String> errors, MultipleDetails multipleDetails) {
         return ResponseEntity.ok(MultipleCallbackResponse.builder()
                 .errors(errors)
                 .data(multipleDetails.getCaseData())
@@ -50,9 +54,8 @@ public class CallbackResponseHelper {
     }
 
     @NotNull
-    public static ResponseEntity<MultipleCallbackResponse> getMultipleCallbackResponseResponseEntityWithDocInfo(List<String> errors,
-                                                                                                                MultipleDetails multipleDetails,
-                                                                                                                DocumentInfo documentInfo) {
+    public static ResponseEntity<MultipleCallbackResponse> getMultipleCallbackRespEntityDocInfo(
+            List<String> errors, MultipleDetails multipleDetails, DocumentInfo documentInfo) {
         if (errors.isEmpty()) {
 
             multipleDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());

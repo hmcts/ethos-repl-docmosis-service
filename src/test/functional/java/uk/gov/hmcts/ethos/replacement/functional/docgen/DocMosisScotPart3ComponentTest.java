@@ -22,7 +22,6 @@ import java.io.IOException;
 })
 public class DocMosisScotPart3ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -40,7 +39,8 @@ public class DocMosisScotPart3ComponentTest {
     @Test
     @Ignore
     public void generateDocument_Part_Scot_16() throws Exception {
-        testUtil.executeGenerateDocumentTest("16", "", "Rule 21 of the Employment Tribunal Rules of Procedure 2013", true);
+        testUtil.executeGenerateDocumentTest("16", "", "Rule 21 of the Employment "
+                + "Tribunal Rules of Procedure 2013", true);
     }
 
     @Test

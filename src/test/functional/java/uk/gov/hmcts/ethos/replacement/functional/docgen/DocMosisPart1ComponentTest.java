@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisPart1ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -67,37 +66,44 @@ public class DocMosisPart1ComponentTest {
 
     @Test
     public void generateDocument_Part1_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "5", "I have received your claim form but am unable to accept it because it has not been presented");
+        testUtil.executeGenerateDocumentTest("1", "5",
+                "I have received your claim form but am unable to accept it because it has not been presented");
     }
 
     @Test
     public void generateDocument_Part1_6() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "6", "I am returning your claim form because you have not given the following minimum information");
+        testUtil.executeGenerateDocumentTest("1", "6",
+                "I am returning your claim form because you have not given the following minimum information");
     }
 
     @Test
     public void generateDocument_Part1_6A() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "6A", "I am returning your claim form because you have not complied with the requirement");
+        testUtil.executeGenerateDocumentTest("1", "6A",
+                "I am returning your claim form because you have not complied with the requirement");
     }
 
     @Test
     public void generateDocument_Part1_6B() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "6B", "has been rejected because you have not complied with the requirement");
+        testUtil.executeGenerateDocumentTest("1", "6B",
+                "has been rejected because you have not complied with the requirement");
     }
 
     @Test
     public void generateDocument_Part1_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "7", "Your claim form has been referred to Employment Judge");
+        testUtil.executeGenerateDocumentTest("1", "7",
+                "Your claim form has been referred to Employment Judge");
     }
 
     @Test
     public void generateDocument_Part1_8() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "8", "who has decided that only the following complaints can be accepted");
+        testUtil.executeGenerateDocumentTest("1", "8",
+                "who has decided that only the following complaints can be accepted");
     }
 
     @Test
     public void generateDocument_Part1_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "9", "who has decided to reject it because \\[it is in a form which cannot sensibly be responded to\\]");
+        testUtil.executeGenerateDocumentTest("1", "9",
+                "who has decided to reject it because \\[it is in a form which cannot sensibly be responded to\\]");
     }
 
     @Test
@@ -117,7 +123,8 @@ public class DocMosisPart1ComponentTest {
 
     @Test
     public void generateDocument_Part1_10() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "10", "The Judge has also decided that your other complaints should be rejected");
+        testUtil.executeGenerateDocumentTest("1", "10",
+                "The Judge has also decided that your other complaints should be rejected");
     }
 
     @Test
@@ -152,17 +159,20 @@ public class DocMosisPart1ComponentTest {
 
     @Test
     public void generateDocument_Part1_14B() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "14B", "Because the original decision to reject that part of your claim was correct");
+        testUtil.executeGenerateDocumentTest("1", "14B",
+                "Because the original decision to reject that part of your claim was correct");
     }
 
     @Test
     public void generateDocument_Part1_15() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "15", "In your claim form you complain that you were unfairly dismissed.");
+        testUtil.executeGenerateDocumentTest("1", "15",
+                "In your claim form you complain that you were unfairly dismissed.");
     }
 
     @Test
     public void generateDocument_Part1_16() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "16", "In your claim form one of your complaints is that you were unfairly dismissed.");
+        testUtil.executeGenerateDocumentTest("1", "16",
+                "In your claim form one of your complaints is that you were unfairly dismissed.");
     }
 
     @Test
@@ -172,12 +182,14 @@ public class DocMosisPart1ComponentTest {
 
     @Test
     public void generateDocument_Part1_18() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "18", "The complaint that the claimant was unfairly dismissed is struck out");
+        testUtil.executeGenerateDocumentTest("1", "18",
+                "The complaint that the claimant was unfairly dismissed is struck out");
     }
 
     @Test
     public void generateDocument_Part1_19() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "19", "has ordered that it be treated as an amendment to the claim");
+        testUtil.executeGenerateDocumentTest("1", "19",
+                "has ordered that it be treated as an amendment to the claim");
     }
 
     @After

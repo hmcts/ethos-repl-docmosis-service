@@ -63,7 +63,8 @@ public class MultipleBatchUpdate2Service {
 
             log.info("Sending detach updates to singles");
 
-            multipleHelperService.sendDetachUpdatesToSinglesWithoutConfirmation(userToken, multipleDetails, errors, multipleObjects);
+            multipleHelperService.sendDetachUpdatesToSinglesWithoutConfirmation(userToken, multipleDetails,
+                    errors, multipleObjects);
 
         } else {
 
@@ -105,7 +106,8 @@ public class MultipleBatchUpdate2Service {
     private void performActionsWithNewLeadCase(String userToken, MultipleDetails multipleDetails, List<String> errors,
                                                String oldLeadCase, List<String> multipleObjectsFiltered) {
 
-        String newLeadCase = multipleHelperService.getLeadCaseFromExcel(userToken, multipleDetails.getCaseData(), errors);
+        String newLeadCase = multipleHelperService.getLeadCaseFromExcel(userToken,
+                multipleDetails.getCaseData(), errors);
 
         if (newLeadCase.isEmpty()) {
 
@@ -117,14 +119,16 @@ public class MultipleBatchUpdate2Service {
 
             if (multipleObjectsFiltered.contains(oldLeadCase)) {
 
-                log.info("Changing the lead case to: " + newLeadCase + " as old lead case: " + oldLeadCase + " has been taken out");
+                log.info("Changing the lead case to: " + newLeadCase + " as old lead case: "
+                        + oldLeadCase + " has been taken out");
 
                 multipleHelperService.addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(),
                         multipleDetails.getCaseData(), newLeadCase, "");
 
                 log.info("Sending single update with the lead flag");
 
-                multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken, multipleDetails.getCaseTypeId(),
+                multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(
+                        userToken, multipleDetails.getCaseTypeId(),
                         multipleDetails.getJurisdiction(), multipleDetails.getCaseData(), errors,
                         new ArrayList<>(Collections.singletonList(newLeadCase)), newLeadCase);
 
@@ -137,8 +141,6 @@ public class MultipleBatchUpdate2Service {
     private void removeCasesFromCurrentMultiple(String userToken, MultipleDetails multipleDetails, List<String> errors,
                                                 List<String> multipleObjectsFiltered) {
 
-        String oldLeadCase = MultiplesHelper.getCurrentLead(multipleDetails.getCaseData().getLeadCase());
-
         log.info("Read current excel and remove cases in multiple");
 
         readCurrentExcelAndRemoveCasesInMultiple(userToken, multipleDetails.getCaseData(), errors,
@@ -146,13 +148,19 @@ public class MultipleBatchUpdate2Service {
 
         log.info("Perform actions with the new lead if exists");
 
+        String oldLeadCase = MultiplesHelper.getCurrentLead(multipleDetails.getCaseData().getLeadCase());
+
         performActionsWithNewLeadCase(userToken, multipleDetails, errors, oldLeadCase, multipleObjectsFiltered);
 
     }
 
-    private void updateToDifferentMultiple(String userToken, MultipleDetails multipleDetails, List<String> errors,
-                                           List<String> multipleObjectsFiltered, TreeMap<String, Object> multipleObjects,
-                                           String updatedMultipleRef, String updatedSubMultipleRef) {
+    private void updateToDifferentMultiple(String userToken,
+                                           MultipleDetails multipleDetails,
+                                           List<String> errors,
+                                           List<String> multipleObjectsFiltered,
+                                           TreeMap<String, Object> multipleObjects,
+                                           String updatedMultipleRef,
+                                           String updatedSubMultipleRef) {
 
         removeCasesFromCurrentMultiple(userToken, multipleDetails, errors, multipleObjectsFiltered);
 
@@ -167,11 +175,14 @@ public class MultipleBatchUpdate2Service {
 
         log.info("Add the lead case markUp");
 
-        String getCurrentNewMultipleLeadCase = multipleHelperService.getLeadCaseFromExcel(userToken, updatedMultipleData, errors);
+        String getCurrentNewMultipleLeadCase =
+                multipleHelperService.getLeadCaseFromExcel(userToken, updatedMultipleData, errors);
 
-        String updatedLeadCase = checkIfNewMultipleWasEmpty(getCurrentNewMultipleLeadCase, new ArrayList<>(multipleObjects.keySet()));
+        String updatedLeadCase = checkIfNewMultipleWasEmpty(getCurrentNewMultipleLeadCase,
+                new ArrayList<>(multipleObjects.keySet()));
 
-        multipleHelperService.addLeadMarkUp(userToken, updatedCaseTypeId, updatedMultipleData, updatedLeadCase, "");
+        multipleHelperService.addLeadMarkUp(userToken, updatedCaseTypeId, updatedMultipleData,
+                updatedLeadCase, "");
 
         multipleHelperService.moveCasesAndSendUpdateToMultiple(userToken, updatedSubMultipleRef,
                 updatedJurisdiction, updatedCaseTypeId, String.valueOf(updatedMultiple.getCaseId()),
@@ -179,8 +190,9 @@ public class MultipleBatchUpdate2Service {
 
         log.info("Sending creation updates to singles");
 
-        multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken, updatedCaseTypeId, updatedJurisdiction,
-                updatedMultipleData, errors, new ArrayList<>(multipleObjects.keySet()), updatedLeadCase);
+        multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken, updatedCaseTypeId,
+                updatedJurisdiction, updatedMultipleData, errors,
+                new ArrayList<>(multipleObjects.keySet()), updatedLeadCase);
 
     }
 

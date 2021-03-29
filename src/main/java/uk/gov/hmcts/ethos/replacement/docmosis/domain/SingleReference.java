@@ -1,4 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.domain;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

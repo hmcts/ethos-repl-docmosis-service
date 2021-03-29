@@ -21,7 +21,8 @@ public class BulkCreationTask implements Runnable {
     private String caseType;
     private CcdClient ccdClient;
 
-    public BulkCreationTask(BulkDetails bulkDetails, SubmitEvent submitEvent, String authToken, String multipleRef, String caseType, CcdClient ccdClient) {
+    public BulkCreationTask(BulkDetails bulkDetails, SubmitEvent submitEvent, String authToken,
+                            String multipleRef, String caseType, CcdClient ccdClient) {
         this.bulkDetails = bulkDetails;
         this.submitEvent = submitEvent;
         this.authToken = authToken;
@@ -40,15 +41,20 @@ public class BulkCreationTask implements Runnable {
             if (submitEvent.getState().equals(PENDING_STATE)) {
                 // Moving to submitted_state
                 log.info("Moving from pending to submitted");
-                    returnedRequest = ccdClient.startEventForCaseBulkSingle(authToken, UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
+                returnedRequest = ccdClient.startEventForCaseBulkSingle(authToken,
+                        UtilHelper.getCaseTypeId(
+                                bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             } else {
                 // Moving to accepted_state
                 log.info("Moving to accepted state");
-                returnedRequest = ccdClient.startEventForCase(authToken, UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
+                returnedRequest = ccdClient.startEventForCase(authToken,
+                        UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             }
             submitEvent.getCaseData().setMultipleReference(multipleRef);
             submitEvent.getCaseData().setCaseType(caseType);
-            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
+            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(),
+                    UtilHelper.getCaseTypeId(
+                            bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
         } catch (IOException e) {
             log.error("Error processing bulk update threads");
         }

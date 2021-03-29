@@ -1,12 +1,19 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 @Slf4j
 public class MultiplesSchedulePrinter {
+
+    private MultiplesSchedulePrinter() {
+    }
 
     public static CellStyle getHeader1CellStyle(XSSFWorkbook workbook) {
         return getCellStyle(workbook, IndexedColors.BLACK.getIndex(), 14, true);

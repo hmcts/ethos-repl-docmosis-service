@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisScotPart6ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -32,12 +31,15 @@ public class DocMosisScotPart6ComponentTest {
     @Test
     @WithTag("SmokeTest")
     public void generateDocument_Part_Scot_34() throws Exception {
-        testUtil.executeGenerateDocumentTest("34", "", "In accordance with the power set out in rule 29 of the Employment Tribunals Rules of", true);
+        testUtil.executeGenerateDocumentTest("34", "",
+                "In accordance with the power set out in rule 29 of the Employment Tribunals Rules of", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_34_A() throws Exception {
-        testUtil.executeGenerateDocumentTest("34", "A", "Under Rule 29 of the Employment Tribunals Rules of Procedure 2013, the Employment Judge issues the", true);
+        testUtil.executeGenerateDocumentTest("34", "A",
+                "Under Rule 29 of the Employment Tribunals Rules of Procedure 2013, the "
+                        + "Employment Judge issues the", true);
     }
 
     @Test
@@ -72,7 +74,8 @@ public class DocMosisScotPart6ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_38() throws Exception {
-        testUtil.executeGenerateDocumentTest("38", "", "Having considered any representations made by the parties an Employment Judge ORDERS that", true);
+        testUtil.executeGenerateDocumentTest("38", "",
+                "Having considered any representations made by the parties an Employment Judge ORDERS that", true);
     }
 
     @Test
@@ -92,7 +95,8 @@ public class DocMosisScotPart6ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_41() throws Exception {
-        testUtil.executeGenerateDocumentTest("41", "", "Your application for a witness order has been granted by an Employment Judge", true);
+        testUtil.executeGenerateDocumentTest("41", "",
+                "Your application for a witness order has been granted by an Employment Judge", true);
     }
 
     @Test
@@ -192,7 +196,8 @@ public class DocMosisScotPart6ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_57_C() throws Exception {
-        testUtil.executeGenerateDocumentTest("57", "C", "Notice of the hearing at which your application will be", true);
+        testUtil.executeGenerateDocumentTest("57", "C", "Notice of the "
+                + "hearing at which your application will be", true);
     }
 
     @After

@@ -44,9 +44,11 @@ public class CaseCreationForCaseWorkerService {
         if (caseData.getCaseRefNumberCount() != null && Integer.parseInt(caseData.getCaseRefNumberCount()) > 0) {
             log.info("Case Type: " + ccdRequest.getCaseDetails().getCaseTypeId());
             log.info("Count: " + Integer.parseInt(caseData.getCaseRefNumberCount()));
-            caseData.setStartCaseRefNumber(singleReferenceService.createReference(ccdRequest.getCaseDetails().getCaseTypeId(),
+            caseData.setStartCaseRefNumber(singleReferenceService.createReference(
+                    ccdRequest.getCaseDetails().getCaseTypeId(),
                     Integer.parseInt(caseData.getCaseRefNumberCount())));
-            caseData.setMultipleRefNumber(multipleReferenceService.createReference(UtilHelper.getBulkCaseTypeId(ccdRequest.getCaseDetails().getCaseTypeId()), 1));
+            caseData.setMultipleRefNumber(multipleReferenceService.createReference(
+                    UtilHelper.getBulkCaseTypeId(ccdRequest.getCaseDetails().getCaseTypeId()), 1));
         }
         return caseData;
     }

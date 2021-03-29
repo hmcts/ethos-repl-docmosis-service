@@ -23,7 +23,8 @@ public class PersistentQHelperService {
 
     public void sendCreationEventToSinglesWithoutConfirmation(String userToken, String caseTypeId, String jurisdiction,
                                                               List<String> errors, String ethosCaseReference,
-                                                              String officeCT, String positionTypeCT, String ccdGatewayBaseUrl) {
+                                                              String officeCT, String positionTypeCT,
+                                                              String ccdGatewayBaseUrl) {
 
         String username = userService.getUserDetails(userToken).getEmail();
 

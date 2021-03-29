@@ -3,8 +3,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,18 +19,27 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ecm.common.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.BulkCreationService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.BulkSearchService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.BulkUpdateService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.SubMultipleService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_ALL_VALUE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.BulkCreationService.BULK_CREATION_STEP;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.BulkCreationService.UPDATE_SINGLES_STEP;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class BulkActionsController {
 
@@ -43,18 +52,6 @@ public class BulkActionsController {
     private final DocumentGenerationService documentGenerationService;
     private final SubMultipleService subMultipleService;
     private final VerifyTokenService verifyTokenService;
-
-    @Autowired
-    public BulkActionsController(BulkCreationService bulkCreationService, BulkUpdateService bulkUpdateService,
-                                 BulkSearchService bulkSearchService, DocumentGenerationService documentGenerationService,
-                                 SubMultipleService subMultipleService, VerifyTokenService verifyTokenService) {
-        this.bulkCreationService = bulkCreationService;
-        this.bulkUpdateService = bulkUpdateService;
-        this.bulkSearchService = bulkSearchService;
-        this.documentGenerationService = documentGenerationService;
-        this.subMultipleService = subMultipleService;
-        this.verifyTokenService = verifyTokenService;
-    }
 
     @PostMapping(value = "/createBulk", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "creates a bulk case. Retrieves cases by ethos case reference.")
@@ -74,9 +71,11 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken, true);
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(
+                bulkRequest.getCaseDetails(), userToken, true);
 
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, BULK_CREATION_STEP);
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(
+                bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, BULK_CREATION_STEP);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -110,7 +109,8 @@ public class BulkActionsController {
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
                 bulkRequest.getCaseDetails(), userToken, true, true);
 
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, BULK_CREATION_STEP);
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(
+                bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, BULK_CREATION_STEP);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -140,8 +140,8 @@ public class BulkActionsController {
                 && !bulkRequest.getCaseDetails().getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
             BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
                     bulkRequest.getCaseDetails(), userToken, true, false);
-            //BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken, false);
-            bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, UPDATE_SINGLES_STEP);
+            bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken,
+                    UPDATE_SINGLES_STEP);
         }
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -168,7 +168,8 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkUpdateLogic(bulkRequest.getCaseDetails(), userToken);
+        BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkUpdateLogic(bulkRequest.getCaseDetails(),
+                userToken);
 
         bulkRequestPayload = bulkUpdateService.clearUpFields(bulkRequestPayload);
 
@@ -196,7 +197,8 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, userToken, false);
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, userToken,
+                false);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -222,7 +224,8 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkDocumentInfo bulkDocumentInfo = documentGenerationService.processBulkDocumentRequest(bulkRequest, userToken);
+        BulkDocumentInfo bulkDocumentInfo = documentGenerationService.processBulkDocumentRequest(bulkRequest,
+                userToken);
         bulkRequest.getCaseDetails().getCaseData().setDocMarkUp(bulkDocumentInfo.getMarkUps());
         documentGenerationService.clearUserChoicesForMultiples(bulkRequest.getCaseDetails());
 
@@ -252,12 +255,14 @@ public class BulkActionsController {
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .data(bulkRequest.getCaseDetails().getCaseData())
-                .confirmation_header(GENERATED_DOCUMENTS_URL + bulkRequest.getCaseDetails().getCaseData().getDocMarkUp())
+                .confirmation_header(GENERATED_DOCUMENTS_URL
+                        + bulkRequest.getCaseDetails().getCaseData().getDocMarkUp())
                 .build());
     }
 
     @PostMapping(value = "/midSearchBulk", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "searches cases in a bulk case. Look for cases in multipleCollection by fields. Mid event callback.")
+    @ApiOperation(value = "searches cases in a bulk case. Look for cases in multipleCollection by fields. "
+            + "Mid event callback.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = CCDCallbackResponse.class),
@@ -274,7 +279,8 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(bulkRequest.getCaseDetails(), false);
+        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(
+                bulkRequest.getCaseDetails(), false);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -326,7 +332,8 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(bulkRequest.getCaseDetails(), true);
+        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(
+                bulkRequest.getCaseDetails(), true);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -352,7 +359,8 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = subMultipleService.createSubMultipleLogic(bulkRequest.getCaseDetails());
+        BulkRequestPayload bulkRequestPayload = subMultipleService.createSubMultipleLogic(
+                bulkRequest.getCaseDetails());
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -378,7 +386,8 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = subMultipleService.populateSubMultipleDynamicListLogic(bulkRequest.getCaseDetails());
+        BulkRequestPayload bulkRequestPayload = subMultipleService.populateSubMultipleDynamicListLogic(
+                bulkRequest.getCaseDetails());
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -404,7 +413,8 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = subMultipleService.populateFilterDefaultedDynamicListLogic(bulkRequest.getCaseDetails(), SELECT_ALL_VALUE);
+        BulkRequestPayload bulkRequestPayload = subMultipleService.populateFilterDefaultedDynamicListLogic(
+                bulkRequest.getCaseDetails(), SELECT_ALL_VALUE);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -430,7 +440,8 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = subMultipleService.populateFilterDefaultedDynamicListLogic(bulkRequest.getCaseDetails(), SELECT_NONE_VALUE);
+        BulkRequestPayload bulkRequestPayload = subMultipleService.populateFilterDefaultedDynamicListLogic(
+                bulkRequest.getCaseDetails(), SELECT_NONE_VALUE);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -534,14 +545,15 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkDocumentInfo bulkDocumentInfo = documentGenerationService.processBulkScheduleRequest(bulkRequest, userToken);
+        BulkDocumentInfo bulkDocumentInfo = documentGenerationService.processBulkScheduleRequest(
+                bulkRequest, userToken);
 
         if (bulkDocumentInfo.getErrors().isEmpty()) {
             bulkRequest.getCaseDetails().getCaseData().setDocMarkUp(bulkDocumentInfo.getMarkUps());
             return ResponseEntity.ok(BulkCallbackResponse.builder()
                     .data(bulkRequest.getCaseDetails().getCaseData())
-                    .significant_item(Helper.generateSignificantItem(bulkDocumentInfo.getDocumentInfo() != null ?
-                            bulkDocumentInfo.getDocumentInfo() : new DocumentInfo(), new ArrayList<>()))
+                    .significant_item(Helper.generateSignificantItem(bulkDocumentInfo.getDocumentInfo() != null
+                            ? bulkDocumentInfo.getDocumentInfo() : new DocumentInfo(), new ArrayList<>()))
                     .build());
         } else {
             return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -571,7 +583,8 @@ public class BulkActionsController {
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .data(bulkRequest.getCaseDetails().getCaseData())
-                .confirmation_header(GENERATED_DOCUMENTS_URL + bulkRequest.getCaseDetails().getCaseData().getDocMarkUp())
+                .confirmation_header(
+                        GENERATED_DOCUMENTS_URL + bulkRequest.getCaseDetails().getCaseData().getDocMarkUp())
                 .build());
     }
 
@@ -593,7 +606,8 @@ public class BulkActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        List<SubmitEvent> submitEvents = bulkSearchService.retrievalCasesForPreAcceptRequest(bulkRequest.getCaseDetails(), userToken);
+        List<SubmitEvent> submitEvents =
+                bulkSearchService.retrievalCasesForPreAcceptRequest(bulkRequest.getCaseDetails(), userToken);
 
         BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(),
                 submitEvents, userToken, false);

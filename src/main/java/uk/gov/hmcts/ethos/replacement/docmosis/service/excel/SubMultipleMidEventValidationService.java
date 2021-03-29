@@ -35,7 +35,8 @@ public class SubMultipleMidEventValidationService {
 
             log.info("Amend validation");
 
-            validateSubMultipleDoesNotExist(multipleData, subMultipleActionType.getAmendSubMultipleNameExisting(), errors);
+            validateSubMultipleDoesNotExist(multipleData, subMultipleActionType.getAmendSubMultipleNameExisting(),
+                    errors);
 
             validateSubMultipleExist(multipleData, subMultipleActionType.getAmendSubMultipleNameNew(), errors);
 
@@ -49,7 +50,8 @@ public class SubMultipleMidEventValidationService {
 
     }
 
-    private void validateSubMultipleDoesNotExist(MultipleData multipleData, String subMultipleName, List<String> errors) {
+    private void validateSubMultipleDoesNotExist(MultipleData multipleData, String subMultipleName,
+                                                 List<String> errors) {
 
         if (!doesSubMultipleExist(multipleData, subMultipleName)) {
 
@@ -73,10 +75,12 @@ public class SubMultipleMidEventValidationService {
 
         log.info("Checking if sub multiple name exists");
 
-        if (multipleData.getSubMultipleCollection() == null) return false;
+        if (multipleData.getSubMultipleCollection() == null) {
+            return false;
+        }
 
-        return multipleData.getSubMultipleCollection().stream().anyMatch(
-                subMultipleTypeItem ->
+        return multipleData.getSubMultipleCollection().stream()
+                .anyMatch(subMultipleTypeItem ->
                         subMultipleTypeItem.getValue().getSubMultipleName().equals(subMultipleName));
 
     }

@@ -14,7 +14,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
 
 @Slf4j
 @Service("multipleCreationMidEventValidationService")
@@ -35,13 +38,14 @@ public class MultipleCreationMidEventValidationService {
         this.singleCasesReadingService = singleCasesReadingService;
     }
 
-    public void multipleCreationValidationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors, boolean amendAction) {
+    public void multipleCreationValidationLogic(String userToken, MultipleDetails multipleDetails,
+                                                List<String> errors, boolean amendAction) {
 
         if (multipleDetails.getCaseData().getMultipleSource() != null
                 &&
                 !amendAction
                 &&
-                ( multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
+                (multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
                         || multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)
                 )) {
 
@@ -82,7 +86,8 @@ public class MultipleCreationMidEventValidationService {
 
             log.info("Case id collection reached the max size");
 
-            errors.add("There are " + ethosCaseRefCollection.size() + " cases in the multiple. The limit is " + MULTIPLE_MAX_SIZE + ".");
+            errors.add("There are " + ethosCaseRefCollection.size() + " cases in the multiple. The limit is "
+                    + MULTIPLE_MAX_SIZE + ".");
 
         }
 

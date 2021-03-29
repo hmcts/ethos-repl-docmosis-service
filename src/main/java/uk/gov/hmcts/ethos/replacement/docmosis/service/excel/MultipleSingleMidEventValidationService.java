@@ -58,12 +58,14 @@ public class MultipleSingleMidEventValidationService {
 
     }
 
-    private void validateSingleCaseInMultiple(String userToken, MultipleData multipleData, List<String> errors, String caseToSearch) {
+    private void validateSingleCaseInMultiple(String userToken, MultipleData multipleData, List<String> errors,
+                                              String caseToSearch) {
 
-        List<String> ethosCaseRefCollection = multipleHelperService.getEthosCaseRefCollection(userToken, multipleData, errors);
+        List<String> ethosCaseRefCollection = multipleHelperService.getEthosCaseRefCollection(userToken,
+                multipleData, errors);
 
-        if (ethosCaseRefCollection == null ||
-                ethosCaseRefCollection.isEmpty()) {
+        if (ethosCaseRefCollection == null
+                || ethosCaseRefCollection.isEmpty()) {
 
             log.info("Multiple does not have cases");
 
@@ -126,7 +128,8 @@ public class MultipleSingleMidEventValidationService {
         if (submitEvent.getCaseData().getJurCodesCollection() != null) {
 
             jurCodesCollection = submitEvent.getCaseData().getJurCodesCollection().stream()
-                    .map(jurCodesTypeItem -> Helper.getDynamicValue(jurCodesTypeItem.getValue().getJuridictionCodesList()))
+                    .map(jurCodesTypeItem ->
+                            Helper.getDynamicValue(jurCodesTypeItem.getValue().getJuridictionCodesList()))
                     .collect(Collectors.toList());
 
         }
@@ -140,7 +143,8 @@ public class MultipleSingleMidEventValidationService {
         if (submitEvent.getCaseData().getRespondentCollection() != null) {
 
             respondentCollection = submitEvent.getCaseData().getRespondentCollection().stream()
-                    .map(respondentSumTypeItem -> Helper.getDynamicValue(respondentSumTypeItem.getValue().getRespondentName()))
+                    .map(respondentSumTypeItem ->
+                            Helper.getDynamicValue(respondentSumTypeItem.getValue().getRespondentName()))
                     .collect(Collectors.toList());
 
         }

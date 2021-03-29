@@ -36,7 +36,8 @@ public class DocMosisPart17ComponentTest {
 
     @Test
     public void generateDocument_Part17_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("17", "2", "The Tribunal office has received a Notice of Appeal against");
+        testUtil.executeGenerateDocumentTest("17", "2",
+                "The Tribunal office has received a Notice of Appeal against");
     }
 
     @Test
@@ -46,12 +47,14 @@ public class DocMosisPart17ComponentTest {
 
     @Test
     public void generateDocument_Part17_4() throws Exception {
-        testUtil.executeGenerateDocumentTest("17", "4", "HEALTH & SAFETY AT WORK ETC ACT 1974: NOTICE OF APPEAL");
+        testUtil.executeGenerateDocumentTest("17", "4",
+                "HEALTH & SAFETY AT WORK ETC ACT 1974: NOTICE OF APPEAL");
     }
 
     @Test
     public void generateDocument_Part17_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("17", "5", "IN THE MATTER OF the Employment Tribunals Rules of Procedure 2013");
+        testUtil.executeGenerateDocumentTest("17", "5",
+                "IN THE MATTER OF the Employment Tribunals Rules of Procedure 2013");
     }
 
     @Test
