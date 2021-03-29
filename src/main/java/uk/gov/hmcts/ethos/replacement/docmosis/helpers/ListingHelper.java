@@ -216,6 +216,7 @@ public class ListingHelper {
         sb.append(getListingRangeDates(listingData));
         log.info("Clerk");
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
+        log.info("Clerk Username: " + userName);
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
 
         sb.append(getDocumentData(listingData, templateName, caseType));
