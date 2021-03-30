@@ -12,19 +12,9 @@ public class GenerateDocumentTest {
 
     @Before
     public void before() {
-//        String appUrl = System.getenv("TEST_URL");
-//        if (appUrl == null) {
-//            appUrl = "http://localhost:8081";
-//        }
-//
-//        RestAssured.baseURI = appUrl;
-//        RestAssured.useRelaxedHTTPSValidation();
-//        log.info("Base Url set to: " + RestAssured.baseURI);
     }
 
-    //@Test
     public void generate_document_returns_405() {
-        //TODO
         get("/generateDocument").then().statusCode(405);
     }
 }

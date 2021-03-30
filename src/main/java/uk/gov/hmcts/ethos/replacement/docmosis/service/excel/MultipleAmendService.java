@@ -56,15 +56,18 @@ public class MultipleAmendService {
 
                 log.info("Amend lead case logic");
 
-                newMultipleObjects = multipleAmendLeadCaseService.bulkAmendLeadCaseLogic(userToken, multipleDetails, errors, multipleObjects);
+                newMultipleObjects = multipleAmendLeadCaseService.bulkAmendLeadCaseLogic(userToken,
+                        multipleDetails, errors, multipleObjects);
 
             }
 
-            if (multipleDetails.getCaseData().getTypeOfAmendmentMSL().contains(TYPE_AMENDMENT_ADDITION) && errors.isEmpty()) {
+            if (multipleDetails.getCaseData().getTypeOfAmendmentMSL().contains(TYPE_AMENDMENT_ADDITION)
+                    && errors.isEmpty()) {
 
                 log.info("Amend case ids logic");
 
-                newMultipleObjects = multipleAmendCaseIdsService.bulkAmendCaseIdsLogic(userToken, multipleDetails, errors, multipleObjects);
+                newMultipleObjects = multipleAmendCaseIdsService.bulkAmendCaseIdsLogic(userToken,
+                        multipleDetails, errors, multipleObjects);
 
             }
 
@@ -72,7 +75,8 @@ public class MultipleAmendService {
 
                 log.info("Create a new Excel");
 
-                excelDocManagementService.generateAndUploadExcel(newMultipleObjects, userToken, multipleDetails.getCaseData());
+                excelDocManagementService.generateAndUploadExcel(newMultipleObjects, userToken,
+                        multipleDetails.getCaseData());
 
             }
 

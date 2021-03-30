@@ -6,7 +6,20 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DO_NOT_POSTPONE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_LIVE_APPEAL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_REPORTING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_RESERVED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_RULE_503B;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_SENSITIVE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_WITH_OUTSTATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_EXTENSION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.IMAGE_FILE_PRECEDING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ONE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ZERO;
 
 @Slf4j
 public class FlagsImageHelper {
@@ -20,6 +33,9 @@ public class FlagsImageHelper {
     private static final String COLOR_DARK_RED = "DarkRed";
     private static final String COLOR_WHITE = "White";
     private static final String COLOR_DEEP_PINK = "DeepPink";
+
+    private FlagsImageHelper() {
+    }
 
     public static void buildFlagsImageFileName(CaseData caseData) {
         StringBuilder flagsImageFileName = new StringBuilder();
@@ -40,7 +56,8 @@ public class FlagsImageHelper {
         caseData.setFlagsImageFileName(flagsImageFileName.toString());
     }
 
-    private static void setFlagImageFor(String flagName, StringBuilder flagsImageFileName, StringBuilder flagsImageAltText, CaseData caseData) {
+    private static void setFlagImageFor(String flagName, StringBuilder flagsImageFileName,
+                                        StringBuilder flagsImageAltText, CaseData caseData) {
         boolean flagRequired;
         String flagColor;
 
@@ -83,7 +100,8 @@ public class FlagsImageHelper {
         }
         flagsImageFileName.append(flagRequired ? ONE : ZERO);
         flagsImageAltText.append(flagRequired && flagsImageAltText.length() > 0 ? "<font size='5'> - </font>" : "");
-        flagsImageAltText.append(flagRequired ? "<font color='" + flagColor + "' size='5'> " + flagName + " </font>" : "");
+        flagsImageAltText.append(flagRequired ? "<font color='"
+                + flagColor + "' size='5'> " + flagName + " </font>" : "");
     }
 
     private static boolean sensitiveCase(CaseData caseData) {
@@ -105,8 +123,7 @@ public class FlagsImageHelper {
             } else {
                 return false;
             }
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -126,8 +143,10 @@ public class FlagsImageHelper {
     private static boolean reservedJudgement(CaseData caseData) {
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                if (hearingTypeItem.getValue().getHearingDateCollection() != null && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty()) {
-                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                if (hearingTypeItem.getValue().getHearingDateCollection() != null
+                        && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty()) {
+                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue()
+                            .getHearingDateCollection()) {
                         String hearingReservedJudgement = dateListedTypeItem.getValue().getHearingReservedJudgement();
                         if (!isNullOrEmpty(hearingReservedJudgement) && hearingReservedJudgement.equals(YES))  {
                             return true;
@@ -159,7 +178,7 @@ public class FlagsImageHelper {
 
     private static boolean doNotPostpone(CaseData caseData) {
         if (caseData.getAdditionalCaseInfoType() != null) {
-            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getDoNotPostpone() )) {
+            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getDoNotPostpone())) {
                 return caseData.getAdditionalCaseInfoType().getDoNotPostpone().equals(YES);
             } else {
                 return false;

@@ -12,12 +12,17 @@ import java.util.regex.Pattern;
 
 public class LogUtil {
 
+    private LogUtil() {
+    }
+
     public static String getDocMosisPayload() throws IOException {
         Pattern pattern = Pattern.compile(".*TornadoService Sending request: (.*)");
 
         List<String> logs = getLogs("ethos-repl-docmosis-service");
 
-        if (logs.size() == 0) return null;
+        if (logs.size() == 0) {
+            return null;
+        }
 
         for (int i = logs.size() - 1; i > 0; i--) {
             String log = logs.get(i);
@@ -43,7 +48,9 @@ public class LogUtil {
         StringBuilder stringBuilder = new StringBuilder();
         while ((s = stdInput.readLine()) != null) {
 
-            if (StringUtils.isEmpty(s)) continue;
+            if (StringUtils.isEmpty(s)) {
+                continue;
+            }
 
             stringBuilder.append(s);
         }

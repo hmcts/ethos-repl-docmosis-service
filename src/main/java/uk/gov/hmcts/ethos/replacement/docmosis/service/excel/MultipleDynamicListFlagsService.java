@@ -17,7 +17,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_2;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_3;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_4;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_5;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_6;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.SELECT_ALL;
 
 @Slf4j
@@ -47,7 +51,8 @@ public class MultipleDynamicListFlagsService {
 
         log.info("Populates the dynamic list with flags from Excel");
 
-        multipleData.setSubMultiple(populateDynamicList(multipleData.getSubMultiple(), getDynamicList(multipleObjects, HEADER_2)));
+        multipleData.setSubMultiple(populateDynamicList(multipleData.getSubMultiple(),
+                getDynamicList(multipleObjects, HEADER_2)));
         multipleData.setFlag1(populateDynamicList(multipleData.getFlag1(), getDynamicList(multipleObjects, HEADER_3)));
         multipleData.setFlag2(populateDynamicList(multipleData.getFlag2(), getDynamicList(multipleObjects, HEADER_4)));
         multipleData.setFlag3(populateDynamicList(multipleData.getFlag3(), getDynamicList(multipleObjects, HEADER_5)));
@@ -79,23 +84,19 @@ public class MultipleDynamicListFlagsService {
         return listItems;
     }
 
-    private DynamicFixedListType populateDynamicList(DynamicFixedListType dynamicListFlag, List<DynamicValueType> listItems) {
+    private DynamicFixedListType populateDynamicList(DynamicFixedListType dynamicListFlag,
+                                                     List<DynamicValueType> listItems) {
 
         if (dynamicListFlag != null) {
             dynamicListFlag.setListItems(listItems);
-
+            dynamicListFlag.setValue(Helper.getDynamicValue(SELECT_ALL));
+            return dynamicListFlag;
         } else {
-
             DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
             dynamicFixedListType.setListItems(listItems);
-            dynamicListFlag = dynamicFixedListType;
-
+            dynamicFixedListType.setValue(Helper.getDynamicValue(SELECT_ALL));
+            return dynamicFixedListType;
         }
-
-        //Default dynamic list
-        dynamicListFlag.setValue(Helper.getDynamicValue(SELECT_ALL));
-
-        return dynamicListFlag;
 
     }
 

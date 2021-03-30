@@ -54,7 +54,8 @@ public class MultipleUploadService {
                         errors);
 
                 log.info("Update the document information");
-                log.info("File name uploaded: " + multipleData.getCaseImporterFile().getUploadedDocument().getDocumentFilename());
+                log.info("File name uploaded: "
+                        + multipleData.getCaseImporterFile().getUploadedDocument().getDocumentFilename());
 
                 multipleData.setCaseImporterFile(
                         excelDocManagementService.populateCaseImporterFile(

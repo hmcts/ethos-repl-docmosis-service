@@ -6,7 +6,11 @@ import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
@@ -225,7 +229,6 @@ public class CreateBulkComponentTest {
 
     }
 
-
     @Test
     public void create_bulk_eng_all_cases_invalid() throws IOException {
         testUtil.loadAuthToken();
@@ -238,7 +241,6 @@ public class CreateBulkComponentTest {
         testData = testData.replace("#ETHOS-CASE-REFERENCE2#", ethosCaseReference);
         ethosCaseReference = testUtil.getUniqueCaseReference(10);
         testData = testData.replace("#ETHOS-CASE-REFERENCE3#", ethosCaseReference);
-
 
         BulkRequest bulkRequest = testUtil.getBulkRequest(true, testData);
         Response response = testUtil.getBulkResponse(bulkRequest, Constants.CREATE_BULK_URI, 500);

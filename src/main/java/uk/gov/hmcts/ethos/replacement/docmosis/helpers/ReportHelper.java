@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
@@ -18,38 +19,78 @@ import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NUMBER_FOUR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NUMBER_ONE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NUMBER_THREE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NUMBER_TWO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_DISMISSED_AT_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_UNSUCCESSFUL_AT_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_CLOSED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_INPUT_IN_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_OTHER_COUNTRY;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_SAME_COUNTRY;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_REJECTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 public class ReportHelper {
 
     public static final String CASES_SEARCHED = "Cases searched: ";
 
-    public static ListingData processBroughtForwardDatesRequest(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
+    private ReportHelper() {
+    }
+
+    public static ListingData processBroughtForwardDatesRequest(ListingDetails listingDetails,
+                                                                List<SubmitEvent> submitEvents) {
 
         if (submitEvents != null && !submitEvents.isEmpty()) {
             log.info(CASES_SEARCHED + submitEvents.size());
-            List<BFDateTypeItem> bFDateTypeItems = new ArrayList<>();
+            List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
             for (SubmitEvent submitEvent : submitEvents) {
-                if (submitEvent.getCaseData().getBfActions() != null && !submitEvent.getCaseData().getBfActions().isEmpty()) {
+                if (submitEvent.getCaseData().getBfActions() != null
+                        && !submitEvent.getCaseData().getBfActions().isEmpty()) {
                     for (BFActionTypeItem bfActionTypeItem : submitEvent.getCaseData().getBfActions()) {
-                        BFDateTypeItem bFDateTypeItem = getBFDateTypeItem(bfActionTypeItem, listingDetails.getCaseData(), submitEvent.getCaseData());
-                        if (bFDateTypeItem.getValue() != null) {
-                            bFDateTypeItems.add(bFDateTypeItem);
+                        BFDateTypeItem bfDateTypeItem = getBFDateTypeItem(bfActionTypeItem,
+                                listingDetails.getCaseData(), submitEvent.getCaseData());
+                        if (bfDateTypeItem.getValue() != null) {
+                            bfDateTypeItems.add(bfDateTypeItem);
                         }
                     }
                 }
             }
-            listingDetails.getCaseData().setBfDateCollection(bFDateTypeItems);
+            listingDetails.getCaseData().setBfDateCollection(bfDateTypeItems);
         }
         return clearListingFields(listingDetails.getCaseData());
 
     }
 
-    public static ListingData processClaimsAcceptedRequest(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
+    public static ListingData processClaimsAcceptedRequest(ListingDetails listingDetails,
+                                                           List<SubmitEvent> submitEvents) {
 
         if (submitEvents != null && !submitEvents.isEmpty()) {
             log.info(CASES_SEARCHED + submitEvents.size());
@@ -59,11 +100,15 @@ public class ReportHelper {
             AdhocReportType localReportsDetailHdr = new AdhocReportType();
             List<AdhocReportTypeItem> localReportsDetailList = new ArrayList<>();
             for (SubmitEvent submitEvent : submitEvents) {
-                AdhocReportTypeItem localReportsDetailItem = getClaimsAcceptedDetailItem(listingDetails, submitEvent.getCaseData());
+                AdhocReportTypeItem localReportsDetailItem =
+                        getClaimsAcceptedDetailItem(listingDetails, submitEvent.getCaseData());
                 if (localReportsDetailItem.getValue() != null) {
                     totalCases++;
-                    if (localReportsDetailItem.getValue().getCaseType().equals(SINGLE_CASE_TYPE)) totalSingles++;
-                    else totalMultiples++;
+                    if (localReportsDetailItem.getValue().getCaseType().equals(SINGLE_CASE_TYPE)) {
+                        totalSingles++;
+                    } else {
+                        totalMultiples++;
+                    }
                     localReportsDetailList.add(localReportsDetailItem);
                 }
             }
@@ -77,13 +122,15 @@ public class ReportHelper {
 
     }
 
-    public static ListingData processLiveCaseloadRequest(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
+    public static ListingData processLiveCaseloadRequest(ListingDetails listingDetails,
+                                                         List<SubmitEvent> submitEvents) {
 
         if (submitEvents != null && !submitEvents.isEmpty()) {
             log.info(CASES_SEARCHED + submitEvents.size());
             List<AdhocReportTypeItem> localReportsDetailList = new ArrayList<>();
             for (SubmitEvent submitEvent : submitEvents) {
-                AdhocReportTypeItem localReportsDetailItem = getLiveCaseloadDetailItem(listingDetails, submitEvent.getCaseData());
+                AdhocReportTypeItem localReportsDetailItem =
+                        getLiveCaseloadDetailItem(listingDetails, submitEvent.getCaseData());
                 if (localReportsDetailItem.getValue() != null) {
                     localReportsDetailList.add(localReportsDetailItem);
                 }
@@ -94,7 +141,8 @@ public class ReportHelper {
 
     }
 
-    public static ListingData processCasesCompletedRequest(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
+    public static ListingData processCasesCompletedRequest(ListingDetails listingDetails,
+                                                           List<SubmitEvent> submitEvents) {
 
         if (submitEvents != null && !submitEvents.isEmpty()) {
             log.info(CASES_SEARCHED + submitEvents.size());
@@ -102,7 +150,8 @@ public class ReportHelper {
             List<AdhocReportTypeItem> localReportsDetailList = new ArrayList<>();
             for (SubmitEvent submitEvent : submitEvents) {
                 if (validCaseForCasesCompetedReport(submitEvent) && caseContainsHearings(submitEvent.getCaseData())) {
-                    AdhocReportTypeItem localReportsDetailItem = getCasesCompletedDetailItem(listingDetails, submitEvent.getCaseData());
+                    AdhocReportTypeItem localReportsDetailItem =
+                            getCasesCompletedDetailItem(listingDetails, submitEvent.getCaseData());
                     if (localReportsDetailItem.getValue() != null) {
                         updateCasesCompletedDetailHdr(localReportsDetailItem, localReportsDetailHdr);
                         localReportsDetailList.add(localReportsDetailItem);
@@ -127,30 +176,32 @@ public class ReportHelper {
         return listingData;
     }
 
-    private static BFDateTypeItem getBFDateTypeItem(BFActionTypeItem bfActionTypeItem, ListingData listingData, CaseData caseData) {
-        BFDateTypeItem bFDateTypeItem = new BFDateTypeItem();
+    private static BFDateTypeItem getBFDateTypeItem(BFActionTypeItem bfActionTypeItem,
+                                                    ListingData listingData, CaseData caseData) {
+        BFDateTypeItem bfDateTypeItem = new BFDateTypeItem();
         BFActionType bfActionType = bfActionTypeItem.getValue();
         if (!isNullOrEmpty(bfActionType.getBfDate()) && isNullOrEmpty(bfActionType.getCleared())) {
             boolean matchingDateIsValid = validateMatchingDate(listingData, bfActionType.getBfDate());
             boolean clerkResponsibleIsValid = validateClerkResponsible(listingData, caseData);
             if (matchingDateIsValid && clerkResponsibleIsValid) {
-                BFDateType bFDateType = new BFDateType();
-                bFDateType.setCaseReference(caseData.getEthosCaseReference());
-                bFDateType.setBroughtForwardDate(bfActionType.getBfDate());
-                bFDateType.setBroughtForwardDateReason(bfActionType.getNotes());
-                bFDateType.setBroughtForwardDateCleared(bfActionType.getCleared());
-                bFDateTypeItem.setId(String.valueOf(bfActionTypeItem.getId()));
-                bFDateTypeItem.setValue(bFDateType);
+                BFDateType bfDateType = new BFDateType();
+                bfDateType.setCaseReference(caseData.getEthosCaseReference());
+                bfDateType.setBroughtForwardDate(bfActionType.getBfDate());
+                bfDateType.setBroughtForwardDateReason(bfActionType.getNotes());
+                bfDateType.setBroughtForwardDateCleared(bfActionType.getCleared());
+                bfDateTypeItem.setId(String.valueOf(bfActionTypeItem.getId()));
+                bfDateTypeItem.setValue(bfDateType);
             }
         }
-        return bFDateTypeItem;
+        return bfDateTypeItem;
     }
 
     private static AdhocReportTypeItem getClaimsAcceptedDetailItem(ListingDetails listingDetails, CaseData caseData) {
         AdhocReportTypeItem adhocReportTypeItem = new AdhocReportTypeItem();
         ListingData listingData = listingDetails.getCaseData();
         if (caseData.getPreAcceptCase() != null && caseData.getPreAcceptCase().getDateAccepted() != null) {
-            boolean matchingDateIsValid = validateMatchingDate(listingData, caseData.getPreAcceptCase().getDateAccepted());
+            boolean matchingDateIsValid =
+                    validateMatchingDate(listingData, caseData.getPreAcceptCase().getDateAccepted());
             if (matchingDateIsValid) {
                 AdhocReportType adhocReportType = new AdhocReportType();
                 adhocReportType.setCaseType(caseData.getCaseType());
@@ -165,7 +216,8 @@ public class ReportHelper {
         AdhocReportTypeItem adhocReportTypeItem = new AdhocReportTypeItem();
         ListingData listingData = listingDetails.getCaseData();
         if (caseData.getPreAcceptCase() != null && caseData.getPreAcceptCase().getDateAccepted() != null) {
-            boolean matchingDateIsValid = validateMatchingDate(listingData, caseData.getPreAcceptCase().getDateAccepted());
+            boolean matchingDateIsValid =
+                    validateMatchingDate(listingData, caseData.getPreAcceptCase().getDateAccepted());
             boolean liveCaseloadIsValid = liveCaseloadIsValid(caseData);
             if (matchingDateIsValid && liveCaseloadIsValid) {
                 AdhocReportType adhocReportType = new AdhocReportType();
@@ -184,16 +236,20 @@ public class ReportHelper {
             if (validHearingForCasesCompetedReport(hearingTypeItem) && caseContainsHearingDates(hearingTypeItem)) {
                 HearingType hearingType = hearingTypeItem.getValue();
                 ListingData listingData = listingDetails.getCaseData();
-                DateListedType maxDateListedType = Collections.max(hearingType.getHearingDateCollection(), Comparator.comparing(c -> c.getValue().getListedDate())).getValue();
+                DateListedType maxDateListedType =
+                        Collections.max(hearingType.getHearingDateCollection(),
+                                Comparator.comparing(c -> c.getValue().getListedDate())).getValue();
                 if (maxDateListedType != null) {
-                    String listedDate =  LocalDateTime.parse(maxDateListedType.getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate().toString();
+                    String listedDate =  LocalDateTime.parse(maxDateListedType.getListedDate(),
+                            OLD_DATE_TIME_PATTERN).toLocalDate().toString();
                     boolean matchingDateIsValid = validateMatchingDate(listingData, listedDate);
                     boolean casesCompletedIsValid = casesCompletedIsValid(adhocReportTypeItem, maxDateListedType);
                     if (matchingDateIsValid && casesCompletedIsValid) {
                         AdhocReportType adhocReportType = new AdhocReportType();
                         adhocReportType.setCaseReference(caseData.getEthosCaseReference());
                         adhocReportType.setPosition(caseData.getCurrentPosition());
-                        adhocReportType.setConciliationTrackNo(getConciliationTrackNumber(caseData.getConciliationTrack()));
+                        adhocReportType.setConciliationTrackNo(
+                                getConciliationTrackNumber(caseData.getConciliationTrack()));
                         adhocReportType.setSessionDays(String.valueOf(hearingType.getHearingDateCollection().size()));
                         adhocReportType.setHearingNumber(hearingType.getHearingNumber());
                         adhocReportType.setHearingDate(maxDateListedType.getListedDate());
@@ -208,12 +264,9 @@ public class ReportHelper {
         return adhocReportTypeItem;
     }
 
-    private static void updateCasesCompletedDetailHdr(AdhocReportTypeItem localReportsDetailItem, AdhocReportType localReportsDetailHdr) {
+    private static void updateCasesCompletedDetailHdr(AdhocReportTypeItem localReportsDetailItem,
+                                                      AdhocReportType localReportsDetailHdr) {
         AdhocReportType adhocReportType = localReportsDetailItem.getValue();
-
-        int completedAtHearingTotal;
-        int sessionDaysTakenTotal;
-        double completedPerSessionDayTotal;
 
         int completedAtHearingPerTrack;
         int sessionDaysTakenPerTrack;
@@ -221,8 +274,12 @@ public class ReportHelper {
 
         switch (adhocReportType.getConciliationTrackNo()) {
             case CONCILIATION_TRACK_NUMBER_ONE:
-                completedAtHearingPerTrack = isNullOrEmpty(localReportsDetailHdr.getConNoneCasesCompletedHearing()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConNoneCasesCompletedHearing());
-                sessionDaysTakenPerTrack = isNullOrEmpty(localReportsDetailHdr.getConNoneSessionDays()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConNoneSessionDays());
+                completedAtHearingPerTrack = isNullOrEmpty(localReportsDetailHdr.getConNoneCasesCompletedHearing())
+                        ? 0
+                        : Integer.parseInt(localReportsDetailHdr.getConNoneCasesCompletedHearing());
+                sessionDaysTakenPerTrack = isNullOrEmpty(localReportsDetailHdr.getConNoneSessionDays())
+                        ? 0
+                        : Integer.parseInt(localReportsDetailHdr.getConNoneSessionDays());
 
                 completedAtHearingPerTrack++;
                 sessionDaysTakenPerTrack += Integer.parseInt(adhocReportType.getSessionDays());
@@ -233,8 +290,12 @@ public class ReportHelper {
                 localReportsDetailHdr.setConNoneCompletedPerSession(Double.toString(completedPerSessionDayPerTrack));
                 break;
             case CONCILIATION_TRACK_NUMBER_TWO:
-                completedAtHearingPerTrack = isNullOrEmpty(localReportsDetailHdr.getConFastCasesCompletedHearing()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConFastCasesCompletedHearing());
-                sessionDaysTakenPerTrack = isNullOrEmpty(localReportsDetailHdr.getConFastSessionDays()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConFastSessionDays());
+                completedAtHearingPerTrack = isNullOrEmpty(localReportsDetailHdr.getConFastCasesCompletedHearing())
+                        ? 0
+                        : Integer.parseInt(localReportsDetailHdr.getConFastCasesCompletedHearing());
+                sessionDaysTakenPerTrack = isNullOrEmpty(localReportsDetailHdr.getConFastSessionDays())
+                        ? 0
+                        : Integer.parseInt(localReportsDetailHdr.getConFastSessionDays());
 
                 completedAtHearingPerTrack++;
                 sessionDaysTakenPerTrack += Integer.parseInt(adhocReportType.getSessionDays());
@@ -245,8 +306,12 @@ public class ReportHelper {
                 localReportsDetailHdr.setConFastCompletedPerSession(Double.toString(completedPerSessionDayPerTrack));
                 break;
             case CONCILIATION_TRACK_NUMBER_THREE:
-                completedAtHearingPerTrack = isNullOrEmpty(localReportsDetailHdr.getConStdCasesCompletedHearing()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConStdCasesCompletedHearing());
-                sessionDaysTakenPerTrack = isNullOrEmpty(localReportsDetailHdr.getConStdSessionDays()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConStdSessionDays());
+                completedAtHearingPerTrack = isNullOrEmpty(localReportsDetailHdr.getConStdCasesCompletedHearing())
+                        ? 0
+                        : Integer.parseInt(localReportsDetailHdr.getConStdCasesCompletedHearing());
+                sessionDaysTakenPerTrack = isNullOrEmpty(localReportsDetailHdr.getConStdSessionDays())
+                        ? 0
+                        : Integer.parseInt(localReportsDetailHdr.getConStdSessionDays());
 
                 completedAtHearingPerTrack++;
                 sessionDaysTakenPerTrack += Integer.parseInt(adhocReportType.getSessionDays());
@@ -257,8 +322,12 @@ public class ReportHelper {
                 localReportsDetailHdr.setConStdCompletedPerSession(Double.toString(completedPerSessionDayPerTrack));
                 break;
             case CONCILIATION_TRACK_NUMBER_FOUR:
-                completedAtHearingPerTrack = isNullOrEmpty(localReportsDetailHdr.getConOpenCasesCompletedHearing()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConOpenCasesCompletedHearing());
-                sessionDaysTakenPerTrack = isNullOrEmpty(localReportsDetailHdr.getConOpenSessionDays()) ? 0 : Integer.parseInt(localReportsDetailHdr.getConOpenSessionDays());
+                completedAtHearingPerTrack = isNullOrEmpty(localReportsDetailHdr.getConOpenCasesCompletedHearing())
+                        ? 0
+                        : Integer.parseInt(localReportsDetailHdr.getConOpenCasesCompletedHearing());
+                sessionDaysTakenPerTrack = isNullOrEmpty(localReportsDetailHdr.getConOpenSessionDays())
+                        ? 0
+                        : Integer.parseInt(localReportsDetailHdr.getConOpenSessionDays());
 
                 completedAtHearingPerTrack++;
                 sessionDaysTakenPerTrack += Integer.parseInt(adhocReportType.getSessionDays());
@@ -272,12 +341,16 @@ public class ReportHelper {
                 return;
         }
 
-        completedAtHearingTotal = isNullOrEmpty(localReportsDetailHdr.getCasesCompletedHearingTotal()) ? 0 : Integer.parseInt(localReportsDetailHdr.getCasesCompletedHearingTotal());
-        sessionDaysTakenTotal = isNullOrEmpty(localReportsDetailHdr.getSessionDaysTotal()) ? 0 : Integer.parseInt(localReportsDetailHdr.getSessionDaysTotal());
+        int completedAtHearingTotal = isNullOrEmpty(localReportsDetailHdr.getCasesCompletedHearingTotal())
+                ? 0
+                : Integer.parseInt(localReportsDetailHdr.getCasesCompletedHearingTotal());
+        int sessionDaysTakenTotal = isNullOrEmpty(localReportsDetailHdr.getSessionDaysTotal())
+                ? 0
+                : Integer.parseInt(localReportsDetailHdr.getSessionDaysTotal());
 
         completedAtHearingTotal++;
         sessionDaysTakenTotal += Integer.parseInt(adhocReportType.getSessionDays());
-        completedPerSessionDayTotal = (double)completedAtHearingTotal / sessionDaysTakenTotal;
+        double completedPerSessionDayTotal = (double)completedAtHearingTotal / sessionDaysTakenTotal;
 
         localReportsDetailHdr.setCasesCompletedHearingTotal(Integer.toString(completedAtHearingTotal));
         localReportsDetailHdr.setSessionDaysTotal(Integer.toString(sessionDaysTakenTotal));
@@ -306,7 +379,8 @@ public class ReportHelper {
         return true;
     }
 
-    private static void getCommonReportDetailFields(ListingDetails listingDetails, CaseData caseData, AdhocReportType adhocReportType) {
+    private static void getCommonReportDetailFields(ListingDetails listingDetails, CaseData caseData,
+                                                    AdhocReportType adhocReportType) {
         adhocReportType.setCaseReference(caseData.getEthosCaseReference());
         adhocReportType.setDateOfAcceptance(caseData.getPreAcceptCase().getDateAccepted());
         adhocReportType.setMultipleRef(caseData.getMultipleReference());
@@ -318,7 +392,7 @@ public class ReportHelper {
     }
 
     private static String getFileLocation(ListingDetails listingDetails, CaseData caseData) {
-        String caseTypeId = ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId());
+        String caseTypeId = UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId());
         if (!caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)) {
             return caseData.getFileLocation();
         } else {
@@ -338,7 +412,7 @@ public class ReportHelper {
     }
 
     private static String getTribunalOffice(ListingDetails listingDetails, CaseData caseData) {
-        String caseTypeId = ListingHelper.getCaseTypeId(listingDetails.getCaseTypeId());
+        String caseTypeId = UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId());
         return caseTypeId.equals(SCOTLAND_CASE_TYPE_ID) ? caseData.getManagingOffice() : caseTypeId;
     }
 
@@ -346,7 +420,7 @@ public class ReportHelper {
         if (!isNullOrEmpty(conciliationTrack)) {
             switch (conciliationTrack) {
                 case CONCILIATION_TRACK_NO_CONCILIATION:
-                    return CONCILIATION_TRACK_NUMBER_ONE ;
+                    return CONCILIATION_TRACK_NUMBER_ONE;
                 case CONCILIATION_TRACK_FAST_TRACK:
                     return CONCILIATION_TRACK_NUMBER_TWO;
                 case CONCILIATION_TRACK_STANDARD_TRACK:
@@ -374,10 +448,10 @@ public class ReportHelper {
 
     private static boolean validCaseForCasesCompetedReport(SubmitEvent submitEvent) {
         CaseData caseData = submitEvent.getCaseData();
-        return (submitEvent.getState() != null &&
-                submitEvent.getState().equals(CLOSED_STATE) &&
-                validPositionTypeForCasesCompetedReport(caseData) &&
-                validJurisdictionOutcomeForCasesCompetedReport(caseData));
+        return (submitEvent.getState() != null
+                && submitEvent.getState().equals(CLOSED_STATE)
+                && validPositionTypeForCasesCompetedReport(caseData)
+                && validJurisdictionOutcomeForCasesCompetedReport(caseData));
     }
 
     private static boolean validPositionTypeForCasesCompetedReport(CaseData caseData) {
@@ -394,10 +468,11 @@ public class ReportHelper {
         if (caseData.getJurCodesCollection() != null && !caseData.getJurCodesCollection().isEmpty()) {
             for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
                 JurCodesType jurCodesType = jurCodesTypeItem.getValue();
-                if (jurCodesType.getJudgmentOutcome() != null &&
-                        (jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING) ||
-                                jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_UNSUCCESSFUL_AT_HEARING) ||
-                                jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_DISMISSED_AT_HEARING))) {
+                if (jurCodesType.getJudgmentOutcome() != null
+                        && (jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING)
+                        || jurCodesType.getJudgmentOutcome()
+                        .equals(JURISDICTION_OUTCOME_UNSUCCESSFUL_AT_HEARING)
+                        || jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_DISMISSED_AT_HEARING))) {
                     return true;
                 }
             }
@@ -416,7 +491,8 @@ public class ReportHelper {
         return false;
     }
 
-    private static boolean casesCompletedIsValid(AdhocReportTypeItem adhocReportTypeItem, DateListedType dateListedType) {
+    private static boolean casesCompletedIsValid(AdhocReportTypeItem adhocReportTypeItem,
+                                                 DateListedType dateListedType) {
         AdhocReportType adhocReportType = adhocReportTypeItem.getValue();
         if (dateListedType.getHearingCaseDisposed() != null && dateListedType.getHearingCaseDisposed().equals(YES)) {
             if (adhocReportType != null) {
@@ -435,7 +511,8 @@ public class ReportHelper {
     }
 
     private static boolean caseContainsHearingDates(HearingTypeItem hearingTypeItem) {
-        return (hearingTypeItem.getValue().getHearingDateCollection() != null && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty());
+        return (hearingTypeItem.getValue().getHearingDateCollection() != null
+                && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty());
     }
 
 }

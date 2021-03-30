@@ -34,14 +34,16 @@ public class BulkPreAcceptTask implements Runnable {
         log.info("Waiting: " + Thread.currentThread().getName());
         String caseId = String.valueOf(submitEvent.getCaseId());
         try {
-            CCDRequest returnedRequest = ccdClient.startEventForCasePreAcceptBulkSingle(authToken, UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                    bulkDetails.getJurisdiction(), caseId);
             log.info("Moving to accepted state");
             CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
             casePreAcceptType.setCaseAccepted(YES);
             casePreAcceptType.setDateAccepted(UtilHelper.formatCurrentDate2(LocalDate.now()));
             submitEvent.getCaseData().setPreAcceptCase(casePreAcceptType);
-            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+            CCDRequest returnedRequest = ccdClient.startEventForCasePreAcceptBulkSingle(authToken,
+                    UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                    bulkDetails.getJurisdiction(), caseId);
+            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(),
+                    UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                     bulkDetails.getJurisdiction(), returnedRequest, caseId);
         } catch (IOException e) {
             log.error("Error processing bulk pre accept threads");

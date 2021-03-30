@@ -18,7 +18,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.getCCDCallbackResponseResponseEntityWithoutErrors;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -50,7 +50,7 @@ public class ReferenceDataController {
 
         CaseData caseData = referenceService.fetchHearingVenueRefData(ccdRequest.getCaseDetails(), userToken);
 
-        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+        return getCallbackRespEntityNoErrors(caseData);
     }
 
     @PostMapping(value = "/dateListedReferenceData", consumes = APPLICATION_JSON_VALUE)
@@ -73,7 +73,7 @@ public class ReferenceDataController {
 
         CaseData caseData = referenceService.fetchDateListedRefData(ccdRequest.getCaseDetails(), userToken);
 
-        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+        return getCallbackRespEntityNoErrors(caseData);
     }
 
 }

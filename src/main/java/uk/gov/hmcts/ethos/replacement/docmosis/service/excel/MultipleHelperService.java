@@ -202,10 +202,10 @@ public class MultipleHelperService {
 
     }
 
-
-    public void sendCreationUpdatesToSinglesWithoutConfirmation(String userToken, String caseTypeId, String jurisdiction,
-                                                           MultipleData updatedMultipleData, List<String> errors,
-                                                           List<String> multipleObjectsFiltered, String leadId) {
+    public void sendCreationUpdatesToSinglesWithoutConfirmation(String userToken, String caseTypeId,
+                                                                String jurisdiction, MultipleData updatedMultipleData,
+                                                                List<String> errors,
+                                                                List<String> multipleObjectsFiltered, String leadId) {
 
         String username = userService.getUserDetails(userToken).getEmail();
 
@@ -284,13 +284,15 @@ public class MultipleHelperService {
         CasePreAcceptType casePreAcceptType = multipleData.getPreAcceptCase();
 
         sendTaskToSinglesWithConfirmation(userToken, multipleDetails,
-                PersistentQHelper.getRejectDataModel(casePreAcceptType.getDateRejected(), casePreAcceptType.getRejectReason()),
+                PersistentQHelper.getRejectDataModel(casePreAcceptType.getDateRejected(),
+                        casePreAcceptType.getRejectReason()),
                 errors,
                 YES);
 
     }
 
-    public void sendCloseToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails, List<String> errors) {
+    public void sendCloseToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails,
+                                                      List<String> errors) {
 
         MultipleData multipleData = multipleDetails.getCaseData();
 
@@ -301,7 +303,8 @@ public class MultipleHelperService {
 
     }
 
-    private void sendTaskToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails, DataModelParent dataModelParent,
+    private void sendTaskToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails,
+                                                   DataModelParent dataModelParent,
                                                    List<String> errors, String confirmation) {
 
         MultipleData multipleData = multipleDetails.getCaseData();
@@ -362,8 +365,9 @@ public class MultipleHelperService {
 
     }
 
-    private void sendUpdatesToSinglesLogicCheckingLead(String userToken, MultipleDetails multipleDetails, List<String> errors,
-                                                      String newLeadCase, TreeMap<String, Object> multipleObjects) {
+    private void sendUpdatesToSinglesLogicCheckingLead(String userToken, MultipleDetails multipleDetails,
+                                                       List<String> errors, String newLeadCase,
+                                                       TreeMap<String, Object> multipleObjects) {
 
         String oldLeadCase = MultiplesHelper.getCurrentLead(multipleDetails.getCaseData().getLeadCase());
 

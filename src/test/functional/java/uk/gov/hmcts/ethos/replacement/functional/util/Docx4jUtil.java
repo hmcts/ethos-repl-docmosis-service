@@ -5,16 +5,18 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.Text;
-
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 
 public class Docx4jUtil {
+
+    private Docx4jUtil() {
+    }
 
     public static List<String> getAllTextElementsFromDocument(File document) throws JAXBException, Docx4JException {
         List<String> result = new LinkedList<>();
@@ -35,7 +37,8 @@ public class Docx4jUtil {
         return result;
     }
 
-    public static List<String> getSelectedTextElementsFromDocument(File document, String docVersion) throws JAXBException, Docx4JException {
+    public static List<String> getSelectedTextElementsFromDocument(File document, String docVersion)
+            throws JAXBException, Docx4JException {
         List<String> result = new LinkedList<>();
 
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(document);
@@ -53,10 +56,14 @@ public class Docx4jUtil {
             Text text = (Text) ((JAXBElement) obj).getValue();
 
             //Loop ends when last end tag is found
-            if (isElemFound && text.getValue().contains("<<es")) break;
+            if (isElemFound && text.getValue().contains("<<es")) {
+                break;
+            }
 
             //Loop ends when end tag is found
-            if (isElemFound && text.getValue().startsWith("<<else")) break;
+            if (isElemFound && text.getValue().startsWith("<<else")) {
+                break;
+            }
 
             //Condition for <<else>> tag
             if (StringUtils.isEmpty(docVersion) && text.getValue().contains("<<else>>")) {
@@ -77,7 +84,8 @@ public class Docx4jUtil {
         return result;
     }
 
-    public static List<String> getTagsFromDocument(File document, boolean isScotland) throws JAXBException, Docx4JException {
+    public static List<String> getTagsFromDocument(File document, boolean isScotland)
+            throws JAXBException, Docx4JException {
         List<String> result = new LinkedList<>();
 
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(document);
@@ -111,10 +119,15 @@ public class Docx4jUtil {
             }
             if (matcher.matches()) {
                 String value = matcher.group(1);
-                if (StringUtils.isEmpty(value)) continue;
+                if (StringUtils.isEmpty(value)) {
+                    continue;
+                }
 
-                if (isScotland && !value.contains("Scot")) value = "Scot_" + value;
+                if (isScotland && !value.contains("Scot")) {
+                    value = "Scot_" + value;
+                }
                 result.add(value);
+
             }
         }
 

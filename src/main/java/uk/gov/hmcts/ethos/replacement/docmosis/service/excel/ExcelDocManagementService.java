@@ -32,7 +32,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.DATE_TIME_USER_FRIE
 @Service("excelDocManagementService")
 public class ExcelDocManagementService {
 
-    public static final String APPLICATION_EXCEL_VALUE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    public static final String APPLICATION_EXCEL_VALUE =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
     @Value("${document_management.url}")
     private String ccdDMStoreBaseUrl;
@@ -86,7 +87,8 @@ public class ExcelDocManagementService {
     public void writeAndUploadExcelDocument(List<?> multipleCollection, String userToken,
                                             MultipleData multipleData, List<String> subMultipleCollection) {
 
-        byte[] excelBytes = excelCreationService.writeExcel(multipleCollection, subMultipleCollection, multipleData.getLeadCase());
+        byte[] excelBytes = excelCreationService.writeExcel(multipleCollection, subMultipleCollection,
+                multipleData.getLeadCase());
 
         uploadExcelDocument(userToken, multipleData, excelBytes);
 
@@ -110,10 +112,13 @@ public class ExcelDocManagementService {
 
     }
 
-    public DocumentInfo writeAndUploadScheduleDocument(String userToken, TreeMap<String, Object> multipleObjectsFiltered,
-                                                       MultipleDetails multipleDetails, List<SchedulePayload> schedulePayloads) {
+    public DocumentInfo writeAndUploadScheduleDocument(String userToken,
+                                                       TreeMap<String, Object> multipleObjectsFiltered,
+                                                       MultipleDetails multipleDetails,
+                                                       List<SchedulePayload> schedulePayloads) {
 
-        byte[] excelBytes = scheduleCreationService.writeSchedule(multipleDetails.getCaseData(), schedulePayloads, multipleObjectsFiltered);
+        byte[] excelBytes = scheduleCreationService.writeSchedule(multipleDetails.getCaseData(),
+                schedulePayloads, multipleObjectsFiltered);
 
         return uploadScheduleDocument(userToken, multipleDetails.getCaseData(), excelBytes);
 
@@ -123,7 +128,8 @@ public class ExcelDocManagementService {
 
         String documentName = MultiplesScheduleHelper.generateScheduleDocumentName(multipleData);
 
-        URI documentSelfPath = documentManagementService.uploadDocument(userToken, excelBytes, documentName, APPLICATION_EXCEL_VALUE);
+        URI documentSelfPath = documentManagementService.uploadDocument(userToken, excelBytes,
+                documentName, APPLICATION_EXCEL_VALUE);
 
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
 
@@ -136,7 +142,8 @@ public class ExcelDocManagementService {
         return DocumentInfo.builder()
                 .type(SignificantItemType.DOCUMENT.name())
                 .description(documentName)
-                .markUp(documentManagementService.generateMarkupDocument(documentManagementService.generateDownloadableURL(documentSelfPath)))
+                .markUp(documentManagementService.generateMarkupDocument(
+                        documentManagementService.generateDownloadableURL(documentSelfPath)))
                 .url(documentManagementService.generateDownloadableURL(documentSelfPath))
                 .build();
 

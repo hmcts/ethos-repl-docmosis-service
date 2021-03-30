@@ -29,7 +29,6 @@
           "hearingEEMember": " ",
           "hearingERMember": " ",
           "hearingClerk": "Anne Fox",
-          "Hearing_room": "Tribunal 2",
           "hearingDay": "1 of 3",
           "claimantName": "Mr s sdfs",
           "claimantTown": "claimantTown",
@@ -46,7 +45,7 @@
       },
       {
         "value": {
-          "causeListDate": "12 October 2020",
+          "causeListDate": "11 February 2020",
           "causeListTime": "00:00",
           "causeListVenue": "Manchester",
           "elmoCaseReference": "1112",
@@ -73,7 +72,7 @@
       },
       {
         "value": {
-          "causeListDate": "12 October 2020",
+          "causeListDate": "14 December 2020",
           "causeListTime": "00:00",
           "causeListVenue": "Manchester",
           "elmoCaseReference": "1112",
@@ -100,7 +99,7 @@
       },
       {
         "value": {
-          "causeListDate": "12 October 2020",
+          "causeListDate": "12 October 2019",
           "causeListTime": "00:00",
           "causeListVenue": "Manchester",
           "elmoCaseReference": "1112",

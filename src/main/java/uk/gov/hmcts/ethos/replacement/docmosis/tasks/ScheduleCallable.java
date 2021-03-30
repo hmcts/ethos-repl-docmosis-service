@@ -18,7 +18,8 @@ public class ScheduleCallable implements Callable<HashSet<SchedulePayload>> {
     private String caseTypeId;
     private List<String> partitionCaseIds;
 
-    public ScheduleCallable(SingleCasesReadingService singleCasesReadingService, String userToken, String caseTypeId, List<String> partitionCaseIds) {
+    public ScheduleCallable(SingleCasesReadingService singleCasesReadingService, String userToken, String caseTypeId,
+                            List<String> partitionCaseIds) {
         this.singleCasesReadingService = singleCasesReadingService;
         this.userToken = userToken;
         this.caseTypeId = caseTypeId;
@@ -35,7 +36,8 @@ public class ScheduleCallable implements Callable<HashSet<SchedulePayload>> {
 
         for (SchedulePayloadEvent schedulePayloadEvent : schedulePayloadEvents) {
 
-            schedulePayloads.add(MultiplesScheduleHelper.getSchedulePayloadFromSchedulePayloadES(schedulePayloadEvent.getSchedulePayloadES()));
+            schedulePayloads.add(MultiplesScheduleHelper.getSchedulePayloadFromSchedulePayloadES(
+                    schedulePayloadEvent.getSchedulePayloadES()));
 
         }
 

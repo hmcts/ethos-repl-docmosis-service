@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -52,7 +54,8 @@ public class AddSingleCaseToMultipleService {
 
             MultipleData multipleData = multipleEvent.getCaseData();
 
-            List<String> ethosCaseRefCollection = multipleHelperService.getEthosCaseRefCollection(userToken, multipleData, errors);
+            List<String> ethosCaseRefCollection =
+                    multipleHelperService.getEthosCaseRefCollection(userToken, multipleData, errors);
 
             String newEthosCaseReferenceToAdd = caseData.getEthosCaseReference();
 
@@ -98,8 +101,8 @@ public class AddSingleCaseToMultipleService {
     }
 
     private void addNewLeadToMultiple(String userToken, String multipleCaseTypeId, String jurisdiction,
-                                        MultipleData multipleData, String leadClaimant, String newEthosCaseReferenceToAdd,
-                                        String caseId, List<String> errors) {
+                                      MultipleData multipleData, String leadClaimant,
+                                      String newEthosCaseReferenceToAdd, String caseId, List<String> errors) {
 
         if (leadClaimant.equals(YES)) {
 

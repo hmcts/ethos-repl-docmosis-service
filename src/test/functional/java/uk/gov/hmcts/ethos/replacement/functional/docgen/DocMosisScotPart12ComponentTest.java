@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisScotPart12ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before

@@ -1,7 +1,16 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataValidation;
+import org.apache.poi.ss.usermodel.DataValidationConstraint;
+import org.apache.poi.ss.usermodel.DataValidationHelper;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Name;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -14,7 +23,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.CONSTRAINT_KEY;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HIDDEN_SHEET_NAME;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NAME;
 
 @Slf4j
 @Service("excelCreationService")
@@ -105,7 +116,7 @@ public class ExcelCreationService {
         //Adjust the column width to fit the content
         sheet.autoSizeColumn(0);
         sheet.setColumnWidth(1, 8000);
-        for (int i=2; i<=5; i++) {
+        for (int i = 2; i <= 5; i++) {
             sheet.setColumnWidth(i, 4000);
         }
     }
@@ -132,7 +143,8 @@ public class ExcelCreationService {
             namedCell.setNameName(HIDDEN_SHEET_NAME);
             namedCell.setRefersToFormula(HIDDEN_SHEET_NAME + "!$A$1:$A$" + subMultipleCollection.size());
 
-            CellRangeAddressList cellRangeAddressList = new CellRangeAddressList(1, multipleCollection.size(), 1, 1);
+            CellRangeAddressList cellRangeAddressList =
+                    new CellRangeAddressList(1, multipleCollection.size(), 1, 1);
             DataValidationHelper helper = sheet.getDataValidationHelper();
             DataValidationConstraint constraint = helper.createFormulaListConstraint(HIDDEN_SHEET_NAME);
             DataValidation dataValidation = helper.createValidation(constraint, cellRangeAddressList);
@@ -188,7 +200,7 @@ public class ExcelCreationService {
                             createCell(row, j++, ethosCaseRef, styleForLocking);
                         }
 
-                        for (int k = 0; k < MultiplesHelper.HEADERS.size()-1; k++) {
+                        for (int k = 0; k < MultiplesHelper.HEADERS.size() - 1; k++) {
                             if (k == 0 && subMultipleCollection.isEmpty()) {
                                 createCell(row, j++, "", styleForLocking);
                             } else {

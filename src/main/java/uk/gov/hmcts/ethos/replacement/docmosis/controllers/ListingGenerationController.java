@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -19,7 +20,6 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.ListingService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
@@ -36,14 +36,11 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.POST_DEFAULT_XLSX_F
 @RestController
 public class ListingGenerationController {
 
-    private static final String LOG_MESSAGE = "received notification request for case reference :    ";
-
+    private static final String LOG_MESSAGE = "received notification request for case reference : ";
     private static final String GENERATED_DOCUMENT_URL = "Please download the document from : ";
 
     private final ListingService listingService;
-
     private final DefaultValuesReaderService defaultValuesReaderService;
-
     private final VerifyTokenService verifyTokenService;
 
     @PostMapping(value = "/listingCaseCreation", consumes = APPLICATION_JSON_VALUE)
@@ -114,12 +111,14 @@ public class ListingGenerationController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        ListingData listingData = listingService.processListingHearingsRequest(listingRequest.getCaseDetails(), userToken);
+        ListingData listingData = listingService.processListingHearingsRequest(
+                listingRequest.getCaseDetails(), userToken);
 
-        String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null ?
-                listingRequest.getCaseDetails().getCaseData().getListingVenue() : "";
-        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, managingOffice,
-                ListingHelper.getCaseTypeId(listingRequest.getCaseDetails().getCaseTypeId()));
+        String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null
+                ? listingRequest.getCaseDetails().getCaseData().getListingVenue() : "";
+        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(
+                POST_DEFAULT_XLSX_FILE_PATH, managingOffice,
+                UtilHelper.getListingCaseTypeId(listingRequest.getCaseDetails().getCaseTypeId()));
         log.info("Post Default values loaded: " + defaultValues);
         listingData = defaultValuesReaderService.getListingData(listingData, defaultValues);
 
@@ -175,7 +174,8 @@ public class ListingGenerationController {
         ListingData listingData = ccdRequest.getCaseDetails().getCaseData().getPrintHearingCollection();
         if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
             listingData = listingService.setCourtAddressFromCaseData(ccdRequest.getCaseDetails().getCaseData());
-            DocumentInfo documentInfo = listingService.processHearingDocument(listingData, ccdRequest.getCaseDetails().getCaseTypeId(), userToken);
+            DocumentInfo documentInfo = listingService.processHearingDocument(
+                    listingData, ccdRequest.getCaseDetails().getCaseTypeId(), userToken);
             ccdRequest.getCaseDetails().getCaseData().setDocMarkUp(documentInfo.getMarkUp());
             return ResponseEntity.ok(CCDCallbackResponse.builder()
                     .data(ccdRequest.getCaseDetails().getCaseData())
@@ -201,7 +201,8 @@ public class ListingGenerationController {
     public ResponseEntity<CCDCallbackResponse> generateListingsDocSingleCasesConfirmation(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("GENERATE LISTINGS DOC SINGLE CASES CONFIRMATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        log.info("GENERATE LISTINGS DOC SINGLE CASES CONFIRMATION ---> "
+                + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -235,7 +236,8 @@ public class ListingGenerationController {
         List<String> errors = new ArrayList<>();
         ListingData listingData = listingRequest.getCaseDetails().getCaseData();
         if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
-            DocumentInfo documentInfo = listingService.processHearingDocument(listingData, listingRequest.getCaseDetails().getCaseTypeId(), userToken);
+            DocumentInfo documentInfo = listingService.processHearingDocument(
+                    listingData, listingRequest.getCaseDetails().getCaseTypeId(), userToken);
             listingData.setDocMarkUp(documentInfo.getMarkUp());
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .data(listingData)
@@ -261,7 +263,8 @@ public class ListingGenerationController {
     public ResponseEntity<ListingCallbackResponse> generateHearingDocumentConfirmation(
             @RequestBody ListingRequest listingRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("GENERATE HEARING DOCUMENT CONFIRMATION ---> " + LOG_MESSAGE + listingRequest.getCaseDetails().getCaseId());
+        log.info("GENERATE HEARING DOCUMENT CONFIRMATION ---> "
+                + LOG_MESSAGE + listingRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -270,7 +273,8 @@ public class ListingGenerationController {
 
         return ResponseEntity.ok(ListingCallbackResponse.builder()
                 .data(listingRequest.getCaseDetails().getCaseData())
-                .confirmation_header(GENERATED_DOCUMENT_URL + listingRequest.getCaseDetails().getCaseData().getDocMarkUp())
+                .confirmation_header(GENERATED_DOCUMENT_URL
+                        + listingRequest.getCaseDetails().getCaseData().getDocMarkUp())
                 .build());
     }
 

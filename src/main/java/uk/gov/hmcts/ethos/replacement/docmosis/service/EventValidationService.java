@@ -4,19 +4,48 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.items.*;
-import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DepositTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.stream.Collectors.joining;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EMPTY_HEARING_COLLECTION_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EMPTY_RESPONDENT_COLLECTION_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RECEIPT_DATE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_NUMBER_MISMATCH_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_DELETED_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_EXISTENCE_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESP_REP_NAME_MISMATCH_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRespondents;
 
 @Slf4j
@@ -88,9 +117,9 @@ public class EventValidationService {
                         boolean validLink = false;
                         while (respItr.hasNext()) {
                             RespondentSumType respondentSumType = respItr.next().getValue();
-                            if ( (respRepName.equals(respondentSumType.getRespondentName()))
-                                    || (respondentSumType.getResponseRespondentName() != null &&
-                                    respRepName.equals(respondentSumType.getResponseRespondentName())) ) {
+                            if ((respRepName.equals(respondentSumType.getRespondentName()))
+                                    || (respondentSumType.getResponseRespondentName() != null
+                                    && respRepName.equals(respondentSumType.getResponseRespondentName()))) {
                                 validLink = true;
                                 break;
                             }
@@ -108,11 +137,14 @@ public class EventValidationService {
     public List<String> validateHearingNumber(CaseData caseData, CorrespondenceType correspondenceType,
                                               CorrespondenceScotType correspondenceScotType) {
         List<String> errors = new ArrayList<>();
-        String correspondenceHearingNumber = DocumentHelper.getCorrespondenceHearingNumber(correspondenceType, correspondenceScotType);
+        String correspondenceHearingNumber = DocumentHelper.getCorrespondenceHearingNumber(
+                correspondenceType, correspondenceScotType);
         if (correspondenceHearingNumber != null) {
             if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
-                HearingType hearingType = DocumentHelper.getHearingByNumber(caseData.getHearingCollection(), correspondenceHearingNumber);
-                if (hearingType.getHearingNumber() == null || !hearingType.getHearingNumber().equals(correspondenceHearingNumber)) {
+                HearingType hearingType = DocumentHelper.getHearingByNumber(
+                        caseData.getHearingCollection(), correspondenceHearingNumber);
+                if (hearingType.getHearingNumber() == null
+                        || !hearingType.getHearingNumber().equals(correspondenceHearingNumber)) {
                     errors.add(HEARING_NUMBER_MISMATCH_ERROR_MESSAGE);
                 }
             } else {
@@ -133,7 +165,8 @@ public class EventValidationService {
         List<String> jurCodesCollection = getJurCodesCollection(caseData.getJurCodesCollection());
         if (caseData.getJudgementCollection() != null && !caseData.getJudgementCollection().isEmpty()) {
             for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
-                jurCodesCollectionWithinJudgement.addAll(getJurCodesCollection(judgementTypeItem.getValue().getJurisdictionCodes()));
+                jurCodesCollectionWithinJudgement.addAll(
+                        getJurCodesCollection(judgementTypeItem.getValue().getJurisdictionCodes()));
             }
         }
         log.info("Check if all jurCodesCollectionWithinJudgement are in jurCodesCollection");
@@ -182,13 +215,18 @@ public class EventValidationService {
         return errors;
     }
 
-    private void validateResponseReturnedFromJudgeDate(RespondentSumType respondentSumType, List<String> errors, int index) {
-        if (respondentSumType.getResponse_ReferredToJudge() != null && respondentSumType.getResponseReturnedFromJudge() != null) {
+    private void validateResponseReturnedFromJudgeDate(RespondentSumType respondentSumType, List<String> errors,
+                                                       int index) {
+        if (respondentSumType.getResponse_ReferredToJudge() != null
+                && respondentSumType.getResponseReturnedFromJudge() != null) {
             LocalDate responseReferredToJudge = LocalDate.parse(respondentSumType.getResponse_ReferredToJudge());
             LocalDate responseReturnedFromJudge = LocalDate.parse(respondentSumType.getResponseReturnedFromJudge());
             if (responseReturnedFromJudge.isBefore(responseReferredToJudge)) {
-                String respondentName = respondentSumType.getRespondentName() != null ? respondentSumType.getRespondentName() : "missing name";
-                errors.add(EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE + " for respondent " + index + " (" + respondentName + ")");
+                String respondentName = respondentSumType.getRespondentName() != null
+                        ? respondentSumType.getRespondentName()
+                        : "missing name";
+                errors.add(EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE + " for respondent "
+                        + index + " (" + respondentName + ")");
             }
         }
     }
@@ -197,8 +235,11 @@ public class EventValidationService {
         if (respondentSumType.getResponseReceivedDate() != null) {
             LocalDate responseReceivedDate = LocalDate.parse(respondentSumType.getResponseReceivedDate());
             if (responseReceivedDate.isAfter(LocalDate.now())) {
-                String respondentName = respondentSumType.getRespondentName() != null ? respondentSumType.getRespondentName() : "missing name";
-                errors.add(FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE + " for respondent " + index + " (" + respondentName + ")");
+                String respondentName = respondentSumType.getRespondentName() != null
+                        ? respondentSumType.getRespondentName()
+                        : "missing name";
+                errors.add(FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE + " for respondent "
+                        + index + " (" + respondentName + ")");
             }
         }
     }
@@ -212,7 +253,8 @@ public class EventValidationService {
     }
 
     private void populateJurCodesDuplicatedWithinJudgement(List<String> jurCodesCollectionWithinJudgement,
-                                                           Map<String, List<String>> duplicatedJurCodesMap, String key) {
+                                                           Map<String, List<String>> duplicatedJurCodesMap,
+                                                           String key) {
         List<String> duplicatedJurCodes = jurCodesCollectionWithinJudgement.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .entrySet()
@@ -225,7 +267,8 @@ public class EventValidationService {
         }
     }
 
-    private void getJurisdictionCodesErrors(List<String> errors, List<String> jurCodesDoesNotExist, Map<String, List<String>> duplicatedJurCodesMap) {
+    private void getJurisdictionCodesErrors(List<String> errors, List<String> jurCodesDoesNotExist,
+                                            Map<String, List<String>> duplicatedJurCodesMap) {
         if (!jurCodesDoesNotExist.isEmpty()) {
             errors.add(JURISDICTION_CODES_EXISTENCE_ERROR + String.join(", ", jurCodesDoesNotExist));
         }
@@ -248,7 +291,8 @@ public class EventValidationService {
 
             for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
                 JudgementType judgementType = judgementTypeItem.getValue();
-                List<String> jurCodesCollectionWithinJudgement = getJurCodesCollection(judgementType.getJurisdictionCodes());
+                List<String> jurCodesCollectionWithinJudgement =
+                        getJurCodesCollection(judgementType.getJurisdictionCodes());
 
                 log.info("Check if jurCodes collection within judgement exist in jurCodesCollection");
                 jurCodesDoesNotExist.addAll(jurCodesCollectionWithinJudgement.stream()
@@ -272,8 +316,8 @@ public class EventValidationService {
 
             for (DepositTypeItem depositTypeItem : caseData.getDepositCollection()) {
                 if (!isNullOrEmpty(depositTypeItem.getValue().getDepositAmountRefunded())) {
-                    if (isNullOrEmpty(depositTypeItem.getValue().getDepositAmount()) ||
-                            Integer.parseInt(depositTypeItem.getValue().getDepositAmountRefunded())
+                    if (isNullOrEmpty(depositTypeItem.getValue().getDepositAmount())
+                            || Integer.parseInt(depositTypeItem.getValue().getDepositAmountRefunded())
                             > Integer.parseInt(depositTypeItem.getValue().getDepositAmount())) {
                         errors.add(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR);
                     }

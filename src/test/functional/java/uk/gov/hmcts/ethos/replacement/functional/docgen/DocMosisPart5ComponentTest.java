@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisPart5ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -82,7 +81,8 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_5() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "5", "is considering listing this case for a preliminary hearing to discuss case");
+        testUtil.executeGenerateDocumentTest("5", "5",
+                "is considering listing this case for a preliminary hearing to discuss case");
     }
 
     @Test
@@ -92,12 +92,14 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_6() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "6", "Having considered the proposals of the parties, Employment Judge");
+        testUtil.executeGenerateDocumentTest("5", "6",
+                "Having considered the proposals of the parties, Employment Judge");
     }
 
     @Test
     public void generateDocument_Part5_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "7", "Having considered the proposals of the parties, Employment Judge");
+        testUtil.executeGenerateDocumentTest("5", "7",
+                "Having considered the proposals of the parties, Employment Judge");
     }
 
     @Test
@@ -187,7 +189,8 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_19() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "19", "Your application for a witness order has been granted by Employment Judge");
+        testUtil.executeGenerateDocumentTest("5", "19",
+                "Your application for a witness order has been granted by Employment Judge");
     }
 
     @Test
@@ -232,7 +235,8 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_27() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "27", "The respondent will then be entitled to notice of any hearings and decisions");
+        testUtil.executeGenerateDocumentTest("5", "27",
+                "The respondent will then be entitled to notice of any hearings and decisions");
     }
 
     @Test
@@ -272,27 +276,32 @@ public class DocMosisPart5ComponentTest {
 
     @Test
     public void generateDocument_Part5_35() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "35", "application to set aside the dismissal of your response following non-compliance with the Unless");
+        testUtil.executeGenerateDocumentTest("5", "35",
+                "application to set aside the dismissal of your response following non-compliance with the Unless");
     }
 
     @Test
     public void generateDocument_Part5_36() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "36", "After considering the objections to the proposal to strike out");
+        testUtil.executeGenerateDocumentTest("5", "36",
+                "After considering the objections to the proposal to strike out");
     }
 
     @Test
     public void generateDocument_Part5_37() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "37", "After considering the objections to the proposal to strike out");
+        testUtil.executeGenerateDocumentTest("5", "37",
+                "After considering the objections to the proposal to strike out");
     }
 
     @Test
     public void generateDocument_Part5_38() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "38", "We enclose a copy of a letter which we have received from the respondent alleging that you");
+        testUtil.executeGenerateDocumentTest("5", "38",
+                "We enclose a copy of a letter which we have received from the respondent alleging that you");
     }
 
     @Test
     public void generateDocument_Part5_39() throws Exception {
-        testUtil.executeGenerateDocumentTest("5", "39", "We enclose a copy of a letter which we have received from the claimant alleging that you have");
+        testUtil.executeGenerateDocumentTest("5", "39",
+                "We enclose a copy of a letter which we have received from the claimant alleging that you have");
     }
 
     @Test

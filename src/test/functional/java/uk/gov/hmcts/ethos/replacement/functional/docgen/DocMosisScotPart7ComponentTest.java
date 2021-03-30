@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisScotPart7ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -42,7 +41,8 @@ public class DocMosisScotPart7ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_60() throws Exception {
-        testUtil.executeGenerateDocumentTest("60", "", "is struck out under rule 37 of the Rules contained in Schedule 1", true);
+        testUtil.executeGenerateDocumentTest("60", "",
+                "is struck out under rule 37 of the Rules contained in Schedule 1", true);
     }
 
     @Test

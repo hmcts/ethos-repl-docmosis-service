@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisPart13ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -42,7 +41,8 @@ public class DocMosisPart13ComponentTest {
 
     @Test
     public void generateDocument_Part13_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "2", "I have been informed that a settlement agreement has been made between the parties");
+        testUtil.executeGenerateDocumentTest("13", "2",
+                "I have been informed that a settlement agreement has been made between the parties");
     }
 
     @Test
@@ -87,42 +87,50 @@ public class DocMosisPart13ComponentTest {
 
     @Test
     public void generateDocument_Part13_6C() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "6C", "has directed that the parties are to write to the Tribunal");
+        testUtil.executeGenerateDocumentTest("13", "6C",
+                "has directed that the parties are to write to the Tribunal");
     }
 
     @Test
     public void generateDocument_Part13_6R() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "6R", "has directed that the parties are to write to the Tribunal");
+        testUtil.executeGenerateDocumentTest("13", "6R",
+                "has directed that the parties are to write to the Tribunal");
     }
 
     @Test
     public void generateDocument_Part13_7C() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "7C", "Your letter has been treated as a change of address for correspondence");
+        testUtil.executeGenerateDocumentTest("13", "7C",
+                "Your letter has been treated as a change of address for correspondence");
     }
 
     @Test
     public void generateDocument_Part13_7R() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "7R", "Your letter has been treated as a change of address for correspondence");
+        testUtil.executeGenerateDocumentTest("13", "7R",
+                "Your letter has been treated as a change of address for correspondence");
     }
 
     @Test
     public void generateDocument_Part13_8C() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "8C", "Please note that correspondence intended for the Employment Tribunal should be addressed to");
+        testUtil.executeGenerateDocumentTest("13", "8C",
+                "Please note that correspondence intended for the Employment Tribunal should be addressed to");
     }
 
     @Test
     public void generateDocument_Part13_8R() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "8R", "Please note that correspondence intended for the Employment Tribunal should be addressed to");
+        testUtil.executeGenerateDocumentTest("13", "8R",
+                "Please note that correspondence intended for the Employment Tribunal should be addressed to");
     }
 
     @Test
     public void generateDocument_Part13_9C() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "9C", "has asked me to explain that correspondence between the parties");
+        testUtil.executeGenerateDocumentTest("13", "9C",
+                "has asked me to explain that correspondence between the parties");
     }
 
     @Test
     public void generateDocument_Part13_9R() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "9R", "has asked me to explain that correspondence between the parties");
+        testUtil.executeGenerateDocumentTest("13", "9R",
+                "has asked me to explain that correspondence between the parties");
     }
 
     @Test
@@ -177,7 +185,8 @@ public class DocMosisPart13ComponentTest {
 
     @Test
     public void generateDocument_Part13_16() throws Exception {
-        testUtil.executeGenerateDocumentTest("13", "16", "EMPLOYMENT TRIBUNALS ACT 1996 section 4\\(3\\)\\(e\\)");
+        testUtil.executeGenerateDocumentTest("13", "16",
+                "EMPLOYMENT TRIBUNALS ACT 1996 section 4\\(3\\)\\(e\\)");
     }
 
     @Test

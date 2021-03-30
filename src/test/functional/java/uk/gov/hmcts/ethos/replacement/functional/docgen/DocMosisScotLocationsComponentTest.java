@@ -22,7 +22,6 @@ import java.io.IOException;
 })
 public class DocMosisScotLocationsComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -32,22 +31,26 @@ public class DocMosisScotLocationsComponentTest {
 
     @Test
     public void generateDocument_Scot_Glasgow_Location() throws Exception {
-        testUtil.executeOutstationDocumentTest("1", "", "glasgowet@justice.gov.uk", true, Constants.TEST_DATA_SCOT_GLASGOW_CASE1);
+        testUtil.executeOutstationDocumentTest("1", "", "glasgowet@justice.gov.uk", true,
+                Constants.TEST_DATA_SCOT_GLASGOW_CASE1);
     }
 
     @Test
     public void generateDocument_Scot_Aberdeen_Location() throws Exception {
-        testUtil.executeOutstationDocumentTest("1", "", "aberdeenet@justice.gov.uk", true, Constants.TEST_DATA_SCOT_ABERDEEN_CASE1);
+        testUtil.executeOutstationDocumentTest("1", "", "aberdeenet@justice.gov.uk", true,
+                Constants.TEST_DATA_SCOT_ABERDEEN_CASE1);
     }
 
     @Test
     public void generateDocument_Scot_Dundee_Location() throws Exception {
-        testUtil.executeOutstationDocumentTest("1", "", "dundeeet@justice.gov.uk", true, Constants.TEST_DATA_SCOT_DUNDEE_CASE1);
+        testUtil.executeOutstationDocumentTest("1", "", "dundeeet@justice.gov.uk", true,
+                Constants.TEST_DATA_SCOT_DUNDEE_CASE1);
     }
 
     @Test
     public void generateDocument_Scot_Edinburgh_Location() throws Exception {
-        testUtil.executeOutstationDocumentTest("1", "", "edinburghet@justice.gov.uk", true, Constants.TEST_DATA_SCOT_EDINBURGH_CASE1);
+        testUtil.executeOutstationDocumentTest("1", "", "edinburghet@justice.gov.uk", true,
+                Constants.TEST_DATA_SCOT_EDINBURGH_CASE1);
     }
 
     @After

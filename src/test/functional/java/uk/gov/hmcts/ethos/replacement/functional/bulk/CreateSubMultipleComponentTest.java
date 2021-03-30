@@ -18,8 +18,6 @@ import uk.gov.hmcts.ethos.replacement.functional.util.TestUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
@@ -30,19 +28,22 @@ import java.util.List;
 public class CreateSubMultipleComponentTest {
 
     private TestUtil testUtil;
-    private List<String> caseList = new ArrayList<>();
 
     @Before
     public void setUp() {
         testUtil = new TestUtil();
     }
+
     @Test
     public void create_sub_multiples_eng() throws IOException {
-        testUtil.executeCreateSubMultiples(false,Constants.TEST_DATA_ENG_CREATE_SUB_MULTIPLE,24,"Manchester_Multiples_Dev");
+        testUtil.executeCreateSubMultiples(false, Constants.TEST_DATA_ENG_CREATE_SUB_MULTIPLE,
+                24, "Manchester_Multiples_Dev");
     }
+
     @Test
     public void create_sub_multiples_scot() throws IOException {
-        testUtil.executeCreateSubMultiples(false,Constants.TEST_DATA_ENG_CREATE_SUB_MULTIPLE,41,"Scotland_Multiples_Dev");
+        testUtil.executeCreateSubMultiples(false, Constants.TEST_DATA_ENG_CREATE_SUB_MULTIPLE,
+                41, "Scotland_Multiples_Dev");
     }
 
     @Test
@@ -61,7 +62,6 @@ public class CreateSubMultipleComponentTest {
         Response response = testUtil.getBulkResponse(bulkRequest, Constants.UPDATE_BULK_CASE_URI, 500);
         testUtil.setAuthToken(null);
     }
-
 
     @After
     public void tearDown() {

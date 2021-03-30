@@ -10,7 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.ecm.common.model.ccd.*;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ecm.common.model.ccd.SignificantItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
@@ -22,15 +27,15 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_EMPTY_ERROR;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.getCCDCallbackResponseResponseEntityWithErrors;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.getCCDCallbackResponseResponseEntityWithoutErrors;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrors;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class DocumentGenerationController {
 
-    private static final String LOG_MESSAGE = "received notification request for case reference :    ";
+    private static final String LOG_MESSAGE = "received notification request for case reference : ";
     private static final String GENERATED_DOCUMENT_URL = "Please download the document from : ";
 
     private final DocumentGenerationService documentGenerationService;
@@ -64,7 +69,7 @@ public class DocumentGenerationController {
             log.info("Event fields validation: " + errors);
         }
 
-        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
+        return getCallbackRespEntityErrors(errors, caseData);
     }
 
     @PostMapping(value = "/midSelectedAddressLabels", consumes = APPLICATION_JSON_VALUE)
@@ -88,7 +93,7 @@ public class DocumentGenerationController {
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         caseData = documentGenerationService.midSelectedAddressLabels(caseData);
 
-        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+        return getCallbackRespEntityNoErrors(caseData);
     }
 
     @PostMapping(value = "/midValidateAddressLabels", consumes = APPLICATION_JSON_VALUE)
@@ -114,7 +119,7 @@ public class DocumentGenerationController {
         errors = documentGenerationService.midValidateAddressLabels(caseData);
         log.info("Event fields validation: " + errors);
 
-        return getCCDCallbackResponseResponseEntityWithErrors(errors, caseData);
+        return getCallbackRespEntityErrors(errors, caseData);
     }
 
     @PostMapping(value = "/generateDocument", consumes = APPLICATION_JSON_VALUE)
@@ -138,7 +143,8 @@ public class DocumentGenerationController {
         CaseDetails caseDetails = ccdRequest.getCaseDetails();
 
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails.getCaseData(),
-                caseDetails.getCaseData().getCorrespondenceType(), caseDetails.getCaseData().getCorrespondenceScotType());
+                caseDetails.getCaseData().getCorrespondenceType(), caseDetails.getCaseData()
+                        .getCorrespondenceScotType());
 
         if (errors.isEmpty()) {
             DocumentInfo documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
@@ -155,12 +161,10 @@ public class DocumentGenerationController {
                         .significant_item(significantItem)
                         .build());
             } else {
-                return getCCDCallbackResponseResponseEntityWithErrors(errors, caseDetails.getCaseData());
+                return getCallbackRespEntityErrors(errors, caseDetails.getCaseData());
             }
-        }
-        else {
-
-            return getCCDCallbackResponseResponseEntityWithErrors(errors, caseDetails.getCaseData());
+        } else {
+            return getCallbackRespEntityErrors(errors, caseDetails.getCaseData());
         }
     }
 

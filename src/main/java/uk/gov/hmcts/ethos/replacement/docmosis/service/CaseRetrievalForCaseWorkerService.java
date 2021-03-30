@@ -41,7 +41,8 @@ public class CaseRetrievalForCaseWorkerService {
         }
     }
 
-    public List<SubmitEvent> casesRetrievalESRequest(String currentCaseId, String authToken, String caseTypeId, List<String> caseIds) {
+    public List<SubmitEvent> casesRetrievalESRequest(String currentCaseId, String authToken, String caseTypeId,
+                                                     List<String> caseIds) {
         try {
             return ccdClient.retrieveCasesElasticSearch(authToken, caseTypeId, caseIds);
         } catch (Exception ex) {

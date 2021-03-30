@@ -30,9 +30,11 @@ public class BulkUpdateTask implements Runnable {
         log.info("Waiting: " + Thread.currentThread().getName());
         String caseId = String.valueOf(submitEvent.getCaseId());
         try {
-            CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+            CCDRequest returnedRequest = ccdClient.startEventForCase(authToken,
+                    UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                     bulkDetails.getJurisdiction(), caseId);
-            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(),
+                    UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                     bulkDetails.getJurisdiction(), returnedRequest, caseId);
         } catch (IOException e) {
             log.error("Error processing bulk update threads");

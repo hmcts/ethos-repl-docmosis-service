@@ -35,7 +35,8 @@ public class ReferenceService {
     public CaseData fetchHearingVenueRefData(CaseDetails caseDetails, String authToken) {
         CaseData caseData = caseDetails.getCaseData();
         try {
-            List<ReferenceSubmitEvent> referenceSubmitEvents = ccdClient.retrieveReferenceDataCases(authToken, GOTHAM_REF_DATA_CASE_TYPE_ID, caseDetails.getJurisdiction());
+            List<ReferenceSubmitEvent> referenceSubmitEvents = ccdClient.retrieveReferenceDataCases(authToken,
+                    GOTHAM_REF_DATA_CASE_TYPE_ID, caseDetails.getJurisdiction());
             if (referenceSubmitEvents != null) {
                 log.info(CASES_SEARCHED + referenceSubmitEvents.size());
                 List<DynamicValueType> venuesListItems = createDynamicVenueNameFixedList(referenceSubmitEvents);
@@ -50,17 +51,18 @@ public class ReferenceService {
     public CaseData fetchDateListedRefData(CaseDetails caseDetails, String authToken) {
         CaseData caseData = caseDetails.getCaseData();
         try {
-            List<ReferenceSubmitEvent> referenceSubmitEvents = ccdClient.retrieveReferenceDataCases(authToken, GOTHAM_REF_DATA_CASE_TYPE_ID, caseDetails.getJurisdiction());
+            List<ReferenceSubmitEvent> referenceSubmitEvents = ccdClient.retrieveReferenceDataCases(authToken,
+                    GOTHAM_REF_DATA_CASE_TYPE_ID, caseDetails.getJurisdiction());
             if (referenceSubmitEvents != null) {
                 log.info(CASES_SEARCHED + referenceSubmitEvents.size());
 
                 List<DynamicValueType> venuesListItems = createDynamicVenueNameFixedList(referenceSubmitEvents);
+                // temp store venue name in room name
+                if (!venuesListItems.isEmpty()) {
+                    caseData.setHearingRoom(bindDynamicGenericFixedList(venuesListItems));
+                }
                 List<DynamicValueType> clerksListItems = createDynamicClerkNameFixedList(referenceSubmitEvents);
                 List<DynamicValueType> judgesListItems = createDynamicJudgeNameFixedList(referenceSubmitEvents);
-
-                // temp store venue name in room name
-                if (!venuesListItems.isEmpty()) { caseData.setHearingRoom(bindDynamicGenericFixedList(venuesListItems)); }
-                // .......................................................................................................
 
                 bindDynamicVenueNameFixedList(caseData, venuesListItems);
                 bindDynamicClerkNameFixedList(caseData, clerksListItems);

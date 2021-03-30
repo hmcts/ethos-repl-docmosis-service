@@ -64,8 +64,8 @@ public class PersistentQueueActionsController {
                 && !bulkRequest.getCaseDetails().getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
             BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
                     bulkRequest.getCaseDetails(), userToken, true, false);
-            //BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(bulkRequest.getCaseDetails(), userToken, false);
-            bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, UPDATE_SINGLES_PQ_STEP);
+            bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(),
+                    bulkCasesPayload, userToken, UPDATE_SINGLES_PQ_STEP);
         }
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -74,7 +74,6 @@ public class PersistentQueueActionsController {
                 .confirmation_header("Updates are being processed. A notification will be sent once completed...")
                 .build());
     }
-
 
     @PostMapping(value = "/preAcceptBulkPQ", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "accept a bulk of cases.")
@@ -94,7 +93,8 @@ public class PersistentQueueActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        List<SubmitEvent> submitEvents = bulkSearchService.retrievalCasesForPreAcceptRequest(bulkRequest.getCaseDetails(), userToken);
+        List<SubmitEvent> submitEvents = bulkSearchService.retrievalCasesForPreAcceptRequest(
+                bulkRequest.getCaseDetails(), userToken);
 
         BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(),
                 submitEvents, userToken, true);
@@ -123,7 +123,8 @@ public class PersistentQueueActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, userToken, true);
+        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(
+                bulkRequest, userToken, true);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())

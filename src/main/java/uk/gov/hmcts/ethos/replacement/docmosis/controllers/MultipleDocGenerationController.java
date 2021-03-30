@@ -28,8 +28,8 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.getMultipleCallbackResponseResponseEntity;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.getMultipleCallbackResponseResponseEntityWithDocInfo;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getMultipleCallbackRespEntity;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getMultipleCallbackRespEntityDocInfo;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -67,7 +67,7 @@ public class MultipleDocGenerationController {
 
         DocumentInfo documentInfo = multipleScheduleService.bulkScheduleLogic(userToken, multipleDetails, errors);
 
-        return getMultipleCallbackResponseResponseEntityWithDocInfo(errors, multipleDetails, documentInfo);
+        return getMultipleCallbackRespEntityDocInfo(errors, multipleDetails, documentInfo);
     }
 
     @PostMapping(value = "/printLetter", consumes = APPLICATION_JSON_VALUE)
@@ -91,9 +91,10 @@ public class MultipleDocGenerationController {
         List<String> errors = new ArrayList<>();
         MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
 
-        DocumentInfo documentInfo = multipleLetterService.bulkLetterLogic(userToken, multipleDetails, errors, false);
+        DocumentInfo documentInfo = multipleLetterService.bulkLetterLogic(userToken, multipleDetails,
+                errors, false);
 
-        return getMultipleCallbackResponseResponseEntityWithDocInfo(errors, multipleDetails, documentInfo);
+        return getMultipleCallbackRespEntityDocInfo(errors, multipleDetails, documentInfo);
     }
 
     @PostMapping(value = "/printDocumentConfirmation", consumes = APPLICATION_JSON_VALUE)
@@ -133,7 +134,8 @@ public class MultipleDocGenerationController {
     public ResponseEntity<MultipleCallbackResponse> midSelectedAddressLabelsMultiple(
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("MID SELECTED ADDRESS LABELS MULTIPLE ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+        log.info("MID SELECTED ADDRESS LABELS MULTIPLE ---> "
+                + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
@@ -146,7 +148,7 @@ public class MultipleDocGenerationController {
         multipleDocGenerationService.midSelectedAddressLabelsMultiple(userToken, multipleDetails, errors);
         LabelsHelper.validateNumberOfSelectedLabels(multipleDetails.getCaseData(), errors);
 
-        return getMultipleCallbackResponseResponseEntity(errors, multipleRequest.getCaseDetails());
+        return getMultipleCallbackRespEntity(errors, multipleRequest.getCaseDetails());
     }
 
     @PostMapping(value = "/midValidateAddressLabelsMultiple", consumes = APPLICATION_JSON_VALUE)
@@ -160,17 +162,18 @@ public class MultipleDocGenerationController {
     public ResponseEntity<MultipleCallbackResponse> midValidateAddressLabelsMultiple(
             @RequestBody MultipleRequest multipleRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("MID VALIDATE ADDRESS LABELS MULTIPLE ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+        log.info("MID VALIDATE ADDRESS LABELS MULTIPLE ---> "
+                + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error("Invalid Token {}", userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        List<String> errors = LabelsHelper.midValidateAddressLabelsErrors
-                (multipleRequest.getCaseDetails().getCaseData().getAddressLabelsAttributesType(), MULTIPLE_CASE_TYPE);
+        List<String> errors = LabelsHelper.midValidateAddressLabelsErrors(
+                multipleRequest.getCaseDetails().getCaseData().getAddressLabelsAttributesType(), MULTIPLE_CASE_TYPE);
 
-        return getMultipleCallbackResponseResponseEntity(errors, multipleRequest.getCaseDetails());
+        return getMultipleCallbackRespEntity(errors, multipleRequest.getCaseDetails());
     }
 
 }

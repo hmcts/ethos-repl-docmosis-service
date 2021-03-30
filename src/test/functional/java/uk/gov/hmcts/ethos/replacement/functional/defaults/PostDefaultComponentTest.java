@@ -71,7 +71,8 @@ public class PostDefaultComponentTest {
     @Ignore
     @Test
     public void invoke_pre_default_endpoint_without_auth_token() throws IOException {
-        CCDRequest ccdRequest = testUtil.getCcdRequest("1", "1", false, Constants.TEST_DATA_POST_DEFAULT1);
+        CCDRequest ccdRequest = testUtil.getCcdRequest("1", "1", false,
+                Constants.TEST_DATA_POST_DEFAULT1);
 
         try {
             testUtil.setAuthToken("Bearer authToken");
@@ -97,7 +98,6 @@ public class PostDefaultComponentTest {
         SerenityRest.given().get(new URL(docmosisUrl + Constants.POST_DEFAULT_URI)).then().statusCode(405);
     }
 
-
     @After
     public void tearDown() {
     }
@@ -105,17 +105,26 @@ public class PostDefaultComponentTest {
     private void executeTest(String testData, boolean isScotland) throws IOException {
         testUtil.executePostDefaultValuesTest("positionType", MANUALLY_CREATED_POSITION, false, testData);
         if (isScotland) {
-            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceAddress", "Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS", false, testData);
-            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceTelephone", "0141 204 0730", false, testData);
-            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceFax", "01264 785 177", false, testData);
+            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceAddress",
+                    "Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS", false, testData);
+            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceTelephone", "0141 204 0730",
+                    false, testData);
+            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceFax", "01264 785 177",
+                    false, testData);
             testUtil.executePostDefaultValuesTest("tribunalCorrespondenceDX", "DX 580003", false, testData);
-            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceEmail", "glasgowet@justice.gov.uk", false, testData);
+            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceEmail", "glasgowet@justice.gov.uk",
+                    false, testData);
         } else {
-            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceAddress", "Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA", false, testData);
-            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceTelephone", "0161 833 6100", false, testData);
-            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceFax", "0870 739 4433", false, testData);
+            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceAddress",
+                    "Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA",
+                    false, testData);
+            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceTelephone", "0161 833 6100",
+                    false, testData);
+            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceFax", "0870 739 4433",
+                    false, testData);
             testUtil.executePostDefaultValuesTest("tribunalCorrespondenceDX", "DX 743570", false, testData);
-            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceEmail", "Manchesteret@justice.gov.uk", false, testData);
+            testUtil.executePostDefaultValuesTest("tribunalCorrespondenceEmail", "Manchesteret@justice.gov.uk",
+                    false, testData);
         }
     }
 }

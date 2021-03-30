@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisScotPart14ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -117,12 +116,14 @@ public class DocMosisScotPart14ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_124C() throws Exception {
-        testUtil.executeGenerateDocumentTest("124", "C", "Please find enclosed the documents that you lodged before the Tribunal", true);
+        testUtil.executeGenerateDocumentTest("124", "C",
+                "Please find enclosed the documents that you lodged before the Tribunal", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_124R() throws Exception {
-        testUtil.executeGenerateDocumentTest("124", "R", "Please find enclosed the documents that you lodged before the Tribunal", true);
+        testUtil.executeGenerateDocumentTest("124", "R",
+                "Please find enclosed the documents that you lodged before the Tribunal", true);
     }
 
     @Test
@@ -177,7 +178,8 @@ public class DocMosisScotPart14ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_133() throws Exception {
-        testUtil.executeGenerateDocumentTest("133", "", "The name you have provided for the respondent to your claim", true);
+        testUtil.executeGenerateDocumentTest("133", "", "The name you have provided "
+                + "for the respondent to your claim", true);
     }
 
     @Test
@@ -197,7 +199,8 @@ public class DocMosisScotPart14ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_137() throws Exception {
-        testUtil.executeGenerateDocumentTest("137", "", "The respondent company is in administration. Neither the consent of the administrator nor the", true);
+        testUtil.executeGenerateDocumentTest("137", "",
+                "The respondent company is in administration. Neither the consent of the administrator nor the", true);
     }
 
     @Test
@@ -207,12 +210,15 @@ public class DocMosisScotPart14ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_139() throws Exception {
-        testUtil.executeGenerateDocumentTest("139", "", "an Employment Judge proposes to order that the claim be struck out because the claim has", true);
+        testUtil.executeGenerateDocumentTest("139", "",
+                "an Employment Judge proposes to order that the claim be struck out because the claim has", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_140() throws Exception {
-        testUtil.executeGenerateDocumentTest("140", "", "proceedings to be instituted or continued as required by the Insolvency Act 1986.  No such consent has been obtained", true);
+        testUtil.executeGenerateDocumentTest("140", "",
+                "proceedings to be instituted or continued as required by the Insolvency Act 1986.  No such "
+                        + "consent has been obtained", true);
     }
 
     @Test
@@ -232,17 +238,20 @@ public class DocMosisScotPart14ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_144() throws Exception {
-        testUtil.executeGenerateDocumentTest("144", "", "has ordered that the time allocated for the hearing shall be", true);
+        testUtil.executeGenerateDocumentTest("144", "",
+                "has ordered that the time allocated for the hearing shall be", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_145() throws Exception {
-        testUtil.executeGenerateDocumentTest("145", "", "I enclose an extract of the award as entered in the Register of the Employment Tribunals", true);
+        testUtil.executeGenerateDocumentTest("145", "",
+                "I enclose an extract of the award as entered in the Register of the Employment Tribunals", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_146() throws Exception {
-        testUtil.executeGenerateDocumentTest("146", "", "Enforcement of Orders in Other Jurisdictions", true);
+        testUtil.executeGenerateDocumentTest("146", "", "Enforcement of Orders in Other "
+                + "Jurisdictions", true);
     }
 
     @Test
@@ -257,7 +266,9 @@ public class DocMosisScotPart14ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_149() throws Exception {
-        testUtil.executeGenerateDocumentTest("149", "", "You have not informed us that you have applied to have the Respondent company restored to the Register of Companies", true);
+        testUtil.executeGenerateDocumentTest("149", "",
+                "You have not informed us that you have applied to have the Respondent company restored to the "
+                        + "Register of Companies", true);
     }
 
     @Test

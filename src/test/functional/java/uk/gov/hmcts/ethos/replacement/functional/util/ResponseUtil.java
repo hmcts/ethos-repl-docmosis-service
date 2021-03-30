@@ -1,8 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.functional.util;
 
 import io.restassured.RestAssured;
-import io.restassured.config.RestAssuredConfig;
-import io.restassured.config.SSLConfig;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.rest.SerenityRest;
@@ -19,29 +17,31 @@ public class ResponseUtil {
 
     private static Properties properties;
 
+    private ResponseUtil() {
+    }
+
     public static String getUrlFromResponse(Response response) {
         String urlContent =  response.body().jsonPath().get("confirmation_header").toString();
         Pattern pattern = Pattern.compile(".*href=(.*/binary).*");
         Matcher matcher = pattern.matcher(urlContent);
-        if (matcher.matches()) return matcher.group(1).replace("\"", "");
-        else return null;
+        if (matcher.matches()) {
+            return matcher.group(1).replace("\"", "");
+        } else {
+            return null;
+        }
     }
 
     public static String getAuthToken(String environment) throws IOException {
 
-        String authorizationUrl = getProperty(environment.toLowerCase() + ".idam.auth.url");
-        String username = getProperty(environment.toLowerCase() + ".ccd.username");
-        String password = getProperty(environment.toLowerCase() + ".ccd.password");
-
         //Generate Auth token using code
         RestAssured.useRelaxedHTTPSValidation();
-       // RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
+        //RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
         RequestSpecification httpRequest = SerenityRest.given().relaxedHTTPSValidation().config(RestAssured.config);
         httpRequest.header("Accept", "application/json");
         httpRequest.header("Content-Type", "application/x-www-form-urlencoded");
-        httpRequest.formParam("username", username);
-        httpRequest.formParam("password", password);
-        Response response = httpRequest.post(authorizationUrl);
+        httpRequest.formParam("username", getProperty(environment.toLowerCase() + ".ccd.username"));
+        httpRequest.formParam("password",  getProperty(environment.toLowerCase() + ".ccd.password"));
+        Response response = httpRequest.post(getProperty(environment.toLowerCase() + ".idam.auth.url"));
 
         Assert.assertEquals(200, response.getStatusCode());
 

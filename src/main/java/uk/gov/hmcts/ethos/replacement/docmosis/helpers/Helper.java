@@ -23,13 +23,47 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_ACAS;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_CASE_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_CASE_PAPERS;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_CASE_TRANSFERRED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_DRAFT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_ENQUIRY_ISSUED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_ENQUIRY_RECEIVED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_EXHIBITS;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_INTERLOCUTORY;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_IT3_RECEIVED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_OTHER_ACTION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_POSTPONEMENT_REQUESTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_REFER_CHAIRMAN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_REPLY_TO_ENQUIRY;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_STRIKING_OUT_WARNING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BRISTOL_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_CENTRAL_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_EAST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_SOUTH_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_EAST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_WEST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.WALES_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.WATFORD_CASE_TYPE_ID;
 
 @Slf4j
 public class Helper {
 
-    public static final String HEARING_CREATION_NUMBER_ERROR = "A new hearing can only be added from the List Hearing menu item";
-    public static final String HEARING_CREATION_DAY_ERROR = "A new day for a hearing can only be added from the List Hearing menu item";
+    public static final String HEARING_CREATION_NUMBER_ERROR = "A new hearing can only "
+            + "be added from the List Hearing menu item";
+    public static final String HEARING_CREATION_DAY_ERROR = "A new day for a hearing can "
+            + "only be added from the List Hearing menu item";
+
+    private Helper() {
+    }
 
     public static String nullCheck(String value) {
         return Optional.ofNullable(value).orElse("");
@@ -49,14 +83,16 @@ public class Helper {
         }
     }
 
-    private static List<DynamicValueType> createDynamicRespondentAddressFixedList(List<RespondentSumTypeItem> respondentCollection) {
+    private static List<DynamicValueType> createDynamicRespondentAddressFixedList(
+            List<RespondentSumTypeItem> respondentCollection) {
         List<DynamicValueType> listItems = new ArrayList<>();
         if (respondentCollection != null) {
             for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
                 DynamicValueType dynamicValueType = new DynamicValueType();
                 RespondentSumType respondentSumType = respondentSumTypeItem.getValue();
                 dynamicValueType.setCode(respondentSumType.getRespondentName());
-                dynamicValueType.setLabel(respondentSumType.getRespondentName() + " - " + respondentSumType.getRespondentAddress().toString());
+                dynamicValueType.setLabel(respondentSumType.getRespondentName() + " - "
+                        + respondentSumType.getRespondentAddress().toString());
                 listItems.add(dynamicValueType);
             }
         }
@@ -112,16 +148,19 @@ public class Helper {
     public static String getDocumentName(CorrespondenceType correspondenceType,
                                          CorrespondenceScotType correspondenceScotType) {
         String ewSection = DocumentHelper.getEWSectionName(correspondenceType);
-        String sectionName = ewSection.equals("") ? DocumentHelper.getScotSectionName(correspondenceScotType) : ewSection;
+        String sectionName = ewSection.equals("")
+                ? DocumentHelper.getScotSectionName(correspondenceScotType) : ewSection;
         return DocumentHelper.getTemplateName(correspondenceType, correspondenceScotType) + "_" + sectionName;
     }
 
-    private static List<DynamicValueType> createDynamicRespondentNameList(List<RespondentSumTypeItem> respondentCollection) {
+    private static List<DynamicValueType> createDynamicRespondentNameList(
+            List<RespondentSumTypeItem> respondentCollection) {
         List<DynamicValueType> listItems = new ArrayList<>();
         if (respondentCollection != null) {
             for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
                 RespondentSumType respondentSumType = respondentSumTypeItem.getValue();
-                if (respondentSumType.getResponseStruckOut() == null || respondentSumType.getResponseStruckOut().equals(NO)) {
+                if (respondentSumType.getResponseStruckOut() == null
+                        || respondentSumType.getResponseStruckOut().equals(NO)) {
                     DynamicValueType dynamicValueType = new DynamicValueType();
                     dynamicValueType.setCode(respondentSumType.getRespondentName());
                     dynamicValueType.setLabel(respondentSumType.getRespondentName());
@@ -188,7 +227,8 @@ public class Helper {
                     return errors;
                 }
                 if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
-                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                    for (DateListedTypeItem dateListedTypeItem
+                            : hearingTypeItem.getValue().getHearingDateCollection()) {
                         if (dateListedTypeItem.getValue().getListedDate() == null
                                 || dateListedTypeItem.getValue().getListedDate().isEmpty()) {
                             errors.add(HEARING_CREATION_DAY_ERROR);
@@ -213,7 +253,8 @@ public class Helper {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
 
                 if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
-                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                    for (DateListedTypeItem dateListedTypeItem
+                            : hearingTypeItem.getValue().getHearingDateCollection()) {
 
                         DateListedType dateListedType = dateListedTypeItem.getValue();
                         if (isHearingStatusPostponed(dateListedType) && dateListedType.getPostponedDate() == null) {
@@ -221,7 +262,8 @@ public class Helper {
                         }
                         if (dateListedType.getPostponedDate() != null
                                 &&
-                                (!isHearingStatusPostponed(dateListedType) || dateListedType.getHearingStatus() == null)) {
+                                (!isHearingStatusPostponed(dateListedType)
+                                        || dateListedType.getHearingStatus() == null)) {
                             dateListedType.setPostponedDate(null);
                         }
                     }

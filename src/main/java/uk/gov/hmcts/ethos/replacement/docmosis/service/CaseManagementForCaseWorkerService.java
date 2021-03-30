@@ -27,7 +27,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -43,7 +50,8 @@ public class CaseManagementForCaseWorkerService {
     private static final String CASE_NOT_FOUND_MESSAGE = "Case Reference Number not found.";
 
     @Autowired
-    public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService, CcdClient ccdClient) {
+    public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
+                                              CcdClient ccdClient) {
         this.caseRetrievalForCaseWorkerService = caseRetrievalForCaseWorkerService;
         this.ccdClient = ccdClient;
     }
@@ -59,7 +67,7 @@ public class CaseManagementForCaseWorkerService {
     public void claimantDefaults(CaseData caseData) {
         String claimantTypeOfClaimant = caseData.getClaimantTypeOfClaimant();
         if (!isNullOrEmpty(claimantTypeOfClaimant)) {
-            if(claimantTypeOfClaimant.equals(INDIVIDUAL_TYPE_CLAIMANT)) {
+            if (claimantTypeOfClaimant.equals(INDIVIDUAL_TYPE_CLAIMANT)) {
                 String claimantFirstNames = nullCheck(caseData.getClaimantIndType().getClaimantFirstNames());
                 String claimantLastName = nullCheck(caseData.getClaimantIndType().getClaimantLastName());
                 caseData.setClaimant(claimantFirstNames + " " + claimantLastName);
@@ -75,8 +83,7 @@ public class CaseManagementForCaseWorkerService {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
             caseData.setRespondent(nullCheck(respondentSumType.getRespondentName()));
-        }
-        else {
+        } else {
             caseData.setRespondent(MISSING_RESPONDENT);
         }
     }
@@ -92,7 +99,7 @@ public class CaseManagementForCaseWorkerService {
     }
 
     private void flagsImageFileNameDefaults(CaseData caseData) {
-        if(isNullOrEmpty(caseData.getFlagsImageFileName())) {
+        if (isNullOrEmpty(caseData.getFlagsImageFileName())) {
             caseData.setFlagsImageFileName(DEFAULT_FLAGS_IMAGE_FILE_NAME);
         }
     }
@@ -122,22 +129,26 @@ public class CaseManagementForCaseWorkerService {
                     activeRespondent.add(respondentSumTypeItem);
                 }
             }
-            caseData.setRespondentCollection(Stream.concat(activeRespondent.stream(), struckRespondent.stream()).collect(Collectors.toList()));
+            caseData.setRespondentCollection(Stream.concat(activeRespondent.stream(),
+                    struckRespondent.stream()).collect(Collectors.toList()));
             respondentDefaults(caseData);
         }
         return caseData;
     }
 
     private boolean positionChanged(CaseData caseData) {
-        return (isNullOrEmpty(caseData.getCurrentPosition()) || !caseData.getPositionType().equals(caseData.getCurrentPosition()));
+        return (isNullOrEmpty(caseData.getCurrentPosition())
+                || !caseData.getPositionType().equals(caseData.getCurrentPosition()));
     }
 
     public void amendHearing(CaseData caseData, String caseTypeId) {
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
                 HearingType hearingType =  hearingTypeItem.getValue();
-                if (hearingTypeItem.getValue().getHearingDateCollection() != null && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty()) {
-                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                if (hearingTypeItem.getValue().getHearingDateCollection() != null
+                        && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty()) {
+                    for (DateListedTypeItem dateListedTypeItem
+                            : hearingTypeItem.getValue().getHearingDateCollection()) {
                         DateListedType dateListedType = dateListedTypeItem.getValue();
                         if (dateListedType.getHearingStatus() == null) {
                             dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
@@ -149,7 +160,8 @@ public class CaseManagementForCaseWorkerService {
         }
     }
 
-    private void populateHearingVenueFromHearingLevelToDayLevel(DateListedType dateListedType, HearingType hearingType, String caseTypeId) {
+    private void populateHearingVenueFromHearingLevelToDayLevel(DateListedType dateListedType, HearingType hearingType,
+                                                                String caseTypeId) {
         if (caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)) {
             if (hearingType.getHearingAberdeen() != null) {
                 if (dateListedType.getHearingAberdeen() == null) {
@@ -183,17 +195,19 @@ public class CaseManagementForCaseWorkerService {
         List<SubmitEvent> submitEvents = getCasesES(caseDetails, authToken);
         if (submitEvents != null && !submitEvents.isEmpty()) {
             SubmitEvent submitEvent = submitEvents.get(0);
-            if(ECCHelper.validCaseForECC(submitEvent, errors)) {
+            if (ECCHelper.validCaseForECC(submitEvent, errors)) {
                 switch (callback) {
                     case MID_EVENT_CALLBACK:
                         Helper.midRespondentECC(currentCaseData, submitEvent.getCaseData());
                         break;
                     case ABOUT_TO_SUBMIT_EVENT_CALLBACK:
-                        ECCHelper.createECCLogic(currentCaseData, submitEvent.getCaseData(), String.valueOf(submitEvent.getCaseId()));
+                        ECCHelper.createECCLogic(currentCaseData, submitEvent.getCaseData(),
+                                String.valueOf(submitEvent.getCaseId()));
                         currentCaseData.setRespondentECC(null);
                         break;
                     default:
-                        sendUpdateSingleCaseECC(authToken, caseDetails, submitEvent.getCaseData(), String.valueOf(submitEvent.getCaseId()));
+                        sendUpdateSingleCaseECC(authToken, caseDetails, submitEvent.getCaseData(),
+                                String.valueOf(submitEvent.getCaseId()));
                 }
             }
         } else {
@@ -207,10 +221,12 @@ public class CaseManagementForCaseWorkerService {
 
     private List<SubmitEvent> getCasesES(CaseDetails caseDetails, String authToken) {
         return caseRetrievalForCaseWorkerService.casesRetrievalESRequest(caseDetails.getCaseId(), authToken,
-                caseDetails.getCaseTypeId(), new ArrayList<>(Collections.singleton(caseDetails.getCaseData().getCaseRefECC())));
+                caseDetails.getCaseTypeId(),
+                new ArrayList<>(Collections.singleton(caseDetails.getCaseData().getCaseRefECC())));
     }
 
-    private void sendUpdateSingleCaseECC(String authToken, CaseDetails currentCaseDetails, CaseData originalCaseData, String caseIdToLink) {
+    private void sendUpdateSingleCaseECC(String authToken, CaseDetails currentCaseDetails,
+                                         CaseData originalCaseData, String caseIdToLink) {
         try {
             originalCaseData.setCcdID(currentCaseDetails.getCaseId());
             originalCaseData.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());

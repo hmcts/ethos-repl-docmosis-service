@@ -14,11 +14,25 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesSchedulePrinter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIST_CASES_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_DETAILED_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_1;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_2;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_3;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_4;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_5;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_6;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_SCHEDULE;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.NEW_LINE_CELL;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.SCHEDULE_SHEET_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.SUB_ZERO;
 
@@ -117,7 +131,8 @@ public class ScheduleCreationService {
 
                 log.info("Multiple schedule");
                 for (int j = 0; j < multipleHeaders.size(); j++) {
-                    createCell(tableTitleRow, j, multipleHeaders.get(j), MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
+                    createCell(tableTitleRow, j, multipleHeaders.get(j),
+                            MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
                 }
                 for (int i = 0; i < schedulePayloads.size(); i++) {
                     SchedulePayload schedulePayload = schedulePayloads.get(i);
@@ -133,7 +148,8 @@ public class ScheduleCreationService {
 
                 log.info("Multiple schedule detailed");
                 for (int j = 0; j < multipleDetailedHeaders.size(); j++) {
-                    createCell(tableTitleRow, j, multipleDetailedHeaders.get(j), MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
+                    createCell(tableTitleRow, j, multipleDetailedHeaders.get(j),
+                            MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
                 }
                 for (int i = 0; i < schedulePayloads.size(); i++) {
                     SchedulePayload schedulePayload = schedulePayloads.get(i);
@@ -170,11 +186,10 @@ public class ScheduleCreationService {
 
         if (subMultipleName.equals(NOT_ALLOCATED)) {
 
-            return subMultipleName.replace("_", " ") + " " + multipleData.getMultipleReference() + SUB_ZERO;
+            return subMultipleName.replace("_", " ")
+                    + " " + multipleData.getMultipleReference() + SUB_ZERO;
 
-        }
-
-        else {
+        } else {
 
             return "SubMultiple " + subMultipleName + " " + getSubMultipleRef(multipleData, subMultipleName);
 
@@ -200,7 +215,8 @@ public class ScheduleCreationService {
                 //SUBTITLE ROW
                 XSSFRow tableTitleRow = sheet.createRow(startingRow + 1);
                 for (int j = 0; j < subMultipleHeaders.size(); j++) {
-                    createCell(tableTitleRow, j, subMultipleHeaders.get(j), MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
+                    createCell(tableTitleRow, j, subMultipleHeaders.get(j),
+                            MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
                 }
                 //DATA ROWS
                 for (int i = 0; i < schedulePayloads.size(); i++) {
@@ -222,9 +238,8 @@ public class ScheduleCreationService {
                                                 MultipleData multipleData, List<SchedulePayload> schedulePayloads,
                                                 TreeMap<String, Object> multipleObjectsFiltered) {
 
-        Map<String, SchedulePayload> scheduleEventMap = schedulePayloads.stream().collect(
-                Collectors.toMap(SchedulePayload::getEthosCaseRef,
-                        schedulePayload -> schedulePayload));
+        Map<String, SchedulePayload> scheduleEventMap = schedulePayloads.stream()
+                .collect(Collectors.toMap(SchedulePayload::getEthosCaseRef, schedulePayload -> schedulePayload));
 
         TreeMap<String, List<SchedulePayload>> schedulePayloadTreeMap =
                 MultiplesScheduleHelper.getMultipleTreeMap(multipleObjectsFiltered, scheduleEventMap);
