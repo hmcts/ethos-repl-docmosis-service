@@ -291,11 +291,13 @@ public class ListingHelper {
                 .stream()
                 .filter(listingTypeItem -> !isEmptyHearingRoom(listingTypeItem.getValue()))
                 .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getHearingRoom()));
-        unsortedMap.computeIfAbsent(ROOM_NOT_ALLOCATED,
-                k -> new ArrayList<>()).addAll(listingData.getListingCollection()
+        List<ListingTypeItem> notAllocated = listingData.getListingCollection()
                 .stream()
                 .filter(listingTypeItem -> isEmptyHearingRoom(listingTypeItem.getValue()))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+        if (!notAllocated.isEmpty()){
+            unsortedMap.computeIfAbsent(ROOM_NOT_ALLOCATED, k -> new ArrayList<>()).addAll(notAllocated);
+        }
         return unsortedMap;
     }
 
