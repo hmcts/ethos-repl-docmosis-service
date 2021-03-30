@@ -279,15 +279,22 @@ public class ListingHelper {
         return sb;
     }
 
+    private static boolean isEmptyHearingRoom(ListingType listingType) {
+        if (listingType.getHearingRoom() != null) {
+            return listingType.getHearingRoom().trim().isEmpty();
+        }
+        return true;
+    }
+
     private static Map<String, List<ListingTypeItem>> getListHearingsByRoomWithNotAllocated(ListingData listingData) {
         Map<String, List<ListingTypeItem>> unsortedMap = listingData.getListingCollection()
                 .stream()
-                .filter(listingTypeItem -> listingTypeItem.getValue().getHearingRoom() != null)
+                .filter(listingTypeItem -> !isEmptyHearingRoom(listingTypeItem.getValue()))
                 .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getHearingRoom()));
         unsortedMap.computeIfAbsent(ROOM_NOT_ALLOCATED,
                 k -> new ArrayList<>()).addAll(listingData.getListingCollection()
                 .stream()
-                .filter(listingTypeItem -> listingTypeItem.getValue().getHearingRoom() == null)
+                .filter(listingTypeItem -> isEmptyHearingRoom(listingTypeItem.getValue()))
                 .collect(Collectors.toList()));
         return unsortedMap;
     }
