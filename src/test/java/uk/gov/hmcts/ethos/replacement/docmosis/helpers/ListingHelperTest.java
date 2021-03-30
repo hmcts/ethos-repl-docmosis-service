@@ -44,177 +44,186 @@ public class ListingHelperTest {
 
     @Test
     public void buildCaseCauseListByRoom() {
-        String expected = "{\n" +
-                "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-SCO-ENG-00214.docx\",\n" +
-                "\"outputName\":\"document.docx\",\n" +
-                "\"data\":{\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
-                "\"Court_town\":\"Manchester\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
-                "\"Listed_date\":\"12 October 2020\",\n" +
-                "\"Hearing_location\":\"Manchester\",\n" +
-                "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"location\":[\n" +
-                "{\"Hearing_room\":\"Tribunal 2\",\n" +
-                "\"listing\":[\n" +
-                "{\"Judge\":\"Ms AM Judge\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
-                "\"Court_town\":\"Manchester\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
-                "\"ERMember\":\" \",\n" +
-                "\"EEMember\":\" \",\n" +
-                "\"Case_No\":\"1112\",\n" +
-                "\"Hearing_type\":\"Hearing\",\n" +
-                "\"Jurisdictions\":\"ADG, DCD\",\n" +
-                "\"Hearing_date\":\"11 February 2020\",\n" +
-                "\"Hearing_date_time\":\"11 February 2020 at 00:00\",\n" +
-                "\"Hearing_time\":\"00:00\",\n" +
-                "\"Hearing_duration\":\"12 Days\",\n" +
-                "\"Hearing_clerk\":\"Andrew Pearl\",\n" +
-                "\"Claimant\":\"Mr s sdfs\",\n" +
-                "\"claimant_town\":\"claimantTown1\",\n" +
-                "\"claimant_representative\":\"Rep2\",\n" +
-                "\"Respondent\":\"sdf2\",\n" +
-                "\"resp_others\":\"Mark Taylor\\nTony Jones\",\n" +
-                "\"respondent_town\":\"respondentTown1\",\n" +
-                "\"Hearing_location\":\"Manchester\",\n" +
-                "\"Hearing_room\":\"Tribunal 2\",\n" +
-                "\"Hearing_dayofdays\":\"2 of 3\",\n" +
-                "\"Hearing_panel\":\"\",\n" +
-                "\"Hearing_notes\":\"Notes2\",\n" +
-                "\"respondent_representative\":\"Org2\"},\n" +
-                "{\"Judge\":\"Ms AM Aspden\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
-                "\"Court_town\":\"Manchester\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
-                "\"ERMember\":\" \",\n" +
-                "\"EEMember\":\" \",\n" +
-                "\"Case_No\":\"1112\",\n" +
-                "\"Hearing_type\":\"Hearing\",\n" +
-                "\"Jurisdictions\":\"ADG, COM\",\n" +
-                "\"Hearing_date\":\"12 October 2020\",\n" +
-                "\"Hearing_date_time\":\"12 October 2020 at 00:00\",\n" +
-                "\"Hearing_time\":\"00:00\",\n" +
-                "\"Hearing_duration\":\"12 Days\",\n" +
-                "\"Hearing_clerk\":\"Anne Fox\",\n" +
-                "\"Claimant\":\"Mr s sdfs\",\n" +
-                "\"claimant_town\":\"claimantTown\",\n" +
-                "\"claimant_representative\":\"Rep\",\n" +
-                "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"Mark Taylor\\nTony Jones\\nSteve Thomas\",\n" +
-                "\"respondent_town\":\"respondentTown\",\n" +
-                "\"Hearing_location\":\"Manchester\",\n" +
-                "\"Hearing_room\":\"Tribunal 2\",\n" +
-                "\"Hearing_dayofdays\":\"1 of 3\",\n" +
-                "\"Hearing_panel\":\"Panel\",\n" +
-                "\"Hearing_notes\":\"Notes1\",\n" +
-                "\"respondent_representative\":\"Org\"}]\n" +
-                "},\n" +
-                "{\"Hearing_room\":\"Tribunal 4\",\n" +
-                "\"listing\":[\n" +
-                "{\"Judge\":\"Another Judge\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
-                "\"Court_town\":\"Manchester\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
-                "\"ERMember\":\" \",\n" +
-                "\"EEMember\":\" \",\n" +
-                "\"Case_No\":\"1112\",\n" +
-                "\"Hearing_type\":\"Preliminary Hearing (CM)\",\n" +
-                "\"Jurisdictions\":\"ADG, COM\",\n" +
-                "\"Hearing_date\":\"12 October 2019\",\n" +
-                "\"Hearing_date_time\":\"12 October 2019 at 00:00\",\n" +
-                "\"Hearing_time\":\"00:00\",\n" +
-                "\"Hearing_duration\":\"3 Minutes\",\n" +
-                "\"Hearing_clerk\":\"Juan Fox\",\n" +
-                "\"Claimant\":\"Mr s Dominguez\",\n" +
-                "\"claimant_town\":\"\",\n" +
-                "\"claimant_representative\":\"Representative\",\n" +
-                "\"Respondent\":\"Respondent\",\n" +
-                "\"resp_others\":\"\",\n" +
-                "\"respondent_town\":\"\",\n" +
-                "\"Hearing_location\":\"Manchester\",\n" +
-                "\"Hearing_room\":\"Tribunal 4\",\n" +
-                "\"Hearing_dayofdays\":\"2 of 3\",\n" +
-                "\"Hearing_panel\":\"Panel\",\n" +
-                "\"Hearing_notes\":\"Notes4\",\n" +
-                "\"respondent_representative\":\"Organization\"},\n" +
-                "{\"Judge\":\"Judge For Tribunal4\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
-                "\"Court_town\":\"Manchester\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
-                "\"ERMember\":\" \",\n" +
-                "\"EEMember\":\" \",\n" +
-                "\"Case_No\":\"1112\",\n" +
-                "\"Hearing_type\":\"Preliminary Hearing (CM)\",\n" +
-                "\"Jurisdictions\":\"ADG, COM\",\n" +
-                "\"Hearing_date\":\"14 December 2020\",\n" +
-                "\"Hearing_date_time\":\"14 December 2020 at 00:00\",\n" +
-                "\"Hearing_time\":\"00:00\",\n" +
-                "\"Hearing_duration\":\"12 Minutes\",\n" +
-                "\"Hearing_clerk\":\"Anne Fox\",\n" +
-                "\"Claimant\":\"Mr s sdfs\",\n" +
-                "\"claimant_town\":\"claimantTown2\",\n" +
-                "\"claimant_representative\":\"Rep\",\n" +
-                "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"Mark Taylor\",\n" +
-                "\"respondent_town\":\"respondentTown2\",\n" +
-                "\"Hearing_location\":\"Manchester\",\n" +
-                "\"Hearing_room\":\"Tribunal 4\",\n" +
-                "\"Hearing_dayofdays\":\"2 of 3\",\n" +
-                "\"Hearing_panel\":\"\",\n" +
-                "\"Hearing_notes\":\"Notes3\",\n" +
-                "\"respondent_representative\":\"Org\"}]\n" +
-                "}],\n" +
-                "\"case_total\":\"1\",\n" +
-                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
-                "}\n" +
-                "}\n";
+        String expected = "{\n"
+                + "\"accessKey\":\"\",\n"
+                + "\"templateName\":\"EM-TRB-SCO-ENG-00214.docx\",\n"
+                + "\"outputName\":\"document.docx\",\n"
+                + "\"data\":{\n"
+                + "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n"
+                + "\"Court_addressLine2\":\"Alexandra House\",\n"
+                + "\"Court_addressLine3\":\"14-22 The Parsonage\",\n"
+                + "\"Court_town\":\"Manchester\",\n"
+                + "\"Court_county\":\"\",\n"
+                + "\"Court_postCode\":\"M3 2JA\",\n"
+                + "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, "
+                + "Manchester, M3 2JA\",\n"
+                + "\"Court_telephone\":\"03577131270\",\n"
+                + "\"Court_fax\":\"07577126570\",\n"
+                + "\"Court_DX\":\"123456\",\n"
+                + "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n"
+                + "\"listing_logo\":\"[userImage:enhmcts.png]\",\n"
+                + "\"Listed_date\":\"12 October 2020\",\n"
+                + "\"Hearing_location\":\"Manchester\",\n"
+                + "\"Clerk\":\"Mike Jordan\",\n"
+                + "\"location\":[\n"
+                + "{\"Hearing_room\":\"* Not Allocated\",\n"
+                + "\"listing\":[\n"
+                + "{\"Judge\":\"Ms AM Aspden\",\n"
+                + "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n"
+                + "\"Court_addressLine2\":\"Alexandra House\",\n"
+                + "\"Court_addressLine3\":\"14-22 The Parsonage\",\n"
+                + "\"Court_town\":\"Manchester\",\n"
+                + "\"Court_county\":\"\",\n"
+                + "\"Court_postCode\":\"M3 2JA\",\n"
+                + "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, "
+                + "Manchester, M3 2JA\",\n"
+                + "\"Court_telephone\":\"03577131270\",\n"
+                + "\"Court_fax\":\"07577126570\",\n"
+                + "\"Court_DX\":\"123456\",\n"
+                + "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n"
+                + "\"listing_logo\":\"[userImage:enhmcts.png]\",\n"
+                + "\"ERMember\":\" \",\n"
+                + "\"EEMember\":\" \",\n"
+                + "\"Case_No\":\"1112\",\n"
+                + "\"Hearing_type\":\"Hearing\",\n"
+                + "\"Jurisdictions\":\"ADG, COM\",\n"
+                + "\"Hearing_date\":\"12 October 2020\",\n"
+                + "\"Hearing_date_time\":\"12 October 2020 at 00:00\",\n"
+                + "\"Hearing_time\":\"00:00\",\n"
+                + "\"Hearing_duration\":\"12 Days\",\n"
+                + "\"Hearing_clerk\":\"Anne Fox\",\n"
+                + "\"Claimant\":\"Mr s sdfs\",\n"
+                + "\"claimant_town\":\"claimantTown\",\n"
+                + "\"claimant_representative\":\"Rep\",\n"
+                + "\"Respondent\":\"sdf\",\n"
+                + "\"resp_others\":\"Mark Taylor\\nTony Jones\\nSteve Thomas\",\n"
+                + "\"respondent_town\":\"respondentTown\",\n"
+                + "\"Hearing_location\":\"Manchester\",\n"
+                + "\"Hearing_room\":\"\",\n"
+                + "\"Hearing_dayofdays\":\"1 of 3\",\n"
+                + "\"Hearing_panel\":\"Panel\",\n"
+                + "\"Hearing_notes\":\"Notes with  -  new line\",\n"
+                + "\"respondent_representative\":\"Org\"}]\n"
+                + "},\n"
+                + "{\"Hearing_room\":\"Tribunal 2\",\n"
+                + "\"listing\":[\n"
+                + "{\"Judge\":\"Ms AM Judge\",\n"
+                + "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n"
+                + "\"Court_addressLine2\":\"Alexandra House\",\n"
+                + "\"Court_addressLine3\":\"14-22 The Parsonage\",\n"
+                + "\"Court_town\":\"Manchester\",\n"
+                + "\"Court_county\":\"\",\n"
+                + "\"Court_postCode\":\"M3 2JA\",\n"
+                + "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, "
+                + "Manchester, M3 2JA\",\n"
+                + "\"Court_telephone\":\"03577131270\",\n"
+                + "\"Court_fax\":\"07577126570\",\n"
+                + "\"Court_DX\":\"123456\",\n"
+                + "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n"
+                + "\"listing_logo\":\"[userImage:enhmcts.png]\",\n"
+                + "\"ERMember\":\" \",\n"
+                + "\"EEMember\":\" \",\n"
+                + "\"Case_No\":\"1112\",\n"
+                + "\"Hearing_type\":\"Hearing\",\n"
+                + "\"Jurisdictions\":\"ADG, DCD\",\n"
+                + "\"Hearing_date\":\"11 February 2020\",\n"
+                + "\"Hearing_date_time\":\"11 February 2020 at 00:00\",\n"
+                + "\"Hearing_time\":\"00:00\",\n"
+                + "\"Hearing_duration\":\"12 Days\",\n"
+                + "\"Hearing_clerk\":\"Andrew Pearl\",\n"
+                + "\"Claimant\":\"Mr s sdfs\",\n"
+                + "\"claimant_town\":\"claimantTown1\",\n"
+                + "\"claimant_representative\":\"Rep2\",\n"
+                + "\"Respondent\":\"sdf2\",\n"
+                + "\"resp_others\":\"Mark Taylor\\nTony Jones\",\n"
+                + "\"respondent_town\":\"respondentTown1\",\n"
+                + "\"Hearing_location\":\"Manchester\",\n"
+                + "\"Hearing_room\":\"Tribunal 2\",\n"
+                + "\"Hearing_dayofdays\":\"2 of 3\",\n"
+                + "\"Hearing_panel\":\"\",\n"
+                + "\"Hearing_notes\":\"Notes2\",\n"
+                + "\"respondent_representative\":\"Org2\"}]\n"
+                + "},\n"
+                + "{\"Hearing_room\":\"Tribunal 4\",\n"
+                + "\"listing\":[\n"
+                + "{\"Judge\":\"Another Judge\",\n"
+                + "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n"
+                + "\"Court_addressLine2\":\"Alexandra House\",\n"
+                + "\"Court_addressLine3\":\"14-22 The Parsonage\",\n"
+                + "\"Court_town\":\"Manchester\",\n"
+                + "\"Court_county\":\"\",\n"
+                + "\"Court_postCode\":\"M3 2JA\",\n"
+                + "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, "
+                + "Manchester, M3 2JA\",\n"
+                + "\"Court_telephone\":\"03577131270\",\n"
+                + "\"Court_fax\":\"07577126570\",\n"
+                + "\"Court_DX\":\"123456\",\n"
+                + "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n"
+                + "\"listing_logo\":\"[userImage:enhmcts.png]\",\n"
+                + "\"ERMember\":\" \",\n"
+                + "\"EEMember\":\" \",\n"
+                + "\"Case_No\":\"1112\",\n"
+                + "\"Hearing_type\":\"Preliminary Hearing (CM)\",\n"
+                + "\"Jurisdictions\":\"ADG, COM\",\n"
+                + "\"Hearing_date\":\"12 October 2019\",\n"
+                + "\"Hearing_date_time\":\"12 October 2019 at 00:00\",\n"
+                + "\"Hearing_time\":\"00:00\",\n"
+                + "\"Hearing_duration\":\"3 Minutes\",\n"
+                + "\"Hearing_clerk\":\"Juan Fox\",\n"
+                + "\"Claimant\":\"Mr s Dominguez\",\n"
+                + "\"claimant_town\":\"\",\n"
+                + "\"claimant_representative\":\"Representative\",\n"
+                + "\"Respondent\":\"Respondent\",\n"
+                + "\"resp_others\":\"\",\n"
+                + "\"respondent_town\":\"\",\n"
+                + "\"Hearing_location\":\"Manchester\",\n"
+                + "\"Hearing_room\":\"Tribunal 4\",\n"
+                + "\"Hearing_dayofdays\":\"2 of 3\",\n"
+                + "\"Hearing_panel\":\"Panel\",\n"
+                + "\"Hearing_notes\":\"Notes4\",\n"
+                + "\"respondent_representative\":\"Organization\"},\n"
+                + "{\"Judge\":\"Judge For Tribunal4\",\n"
+                + "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n"
+                + "\"Court_addressLine2\":\"Alexandra House\",\n"
+                + "\"Court_addressLine3\":\"14-22 The Parsonage\",\n"
+                + "\"Court_town\":\"Manchester\",\n"
+                + "\"Court_county\":\"\",\n"
+                + "\"Court_postCode\":\"M3 2JA\",\n"
+                + "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, "
+                + "Manchester, M3 2JA\",\n"
+                + "\"Court_telephone\":\"03577131270\",\n"
+                + "\"Court_fax\":\"07577126570\",\n"
+                + "\"Court_DX\":\"123456\",\n"
+                + "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n"
+                + "\"listing_logo\":\"[userImage:enhmcts.png]\",\n"
+                + "\"ERMember\":\" \",\n"
+                + "\"EEMember\":\" \",\n"
+                + "\"Case_No\":\"1112\",\n"
+                + "\"Hearing_type\":\"Preliminary Hearing (CM)\",\n"
+                + "\"Jurisdictions\":\"ADG, COM\",\n"
+                + "\"Hearing_date\":\"14 December 2020\",\n"
+                + "\"Hearing_date_time\":\"14 December 2020 at 00:00\",\n"
+                + "\"Hearing_time\":\"00:00\",\n"
+                + "\"Hearing_duration\":\"12 Minutes\",\n"
+                + "\"Hearing_clerk\":\"Anne Fox\",\n"
+                + "\"Claimant\":\"Mr s sdfs\",\n"
+                + "\"claimant_town\":\"claimantTown2\",\n"
+                + "\"claimant_representative\":\"Rep\",\n"
+                + "\"Respondent\":\"sdf\",\n"
+                + "\"resp_others\":\"Mark Taylor\",\n"
+                + "\"respondent_town\":\"respondentTown2\",\n"
+                + "\"Hearing_location\":\"Manchester\",\n"
+                + "\"Hearing_room\":\"Tribunal 4\",\n"
+                + "\"Hearing_dayofdays\":\"2 of 3\",\n"
+                + "\"Hearing_panel\":\"\",\n"
+                + "\"Hearing_notes\":\"Notes3\",\n"
+                + "\"respondent_representative\":\"Org\"}]\n"
+                + "}],\n"
+                + "\"case_total\":\"1\",\n"
+                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n"
+                + "}\n"
+                + "}\n";
+        listingDetails.getCaseData().getListingCollection().get(0).getValue().setHearingNotes("Notes with \n new line");
         assertEquals(expected, ListingHelper.buildListingDocumentContent(listingDetails.getCaseData(), "", PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE, userDetails, MANCHESTER_LISTING_CASE_TYPE_ID).toString());
     }
 
@@ -283,171 +292,176 @@ public class ListingHelperTest {
 
     @Test
     public void buildCaseCauseList() {
-        String expected = "{\n" +
-                "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-SCO-ENG-00212.docx\",\n" +
-                "\"outputName\":\"document.docx\",\n" +
-                "\"data\":{\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
-                "\"Court_town\":\"Manchester\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
-                "\"Listed_date\":\"12 October 2020\",\n" +
-                "\"Hearing_location\":\"Manchester\",\n" +
-                "\"Clerk\":\"Mike Jordan\",\n" +
-                "\"listing\":[\n" +
-                "{\"Judge\":\"Another Judge\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
-                "\"Court_town\":\"Manchester\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
-                "\"ERMember\":\" \",\n" +
-                "\"EEMember\":\" \",\n" +
-                "\"Case_No\":\"1112\",\n" +
-                "\"Hearing_type\":\"Preliminary Hearing (CM)\",\n" +
-                "\"Jurisdictions\":\"ADG, COM\",\n" +
-                "\"Hearing_date\":\"12 October 2019\",\n" +
-                "\"Hearing_date_time\":\"12 October 2019 at 00:00\",\n" +
-                "\"Hearing_time\":\"00:00\",\n" +
-                "\"Hearing_duration\":\"3 Minutes\",\n" +
-                "\"Hearing_clerk\":\"Juan Fox\",\n" +
-                "\"Claimant\":\"Mr s Dominguez\",\n" +
-                "\"claimant_town\":\"\",\n" +
-                "\"claimant_representative\":\"Representative\",\n" +
-                "\"Respondent\":\"Respondent\",\n" +
-                "\"resp_others\":\"\",\n" +
-                "\"respondent_town\":\"\",\n" +
-                "\"Hearing_location\":\"Manchester\",\n" +
-                "\"Hearing_room\":\"Tribunal 4\",\n" +
-                "\"Hearing_dayofdays\":\"2 of 3\",\n" +
-                "\"Hearing_panel\":\"Panel\",\n" +
-                "\"Hearing_notes\":\"Notes4\",\n" +
-                "\"respondent_representative\":\"Organization\"},\n" +
-                "{\"Judge\":\"Ms AM Judge\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
-                "\"Court_town\":\"Manchester\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
-                "\"ERMember\":\" \",\n" +
-                "\"EEMember\":\" \",\n" +
-                "\"Case_No\":\"1112\",\n" +
-                "\"Hearing_type\":\"Hearing\",\n" +
-                "\"Jurisdictions\":\"ADG, DCD\",\n" +
-                "\"Hearing_date\":\"11 February 2020\",\n" +
-                "\"Hearing_date_time\":\"11 February 2020 at 00:00\",\n" +
-                "\"Hearing_time\":\"00:00\",\n" +
-                "\"Hearing_duration\":\"12 Days\",\n" +
-                "\"Hearing_clerk\":\"Andrew Pearl\",\n" +
-                "\"Claimant\":\"Mr s sdfs\",\n" +
-                "\"claimant_town\":\"claimantTown1\",\n" +
-                "\"claimant_representative\":\"Rep2\",\n" +
-                "\"Respondent\":\"sdf2\",\n" +
-                "\"resp_others\":\"Mark Taylor\\nTony Jones\",\n" +
-                "\"respondent_town\":\"respondentTown1\",\n" +
-                "\"Hearing_location\":\"Manchester\",\n" +
-                "\"Hearing_room\":\"Tribunal 2\",\n" +
-                "\"Hearing_dayofdays\":\"2 of 3\",\n" +
-                "\"Hearing_panel\":\"\",\n" +
-                "\"Hearing_notes\":\"Notes2\",\n" +
-                "\"respondent_representative\":\"Org2\"},\n" +
-                "{\"Judge\":\"Ms AM Aspden\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
-                "\"Court_town\":\"Manchester\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
-                "\"ERMember\":\" \",\n" +
-                "\"EEMember\":\" \",\n" +
-                "\"Case_No\":\"1112\",\n" +
-                "\"Hearing_type\":\"Hearing\",\n" +
-                "\"Jurisdictions\":\"ADG, COM\",\n" +
-                "\"Hearing_date\":\"12 October 2020\",\n" +
-                "\"Hearing_date_time\":\"12 October 2020 at 00:00\",\n" +
-                "\"Hearing_time\":\"00:00\",\n" +
-                "\"Hearing_duration\":\"12 Days\",\n" +
-                "\"Hearing_clerk\":\"Anne Fox\",\n" +
-                "\"Claimant\":\"Mr s sdfs\",\n" +
-                "\"claimant_town\":\"claimantTown\",\n" +
-                "\"claimant_representative\":\"Rep\",\n" +
-                "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"Mark Taylor\\nTony Jones\\nSteve Thomas\",\n" +
-                "\"respondent_town\":\"respondentTown\",\n" +
-                "\"Hearing_location\":\"Manchester\",\n" +
-                "\"Hearing_room\":\"Tribunal 2\",\n" +
-                "\"Hearing_dayofdays\":\"1 of 3\",\n" +
-                "\"Hearing_panel\":\"Panel\",\n" +
-                "\"Hearing_notes\":\"Notes1\",\n" +
-                "\"respondent_representative\":\"Org\"},\n" +
-                "{\"Judge\":\"Judge For Tribunal4\",\n" +
-                "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n" +
-                "\"Court_addressLine2\":\"Alexandra House\",\n" +
-                "\"Court_addressLine3\":\"14-22 The Parsonage\",\n" +
-                "\"Court_town\":\"Manchester\",\n" +
-                "\"Court_county\":\"\",\n" +
-                "\"Court_postCode\":\"M3 2JA\",\n" +
-                "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, Manchester, M3 2JA\",\n" +
-                "\"Court_telephone\":\"03577131270\",\n" +
-                "\"Court_fax\":\"07577126570\",\n" +
-                "\"Court_DX\":\"123456\",\n" +
-                "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n" +
-                "\"listing_logo\":\"[userImage:enhmcts.png]\",\n" +
-                "\"ERMember\":\" \",\n" +
-                "\"EEMember\":\" \",\n" +
-                "\"Case_No\":\"1112\",\n" +
-                "\"Hearing_type\":\"Preliminary Hearing (CM)\",\n" +
-                "\"Jurisdictions\":\"ADG, COM\",\n" +
-                "\"Hearing_date\":\"14 December 2020\",\n" +
-                "\"Hearing_date_time\":\"14 December 2020 at 00:00\",\n" +
-                "\"Hearing_time\":\"00:00\",\n" +
-                "\"Hearing_duration\":\"12 Minutes\",\n" +
-                "\"Hearing_clerk\":\"Anne Fox\",\n" +
-                "\"Claimant\":\"Mr s sdfs\",\n" +
-                "\"claimant_town\":\"claimantTown2\",\n" +
-                "\"claimant_representative\":\"Rep\",\n" +
-                "\"Respondent\":\"sdf\",\n" +
-                "\"resp_others\":\"Mark Taylor\",\n" +
-                "\"respondent_town\":\"respondentTown2\",\n" +
-                "\"Hearing_location\":\"Manchester\",\n" +
-                "\"Hearing_room\":\"Tribunal 4\",\n" +
-                "\"Hearing_dayofdays\":\"2 of 3\",\n" +
-                "\"Hearing_panel\":\"\",\n" +
-                "\"Hearing_notes\":\"Notes3\",\n" +
-                "\"respondent_representative\":\"Org\"}],\n" +
-                "\"case_total\":\"1\",\n" +
-                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
-                "}\n" +
-                "}\n";
+        String expected = "{\n"
+                + "\"accessKey\":\"\",\n"
+                + "\"templateName\":\"EM-TRB-SCO-ENG-00212.docx\",\n"
+                + "\"outputName\":\"document.docx\",\n"
+                + "\"data\":{\n"
+                + "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n"
+                + "\"Court_addressLine2\":\"Alexandra House\",\n"
+                + "\"Court_addressLine3\":\"14-22 The Parsonage\",\n"
+                + "\"Court_town\":\"Manchester\",\n"
+                + "\"Court_county\":\"\",\n"
+                + "\"Court_postCode\":\"M3 2JA\",\n"
+                + "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, "
+                + "Manchester, M3 2JA\",\n"
+                + "\"Court_telephone\":\"03577131270\",\n"
+                + "\"Court_fax\":\"07577126570\",\n"
+                + "\"Court_DX\":\"123456\",\n"
+                + "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n"
+                + "\"listing_logo\":\"[userImage:enhmcts.png]\",\n"
+                + "\"Listed_date\":\"12 October 2020\",\n"
+                + "\"Hearing_location\":\"Manchester\",\n"
+                + "\"Clerk\":\"Mike Jordan\",\n"
+                + "\"listing\":[\n"
+                + "{\"Judge\":\"Another Judge\",\n"
+                + "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n"
+                + "\"Court_addressLine2\":\"Alexandra House\",\n"
+                + "\"Court_addressLine3\":\"14-22 The Parsonage\",\n"
+                + "\"Court_town\":\"Manchester\",\n"
+                + "\"Court_county\":\"\",\n"
+                + "\"Court_postCode\":\"M3 2JA\",\n"
+                + "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, "
+                + "Manchester, M3 2JA\",\n"
+                + "\"Court_telephone\":\"03577131270\",\n"
+                + "\"Court_fax\":\"07577126570\",\n"
+                + "\"Court_DX\":\"123456\",\n"
+                + "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n"
+                + "\"listing_logo\":\"[userImage:enhmcts.png]\",\n"
+                + "\"ERMember\":\" \",\n"
+                + "\"EEMember\":\" \",\n"
+                + "\"Case_No\":\"1112\",\n"
+                + "\"Hearing_type\":\"Preliminary Hearing (CM)\",\n"
+                + "\"Jurisdictions\":\"ADG, COM\",\n"
+                + "\"Hearing_date\":\"12 October 2019\",\n"
+                + "\"Hearing_date_time\":\"12 October 2019 at 00:00\",\n"
+                + "\"Hearing_time\":\"00:00\",\n"
+                + "\"Hearing_duration\":\"3 Minutes\",\n"
+                + "\"Hearing_clerk\":\"Juan Fox\",\n"
+                + "\"Claimant\":\"Mr s Dominguez\",\n"
+                + "\"claimant_town\":\"\",\n"
+                + "\"claimant_representative\":\"Representative\",\n"
+                + "\"Respondent\":\"Respondent\",\n"
+                + "\"resp_others\":\"\",\n"
+                + "\"respondent_town\":\"\",\n"
+                + "\"Hearing_location\":\"Manchester\",\n"
+                + "\"Hearing_room\":\"Tribunal 4\",\n"
+                + "\"Hearing_dayofdays\":\"2 of 3\",\n"
+                + "\"Hearing_panel\":\"Panel\",\n"
+                + "\"Hearing_notes\":\"Notes4\",\n"
+                + "\"respondent_representative\":\"Organization\"},\n"
+                + "{\"Judge\":\"Ms AM Judge\",\n"
+                + "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n"
+                + "\"Court_addressLine2\":\"Alexandra House\",\n"
+                + "\"Court_addressLine3\":\"14-22 The Parsonage\",\n"
+                + "\"Court_town\":\"Manchester\",\n"
+                + "\"Court_county\":\"\",\n"
+                + "\"Court_postCode\":\"M3 2JA\",\n"
+                + "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, "
+                + "Manchester, M3 2JA\",\n"
+                + "\"Court_telephone\":\"03577131270\",\n"
+                + "\"Court_fax\":\"07577126570\",\n"
+                + "\"Court_DX\":\"123456\",\n"
+                + "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n"
+                + "\"listing_logo\":\"[userImage:enhmcts.png]\",\n"
+                + "\"ERMember\":\" \",\n"
+                + "\"EEMember\":\" \",\n"
+                + "\"Case_No\":\"1112\",\n"
+                + "\"Hearing_type\":\"Hearing\",\n"
+                + "\"Jurisdictions\":\"ADG, DCD\",\n"
+                + "\"Hearing_date\":\"11 February 2020\",\n"
+                + "\"Hearing_date_time\":\"11 February 2020 at 00:00\",\n"
+                + "\"Hearing_time\":\"00:00\",\n"
+                + "\"Hearing_duration\":\"12 Days\",\n"
+                + "\"Hearing_clerk\":\"Andrew Pearl\",\n"
+                + "\"Claimant\":\"Mr s sdfs\",\n"
+                + "\"claimant_town\":\"claimantTown1\",\n"
+                + "\"claimant_representative\":\"Rep2\",\n"
+                + "\"Respondent\":\"sdf2\",\n"
+                + "\"resp_others\":\"Mark Taylor\\nTony Jones\",\n"
+                + "\"respondent_town\":\"respondentTown1\",\n"
+                + "\"Hearing_location\":\"Manchester\",\n"
+                + "\"Hearing_room\":\"Tribunal 2\",\n"
+                + "\"Hearing_dayofdays\":\"2 of 3\",\n"
+                + "\"Hearing_panel\":\"\",\n"
+                + "\"Hearing_notes\":\"Notes2\",\n"
+                + "\"respondent_representative\":\"Org2\"},\n"
+                + "{\"Judge\":\"Ms AM Aspden\",\n"
+                + "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n"
+                + "\"Court_addressLine2\":\"Alexandra House\",\n"
+                + "\"Court_addressLine3\":\"14-22 The Parsonage\",\n"
+                + "\"Court_town\":\"Manchester\",\n"
+                + "\"Court_county\":\"\",\n"
+                + "\"Court_postCode\":\"M3 2JA\",\n"
+                + "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, "
+                + "Manchester, M3 2JA\",\n"
+                + "\"Court_telephone\":\"03577131270\",\n"
+                + "\"Court_fax\":\"07577126570\",\n"
+                + "\"Court_DX\":\"123456\",\n"
+                + "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n"
+                + "\"listing_logo\":\"[userImage:enhmcts.png]\",\n"
+                + "\"ERMember\":\" \",\n"
+                + "\"EEMember\":\" \",\n"
+                + "\"Case_No\":\"1112\",\n"
+                + "\"Hearing_type\":\"Hearing\",\n"
+                + "\"Jurisdictions\":\"ADG, COM\",\n"
+                + "\"Hearing_date\":\"12 October 2020\",\n"
+                + "\"Hearing_date_time\":\"12 October 2020 at 00:00\",\n"
+                + "\"Hearing_time\":\"00:00\",\n"
+                + "\"Hearing_duration\":\"12 Days\",\n"
+                + "\"Hearing_clerk\":\"Anne Fox\",\n"
+                + "\"Claimant\":\"Mr s sdfs\",\n"
+                + "\"claimant_town\":\"claimantTown\",\n"
+                + "\"claimant_representative\":\"Rep\",\n"
+                + "\"Respondent\":\"sdf\",\n"
+                + "\"resp_others\":\"Mark Taylor\\nTony Jones\\nSteve Thomas\",\n"
+                + "\"respondent_town\":\"respondentTown\",\n"
+                + "\"Hearing_location\":\"Manchester\",\n"
+                + "\"Hearing_room\":\"\",\n"
+                + "\"Hearing_dayofdays\":\"1 of 3\",\n"
+                + "\"Hearing_panel\":\"Panel\",\n"
+                + "\"Hearing_notes\":\"Notes1\",\n"
+                + "\"respondent_representative\":\"Org\"},\n"
+                + "{\"Judge\":\"Judge For Tribunal4\",\n"
+                + "\"Court_addressLine1\":\"Manchester Employment Tribunal\",\n"
+                + "\"Court_addressLine2\":\"Alexandra House\",\n"
+                + "\"Court_addressLine3\":\"14-22 The Parsonage\",\n"
+                + "\"Court_town\":\"Manchester\",\n"
+                + "\"Court_county\":\"\",\n"
+                + "\"Court_postCode\":\"M3 2JA\",\n"
+                + "\"Court_fullAddress\":\"Manchester Employment Tribunal, Alexandra House, 14-22 The Parsonage, "
+                + "Manchester, M3 2JA\",\n"
+                + "\"Court_telephone\":\"03577131270\",\n"
+                + "\"Court_fax\":\"07577126570\",\n"
+                + "\"Court_DX\":\"123456\",\n"
+                + "\"Court_Email\":\"ManchesterOfficeET@hmcts.gov.uk\",\n"
+                + "\"listing_logo\":\"[userImage:enhmcts.png]\",\n"
+                + "\"ERMember\":\" \",\n"
+                + "\"EEMember\":\" \",\n"
+                + "\"Case_No\":\"1112\",\n"
+                + "\"Hearing_type\":\"Preliminary Hearing (CM)\",\n"
+                + "\"Jurisdictions\":\"ADG, COM\",\n"
+                + "\"Hearing_date\":\"14 December 2020\",\n"
+                + "\"Hearing_date_time\":\"14 December 2020 at 00:00\",\n"
+                + "\"Hearing_time\":\"00:00\",\n"
+                + "\"Hearing_duration\":\"12 Minutes\",\n"
+                + "\"Hearing_clerk\":\"Anne Fox\",\n"
+                + "\"Claimant\":\"Mr s sdfs\",\n"
+                + "\"claimant_town\":\"claimantTown2\",\n"
+                + "\"claimant_representative\":\"Rep\",\n"
+                + "\"Respondent\":\"sdf\",\n"
+                + "\"resp_others\":\"Mark Taylor\",\n"
+                + "\"respondent_town\":\"respondentTown2\",\n"
+                + "\"Hearing_location\":\"Manchester\",\n"
+                + "\"Hearing_room\":\"Tribunal 4\",\n"
+                + "\"Hearing_dayofdays\":\"2 of 3\",\n"
+                + "\"Hearing_panel\":\"\",\n"
+                + "\"Hearing_notes\":\"Notes3\",\n"
+                + "\"respondent_representative\":\"Org\"}],\n"
+                + "\"case_total\":\"1\",\n"
+                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n"
+                + "}\n"
+                + "}\n";
         assertEquals(expected, ListingHelper.buildListingDocumentContent(listingDetails.getCaseData(), "", PUBLIC_CASE_CAUSE_LIST_TEMPLATE, userDetails, MANCHESTER_LISTING_CASE_TYPE_ID).toString());
     }
 

@@ -13,6 +13,7 @@ import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -66,6 +67,8 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
 public class ListingHelper {
+
+    private static final String ROOM_NOT_ALLOCATED = "* Not Allocated";
 
     private ListingHelper() {
 
@@ -276,10 +279,22 @@ public class ListingHelper {
         return sb;
     }
 
+    private static Map<String, List<ListingTypeItem>> getListHearingsByRoomWithNotAllocated(ListingData listingData) {
+        Map<String, List<ListingTypeItem>> unsortedMap = listingData.getListingCollection()
+                .stream()
+                .filter(listingTypeItem -> listingTypeItem.getValue().getHearingRoom() != null)
+                .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getHearingRoom()));
+        unsortedMap.computeIfAbsent(ROOM_NOT_ALLOCATED,
+                k -> new ArrayList<>()).addAll(listingData.getListingCollection()
+                .stream()
+                .filter(listingTypeItem -> listingTypeItem.getValue().getHearingRoom() == null)
+                .collect(Collectors.toList()));
+        return unsortedMap;
+    }
+
     private static StringBuilder getCaseCauseListByRoom(ListingData listingData, String caseType) {
         StringBuilder sb = new StringBuilder();
-        Map<String, List<ListingTypeItem>> unsortedMap = listingData.getListingCollection().stream()
-                .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getHearingRoom()));
+        Map<String, List<ListingTypeItem>> unsortedMap = getListHearingsByRoomWithNotAllocated(listingData);
         sb.append("\"location\":[\n");
         Iterator<Map.Entry<String, List<ListingTypeItem>>> entries = new TreeMap<>(unsortedMap).entrySet().iterator();
         while (entries.hasNext()) {
@@ -352,10 +367,16 @@ public class ListingHelper {
         sb.append("\"Hearing_room\":\"").append(nullCheck(listingType.getHearingRoom())).append(NEW_LINE);
         sb.append("\"Hearing_dayofdays\":\"").append(nullCheck(listingType.getHearingDay())).append(NEW_LINE);
         sb.append("\"Hearing_panel\":\"").append(nullCheck(listingType.getHearingPanel())).append(NEW_LINE);
-        sb.append("\"Hearing_notes\":\"").append(nullCheck(listingType.getHearingNotes())).append(NEW_LINE);
-        sb.append("\"respondent_representative\":\"").append(
-                nullCheck(listingType.getRespondentRepresentative())).append("\"}");
+        sb.append("\"Hearing_notes\":\"").append(extractHearingNotes(listingType)).append(NEW_LINE);
+        sb.append("\"respondent_representative\":\"").append(nullCheck(listingType.getRespondentRepresentative())).append("\"}");
         return sb;
+    }
+
+    private static String extractHearingNotes(ListingType listingType) {
+        if (!isNullOrEmpty(listingType.getHearingNotes())) {
+            return listingType.getHearingNotes().replaceAll("\n", " - ");
+        }
+        return "";
     }
 
     private static String extractHearingJudgeName(ListingType listingType) {
