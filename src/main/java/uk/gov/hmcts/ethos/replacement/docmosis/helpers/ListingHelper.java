@@ -220,6 +220,8 @@ public class ListingHelper {
         sb.append(getCourtListingData(listingData));
         log.info("Getting logo");
         sb.append(getLogo(caseType));
+        sb.append("\"Office_name\":\"").append(UtilHelper.getListingCaseTypeId(caseType)).append(NEW_LINE);
+
         if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
             sb.append("\"Listed_date\":\"").append(listingData.getListingCollection().get(0).getValue()
                     .getCauseListDate()).append(NEW_LINE);
