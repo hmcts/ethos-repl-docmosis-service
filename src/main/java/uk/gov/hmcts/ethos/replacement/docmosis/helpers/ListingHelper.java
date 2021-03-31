@@ -64,6 +64,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.STAFF_CASE_CAUSE_LI
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.STAFF_CASE_CAUSE_LIST_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
 
 @Slf4j
 public class ListingHelper {
@@ -257,12 +258,15 @@ public class ListingHelper {
     }
 
     private static StringBuilder getDocumentData(ListingData listingData, String templateName, String caseType) {
-        if (Arrays.asList(IT56_TEMPLATE, IT57_TEMPLATE, PUBLIC_CASE_CAUSE_LIST_TEMPLATE, STAFF_CASE_CAUSE_LIST_TEMPLATE,
-                PRESS_LIST_CAUSE_LIST_RANGE_TEMPLATE, PRESS_LIST_CAUSE_LIST_SINGLE_TEMPLATE).contains(templateName)) {
+        if (Arrays.asList(IT56_TEMPLATE, IT57_TEMPLATE, PUBLIC_CASE_CAUSE_LIST_TEMPLATE, STAFF_CASE_CAUSE_LIST_TEMPLATE)
+                .contains(templateName)) {
             return getCaseCauseList(listingData, caseType);
+        } else if (Arrays.asList(PRESS_LIST_CAUSE_LIST_RANGE_TEMPLATE, PRESS_LIST_CAUSE_LIST_SINGLE_TEMPLATE)
+                .contains(templateName)) {
+            return getCaseCauseListByRoomOrVenue(listingData, caseType, false);
         } else if (Arrays.asList(PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE, STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE)
                 .contains(templateName)) {
-            return getCaseCauseListByRoom(listingData, caseType);
+            return getCaseCauseListByRoomOrVenue(listingData, caseType, true);
         } else {
             return new StringBuilder();
         }
@@ -301,15 +305,41 @@ public class ListingHelper {
         return unsortedMap;
     }
 
-    private static StringBuilder getCaseCauseListByRoom(ListingData listingData, String caseType) {
+    private static boolean isEmptyHearingVenue(ListingType listingType) {
+        if (listingType.getCauseListVenue() != null) {
+            return listingType.getCauseListVenue().trim().isEmpty();
+        }
+        return true;
+    }
+
+    private static Map<String, List<ListingTypeItem>> getListHearingsByVenueWithNotAllocated(
+            ListingData listingData) {
+        Map<String, List<ListingTypeItem>> unsortedMap = listingData.getListingCollection()
+                .stream()
+                .filter(listingTypeItem -> !isEmptyHearingVenue(listingTypeItem.getValue()))
+                .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getCauseListVenue()));
+        List<ListingTypeItem> notAllocated = listingData.getListingCollection()
+                .stream()
+                .filter(listingTypeItem -> isEmptyHearingVenue(listingTypeItem.getValue()))
+                .collect(Collectors.toList());
+        if (!notAllocated.isEmpty()){
+            unsortedMap.computeIfAbsent(NOT_ALLOCATED, k -> new ArrayList<>()).addAll(notAllocated);
+        }
+        return unsortedMap;
+    }
+
+    private static StringBuilder getCaseCauseListByRoomOrVenue(ListingData listingData, String caseType,
+                                                               boolean byRoom) {
         StringBuilder sb = new StringBuilder();
-        Map<String, List<ListingTypeItem>> unsortedMap = getListHearingsByRoomWithNotAllocated(listingData);
+        Map<String, List<ListingTypeItem>> unsortedMap = byRoom
+                ? getListHearingsByRoomWithNotAllocated(listingData)
+                : getListHearingsByVenueWithNotAllocated(listingData);
         sb.append("\"location\":[\n");
         Iterator<Map.Entry<String, List<ListingTypeItem>>> entries = new TreeMap<>(unsortedMap).entrySet().iterator();
         while (entries.hasNext()) {
             Map.Entry<String, List<ListingTypeItem>> listingEntry = entries.next();
-            sb.append("{\"Hearing_room\":\"").append(listingEntry.getKey()).append(NEW_LINE);
-            //sb.append("\"Floor\":\"").append("6th Floor").append(NEW_LINE);
+            String subTitle = byRoom ? "Hearing_room" : "Hearing_venue";
+            sb.append("{\"").append(subTitle).append("\":\"").append(listingEntry.getKey()).append(NEW_LINE);
             sb.append("\"listing\":[\n");
             for (int i = 0; i < listingEntry.getValue().size(); i++) {
                 sb.append(getListingTypeRow(listingEntry.getValue().get(i).getValue(), caseType, listingData));

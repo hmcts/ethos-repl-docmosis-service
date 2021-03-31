@@ -148,7 +148,7 @@ dependencies {
     compile group: 'io.github.openfeign', name: 'feign-httpclient', version: '11.1'
     compile group: 'io.github.openfeign', name: 'feign-core', version: '11.1'
 
-    compile group: 'uk.gov.hmcts.reform', name: 'ecm-common', version: '0.1.54'
+    compile group: 'uk.gov.hmcts.reform', name: 'ecm-common', version: '0.1.55'
     compile group: 'uk.gov.hmcts.reform', name: 'document-management-client', version: '6.0.0'
     compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.logging
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging

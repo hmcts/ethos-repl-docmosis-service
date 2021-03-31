@@ -92,10 +92,8 @@ public class CaseCreationForCaseWorkerServiceTest {
     }
 
     @Test
-    public void createCaseTransfer() throws IOException {
+    public void createCaseTransfer() {
         List<String> errors = new ArrayList<>();
-        when(ccdClient.startCaseCreationAccepted(anyString(), any())).thenReturn(ccdRequest);
-        when(ccdClient.submitCaseCreation(anyString(), any(), any())).thenReturn(submitEvent);
         caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
         assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
