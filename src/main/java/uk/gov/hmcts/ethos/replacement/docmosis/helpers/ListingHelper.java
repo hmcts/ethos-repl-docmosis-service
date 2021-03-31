@@ -221,16 +221,10 @@ public class ListingHelper {
         log.info("Getting logo");
         sb.append(getLogo(caseType));
         sb.append("\"Office_name\":\"").append(UtilHelper.getListingCaseTypeId(caseType)).append(NEW_LINE);
-
-        if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
-            sb.append("\"Listed_date\":\"").append(listingData.getListingCollection().get(0).getValue()
-                    .getCauseListDate()).append(NEW_LINE);
-            sb.append("\"Hearing_location\":\"").append(!listingData.getListingVenue().equals(ALL_VENUES)
-                    ? listingData.getListingCollection().get(0).getValue().getCauseListVenue()
-                    : ALL_VENUES).append(NEW_LINE);
-        }
-        log.info("Listings range dates");
-        sb.append(getListingRangeDates(listingData));
+        log.info("Hearing location");
+        sb.append("\"Hearing_location\":\"").append(getListingVenue(listingData)).append(NEW_LINE);
+        log.info("Listings dates");
+        sb.append(getListingDate(listingData));
         log.info("Clerk");
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
         log.info("Clerk Username: " + userName);
@@ -274,13 +268,17 @@ public class ListingHelper {
         }
     }
 
-    public static StringBuilder getListingRangeDates(ListingData listingData) {
+    public static StringBuilder getListingDate(ListingData listingData) {
         StringBuilder sb = new StringBuilder();
-        if (listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
-            sb.append("\"Listed_date_from\":\"").append(
-                    UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
-            sb.append("\"Listed_date_to\":\"").append(
-                    UtilHelper.listingFormatLocalDate(listingData.getListingDateTo())).append(NEW_LINE);
+        if (listingData.getHearingDateType() != null
+                && listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
+            sb.append("\"Listed_date_from\":\"")
+                    .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
+            sb.append("\"Listed_date_to\":\"")
+                    .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateTo())).append(NEW_LINE);
+        } else {
+            sb.append("\"Listed_date\":\"")
+                    .append(UtilHelper.listingFormatLocalDate(listingData.getListingDate())).append(NEW_LINE);
         }
         return sb;
     }
@@ -386,8 +384,8 @@ public class ListingHelper {
         sb.append("\"Hearing_type\":\"").append(nullCheck(listingType.getHearingType())).append(NEW_LINE);
         sb.append("\"Jurisdictions\":\"").append(nullCheck(listingType.getJurisdictionCodesList())).append(NEW_LINE);
         sb.append("\"Hearing_date\":\"").append(nullCheck(listingType.getCauseListDate())).append(NEW_LINE);
-        sb.append("\"Hearing_date_time\":\"").append(nullCheck(listingType.getCauseListDate())).append(" at ").append(
-                nullCheck(listingType.getCauseListTime())).append(NEW_LINE);
+        sb.append("\"Hearing_date_time\":\"").append(nullCheck(listingType.getCauseListDate())).append(" at ")
+                .append(nullCheck(listingType.getCauseListTime())).append(NEW_LINE);
         sb.append("\"Hearing_time\":\"").append(nullCheck(listingType.getCauseListTime())).append(NEW_LINE);
         sb.append("\"Hearing_duration\":\"").append(nullCheck(listingType.getEstHearingLength())).append(NEW_LINE);
         log.info("Hearing clerk");
@@ -395,13 +393,12 @@ public class ListingHelper {
         log.info("Hearing clerk ends");
         sb.append("\"Claimant\":\"").append(nullCheck(listingType.getClaimantName())).append(NEW_LINE);
         sb.append("\"claimant_town\":\"").append(nullCheck(listingType.getClaimantTown())).append(NEW_LINE);
-        sb.append("\"claimant_representative\":\"").append(
-                nullCheck(listingType.getClaimantRepresentative())).append(NEW_LINE);
-        sb.append("\"Respondent\":\"").append(
-                nullCheck(listingType.getRespondent())).append(NEW_LINE);
+        sb.append("\"claimant_representative\":\"")
+                .append(nullCheck(listingType.getClaimantRepresentative())).append(NEW_LINE);
+        sb.append("\"Respondent\":\"").append(nullCheck(listingType.getRespondent())).append(NEW_LINE);
         log.info("Resp others");
-        sb.append("\"resp_others\":\"").append(
-                nullCheck(getRespondentOthersWithLineBreaks(listingType))).append(NEW_LINE);
+        sb.append("\"resp_others\":\"")
+                .append(nullCheck(getRespondentOthersWithLineBreaks(listingType))).append(NEW_LINE);
         log.info("End Resp others");
         sb.append("\"respondent_town\":\"").append(nullCheck(listingType.getRespondentTown())).append(NEW_LINE);
         sb.append("\"Hearing_location\":\"").append(nullCheck(listingType.getCauseListVenue())).append(NEW_LINE);
@@ -509,6 +506,29 @@ public class ListingHelper {
         return map;
     }
 
+    public static String getListingVenue(ListingData listingData) {
+        Map<String, String> venueToSearchMap = getListingVenueToSearch(listingData);
+        return venueToSearchMap.entrySet().iterator().next().getValue();
+    }
+
+    public static Map<String, String> getListingVenueToSearch(ListingData listingData) {
+        boolean allLocations = listingData.getListingVenue().equals(ALL_VENUES);
+        if (allLocations) {
+            log.info("All locations");
+            return createMap(ALL_VENUES, ALL_VENUES);
+        } else {
+            if (isAllScottishVenues(listingData)) {
+                log.info("Scottish Venues checking");
+                return getVenueToSearch(listingData);
+            } else {
+                log.info("Other");
+                return !isNullOrEmpty(listingData.getListingVenue())
+                        ? createMap(LISTING_VENUE_FIELD_NAME, listingData.getListingVenue())
+                        : createMap("", "");
+            }
+        }
+    }
+
     public static Map<String, String> getVenueToSearch(ListingData listingData) {
         if (!isNullOrEmpty(listingData.getVenueGlasgow())) {
             return createMap(LISTING_GLASGOW_VENUE_FIELD_NAME, listingData.getVenueGlasgow());
@@ -522,6 +542,18 @@ public class ListingHelper {
         return !isNullOrEmpty(listingData.getListingVenue())
                 ? createMap(LISTING_VENUE_FIELD_NAME, listingData.getListingVenue())
                 : createMap("", "");
+    }
+
+    public static boolean isAllScottishVenues(ListingData listingData) {
+        boolean allVenuesGlasgow = !isNullOrEmpty(listingData.getVenueGlasgow())
+                && listingData.getVenueGlasgow().equals(ALL_VENUES);
+        boolean allVenuesAberdeen = !isNullOrEmpty(listingData.getVenueAberdeen())
+                && listingData.getVenueAberdeen().equals(ALL_VENUES);
+        boolean allVenuesDundee = !isNullOrEmpty(listingData.getVenueDundee())
+                && listingData.getVenueDundee().equals(ALL_VENUES);
+        boolean allVenuesEdinburgh = !isNullOrEmpty(listingData.getVenueEdinburgh())
+                && listingData.getVenueEdinburgh().equals(ALL_VENUES);
+        return !allVenuesGlasgow && !allVenuesAberdeen && !allVenuesDundee && !allVenuesEdinburgh;
     }
 
     public static String getVenueFromDateListedType(DateListedType dateListedType) {
