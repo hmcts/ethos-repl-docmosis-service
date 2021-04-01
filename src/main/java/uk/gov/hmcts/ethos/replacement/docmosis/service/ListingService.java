@@ -165,6 +165,8 @@ public class ListingService {
             int hearingDateCollectionSize = hearingTypeItem.getValue().getHearingDateCollection().size();
             for (int i = 0; i < hearingDateCollectionSize; i++) {
                 log.info("EthosCaseRef Listing: " + caseData.getEthosCaseReference());
+                hearingTypeItem.getValue().getHearingNumber();
+                log.info("Hearing number: " + hearingTypeItem.getValue().getHearingNumber());
                 DateListedTypeItem dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
                 boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
                 log.info("isListingVenueValid: " + isListingVenueValid);
