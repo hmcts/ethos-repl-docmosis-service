@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.hmcts.ecm.common.exceptions.CaseRetrievalException;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -81,7 +80,7 @@ public class ListingHelper {
         ListingType listingType = new ListingType();
 
         try {
-            log.info("Elmo ethos case");
+            log.info("started getListingTypeFromCaseData");
             listingType.setElmoCaseReference(caseData.getEthosCaseReference());
             String listedDate = dateListedType.getListedDate();
             listingType.setCauseListDate(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalDate(listedDate) : " ");
