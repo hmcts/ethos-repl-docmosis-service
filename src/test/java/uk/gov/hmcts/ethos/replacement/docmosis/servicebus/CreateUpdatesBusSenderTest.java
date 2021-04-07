@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.model.servicebus.CreateUpdatesDto;
 import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.CreationDataModel;
 import uk.gov.hmcts.ecm.common.servicebus.ServiceBusSender;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_BULK_CASE_TYPE_ID;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CreateUpdatesBusSenderTest {
@@ -47,7 +49,7 @@ public class CreateUpdatesBusSenderTest {
 
     @Test
     public void runMainMethodTestException() {
-        doThrow(new RuntimeException())
+        doThrow(new InternalException(ERROR_MESSAGE))
                 .when(serviceBusSender).sendMessage(any());
         createUpdatesBusSender.sendUpdatesToQueue(createUpdatesDto, creationDataModel, new ArrayList<>(), String.valueOf(ethosCaseRefCollection.size()));
     }

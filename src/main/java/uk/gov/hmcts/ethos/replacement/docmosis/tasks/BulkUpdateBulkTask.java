@@ -34,21 +34,25 @@ public class BulkUpdateBulkTask implements Runnable {
         log.info("Waiting: " + Thread.currentThread().getName());
         try {
             if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null) {
-                String bulkCaseId = String.valueOf(submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseId());
+                String bulkCaseId = String.valueOf(submitBulkEventSubmitEventType
+                        .getSubmitBulkEventToUpdate().getCaseId());
                 log.info("Update the bulk");
                 CCDRequest returnedRequest = ccdClient.startBulkEventForCase(authToken, bulkDetails.getCaseTypeId(),
                         bulkDetails.getJurisdiction(), bulkCaseId);
                 submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseData().setFilterCases("No");
-                ccdClient.submitBulkEventForCase(authToken, submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseData(), bulkDetails.getCaseTypeId(),
+                ccdClient.submitBulkEventForCase(authToken, submitBulkEventSubmitEventType
+                                .getSubmitBulkEventToUpdate().getCaseData(), bulkDetails.getCaseTypeId(),
                         bulkDetails.getJurisdiction(), returnedRequest, bulkCaseId);
             } else {
                 log.info("Update the single cases");
                 for (SubmitEvent submitEvent : submitBulkEventSubmitEventType.getSubmitEventList()) {
                     String caseId = String.valueOf(submitEvent.getCaseId());
                     if (!leadId.equals(caseId)) {
-                        CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                        CCDRequest returnedRequest = ccdClient.startEventForCase(authToken,
+                                UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                                 bulkDetails.getJurisdiction(), caseId);
-                        ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                        ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(),
+                                UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                                 bulkDetails.getJurisdiction(), returnedRequest, caseId);
                     }
                 }

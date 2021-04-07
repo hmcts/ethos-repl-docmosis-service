@@ -21,7 +21,8 @@ public class MultipleDocGenerationService {
         this.multipleLetterService = multipleLetterService;
     }
 
-    public void midSelectedAddressLabelsMultiple(String userToken, MultipleDetails multipleDetails, List<String> errors) {
+    public void midSelectedAddressLabelsMultiple(String userToken, MultipleDetails multipleDetails,
+                                                 List<String> errors) {
 
         multipleDetails.getCaseData().setAddressLabelsAttributesType(new AddressLabelsAttributesType());
 

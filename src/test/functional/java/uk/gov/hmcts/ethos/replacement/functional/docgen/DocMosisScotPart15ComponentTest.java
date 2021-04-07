@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisScotPart15ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -37,12 +36,14 @@ public class DocMosisScotPart15ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_160() throws Exception {
-        testUtil.executeGenerateDocumentTest("160", "", "CRITERIA FOR THE IDENTIFICATION OF CASES THAT MIGHT BE CONSIDERED", true);
+        testUtil.executeGenerateDocumentTest("160", "",
+                "CRITERIA FOR THE IDENTIFICATION OF CASES THAT MIGHT BE CONSIDERED", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_161() throws Exception {
-        testUtil.executeGenerateDocumentTest("161", "", "First part for completion by Employment Judge who conducted the PH", true);
+        testUtil.executeGenerateDocumentTest("161", "",
+                "First part for completion by Employment Judge who conducted the PH", true);
     }
 
     @Test
@@ -52,7 +53,9 @@ public class DocMosisScotPart15ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_163() throws Exception {
-        testUtil.executeGenerateDocumentTest("163", "", "At the preliminary hearing which you recently attended parties indicated that they wished some time to", true);
+        testUtil.executeGenerateDocumentTest("163", "",
+                "At the preliminary hearing which you recently attended parties indicated "
+                        + "that they wished some time to", true);
     }
 
     @Test
@@ -77,12 +80,15 @@ public class DocMosisScotPart15ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_168() throws Exception {
-        testUtil.executeGenerateDocumentTest("168", "", "The file has been referred to the Vice-President to consider whether judicial mediation could be offered", true);
+        testUtil.executeGenerateDocumentTest("168", "",
+                "The file has been referred to the Vice-President to consider whether judicial "
+                        + "mediation could be offered", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_169() throws Exception {
-        testUtil.executeGenerateDocumentTest("169", "", "I understand that you expressed interest in an offer of judicial mediation", true);
+        testUtil.executeGenerateDocumentTest("169", "",
+                "I understand that you expressed interest in an offer of judicial mediation", true);
     }
 
     @Test
@@ -92,7 +98,9 @@ public class DocMosisScotPart15ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_171() throws Exception {
-        testUtil.executeGenerateDocumentTest("171", "", "The Vice-President has directed that there should be a Judicial Mediation which will take place in private", true);
+        testUtil.executeGenerateDocumentTest("171", "",
+                "The Vice-President has directed that there should be a Judicial Mediation which "
+                        + "will take place in private", true);
     }
 
     @Test

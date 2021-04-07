@@ -20,6 +20,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.hmcts.ethos.replacement.docmosis.utils.SetUpUtils.feignError;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ExcelActionsController.class)
@@ -498,7 +499,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void createMultipleError500() throws Exception {
-        doThrow(feignError()).when(multipleCreationService).bulkCreationLogic(
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleCreationService).bulkCreationLogic(
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(CREATE_MULTIPLE_URL)
@@ -510,7 +511,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void amendMultipleError500() throws Exception {
-        doThrow(feignError()).when(multipleAmendService).bulkAmendMultipleLogic(
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleAmendService).bulkAmendMultipleLogic(
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(AMEND_MULTIPLE_URL)
@@ -522,7 +523,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void uploadBulkExcelError500() throws Exception {
-        doThrow(feignError()).when(multipleUploadService).bulkUploadLogic(
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleUploadService).bulkUploadLogic(
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(IMPORT_MULTIPLE_URL)
@@ -534,7 +535,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void preAcceptMultipleError500() throws Exception {
-        doThrow(feignError()).when(multiplePreAcceptService).bulkPreAcceptLogic(
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multiplePreAcceptService).bulkPreAcceptLogic(
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(PRE_ACCEPT_MULTIPLE_URL)
@@ -546,7 +547,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void batchUpdateError500() throws Exception {
-        doThrow(feignError()).when(multipleUpdateService).bulkUpdateLogic(
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleUpdateService).bulkUpdateLogic(
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(BATCH_UPDATE_URL)
@@ -558,7 +559,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void updateSubMultipleError500() throws Exception {
-        doThrow(feignError()).when(subMultipleUpdateService).subMultipleUpdateLogic(
+        doThrow(new InternalException(ERROR_MESSAGE)).when(subMultipleUpdateService).subMultipleUpdateLogic(
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(UPDATE_SUB_MULTIPLE_URL)
@@ -570,7 +571,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void dynamicListFlagsError500() throws Exception {
-        doThrow(feignError()).when(multipleDynamicListFlagsService).populateDynamicListFlagsLogic(
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleDynamicListFlagsService).populateDynamicListFlagsLogic(
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(DYNAMIC_LIST_FLAGS_URL)
@@ -582,7 +583,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void multipleMidEventValidationError500() throws Exception {
-        doThrow(feignError()).when(multipleMidEventValidationService).multipleValidationLogic(
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleMidEventValidationService).multipleValidationLogic(
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MULTIPLE_MID_EVENT_VALIDATION_URL)
@@ -594,7 +595,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void subMultipleMidEventValidationError500() throws Exception {
-        doThrow(feignError()).when(subMultipleMidEventValidationService).subMultipleValidationLogic(
+        doThrow(new InternalException(ERROR_MESSAGE)).when(subMultipleMidEventValidationService).subMultipleValidationLogic(
                 isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(SUB_MULTIPLE_MID_EVENT_VALIDATION_URL)
@@ -606,7 +607,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void multipleCreationMidEventValidationError500() throws Exception {
-        doThrow(feignError()).when(multipleCreationMidEventValidationService).multipleCreationValidationLogic(
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleCreationMidEventValidationService).multipleCreationValidationLogic(
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class), isA(Boolean.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MULTIPLE_CREATION_MID_EVENT_VALIDATION_URL)
@@ -618,7 +619,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void multipleAmendCaseIdsMidEventValidationError500() throws Exception {
-        doThrow(feignError()).when(multipleCreationMidEventValidationService).multipleCreationValidationLogic(
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleCreationMidEventValidationService).multipleCreationValidationLogic(
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class), isA(Boolean.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MULTIPLE_AMEND_CASE_IDS_MID_EVENT_VALIDATION_URL)
@@ -630,7 +631,7 @@ public class ExcelActionsControllerTest {
 
     @Test
     public void multipleSingleMidEventValidationError500() throws Exception {
-        doThrow(feignError()).when(multipleSingleMidEventValidationService).multipleSingleValidationLogic(
+        doThrow(new InternalException(ERROR_MESSAGE)).when(multipleSingleMidEventValidationService).multipleSingleValidationLogic(
                 eq(AUTH_TOKEN), isA(MultipleDetails.class), isA(List.class));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(MULTIPLE_SINGLE_MID_EVENT_VALIDATION_URL)

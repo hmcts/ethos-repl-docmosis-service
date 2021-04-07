@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisPart16ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -32,17 +31,20 @@ public class DocMosisPart16ComponentTest {
     @Test
     @WithTag("SmokeTest")
     public void generateDocument_Part16_1() throws Exception {
-        testUtil.executeGenerateDocumentTest("16", "1", "INCORPORATING NOTICE OF STAGE 1 EQUAL VALUE HEARING");
+        testUtil.executeGenerateDocumentTest("16", "1",
+                "INCORPORATING NOTICE OF STAGE 1 EQUAL VALUE HEARING");
     }
 
     @Test
     public void generateDocument_Part16_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("16", "2", "INCORPORATING NOTICE OF STAGE 2 EQUAL VALUE HEARING");
+        testUtil.executeGenerateDocumentTest("16", "2",
+                "INCORPORATING NOTICE OF STAGE 2 EQUAL VALUE HEARING");
     }
 
     @Test
     public void generateDocument_Part16_3() throws Exception {
-        testUtil.executeGenerateDocumentTest("16", "3", "A member of the panel of independent experts designated by");
+        testUtil.executeGenerateDocumentTest("16", "3",
+                "A member of the panel of independent experts designated by");
     }
 
     @Test

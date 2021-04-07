@@ -18,6 +18,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TornadoServiceTest {
@@ -72,7 +74,7 @@ public class TornadoServiceTest {
 
     @Test(expected = Exception.class)
     public void documentGenerationError() throws IOException {
-        when(userService.getUserDetails(anyString())).thenThrow(new RuntimeException());
+        when(userService.getUserDetails(anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
         tornadoService.documentGeneration(userToken, caseData, MANCHESTER_CASE_TYPE_ID,
                 caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
     }
@@ -118,4 +120,10 @@ public class TornadoServiceTest {
         assertEquals(documentInfo.toString(), documentInfo1.toString());
     }
 
+    @Test
+    public void reportGeneration() throws IOException {
+        listingData.setReportType(CLAIMS_ACCEPTED_REPORT);
+        DocumentInfo documentInfo1 = tornadoService.listingGeneration(userToken, listingData, MANCHESTER_LISTING_CASE_TYPE_ID);
+        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    }
 }

@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
@@ -20,21 +20,13 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.AMEND_ACTION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CREATE_ACTION;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("subMultipleUpdateService")
 public class SubMultipleUpdateService {
 
     private final ExcelReadingService excelReadingService;
     private final SubMultipleReferenceService subMultipleReferenceService;
     private final ExcelDocManagementService excelDocManagementService;
-
-    @Autowired
-    public SubMultipleUpdateService(ExcelReadingService excelReadingService,
-                                    SubMultipleReferenceService subMultipleReferenceService,
-                                    ExcelDocManagementService excelDocManagementService) {
-        this.excelReadingService = excelReadingService;
-        this.subMultipleReferenceService = subMultipleReferenceService;
-        this.excelDocManagementService = excelDocManagementService;
-    }
 
     public void subMultipleUpdateLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
@@ -48,9 +40,6 @@ public class SubMultipleUpdateService {
                         multipleDetails.getCaseData(),
                         FilterExcelType.ALL);
 
-        log.info("MultipleObjectsKeySet: " + multipleObjects.keySet());
-        log.info("MultipleObjectsValues: " + multipleObjects.values());
-
         log.info("Logic depending on batch update type");
 
         actionTypeLogic(userToken, multipleDetails, multipleObjects);
@@ -61,7 +50,8 @@ public class SubMultipleUpdateService {
 
     }
 
-    private void actionTypeLogic(String userToken, MultipleDetails multipleDetails, TreeMap<String, Object> multipleObjects) {
+    private void actionTypeLogic(String userToken, MultipleDetails multipleDetails,
+                                 TreeMap<String, Object> multipleObjects) {
 
         SubMultipleActionType subMultipleActionType = multipleDetails.getCaseData().getSubMultipleAction();
 
@@ -98,11 +88,13 @@ public class SubMultipleUpdateService {
 
     }
 
-    private List<MultipleObject> createAction(MultipleDetails multipleDetails, TreeMap<String, Object> multipleObjects) {
+    private List<MultipleObject> createAction(MultipleDetails multipleDetails,
+                                              TreeMap<String, Object> multipleObjects) {
 
         String subMultipleName = multipleDetails.getCaseData().getSubMultipleAction().getCreateSubMultipleName();
 
-        SubMultipleTypeItem subMultipleTypeItem = createSubMultipleTypeItemWithReference(multipleDetails, subMultipleName);
+        SubMultipleTypeItem subMultipleTypeItem = createSubMultipleTypeItemWithReference(
+                multipleDetails, subMultipleName);
 
         log.info("Add sub multiple to the multiple");
 
@@ -116,13 +108,15 @@ public class SubMultipleUpdateService {
 
     private List<MultipleObject> amendAction(MultipleDetails multipleDetails, TreeMap<String, Object> multipleObjects) {
 
-        String existingSubMultipleName = multipleDetails.getCaseData().getSubMultipleAction().getAmendSubMultipleNameExisting();
+        String existingSubMultipleName =
+                multipleDetails.getCaseData().getSubMultipleAction().getAmendSubMultipleNameExisting();
 
         String newSubMultipleName = multipleDetails.getCaseData().getSubMultipleAction().getAmendSubMultipleNameNew();
 
         log.info("Updating with new sub multiple name in the sub multiple collection");
 
-        multipleDetails.getCaseData().setSubMultipleCollection(multipleDetails.getCaseData().getSubMultipleCollection().stream()
+        multipleDetails.getCaseData().setSubMultipleCollection(
+                multipleDetails.getCaseData().getSubMultipleCollection().stream()
                 .map(subMultipleTypeItem ->
                         !subMultipleTypeItem.getValue().getSubMultipleName().equals(existingSubMultipleName)
                                 ? subMultipleTypeItem
@@ -131,28 +125,33 @@ public class SubMultipleUpdateService {
 
         log.info("Generating the multiple object list with the new sub multiple name updated");
 
-        return getMultipleObjectListFromTreeMapSubMultipleUpdated(multipleObjects, existingSubMultipleName, newSubMultipleName);
+        return getMultipleObjectListFromTreeMapSubMultipleUpdated(
+                multipleObjects, existingSubMultipleName, newSubMultipleName);
 
     }
 
-    private List<MultipleObject> deleteAction(MultipleDetails multipleDetails, TreeMap<String, Object> multipleObjects) {
+    private List<MultipleObject> deleteAction(MultipleDetails multipleDetails,
+                                              TreeMap<String, Object> multipleObjects) {
 
         String deleteSubMultipleName = multipleDetails.getCaseData().getSubMultipleAction().getDeleteSubMultipleName();
 
         log.info("Removing sub multiple from the sub multiple collection");
 
-        multipleDetails.getCaseData().setSubMultipleCollection(multipleDetails.getCaseData().getSubMultipleCollection().stream()
+        multipleDetails.getCaseData().setSubMultipleCollection(
+                multipleDetails.getCaseData().getSubMultipleCollection().stream()
                 .filter(subMultipleTypeItem ->
                         !subMultipleTypeItem.getValue().getSubMultipleName().equals(deleteSubMultipleName))
                 .collect(Collectors.toList()));
 
         log.info("Generating the multiple object list without the sub multiple name");
 
-        return getMultipleObjectListFromTreeMapSubMultipleUpdated(multipleObjects, deleteSubMultipleName, "");
+        return getMultipleObjectListFromTreeMapSubMultipleUpdated(
+                multipleObjects, deleteSubMultipleName, "");
 
     }
 
-    public SubMultipleTypeItem createSubMultipleTypeItemWithReference(MultipleDetails multipleDetails, String subMultipleName) {
+    public SubMultipleTypeItem createSubMultipleTypeItemWithReference(MultipleDetails multipleDetails,
+                                                                      String subMultipleName) {
 
         String subMultipleReference = generateSubMultipleReference(multipleDetails);
 
@@ -162,7 +161,8 @@ public class SubMultipleUpdateService {
 
     }
 
-    private SubMultipleTypeItem updateSubMultipleName(SubMultipleTypeItem subMultipleTypeItem, String newSubMultipleName) {
+    private SubMultipleTypeItem updateSubMultipleName(SubMultipleTypeItem subMultipleTypeItem,
+                                                      String newSubMultipleName) {
 
         subMultipleTypeItem.getValue().setSubMultipleName(newSubMultipleName);
 
@@ -187,8 +187,8 @@ public class SubMultipleUpdateService {
         return multipleObjectsExcel;
     }
 
-    private List<MultipleObject> getMultipleObjectListFromTreeMapSubMultipleUpdated(TreeMap<String, Object> multipleObjects,
-                                                                                    String existingSubMultipleName, String newSubMultipleName) {
+    private List<MultipleObject> getMultipleObjectListFromTreeMapSubMultipleUpdated(
+            TreeMap<String, Object> multipleObjects, String existingSubMultipleName, String newSubMultipleName) {
 
         List<MultipleObject> multipleObjectsExcel = new ArrayList<>();
 

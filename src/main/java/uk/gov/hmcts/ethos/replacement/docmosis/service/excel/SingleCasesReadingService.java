@@ -25,7 +25,8 @@ public class SingleCasesReadingService {
         this.ccdClient = ccdClient;
     }
 
-    public SubmitEvent retrieveSingleCase(String userToken, String multipleCaseTypeId, String caseId, String multipleSource) {
+    public SubmitEvent retrieveSingleCase(String userToken, String multipleCaseTypeId, String caseId,
+                                          String multipleSource) {
 
         List<SubmitEvent> submitEvents = retrieveSingleCases(userToken,
                 multipleCaseTypeId,
@@ -35,7 +36,8 @@ public class SingleCasesReadingService {
         return submitEvents.isEmpty() ? null : submitEvents.get(0);
     }
 
-    public List<SubmitEvent> retrieveSingleCases(String userToken, String multipleCaseTypeId, List<String> caseIds, String multipleSource) {
+    public List<SubmitEvent> retrieveSingleCases(String userToken, String multipleCaseTypeId, List<String> caseIds,
+                                                 String multipleSource) {
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
 
@@ -57,7 +59,8 @@ public class SingleCasesReadingService {
 
     }
 
-    public List<LabelPayloadEvent> retrieveLabelCases(String userToken, String multipleCaseTypeId, List<String> caseIds) {
+    public List<LabelPayloadEvent> retrieveLabelCases(String userToken, String multipleCaseTypeId,
+                                                      List<String> caseIds) {
 
         List<LabelPayloadEvent> labelEvents = new ArrayList<>();
 
@@ -78,7 +81,8 @@ public class SingleCasesReadingService {
 
     }
 
-    public HashSet<SchedulePayloadEvent> retrieveScheduleCases(String userToken, String multipleCaseTypeId, List<String> caseIds) {
+    public HashSet<SchedulePayloadEvent> retrieveScheduleCases(String userToken, String multipleCaseTypeId,
+                                                               List<String> caseIds) {
 
         HashSet<SchedulePayloadEvent> schedulePayloadEvents = new HashSet<>();
 

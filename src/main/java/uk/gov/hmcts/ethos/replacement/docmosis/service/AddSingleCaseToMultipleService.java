@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -15,21 +15,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("addSingleCaseToMultipleService")
 public class AddSingleCaseToMultipleService {
 
     private final MultipleHelperService multipleHelperService;
     private final MultipleCasesReadingService multipleCasesReadingService;
-
-    @Autowired
-    public AddSingleCaseToMultipleService(MultipleHelperService multipleHelperService,
-                                          MultipleCasesReadingService multipleCasesReadingService) {
-        this.multipleHelperService = multipleHelperService;
-        this.multipleCasesReadingService = multipleCasesReadingService;
-    }
 
     public void addSingleCaseToMultipleLogic(String userToken, CaseData caseData, String caseTypeId,
                                              String jurisdiction, String caseId, List<String> errors) {
@@ -58,7 +54,8 @@ public class AddSingleCaseToMultipleService {
 
             MultipleData multipleData = multipleEvent.getCaseData();
 
-            List<String> ethosCaseRefCollection = multipleHelperService.getEthosCaseRefCollection(userToken, multipleData, errors);
+            List<String> ethosCaseRefCollection =
+                    multipleHelperService.getEthosCaseRefCollection(userToken, multipleData, errors);
 
             String newEthosCaseReferenceToAdd = caseData.getEthosCaseReference();
 
@@ -104,8 +101,8 @@ public class AddSingleCaseToMultipleService {
     }
 
     private void addNewLeadToMultiple(String userToken, String multipleCaseTypeId, String jurisdiction,
-                                        MultipleData multipleData, String leadClaimant, String newEthosCaseReferenceToAdd,
-                                        String caseId, List<String> errors) {
+                                      MultipleData multipleData, String leadClaimant,
+                                      String newEthosCaseReferenceToAdd, String caseId, List<String> errors) {
 
         if (leadClaimant.equals(YES)) {
 

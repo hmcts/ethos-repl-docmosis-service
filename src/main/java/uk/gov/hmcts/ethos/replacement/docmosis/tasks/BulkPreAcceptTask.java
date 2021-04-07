@@ -11,7 +11,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import java.io.IOException;
 import java.time.LocalDate;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
@@ -35,15 +34,16 @@ public class BulkPreAcceptTask implements Runnable {
         log.info("Waiting: " + Thread.currentThread().getName());
         String caseId = String.valueOf(submitEvent.getCaseId());
         try {
-            CCDRequest returnedRequest = ccdClient.startEventForCasePreAcceptBulkSingle(authToken, UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
-                    bulkDetails.getJurisdiction(), caseId);
             log.info("Moving to accepted state");
-            submitEvent.getCaseData().setState(ACCEPTED_STATE);
             CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
             casePreAcceptType.setCaseAccepted(YES);
             casePreAcceptType.setDateAccepted(UtilHelper.formatCurrentDate2(LocalDate.now()));
             submitEvent.getCaseData().setPreAcceptCase(casePreAcceptType);
-            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(), UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+            CCDRequest returnedRequest = ccdClient.startEventForCasePreAcceptBulkSingle(authToken,
+                    UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
+                    bulkDetails.getJurisdiction(), caseId);
+            ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(),
+                    UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                     bulkDetails.getJurisdiction(), returnedRequest, caseId);
         } catch (IOException e) {
             log.error("Error processing bulk pre accept threads");

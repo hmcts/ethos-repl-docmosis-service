@@ -3,8 +3,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,9 +18,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackResponseHelper.getCCDCallbackResponseResponseEntityWithoutErrors;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class ReferenceDataController {
 
@@ -28,12 +29,6 @@ public class ReferenceDataController {
 
     private final VerifyTokenService verifyTokenService;
     private final ReferenceService referenceService;
-
-    @Autowired
-    public ReferenceDataController(VerifyTokenService verifyTokenService, ReferenceService referenceService) {
-        this.verifyTokenService = verifyTokenService;
-        this.referenceService = referenceService;
-    }
 
     @PostMapping(value = "/hearingVenueReferenceData", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "populates the hearing venue dynamic list with reference data.")
@@ -55,7 +50,7 @@ public class ReferenceDataController {
 
         CaseData caseData = referenceService.fetchHearingVenueRefData(ccdRequest.getCaseDetails(), userToken);
 
-        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+        return getCallbackRespEntityNoErrors(caseData);
     }
 
     @PostMapping(value = "/dateListedReferenceData", consumes = APPLICATION_JSON_VALUE)
@@ -78,7 +73,7 @@ public class ReferenceDataController {
 
         CaseData caseData = referenceService.fetchDateListedRefData(ccdRequest.getCaseDetails(), userToken);
 
-        return getCCDCallbackResponseResponseEntityWithoutErrors(caseData);
+        return getCallbackRespEntityNoErrors(caseData);
     }
 
 }

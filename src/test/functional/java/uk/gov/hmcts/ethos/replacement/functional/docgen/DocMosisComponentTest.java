@@ -151,7 +151,6 @@ public class DocMosisComponentTest {
         SerenityRest.given().get(new URL(docmosisUrl + Constants.DOCGEN_URI)).then().statusCode(405);
     }
 
-
     @After
     public void tearDown() throws IOException {
         testUtil.deleteTempFile();

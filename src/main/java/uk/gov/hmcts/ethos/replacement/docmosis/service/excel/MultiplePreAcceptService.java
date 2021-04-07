@@ -9,7 +9,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ET1_ONLINE_CASE_SOURCE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.UPDATING_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("multiplePreAcceptService")
@@ -29,13 +31,13 @@ public class MultiplePreAcceptService {
 
             multipleDetails.getCaseData().setState(UPDATING_STATE);
 
-            multipleDetails.getCaseData().setPreAcceptDone(YES);
-
             log.info("Send updates to single cases");
 
             if (multipleDetails.getCaseData().getPreAcceptCase().getCaseAccepted().equals(YES)) {
 
                 log.info("Accepting cases");
+
+                multipleDetails.getCaseData().setPreAcceptDone(YES);
 
                 preAcceptLogic(userToken, multipleDetails, errors);
 

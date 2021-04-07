@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisScotPart5ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -32,7 +31,8 @@ public class DocMosisScotPart5ComponentTest {
     @Test
     @WithTag("SmokeTest")
     public void generateDocument_Part_Scot_26() throws Exception {
-        testUtil.executeGenerateDocumentTest("26", "", "INITIAL CONSIDERATION OF CLAIM AND RESPONSE", true);
+        testUtil.executeGenerateDocumentTest("26", "",
+                "INITIAL CONSIDERATION OF CLAIM AND RESPONSE", true);
     }
 
     @Test
@@ -67,7 +67,8 @@ public class DocMosisScotPart5ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_33() throws Exception {
-        testUtil.executeGenerateDocumentTest("33", "", "INITIAL CONSIDERATION OF CLAIM AND RESPONSE completed", true);
+        testUtil.executeGenerateDocumentTest("33", "",
+                "INITIAL CONSIDERATION OF CLAIM AND RESPONSE completed", true);
     }
 
     @After

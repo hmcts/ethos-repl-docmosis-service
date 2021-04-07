@@ -70,16 +70,12 @@ public class MultipleBatchUpdate3Service {
     private boolean checkAnyChange(MultipleData multipleData) {
 
         return (
-                (multipleData.getBatchUpdateClaimantRep() != null &&
-                        !multipleData.getBatchUpdateClaimantRep().getValue().getCode().equals(SELECT_NONE_VALUE))
-                ||
-                (multipleData.getBatchUpdateJurisdiction() != null &&
-                        !multipleData.getBatchUpdateJurisdiction().getValue().getCode().equals(SELECT_NONE_VALUE))
-                ||
-                (multipleData.getBatchUpdateRespondent() != null &&
-                        !multipleData.getBatchUpdateRespondent().getValue().getCode().equals(SELECT_NONE_VALUE))
-        );
-
+                (multipleData.getBatchUpdateClaimantRep() != null
+                        && !multipleData.getBatchUpdateClaimantRep().getValue().getCode().equals(SELECT_NONE_VALUE))
+                        || (multipleData.getBatchUpdateJurisdiction() != null
+                        && !multipleData.getBatchUpdateJurisdiction().getValue().getCode().equals(SELECT_NONE_VALUE))
+                        || (multipleData.getBatchUpdateRespondent() != null
+                        && !multipleData.getBatchUpdateRespondent().getValue().getCode().equals(SELECT_NONE_VALUE)));
     }
 
 }

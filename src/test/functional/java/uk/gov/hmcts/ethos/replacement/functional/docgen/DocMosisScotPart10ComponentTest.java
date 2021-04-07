@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisScotPart10ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -47,7 +46,8 @@ public class DocMosisScotPart10ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_74() throws Exception {
-        testUtil.executeGenerateDocumentTest("74", "", "Insert this paragraph if no response or response struck out or dismissed", true);
+        testUtil.executeGenerateDocumentTest("74", "",
+                "Insert this paragraph if no response or response struck out or dismissed", true);
     }
 
     @Test
@@ -57,12 +57,15 @@ public class DocMosisScotPart10ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_76() throws Exception {
-        testUtil.executeGenerateDocumentTest("76", "", "If a response is accepted, a preliminary hearing will be held", true);
+        testUtil.executeGenerateDocumentTest("76", "",
+                "If a response is accepted, a preliminary hearing will be held", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_78() throws Exception {
-        testUtil.executeGenerateDocumentTest("78", "", "It is proposed to list this case for a final hearing. If you are aware of any reason why such a", true);
+        testUtil.executeGenerateDocumentTest("78", "",
+                "It is proposed to list this case for a final hearing. If you are aware "
+                        + "of any reason why such a", true);
     }
 
     @Test
@@ -82,17 +85,20 @@ public class DocMosisScotPart10ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_82() throws Exception {
-        testUtil.executeGenerateDocumentTest("82", "", "Rule 27 \\(3\\) Employment Tribunals Rules of Procedure 2013", true);
+        testUtil.executeGenerateDocumentTest("82", "", "Rule 27 \\(3\\) Employment "
+                + "Tribunals Rules of Procedure 2013", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_83() throws Exception {
-        testUtil.executeGenerateDocumentTest("83", "", "Rule 28 \\(3\\) Employment Tribunals Rules of Procedure 2013", true);
+        testUtil.executeGenerateDocumentTest("83", "", "Rule 28 \\(3\\) Employment "
+                + "Tribunals Rules of Procedure 2013", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_84() throws Exception {
-        testUtil.executeGenerateDocumentTest("84", "", "NOTICE OF HEARING - RECONSIDERATION OF JUDGMENT", true);
+        testUtil.executeGenerateDocumentTest("84", "", "NOTICE OF HEARING - "
+                + "RECONSIDERATION OF JUDGMENT", true);
     }
 
     @Test
@@ -102,12 +108,14 @@ public class DocMosisScotPart10ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_86() throws Exception {
-        testUtil.executeGenerateDocumentTest("86", "", "NOTICE OF EXPENSES / PREPARATION TIME/WASTED COSTS HEARING", true);
+        testUtil.executeGenerateDocumentTest("86", "", "NOTICE OF EXPENSES / PREPARATION "
+                + "TIME/WASTED COSTS HEARING", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_87() throws Exception {
-        testUtil.executeGenerateDocumentTest("87", "", "NOTICE OF HEARING - RECONSIDERATION OF RULE 21 JUDGMENT", true);
+        testUtil.executeGenerateDocumentTest("87", "", "NOTICE OF HEARING - RECONSIDERATION "
+                + "OF RULE 21 JUDGMENT", true);
     }
 
     @Test
@@ -122,12 +130,14 @@ public class DocMosisScotPart10ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_91_A() throws Exception {
-        testUtil.executeGenerateDocumentTest("91", "A", "application for an extension of time to present a response should be considered at a hearing", true);
+        testUtil.executeGenerateDocumentTest("91", "A",
+                "application for an extension of time to present a response should be considered at a hearing", true);
     }
 
     @Test
     public void generateDocument_Part_Scot_91_B() throws Exception {
-        testUtil.executeGenerateDocumentTest("91", "B", "time to present a response to the employer’s contract claim", true);
+        testUtil.executeGenerateDocumentTest("91", "B", "time to present a response to the "
+                + "employer’s contract claim", true);
     }
 
     @After

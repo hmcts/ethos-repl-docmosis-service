@@ -9,7 +9,15 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.servicebus.CreateUpdatesDto;
-import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.*;
+import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.CloseDataModel;
+import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.CreationDataModel;
+import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.CreationSingleDataModel;
+import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.DataModelParent;
+import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.DetachDataModel;
+import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.PreAcceptDataModel;
+import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.RejectDataModel;
+import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.ResetStateDataModel;
+import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.UpdateDataModel;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.List;
@@ -17,6 +25,9 @@ import java.util.Optional;
 
 @Slf4j
 public class PersistentQHelper {
+
+    private PersistentQHelper() {
+    }
 
     //********************
     /* BULK DETAILS */
@@ -33,9 +44,11 @@ public class PersistentQHelper {
                 .build();
     }
 
-    public static void sendUpdatesPersistentQ(BulkDetails bulkDetails, String username, List<String> ethosCaseRefCollection,
-                                              DataModelParent dataModelParent, List<String> errors, String multipleRef,
-                                              CreateUpdatesBusSender createUpdatesBusSender, String updateSize) {
+    public static void sendUpdatesPersistentQ(BulkDetails bulkDetails, String username,
+                                              List<String> ethosCaseRefCollection,
+                                              DataModelParent dataModelParent, List<String> errors,
+                                              String multipleRef, CreateUpdatesBusSender createUpdatesBusSender,
+                                              String updateSize) {
         log.info("Case Ref collection: " + ethosCaseRefCollection);
         if (!ethosCaseRefCollection.isEmpty()) {
             CreateUpdatesDto createUpdatesDto = PersistentQHelper.getCreateUpdatesDto(bulkDetails,
@@ -56,7 +69,8 @@ public class PersistentQHelper {
     //********************
 
     public static void sendSingleUpdatesPersistentQ(String caseTypeId, String jurisdiction, String username,
-                                                    List<String> ethosCaseRefCollection, DataModelParent dataModelParent,
+                                                    List<String> ethosCaseRefCollection,
+                                                    DataModelParent dataModelParent,
                                                     List<String> errors, String multipleRef, String confirmation,
                                                     CreateUpdatesBusSender createUpdatesBusSender, String updateSize) {
         log.info("Case Ref collection: " + ethosCaseRefCollection);
@@ -87,7 +101,6 @@ public class PersistentQHelper {
                 .build();
     }
 
-
     public static CreationDataModel getCreationDataModel(String lead, String multipleRef) {
         return CreationDataModel.builder()
                 .lead(lead)
@@ -108,11 +121,16 @@ public class PersistentQHelper {
                 .build();
     }
 
-    public static CloseDataModel getCloseDataModel(String clerkResponsible, String fileLocation, String notes) {
+    public static CloseDataModel getCloseDataModel(MultipleData multipleData) {
         return CloseDataModel.builder()
-                .clerkResponsible(clerkResponsible)
-                .fileLocation(fileLocation)
-                .notes(notes)
+                .clerkResponsible(multipleData.getClerkResponsible())
+                .fileLocation(multipleData.getFileLocation())
+                .notes(multipleData.getNotes())
+                .managingOffice(multipleData.getManagingOffice())
+                .fileLocationGlasgow(multipleData.getFileLocationGlasgow())
+                .fileLocationAberdeen(multipleData.getFileLocationAberdeen())
+                .fileLocationDundee(multipleData.getFileLocationDundee())
+                .fileLocationEdinburgh(multipleData.getFileLocationEdinburgh())
                 .build();
     }
 
@@ -123,6 +141,15 @@ public class PersistentQHelper {
 
     public static ResetStateDataModel getResetStateModel() {
         return ResetStateDataModel.builder()
+                .build();
+    }
+
+    public static CreationSingleDataModel getCreationSingleDataModel(String ccdGatewayBaseUrl,
+                                                                     String officeCT, String positionTypeCT) {
+        return CreationSingleDataModel.builder()
+                .officeCT(officeCT)
+                .positionTypeCT(positionTypeCT)
+                .ccdGatewayBaseUrl(ccdGatewayBaseUrl)
                 .build();
     }
 

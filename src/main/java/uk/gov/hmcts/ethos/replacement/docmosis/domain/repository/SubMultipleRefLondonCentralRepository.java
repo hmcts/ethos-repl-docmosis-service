@@ -6,5 +6,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.domain.SubMultipleReferenceLondon
 
 @Repository
 @Transactional
-public interface SubMultipleRefLondonCentralRepository extends SubMultipleRefRepository<SubMultipleReferenceLondonCentral> {
+public interface SubMultipleRefLondonCentralRepository
+        extends SubMultipleRefRepository<SubMultipleReferenceLondonCentral> {
 }

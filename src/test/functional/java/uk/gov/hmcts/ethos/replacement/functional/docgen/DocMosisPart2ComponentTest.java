@@ -36,7 +36,8 @@ public class DocMosisPart2ComponentTest {
 
     @Test
     public void generateDocument_Part2_2() throws Exception {
-        testUtil.executeGenerateDocumentTest("2", "2", "You are however required to enter a response to the other claims");
+        testUtil.executeGenerateDocumentTest("2", "2",
+                "You are however required to enter a response to the other claims");
     }
 
     @Test
@@ -66,17 +67,20 @@ public class DocMosisPart2ComponentTest {
 
     @Test
     public void generateDocument_Part2_7() throws Exception {
-        testUtil.executeGenerateDocumentTest("2", "7", "The law protects workers from having unauthorised deductions made from their wages");
+        testUtil.executeGenerateDocumentTest("2", "7",
+                "The law protects workers from having unauthorised deductions made from their wages");
     }
 
     @Test
     public void generateDocument_Part2_8() throws Exception {
-        testUtil.executeGenerateDocumentTest("2", "8", "These Orders are made under rules 29 and 30 of the Employment Tribunals Rules");
+        testUtil.executeGenerateDocumentTest("2", "8",
+                "These Orders are made under rules 29 and 30 of the Employment Tribunals Rules");
     }
 
     @Test
     public void generateDocument_Part2_9() throws Exception {
-        testUtil.executeGenerateDocumentTest("2", "9", "FURTHER COMPLAINTS ACCEPTED AFTER RECONSIDERATION");
+        testUtil.executeGenerateDocumentTest("2", "9",
+                "FURTHER COMPLAINTS ACCEPTED AFTER RECONSIDERATION");
     }
 
     @Test
@@ -101,7 +105,8 @@ public class DocMosisPart2ComponentTest {
 
     @Test
     public void generateDocument_Part2_12() throws Exception {
-        testUtil.executeGenerateDocumentTest("2", "12", "because it has not been presented on a prescribed form as required by rule 16 of the above Rules");
+        testUtil.executeGenerateDocumentTest("2", "12",
+                "because it has not been presented on a prescribed form as required by rule 16 of the above Rules");
     }
 
     @Test
@@ -111,7 +116,8 @@ public class DocMosisPart2ComponentTest {
 
     @Test
     public void generateDocument_Part2_14() throws Exception {
-        testUtil.executeGenerateDocumentTest("2", "14", "under rule 18 of the above Rules the response must be rejected");
+        testUtil.executeGenerateDocumentTest("2", "14",
+                "under rule 18 of the above Rules the response must be rejected");
     }
 
     @Test
@@ -121,12 +127,14 @@ public class DocMosisPart2ComponentTest {
 
     @Test
     public void generateDocument_Part2_16() throws Exception {
-        testUtil.executeGenerateDocumentTest("2", "16", "reconsideration of the decision to reject your response cannot be accepted");
+        testUtil.executeGenerateDocumentTest("2", "16",
+                "reconsideration of the decision to reject your response cannot be accepted");
     }
 
     @Test
     public void generateDocument_Part2_17() throws Exception {
-        testUtil.executeGenerateDocumentTest("2", "17", "has reconsidered the decision and has decided that your response can be accepted");
+        testUtil.executeGenerateDocumentTest("2", "17",
+                "has reconsidered the decision and has decided that your response can be accepted");
     }
 
     @Test
@@ -161,12 +169,14 @@ public class DocMosisPart2ComponentTest {
 
     @Test
     public void generateDocument_Part2_23() throws Exception {
-        testUtil.executeGenerateDocumentTest("2", "23", "It is not clear whether you have copied your application to the claimant as required by rule 20");
+        testUtil.executeGenerateDocumentTest("2", "23",
+                "It is not clear whether you have copied your application to the claimant as required by rule 20");
     }
 
     @Test
     public void generateDocument_Part2_24() throws Exception {
-        testUtil.executeGenerateDocumentTest("2", "24", "has granted your application and has extended the time limit to enable the response to be accepted");
+        testUtil.executeGenerateDocumentTest("2", "24",
+                "has granted your application and has extended the time limit to enable the response to be accepted");
     }
 
     @Test

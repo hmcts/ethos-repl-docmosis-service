@@ -345,9 +345,11 @@ public class BulkSearchServiceTest {
     @Test
     public void caseUpdateRequestElasticSearchNoFiltered() throws IOException {
         List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
-        when(ccdClient.retrieveCasesElasticSearchForCreation(anyString(), anyString(), anyList(), anyString())).thenReturn(submitEventList);
+        when(ccdClient.retrieveCasesElasticSearchForCreation(anyString(), anyString(), anyList(), anyString()))
+                .thenReturn(submitEventList);
         bulkDetails.setCaseData(getSimpleBulkData(bulkDetails.getCaseData()));
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(bulkDetails, "authToken", false, false);
+        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
+                bulkDetails, "authToken", false, false);
         assertEquals(submitEventList, bulkCasesPayload.getSubmitEvents());
     }
 }

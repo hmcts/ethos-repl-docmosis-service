@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
@@ -28,10 +28,12 @@ import java.util.TreeMap;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DATE_TIME_USER_FRIENDLY_PATTERN;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("excelDocManagementService")
 public class ExcelDocManagementService {
 
-    public static final String APPLICATION_EXCEL_VALUE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    public static final String APPLICATION_EXCEL_VALUE =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
     @Value("${document_management.url}")
     private String ccdDMStoreBaseUrl;
@@ -40,17 +42,6 @@ public class ExcelDocManagementService {
     private final ExcelCreationService excelCreationService;
     private final UserService userService;
     private final ScheduleCreationService scheduleCreationService;
-
-    @Autowired
-    public ExcelDocManagementService(DocumentManagementService documentManagementService,
-                                     ExcelCreationService excelCreationService,
-                                     UserService userService,
-                                     ScheduleCreationService scheduleCreationService) {
-        this.documentManagementService = documentManagementService;
-        this.excelCreationService = excelCreationService;
-        this.userService = userService;
-        this.scheduleCreationService = scheduleCreationService;
-    }
 
     public void uploadExcelDocument(String userToken, MultipleData multipleData, byte[] excelBytes) {
 
@@ -96,7 +87,8 @@ public class ExcelDocManagementService {
     public void writeAndUploadExcelDocument(List<?> multipleCollection, String userToken,
                                             MultipleData multipleData, List<String> subMultipleCollection) {
 
-        byte[] excelBytes = excelCreationService.writeExcel(multipleCollection, subMultipleCollection, multipleData.getLeadCase());
+        byte[] excelBytes = excelCreationService.writeExcel(multipleCollection, subMultipleCollection,
+                multipleData.getLeadCase());
 
         uploadExcelDocument(userToken, multipleData, excelBytes);
 
@@ -120,10 +112,13 @@ public class ExcelDocManagementService {
 
     }
 
-    public DocumentInfo writeAndUploadScheduleDocument(String userToken, TreeMap<String, Object> multipleObjectsFiltered,
-                                                       MultipleDetails multipleDetails, List<SchedulePayload> schedulePayloads) {
+    public DocumentInfo writeAndUploadScheduleDocument(String userToken,
+                                                       TreeMap<String, Object> multipleObjectsFiltered,
+                                                       MultipleDetails multipleDetails,
+                                                       List<SchedulePayload> schedulePayloads) {
 
-        byte[] excelBytes = scheduleCreationService.writeSchedule(multipleDetails.getCaseData(), schedulePayloads, multipleObjectsFiltered);
+        byte[] excelBytes = scheduleCreationService.writeSchedule(multipleDetails.getCaseData(),
+                schedulePayloads, multipleObjectsFiltered);
 
         return uploadScheduleDocument(userToken, multipleDetails.getCaseData(), excelBytes);
 
@@ -133,7 +128,8 @@ public class ExcelDocManagementService {
 
         String documentName = MultiplesScheduleHelper.generateScheduleDocumentName(multipleData);
 
-        URI documentSelfPath = documentManagementService.uploadDocument(userToken, excelBytes, documentName, APPLICATION_EXCEL_VALUE);
+        URI documentSelfPath = documentManagementService.uploadDocument(userToken, excelBytes,
+                documentName, APPLICATION_EXCEL_VALUE);
 
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
 
@@ -146,7 +142,8 @@ public class ExcelDocManagementService {
         return DocumentInfo.builder()
                 .type(SignificantItemType.DOCUMENT.name())
                 .description(documentName)
-                .markUp(documentManagementService.generateMarkupDocument(documentManagementService.generateDownloadableURL(documentSelfPath)))
+                .markUp(documentManagementService.generateMarkupDocument(
+                        documentManagementService.generateDownloadableURL(documentSelfPath)))
                 .url(documentManagementService.generateDownloadableURL(documentSelfPath))
                 .build();
 

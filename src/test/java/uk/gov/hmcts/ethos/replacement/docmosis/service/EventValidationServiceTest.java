@@ -41,6 +41,7 @@ public class EventValidationServiceTest {
     private CaseDetails caseDetails2;
     private CaseDetails caseDetails3;
     private CaseDetails caseDetails4;
+    private CaseDetails caseDetails5;
 
     private CaseData caseData;
     private MultipleData multipleData;
@@ -53,6 +54,7 @@ public class EventValidationServiceTest {
         caseDetails2 = generateCaseDetails("caseDetailsTest2.json");
         caseDetails3 = generateCaseDetails("caseDetailsTest3.json");
         caseDetails4 = generateCaseDetails("caseDetailsTest4.json");
+        caseDetails5 = generateCaseDetails("caseDetailsTest5.json");
 
         caseData = new CaseData();
         multipleData = new MultipleData();
@@ -203,6 +205,15 @@ public class EventValidationServiceTest {
     @Test
     public void shouldValidateRespRepNamesWithNullRepCollection() {
         CaseData caseData = caseDetails4.getCaseData();
+
+        List<String> errors = eventValidationService.validateRespRepNames(caseData);
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateRespRepNamesWithMatchResponseName() {
+        CaseData caseData = caseDetails5.getCaseData();
 
         List<String> errors = eventValidationService.validateRespRepNames(caseData);
 

@@ -6,5 +6,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.domain.SubMultipleReferenceMidlan
 
 @Repository
 @Transactional
-public interface SubMultipleRefMidlandsWestRepository extends SubMultipleRefRepository<SubMultipleReferenceMidlandsWest> {
+public interface SubMultipleRefMidlandsWestRepository
+        extends SubMultipleRefRepository<SubMultipleReferenceMidlandsWest> {
 }

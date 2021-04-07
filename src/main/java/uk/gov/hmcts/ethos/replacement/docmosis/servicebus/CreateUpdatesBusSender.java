@@ -27,7 +27,8 @@ public class CreateUpdatesBusSender {
         this.serviceBusSender = serviceBusSender;
     }
 
-    public void sendUpdatesToQueue(CreateUpdatesDto createUpdatesDto, DataModelParent dataModelParent, List<String> errors, String updateSize) {
+    public void sendUpdatesToQueue(CreateUpdatesDto createUpdatesDto, DataModelParent dataModelParent,
+                                   List<String> errors, String updateSize) {
         log.info("Started sending messages to create-updates queue");
 
         AtomicInteger successCount = new AtomicInteger(0);

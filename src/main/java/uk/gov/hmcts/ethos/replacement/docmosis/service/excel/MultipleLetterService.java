@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
@@ -10,7 +10,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.TornadoService;
 
@@ -23,29 +26,21 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.MAX_NUMBER_LABELS;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("multipleLetterService")
 public class MultipleLetterService {
 
     private static final String MESSAGE = "Failed to generate document for case id : ";
-    private static final String NUMBER_CASES_LIMIT_ERROR = "Number of cases to generate labels should be less or equal than "  + MAX_NUMBER_LABELS;
+    private static final String NUMBER_CASES_LIMIT_ERROR =
+            "Number of cases to generate labels should be less or equal than "  + MAX_NUMBER_LABELS;
 
     private final TornadoService tornadoService;
     private final ExcelReadingService excelReadingService;
     private final SingleCasesReadingService singleCasesReadingService;
     private final EventValidationService eventValidationService;
 
-    @Autowired
-    public MultipleLetterService(TornadoService tornadoService,
-                                 ExcelReadingService excelReadingService,
-                                 SingleCasesReadingService singleCasesReadingService,
-                                 EventValidationService eventValidationService) {
-        this.tornadoService = tornadoService;
-        this.excelReadingService = excelReadingService;
-        this.singleCasesReadingService = singleCasesReadingService;
-        this.eventValidationService = eventValidationService;
-    }
-
-    public DocumentInfo bulkLetterLogic(String userToken, MultipleDetails multipleDetails, List<String> errors, boolean validation) {
+    public DocumentInfo bulkLetterLogic(String userToken, MultipleDetails multipleDetails, List<String> errors,
+                                        boolean validation) {
 
         log.info("Read excel for letter logic");
 
@@ -63,7 +58,8 @@ public class MultipleLetterService {
 
             log.info("Check top level document to generate");
 
-            documentInfo = generateLetterOrLabel(userToken, multipleDetails, multipleObjects, errors, documentInfo, validation);
+            documentInfo = checkGenerationLetterOrLabel(userToken, multipleDetails,
+                    multipleObjects, errors, documentInfo, validation);
 
         } else {
 
@@ -83,9 +79,10 @@ public class MultipleLetterService {
 
     }
 
-    private DocumentInfo generateLetterOrLabel(String userToken, MultipleDetails multipleDetails,
-                                               TreeMap<String, Object> multipleObjects,
-                                               List<String> errors, DocumentInfo documentInfo, boolean validation) {
+    private DocumentInfo checkGenerationLetterOrLabel(String userToken, MultipleDetails multipleDetails,
+                                                      TreeMap<String, Object> multipleObjects,
+                                                      List<String> errors, DocumentInfo documentInfo,
+                                                      boolean validation) {
 
         String templateName = DocumentHelper.getTemplateName(multipleDetails.getCaseData().getCorrespondenceType(),
                 multipleDetails.getCaseData().getCorrespondenceScotType());
@@ -156,7 +153,8 @@ public class MultipleLetterService {
         log.info("Pull information from first case filtered");
 
         SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
-                multipleDetails.getCaseTypeId(), multipleObjects.firstKey(), multipleDetails.getCaseData().getMultipleSource());
+                multipleDetails.getCaseTypeId(), multipleObjects.firstKey(),
+                multipleDetails.getCaseData().getMultipleSource());
 
         log.info("Validating hearing number");
 
@@ -176,7 +174,8 @@ public class MultipleLetterService {
 
     }
 
-    private DocumentInfo generateLetterOrLabel(String userToken, MultipleDetails multipleDetails, SubmitEvent submitEvent) {
+    private DocumentInfo generateLetterOrLabel(String userToken, MultipleDetails multipleDetails,
+                                               SubmitEvent submitEvent) {
 
         DocumentInfo documentInfo;
 

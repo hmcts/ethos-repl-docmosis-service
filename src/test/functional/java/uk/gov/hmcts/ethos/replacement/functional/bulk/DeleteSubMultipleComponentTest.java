@@ -35,22 +35,30 @@ public class DeleteSubMultipleComponentTest {
     public void setUp() {
         testUtil = new TestUtil();
     }
+
     @Test
     public void delete_sub_multiples_eng() throws IOException {
-        testUtil.executeUpdateSubMultiples(false,Constants.TEST_DATA_ENG_UPDATE_SUB_MULTIPLE,24,"Manchester_Multiples_Dev");
-        testUtil.executeDeleteSubMultiples(false,Constants.TEST_DATA_ENG_DELETE_SUB_MULTIPLE,"Manchester_Multiples_Dev");
+        testUtil.executeUpdateSubMultiples(false, Constants.TEST_DATA_ENG_UPDATE_SUB_MULTIPLE, 24,
+                "Manchester_Multiples_Dev");
+        testUtil.executeDeleteSubMultiples(false, Constants.TEST_DATA_ENG_DELETE_SUB_MULTIPLE,
+                "Manchester_Multiples_Dev");
     }
+
     @Test
     public void delete_sub_multiples_scot() throws IOException {
-        testUtil.executeUpdateSubMultiples(false,Constants.TEST_DATA_ENG_UPDATE_SUB_MULTIPLE,41,"Scotland_Multiples_Dev");
-        testUtil.executeDeleteSubMultiples(false,Constants.TEST_DATA_ENG_DELETE_SUB_MULTIPLE,"Scotland_Multiples_Dev");
+        testUtil.executeUpdateSubMultiples(false, Constants.TEST_DATA_ENG_UPDATE_SUB_MULTIPLE, 41,
+                "Scotland_Multiples_Dev");
+        testUtil.executeDeleteSubMultiples(false, Constants.TEST_DATA_ENG_DELETE_SUB_MULTIPLE,
+                 "Scotland_Multiples_Dev");
     }
+
     @Test
     public void delete_sub_multiples_with_no_payload() throws IOException {
         testUtil.loadAuthToken();
         BulkRequest bulkRequest = new BulkRequest();
         Response response = testUtil.getBulkResponse(bulkRequest, Constants.UPDATE_BULK_CASE_URI, 500);
     }
+
     @Test
     public void delete_sub_multiples_with_no_token() throws IOException {
         testUtil.setAuthToken("authToken");
@@ -59,6 +67,7 @@ public class DeleteSubMultipleComponentTest {
         Response response = testUtil.getBulkResponse(bulkRequest, Constants.UPDATE_BULK_CASE_URI, 500);
         testUtil.setAuthToken(null);
     }
+
     @After
     public void tearDown() {
     }

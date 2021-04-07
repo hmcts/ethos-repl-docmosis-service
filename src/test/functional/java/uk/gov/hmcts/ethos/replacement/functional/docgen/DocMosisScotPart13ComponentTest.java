@@ -21,7 +21,6 @@ import java.io.IOException;
 })
 public class DocMosisScotPart13ComponentTest {
 
-
     private TestUtil testUtil;
 
     @Before
@@ -52,9 +51,9 @@ public class DocMosisScotPart13ComponentTest {
 
     @Test
     public void generateDocument_Part_Scot_106_A() throws Exception {
-        testUtil.executeGenerateDocumentTest("106", "A", "An Employment Judge is considering making a wasted costs against you in favour of", true);
+        testUtil.executeGenerateDocumentTest("106", "A",
+                "An Employment Judge is considering making a wasted costs against you in favour of", true);
     }
-
 
     @After
     public void tearDown() throws IOException {

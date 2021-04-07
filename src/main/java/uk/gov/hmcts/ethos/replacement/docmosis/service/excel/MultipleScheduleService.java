@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import com.google.common.collect.Lists;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
@@ -24,6 +24,7 @@ import java.util.concurrent.Future;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("multipleScheduleService")
 public class MultipleScheduleService {
 
@@ -35,20 +36,12 @@ public class MultipleScheduleService {
     public static final int THREAD_NUMBER = 20;
     public static final int SCHEDULE_LIMIT_CASES = 10000;
 
-    @Autowired
-    public MultipleScheduleService(ExcelReadingService excelReadingService,
-                                   SingleCasesReadingService singleCasesReadingService,
-                                   ExcelDocManagementService excelDocManagementService) {
-        this.excelReadingService = excelReadingService;
-        this.singleCasesReadingService = singleCasesReadingService;
-        this.excelDocManagementService = excelDocManagementService;
-    }
-
     public DocumentInfo bulkScheduleLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
         log.info("Read excel for schedule logic");
 
-        FilterExcelType filterExcelType = MultiplesScheduleHelper.getFilterExcelTypeByScheduleDoc(multipleDetails.getCaseData());
+        FilterExcelType filterExcelType =
+                MultiplesScheduleHelper.getFilterExcelTypeByScheduleDoc(multipleDetails.getCaseData());
 
         TreeMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
@@ -90,7 +83,8 @@ public class MultipleScheduleService {
 
     }
 
-    private List<String> getCaseIdCollectionFromFilter(TreeMap<String, Object> multipleObjects, FilterExcelType filterExcelType) {
+    private List<String> getCaseIdCollectionFromFilter(TreeMap<String, Object> multipleObjects,
+                                                       FilterExcelType filterExcelType) {
 
         if (filterExcelType.equals(FilterExcelType.FLAGS)) {
 
@@ -104,7 +98,8 @@ public class MultipleScheduleService {
 
     }
 
-    private List<SchedulePayload> getSchedulePayloadCollection(String userToken, String caseTypeId, List<String> caseIdCollection, List<String> errors) {
+    private List<SchedulePayload> getSchedulePayloadCollection(String userToken, String caseTypeId,
+                                                               List<String> caseIdCollection, List<String> errors) {
 
         ExecutorService executor = Executors.newFixedThreadPool(THREAD_NUMBER);
 
@@ -114,7 +109,8 @@ public class MultipleScheduleService {
 
         for (List<String> partitionCaseIds : Lists.partition(caseIdCollection, ES_PARTITION_SIZE)) {
 
-            ScheduleCallable scheduleCallable = new ScheduleCallable(singleCasesReadingService, userToken, caseTypeId, partitionCaseIds);
+            ScheduleCallable scheduleCallable =
+                    new ScheduleCallable(singleCasesReadingService, userToken, caseTypeId, partitionCaseIds);
 
             resultList.add(executor.submit(scheduleCallable));
 
@@ -122,7 +118,7 @@ public class MultipleScheduleService {
 
         List<SchedulePayload> result = new ArrayList<>();
 
-        for (Future<HashSet<SchedulePayload>> fut : resultList){
+        for (Future<HashSet<SchedulePayload>> fut : resultList) {
 
             try {
 

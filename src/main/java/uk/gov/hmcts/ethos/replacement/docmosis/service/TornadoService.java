@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
@@ -14,24 +14,45 @@ import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportDocHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import static java.net.HttpURLConnection.HTTP_OK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LETTER_ADDRESS_ALLOCATED_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POST_DEFAULT_XLSX_FILE_PATH;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService.APPLICATION_DOCX_VALUE;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("tornadoService")
 public class TornadoService {
 
-    private static final String VENUE_ADDRESS_INPUT_STREAM_ERROR = "Failed to get an inputStream for the venueAddressValues.xlsx file : ---> ";
+    private static final String VENUE_ADDRESS_INPUT_STREAM_ERROR = "Failed to get an inputStream for the "
+            + "venueAddressValues.xlsx file : ---> ";
 
     private final TornadoConfiguration tornadoConfiguration;
     private final DocumentManagementService documentManagementService;
@@ -40,17 +61,6 @@ public class TornadoService {
 
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
-
-    @Autowired
-    public TornadoService(TornadoConfiguration tornadoConfiguration,
-                          DocumentManagementService documentManagementService,
-                          UserService userService,
-                          DefaultValuesReaderService defaultValuesReaderService) {
-        this.tornadoConfiguration = tornadoConfiguration;
-        this.documentManagementService = documentManagementService;
-        this.userService = userService;
-        this.defaultValuesReaderService = defaultValuesReaderService;
-    }
 
     public DocumentInfo documentGeneration(String authToken, CaseData caseData, String caseTypeId,
                                            CorrespondenceType correspondenceType,
@@ -99,9 +109,10 @@ public class TornadoService {
     }
 
     private DefaultValues getAllocatedCourtAddress(CaseData caseData, String caseTypeId, MultipleData multipleData) {
-        if ( (multipleData != null && isAllocatedOffice(caseTypeId, multipleData.getCorrespondenceScotType()))
-                || isAllocatedOffice(caseTypeId, caseData.getCorrespondenceScotType()) ) {
-            return defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, caseData.getAllocatedOffice(), caseTypeId);
+        if ((multipleData != null && isAllocatedOffice(caseTypeId, multipleData.getCorrespondenceScotType()))
+                || isAllocatedOffice(caseTypeId, caseData.getCorrespondenceScotType())) {
+            return defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH,
+                    caseData.getAllocatedOffice(), caseTypeId);
         }
         return null;
     }
@@ -111,7 +122,8 @@ public class TornadoService {
                                   CorrespondenceScotType correspondenceScotType,
                                   MultipleData multipleData) {
 
-        try (InputStream venueAddressInputStream = getClass().getClassLoader().getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH)) {
+        try (InputStream venueAddressInputStream = getClass().getClassLoader()
+                .getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH)) {
             DefaultValues allocatedCourtAddress = getAllocatedCourtAddress(caseData, caseTypeId, multipleData);
             StringBuilder sb = DocumentHelper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(),
                     userDetails, caseTypeId, venueAddressInputStream, correspondenceType,
@@ -135,17 +147,20 @@ public class TornadoService {
         return os.toByteArray();
     }
 
-    private DocumentInfo createDocument(String authToken, HttpURLConnection conn, String documentName) throws IOException {
-        URI documentSelfPath = documentManagementService.uploadDocument(authToken, getBytesFromInputStream(conn.getInputStream()),
+    private DocumentInfo createDocument(String authToken, HttpURLConnection conn, String documentName)
+            throws IOException {
+        URI documentSelfPath = documentManagementService.uploadDocument(authToken,
+                getBytesFromInputStream(conn.getInputStream()),
                 OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE);
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
         return generateDocumentInfo(documentName,
                 documentSelfPath,
-                documentManagementService.generateMarkupDocument(documentManagementService.generateDownloadableURL(documentSelfPath)));
+                documentManagementService.generateMarkupDocument(documentManagementService
+                        .generateDownloadableURL(documentSelfPath)));
     }
 
     private DocumentInfo generateDocumentInfo(String documentName, URI documentSelfPath, String markupURL) {
-        log.info("MarkupURL: "+markupURL);
+        log.info("MarkupURL: " + markupURL);
         return DocumentInfo.builder()
                 .type(SignificantItemType.DOCUMENT.name())
                 .description(documentName)
@@ -154,7 +169,8 @@ public class TornadoService {
                 .build();
     }
 
-    private DocumentInfo checkResponseStatus(String authToken, HttpURLConnection conn, String documentName) throws IOException {
+    private DocumentInfo checkResponseStatus(String authToken, HttpURLConnection conn, String documentName)
+            throws IOException {
         DocumentInfo documentInfo = new DocumentInfo();
         int status = conn.getResponseCode();
         if (status == HTTP_OK) {
@@ -192,8 +208,17 @@ public class TornadoService {
         return documentInfo;
     }
 
-    private void buildListingInstruction(HttpURLConnection conn, ListingData listingData, String documentName, UserDetails userDetails, String caseType) throws IOException {
-        StringBuilder sb = ListingHelper.buildListingDocumentContent(listingData, tornadoConfiguration.getAccessKey(), documentName, userDetails, caseType);
+    private void buildListingInstruction(HttpURLConnection conn, ListingData listingData, String documentName,
+                                         UserDetails userDetails, String caseType) throws IOException {
+        StringBuilder sb;
+        if (Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT, LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT)
+                .contains(listingData.getReportType())) {
+            sb = ReportDocHelper.buildReportDocumentContent(listingData, tornadoConfiguration.getAccessKey(),
+                    documentName, userDetails);
+        } else {
+            sb = ListingHelper.buildListingDocumentContent(listingData, tornadoConfiguration.getAccessKey(),
+                    documentName, userDetails, caseType);
+        }
         //log.info("Sending request: " + sb.toString());
         // send the instruction in UTF-8 encoding so that most character sets are available
         OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);

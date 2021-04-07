@@ -65,7 +65,8 @@ public class MultipleAmendCaseIdsService {
 
     }
 
-    private List<String> concatNewAndOldCases(TreeMap<String, Object> multipleObjects, List<String> newEthosCaseRefCollection) {
+    private List<String> concatNewAndOldCases(TreeMap<String, Object> multipleObjects,
+                                              List<String> newEthosCaseRefCollection) {
 
         log.info("EthosCaseRefCollection: " + newEthosCaseRefCollection);
 
@@ -74,25 +75,26 @@ public class MultipleAmendCaseIdsService {
 
     }
 
-    private List<MultipleObject> generateMultipleObjects(List<String> unionLists, TreeMap<String, Object> multipleObjects) {
+    private List<MultipleObject> generateMultipleObjects(List<String> unionLists,
+                                                         TreeMap<String, Object> multipleObjects) {
 
         List<MultipleObject> multipleObjectList = new ArrayList<>();
 
         for (String ethosCaseRef : unionLists) {
 
-                MultipleObject multipleObject;
+            MultipleObject multipleObject;
 
-                if (multipleObjects.containsKey(ethosCaseRef)) {
+            if (multipleObjects.containsKey(ethosCaseRef)) {
 
-                    multipleObject = (MultipleObject)multipleObjects.get(ethosCaseRef);
+                multipleObject = (MultipleObject)multipleObjects.get(ethosCaseRef);
 
-                } else {
+            } else {
 
-                    multipleObject = MultiplesHelper.createMultipleObject(ethosCaseRef, "");
+                multipleObject = MultiplesHelper.createMultipleObject(ethosCaseRef, "");
 
-                }
+            }
 
-                multipleObjectList.add(multipleObject);
+            multipleObjectList.add(multipleObject);
 
         }
 
