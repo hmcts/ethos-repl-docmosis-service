@@ -13,6 +13,7 @@ import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -24,6 +25,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.util.stream.Collectors.toList;
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_ABERDEEN_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_DUNDEE_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_EDINBURGH_VENUE_FIELD_NAME;
@@ -46,9 +48,13 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_PUBLIC
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.IT56_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.IT57_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LISTINGS;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LISTINGS_DEV;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LISTINGS_USER;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
@@ -70,9 +76,9 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleH
 public class ListingHelper {
 
     private static final String ROOM_NOT_ALLOCATED = "* Not Allocated";
+    private static final int NUMBER_CHAR_PARSING_DATE = 20;
 
     private ListingHelper() {
-
     }
 
     public static ListingType getListingTypeFromCaseData(ListingData listingData, CaseData caseData,
@@ -220,7 +226,8 @@ public class ListingHelper {
         sb.append(getCourtListingData(listingData));
         log.info("Getting logo");
         sb.append(getLogo(caseType));
-        sb.append("\"Office_name\":\"").append(UtilHelper.getListingCaseTypeId(caseType)).append(NEW_LINE);
+        sb.append("\"Office_name\":\"").append(getOfficeName(getListingCaseTypeSingleOrListings(caseType)))
+                .append(NEW_LINE);
         log.info("Hearing location");
         sb.append("\"Hearing_location\":\"").append(getListingVenue(listingData)).append(NEW_LINE);
         log.info("Listings dates");
@@ -231,16 +238,46 @@ public class ListingHelper {
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
 
         if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
-            sortListingCollectionByDateAndVenue(listingData);
+            sortListingCollection(listingData, templateName);
             sb.append(getDocumentData(listingData, templateName, caseType));
         }
 
         log.info("Document data ends");
-        sb.append("\"case_total\":\"").append(getCaseTotal(listingData.getListingCollection())).append(NEW_LINE);
         sb.append("\"Today_date\":\"").append(UtilHelper.formatCurrentDate(LocalDate.now())).append("\"\n");
         sb.append("}\n");
         sb.append("}\n");
         return sb;
+    }
+
+    private static String getListingCaseTypeSingleOrListings(String caseType) {
+        if (caseType.endsWith(LISTINGS) || caseType.endsWith(LISTINGS_DEV) || caseType.endsWith(LISTINGS_USER)) {
+            return UtilHelper.getListingCaseTypeId(caseType);
+        } else {
+            return caseType;
+        }
+    }
+
+    private static String getOfficeName(String caseType) {
+        int index = findOfficeNameInUpperCase(caseType);
+        if (index != 0) {
+            String upperCaseLetter = Character.toString(caseType.charAt(index));
+            return caseType.replace(upperCaseLetter, " " + upperCaseLetter);
+        } else {
+            return caseType;
+        }
+    }
+
+    private static int findOfficeNameInUpperCase(String caseType) {
+        int count = 0;
+        for (int i = 0; i < caseType.length(); i++) {
+            if (Character.isUpperCase(caseType.charAt(i))) {
+                count++;
+            }
+            if (count == 2) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private static StringBuilder getLogo(String caseType) {
@@ -254,18 +291,83 @@ public class ListingHelper {
     }
 
     private static StringBuilder getDocumentData(ListingData listingData, String templateName, String caseType) {
-        if (Arrays.asList(IT56_TEMPLATE, IT57_TEMPLATE, PUBLIC_CASE_CAUSE_LIST_TEMPLATE, STAFF_CASE_CAUSE_LIST_TEMPLATE)
+        if (Arrays.asList(IT56_TEMPLATE, IT57_TEMPLATE)
                 .contains(templateName)) {
             return getCaseCauseList(listingData, caseType);
+        } else if (Arrays.asList(PUBLIC_CASE_CAUSE_LIST_TEMPLATE, STAFF_CASE_CAUSE_LIST_TEMPLATE)
+                .contains(templateName)) {
+            return getCaseCauseListByDate(listingData, caseType);
         } else if (Arrays.asList(PRESS_LIST_CAUSE_LIST_RANGE_TEMPLATE, PRESS_LIST_CAUSE_LIST_SINGLE_TEMPLATE)
                 .contains(templateName)) {
-            return getCaseCauseListByRoomOrVenue(listingData, caseType, false);
+            return getListByRoomOrVenue(new ArrayList<>(), listingData, caseType, false);
         } else if (Arrays.asList(PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE, STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE)
                 .contains(templateName)) {
-            return getCaseCauseListByRoomOrVenue(listingData, caseType, true);
+            return getCaseCauseListByRoom(listingData, caseType);
         } else {
             return new StringBuilder();
         }
+    }
+
+    private static boolean isEmptyHearingDate(ListingType listingType) {
+        if (listingType.getCauseListDate() != null) {
+            return listingType.getCauseListDate().trim().isEmpty();
+        }
+        return true;
+    }
+
+    private static TreeMap<String, List<ListingTypeItem>> getListHearingsByDate(ListingData listingData) {
+        return listingData.getListingCollection()
+                .stream()
+                .filter(listingTypeItem -> !isEmptyHearingDate(listingTypeItem.getValue()))
+                .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getCauseListDate(),
+                        () -> new TreeMap<>(getDateComparator()), Collectors.toList()));
+    }
+
+    private static Iterator<Map.Entry<String, List<ListingTypeItem>>> getEntriesByDate(StringBuilder sb,
+                                                                                       ListingData listingData) {
+        TreeMap<String, List<ListingTypeItem>> sortedMap = getListHearingsByDate(listingData);
+        sb.append("\"listing_date\":[\n");
+        return new TreeMap<>(sortedMap).entrySet().iterator();
+    }
+
+    private static StringBuilder getCaseCauseListByDate(ListingData listingData, String caseType) {
+        StringBuilder sb = new StringBuilder();
+        Iterator<Map.Entry<String, List<ListingTypeItem>>> entries = getEntriesByDate(sb, listingData);
+        while (entries.hasNext()) {
+            Map.Entry<String, List<ListingTypeItem>> listingEntry = entries.next();
+            sb.append("{\"date\":\"").append(listingEntry.getKey()).append(NEW_LINE);
+            sb.append("\"case_total\":\"").append(listingEntry.getValue().size()).append(NEW_LINE);
+            sb.append("\"listing\":[\n");
+            for (int i = 0; i < listingEntry.getValue().size(); i++) {
+                sb.append(getListingTypeRow(listingEntry.getValue().get(i).getValue(), caseType, listingData));
+                if (i != listingEntry.getValue().size() - 1) {
+                    sb.append(",\n");
+                }
+            }
+            sb.append("]\n");
+            if (entries.hasNext()) {
+                sb.append("},\n");
+            } else {
+                sb.append("}],\n");
+            }
+        }
+        return sb;
+    }
+
+    private static StringBuilder getCaseCauseListByRoom(ListingData listingData, String caseType) {
+        StringBuilder sb = new StringBuilder();
+        Iterator<Map.Entry<String, List<ListingTypeItem>>> entries = getEntriesByDate(sb, listingData);
+        while (entries.hasNext()) {
+            Map.Entry<String, List<ListingTypeItem>> listingEntry = entries.next();
+            sb.append("{\"date\":\"").append(listingEntry.getKey()).append(NEW_LINE);
+            sb.append(getListByRoomOrVenue(listingEntry.getValue(), listingData, caseType, true));
+            if (entries.hasNext()) {
+                sb.append("},\n");
+            } else {
+                sb.append("}],\n");
+            }
+        }
+        return sb;
     }
 
     public static StringBuilder getListingDate(ListingData listingData) {
@@ -290,19 +392,22 @@ public class ListingHelper {
         return true;
     }
 
-    private static Map<String, List<ListingTypeItem>> getListHearingsByRoomWithNotAllocated(ListingData listingData) {
-        Map<String, List<ListingTypeItem>> unsortedMap = listingData.getListingCollection()
+    private static TreeMap<String, List<ListingTypeItem>> getListHearingsByRoomWithNotAllocated
+            (List<ListingTypeItem> listingSubCollection) {
+        TreeMap<String, List<ListingTypeItem>> sortedMap = listingSubCollection
                 .stream()
                 .filter(listingTypeItem -> !isEmptyHearingRoom(listingTypeItem.getValue()))
-                .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getHearingRoom()));
-        List<ListingTypeItem> notAllocated = listingData.getListingCollection()
+                .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getHearingRoom(),
+                        () -> new TreeMap<>(getVenueComparator()), Collectors.toList()));
+        List<ListingTypeItem> notAllocated = listingSubCollection
                 .stream()
                 .filter(listingTypeItem -> isEmptyHearingRoom(listingTypeItem.getValue()))
-                .collect(Collectors.toList());
+                .sorted(getVenueComparatorListingTypeItem())
+                .collect(toList());
         if (!notAllocated.isEmpty()){
-            unsortedMap.computeIfAbsent(ROOM_NOT_ALLOCATED, k -> new ArrayList<>()).addAll(notAllocated);
+            sortedMap.computeIfAbsent(ROOM_NOT_ALLOCATED, k -> new ArrayList<>()).addAll(notAllocated);
         }
-        return unsortedMap;
+        return sortedMap;
     }
 
     private static boolean isEmptyHearingVenue(ListingType listingType) {
@@ -312,34 +417,36 @@ public class ListingHelper {
         return true;
     }
 
-    private static Map<String, List<ListingTypeItem>> getListHearingsByVenueWithNotAllocated(
+    private static TreeMap<String, List<ListingTypeItem>> getListHearingsByVenueWithNotAllocated(
             ListingData listingData) {
-        Map<String, List<ListingTypeItem>> unsortedMap = listingData.getListingCollection()
+        TreeMap<String, List<ListingTypeItem>> sortedMap = listingData.getListingCollection()
                 .stream()
                 .filter(listingTypeItem -> !isEmptyHearingVenue(listingTypeItem.getValue()))
-                .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getCauseListVenue()));
+                .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getCauseListVenue(),
+                        () -> new TreeMap<>(getVenueComparator()), Collectors.toList()));
         List<ListingTypeItem> notAllocated = listingData.getListingCollection()
                 .stream()
                 .filter(listingTypeItem -> isEmptyHearingVenue(listingTypeItem.getValue()))
-                .collect(Collectors.toList());
+                .sorted(getDateComparatorListingTypeItem().thenComparing(getTimeComparatorListingTypeItem()))
+                .collect(toList());
         if (!notAllocated.isEmpty()){
-            unsortedMap.computeIfAbsent(NOT_ALLOCATED, k -> new ArrayList<>()).addAll(notAllocated);
+            sortedMap.computeIfAbsent(NOT_ALLOCATED, k -> new ArrayList<>()).addAll(notAllocated);
         }
-        return unsortedMap;
+        return sortedMap;
     }
 
-    private static StringBuilder getCaseCauseListByRoomOrVenue(ListingData listingData, String caseType,
-                                                               boolean byRoom) {
+    private static StringBuilder getListByRoomOrVenue(List<ListingTypeItem> collection, ListingData listingData,
+                                                      String caseType, boolean byRoom) {
         StringBuilder sb = new StringBuilder();
-        Map<String, List<ListingTypeItem>> unsortedMap = byRoom
-                ? getListHearingsByRoomWithNotAllocated(listingData)
+        TreeMap<String, List<ListingTypeItem>> sortedMap = byRoom
+                ? getListHearingsByRoomWithNotAllocated(collection)
                 : getListHearingsByVenueWithNotAllocated(listingData);
         sb.append("\"location\":[\n");
-        Iterator<Map.Entry<String, List<ListingTypeItem>>> entries = new TreeMap<>(unsortedMap).entrySet().iterator();
+        Iterator<Map.Entry<String, List<ListingTypeItem>>> entries = new TreeMap<>(sortedMap).entrySet().iterator();
         while (entries.hasNext()) {
             Map.Entry<String, List<ListingTypeItem>> listingEntry = entries.next();
-            String subTitle = byRoom ? "Hearing_room" : "Hearing_venue";
-            sb.append("{\"").append(subTitle).append("\":\"").append(listingEntry.getKey()).append(NEW_LINE);
+            String hearingRoomOrVenue = byRoom ? "Hearing_room" : "Hearing_venue";
+            sb.append("{\"").append(hearingRoomOrVenue).append("\":\"").append(listingEntry.getKey()).append(NEW_LINE);
             sb.append("\"listing\":[\n");
             for (int i = 0; i < listingEntry.getValue().size(); i++) {
                 sb.append(getListingTypeRow(listingEntry.getValue().get(i).getValue(), caseType, listingData));
@@ -581,23 +688,22 @@ public class ListingHelper {
                     .skip(1)
                     .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
                     .map(respondentSumTypeItem -> respondentSumTypeItem.getValue().getRespondentName())
-                    .collect(Collectors.toList());
+                    .collect(toList());
             return String.join(", ", respOthers);
         }
         return " ";
     }
 
-    private static String getCaseTotal(List<ListingTypeItem> listingTypeItems) {
-        return String.valueOf(listingTypeItems
-                .stream()
-                .map(listingTypeItem -> listingTypeItem.getValue().getElmoCaseReference())
-                .distinct()
-                .count());
+    public static String addMillisToDateToSearch(String dateToSearch) {
+        if (dateToSearch.length() < NUMBER_CHAR_PARSING_DATE) {
+            return dateToSearch.concat(".000");
+        }
+        return dateToSearch;
     }
 
     public static boolean getListingDateBetween(String dateToSearchFrom, String dateToSearchTo, String dateToSearch) {
         LocalDate localDateFrom = LocalDate.parse(dateToSearchFrom, OLD_DATE_TIME_PATTERN2);
-        LocalDate localDate = LocalDate.parse(dateToSearch, OLD_DATE_TIME_PATTERN);
+        LocalDate localDate = LocalDate.parse(addMillisToDateToSearch(dateToSearch), OLD_DATE_TIME_PATTERN);
         if (dateToSearchTo.equals("")) {
             return localDateFrom.isEqual(localDate);
         } else {
@@ -618,16 +724,53 @@ public class ListingHelper {
         }
     }
 
-    private static void sortListingCollectionByDateAndVenue(ListingData listingData) {
-        log.info("Sorting hearings");
-        Comparator<ListingTypeItem> venueComparator =
-                Comparator.comparing(s -> s.getValue().getCauseListVenue(),
-                        Comparator.nullsLast(Comparator.naturalOrder()));
+    private static Comparator<String> getDateComparator() {
+        return Comparator.comparing(causeListDate -> causeListDate != null
+                        ? LocalDate.parse(causeListDate, NEW_DATE_PATTERN)
+                        : null,
+                Comparator.nullsLast(Comparator.naturalOrder()));
+    }
 
-        listingData.getListingCollection()
-                .sort(venueComparator.thenComparing(s -> s.getValue().getCauseListDate() != null
-                                ? LocalDate.parse(s.getValue().getCauseListDate(), NEW_DATE_PATTERN)
-                                : null,
-                        Comparator.nullsLast(Comparator.naturalOrder())));
+    private static Comparator<String> getVenueComparator() {
+        return Comparator.comparing(causeListVenue -> causeListVenue,
+                Comparator.nullsLast(Comparator.naturalOrder()));
+    }
+
+    private static Comparator<ListingTypeItem> getVenueComparatorListingTypeItem() {
+        return Comparator.comparing(s -> s.getValue().getCauseListVenue(),
+                Comparator.nullsLast(Comparator.naturalOrder()));
+    }
+
+    private static Comparator<ListingTypeItem> getDateComparatorListingTypeItem() {
+        return Comparator.comparing(s -> s.getValue().getCauseListDate() != null
+                        ? LocalDate.parse(s.getValue().getCauseListDate(), NEW_DATE_PATTERN)
+                        : null,
+                Comparator.nullsLast(Comparator.naturalOrder()));
+    }
+
+    private static Comparator<ListingTypeItem> getTimeComparatorListingTypeItem() {
+        return Comparator.comparing(s -> s.getValue().getCauseListTime() != null
+                        ? LocalTime.parse(s.getValue().getCauseListTime(), NEW_TIME_PATTERN)
+                        : null,
+                Comparator.nullsLast(Comparator.naturalOrder()));
+    }
+
+    private static void sortListingCollection(ListingData listingData, String templateName) {
+
+        log.info("Sorting hearings");
+        if (Arrays.asList(PRESS_LIST_CAUSE_LIST_RANGE_TEMPLATE, PRESS_LIST_CAUSE_LIST_SINGLE_TEMPLATE)
+                .contains(templateName)) {
+
+            listingData.getListingCollection()
+                    .sort(getVenueComparatorListingTypeItem()
+                            .thenComparing(getDateComparatorListingTypeItem())
+                            .thenComparing(getTimeComparatorListingTypeItem()));
+        } else {
+
+            listingData.getListingCollection()
+                    .sort(getDateComparatorListingTypeItem()
+                            .thenComparing(getVenueComparatorListingTypeItem())
+                            .thenComparing(getTimeComparatorListingTypeItem()));
+        }
     }
 }

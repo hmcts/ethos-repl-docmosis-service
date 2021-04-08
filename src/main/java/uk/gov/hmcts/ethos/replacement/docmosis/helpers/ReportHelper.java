@@ -240,7 +240,8 @@ public class ReportHelper {
                         Collections.max(hearingType.getHearingDateCollection(),
                                 Comparator.comparing(c -> c.getValue().getListedDate())).getValue();
                 if (maxDateListedType != null) {
-                    String listedDate =  LocalDateTime.parse(maxDateListedType.getListedDate(),
+                    String dateToSearch = ListingHelper.addMillisToDateToSearch(maxDateListedType.getListedDate());
+                    String listedDate =  LocalDateTime.parse(dateToSearch,
                             OLD_DATE_TIME_PATTERN).toLocalDate().toString();
                     boolean matchingDateIsValid = validateMatchingDate(listingData, listedDate);
                     boolean casesCompletedIsValid = casesCompletedIsValid(adhocReportTypeItem, maxDateListedType);

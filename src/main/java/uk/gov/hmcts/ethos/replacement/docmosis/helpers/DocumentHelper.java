@@ -357,11 +357,13 @@ public class DocumentHelper {
                 log.info("Hearing dates collection");
                 sb.append("\"Hearing_date\":\"").append(nullCheck(getHearingDates(hearingType
                         .getHearingDateCollection()))).append(NEW_LINE);
-                sb.append("\"Hearing_date_time\":\"").append(nullCheck(getHearingDatesAndTime(hearingType
-                        .getHearingDateCollection()))).append(NEW_LINE);
+                String hearingDateAndTime = nullCheck(getHearingDatesAndTime(hearingType.getHearingDateCollection()));
+                sb.append("\"Hearing_date_time\":\"").append(hearingDateAndTime).append(NEW_LINE);
+                sb.append("\"Hearing_time\":\"").append(getHearingTime(hearingDateAndTime)).append(NEW_LINE);
             } else {
                 sb.append("\"Hearing_date\":\"").append(NEW_LINE);
                 sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
+                sb.append("\"Hearing_time\":\"").append(NEW_LINE);
             }
             log.info("Checking hearing venue and duration");
             sb.append("\"Hearing_venue\":\"").append(nullCheck(getVenueAddress(
@@ -372,6 +374,7 @@ public class DocumentHelper {
             sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
             sb.append("\"Hearing_venue\":\"").append(NEW_LINE);
             sb.append("\"Hearing_duration\":\"").append(NEW_LINE);
+            sb.append("\"Hearing_time\":\"").append(NEW_LINE);
         }
         return sb;
     }
@@ -404,6 +407,10 @@ public class DocumentHelper {
         }
 
         return hearingType;
+    }
+
+    private static String getHearingTime(String dateTime) {
+        return !dateTime.isEmpty() ? dateTime.substring(dateTime.indexOf("at") + 3) : "";
     }
 
     private static String getHearingDates(List<DateListedTypeItem> hearingDateCollection) {

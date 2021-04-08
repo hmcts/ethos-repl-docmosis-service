@@ -18,8 +18,8 @@
     "listingCollection": [
       {
         "value": {
-          "causeListDate": "12 October 2020",
-          "causeListTime": "00:00",
+          "causeListDate": "16 January 2020",
+          "causeListTime": "03:00",
           "elmoCaseReference": "1112",
           "jurisdictionCodesList": "ADG, COM",
           "hearingType": "Hearing",
@@ -44,9 +44,9 @@
       },
       {
         "value": {
-          "causeListDate": "14 October 2020",
-          "causeListTime": "00:00",
-          "causeListVenue": " ",
+          "causeListDate": "16 January 2020",
+          "causeListTime": "02:00",
+          "causeListVenue": "Manchester",
           "elmoCaseReference": "1112",
           "jurisdictionCodesList": "ADG, DCD",
           "hearingType": "Hearing",
