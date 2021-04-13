@@ -18,17 +18,16 @@
     "listingCollection": [
       {
         "value": {
-          "causeListDate": "12 October 2020",
-          "causeListTime": "00:00",
-          "causeListVenue": "Manchester",
+          "causeListDate": "16 January 2020",
+          "causeListTime": "03:00",
           "elmoCaseReference": "1112",
           "jurisdictionCodesList": "ADG, COM",
           "hearingType": "Hearing",
           "positionType": "Manually Created",
-          "hearingJudgeName": "itcoRef123_Ms AM Aspden",
           "hearingEEMember": " ",
           "hearingERMember": " ",
           "hearingClerk": "Anne Fox",
+          "Hearing_room": "Tribunal 2",
           "hearingDay": "1 of 3",
           "claimantName": "Mr s sdfs",
           "claimantTown": "claimantTown",
@@ -45,14 +44,13 @@
       },
       {
         "value": {
-          "causeListDate": "11 February 2020",
-          "causeListTime": "00:00",
+          "causeListDate": "16 January 2020",
+          "causeListTime": "02:00",
           "causeListVenue": "Manchester",
           "elmoCaseReference": "1112",
           "jurisdictionCodesList": "ADG, DCD",
           "hearingType": "Hearing",
           "positionType": "Manually Created",
-          "hearingJudgeName": "Ms AM Judge",
           "hearingEEMember": " ",
           "hearingERMember": " ",
           "hearingClerk": "Andrew Pearl",
@@ -72,14 +70,13 @@
       },
       {
         "value": {
-          "causeListDate": "14 December 2020",
-          "causeListTime": "01:00",
+          "causeListDate": "16 January 2020",
+          "causeListTime": "00:00",
           "causeListVenue": "Manchester",
           "elmoCaseReference": "1112",
           "jurisdictionCodesList": "ADG, COM",
           "hearingType": "Preliminary Hearing (CM)",
           "positionType": "Manually Created",
-          "hearingJudgeName": "Judge For Tribunal4",
           "hearingEEMember": " ",
           "hearingERMember": " ",
           "hearingClerk": "Anne Fox",
@@ -96,33 +93,9 @@
           "resp_others": "Mark Taylor"
         },
         "id": "f4ef21b6-df93-4835-972b-ddcb6ac4992e"
-      },
-      {
-        "value": {
-          "causeListDate": "14 December 2020",
-          "causeListTime": "00:00",
-          "causeListVenue": "Manchester",
-          "elmoCaseReference": "1112",
-          "jurisdictionCodesList": "ADG, COM",
-          "hearingType": "Preliminary Hearing (CM)",
-          "positionType": "Manually Created",
-          "hearingJudgeName": "Another Judge",
-          "hearingEEMember": " ",
-          "hearingERMember": " ",
-          "hearingClerk": "Juan Fox",
-          "Hearing_room": "Tribunal 4",
-          "hearingDay": "2 of 3",
-          "claimantName": "Mr s Dominguez",
-          "claimantRepresentative": "Representative",
-          "respondent": "Respondent",
-          "respondentRepresentative": "Organization",
-          "Hearing_panel": "Panel",
-          "Hearing_notes": "Notes4",
-          "estHearingLength": "3 Minutes"
-        },
-        "id": "f4ef21b6-df93-4835-972b-ddcb6ac4122e"
       }
     ],
-    "listingVenue": "Manchester"
+    "listingVenue": "Glasgow",
+    "venueGlasgow": "Glasgow COET"
   }
 }

@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
@@ -139,7 +138,8 @@ public class ListingService {
     private List<SubmitEvent> getListingHearingsSearch(ListingDetails listingDetails, String authToken)
             throws IOException {
         ListingData listingData = listingDetails.getCaseData();
-        Map.Entry<String, String> entry = getListingVenueToSearch(listingData).entrySet().iterator().next();
+        Map.Entry<String, String> entry =
+                ListingHelper.getListingVenueToSearch(listingData).entrySet().iterator().next();
         String venueToSearchMapping = entry.getKey();
         String venueToSearch = entry.getValue();
         boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
@@ -234,45 +234,14 @@ public class ListingService {
         }
     }
 
-    private boolean isAllScottishVenues(ListingData listingData) {
-        boolean allVenuesGlasgow = !isNullOrEmpty(listingData.getVenueGlasgow())
-                && listingData.getVenueGlasgow().equals(ALL_VENUES);
-        boolean allVenuesAberdeen = !isNullOrEmpty(listingData.getVenueAberdeen())
-                && listingData.getVenueAberdeen().equals(ALL_VENUES);
-        boolean allVenuesDundee = !isNullOrEmpty(listingData.getVenueDundee())
-                && listingData.getVenueDundee().equals(ALL_VENUES);
-        boolean allVenuesEdinburgh = !isNullOrEmpty(listingData.getVenueEdinburgh())
-                && listingData.getVenueEdinburgh().equals(ALL_VENUES);
-        return !allVenuesGlasgow && !allVenuesAberdeen && !allVenuesDundee && !allVenuesEdinburgh;
-    }
-
-    private Map<String, String> getListingVenueToSearch(ListingData listingData) {
-        boolean allLocations = listingData.getListingVenue().equals(ALL_VENUES);
-        if (allLocations) {
-            log.info("All locations");
-            return ListingHelper.createMap(ALL_VENUES, ALL_VENUES);
-        } else {
-            if (isAllScottishVenues(listingData)) {
-                log.info("Scottish Venues checking");
-                return ListingHelper.getVenueToSearch(listingData);
-            } else {
-                log.info("Other");
-                return !isNullOrEmpty(listingData.getListingVenue())
-                        ? ListingHelper.createMap(LISTING_VENUE_FIELD_NAME, listingData.getListingVenue())
-                        : ListingHelper.createMap("", "");
-            }
-        }
-    }
-
     private boolean isListingVenueValid(ListingData listingData, DateListedTypeItem dateListedTypeItem) {
-        Map<String, String> venueToSearchMap = getListingVenueToSearch(listingData);
-        String venueToSearch = venueToSearchMap.entrySet().iterator().next().getValue();
+        String venueToSearch = ListingHelper.getListingVenue(listingData);
         log.info("VENUE TO SEARCH: " + venueToSearch);
         if (ALL_VENUES.equals(venueToSearch)) {
             return true;
         } else {
             String venueSearched;
-            if (isAllScottishVenues(listingData)) {
+            if (ListingHelper.isAllScottishVenues(listingData)) {
                 log.info("Scottish checking venue valid");
                 venueSearched = ListingHelper.getVenueFromDateListedType(dateListedTypeItem.getValue());
             } else {

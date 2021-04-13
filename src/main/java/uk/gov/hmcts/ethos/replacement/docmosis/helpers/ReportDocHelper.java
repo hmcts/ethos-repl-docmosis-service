@@ -41,7 +41,7 @@ public class ReportDocHelper {
 
         sb.append("\"data\":{\n");
 
-        sb.append(ListingHelper.getListingRangeDates(listingData));
+        sb.append(ListingHelper.getListingDate(listingData));
 
         if (listingData.getLocalReportsDetailHdr() != null) {
             sb.append("\"Report_Office\":\"").append(
