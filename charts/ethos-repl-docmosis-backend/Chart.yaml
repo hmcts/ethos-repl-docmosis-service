@@ -8,5 +8,5 @@ maintainers:
     email: javier.carretero@hmcts.net
 dependencies:
   - name: java
-    version: 3.4.2
+    version: 3.4.5
     repository: '@hmctspublic'
