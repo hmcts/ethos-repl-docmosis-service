@@ -75,7 +75,6 @@ public class CaseCreationForCaseWorkerService {
 
         caseData.setOfficeCT(null);
         caseData.setPositionTypeCT(null);
-        caseData.setReasonForCT(null);
 
     }
 
