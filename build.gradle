@@ -136,19 +136,19 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.retry:spring-retry'
 
-    compile 'org.postgresql:postgresql:42.2.2'
+    compile 'org.postgresql:postgresql:42.2.19'
 
     compile group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
     compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.7'
-    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.5.RELEASE'
     compile group: 'io.github.openfeign', name: 'feign-httpclient', version: '11.1'
     compile group: 'io.github.openfeign', name: 'feign-core', version: '11.1'
 
-    compile group: 'uk.gov.hmcts.reform', name: 'ecm-common', version: '0.1.55'
+    compile group: 'uk.gov.hmcts.reform', name: 'ecm-common', version: '0.1.58'
     compile group: 'uk.gov.hmcts.reform', name: 'document-management-client', version: '6.0.0'
     compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.logging
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging
