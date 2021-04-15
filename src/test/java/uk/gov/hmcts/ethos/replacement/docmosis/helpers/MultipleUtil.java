@@ -208,6 +208,7 @@ public class MultipleUtil {
         SubmitMultipleEvent submitMultipleEventSearched = new SubmitMultipleEvent();
         submitMultipleEventSearched.setCaseData(MultipleUtil.getMultipleData());
         submitMultipleEventSearched.getCaseData().setMultipleReference("246001");
+        submitMultipleEventSearched.setState(OPEN_STATE);
         return new ArrayList<>(Collections.singletonList(submitMultipleEventSearched));
     }
 

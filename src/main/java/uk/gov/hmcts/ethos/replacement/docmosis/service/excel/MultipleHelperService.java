@@ -26,6 +26,7 @@ import java.util.TreeMap;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TRANSFERRED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
@@ -92,10 +93,17 @@ public class MultipleHelperService {
 
             SubmitMultipleEvent multipleEvent = multipleEvents.get(0);
 
-            validateSubMultiple(subMultipleName,
-                    multipleEvent.getCaseData().getSubMultipleCollection(),
-                    errors,
-                    multipleRef);
+            if (!multipleEvent.getState().equals(TRANSFERRED_STATE)) {
+                validateSubMultiple(subMultipleName,
+                        multipleEvent.getCaseData().getSubMultipleCollection(),
+                        errors,
+                        multipleRef);
+            } else {
+
+                errors.add("Multiple " + multipleRef + " has been transferred. The case cannot be moved to this "
+                        + "multiple");
+
+            }
 
         } else {
 

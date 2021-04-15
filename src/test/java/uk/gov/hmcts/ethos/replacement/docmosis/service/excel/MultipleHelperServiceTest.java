@@ -25,6 +25,7 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TRANSFERRED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -210,6 +211,32 @@ public class MultipleHelperServiceTest {
                 errors);
 
         assertEquals("Multiple 246002 does not exist", errors.get(0));
+
+    }
+
+    @Test
+    public void multipleValidationLogicMultipleTransferred() {
+
+        List<String> errors = new ArrayList<>();
+
+        String multipleReference = "246001";
+        String subMultipleName = "SubMultiple";
+
+        submitMultipleEvents.get(0).setState(TRANSFERRED_STATE);
+        when(multipleCasesReadingService.retrieveMultipleCases(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleReference)
+        ).thenReturn(submitMultipleEvents);
+
+        multipleHelperService.validateExternalMultipleAndSubMultiple(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleReference,
+                subMultipleName,
+                errors);
+
+        assertEquals(1, errors.size());
+        assertEquals("Multiple 246001 has been transferred. "
+                + "The case cannot be moved to this multiple", errors.get(0));
 
     }
 
