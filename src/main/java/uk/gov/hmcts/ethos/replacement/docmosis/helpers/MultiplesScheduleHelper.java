@@ -5,7 +5,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-import uk.gov.hmcts.ecm.common.model.schedule.ScheduleAddress;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantType;
@@ -28,6 +27,9 @@ public class MultiplesScheduleHelper {
     public static final String NOT_ALLOCATED = "Not_Allocated";
     public static final String RESPONDENT_NAME = "RespondentName";
     public static final String ADDRESS_LINE1 = "AddressLine1";
+    public static final String ADDRESS_LINE2 = "AddressLine2";
+    public static final String ADDRESS_LINE3 = "AddressLine3";
+    public static final String TOWN = "Town";
     public static final String POSTCODE = "PostCode";
 
     private MultiplesScheduleHelper() {
@@ -37,13 +39,23 @@ public class MultiplesScheduleHelper {
 
         return SchedulePayload.builder()
                 .ethosCaseRef(nullCheck(submitEventES.getEthosCaseReference()))
-                .claimantName(getClaimantName(submitEventES.getClaimantCompany(), submitEventES.getClaimantIndType()))
-                .respondentName(getRespondentData(submitEventES.getRespondentCollection(), RESPONDENT_NAME))
+                .claimantName(nullCheck(getClaimantName(submitEventES.getClaimantCompany(),
+                        submitEventES.getClaimantIndType())))
+                .respondentName(nullCheck(getRespondentData(submitEventES.getRespondentCollection(), RESPONDENT_NAME)))
                 .positionType(nullCheck(submitEventES.getPositionType()))
-                .claimantAddressLine1(getClaimantData(submitEventES.getClaimantType(), ADDRESS_LINE1))
-                .claimantPostCode(getClaimantData(submitEventES.getClaimantType(), POSTCODE))
-                .respondentAddressLine1(getRespondentData(submitEventES.getRespondentCollection(), ADDRESS_LINE1))
-                .respondentPostCode(getRespondentData(submitEventES.getRespondentCollection(), POSTCODE))
+                .claimantAddressLine1(nullCheck(getClaimantData(submitEventES.getClaimantType(), ADDRESS_LINE1)))
+                .claimantAddressLine2(nullCheck(getClaimantData(submitEventES.getClaimantType(), ADDRESS_LINE2)))
+                .claimantAddressLine3(nullCheck(getClaimantData(submitEventES.getClaimantType(), ADDRESS_LINE3)))
+                .claimantTown(nullCheck(getClaimantData(submitEventES.getClaimantType(), TOWN)))
+                .claimantPostCode(nullCheck(getClaimantData(submitEventES.getClaimantType(), POSTCODE)))
+                .respondentAddressLine1(nullCheck(getRespondentData(submitEventES.getRespondentCollection(),
+                        ADDRESS_LINE1)))
+                .respondentAddressLine2(nullCheck(getRespondentData(submitEventES.getRespondentCollection(),
+                        ADDRESS_LINE2)))
+                .respondentAddressLine3(nullCheck(getRespondentData(submitEventES.getRespondentCollection(),
+                        ADDRESS_LINE3)))
+                .respondentTown(nullCheck(getRespondentData(submitEventES.getRespondentCollection(), TOWN)))
+                .respondentPostCode(nullCheck(getRespondentData(submitEventES.getRespondentCollection(), POSTCODE)))
                 .build();
 
     }
@@ -62,12 +74,9 @@ public class MultiplesScheduleHelper {
 
             }
 
-            ScheduleAddress scheduleAddress = new ScheduleAddress();
             Address address = DocumentHelper.getRespondentAddressET3(respondentCollection.get(0).getValue());
-            scheduleAddress.setAddressLine1(address.getAddressLine1());
-            scheduleAddress.setPostCode(address.getPostCode());
 
-            return getScheduleAddress(field, scheduleAddress);
+            return getScheduleAddress(field, address);
 
         } else {
 
@@ -81,9 +90,9 @@ public class MultiplesScheduleHelper {
 
         if (scheduleClaimantType != null) {
 
-            ScheduleAddress scheduleAddress = scheduleClaimantType.getClaimantAddressUK();
+            Address address = scheduleClaimantType.getClaimantAddressUK();
 
-            return getScheduleAddress(field, scheduleAddress);
+            return getScheduleAddress(field, address);
 
         } else {
 
@@ -93,19 +102,38 @@ public class MultiplesScheduleHelper {
 
     }
 
-    private static String getScheduleAddress(String field, ScheduleAddress scheduleAddress) {
+    private static String getScheduleAddress(String field, Address address) {
 
-        if (field.equals(ADDRESS_LINE1)) {
+        switch (field) {
+            case ADDRESS_LINE1:
 
-            return scheduleAddress.getAddressLine1() != null
-                    ? scheduleAddress.getAddressLine1()
-                    : "";
+                return address.getAddressLine1() != null
+                        ? address.getAddressLine1()
+                        : "";
 
-        } else {
+            case ADDRESS_LINE2:
 
-            return scheduleAddress != null
-                    ? scheduleAddress.getPostCode()
-                    : "";
+                return address.getAddressLine2() != null
+                        ? address.getAddressLine2()
+                        : "";
+
+            case ADDRESS_LINE3:
+
+                return address.getAddressLine3() != null
+                        ? address.getAddressLine3()
+                        : "";
+
+            case TOWN:
+
+                return address.getPostTown() != null
+                        ? address.getPostTown()
+                        : "";
+
+            default:
+
+                return address != null
+                        ? address.getPostCode()
+                        : "";
 
         }
 

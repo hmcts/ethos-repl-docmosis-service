@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIST_CASES_CONFIG;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_DETAILED_CONFIG;
@@ -156,19 +157,57 @@ public class ScheduleCreationService {
 
                     for (int j = 0; j < multipleDetailedHeaders.size(); j++) {
                         XSSFRow row = sheet.createRow(i + startingRow);
-                        row.setHeightInPoints(((float)2.2 * sheet.getDefaultRowHeightInPoints()));
+                        row.setHeightInPoints(((float)4.5 * sheet.getDefaultRowHeightInPoints()));
                         createCell(row, j++, schedulePayload.getEthosCaseRef(), cellStyle);
-                        createCell(row, j++, schedulePayload.getClaimantName()
-                                + NEW_LINE_CELL + schedulePayload.getClaimantAddressLine1()
-                                + NEW_LINE_CELL + schedulePayload.getClaimantPostCode(), cellStyle);
-                        createCell(row, j++, schedulePayload.getRespondentName()
-                                + NEW_LINE_CELL + schedulePayload.getRespondentAddressLine1()
-                                + NEW_LINE_CELL + schedulePayload.getRespondentPostCode(), cellStyle);
+                        createCell(row, j++, getClaimantAddress(schedulePayload), cellStyle);
+                        createCell(row, j++, getRespondentAddress(schedulePayload), cellStyle);
                     }
                 }
 
             }
         }
+    }
+
+    private String getClaimantAddress(SchedulePayload schedulePayload) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(schedulePayload.getClaimantName());
+        if (!isNullOrEmpty(schedulePayload.getClaimantAddressLine1())) {
+            sb.append(NEW_LINE_CELL).append(schedulePayload.getClaimantAddressLine1());
+        }
+        if (!isNullOrEmpty(schedulePayload.getClaimantAddressLine2())) {
+            sb.append(NEW_LINE_CELL).append(schedulePayload.getClaimantAddressLine2());
+        }
+        if (!isNullOrEmpty(schedulePayload.getClaimantAddressLine3())) {
+            sb.append(NEW_LINE_CELL).append(schedulePayload.getClaimantAddressLine3());
+        }
+        if (!isNullOrEmpty(schedulePayload.getClaimantTown())) {
+            sb.append(NEW_LINE_CELL).append(schedulePayload.getClaimantTown());
+        }
+        if (!isNullOrEmpty(schedulePayload.getClaimantPostCode())) {
+            sb.append(NEW_LINE_CELL).append(schedulePayload.getClaimantPostCode());
+        }
+        return sb.toString();
+    }
+
+    private String getRespondentAddress(SchedulePayload schedulePayload) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(schedulePayload.getRespondentName());
+        if (!isNullOrEmpty(schedulePayload.getRespondentAddressLine1())) {
+            sb.append(NEW_LINE_CELL).append(schedulePayload.getRespondentAddressLine1());
+        }
+        if (!isNullOrEmpty(schedulePayload.getRespondentAddressLine2())) {
+            sb.append(NEW_LINE_CELL).append(schedulePayload.getRespondentAddressLine2());
+        }
+        if (!isNullOrEmpty(schedulePayload.getRespondentAddressLine3())) {
+            sb.append(NEW_LINE_CELL).append(schedulePayload.getRespondentAddressLine3());
+        }
+        if (!isNullOrEmpty(schedulePayload.getRespondentTown())) {
+            sb.append(NEW_LINE_CELL).append(schedulePayload.getRespondentTown());
+        }
+        if (!isNullOrEmpty(schedulePayload.getRespondentPostCode())) {
+            sb.append(NEW_LINE_CELL).append(schedulePayload.getRespondentPostCode());
+        }
+        return sb.toString();
     }
 
     private String getSubMultipleRef(MultipleData multipleData, String subMultipleName) {

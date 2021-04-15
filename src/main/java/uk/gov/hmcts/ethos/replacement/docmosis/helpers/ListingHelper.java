@@ -537,7 +537,7 @@ public class ListingHelper {
         sb.append("\"Hearing_room\":\"").append(nullCheck(listingType.getHearingRoom())).append(NEW_LINE);
         sb.append("\"Hearing_dayofdays\":\"").append(nullCheck(listingType.getHearingDay())).append(NEW_LINE);
         sb.append("\"Hearing_panel\":\"").append(nullCheck(listingType.getHearingPanel())).append(NEW_LINE);
-        sb.append("\"Hearing_notes\":\"").append(extractHearingNotes(listingType)).append(NEW_LINE);
+        sb.append("\"Hearing_notes\":\"").append(nullCheck(extractHearingNotes(listingType))).append(NEW_LINE);
         sb.append("\"respondent_representative\":\"").append(nullCheck(listingType.getRespondentRepresentative())).append("\"}");
         return sb;
     }

@@ -66,7 +66,12 @@ public class Helper {
     }
 
     public static String nullCheck(String value) {
-        return Optional.ofNullable(value).orElse("");
+        Optional<String> opt = Optional.ofNullable(value);
+        if (opt.isPresent()) {
+            return value.replaceAll("\"", "'");
+        } else {
+            return "";
+        }
     }
 
     public static SignificantItem generateSignificantItem(DocumentInfo documentInfo, List<String> errors) {
