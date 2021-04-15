@@ -29,7 +29,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
 @ExtendWith(PactConsumerTestExt.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @PactFolder("pacts")
-@PactTestFor(providerName = "idamApi_oidc", port ="8889")
+@PactTestFor(providerName = "idamApi_oidc", port = "8889")
 @ContextConfiguration(classes = {IdamApiConsumerApplication.class})
 @TestPropertySource(locations = {"classpath:application.properties"}, properties = {"idam.api.url=localhost:8889"})
 @Import(HttpClientConfiguration.class)
