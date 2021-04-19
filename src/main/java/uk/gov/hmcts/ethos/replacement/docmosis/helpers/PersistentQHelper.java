@@ -144,12 +144,13 @@ public class PersistentQHelper {
                 .build();
     }
 
-    public static CreationSingleDataModel getCreationSingleDataModel(String ccdGatewayBaseUrl,
-                                                                     String officeCT, String positionTypeCT) {
+    public static CreationSingleDataModel getCreationSingleDataModel(String ccdGatewayBaseUrl, String officeCT,
+                                                                     String positionTypeCT, String reasonForCT) {
         return CreationSingleDataModel.builder()
                 .officeCT(officeCT)
                 .positionTypeCT(positionTypeCT)
                 .ccdGatewayBaseUrl(ccdGatewayBaseUrl)
+                .reasonForCT(reasonForCT)
                 .build();
     }
 

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleRequest;
@@ -28,6 +30,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleUpdateServi
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleUploadService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.SubMultipleMidEventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.SubMultipleUpdateService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleTransferService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +61,7 @@ public class ExcelActionsController {
     private final MultipleSingleMidEventValidationService multipleSingleMidEventValidationService;
     private final EventValidationService eventValidationService;
     private final MultipleHelperService multipleHelperService;
+    private final MultipleTransferService multipleTransferService;
 
     @PostMapping(value = "/createMultiple", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Creates a multiple case. Retrieves cases by ethos case reference. Creates an Excel")
@@ -506,6 +510,60 @@ public class ExcelActionsController {
                 multipleDetails.getJurisdiction(), multipleDetails.getCaseData(), errors);
 
         multipleDetails.getCaseData().setState(OPEN_STATE);
+
+        return getMultipleCallbackRespEntity(errors, multipleDetails);
+    }
+
+    @PostMapping(value = "/dynamicListOfficesMultiple", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates all offices except the current one in dynamic lists.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<MultipleCallbackResponse> dynamicListOfficesMultiple(
+            @RequestBody MultipleRequest multipleRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DYNAMIC LIST OFFICES MULTIPLE ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
+
+        MultiplesHelper.populateDynamicListOfficesMultiple(multipleDetails.getCaseData(),
+                UtilHelper.getCaseTypeId(multipleDetails.getCaseTypeId()));
+
+        return ResponseEntity.ok(MultipleCallbackResponse.builder()
+                .data(multipleDetails.getCaseData())
+                .build());
+    }
+
+    @PostMapping(value = "/multipleTransfer", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Transfers a multiple and all single cases to a different office.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = MultipleCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<MultipleCallbackResponse> multipleTransfer(
+            @RequestBody MultipleRequest multipleRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MULTIPLE TRANSFER ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error("Invalid Token {}", userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors = new ArrayList<>();
+        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
+
+        multipleTransferService.multipleTransferLogic(userToken, multipleDetails, errors);
 
         return getMultipleCallbackRespEntity(errors, multipleDetails);
     }

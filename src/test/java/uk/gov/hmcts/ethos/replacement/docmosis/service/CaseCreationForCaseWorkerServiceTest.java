@@ -34,6 +34,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -108,6 +109,15 @@ public class CaseCreationForCaseWorkerServiceTest {
     }
 
     @Test
+    public void createCaseTransferMultiples() {
+        List<String> errors = new ArrayList<>();
+        ccdRequest.getCaseDetails().getCaseData().setStateAPI(MULTIPLE);
+        caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
+        assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
+        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
+    }
+
+    @Test
     public void createCaseTransferBfNotCleared() {
         ccdRequest.getCaseDetails().getCaseData().setBfActions(BFHelperTest.generateBFActionTypeItems());
         ccdRequest.getCaseDetails().getCaseData().getBfActions().get(0).getValue().setCleared(null);
@@ -126,6 +136,20 @@ public class CaseCreationForCaseWorkerServiceTest {
         assertEquals(1, errors.size());
         assertEquals("There are one or more hearings that have the status Listed. These must be updated "
                 + "before this case can be transferred", errors.get(0));
+    }
+
+    @Test
+    public void createCaseTransferHearingListedAndBfNotCleared() {
+        ccdRequest.getCaseDetails().getCaseData().setBfActions(BFHelperTest.generateBFActionTypeItems());
+        ccdRequest.getCaseDetails().getCaseData().getBfActions().get(0).getValue().setCleared(null);
+        ccdRequest.getCaseDetails().getCaseData().setHearingCollection(getHearingTypeCollection(HEARING_STATUS_LISTED));
+        List<String> errors = new ArrayList<>();
+        caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
+        assertEquals(2, errors.size());
+        assertEquals("There are one or more open Brought Forward actions that must be cleared before this "
+                + "case can be transferred", errors.get(0));
+        assertEquals("There are one or more hearings that have the status Listed. These must be updated "
+                + "before this case can be transferred", errors.get(1));
     }
 
     @Test

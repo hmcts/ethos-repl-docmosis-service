@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -747,6 +748,21 @@ public class ListingHelper {
             LocalDate localDateTo = LocalDate.parse(dateToSearchTo, OLD_DATE_TIME_PATTERN2);
             return (!localDate.isBefore(localDateFrom)) && (!localDate.isAfter(localDateTo));
         }
+    }
+
+    public static boolean isListingRangeValid(ListingData listingData, List<String> errors) {
+        if (listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
+            LocalDate localDateFrom = LocalDate.parse(listingData.getListingDateFrom(), OLD_DATE_TIME_PATTERN2);
+            LocalDate localDateTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2);
+            long noOfDaysBetween = ChronoUnit.DAYS.between(localDateFrom, localDateTo);
+            if (localDateFrom.isBefore(localDateTo) && noOfDaysBetween <= 31) {
+                return true;
+            } else {
+                errors.add("Date range is limited to a max of 31 days");
+                return false;
+            }
+        }
+        return true;
     }
 
     private static Comparator<String> getDateComparator() {

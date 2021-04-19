@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.*;
@@ -27,6 +28,7 @@ public class ListingHelperTest {
     private ListingDetails listingDetails;
     private ListingDetails listingDetails2;
     private ListingDetails listingDetails3;
+    private ListingDetails listingDetails4;
     private UserDetails userDetails;
 
     @Before
@@ -34,6 +36,7 @@ public class ListingHelperTest {
         listingDetails = generateListingDetails("listingDetailsTest1.json");
         listingDetails2 = generateListingDetails("listingDetailsTest2.json");
         listingDetails3 = generateListingDetails("listingDetailsTest3.json");
+        listingDetails4 = generateListingDetails("listingDetailsTest4.json");
         userDetails = HelperTest.getUserDetails();
     }
 
@@ -1303,5 +1306,24 @@ public class ListingHelperTest {
         String actual = ListingHelper.getRespondentOthersWithLineBreaks(listingDetails.getCaseData().getListingCollection().get(3).getValue());
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void listingRangeValid() {
+        List<String> errors = new ArrayList<>();
+        ListingHelper.isListingRangeValid(listingDetails.getCaseData(), errors);
+
+        assertEquals(0, errors.size());
+
+    }
+
+    @Test
+    public void listingRangeInvalid() {
+        List<String> errors = new ArrayList<>();
+        ListingHelper.isListingRangeValid(listingDetails4.getCaseData(), errors);
+
+        assertEquals(1, errors.size());
+        assertEquals("Date range is limited to a max of 31 days", errors.get(0));
+
     }
 }

@@ -34,6 +34,21 @@ public class MultipleCreationService {
     private final MultipleHelperService multipleHelperService;
     private final SubMultipleUpdateService subMultipleUpdateService;
 
+    private void populateDataIfComingFromCT(String userToken, MultipleDetails multipleDetails) {
+
+        if (multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)
+                && multipleDetails.getCaseData().getLinkedMultipleCT() != null) {
+
+            log.info("Retrieve the multiple info -> reasonForCT has the old multiple case type");
+
+            log.info("Create multipleData.getCaseMultipleCollection()");
+
+            log.info("multipleRelated markup -> add from getLinkedMultipleCT get the ID and from multipleReference");
+
+        }
+
+    }
+
     public void bulkCreationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
         log.info("Add data to the multiple");
@@ -44,12 +59,13 @@ public class MultipleCreationService {
 
         multipleDetails.getCaseData().setState(OPEN_STATE);
 
+        log.info("Check if creation is coming from Case Transfer");
+
+        populateDataIfComingFromCT(userToken, multipleDetails);
+
         log.info("Get lead case link and add to the collection case Ids");
 
         getLeadMarkUpAndAddLeadToCaseIds(userToken, multipleDetails);
-
-        log.info("CasesXXX: " + multipleDetails.getCaseData().getCaseIdCollection());
-        log.info("LeadCaseXXX: " + multipleDetails.getCaseData().getLeadCase());
 
         if (!multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
                 && !multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)) {
@@ -66,7 +82,7 @@ public class MultipleCreationService {
 
         log.info("Clearing the payload");
 
-        multipleDetails.getCaseData().setCaseIdCollection(null);
+        clearingMultipleCreationPayload(multipleDetails);
 
     }
 
@@ -276,6 +292,20 @@ public class MultipleCreationService {
             log.info("Empty case ref collection");
 
         }
+    }
+
+    private void clearingMultipleCreationPayload(MultipleDetails multipleDetails) {
+
+        multipleDetails.getCaseData().setCaseIdCollection(null);
+
+        if (multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)
+                && multipleDetails.getCaseData().getLinkedMultipleCT() != null) {
+
+            multipleDetails.getCaseData().setMultipleSource(MANUALLY_CREATED_POSITION);
+            multipleDetails.getCaseData().setReasonForCT(null);
+
+        }
+
     }
 
 }

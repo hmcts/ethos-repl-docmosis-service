@@ -309,6 +309,11 @@ public class MultipleUtil {
         multipleData.setLeadCase("21006/2020");
         multipleData.setState(OPEN_STATE);
         multipleData.setCaseCounter("2");
+
+        multipleData.setOfficeMultipleCT(generateDynamicList(MANCHESTER_CASE_TYPE_ID));
+        multipleData.setPositionTypeCT("PositionTypeCT");
+        multipleData.setReasonForCT("ReasonForCT");
+
         return multipleData;
     }
 

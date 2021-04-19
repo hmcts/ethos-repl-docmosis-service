@@ -15,10 +15,15 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -90,32 +95,49 @@ public class CaseCreationForCaseWorkerService {
 
         CaseData caseData = caseDetails.getCaseData();
 
-        if (!checkBfActionsCleared(caseData)) {
+        //StateAPI as Multiple used to transfer a case from a Multiple. Creations are done in the ECM-CONSUMER
 
-            errors.add("There are one or more open Brought Forward actions that must be cleared before this case can "
-                    + "be transferred");
+        if (caseData.getStateAPI() != null && caseData.getStateAPI().equals(MULTIPLE)) {
 
-            return;
+            log.info("Case Transfer belongs to multiple. Skipping validation and creation");
+
+        } else {
+
+            if (!checkBfActionsCleared(caseData)) {
+
+                errors.add(
+                        "There are one or more open Brought Forward actions that must be cleared before this case can "
+                                + "be transferred");
+            }
+
+            if (!checkHearingsNotListed(caseData)) {
+
+                errors.add(
+                        "There are one or more hearings that have the status Listed. These must be updated before this "
+                                + "case can be transferred");
+            }
+
+            if (!errors.isEmpty()) {
+
+                return;
+
+            }
+
+            persistentQHelperService.sendCreationEventToSingles(
+                    userToken,
+                    caseDetails.getCaseTypeId(),
+                    caseDetails.getJurisdiction(),
+                    errors,
+                    new ArrayList<>(Collections.singletonList(caseData.getEthosCaseReference())),
+                    caseData.getOfficeCT().getValue().getCode(),
+                    caseData.getPositionTypeCT(),
+                    ccdGatewayBaseUrl,
+                    "",
+                    SINGLE_CASE_TYPE,
+                    NO
+            );
+
         }
-
-        if (!checkHearingsNotListed(caseData)) {
-
-            errors.add("There are one or more hearings that have the status Listed. These must be updated before this "
-                    + "case can be transferred");
-
-            return;
-        }
-
-        persistentQHelperService.sendCreationEventToSinglesWithoutConfirmation(
-                userToken,
-                caseDetails.getCaseTypeId(),
-                caseDetails.getJurisdiction(),
-                errors,
-                caseData.getEthosCaseReference(),
-                caseData.getOfficeCT().getValue().getCode(),
-                caseData.getPositionTypeCT(),
-                ccdGatewayBaseUrl
-        );
 
         caseData.setLinkedCaseCT("Transferred to " + caseData.getOfficeCT().getValue().getCode());
         caseData.setPositionType(caseData.getPositionTypeCT());
@@ -124,6 +146,7 @@ public class CaseCreationForCaseWorkerService {
 
         caseData.setOfficeCT(null);
         caseData.setPositionTypeCT(null);
+        caseData.setStateAPI(null);
 
     }
 

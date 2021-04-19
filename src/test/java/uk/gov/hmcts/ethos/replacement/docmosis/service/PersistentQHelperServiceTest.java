@@ -11,16 +11,18 @@ import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PersistentQHelperServiceTest {
@@ -33,7 +35,6 @@ public class PersistentQHelperServiceTest {
     private UserService userService;
 
     private CCDRequest ccdRequest;
-    private SubmitEvent submitEvent;
     private String userToken;
 
     @Before
@@ -53,17 +54,17 @@ public class PersistentQHelperServiceTest {
         caseDetails.setJurisdiction("Employment");
         caseDetails.setState(ACCEPTED_STATE);
         ccdRequest.setCaseDetails(caseDetails);
-        submitEvent = new SubmitEvent();
         userToken = "authToken";
     }
 
     @Test
     public void sendCreationEventToSinglesWithoutConfirmation() {
         when(userService.getUserDetails("authToken")).thenReturn(HelperTest.getUserDetails());
-        persistentQHelperService.sendCreationEventToSinglesWithoutConfirmation(userToken,
+        persistentQHelperService.sendCreationEventToSingles(userToken,
                 ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getJurisdiction(),
-                new ArrayList<>(), "ethosCaseReference", LEEDS_CASE_TYPE_ID,
-                "positionTypeCT", "ccdGatewayBaseUrl");
+                new ArrayList<>(), new ArrayList<>(Collections.singletonList("ethosCaseReference")), LEEDS_CASE_TYPE_ID,
+                "positionTypeCT", "ccdGatewayBaseUrl", "",
+                SINGLE_CASE_TYPE, NO);
         verify(userService).getUserDetails(userToken);
         verifyNoMoreInteractions(userService);
     }
