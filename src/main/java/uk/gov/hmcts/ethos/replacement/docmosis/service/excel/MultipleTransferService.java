@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
+import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
+import uk.gov.hmcts.ecm.common.model.multiples.items.CaseMultipleTypeItem;
+import uk.gov.hmcts.ecm.common.model.multiples.types.MultipleObjectType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.PersistentQHelperService;
@@ -13,7 +17,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.PersistentQHelperService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.UUID;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.UPDATING_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
@@ -24,6 +30,7 @@ public class MultipleTransferService {
 
     private final ExcelReadingService excelReadingService;
     private final PersistentQHelperService persistentQHelperService;
+    private final MultipleCasesReadingService multipleCasesReadingService;
 
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
@@ -81,6 +88,75 @@ public class MultipleTransferService {
                 multipleData.getMultipleReference(),
                 YES
         );
+
+    }
+
+    public void populateDataIfComingFromCT(String userToken, MultipleDetails multipleDetails, List<String> errors) {
+
+        if (multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)
+                && multipleDetails.getCaseData().getLinkedMultipleCT() != null) {
+
+            String oldCaseTypeId = multipleDetails.getCaseData().getLinkedMultipleCT();
+            String multipleReference = multipleDetails.getCaseData().getMultipleReference();
+
+            log.info("Retrieve the old multiple info");
+
+            SubmitMultipleEvent oldSubmitMultipleEvent = multipleCasesReadingService.retrieveMultipleCasesWithRetries(
+                    userToken,
+                    oldCaseTypeId,
+                    multipleReference).get(0);
+
+            log.info("Generate case multiple items");
+
+            multipleDetails.getCaseData().setCaseMultipleCollection(generateCaseMultipleItems(
+                    userToken,
+                    oldSubmitMultipleEvent,
+                    errors));
+
+            log.info("Generate linked multiple CT markup");
+
+            multipleDetails.getCaseData().setLinkedMultipleCT(MultiplesHelper.generateMarkUp(
+                    ccdGatewayBaseUrl,
+                    String.valueOf(oldSubmitMultipleEvent.getCaseId()),
+                    multipleReference));
+
+        }
+
+    }
+
+    private List<CaseMultipleTypeItem> generateCaseMultipleItems(String userToken,
+                                                                 SubmitMultipleEvent oldSubmitMultipleEvent,
+                                                                 List<String> errors) {
+
+        TreeMap<String, Object> multipleObjects =
+                excelReadingService.readExcel(
+                        userToken,
+                        MultiplesHelper.getExcelBinaryUrl(oldSubmitMultipleEvent.getCaseData()),
+                        errors,
+                        oldSubmitMultipleEvent.getCaseData(),
+                        FilterExcelType.ALL);
+
+        List<CaseMultipleTypeItem> newMultipleObjectsUpdated = new ArrayList<>();
+
+        if (!multipleObjects.keySet().isEmpty()) {
+
+            multipleObjects.forEach((key, value) -> {
+                MultipleObject multipleObject = (MultipleObject) value;
+                CaseMultipleTypeItem caseMultipleTypeItem = new CaseMultipleTypeItem();
+
+                MultipleObjectType multipleObjectType = new MultipleObjectType();
+                multipleObjectType.setSubMultiple(multipleObject.getSubMultiple());
+                multipleObjectType.setEthosCaseRef(multipleObject.getEthosCaseRef());
+
+                caseMultipleTypeItem.setId(UUID.randomUUID().toString());
+                caseMultipleTypeItem.setValue(multipleObjectType);
+
+                newMultipleObjectsUpdated.add(caseMultipleTypeItem);
+            });
+
+        }
+
+        return newMultipleObjectsUpdated;
 
     }
 

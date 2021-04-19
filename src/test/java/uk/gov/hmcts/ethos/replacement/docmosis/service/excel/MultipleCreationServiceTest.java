@@ -30,6 +30,9 @@ public class MultipleCreationServiceTest {
     private MultipleHelperService multipleHelperService;
     @Mock
     private SubMultipleUpdateService subMultipleUpdateService;
+    @Mock
+    private MultipleTransferService multipleTransferService;
+
     @InjectMocks
     private MultipleCreationService multipleCreationService;
 

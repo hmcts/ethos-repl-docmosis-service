@@ -33,21 +33,7 @@ public class MultipleCreationService {
     private final MultipleReferenceService multipleReferenceService;
     private final MultipleHelperService multipleHelperService;
     private final SubMultipleUpdateService subMultipleUpdateService;
-
-    private void populateDataIfComingFromCT(String userToken, MultipleDetails multipleDetails) {
-
-        if (multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)
-                && multipleDetails.getCaseData().getLinkedMultipleCT() != null) {
-
-            log.info("Retrieve the multiple info -> reasonForCT has the old multiple case type");
-
-            log.info("Create multipleData.getCaseMultipleCollection()");
-
-            log.info("multipleRelated markup -> add from getLinkedMultipleCT get the ID and from multipleReference");
-
-        }
-
-    }
+    private final MultipleTransferService multipleTransferService;
 
     public void bulkCreationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
@@ -61,7 +47,7 @@ public class MultipleCreationService {
 
         log.info("Check if creation is coming from Case Transfer");
 
-        populateDataIfComingFromCT(userToken, multipleDetails);
+        multipleTransferService.populateDataIfComingFromCT(userToken, multipleDetails, errors);
 
         log.info("Get lead case link and add to the collection case Ids");
 
@@ -302,7 +288,6 @@ public class MultipleCreationService {
                 && multipleDetails.getCaseData().getLinkedMultipleCT() != null) {
 
             multipleDetails.getCaseData().setMultipleSource(MANUALLY_CREATED_POSITION);
-            multipleDetails.getCaseData().setReasonForCT(null);
 
         }
 
