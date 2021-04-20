@@ -77,22 +77,6 @@ public class SingleCaseMultipleMidEventValidationServiceTest {
     }
 
     @Test
-    public void singleCaseMultipleValidationTransferredLogic() {
-
-        List<String> errors = new ArrayList<>();
-
-        caseDetails.setState(TRANSFERRED_STATE);
-
-        singleCaseMultipleMidEventValidationService.singleCaseMultipleValidationLogic(userToken,
-                caseDetails,
-                errors);
-
-        assertEquals(1, errors.size());
-        assertEquals("Case has been transferred. It cannot be moved to a multiple", errors.get(0));
-
-    }
-
-    @Test
     public void singleCaseMultipleValidationLogicSingleToSingle() {
 
         List<String> errors = new ArrayList<>();

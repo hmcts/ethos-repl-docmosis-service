@@ -12,7 +12,6 @@ import java.util.List;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.TRANSFERRED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
@@ -50,16 +49,6 @@ public class SingleCaseMultipleMidEventValidationService {
 
         if (caseDetails.getCaseData().getMultipleFlag().equals(NO)
                 && caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
-
-            if (caseDetails.getState().equals(TRANSFERRED_STATE)) {
-
-                log.info("Case has been transferred. It cannot be moved to a multiple");
-
-                errors.add("Case has been transferred. It cannot be moved to a multiple");
-
-                return;
-
-            }
 
             log.info("Validating multiple and subMultiple in singles");
 
