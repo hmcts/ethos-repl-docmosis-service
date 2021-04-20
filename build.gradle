@@ -98,7 +98,9 @@ task functional(type: Test, description: 'Runs the functional tests.', group: 'V
     testClassesDirs = sourceSets.functional.output.classesDirs
     classpath = sourceSets.functional.runtimeClasspath
     systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
-
+    useJUnit {
+        includeCategories 'uk.gov.hmcts.ethos.replacement.functional.FunctionalTest'
+    }
     maxHeapSize = '1G'
 }
 
