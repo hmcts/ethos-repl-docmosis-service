@@ -172,7 +172,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getManchesterPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(1))
                 .tribunalCorrespondenceAddressLine2(values.get(2))
                 .tribunalCorrespondenceAddressLine3(values.get(3))
@@ -249,7 +249,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getGlasgowPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(10))
                 .tribunalCorrespondenceAddressLine2(values.get(11))
                 .tribunalCorrespondenceTown(values.get(12))
@@ -265,7 +265,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getAberdeenPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(19))
                 .tribunalCorrespondenceAddressLine2(values.get(20))
                 .tribunalCorrespondenceTown(values.get(21))
@@ -280,7 +280,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getDundeePostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(27))
                 .tribunalCorrespondenceAddressLine2(values.get(28))
                 .tribunalCorrespondenceAddressLine3(values.get(29))
@@ -296,7 +296,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getEdinburghPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(36))
                 .tribunalCorrespondenceTown(values.get(37))
                 .tribunalCorrespondencePostCode(values.get(38))
@@ -310,7 +310,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getBristolPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(43))
                 .tribunalCorrespondenceAddressLine2(values.get(44))
                 .tribunalCorrespondenceTown(values.get(45))
@@ -325,7 +325,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getLeedsPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(51))
                 .tribunalCorrespondenceAddressLine2(values.get(52))
                 .tribunalCorrespondenceAddressLine3(values.get(53))
@@ -340,7 +340,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getLondonCentralPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(59))
                 .tribunalCorrespondenceAddressLine2(values.get(60))
                 .tribunalCorrespondenceAddressLine3(values.get(61))
@@ -356,7 +356,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getLondonEastPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(68))
                 .tribunalCorrespondenceAddressLine2(values.get(69))
                 .tribunalCorrespondenceAddressLine3(values.get(70))
@@ -371,7 +371,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getLondonSouthPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(76))
                 .tribunalCorrespondenceAddressLine2(values.get(77))
                 .tribunalCorrespondenceAddressLine3(values.get(78))
@@ -387,7 +387,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getMidlandsEastPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(85))
                 .tribunalCorrespondenceAddressLine2(values.get(86))
                 .tribunalCorrespondenceTown(values.get(87))
@@ -401,7 +401,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getMidlandsWestPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(92))
                 .tribunalCorrespondenceAddressLine2(values.get(93))
                 .tribunalCorrespondenceAddressLine3(values.get(94))
@@ -416,7 +416,7 @@ public class DefaultValuesReaderService {
     private DefaultValues getNewcastlePostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(100))
                 .tribunalCorrespondenceAddressLine2(values.get(101))
                 .tribunalCorrespondenceAddressLine3(values.get(102))
@@ -432,30 +432,32 @@ public class DefaultValuesReaderService {
     private DefaultValues getWalesPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
+                .caseType(values.get(127))
                 .tribunalCorrespondenceAddressLine1(values.get(109))
-                .tribunalCorrespondenceTown(values.get(110))
-                .tribunalCorrespondencePostCode(values.get(111))
-                .tribunalCorrespondenceTelephone(values.get(112))
-                .tribunalCorrespondenceFax(values.get(113))
-                .tribunalCorrespondenceDX(values.get(114))
-                .tribunalCorrespondenceEmail(values.get(115))
+                .tribunalCorrespondenceAddressLine2(values.get(110))
+                .tribunalCorrespondenceAddressLine3(values.get(111))
+                .tribunalCorrespondenceTown(values.get(112))
+                .tribunalCorrespondencePostCode(values.get(113))
+                .tribunalCorrespondenceTelephone(values.get(114))
+                .tribunalCorrespondenceFax(values.get(115))
+                .tribunalCorrespondenceDX(values.get(116))
+                .tribunalCorrespondenceEmail(values.get(117))
                 .build();
     }
 
     private DefaultValues getWatfordPostDefaultValues(List<String> values) {
         return DefaultValues.builder()
                 .positionType(values.get(0))
-                .caseType(values.get(125))
-                .tribunalCorrespondenceAddressLine1(values.get(116))
-                .tribunalCorrespondenceAddressLine2(values.get(117))
-                .tribunalCorrespondenceAddressLine3(values.get(118))
-                .tribunalCorrespondenceTown(values.get(119))
-                .tribunalCorrespondencePostCode(values.get(120))
-                .tribunalCorrespondenceTelephone(values.get(121))
-                .tribunalCorrespondenceFax(values.get(122))
-                .tribunalCorrespondenceDX(values.get(123))
-                .tribunalCorrespondenceEmail(values.get(124))
+                .caseType(values.get(127))
+                .tribunalCorrespondenceAddressLine1(values.get(118))
+                .tribunalCorrespondenceAddressLine2(values.get(119))
+                .tribunalCorrespondenceAddressLine3(values.get(120))
+                .tribunalCorrespondenceTown(values.get(121))
+                .tribunalCorrespondencePostCode(values.get(122))
+                .tribunalCorrespondenceTelephone(values.get(123))
+                .tribunalCorrespondenceFax(values.get(124))
+                .tribunalCorrespondenceDX(values.get(125))
+                .tribunalCorrespondenceEmail(values.get(126))
                 .build();
     }
 
