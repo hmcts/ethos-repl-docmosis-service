@@ -99,7 +99,7 @@ public class MultipleTransferService {
             String oldCaseTypeId = multipleDetails.getCaseData().getLinkedMultipleCT();
             String multipleReference = multipleDetails.getCaseData().getMultipleReference();
 
-            log.info("Retrieve the old multiple info");
+            log.info("Retrieve the old multiple data");
 
             SubmitMultipleEvent oldSubmitMultipleEvent = multipleCasesReadingService.retrieveMultipleCasesWithRetries(
                     userToken,
