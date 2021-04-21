@@ -20,8 +20,8 @@ public class MultipleCasesReadingService {
     }
 
     public List<SubmitMultipleEvent> retrieveMultipleCasesWithRetries(String userToken,
-                                                           String multipleCaseTypeId,
-                                                           String multipleReference) {
+                                                                      String multipleCaseTypeId,
+                                                                      String multipleReference) {
 
         List<SubmitMultipleEvent> submitMultipleEvents;
 
@@ -44,8 +44,8 @@ public class MultipleCasesReadingService {
     }
 
     public List<SubmitMultipleEvent> retrieveMultipleCases(String userToken,
-                                                                      String multipleCaseTypeId,
-                                                                      String multipleReference) {
+                                                           String multipleCaseTypeId,
+                                                           String multipleReference) {
 
         List<SubmitMultipleEvent> submitMultipleEvents;
 

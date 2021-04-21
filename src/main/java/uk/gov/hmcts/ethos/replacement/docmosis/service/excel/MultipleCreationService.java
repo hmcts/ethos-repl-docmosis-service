@@ -33,6 +33,7 @@ public class MultipleCreationService {
     private final MultipleReferenceService multipleReferenceService;
     private final MultipleHelperService multipleHelperService;
     private final SubMultipleUpdateService subMultipleUpdateService;
+    private final MultipleTransferService multipleTransferService;
 
     public void bulkCreationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
@@ -44,12 +45,13 @@ public class MultipleCreationService {
 
         multipleDetails.getCaseData().setState(OPEN_STATE);
 
+        log.info("Check if creation is coming from Case Transfer");
+
+        multipleTransferService.populateDataIfComingFromCT(userToken, multipleDetails, errors);
+
         log.info("Get lead case link and add to the collection case Ids");
 
         getLeadMarkUpAndAddLeadToCaseIds(userToken, multipleDetails);
-
-        log.info("CasesXXX: " + multipleDetails.getCaseData().getCaseIdCollection());
-        log.info("LeadCaseXXX: " + multipleDetails.getCaseData().getLeadCase());
 
         if (!multipleDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)
                 && !multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)) {
@@ -66,7 +68,7 @@ public class MultipleCreationService {
 
         log.info("Clearing the payload");
 
-        multipleDetails.getCaseData().setCaseIdCollection(null);
+        clearingMultipleCreationPayload(multipleDetails);
 
     }
 
@@ -276,6 +278,19 @@ public class MultipleCreationService {
             log.info("Empty case ref collection");
 
         }
+    }
+
+    private void clearingMultipleCreationPayload(MultipleDetails multipleDetails) {
+
+        multipleDetails.getCaseData().setCaseIdCollection(null);
+
+        if (multipleDetails.getCaseData().getMultipleSource().equals(MIGRATION_CASE_SOURCE)
+                && multipleDetails.getCaseData().getLinkedMultipleCT() != null) {
+
+            multipleDetails.getCaseData().setMultipleSource(MANUALLY_CREATED_POSITION);
+
+        }
+
     }
 
 }

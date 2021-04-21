@@ -47,6 +47,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIM
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PRIVATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
@@ -178,10 +179,12 @@ public class ListingService {
                 if (!isListingDateValid) {
                     continue;
                 }
-                boolean isListingStatusValid = isListingStatusValid(dateListedTypeItem);
-                log.info("isListingStatusValid: " + isListingStatusValid);
-                if (!isListingStatusValid) {
-                    continue;
+                if (!showAllHearingType(listingData)) {
+                    boolean isListingStatusValid = isListingStatusValid(dateListedTypeItem);
+                    log.info("isListingStatusValid: " + isListingStatusValid);
+                    if (!isListingStatusValid) {
+                        continue;
+                    }
                 }
                 ListingTypeItem listingTypeItem = new ListingTypeItem();
                 ListingType listingType = ListingHelper.getListingTypeFromCaseData(
@@ -278,6 +281,14 @@ public class ListingService {
         } else {
             return true;
         }
+    }
+
+    private boolean showAllHearingType(ListingData listingData) {
+        return isNullOrEmpty(listingData.getHearingDocType())
+                || isNullOrEmpty(listingData.getHearingDocETCL())
+                || !listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                || !listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)
+                || !listingData.getShowAll().equals(NO);
     }
 
     private boolean isHearingTypeValid(ListingData listingData, HearingTypeItem hearingTypeItem) {

@@ -295,7 +295,7 @@ public class DocumentHelper {
                     .append(NEW_LINE);
             sb.append(getRespondentAddressUK(getRespondentAddressET3(respondentSumType)));
             sb.append("\"Respondent\":\"").append(caseData.getRespondentCollection().size() > 1 ? "1. " : "")
-                    .append(respondentSumType.getRespondentName()).append(NEW_LINE);
+                    .append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE);
             sb.append(getRespOthersName(caseData));
             sb.append(getRespAddress(caseData));
         } else {
@@ -320,7 +320,7 @@ public class DocumentHelper {
                 .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". "
                         + respondentSumTypeItem.getValue().getRespondentName())
                 .collect(Collectors.toList());
-        sb.append("\"resp_others\":\"").append(String.join("\\n", respOthers)).append(NEW_LINE);
+        sb.append("\"resp_others\":\"").append(nullCheck(String.join("\\n", respOthers))).append(NEW_LINE);
         return sb;
     }
 
@@ -336,7 +336,8 @@ public class DocumentHelper {
                 .map(respondentSumTypeItem -> (size > 1 ? atomicInteger.getAndIncrement() + ". " : "")
                         + getRespondentAddressET3(respondentSumTypeItem.getValue()))
                 .collect(Collectors.toList());
-        sb.append("\"resp_address\":\"").append(String.join("\\n", respAddressList)).append(NEW_LINE);
+        sb.append("\"resp_address\":\"").append(nullCheck(String.join("\\n", respAddressList)))
+                .append(NEW_LINE);
         return sb;
     }
 

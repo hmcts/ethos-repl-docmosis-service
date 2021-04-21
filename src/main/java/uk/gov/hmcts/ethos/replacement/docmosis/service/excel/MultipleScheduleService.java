@@ -13,6 +13,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.tasks.ScheduleCallable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.TreeMap;
@@ -21,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static java.util.stream.Collectors.toList;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
 
 @Slf4j
@@ -65,9 +67,12 @@ public class MultipleScheduleService {
 
             log.info("Pull information from single cases");
 
+            List<String> sortedCaseIdsCollection =
+                    sortCollectionByEthosCaseRef(getCaseIdCollectionFromFilter(multipleObjects, filterExcelType));
+
             List<SchedulePayload> schedulePayloads =
                     getSchedulePayloadCollection(userToken, multipleDetails.getCaseTypeId(),
-                            getCaseIdCollectionFromFilter(multipleObjects, filterExcelType), errors);
+                            sortedCaseIdsCollection, errors);
 
             log.info("Generate schedule");
 
@@ -81,6 +86,14 @@ public class MultipleScheduleService {
 
         return documentInfo;
 
+    }
+
+    private List<String> sortCollectionByEthosCaseRef(List<String> caseIdsCollection) {
+        return caseIdsCollection
+                .stream()
+                .sorted(Comparator.comparing(ethosCaseRef -> ethosCaseRef,
+                        Comparator.nullsLast(Comparator.naturalOrder())))
+                .collect(toList());
     }
 
     private List<String> getCaseIdCollectionFromFilter(TreeMap<String, Object> multipleObjects,

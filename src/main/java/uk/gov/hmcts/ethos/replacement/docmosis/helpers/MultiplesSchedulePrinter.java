@@ -41,6 +41,7 @@ public class MultiplesSchedulePrinter {
         font.setBold(bold);
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle.setFont(font);
+        cellStyle.setWrapText(true);
         return cellStyle;
 
     }

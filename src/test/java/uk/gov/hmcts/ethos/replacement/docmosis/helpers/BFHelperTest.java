@@ -53,7 +53,7 @@ public class BFHelperTest {
         return dynamicFixedListType;
     }
 
-    private static List<BFActionTypeItem> generateBFActionTypeItems() {
+    public static List<BFActionTypeItem> generateBFActionTypeItems() {
         BFActionTypeItem bfActionTypeItem = new BFActionTypeItem();
         BFActionType bfActionType = new BFActionType();
         bfActionType.setAction(getBfActionsDynamicFixedList());

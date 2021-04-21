@@ -52,6 +52,14 @@ public class HelperTest {
     }
 
     @Test
+    public void nullCheck() {
+        assertEquals("Value ' example ' ", Helper.nullCheck( "Value \" example \" "));
+        assertEquals("", Helper.nullCheck(null));
+        assertEquals("Value example", Helper.nullCheck("Value example"));
+        assertEquals("Value ' example '", Helper.nullCheck("Value ' example '"));
+    }
+
+    @Test
     public void getDocumentName() {
         String expected = "EM-TRB-EGW-ENG-00029_4.2";
         assertEquals(expected, Helper.getDocumentName(caseDetails4.getCaseData().getCorrespondenceType(),

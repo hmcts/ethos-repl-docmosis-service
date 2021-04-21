@@ -29,7 +29,6 @@ import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.types.MultipleObjectType;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleActionType;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
-import uk.gov.hmcts.ecm.common.model.schedule.ScheduleAddress;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadEvent;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
@@ -154,9 +153,12 @@ public class MultipleUtil {
         SchedulePayloadES schedulePayloadES = new SchedulePayloadES();
         schedulePayloadES.setClaimantCompany("JuanFran");
         ScheduleClaimantType claimantType = new ScheduleClaimantType();
-        ScheduleAddress address = new ScheduleAddress();
+        Address address = new Address();
         address.setPostCode("M2 45GD");
         address.setAddressLine1("12 Sillavan Way");
+        address.setAddressLine2("Address2");
+        address.setAddressLine3("Address3");
+        address.setPostTown("PostTown");
         claimantType.setClaimantAddressUK(address);
         schedulePayloadES.setClaimantType(claimantType);
         ScheduleClaimantIndType claimantIndType = new ScheduleClaimantIndType();
@@ -208,6 +210,7 @@ public class MultipleUtil {
         SubmitMultipleEvent submitMultipleEventSearched = new SubmitMultipleEvent();
         submitMultipleEventSearched.setCaseData(MultipleUtil.getMultipleData());
         submitMultipleEventSearched.getCaseData().setMultipleReference("246001");
+        submitMultipleEventSearched.setState(OPEN_STATE);
         return new ArrayList<>(Collections.singletonList(submitMultipleEventSearched));
     }
 
@@ -306,6 +309,11 @@ public class MultipleUtil {
         multipleData.setLeadCase("21006/2020");
         multipleData.setState(OPEN_STATE);
         multipleData.setCaseCounter("2");
+
+        multipleData.setOfficeMultipleCT(generateDynamicList(MANCHESTER_CASE_TYPE_ID));
+        multipleData.setPositionTypeCT("PositionTypeCT");
+        multipleData.setReasonForCT("ReasonForCT");
+
         return multipleData;
     }
 
