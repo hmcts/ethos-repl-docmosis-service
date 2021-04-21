@@ -43,7 +43,7 @@ public class TestUtil {
     private static String downloadedFilePath;
 
     public TestUtil() {
-        // environment = System.getProperty("VAULTNAME").replace("ethos-", "");
+         environment = System.getProperty("VAULTNAME").replace("ethos-", "");
     }
 
     //End-point /generateDocument
