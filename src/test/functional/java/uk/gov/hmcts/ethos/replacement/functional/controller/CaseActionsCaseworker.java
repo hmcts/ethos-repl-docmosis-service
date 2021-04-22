@@ -94,11 +94,24 @@ public class CaseActionsCaseworker {
         BulkRequest bulkRequest = new BulkRequest();
         RestAssured.given()
             .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
-                .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
-                .body(bulkRequest)
-                .post("/createBulk")
-                .then()
-                .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+            .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
+            .body(bulkRequest)
+            .post("/createBulk")
+            .then()
+            .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    @Category(FunctionalTest.class)
+    public void createIndividualCaseNoPayload() {
+        CCDRequest ccdRequest = new CCDRequest();
+        RestAssured.given()
+            .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
+            .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
+            .body(ccdRequest)
+            .post("/createCase")
+            .then()
+            .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
     }
 
     public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, String testData)
