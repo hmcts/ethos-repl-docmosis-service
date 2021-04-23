@@ -650,26 +650,23 @@ public class ListingHelper {
             log.info("All locations");
             return createMap(ALL_VENUES, ALL_VENUES);
         } else {
-            if (isAllScottishVenues(listingData)) {
-                log.info("Scottish Venues checking");
-                return getVenueToSearch(listingData);
-            } else {
-                log.info("Other");
-                return !isNullOrEmpty(listingData.getListingVenue())
-                        ? createMap(LISTING_VENUE_FIELD_NAME, listingData.getListingVenue())
-                        : createMap("", "");
-            }
+            log.info("Specific venue");
+            return getVenueToSearch(listingData);
         }
     }
 
     public static Map<String, String> getVenueToSearch(ListingData listingData) {
-        if (!isNullOrEmpty(listingData.getVenueGlasgow())) {
+        if (!isNullOrEmpty(listingData.getVenueGlasgow())
+                && !listingData.getVenueGlasgow().equals(ALL_VENUES)) {
             return createMap(LISTING_GLASGOW_VENUE_FIELD_NAME, listingData.getVenueGlasgow());
-        } else if (!isNullOrEmpty(listingData.getVenueAberdeen())) {
+        } else if (!isNullOrEmpty(listingData.getVenueAberdeen())
+                && !listingData.getVenueAberdeen().equals(ALL_VENUES)) {
             return createMap(LISTING_ABERDEEN_VENUE_FIELD_NAME, listingData.getVenueAberdeen());
-        } else if (!isNullOrEmpty(listingData.getVenueDundee())) {
+        } else if (!isNullOrEmpty(listingData.getVenueDundee())
+                && !listingData.getVenueDundee().equals(ALL_VENUES)) {
             return createMap(LISTING_DUNDEE_VENUE_FIELD_NAME, listingData.getVenueDundee());
-        } else if (!isNullOrEmpty(listingData.getVenueEdinburgh())) {
+        } else if (!isNullOrEmpty(listingData.getVenueEdinburgh())
+                && !listingData.getVenueEdinburgh().equals(ALL_VENUES)) {
             return createMap(LISTING_EDINBURGH_VENUE_FIELD_NAME, listingData.getVenueEdinburgh());
         }
         return !isNullOrEmpty(listingData.getListingVenue())
@@ -686,22 +683,22 @@ public class ListingHelper {
                 && listingData.getVenueDundee().equals(ALL_VENUES);
         boolean allVenuesEdinburgh = !isNullOrEmpty(listingData.getVenueEdinburgh())
                 && listingData.getVenueEdinburgh().equals(ALL_VENUES);
-        return !allVenuesGlasgow && !allVenuesAberdeen && !allVenuesDundee && !allVenuesEdinburgh;
+        return allVenuesGlasgow || allVenuesAberdeen || allVenuesDundee || allVenuesEdinburgh;
     }
 
     public static String getVenueFromDateListedType(DateListedType dateListedType) {
         if (dateListedType.getHearingVenueDay() != null) {
             switch (dateListedType.getHearingVenueDay()) {
                 case GLASGOW_OFFICE:
-                    return dateListedType.getHearingGlasgow();
+                    return dateListedType.getHearingGlasgow() != null ? dateListedType.getHearingGlasgow() : " ";
                 case DUNDEE_OFFICE:
-                    return dateListedType.getHearingDundee();
+                    return dateListedType.getHearingDundee() != null ? dateListedType.getHearingDundee() : " ";
                 case EDINBURGH_OFFICE:
-                    return dateListedType.getHearingEdinburgh();
+                    return dateListedType.getHearingEdinburgh() != null ? dateListedType.getHearingEdinburgh() : " ";
                 case ABERDEEN_OFFICE:
-                    return dateListedType.getHearingAberdeen();
+                    return dateListedType.getHearingAberdeen() != null ? dateListedType.getHearingAberdeen() : " ";
                 default:
-                    return dateListedType.getHearingVenueDay();
+                    return dateListedType.getHearingVenueDay() != null ? dateListedType.getHearingVenueDay() : " ";
             }
         }
         return " ";
