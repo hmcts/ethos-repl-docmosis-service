@@ -15,7 +15,6 @@ import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.functional.FunctionalTest;
 import uk.gov.hmcts.ethos.replacement.functional.util.Constants;
-import uk.gov.hmcts.ethos.replacement.functional.util.JsonUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,16 +33,20 @@ public class PreDefaultComponentFunctionalTest {
     private String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private List<String> caseList = new ArrayList<>();
 
+    private FuncHelper funcHelper;
+
     @Before
     public void setUp() {
+        funcHelper = new FuncHelper();
         baseURI = "http://ethos-repl-docmosis-backend-demo.service.core-compute-demo.internal";
         useRelaxedHTTPSValidation();
     }
 
     @Test
     @Category(FunctionalTest.class)
-    public void claimaintIndividualEng() throws IOException {
-        CCDRequest ccdRequest = getCcdRequest("1", "1", false, new File(Constants.TEST_DATA_PRE_DEFAULT1));
+    public void claimantIndividualEng() throws IOException {
+        String payload = FileUtils.readFileToString(new File(Constants.TEST_DATA_PRE_DEFAULT1),"UTF-8");
+        CCDRequest ccdRequest = funcHelper.getCcdRequest("1", "1", false, payload);
         RestAssured.given()
             .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
             .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
@@ -77,8 +80,4 @@ public class PreDefaultComponentFunctionalTest {
             .statusCode(405);
     }
 
-    public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, File testData) throws IOException {
-        String payload = FileUtils.readFileToString(testData,"UTF-8");
-        return JsonUtil.getCaseDetails(payload, topLevel, childLevel, isScotland);
-    }
 }

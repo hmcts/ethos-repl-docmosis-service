@@ -1,11 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.functional.controller;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.apache.commons.io.FileUtils;
-import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +14,6 @@ import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.functional.FunctionalTest;
 import uk.gov.hmcts.ethos.replacement.functional.util.Constants;
-import uk.gov.hmcts.ethos.replacement.functional.util.JsonUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,8 +33,11 @@ public class DocMosisScotlandComponentTest {
     private String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private List<String> caseList = new ArrayList<>();
 
+    private FuncHelper funcHelper;
+
     @Before
     public void setUp() {
+        funcHelper = new FuncHelper();
         baseURI = "http://ethos-repl-docmosis-backend-demo.service.core-compute-demo.internal";
         useRelaxedHTTPSValidation();
     }
@@ -46,23 +45,10 @@ public class DocMosisScotlandComponentTest {
     @Test
     @Category(FunctionalTest.class)
     public void generateDocumentDundee() throws IOException {
-        CCDRequest ccdRequest = getCcdRequest("1", "", true, new File(Constants.TEST_DATA_SCOT_DUNDEE_CASE1));
-        Response response = getResponse(ccdRequest, "/amendCaseDetails");
+        String payload = FileUtils.readFileToString(new File(Constants.TEST_DATA_SCOT_DUNDEE_CASE1), "UTF-8");
+        CCDRequest ccdRequest = funcHelper.getCcdRequest("1", "", true, payload);
+        Response response = funcHelper.getCcdResponse(ccdRequest, "/amendCaseDetails");
         Assertions.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusCode()); // Should be 200 but getting 403
 
     }
-
-    private Response getResponse(CCDRequest ccdRequest, String uri) {
-        return RestAssured.given()
-                .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
-                .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
-                .body(ccdRequest)
-                .post(uri);
-    }
-
-    private CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, File testData) throws IOException {
-        String payload = FileUtils.readFileToString(testData, "UTF-8");
-        return JsonUtil.getCaseDetails(payload, topLevel, childLevel, isScotland);
-    }
-
 }
