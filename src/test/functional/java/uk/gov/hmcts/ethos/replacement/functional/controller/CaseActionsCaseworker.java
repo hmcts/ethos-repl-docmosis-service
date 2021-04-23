@@ -11,6 +11,7 @@ import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.TestPropertySource;
@@ -35,7 +36,7 @@ public class CaseActionsCaseworker {
     @Value("${test-url}")
     private String testUrl;
 
-    private String AUTH_TOKEN = "Bearer someAuthToken";
+    private String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private List<String> caseList = new ArrayList<>();
 
     @Before
@@ -48,27 +49,32 @@ public class CaseActionsCaseworker {
     @Test
     @Category(FunctionalTest.class)
     public void createCaseIndividualClaimantNotRepresentedEng() throws IOException {
+        caseList.clear();
         caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
+        Response response = createIndividualCase(caseList, false);
+        Assertions.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusCode());
+    }
 
+    private Response createIndividualCase(List<String> caseList, boolean isScotland) throws IOException {
+        Response response = null;
         for(String caseDataFilePath: caseList) {
             String ethosCaseRef = RandomStringUtils.randomNumeric(10);
             String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
             caseDetails = caseDetails.replace("#ETHOS-CASE-REPLACEMENT#", ethosCaseRef);
-            CCDRequest ccdRequest = getCcdRequest("1", "", false, caseDetails);
+            CCDRequest ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
 
             System.out.println("CREATE CASE ---> " + ccdRequest.getCaseDetails().getCaseId());
 
-            RestAssured.given()
+            response = RestAssured.given()
                     .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
                     .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
                     .body(ccdRequest)
-                    .post("/createCase")
-                    .then()
-                    .statusCode(HttpStatus.SC_FORBIDDEN);
+                    .post("/createCase");
         }
+        return response;
     }
 
-//  Test not working correctly
+    //  Test not working correctly
     @Test
     @Category(FunctionalTest.class)
     public void createBulkNoCasesEng() throws IOException {
@@ -112,6 +118,14 @@ public class CaseActionsCaseworker {
             .post("/createCase")
             .then()
             .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    @Category(FunctionalTest.class)
+    public void searchBulkTest() throws IOException {
+        caseList.clear();
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
+
     }
 
     public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, String testData)

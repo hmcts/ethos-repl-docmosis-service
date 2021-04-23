@@ -31,7 +31,7 @@ public class PreDefaultComponentFunctionalTest {
     @Value("${test-url}")
     private String testUrl;
 
-    private String AUTH_TOKEN = "Bearer someAuthToken";
+    private String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
     private List<String> caseList = new ArrayList<>();
 
     @Before
