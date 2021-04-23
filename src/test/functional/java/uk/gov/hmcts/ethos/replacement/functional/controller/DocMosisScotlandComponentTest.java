@@ -1,13 +1,9 @@
 package uk.gov.hmcts.ethos.replacement.functional.controller;
 
 import io.restassured.RestAssured;
-import io.restassured.config.RestAssuredConfig;
-import io.restassured.config.SSLConfig;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.serenitybdd.rest.SerenityRest;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
