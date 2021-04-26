@@ -515,4 +515,8 @@
         <notes><![CDATA[ CVE-2021-21409  ]]></notes>
         <cve>CVE-2021-21409</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2021-22134  ]]></notes>
+        <cve>CVE-2021-22134</cve>
+    </suppress>
 </suppressions>
