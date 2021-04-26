@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.functional.FunctionalTest;
@@ -21,23 +20,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.useRelaxedHTTPSValidation;
 
 @RunWith(SerenityRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class CaseActionsCaseworker {
 
-    @Value("${test-url}")
-    private String testUrl;
-
-    private String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
+    private String AUTH_TOKEN = "";
     private List<String> caseList = new ArrayList<>();
 
     private FuncHelper funcHelper;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         funcHelper = new FuncHelper();
         useRelaxedHTTPSValidation();
     }
@@ -54,8 +49,9 @@ public class CaseActionsCaseworker {
 
     @Test
     @Category(FunctionalTest.class)
-    public void createIndividualCaseNoPayload() {
+    public void createIndividualCaseNoPayload() throws IOException {
         CCDRequest ccdRequest = new CCDRequest();
+        AUTH_TOKEN = funcHelper.loadAuthToken();
         RestAssured.given()
             .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
             .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)

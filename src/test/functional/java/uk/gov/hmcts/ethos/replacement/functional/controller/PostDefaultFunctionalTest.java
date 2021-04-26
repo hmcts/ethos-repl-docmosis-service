@@ -18,7 +18,7 @@ public class PostDefaultFunctionalTest {
     private FuncHelper funcHelper;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         funcHelper = new FuncHelper();
         useRelaxedHTTPSValidation();
     }
