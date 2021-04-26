@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.functional.FunctionalTest;
@@ -18,27 +17,18 @@ import uk.gov.hmcts.ethos.replacement.functional.util.Constants;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.useRelaxedHTTPSValidation;
 
 @RunWith(SerenityRunner.class)
 @TestPropertySource(locations = "classpath:config/application.properties")
 public class PreDefaultComponentFunctionalTest {
-    @Value("${test-url}")
-    private String testUrl;
-
     private String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
-    private List<String> caseList = new ArrayList<>();
-
     private FuncHelper funcHelper;
 
     @Before
     public void setUp() {
         funcHelper = new FuncHelper();
-        baseURI = "http://ethos-repl-docmosis-backend-demo.service.core-compute-demo.internal";
         useRelaxedHTTPSValidation();
     }
 

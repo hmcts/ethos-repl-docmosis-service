@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.functional.util.JsonUtil;
@@ -15,8 +16,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static io.restassured.RestAssured.baseURI;
+
 public class FuncHelper {
+
+    @Value("${test-url}")
+    private String testUrl;
+
     private String AUTH_TOKEN = "Bearer eyJhbGJbpjciOiJIUzI1NiJ9";
+
+    public FuncHelper() {
+        baseURI = "http://ethos-repl-docmosis-backend-demo.service.core-compute-demo.internal";
+    }
 
     public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, String testData)
             throws IOException {
@@ -61,5 +72,12 @@ public class FuncHelper {
                 .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
                 .body(ccdRequest)
                 .post(uri);
+    }
+
+    public void postDefaultValues(String parameter, String value, String testData) throws IOException {
+        CCDRequest ccdRequest = getCcdRequest("1", "", false, testData);
+        Response response = getCcdResponse(ccdRequest, "/postDefaultValues");
+        String json = response.body().prettyPrint();
+
     }
 }

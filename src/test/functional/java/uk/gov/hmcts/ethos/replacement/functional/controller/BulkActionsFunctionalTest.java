@@ -1,8 +1,11 @@
 package uk.gov.hmcts.ethos.replacement.functional.controller;
 
+import com.jayway.jsonpath.JsonPath;
 import io.restassured.response.Response;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -18,8 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.restassured.RestAssured.baseURI;
-import static io.restassured.RestAssured.useRelaxedHTTPSValidation;
+import static io.restassured.RestAssured.*;
 
 public class BulkActionsFunctionalTest {
     @Value("${test-url}")
@@ -68,4 +70,81 @@ public class BulkActionsFunctionalTest {
         Assertions.assertEquals(HttpStatus.SC_FORBIDDEN, searchResponse.getStatusCode());
     }
 
+    @Test
+    @Category(FunctionalTest.class)
+    public void updateBulk() throws IOException {
+        caseList.clear();
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1));
+        testData = funcHelper.createIndividualCase(caseList, false, testData);
+        BulkRequest bulkRequest = JsonUtil.getBulkDetails(false, testData);
+        Response response = funcHelper.getBulkResponse(bulkRequest, "/createBulk");
+        Assertions.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusCode());
+        response = funcHelper.getBulkResponse(bulkRequest, "/searchBulk");
+        Assertions.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusCode());
+        response = funcHelper.getBulkResponse(bulkRequest, "/updateBulk");
+        Assertions.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusCode());
+//        verifyBulkResponse(testData, response);
+    }
+
+    @Test
+    @Category(FunctionalTest.class)
+    public void updateBulkCase() throws IOException {
+        caseList.clear();
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1));
+        testData = funcHelper.createIndividualCase(caseList, false, testData);
+        BulkRequest bulkRequest = JsonUtil.getBulkDetails(false, testData);
+        Response response = funcHelper.getBulkResponse(bulkRequest, "/createBulk");
+        Assertions.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusCode());
+        response = funcHelper.getBulkResponse(bulkRequest, "/updateBulkCase");
+//        verifyBulkResponse(testData, response);
+    }
+
+    @Test
+    @Category(FunctionalTest.class)
+    public void generateBulkLetter() throws IOException {
+        caseList.clear();
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE2);
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE3);
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1));
+        testData = funcHelper.createIndividualCase(caseList, false, testData);
+        BulkRequest bulkRequest = JsonUtil.getBulkDetails(false, testData);
+        Response response = funcHelper.getBulkResponse(bulkRequest, "/createBulk");
+        Assertions.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusCode());
+        response = funcHelper.getBulkResponse(bulkRequest, "/generateBulkLetter");
+    }
+
+    @Test
+//    @Category(FunctionalTest.class)
+    public void createSubMultiple() throws IOException {
+        String locationRefNo = "24";
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_CREATE_SUB_MULTIPLE));
+        testData = testData.replace("#CASE_TYPE_ID#", "Manchester_Multiples_Dev");
+        String ethosCaseRef1 = RandomStringUtils.randomNumeric(5);
+        String multipleReference = locationRefNo + ethosCaseRef1;
+        testData = testData.replace("#MULTIPLEREFERENCE#", multipleReference);
+        ethosCaseRef1 = locationRefNo + ethosCaseRef1 + "/19";
+        testData = testData.replace("#ETHOS_CASE_REFERENCE_M1#", ethosCaseRef1);
+        String ethosCaseRef2 = RandomStringUtils.randomNumeric(5);
+        ethosCaseRef2 = locationRefNo + ethosCaseRef2 + "/19";
+        testData = testData.replace("#ETHOS_CASE_REFERENCE_M2#", ethosCaseRef2);
+        BulkRequest bulkRequest = JsonUtil.getBulkDetails(false, testData);
+        Response response = funcHelper.getBulkResponse(bulkRequest, "/createSubMultiple");
+        String multipleValue = response.body().jsonPath().getString("data.multipleCollection[0].value.subMultipleM");
+        String expectedValue = response.body().jsonPath()
+                .getString("data.subMultipleCollection[0].value.subMultipleRefT");
+        String expectedMultipleValue = multipleValue.split("/")[0].toString();
+        String expectedMultipleValue1 = expectedValue.split("/")[0].toString();
+        Assert.assertEquals(expectedMultipleValue, multipleReference);
+        Assert.assertEquals(expectedMultipleValue1, multipleReference);
+    }
+
+    public void verifyBulkResponse(String testData, Response response) {
+        String caseTitle = JsonPath.read(testData, "$.case_details.case_data.bulkCaseTitle");
+        String caseReference = JsonPath.read(testData, "$.case_details.case_data.multipleReference");
+        Assert.assertEquals(caseTitle, response.body().jsonPath().getString("data.bulkCaseTitle"));
+        Assert.assertEquals(caseReference, response.body().jsonPath().getString("data.multipleReference"));
+    }
 }

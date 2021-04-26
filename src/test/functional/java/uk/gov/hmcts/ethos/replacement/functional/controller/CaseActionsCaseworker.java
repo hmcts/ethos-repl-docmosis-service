@@ -39,7 +39,6 @@ public class CaseActionsCaseworker {
     @Before
     public void setUp() {
         funcHelper = new FuncHelper();
-        baseURI = "http://ethos-repl-docmosis-backend-demo.service.core-compute-demo.internal";
         useRelaxedHTTPSValidation();
     }
 
