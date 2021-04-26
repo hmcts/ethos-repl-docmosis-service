@@ -290,6 +290,7 @@ public class ListingService {
                 && !isNullOrEmpty(listingData.getHearingDocETCL())
                 && listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
                 && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)
+                && !isNullOrEmpty(listingData.getShowAll())
                 && listingData.getShowAll().equals(YES);
     }
 
