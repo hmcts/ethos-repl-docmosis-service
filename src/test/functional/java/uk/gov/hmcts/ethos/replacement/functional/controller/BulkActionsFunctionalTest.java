@@ -61,13 +61,16 @@ public class BulkActionsFunctionalTest {
     @Test
     @Category(FunctionalTest.class)
     public void searchBulkTest() throws IOException {
-        caseList.clear();
-        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
-        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1));
-        testData = funcHelper.createIndividualCase(caseList, false, testData);
-        BulkRequest bulkRequest = JsonUtil.getBulkDetails(false, testData);
+//        caseList.clear();
+//        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
+//        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1));
+//        testData = funcHelper.createIndividualCase(caseList, false, testData);
+//        BulkRequest bulkRequest = JsonUtil.getBulkDetails(false, testData);
+//        Response response = funcHelper.getBulkResponse(bulkRequest, "/createBulk");
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK6), "UTF-8");
+        BulkRequest bulkRequest = JsonUtil.getBulkDetails(true, testData);
         Response response = funcHelper.getBulkResponse(bulkRequest, "/createBulk");
-        Assertions.assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusCode());
+        Assertions.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
         Response searchResponse = funcHelper.getBulkResponse(bulkRequest, "/searchBulk");
         Assertions.assertEquals(HttpStatus.SC_OK, searchResponse.getStatusCode());
     }
@@ -75,13 +78,17 @@ public class BulkActionsFunctionalTest {
     @Test
     @Category(FunctionalTest.class)
     public void updateBulk() throws IOException {
-        caseList.clear();
-        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
-        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1));
-        testData = funcHelper.createIndividualCase(caseList, false, testData);
-        BulkRequest bulkRequest = JsonUtil.getBulkDetails(false, testData);
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK6), "UTF-8");
+        BulkRequest bulkRequest = JsonUtil.getBulkDetails(true, testData);
         Response response = funcHelper.getBulkResponse(bulkRequest, "/createBulk");
-        Assertions.assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusCode());
+        Assertions.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+//        caseList.clear();
+//        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
+//        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1));
+//        testData = funcHelper.createIndividualCase(caseList, false, testData);
+//        BulkRequest bulkRequest = JsonUtil.getBulkDetails(false, testData);
+//        Response response = funcHelper.getBulkResponse(bulkRequest, "/createBulk");
+//        Assertions.assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusCode());
         response = funcHelper.getBulkResponse(bulkRequest, "/searchBulk");
         Assertions.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
         response = funcHelper.getBulkResponse(bulkRequest, "/updateBulk");
@@ -92,13 +99,17 @@ public class BulkActionsFunctionalTest {
     @Test
     @Category(FunctionalTest.class)
     public void updateBulkCase() throws IOException {
-        caseList.clear();
-        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
-        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1));
-        testData = funcHelper.createIndividualCase(caseList, false, testData);
-        BulkRequest bulkRequest = JsonUtil.getBulkDetails(false, testData);
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK6), "UTF-8");
+        BulkRequest bulkRequest = JsonUtil.getBulkDetails(true, testData);
         Response response = funcHelper.getBulkResponse(bulkRequest, "/createBulk");
-        Assertions.assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusCode());
+        Assertions.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+//        caseList.clear();
+//        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
+//        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1));
+//        testData = funcHelper.createIndividualCase(caseList, false, testData);
+//        BulkRequest bulkRequest = JsonUtil.getBulkDetails(false, testData);
+//        Response response = funcHelper.getBulkResponse(bulkRequest, "/createBulk");
+//        Assertions.assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusCode());
         response = funcHelper.getBulkResponse(bulkRequest, "/updateBulkCase");
 //        verifyBulkResponse(testData, response);
     }
@@ -106,15 +117,19 @@ public class BulkActionsFunctionalTest {
     @Test
     @Category(FunctionalTest.class)
     public void generateBulkLetter() throws IOException {
-        caseList.clear();
-        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
-        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE2);
-        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE3);
-        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1));
-        testData = funcHelper.createIndividualCase(caseList, false, testData);
-        BulkRequest bulkRequest = JsonUtil.getBulkDetails(false, testData);
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK6), "UTF-8");
+        BulkRequest bulkRequest = JsonUtil.getBulkDetails(true, testData);
         Response response = funcHelper.getBulkResponse(bulkRequest, "/createBulk");
-        Assertions.assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusCode());
+        Assertions.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+//        caseList.clear();
+//        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
+//        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE2);
+//        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE3);
+//        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1));
+//        testData = funcHelper.createIndividualCase(caseList, false, testData);
+//        BulkRequest bulkRequest = JsonUtil.getBulkDetails(false, testData);
+//        Response response = funcHelper.getBulkResponse(bulkRequest, "/createBulk");
+//        Assertions.assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusCode());
         response = funcHelper.getBulkResponse(bulkRequest, "/generateBulkLetter");
     }
 

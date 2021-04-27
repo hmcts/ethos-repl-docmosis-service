@@ -44,7 +44,7 @@ public class PreDefaultComponentFunctionalTest {
             .body(ccdRequest)
             .post("/preDefaultValues")
             .then()
-            .statusCode(200); // Should be 200
+            .statusCode(200);
     }
 
     @Test

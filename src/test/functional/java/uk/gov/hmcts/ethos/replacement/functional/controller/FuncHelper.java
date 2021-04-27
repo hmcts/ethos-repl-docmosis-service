@@ -39,6 +39,12 @@ public class FuncHelper {
         return JsonUtil.getCaseDetails(testData, topLevel, childLevel, isScotland);
     }
 
+    public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, File testDataFile)
+            throws IOException {
+        String payload = FileUtils.readFileToString(testDataFile, "UTF-8");
+        return getCcdRequest(topLevel, childLevel, isScotland, payload);
+    }
+
     public String createIndividualCase(List<String> caseList, boolean isScotland, String testData) throws IOException {
         int count = 1;
         String ethosCaseRef = "";
@@ -48,17 +54,11 @@ public class FuncHelper {
             String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
             caseDetails = caseDetails.replace("#ETHOS-CASE-REPLACEMENT#", ethosCaseRef);
             CCDRequest ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
-
-            System.out.println("CREATE CASE ---> " + ccdRequest.getCaseDetails().getCaseId());
-
-            Response response = RestAssured.given()
+            Response response = RestAssured.given() // Status code currently 500
                     .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
                     .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
                     .body(ccdRequest)
                     .post("/createCase");
-//                    .then()
-//                    .statusCode(HttpStatus.SC_FORBIDDEN); // Should be 200
-            System.out.println(response.getStatusCode());
             count++;
         }
         return testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseRef);
@@ -108,7 +108,6 @@ public class FuncHelper {
         httpRequest.formParam("password",  getProperty("demo.ccd.password"));
         Response response = httpRequest.post(getProperty("demo.idam.auth.url"));
         Assertions.assertEquals(HttpStatus.SC_OK, response.statusCode());
-        System.out.println(response.body().jsonPath().getString("access_token"));
         return response.body().jsonPath().getString("access_token");
     }
 }

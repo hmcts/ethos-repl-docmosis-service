@@ -24,7 +24,7 @@ import static io.restassured.RestAssured.useRelaxedHTTPSValidation;
 
 @RunWith(SerenityRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class CaseActionsCaseworker {
+public class CaseActionsForCaseworkerFunctional {
 
     private String AUTH_TOKEN = "";
     private List<String> caseList = new ArrayList<>();
