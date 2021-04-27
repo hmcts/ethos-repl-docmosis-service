@@ -169,6 +169,8 @@ public class DocumentHelper {
             log.info("Claimant represented");
             sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(representedTypeC.getNameOfRepresentative()))
                     .append(NEW_LINE);
+            sb.append("\"claimant_rep_organisation\":\"").append(nullCheck(representedTypeC.getNameOfOrganisation()))
+                    .append(NEW_LINE);
             if (representedTypeC.getRepresentativeAddress() != null) {
                 sb.append(getClaimantOrRepAddressUK(representedTypeC.getRepresentativeAddress()));
             } else {
@@ -216,6 +218,7 @@ public class DocumentHelper {
                     sb.append("\"claimant_or_rep_full_name\":\"").append(NEW_LINE);
                     sb.append("\"claimant_full_name\":\"").append(NEW_LINE);
                     sb.append("\"Claimant\":\"").append(NEW_LINE);
+                    sb.append("\"claimant_rep_organisation\":\"").append(NEW_LINE);
                 }
             }
             Optional<ClaimantType> claimantType = Optional.ofNullable(caseData.getClaimantType());
@@ -276,6 +279,8 @@ public class DocumentHelper {
             }
             sb.append("\"respondent_reference\":\"").append(nullCheck(representedTypeR.getRepresentativeReference()))
                     .append(NEW_LINE);
+            sb.append("\"respondent_rep_organisation\":\"").append(nullCheck(representedTypeR.getNameOfOrganisation()))
+                    .append(NEW_LINE);
         } else {
             log.info("Respondent not represented");
             if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
@@ -285,6 +290,7 @@ public class DocumentHelper {
                 sb.append(getRespondentOrRepAddressUK(getRespondentAddressET3(respondentSumType)));
             } else {
                 sb.append("\"respondent_or_rep_full_name\":\"").append(NEW_LINE);
+                sb.append("\"respondent_rep_organisation\":\"").append(NEW_LINE);
                 sb.append(getRespondentOrRepAddressUK(new Address()));
             }
         }
