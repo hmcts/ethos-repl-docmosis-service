@@ -37,7 +37,7 @@ public class BulkActionsFunctionalTest {
     @Before
     public void setUp() throws IOException {
         funcHelper = new FuncHelper();
-        baseURI = getProperty("demo.docmosis.api.url");
+//        baseURI = getProperty("demo.docmosis.api.url");
         useRelaxedHTTPSValidation();
     }
 

@@ -69,7 +69,7 @@ public class FuncHelper {
     public Response getBulkResponse(BulkRequest bulkRequest, String uri) throws IOException {
         loadAuthToken();
         return RestAssured.given()
-                .header(HttpHeaders.AUTHORIZATION, "AUTH_TOKEN")
+                .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
                 .body(bulkRequest)
                 .post(uri);
