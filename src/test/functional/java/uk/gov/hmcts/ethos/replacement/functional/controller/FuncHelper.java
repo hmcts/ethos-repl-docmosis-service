@@ -48,17 +48,18 @@ public class FuncHelper {
     public String createIndividualCase(List<String> caseList, boolean isScotland, String testData) throws IOException {
         int count = 1;
         String ethosCaseRef = "";
-        loadAuthToken();
+        //loadAuthToken();
         for(String caseDataFilePath: caseList) {
             ethosCaseRef = RandomStringUtils.randomNumeric(10);
             String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
-            caseDetails = caseDetails.replace("#ETHOS-CASE-REPLACEMENT#", ethosCaseRef);
+            caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseRef);
             CCDRequest ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
             Response response = RestAssured.given() // Status code currently 500
-                    .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
+                    .header(HttpHeaders.AUTHORIZATION, "eyJhbGJbpjciOiJIUzI1NiJ9")
                     .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
                     .body(ccdRequest)
                     .post("/createCase");
+//            Assertions.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
             count++;
         }
         return testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseRef);
@@ -68,7 +69,7 @@ public class FuncHelper {
     public Response getBulkResponse(BulkRequest bulkRequest, String uri) throws IOException {
         loadAuthToken();
         return RestAssured.given()
-                .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
+                .header(HttpHeaders.AUTHORIZATION, "AUTH_TOKEN")
                 .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
                 .body(bulkRequest)
                 .post(uri);

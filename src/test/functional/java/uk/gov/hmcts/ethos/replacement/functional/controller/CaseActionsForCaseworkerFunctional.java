@@ -43,6 +43,8 @@ public class CaseActionsForCaseworkerFunctional {
     public void createCaseIndividualClaimantNotRepresentedEng() throws IOException {
         caseList.clear();
         caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE2);
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE3);
         String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1));
         testData = funcHelper.createIndividualCase(caseList, false, testData);
     }
@@ -59,5 +61,27 @@ public class CaseActionsForCaseworkerFunctional {
             .post("/createCase")
             .then()
             .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    @Category(FunctionalTest.class)
+    public void retrieveCases() throws IOException {
+        CCDRequest ccdRequest;
+        caseList.clear();
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE1);
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE2);
+        caseList.add(Constants.TEST_DATA_ENG_BULK1_CASE3);
+        String testData = FileUtils.readFileToString(new File(Constants.TEST_DATA_ENG_BULK1));
+        testData = funcHelper.createIndividualCase(caseList, false, testData);
+        // AUTH_TOKEN = funcHelper.loadAuthToken(); Code causes 500 error
+        ccdRequest = funcHelper.getCcdRequest("1", "", false, testData);
+        RestAssured.given()
+                .header(HttpHeaders.AUTHORIZATION, "AUTH_TOKEN")
+                .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
+                .body(ccdRequest)
+                .post("/retrieveCases")
+                .then()
+                .statusCode(HttpStatus.SC_FORBIDDEN);
+
     }
 }
