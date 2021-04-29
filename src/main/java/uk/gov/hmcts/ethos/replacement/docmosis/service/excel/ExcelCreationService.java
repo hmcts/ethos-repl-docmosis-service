@@ -114,11 +114,11 @@ public class ExcelCreationService {
     private void adjustColumnSize(XSSFSheet sheet) {
 
         //Adjust the column width to fit the content
-//        sheet.autoSizeColumn(0);
-//        sheet.setColumnWidth(1, 8000);
-//        for (int i = 2; i <= 5; i++) {
-//            sheet.setColumnWidth(i, 4000);
-//        }
+        sheet.autoSizeColumn(0);
+        sheet.setColumnWidth(1, 8000);
+        for (int i = 2; i <= 5; i++) {
+            sheet.setColumnWidth(i, 4000);
+        }
     }
 
     private void createHiddenSheet(XSSFWorkbook workbook, XSSFSheet hiddenSheet, List<String> subMultipleCollection) {
