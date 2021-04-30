@@ -132,7 +132,7 @@ public class CaseCreationForCaseWorkerService {
                     caseData.getOfficeCT().getValue().getCode(),
                     caseData.getPositionTypeCT(),
                     ccdGatewayBaseUrl,
-                    caseData.getReasonForCT(),
+                    "",
                     SINGLE_CASE_TYPE,
                     NO
             );
