@@ -83,6 +83,7 @@ public class ExcelCreationService {
     private CellStyle getStyleForUnLocking(XSSFWorkbook workbook) {
         CellStyle styleForUnLocking = workbook.createCellStyle();
         Font font = workbook.createFont();
+        font.setFontName("Arial");
         font.setColor(IndexedColors.BLUE.getIndex());
 
         styleForUnLocking.setLocked(false);
@@ -97,6 +98,7 @@ public class ExcelCreationService {
     private static CellStyle getStyleForLocking(XSSFWorkbook workbook, boolean lead) {
         CellStyle styleForLocking = workbook.createCellStyle();
         Font font = workbook.createFont();
+        font.setFontName("Arial");
         font.setColor(IndexedColors.BLACK.getIndex());
 
         if (lead) {
