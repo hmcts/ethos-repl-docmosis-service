@@ -121,6 +121,7 @@ public class MultipleTransferService {
                     multipleReference));
 
             multipleDetails.getCaseData().setReasonForCT(oldSubmitMultipleEvent.getCaseData().getReasonForCT());
+            multipleDetails.getCaseData().setMultipleName(oldSubmitMultipleEvent.getCaseData().getMultipleName());
         }
 
     }
