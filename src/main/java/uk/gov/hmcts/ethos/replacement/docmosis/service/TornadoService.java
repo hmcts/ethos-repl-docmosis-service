@@ -251,11 +251,14 @@ public class TornadoService {
             documentInfo = createDocument(authToken, conn, documentName, os);
         } else {
             log.error("message:" + conn.getResponseMessage());
-            BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            InputStreamReader inputStreamReader = new InputStreamReader(conn.getErrorStream());
+            BufferedReader errorReader = new BufferedReader(inputStreamReader);
             String msg;
             while ((msg = errorReader.readLine()) != null) {
                 log.error(msg);
             }
+            inputStreamReader.close();
+            errorReader.close();
         }
         return documentInfo;
     }
