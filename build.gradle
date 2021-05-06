@@ -140,7 +140,7 @@ dependencies {
 
     compile group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
-    compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.7'
+    compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.9.2'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
