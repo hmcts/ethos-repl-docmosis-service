@@ -228,7 +228,7 @@ public class CaseActionsForCaseWorkerController {
     }
 
     @PostMapping(value = "/amendCaseDetails", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "amend the case details for a single case.")
+    @ApiOperation(value = "amend the case details for a single case and validates receipt date.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully",
                     response = CCDCallbackResponse.class),
