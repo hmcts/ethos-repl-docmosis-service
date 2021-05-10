@@ -85,15 +85,7 @@ public class TornadoService {
             log.error("If you have a proxy, you will need the Proxy aware example code.");
             System.exit(2);
         } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-            if (outputStreamWriter != null) {
-                outputStreamWriter.close();
-            }
-            if (os != null) {
-                os.close();
-            }
+            releaseResources(conn, outputStreamWriter, os);
         }
         return documentInfo;
     }
@@ -135,12 +127,10 @@ public class TornadoService {
         try (InputStream venueAddressInputStream = getClass().getClassLoader()
                 .getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH)) {
             DefaultValues allocatedCourtAddress = getAllocatedCourtAddress(caseData, caseTypeId, multipleData);
-            StringBuilder sb = DocumentHelper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(),
+            writeOutputStream(outputStreamWriter, DocumentHelper.buildDocumentContent(caseData,
+                tornadoConfiguration.getAccessKey(),
                     userDetails, caseTypeId, venueAddressInputStream, correspondenceType,
-                    correspondenceScotType, multipleData, allocatedCourtAddress);
-            //log.info("Sending request: " + sb.toString());
-            outputStreamWriter.write(sb.toString());
-            outputStreamWriter.flush();
+                    correspondenceScotType, multipleData, allocatedCourtAddress));
         } catch (Exception ex) {
             log.error(VENUE_ADDRESS_INPUT_STREAM_ERROR + ex.getMessage());
         }
@@ -175,15 +165,7 @@ public class TornadoService {
             log.error("If you have a proxy, you will need the Proxy aware example code.");
             System.exit(2);
         } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-            if (outputStreamWriter != null) {
-                outputStreamWriter.close();
-            }
-            if (os != null) {
-                os.close();
-            }
+            releaseResources(conn, outputStreamWriter, os);
         }
         return documentInfo;
     }
@@ -200,9 +182,7 @@ public class TornadoService {
             sb = ListingHelper.buildListingDocumentContent(listingData, tornadoConfiguration.getAccessKey(),
                     documentName, userDetails, caseType);
         }
-        //log.info("Sending request: " + sb.toString());
-        outputStreamWriter.write(sb.toString());
-        outputStreamWriter.flush();
+        writeOutputStream(outputStreamWriter, sb);
     }
 
     DocumentInfo scheduleGeneration(String authToken, BulkData bulkData) throws IOException {
@@ -223,24 +203,14 @@ public class TornadoService {
             log.error("If you have a proxy, you will need the Proxy aware example code.");
             System.exit(2);
         } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-            if (outputStreamWriter != null) {
-                outputStreamWriter.close();
-            }
-            if (os != null) {
-                os.close();
-            }
+            releaseResources(conn, outputStreamWriter, os);
         }
         return documentInfo;
     }
 
     private void buildScheduleInstruction(OutputStreamWriter outputStreamWriter, BulkData bulkData) throws IOException {
-        StringBuilder sb = BulkHelper.buildScheduleDocumentContent(bulkData, tornadoConfiguration.getAccessKey());
-        //log.info("Sending request: " + sb.toString());
-        outputStreamWriter.write(sb.toString());
-        outputStreamWriter.flush();
+        writeOutputStream(outputStreamWriter, BulkHelper.buildScheduleDocumentContent(bulkData,
+                tornadoConfiguration.getAccessKey()));
     }
 
     private DocumentInfo checkResponseStatus(String authToken, HttpURLConnection conn, String documentName,
@@ -281,6 +251,24 @@ public class TornadoService {
                 documentSelfPath,
                 documentManagementService.generateMarkupDocument(documentManagementService
                         .generateDownloadableURL(documentSelfPath)));
+    }
+
+    private void releaseResources(HttpURLConnection conn, OutputStreamWriter outputStreamWriter,
+                                  ByteArrayOutputStream os) throws IOException {
+        if (conn != null) {
+            conn.disconnect();
+        }
+        if (outputStreamWriter != null) {
+            outputStreamWriter.close();
+        }
+        if (os != null) {
+            os.close();
+        }
+    }
+
+    private void writeOutputStream(OutputStreamWriter outputStreamWriter, StringBuilder sb) throws IOException {
+        outputStreamWriter.write(sb.toString());
+        outputStreamWriter.flush();
     }
 
 }
