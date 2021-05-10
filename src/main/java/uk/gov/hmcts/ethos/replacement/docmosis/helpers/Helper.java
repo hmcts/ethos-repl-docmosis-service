@@ -45,6 +45,10 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_CENTRAL_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_EAST_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_SOUTH_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_EAST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIDLANDS_WEST_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.WALES_CASE_TYPE_ID;
@@ -287,10 +291,10 @@ public class Helper {
                 LONDON_CENTRAL_CASE_TYPE_ID,
                 LONDON_EAST_CASE_TYPE_ID,
                 LONDON_SOUTH_CASE_TYPE_ID,
-                //MANCHESTER_CASE_TYPE_ID,
-                //MIDLANDS_EAST_CASE_TYPE_ID,
-                //MIDLANDS_WEST_CASE_TYPE_ID,
-                //NEWCASTLE_CASE_TYPE_ID,
+                MANCHESTER_CASE_TYPE_ID,
+                MIDLANDS_EAST_CASE_TYPE_ID,
+                MIDLANDS_WEST_CASE_TYPE_ID,
+                NEWCASTLE_CASE_TYPE_ID,
                 WALES_CASE_TYPE_ID,
                 WATFORD_CASE_TYPE_ID,
                 SCOTLAND_CASE_TYPE_ID

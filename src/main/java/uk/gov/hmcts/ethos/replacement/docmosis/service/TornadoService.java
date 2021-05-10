@@ -67,23 +67,25 @@ public class TornadoService {
                                            CorrespondenceScotType correspondenceScotType,
                                            MultipleData multipleData) throws IOException {
         HttpURLConnection conn = null;
+        OutputStreamWriter outputStreamWriter = null;
+        ByteArrayOutputStream os = null;
         DocumentInfo documentInfo = new DocumentInfo();
         try {
             conn = createConnection();
             log.info("Connected");
             UserDetails userDetails = userService.getUserDetails(authToken);
             String documentName = Helper.getDocumentName(correspondenceType, correspondenceScotType);
-            buildInstruction(conn, caseData, userDetails, caseTypeId,
+            outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
+            buildInstruction(outputStreamWriter, caseData, userDetails, caseTypeId,
                     correspondenceType, correspondenceScotType, multipleData);
-            documentInfo = checkResponseStatus(authToken, conn, documentName);
+            os = new ByteArrayOutputStream();
+            documentInfo = checkResponseStatus(authToken, conn, documentName, os);
         } catch (ConnectException e) {
             log.error("Unable to connect to Docmosis: " + e.getMessage());
             log.error("If you have a proxy, you will need the Proxy aware example code.");
             System.exit(2);
         } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
+            releaseResources(conn, outputStreamWriter, os);
         }
         return documentInfo;
     }
@@ -117,7 +119,7 @@ public class TornadoService {
         return null;
     }
 
-    private void buildInstruction(HttpURLConnection conn, CaseData caseData, UserDetails userDetails,
+    private void buildInstruction(OutputStreamWriter outputStreamWriter, CaseData caseData, UserDetails userDetails,
                                   String caseTypeId, CorrespondenceType correspondenceType,
                                   CorrespondenceScotType correspondenceScotType,
                                   MultipleData multipleData) {
@@ -125,38 +127,13 @@ public class TornadoService {
         try (InputStream venueAddressInputStream = getClass().getClassLoader()
                 .getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH)) {
             DefaultValues allocatedCourtAddress = getAllocatedCourtAddress(caseData, caseTypeId, multipleData);
-            StringBuilder sb = DocumentHelper.buildDocumentContent(caseData, tornadoConfiguration.getAccessKey(),
+            writeOutputStream(outputStreamWriter, DocumentHelper.buildDocumentContent(caseData,
+                tornadoConfiguration.getAccessKey(),
                     userDetails, caseTypeId, venueAddressInputStream, correspondenceType,
-                    correspondenceScotType, multipleData, allocatedCourtAddress);
-            //log.info("Sending request: " + sb.toString());
-            // send the instruction in UTF-8 encoding so that most character sets are available
-            OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
-            os.write(sb.toString());
-            os.flush();
+                    correspondenceScotType, multipleData, allocatedCourtAddress));
         } catch (Exception ex) {
             log.error(VENUE_ADDRESS_INPUT_STREAM_ERROR + ex.getMessage());
         }
-    }
-
-    private byte[] getBytesFromInputStream(InputStream is) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        byte[] buffer = new byte[0xFFFF];
-        for (int len = is.read(buffer); len != -1; len = is.read(buffer)) {
-            os.write(buffer, 0, len);
-        }
-        return os.toByteArray();
-    }
-
-    private DocumentInfo createDocument(String authToken, HttpURLConnection conn, String documentName)
-            throws IOException {
-        URI documentSelfPath = documentManagementService.uploadDocument(authToken,
-                getBytesFromInputStream(conn.getInputStream()),
-                OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE);
-        log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
-        return generateDocumentInfo(documentName,
-                documentSelfPath,
-                documentManagementService.generateMarkupDocument(documentManagementService
-                        .generateDownloadableURL(documentSelfPath)));
     }
 
     private DocumentInfo generateDocumentInfo(String documentName, URI documentSelfPath, String markupURL) {
@@ -169,47 +146,33 @@ public class TornadoService {
                 .build();
     }
 
-    private DocumentInfo checkResponseStatus(String authToken, HttpURLConnection conn, String documentName)
-            throws IOException {
-        DocumentInfo documentInfo = new DocumentInfo();
-        int status = conn.getResponseCode();
-        if (status == HTTP_OK) {
-            documentInfo = createDocument(authToken, conn, documentName);
-        } else {
-            log.error("message:" + conn.getResponseMessage());
-            BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-            String msg;
-            while ((msg = errorReader.readLine()) != null) {
-                log.error(msg);
-            }
-        }
-        return documentInfo;
-    }
-
     DocumentInfo listingGeneration(String authToken, ListingData listingData, String caseType) throws IOException {
         HttpURLConnection conn = null;
+        OutputStreamWriter outputStreamWriter = null;
+        ByteArrayOutputStream os = null;
         DocumentInfo documentInfo = new DocumentInfo();
         try {
             conn = createConnection();
             log.info("Connected");
             UserDetails userDetails = userService.getUserDetails(authToken);
             String documentName = ListingHelper.getListingDocName(listingData);
-            buildListingInstruction(conn, listingData, documentName, userDetails, caseType);
-            documentInfo = checkResponseStatus(authToken, conn, documentName);
+            outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
+            buildListingInstruction(outputStreamWriter, listingData, documentName, userDetails, caseType);
+            os = new ByteArrayOutputStream();
+            documentInfo = checkResponseStatus(authToken, conn, documentName, os);
         } catch (ConnectException e) {
             log.error("Unable to connect to Docmosis: " + e.getMessage());
             log.error("If you have a proxy, you will need the Proxy aware example code.");
             System.exit(2);
         } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
+            releaseResources(conn, outputStreamWriter, os);
         }
         return documentInfo;
     }
 
-    private void buildListingInstruction(HttpURLConnection conn, ListingData listingData, String documentName,
-                                         UserDetails userDetails, String caseType) throws IOException {
+    private void buildListingInstruction(OutputStreamWriter outputStreamWriter, ListingData listingData,
+                                         String documentName, UserDetails userDetails, String caseType)
+            throws IOException {
         StringBuilder sb;
         if (Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT, LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT)
                 .contains(listingData.getReportType())) {
@@ -219,41 +182,93 @@ public class TornadoService {
             sb = ListingHelper.buildListingDocumentContent(listingData, tornadoConfiguration.getAccessKey(),
                     documentName, userDetails, caseType);
         }
-        //log.info("Sending request: " + sb.toString());
-        // send the instruction in UTF-8 encoding so that most character sets are available
-        OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
-        os.write(sb.toString());
-        os.flush();
+        writeOutputStream(outputStreamWriter, sb);
     }
 
     DocumentInfo scheduleGeneration(String authToken, BulkData bulkData) throws IOException {
         HttpURLConnection conn = null;
+        OutputStreamWriter outputStreamWriter = null;
+        ByteArrayOutputStream os = null;
         DocumentInfo documentInfo = new DocumentInfo();
         try {
             conn = createConnection();
             log.info("Connected");
             String documentName = BulkHelper.getScheduleDocName(bulkData.getScheduleDocName());
-            buildScheduleInstruction(conn, bulkData);
-            documentInfo = checkResponseStatus(authToken, conn, documentName);
+            outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
+            buildScheduleInstruction(outputStreamWriter, bulkData);
+            os = new ByteArrayOutputStream();
+            documentInfo = checkResponseStatus(authToken, conn, documentName, os);
         } catch (ConnectException e) {
             log.error("Unable to connect to Docmosis: " + e.getMessage());
             log.error("If you have a proxy, you will need the Proxy aware example code.");
             System.exit(2);
         } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
+            releaseResources(conn, outputStreamWriter, os);
         }
         return documentInfo;
     }
 
-    private void buildScheduleInstruction(HttpURLConnection conn, BulkData bulkData) throws IOException {
-        StringBuilder sb = BulkHelper.buildScheduleDocumentContent(bulkData, tornadoConfiguration.getAccessKey());
-        //log.info("Sending request: " + sb.toString());
-        // send the instruction in UTF-8 encoding so that most character sets are available
-        OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
-        os.write(sb.toString());
-        os.flush();
+    private void buildScheduleInstruction(OutputStreamWriter outputStreamWriter, BulkData bulkData) throws IOException {
+        writeOutputStream(outputStreamWriter, BulkHelper.buildScheduleDocumentContent(bulkData,
+                tornadoConfiguration.getAccessKey()));
+    }
+
+    private DocumentInfo checkResponseStatus(String authToken, HttpURLConnection conn, String documentName,
+                                             ByteArrayOutputStream os) throws IOException {
+        DocumentInfo documentInfo = new DocumentInfo();
+        int status = conn.getResponseCode();
+        if (status == HTTP_OK) {
+            documentInfo = createDocument(authToken, conn, documentName, os);
+        } else {
+            log.error("message:" + conn.getResponseMessage());
+            InputStreamReader inputStreamReader = new InputStreamReader(conn.getErrorStream());
+            BufferedReader errorReader = new BufferedReader(inputStreamReader);
+            String msg;
+            while ((msg = errorReader.readLine()) != null) {
+                log.error(msg);
+            }
+            inputStreamReader.close();
+            errorReader.close();
+        }
+        return documentInfo;
+    }
+
+    private byte[] getBytesFromInputStream(ByteArrayOutputStream os, InputStream is) throws IOException {
+        byte[] buffer = new byte[0xFFFF];
+        for (int len = is.read(buffer); len != -1; len = is.read(buffer)) {
+            os.write(buffer, 0, len);
+        }
+        return os.toByteArray();
+    }
+
+    private DocumentInfo createDocument(String authToken, HttpURLConnection conn, String documentName,
+                                        ByteArrayOutputStream os) throws IOException {
+        URI documentSelfPath = documentManagementService.uploadDocument(authToken,
+                getBytesFromInputStream(os, conn.getInputStream()),
+                OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE);
+        log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
+        return generateDocumentInfo(documentName,
+                documentSelfPath,
+                documentManagementService.generateMarkupDocument(documentManagementService
+                        .generateDownloadableURL(documentSelfPath)));
+    }
+
+    private void releaseResources(HttpURLConnection conn, OutputStreamWriter outputStreamWriter,
+                                  ByteArrayOutputStream os) throws IOException {
+        if (conn != null) {
+            conn.disconnect();
+        }
+        if (outputStreamWriter != null) {
+            outputStreamWriter.close();
+        }
+        if (os != null) {
+            os.close();
+        }
+    }
+
+    private void writeOutputStream(OutputStreamWriter outputStreamWriter, StringBuilder sb) throws IOException {
+        outputStreamWriter.write(sb.toString());
+        outputStreamWriter.flush();
     }
 
 }
