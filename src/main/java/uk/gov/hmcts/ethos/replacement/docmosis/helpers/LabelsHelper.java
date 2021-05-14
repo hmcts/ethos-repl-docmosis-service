@@ -44,6 +44,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.TEL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRespondents;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRespondentsLabels;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
 public class LabelsHelper {
@@ -91,14 +92,14 @@ public class LabelsHelper {
 
         if (claimantTypeOfClaimant != null && claimantTypeOfClaimant.equals(INDIVIDUAL_TYPE_CLAIMANT)) {
             if (claimantIndType != null) {
-                addressLabelType.setFullName(CLAIMANT + Helper.nullCheck(claimantIndType.claimantFullName()));
-                addressLabelType.setLabelEntityName01(Helper.nullCheck(claimantIndType.claimantFullName()));
+                addressLabelType.setFullName(CLAIMANT + nullCheck(claimantIndType.claimantFullName()));
+                addressLabelType.setLabelEntityName01(nullCheck(claimantIndType.claimantFullName()));
                 addressLabelType.setLabelEntityName02("");
             }
         } else {
-            addressLabelType.setFullName(CLAIMANT + Helper.nullCheck(claimantCompany));
+            addressLabelType.setFullName(CLAIMANT + nullCheck(claimantCompany));
             addressLabelType.setLabelEntityName01("");
-            addressLabelType.setLabelEntityName02((Helper.nullCheck(claimantCompany)));
+            addressLabelType.setLabelEntityName02((nullCheck(claimantCompany)));
         }
 
         if (claimantType != null) {
@@ -156,16 +157,16 @@ public class LabelsHelper {
 
         addressLabelType.setPrintLabel(printClaimantRepLabel);
 
-        addressLabelType.setFullName(CLAIMANT_REP + Helper.nullCheck(representedTypeC.getNameOfRepresentative()));
-        addressLabelType.setLabelEntityName01(Helper.nullCheck(representedTypeC.getNameOfRepresentative()));
-        addressLabelType.setLabelEntityName02(Helper.nullCheck(representedTypeC.getNameOfOrganisation()));
+        addressLabelType.setFullName(CLAIMANT_REP + nullCheck(representedTypeC.getNameOfRepresentative()));
+        addressLabelType.setLabelEntityName01(nullCheck(representedTypeC.getNameOfRepresentative()));
+        addressLabelType.setLabelEntityName02(nullCheck(representedTypeC.getNameOfOrganisation()));
         getEntityAddress(addressLabelType, representedTypeC.getRepresentativeAddress());
         getEntityTelephone(addressLabelType, representedTypeC.getRepresentativePhoneNumber());
         getEntityFax(addressLabelType, representedTypeC.getRepresentativeMobileNumber());
 
-        if (!isNullOrEmpty(Helper.nullCheck(representedTypeC.getRepresentativeReference()))) {
+        if (!isNullOrEmpty(nullCheck(representedTypeC.getRepresentativeReference()))) {
             addressLabelType.setLabelEntityReference(
-                    REF + Helper.nullCheck(representedTypeC.getRepresentativeReference()));
+                    REF + nullCheck(representedTypeC.getRepresentativeReference()));
         } else {
             addressLabelType.setLabelEntityReference(REF);
         }
@@ -226,8 +227,8 @@ public class LabelsHelper {
             RespondentSumType respondentSumType = activeRespondent.getValue();
 
             addressLabelType.setPrintLabel(printRespondentsLabels);
-            addressLabelType.setFullName(RESPONDENT + Helper.nullCheck(respondentSumType.getRespondentName()));
-            addressLabelType.setLabelEntityName01(Helper.nullCheck(respondentSumType.getRespondentName()));
+            addressLabelType.setFullName(RESPONDENT + nullCheck(respondentSumType.getRespondentName()));
+            addressLabelType.setLabelEntityName01(nullCheck(respondentSumType.getRespondentName()));
             addressLabelType.setLabelEntityName02("");
             getEntityAddress(addressLabelType, DocumentHelper.getRespondentAddressET3(respondentSumType));
             getEntityTelephone(addressLabelType, respondentSumType.getRespondentPhone1());
@@ -290,16 +291,16 @@ public class LabelsHelper {
 
             addressLabelType.setPrintLabel(printRespondentsRepsLabels);
 
-            addressLabelType.setFullName(RESPONDENT_REP + Helper.nullCheck(representedTypeR.getNameOfRepresentative()));
-            addressLabelType.setLabelEntityName01(Helper.nullCheck(representedTypeR.getNameOfRepresentative()));
-            addressLabelType.setLabelEntityName02(Helper.nullCheck(representedTypeR.getNameOfOrganisation()));
+            addressLabelType.setFullName(RESPONDENT_REP + nullCheck(representedTypeR.getNameOfRepresentative()));
+            addressLabelType.setLabelEntityName01(nullCheck(representedTypeR.getNameOfRepresentative()));
+            addressLabelType.setLabelEntityName02(nullCheck(representedTypeR.getNameOfOrganisation()));
             getEntityAddress(addressLabelType, representedTypeR.getRepresentativeAddress());
             getEntityTelephone(addressLabelType, representedTypeR.getRepresentativePhoneNumber());
             getEntityFax(addressLabelType, representedTypeR.getRepresentativeMobileNumber());
 
-            if (!isNullOrEmpty(Helper.nullCheck(representedTypeR.getRepresentativeReference()))) {
+            if (!isNullOrEmpty(nullCheck(representedTypeR.getRepresentativeReference()))) {
                 addressLabelType.setLabelEntityReference(
-                        REF + Helper.nullCheck(representedTypeR.getRepresentativeReference()));
+                        REF + nullCheck(representedTypeR.getRepresentativeReference()));
             } else {
                 addressLabelType.setLabelEntityReference(REF);
             }
@@ -334,8 +335,8 @@ public class LabelsHelper {
 
     private static void getEntityTelephone(AddressLabelType addressLabelType, String telephone) {
 
-        if (!isNullOrEmpty(Helper.nullCheck(telephone))) {
-            addressLabelType.setLabelEntityTelephone(TEL + Helper.nullCheck(telephone));
+        if (!isNullOrEmpty(nullCheck(telephone))) {
+            addressLabelType.setLabelEntityTelephone(TEL + nullCheck(telephone));
 
         } else {
             addressLabelType.setLabelEntityTelephone("");
@@ -345,8 +346,8 @@ public class LabelsHelper {
 
     private static void getEntityFax(AddressLabelType addressLabelType, String fax) {
 
-        if (!isNullOrEmpty(Helper.nullCheck(fax))) {
-            addressLabelType.setLabelEntityFax(TEL + Helper.nullCheck(fax));
+        if (!isNullOrEmpty(nullCheck(fax))) {
+            addressLabelType.setLabelEntityFax(TEL + nullCheck(fax));
 
         } else {
             addressLabelType.setLabelEntityFax("");
@@ -357,19 +358,19 @@ public class LabelsHelper {
     private static StringBuilder getFullAddressOneLine(Address address) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append(Helper.nullCheck(address.getAddressLine1()));
-        sb.append(!isNullOrEmpty(Helper.nullCheck(address.getAddressLine2())) && sb.length() > 0  ? ", " : "");
-        sb.append(Helper.nullCheck(address.getAddressLine2()));
-        sb.append(!isNullOrEmpty(Helper.nullCheck(address.getAddressLine3())) && sb.length() > 0  ? ", " : "");
-        sb.append(Helper.nullCheck(address.getAddressLine3()));
-        sb.append(!isNullOrEmpty(Helper.nullCheck(address.getPostTown())) && sb.length() > 0  ? ", " : "");
-        sb.append(Helper.nullCheck(address.getPostTown()));
-        sb.append(!isNullOrEmpty(Helper.nullCheck(address.getCounty())) && sb.length() > 0  ? ", " : "");
-        sb.append(Helper.nullCheck(address.getCounty()));
-        sb.append(!isNullOrEmpty(Helper.nullCheck(address.getPostCode())) && sb.length() > 0  ? ", " : "");
-        sb.append(Helper.nullCheck(address.getPostCode()));
-        sb.append(!isNullOrEmpty(Helper.nullCheck(address.getCountry())) && sb.length() > 0  ? ", " : "");
-        sb.append(Helper.nullCheck(address.getCountry()));
+        sb.append(nullCheck(address.getAddressLine1()));
+        sb.append(!isNullOrEmpty(nullCheck(address.getAddressLine2())) && sb.length() > 0  ? ", " : "");
+        sb.append(nullCheck(address.getAddressLine2()));
+        sb.append(!isNullOrEmpty(nullCheck(address.getAddressLine3())) && sb.length() > 0  ? ", " : "");
+        sb.append(nullCheck(address.getAddressLine3()));
+        sb.append(!isNullOrEmpty(nullCheck(address.getPostTown())) && sb.length() > 0  ? ", " : "");
+        sb.append(nullCheck(address.getPostTown()));
+        sb.append(!isNullOrEmpty(nullCheck(address.getCounty())) && sb.length() > 0  ? ", " : "");
+        sb.append(nullCheck(address.getCounty()));
+        sb.append(!isNullOrEmpty(nullCheck(address.getPostCode())) && sb.length() > 0  ? ", " : "");
+        sb.append(nullCheck(address.getPostCode()));
+        sb.append(!isNullOrEmpty(nullCheck(address.getCountry())) && sb.length() > 0  ? ", " : "");
+        sb.append(nullCheck(address.getCountry()));
         sb.append(sb.length() > 0  ? "." : "");
 
         return sb;

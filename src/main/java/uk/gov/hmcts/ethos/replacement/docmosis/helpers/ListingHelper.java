@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -537,7 +538,7 @@ public class ListingHelper {
         sb.append("\"Hearing_room\":\"").append(nullCheck(listingType.getHearingRoom())).append(NEW_LINE);
         sb.append("\"Hearing_dayofdays\":\"").append(nullCheck(listingType.getHearingDay())).append(NEW_LINE);
         sb.append("\"Hearing_panel\":\"").append(nullCheck(listingType.getHearingPanel())).append(NEW_LINE);
-        sb.append("\"Hearing_notes\":\"").append(extractHearingNotes(listingType)).append(NEW_LINE);
+        sb.append("\"Hearing_notes\":\"").append(nullCheck(extractHearingNotes(listingType))).append(NEW_LINE);
         sb.append("\"respondent_representative\":\"").append(nullCheck(listingType.getRespondentRepresentative())).append("\"}");
         return sb;
     }
@@ -649,26 +650,23 @@ public class ListingHelper {
             log.info("All locations");
             return createMap(ALL_VENUES, ALL_VENUES);
         } else {
-            if (isAllScottishVenues(listingData)) {
-                log.info("Scottish Venues checking");
-                return getVenueToSearch(listingData);
-            } else {
-                log.info("Other");
-                return !isNullOrEmpty(listingData.getListingVenue())
-                        ? createMap(LISTING_VENUE_FIELD_NAME, listingData.getListingVenue())
-                        : createMap("", "");
-            }
+            log.info("Specific venue");
+            return getVenueToSearch(listingData);
         }
     }
 
     public static Map<String, String> getVenueToSearch(ListingData listingData) {
-        if (!isNullOrEmpty(listingData.getVenueGlasgow())) {
+        if (!isNullOrEmpty(listingData.getVenueGlasgow())
+                && !listingData.getVenueGlasgow().equals(ALL_VENUES)) {
             return createMap(LISTING_GLASGOW_VENUE_FIELD_NAME, listingData.getVenueGlasgow());
-        } else if (!isNullOrEmpty(listingData.getVenueAberdeen())) {
+        } else if (!isNullOrEmpty(listingData.getVenueAberdeen())
+                && !listingData.getVenueAberdeen().equals(ALL_VENUES)) {
             return createMap(LISTING_ABERDEEN_VENUE_FIELD_NAME, listingData.getVenueAberdeen());
-        } else if (!isNullOrEmpty(listingData.getVenueDundee())) {
+        } else if (!isNullOrEmpty(listingData.getVenueDundee())
+                && !listingData.getVenueDundee().equals(ALL_VENUES)) {
             return createMap(LISTING_DUNDEE_VENUE_FIELD_NAME, listingData.getVenueDundee());
-        } else if (!isNullOrEmpty(listingData.getVenueEdinburgh())) {
+        } else if (!isNullOrEmpty(listingData.getVenueEdinburgh())
+                && !listingData.getVenueEdinburgh().equals(ALL_VENUES)) {
             return createMap(LISTING_EDINBURGH_VENUE_FIELD_NAME, listingData.getVenueEdinburgh());
         }
         return !isNullOrEmpty(listingData.getListingVenue())
@@ -685,22 +683,22 @@ public class ListingHelper {
                 && listingData.getVenueDundee().equals(ALL_VENUES);
         boolean allVenuesEdinburgh = !isNullOrEmpty(listingData.getVenueEdinburgh())
                 && listingData.getVenueEdinburgh().equals(ALL_VENUES);
-        return !allVenuesGlasgow && !allVenuesAberdeen && !allVenuesDundee && !allVenuesEdinburgh;
+        return allVenuesGlasgow || allVenuesAberdeen || allVenuesDundee || allVenuesEdinburgh;
     }
 
     public static String getVenueFromDateListedType(DateListedType dateListedType) {
         if (dateListedType.getHearingVenueDay() != null) {
             switch (dateListedType.getHearingVenueDay()) {
                 case GLASGOW_OFFICE:
-                    return dateListedType.getHearingGlasgow();
+                    return dateListedType.getHearingGlasgow() != null ? dateListedType.getHearingGlasgow() : " ";
                 case DUNDEE_OFFICE:
-                    return dateListedType.getHearingDundee();
+                    return dateListedType.getHearingDundee() != null ? dateListedType.getHearingDundee() : " ";
                 case EDINBURGH_OFFICE:
-                    return dateListedType.getHearingEdinburgh();
+                    return dateListedType.getHearingEdinburgh() != null ? dateListedType.getHearingEdinburgh() : " ";
                 case ABERDEEN_OFFICE:
-                    return dateListedType.getHearingAberdeen();
+                    return dateListedType.getHearingAberdeen() != null ? dateListedType.getHearingAberdeen() : " ";
                 default:
-                    return dateListedType.getHearingVenueDay();
+                    return dateListedType.getHearingVenueDay() != null ? dateListedType.getHearingVenueDay() : " ";
             }
         }
         return " ";
@@ -747,6 +745,21 @@ public class ListingHelper {
             LocalDate localDateTo = LocalDate.parse(dateToSearchTo, OLD_DATE_TIME_PATTERN2);
             return (!localDate.isBefore(localDateFrom)) && (!localDate.isAfter(localDateTo));
         }
+    }
+
+    public static boolean isListingRangeValid(ListingData listingData, List<String> errors) {
+        if (listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
+            LocalDate localDateFrom = LocalDate.parse(listingData.getListingDateFrom(), OLD_DATE_TIME_PATTERN2);
+            LocalDate localDateTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2);
+            long noOfDaysBetween = ChronoUnit.DAYS.between(localDateFrom, localDateTo);
+            if (localDateFrom.isBefore(localDateTo) && noOfDaysBetween <= 31) {
+                return true;
+            } else {
+                errors.add("Date range is limited to a max of 31 days");
+                return false;
+            }
+        }
+        return true;
     }
 
     private static Comparator<String> getDateComparator() {

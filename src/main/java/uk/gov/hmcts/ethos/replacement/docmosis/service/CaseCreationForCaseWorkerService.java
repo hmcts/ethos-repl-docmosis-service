@@ -11,8 +11,18 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -53,19 +63,69 @@ public class CaseCreationForCaseWorkerService {
         return caseData;
     }
 
+    private boolean checkBfActionsCleared(CaseData caseData) {
+        if (caseData.getBfActions() != null) {
+            for (BFActionTypeItem bfActionTypeItem : caseData.getBfActions()) {
+                if (isNullOrEmpty(bfActionTypeItem.getValue().getCleared())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean checkHearingsNotListed(CaseData caseData) {
+        if (caseData.getHearingCollection() != null) {
+            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+                if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
+                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                        if (dateListedTypeItem.getValue().getHearingStatus() != null
+                                && dateListedTypeItem.getValue().getHearingStatus().equals(HEARING_STATUS_LISTED)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     public void createCaseTransfer(CaseDetails caseDetails, List<String> errors, String userToken) {
 
         CaseData caseData = caseDetails.getCaseData();
 
-        persistentQHelperService.sendCreationEventToSinglesWithoutConfirmation(
+        if (!checkBfActionsCleared(caseData)) {
+
+            errors.add(
+                    "There are one or more open Brought Forward actions that must be cleared before this case can "
+                            + "be transferred");
+        }
+
+        if (!checkHearingsNotListed(caseData)) {
+
+            errors.add(
+                    "There are one or more hearings that have the status Listed. These must be updated before this "
+                            + "case can be transferred");
+        }
+
+        if (!errors.isEmpty()) {
+
+            return;
+
+        }
+
+        persistentQHelperService.sendCreationEventToSingles(
                 userToken,
                 caseDetails.getCaseTypeId(),
                 caseDetails.getJurisdiction(),
                 errors,
-                caseData.getEthosCaseReference(),
+                new ArrayList<>(Collections.singletonList(caseData.getEthosCaseReference())),
                 caseData.getOfficeCT().getValue().getCode(),
                 caseData.getPositionTypeCT(),
-                ccdGatewayBaseUrl
+                ccdGatewayBaseUrl,
+                caseData.getReasonForCT(),
+                SINGLE_CASE_TYPE,
+                NO
         );
 
         caseData.setLinkedCaseCT("Transferred to " + caseData.getOfficeCT().getValue().getCode());
@@ -75,6 +135,7 @@ public class CaseCreationForCaseWorkerService {
 
         caseData.setOfficeCT(null);
         caseData.setPositionTypeCT(null);
+        caseData.setStateAPI(null);
 
     }
 

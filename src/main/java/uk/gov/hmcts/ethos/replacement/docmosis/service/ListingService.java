@@ -49,6 +49,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PRIVAT
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
 
 @Slf4j
@@ -178,10 +179,12 @@ public class ListingService {
                 if (!isListingDateValid) {
                     continue;
                 }
-                boolean isListingStatusValid = isListingStatusValid(dateListedTypeItem);
-                log.info("isListingStatusValid: " + isListingStatusValid);
-                if (!isListingStatusValid) {
-                    continue;
+                if (!showAllHearingType(listingData)) {
+                    boolean isListingStatusValid = isListingStatusValid(dateListedTypeItem);
+                    log.info("isListingStatusValid: " + isListingStatusValid);
+                    if (!isListingStatusValid) {
+                        continue;
+                    }
                 }
                 ListingTypeItem listingTypeItem = new ListingTypeItem();
                 ListingType listingType = ListingHelper.getListingTypeFromCaseData(
@@ -235,21 +238,23 @@ public class ListingService {
     }
 
     private boolean isListingVenueValid(ListingData listingData, DateListedTypeItem dateListedTypeItem) {
-        String venueToSearch = ListingHelper.getListingVenue(listingData);
-        log.info("VENUE TO SEARCH: " + venueToSearch);
-        if (ALL_VENUES.equals(venueToSearch)) {
+        if (listingData.getListingVenue().equals(ALL_VENUES)) {
             return true;
         } else {
             String venueSearched;
+            String venueToSearch = ListingHelper.getListingVenue(listingData);
+            log.info("VENUE TO SEARCH: " + venueToSearch);
+
             if (ListingHelper.isAllScottishVenues(listingData)) {
-                log.info("Scottish checking venue valid");
-                venueSearched = ListingHelper.getVenueFromDateListedType(dateListedTypeItem.getValue());
-            } else {
-                venueSearched = !isNullOrEmpty(dateListedTypeItem.getValue().getHearingVenueDay())
+                venueSearched = dateListedTypeItem.getValue().getHearingVenueDay() != null
                         ? dateListedTypeItem.getValue().getHearingVenueDay()
                         : " ";
+                log.info("Checking venue for all scottish level (HearingVenueDay): " + venueSearched);
+            } else {
+                venueSearched = ListingHelper.getVenueFromDateListedType(dateListedTypeItem.getValue());
+                log.info("Checking venue low level: " + venueSearched);
             }
-            return venueSearched.equals(venueToSearch);
+            return venueSearched.trim().equals(venueToSearch.trim());
         }
     }
 
@@ -278,6 +283,15 @@ public class ListingService {
         } else {
             return true;
         }
+    }
+
+    private boolean showAllHearingType(ListingData listingData) {
+        return !isNullOrEmpty(listingData.getHearingDocType())
+                && !isNullOrEmpty(listingData.getHearingDocETCL())
+                && listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)
+                && !isNullOrEmpty(listingData.getShowAll())
+                && listingData.getShowAll().equals(YES);
     }
 
     private boolean isHearingTypeValid(ListingData listingData, HearingTypeItem hearingTypeItem) {

@@ -20,6 +20,7 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.ListingService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
@@ -30,6 +31,8 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POST_DEFAULT_XLSX_FILE_PATH;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrors;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getListingCallbackRespEntityErrors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -86,11 +89,17 @@ public class ListingGenerationController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = listingService.processListingSingleCasesRequest(ccdRequest.getCaseDetails());
+        List<String> errors = new ArrayList<>();
+        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
 
-        return ResponseEntity.ok(CCDCallbackResponse.builder()
-                .data(caseData)
-                .build());
+        if (ListingHelper.isListingRangeValid(ccdRequest.getCaseDetails().getCaseData()
+                .getPrintHearingDetails(), errors)) {
+
+            listingService.processListingSingleCasesRequest(ccdRequest.getCaseDetails());
+
+        }
+
+        return getCallbackRespEntityErrors(errors, caseData);
     }
 
     @PostMapping(value = "/listingHearings", consumes = APPLICATION_JSON_VALUE)
@@ -111,20 +120,25 @@ public class ListingGenerationController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        ListingData listingData = listingService.processListingHearingsRequest(
-                listingRequest.getCaseDetails(), userToken);
+        List<String> errors = new ArrayList<>();
+        ListingData listingData = listingRequest.getCaseDetails().getCaseData();
 
-        String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null
-                ? listingRequest.getCaseDetails().getCaseData().getListingVenue() : "";
-        DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(
-                POST_DEFAULT_XLSX_FILE_PATH, managingOffice,
-                UtilHelper.getListingCaseTypeId(listingRequest.getCaseDetails().getCaseTypeId()));
-        log.info("Post Default values loaded: " + defaultValues);
-        listingData = defaultValuesReaderService.getListingData(listingData, defaultValues);
+        if (ListingHelper.isListingRangeValid(listingData, errors)) {
 
-        return ResponseEntity.ok(ListingCallbackResponse.builder()
-                .data(listingData)
-                .build());
+            listingData = listingService.processListingHearingsRequest(
+                    listingRequest.getCaseDetails(), userToken);
+
+            String managingOffice = listingRequest.getCaseDetails().getCaseData().getListingVenue() != null
+                    ? listingRequest.getCaseDetails().getCaseData().getListingVenue() : "";
+            DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(
+                    POST_DEFAULT_XLSX_FILE_PATH, managingOffice,
+                    UtilHelper.getListingCaseTypeId(listingRequest.getCaseDetails().getCaseTypeId()));
+            log.info("Post Default values loaded: " + defaultValues);
+            listingData = defaultValuesReaderService.getListingData(listingData, defaultValues);
+
+        }
+
+        return getListingCallbackRespEntityErrors(errors, listingData);
     }
 
     @PostMapping(value = "/generateReport", consumes = APPLICATION_JSON_VALUE)

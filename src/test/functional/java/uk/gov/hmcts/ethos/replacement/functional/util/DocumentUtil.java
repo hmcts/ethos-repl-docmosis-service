@@ -95,8 +95,8 @@ public class DocumentUtil {
         StringBuilder sb = new StringBuilder();
         RepresentedTypeC representedTypeC = caseData.getRepresentativeClaimantType();
         if (representedTypeC != null) {
-            sb.append("\"claimant_addressLine1\": \"" + representedTypeC.getRepresentativeAddress()
-                    .getAddressLine1()).append(NEW_LINE);
+            sb.append("\"claimant_addressLine1\": \"" + nullCheck(representedTypeC.getRepresentativeAddress()
+                    .getAddressLine1())).append(NEW_LINE);
             sb.append("\"claimant_addressLine2\": \"" + nullCheck(representedTypeC.getRepresentativeAddress()
                     .getAddressLine2())).append(NEW_LINE);
             sb.append("\"claimant_addressLine3\": \"" + nullCheck(representedTypeC.getRepresentativeAddress()

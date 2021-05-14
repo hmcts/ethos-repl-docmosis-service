@@ -169,6 +169,8 @@ public class DocumentHelper {
             log.info("Claimant represented");
             sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(representedTypeC.getNameOfRepresentative()))
                     .append(NEW_LINE);
+            sb.append("\"claimant_rep_organisation\":\"").append(nullCheck(representedTypeC.getNameOfOrganisation()))
+                    .append(NEW_LINE);
             if (representedTypeC.getRepresentativeAddress() != null) {
                 sb.append(getClaimantOrRepAddressUK(representedTypeC.getRepresentativeAddress()));
             } else {
@@ -216,6 +218,7 @@ public class DocumentHelper {
                     sb.append("\"claimant_or_rep_full_name\":\"").append(NEW_LINE);
                     sb.append("\"claimant_full_name\":\"").append(NEW_LINE);
                     sb.append("\"Claimant\":\"").append(NEW_LINE);
+                    sb.append("\"claimant_rep_organisation\":\"").append(NEW_LINE);
                 }
             }
             Optional<ClaimantType> claimantType = Optional.ofNullable(caseData.getClaimantType());
@@ -276,6 +279,8 @@ public class DocumentHelper {
             }
             sb.append("\"respondent_reference\":\"").append(nullCheck(representedTypeR.getRepresentativeReference()))
                     .append(NEW_LINE);
+            sb.append("\"respondent_rep_organisation\":\"").append(nullCheck(representedTypeR.getNameOfOrganisation()))
+                    .append(NEW_LINE);
         } else {
             log.info("Respondent not represented");
             if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
@@ -285,6 +290,7 @@ public class DocumentHelper {
                 sb.append(getRespondentOrRepAddressUK(getRespondentAddressET3(respondentSumType)));
             } else {
                 sb.append("\"respondent_or_rep_full_name\":\"").append(NEW_LINE);
+                sb.append("\"respondent_rep_organisation\":\"").append(NEW_LINE);
                 sb.append(getRespondentOrRepAddressUK(new Address()));
             }
         }
@@ -295,7 +301,7 @@ public class DocumentHelper {
                     .append(NEW_LINE);
             sb.append(getRespondentAddressUK(getRespondentAddressET3(respondentSumType)));
             sb.append("\"Respondent\":\"").append(caseData.getRespondentCollection().size() > 1 ? "1. " : "")
-                    .append(respondentSumType.getRespondentName()).append(NEW_LINE);
+                    .append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE);
             sb.append(getRespOthersName(caseData));
             sb.append(getRespAddress(caseData));
         } else {
@@ -320,7 +326,7 @@ public class DocumentHelper {
                 .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". "
                         + respondentSumTypeItem.getValue().getRespondentName())
                 .collect(Collectors.toList());
-        sb.append("\"resp_others\":\"").append(String.join("\\n", respOthers)).append(NEW_LINE);
+        sb.append("\"resp_others\":\"").append(nullCheck(String.join("\\n", respOthers))).append(NEW_LINE);
         return sb;
     }
 
@@ -336,7 +342,8 @@ public class DocumentHelper {
                 .map(respondentSumTypeItem -> (size > 1 ? atomicInteger.getAndIncrement() + ". " : "")
                         + getRespondentAddressET3(respondentSumTypeItem.getValue()))
                 .collect(Collectors.toList());
-        sb.append("\"resp_address\":\"").append(String.join("\\n", respAddressList)).append(NEW_LINE);
+        sb.append("\"resp_address\":\"").append(nullCheck(String.join("\\n", respAddressList)))
+                .append(NEW_LINE);
         return sb;
     }
 

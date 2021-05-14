@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.items.CaseMultipleTypeItem;
@@ -221,6 +222,9 @@ public class MultiplesHelper {
 
         multipleData.setPreAcceptCase(null);
 
+        multipleData.setOfficeMultipleCT(null);
+        multipleData.setPositionTypeCT(null);
+
     }
 
     public static SubMultipleTypeItem createSubMultipleTypeItem(String subMultipleReference, String subMultipleName) {
@@ -305,6 +309,17 @@ public class MultiplesHelper {
                 && multipleData.getPreAcceptCase() == null) {
             multipleData.setPreAcceptDone(YES);
         }
+    }
+
+    public static void populateDynamicListOfficesMultiple(MultipleData multipleData, String caseTypeId) {
+
+        log.info("Populating dynamic list with offices multiple");
+
+        DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+        dynamicFixedListType.setListItems(Helper.getAvailableOffices(caseTypeId));
+
+        multipleData.setOfficeMultipleCT(dynamicFixedListType);
+
     }
 
 }

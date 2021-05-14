@@ -6,6 +6,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ecm.common.model.listing.ListingCallbackResponse;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
@@ -40,6 +42,16 @@ public class CallbackRespHelper {
 
         return ResponseEntity.ok(CCDCallbackResponse.builder()
                 .data(caseData)
+                .errors(errors)
+                .build());
+    }
+
+    @NotNull
+    public static ResponseEntity<ListingCallbackResponse> getListingCallbackRespEntityErrors(
+            List<String> errors, ListingData listingData) {
+
+        return ResponseEntity.ok(ListingCallbackResponse.builder()
+                .data(listingData)
                 .errors(errors)
                 .build());
     }

@@ -136,6 +136,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondencePostCode("LS1 5ES")
                 .tribunalCorrespondenceTelephone("0113 245 9741")
                 .tribunalCorrespondenceFax("01264 785136")
+                .tribunalCorrespondenceDX("DX 742940 Leeds 75")
                 .tribunalCorrespondenceEmail("LeedsET@justice.gov.uk")
                 .build();
         postDefaultValuesLondonCentral = DefaultValues.builder()
@@ -174,7 +175,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceTelephone("0208 667 9131")
                 .tribunalCorrespondenceFax("0870 324 0174")
                 .tribunalCorrespondenceDX("DX 155061 Croydon 39")
-                .tribunalCorrespondenceEmail("londonsouthet@hmcts.gsi.gov.uk")
+                .tribunalCorrespondenceEmail("londonsouthet@Justice.gov.uk")
                 .build();
         postDefaultValuesMidlandsEast = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
@@ -185,7 +186,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondencePostCode("NG2 1EE")
                 .tribunalCorrespondenceTelephone("0115 947 5701")
                 .tribunalCorrespondenceDX("DX 719030 Nottingham 32")
-                .tribunalCorrespondenceEmail("e.midlandseastet@justice.gov.uk")
+                .tribunalCorrespondenceEmail("MidlandsEastET@justice.gov.uk")
                 .build();
         postDefaultValuesMidlandsWest = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
@@ -202,26 +203,28 @@ public class DefaultValuesReaderServiceTest {
         postDefaultValuesNewcastle = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
-                .tribunalCorrespondenceAddressLine1("Kings Court")
-                .tribunalCorrespondenceAddressLine2("Earl Grey Way")
-                .tribunalCorrespondenceAddressLine3("Royal Quays")
-                .tribunalCorrespondenceTown("North Shields")
-                .tribunalCorrespondencePostCode("NE29 6AR")
-                .tribunalCorrespondenceTelephone("0191 260 6900")
+                .tribunalCorrespondenceAddressLine1("Employment Tribunal")
+                .tribunalCorrespondenceAddressLine2("Newcastle Civil Family Courts and Tribunal Centre")
+                .tribunalCorrespondenceAddressLine3("Barras Bridge")
+                .tribunalCorrespondenceTown("Newcastle upon Tyne")
+                .tribunalCorrespondencePostCode("NE1 8QF")
+                .tribunalCorrespondenceTelephone("0191 205 8750")
                 .tribunalCorrespondenceFax("0870 739 4206")
-                .tribunalCorrespondenceDX("DX 65137 North Shields 2")
-                .tribunalCorrespondenceEmail("newcastleet@hmcts.gsi.gov.uk")
+                .tribunalCorrespondenceDX("DX 336901, Newcastle upon Tyne 55")
+                .tribunalCorrespondenceEmail("newcastleet@justice.gov.uk")
                 .build();
         postDefaultValuesWales = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
-                .tribunalCorrespondenceAddressLine1("Fitzalan Place")
+                .tribunalCorrespondenceAddressLine1("Wales Employment Tribunal")
+                .tribunalCorrespondenceAddressLine2("3rd Floor, Cardiff Magistrates' Court")
+                .tribunalCorrespondenceAddressLine3("Fitzalan Place")
                 .tribunalCorrespondenceTown("Cardiff")
                 .tribunalCorrespondencePostCode("CF24 0RZ")
                 .tribunalCorrespondenceTelephone("0292 067 8100")
                 .tribunalCorrespondenceFax("0870 761 7635")
-                .tribunalCorrespondenceDX("DX 743942 Caerdydd/Cardiff 38")
-                .tribunalCorrespondenceEmail("cardiffet@justice.gov.uk")
+                .tribunalCorrespondenceDX("317501 Caerdydd/Cardiff 45")
+                .tribunalCorrespondenceEmail("waleset@justice.gov.uk")
                 .build();
         postDefaultValuesWatford = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
@@ -232,17 +235,17 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceTown("Watford")
                 .tribunalCorrespondencePostCode("WD17 1HP")
                 .tribunalCorrespondenceTelephone("0192 328 1750")
-                .tribunalCorrespondenceFax("0870 324 0174")
+                .tribunalCorrespondenceFax("01264 887 302")
                 .tribunalCorrespondenceDX("DX 155650 Watford 3")
                 .tribunalCorrespondenceEmail("watfordet@justice.gov.uk")
                 .build();
         postDefaultValuesGlasgow = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
-                .tribunalCorrespondenceAddressLine1("Eagle Building")
-                .tribunalCorrespondenceAddressLine2("215 Bothwell Street")
+                .tribunalCorrespondenceAddressLine1("Glasgow Tribunals Centre")
+                .tribunalCorrespondenceAddressLine2("3 Atlantic Quay, 20 York Street")
                 .tribunalCorrespondenceTown("Glasgow")
-                .tribunalCorrespondencePostCode("G2 7TS")
+                .tribunalCorrespondencePostCode("G2 8GT")
                 .tribunalCorrespondenceTelephone("0141 204 0730")
                 .tribunalCorrespondenceFax("01264 785 177")
                 .tribunalCorrespondenceDX("DX 580003")
@@ -369,27 +372,39 @@ public class DefaultValuesReaderServiceTest {
 
     @Test
     public void getCaseData() {
-        String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, tribunalCorrespondenceTelephone=0141 " +
-                "204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, " +
-                "ethosCaseReference=null, caseType=Single, multipleReference=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, " +
-                "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, claimantOtherType=null, preAcceptCase=null, " +
-                "receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
-                "respondentCollection=null, repCollection=null, positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, " +
-                "fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, depositCollection=null, judgementCollection=null, " +
-                "jurCodesCollection=null, bfActions=null, clerkResponsible=null, " +
-                "userLocation=null, documentCollection=null, additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, " +
-                "addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, caseNotes=null, claimantWorkAddress=null, " +
-                "claimantRepresentedQuestion=null, managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, et3Received=null, " +
-                "conciliationTrack=null, counterClaim=null, restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, targetHearingDate=null, " +
-                "claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, " +
-                "multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, hearingNumbers=null, " +
-                "hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, hearingEstLengthNum=null, hearingEstLengthNumType=null, hearingSitAlone=null, " +
-                "hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, hearingERMember=null, hearingEEMember=null, " +
-                "hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, Postponed_by=null, hearingRoom=null, " +
-                "hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, hearingPartHeard=null, hearingReservedJudgement=null, attendeeClaimant=null, " +
-                "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, " +
-                "hearingTimingResume=null, hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, " +
-                "relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null)";
+        String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Glasgow Tribunals Centre, 3 Atlantic Quay, "
+                + "20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
+                + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
+                + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=Single, "
+                + "multipleReference=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, "
+                + "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, "
+                + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, "
+                + "claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
+                + "representativeClaimantType=null, respondentCollection=null, repCollection=null, "
+                + "positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, "
+                + "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, "
+                + "fileLocationEdinburgh=null, hearingCollection=null, depositCollection=null, judgementCollection=null, "
+                + "jurCodesCollection=null, bfActions=null, clerkResponsible=null, userLocation=null, "
+                + "documentCollection=null, additionalCaseInfoType=null, correspondenceScotType=null, "
+                + "correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, "
+                + "addressLabelsAttributesType=null, caseNotes=null, claimantWorkAddress=null, "
+                + "claimantRepresentedQuestion=null, managingOffice=Glasgow, allocatedOffice=null, "
+                + "caseSource=Manually Created, et3Received=null, conciliationTrack=null, counterClaim=null, "
+                + "restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, "
+                + "targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, "
+                + "docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, multipleRefNumber=null, "
+                + "caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, "
+                + "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, "
+                + "hearingEstLengthNum=null, hearingEstLengthNumType=null, hearingSitAlone=null, hearingStage=null, "
+                + "listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, "
+                + "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, "
+                + "hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, Postponed_by=null, "
+                + "hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, "
+                + "hearingPartHeard=null, hearingReservedJudgement=null, attendeeClaimant=null, "
+                + "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, "
+                + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
+                + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
+                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null)";
         defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -424,34 +439,52 @@ public class DefaultValuesReaderServiceTest {
     }
     @Test
     public void getCaseDataWithClaimantWorkAddress() {
-        String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, tribunalCorrespondenceTelephone=0141 " +
-                "204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, " +
-                "ethosCaseReference=null, caseType=Single, multipleReference=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, " +
-                "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, claimantOtherType=null, preAcceptCase=null, " +
-                "receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=Yes, claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
-                "respondentCollection=[RespondentSumTypeItem(id=null, value=RespondentSumType(responseStatus=null, responseToClaim=null, rejectionReason=null, " +
-                "rejectionReasonOther=null, responseOutOfTime=null, responseNotOnPrescribedForm=null, responseRequiredInfoAbsent=null, responseNotes=null, " +
-                "response_ReferredToJudge=null, responseReturnedFromJudge=null, respondentName=Andrew Smith, respondentACASQuestion=null, respondentACAS=null, " +
-                "respondentACASNo=null, respondentAddress=Line1, PostCode, respondentPhone1=null, respondentPhone2=null, respondentEmail=null, " +
-                "respondentContactPreference=null, responseStruckOut=null, responseStruckOutDate=null, responseStruckOutChairman=null, responseStruckOutReason=null, " +
-                "responseRespondentAddress=null, responseRespondentPhone1=null, responseRespondentPhone2=null, responseRespondentEmail=null, " +
-                "responseRespondentContactPreference=null, responseReceived=null, responseReceivedDate=null, responseRespondentNameQuestion=null, responseRespondentName=null, " +
-                "responseContinue=null, responseCounterClaim=null, responseReference=null))], repCollection=null, positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
-                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, depositCollection=null, " +
-                "judgementCollection=null, jurCodesCollection=null, bfActions=null, " +
-                "clerkResponsible=null, userLocation=null, documentCollection=null, additionalCaseInfoType=null, correspondenceScotType=null, " +
-                "correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, caseNotes=null, " +
-                "claimantWorkAddress=ClaimantWorkAddressType(claimantWorkAddress=null, claimantWorkPhoneNumber=null), claimantRepresentedQuestion=null, " +
-                "managingOffice=Glasgow, allocatedOffice=null, caseSource=Manually Created, et3Received=null, conciliationTrack=null, counterClaim=null, " +
-                "restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, EQP=null, " +
-                "flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null," +
-                " ccdID=null, flagsImageFileName=null, flagsImageAltText=null, hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, " +
-                "hearingEstLengthNum=null, hearingEstLengthNumType=null, hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, " +
-                "hearingSelection=null, hearingActions=null, hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, hearingDateSelection=null, " +
-                "hearingDateActions=null, hearingStatus=null, Postponed_by=null, hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, " +
-                "hearingPartHeard=null, hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, " +
-                "attendeeRespAndRep=null, attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, " +
-                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null)";
+        String caseDataExpected = "CaseData(tribunalCorrespondenceAddress=Glasgow Tribunals Centre, 3 Atlantic Quay, "
+                + "20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
+                + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
+                + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=Single, "
+                + "multipleReference=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, "
+                + "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, "
+                + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, "
+                + "claimantWorkAddressQuestion=Yes, claimantWorkAddressQRespondent=null, "
+                + "representativeClaimantType=null, respondentCollection=[RespondentSumTypeItem(id=null, "
+                + "value=RespondentSumType(responseStatus=null, responseToClaim=null, rejectionReason=null, "
+                + "rejectionReasonOther=null, responseOutOfTime=null, responseNotOnPrescribedForm=null, "
+                + "responseRequiredInfoAbsent=null, responseNotes=null, response_ReferredToJudge=null, "
+                + "responseReturnedFromJudge=null, respondentName=Andrew Smith, respondentACASQuestion=null, "
+                + "respondentACAS=null, respondentACASNo=null, respondentAddress=Line1, PostCode, "
+                + "respondentPhone1=null, respondentPhone2=null, respondentEmail=null, "
+                + "respondentContactPreference=null, responseStruckOut=null, responseStruckOutDate=null, "
+                + "responseStruckOutChairman=null, responseStruckOutReason=null, responseRespondentAddress=null, "
+                + "responseRespondentPhone1=null, responseRespondentPhone2=null, responseRespondentEmail=null, "
+                + "responseRespondentContactPreference=null, responseReceived=null, responseReceivedDate=null, "
+                + "responseRespondentNameQuestion=null, responseRespondentName=null, responseContinue=null, "
+                + "responseCounterClaim=null, responseReference=null))], repCollection=null, "
+                + "positionType=Manually Created, dateToPosition=null, currentPosition=null, fileLocation=null, "
+                + "fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, "
+                + "fileLocationEdinburgh=null, hearingCollection=null, depositCollection=null, "
+                + "judgementCollection=null, jurCodesCollection=null, bfActions=null, clerkResponsible=null, "
+                + "userLocation=null, documentCollection=null, additionalCaseInfoType=null, "
+                + "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, "
+                + "addressLabelCollection=null, addressLabelsAttributesType=null, caseNotes=null, "
+                + "claimantWorkAddress=ClaimantWorkAddressType(claimantWorkAddress=null, "
+                + "claimantWorkPhoneNumber=null), claimantRepresentedQuestion=null, managingOffice=Glasgow, "
+                + "allocatedOffice=null, caseSource=Manually Created, et3Received=null, conciliationTrack=null, "
+                + "counterClaim=null, restrictedReporting=null, printHearingDetails=null, "
+                + "printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, EQP=null, "
+                + "flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, "
+                + "multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, "
+                + "flagsImageAltText=null, hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, "
+                + "hearingVenue=null, hearingEstLengthNum=null, hearingEstLengthNumType=null, hearingSitAlone=null, "
+                + "hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, "
+                + "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, "
+                + "hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, Postponed_by=null, "
+                + "hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, "
+                + "hearingPartHeard=null, hearingReservedJudgement=null, attendeeClaimant=null, "
+                + "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, "
+                + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
+                + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
+                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -486,14 +519,16 @@ public class DefaultValuesReaderServiceTest {
 
     @Test
     public void getListingData() {
-        String listingDataExpected = "ListingData(tribunalCorrespondenceAddress=Eagle Building, 215 Bothwell Street, Glasgow, G2 7TS, " +
-                "tribunalCorrespondenceTelephone=0141 204 0730, tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, " +
-                "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, hearingDateType=null, listingDate=null, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=null, listingCollection=null, listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
-                "reportType=null, documentName=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
-                "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
+        String listingDataExpected = "ListingData(tribunalCorrespondenceAddress=Glasgow Tribunals Centre, 3 "
+                + "Atlantic Quay, 20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
+                + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
+                + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, hearingDateType=null, listingDate=null, "
+                + "listingDateFrom=null, listingDateTo=null, listingVenue=null, listingCollection=null, "
+                + "listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, "
+                + "venueDundee=null, venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, "
+                + "docMarkUp=null, bfDateCollection=null, clerkResponsible=null, reportType=null, documentName=null, "
+                + "showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, "
+                + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         assertEquals(listingDataExpected, defaultValuesReaderService.getListingData(listingData, postDefaultValuesGlasgow).toString());
     }
 }
