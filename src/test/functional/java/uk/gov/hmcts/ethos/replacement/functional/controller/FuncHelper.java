@@ -12,6 +12,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ethos.replacement.functional.util.JsonUtil;
@@ -23,6 +24,7 @@ import java.util.List;
 import static io.restassured.RestAssured.baseURI;
 import static uk.gov.hmcts.ethos.replacement.functional.util.ResponseUtil.getProperty;
 
+@TestPropertySource(locations = "classpath:config.properties")
 public class FuncHelper {
 
     @Value("${test-url}")
@@ -48,23 +50,22 @@ public class FuncHelper {
     public String createIndividualCase(List<String> caseList, boolean isScotland, String testData) throws IOException {
         int count = 1;
         String ethosCaseRef = "";
-        //loadAuthToken();
+        loadAuthToken();
         for(String caseDataFilePath: caseList) {
             ethosCaseRef = RandomStringUtils.randomNumeric(10);
             String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
             caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseRef);
             CCDRequest ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
-            Response response = RestAssured.given() // Status code currently 500
-                    .header(HttpHeaders.AUTHORIZATION, "eyJhbGJbpjciOiJIUzI1NiJ9")
-                    .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
-                    .body(ccdRequest)
-                    .post("/createCase");
-//            Assertions.assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+            Response response = RestAssured.given()
+                .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
+                .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
+                .body(ccdRequest)
+                .post("/createCase");
+//            Assertions.assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusCode());
             count++;
         }
         return testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseRef);
     }
-
 
     public Response getBulkResponse(BulkRequest bulkRequest, String uri) throws IOException {
         loadAuthToken();
@@ -84,12 +85,6 @@ public class FuncHelper {
                 .post(uri);
     }
 
-    public void postDefaultValues(String parameter, String value, String testData) throws IOException {
-        CCDRequest ccdRequest = getCcdRequest("1", "", false, testData);
-        Response response = getCcdResponse(ccdRequest, "/postDefaultValues");
-        String json = response.body().prettyPrint();
-    }
-
     public String loadAuthToken() throws IOException {
         if(AUTH_TOKEN == null) {
             AUTH_TOKEN = getAuthToken();
@@ -97,6 +92,7 @@ public class FuncHelper {
         if(!AUTH_TOKEN.startsWith("Bearer")) {
             AUTH_TOKEN = "Bearer " + AUTH_TOKEN;
         }
+        System.out.println(AUTH_TOKEN);
         return AUTH_TOKEN;
     }
 
@@ -104,6 +100,7 @@ public class FuncHelper {
         RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
         RequestSpecification httpRequest = RestAssured.given();
         httpRequest.header("Accept", "*/*");
+//        httpRequest.header("Host", userAuthIdamHost);
         httpRequest.header("Content-Type", "application/x-www-form-urlencoded");
         httpRequest.formParam("username", getProperty("demo.ccd.username"));
         httpRequest.formParam("password",  getProperty("demo.ccd.password"));

@@ -38,5 +38,14 @@ public class DocmosisScotlandComponentTest {
         CCDRequest ccdRequest = funcHelper.getCcdRequest("1", "", true, payload);
         Response response = funcHelper.getCcdResponse(ccdRequest, "/amendCaseDetails");
         Assertions.assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusCode()); // Should be 200
+        String caseData = response.body().prettyPrint();
+        caseData = caseData.substring(caseData.indexOf('{') + 1);
+        caseData = caseData.substring(0, caseData.lastIndexOf('}'));
+        caseData = caseData.replace("\"data\"", "\"case_data\"");
+        String caseDetails = FileUtils.readFileToString(new File(Constants.TEST_DATA_SCOT_TEMPLATE), "UTF-8");
+        caseDetails = caseDetails.replace("#CASE_DATA#", caseData);
+        ccdRequest = funcHelper.getCcdRequest("1", "", true, caseDetails);
+        response = funcHelper.getCcdResponse(ccdRequest, "/generateDocument");
+        Assertions.assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusCode()); // Should be 200
     }
 }

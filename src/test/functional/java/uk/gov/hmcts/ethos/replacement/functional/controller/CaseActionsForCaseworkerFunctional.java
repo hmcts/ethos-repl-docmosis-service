@@ -84,4 +84,12 @@ public class CaseActionsForCaseworkerFunctional {
                 .statusCode(HttpStatus.SC_FORBIDDEN);
 
     }
+
+    @Test
+    @Category(FunctionalTest.class)
+    public void updateCase() throws IOException {
+        CCDRequest ccdRequest;
+        caseList.clear();
+
+    }
 }
