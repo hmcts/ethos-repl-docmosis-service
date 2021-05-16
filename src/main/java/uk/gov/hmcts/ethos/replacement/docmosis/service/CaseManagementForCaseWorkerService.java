@@ -83,6 +83,7 @@ public class CaseManagementForCaseWorkerService {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
             caseData.setRespondent(nullCheck(respondentSumType.getRespondentName()));
+            if (caseData.getEt3Received().equals(null))
             caseData.setEt3Received(NO);
         } else {
             caseData.setRespondent(MISSING_RESPONDENT);
