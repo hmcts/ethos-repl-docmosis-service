@@ -17,6 +17,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -162,11 +163,11 @@ public class EventValidationService {
     private void validateJurisdictionCodesExistenceInJudgement(CaseData caseData, List<String> errors) {
 
         Set<String> jurCodesCollectionWithinJudgement = new HashSet<>();
-        List<String> jurCodesCollection = getJurCodesCollection(caseData.getJurCodesCollection());
+        List<String> jurCodesCollection = Helper.getJurCodesCollection(caseData.getJurCodesCollection());
         if (caseData.getJudgementCollection() != null && !caseData.getJudgementCollection().isEmpty()) {
             for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
                 jurCodesCollectionWithinJudgement.addAll(
-                        getJurCodesCollection(judgementTypeItem.getValue().getJurisdictionCodes()));
+                        Helper.getJurCodesCollection(judgementTypeItem.getValue().getJurisdictionCodes()));
             }
         }
         log.info("Check if all jurCodesCollectionWithinJudgement are in jurCodesCollection");
@@ -244,14 +245,6 @@ public class EventValidationService {
         }
     }
 
-    private List<String> getJurCodesCollection(List<JurCodesTypeItem> jurCodesCollection) {
-        return jurCodesCollection != null
-                ? jurCodesCollection.stream()
-                .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
-                .collect(Collectors.toList())
-                : new ArrayList<>();
-    }
-
     private void populateJurCodesDuplicatedWithinJudgement(List<String> jurCodesCollectionWithinJudgement,
                                                            Map<String, List<String>> duplicatedJurCodesMap,
                                                            String key) {
@@ -285,14 +278,14 @@ public class EventValidationService {
         List<String> errors = new ArrayList<>();
         if (caseData.getJudgementCollection() != null && !caseData.getJudgementCollection().isEmpty()) {
 
-            List<String> jurCodesCollection = getJurCodesCollection(caseData.getJurCodesCollection());
+            List<String> jurCodesCollection = Helper.getJurCodesCollection(caseData.getJurCodesCollection());
             List<String> jurCodesDoesNotExist = new ArrayList<>();
             Map<String, List<String>> duplicatedJurCodesMap = new HashMap<>();
 
             for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
                 JudgementType judgementType = judgementTypeItem.getValue();
                 List<String> jurCodesCollectionWithinJudgement =
-                        getJurCodesCollection(judgementType.getJurisdictionCodes());
+                        Helper.getJurCodesCollection(judgementType.getJurisdictionCodes());
 
                 log.info("Check if jurCodes collection within judgement exist in jurCodesCollection");
                 jurCodesDoesNotExist.addAll(jurCodesCollectionWithinJudgement.stream()
