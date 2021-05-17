@@ -136,6 +136,13 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    public void caseDataDefaultsEt3Received() {
+        CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.caseDataDefaults(caseData);
+        assertEquals(NO, caseData.getEt3Received());
+    }
+
+    @Test
     public void caseDataDefaultsClaimantCompany() {
         CaseData caseData = scotlandCcdRequest2.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.caseDataDefaults(caseData);
