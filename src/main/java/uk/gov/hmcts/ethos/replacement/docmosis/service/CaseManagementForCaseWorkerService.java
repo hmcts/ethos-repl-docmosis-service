@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
@@ -48,6 +49,7 @@ public class CaseManagementForCaseWorkerService {
     private static final String MISSING_RESPONDENT = "Missing respondent";
     private static final String MESSAGE = "Failed to link ECC case for case id : ";
     private static final String CASE_NOT_FOUND_MESSAGE = "Case Reference Number not found.";
+    public static List<CaseData> eccCases;
 
     @Autowired
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
@@ -195,7 +197,7 @@ public class CaseManagementForCaseWorkerService {
         List<SubmitEvent> submitEvents = getCasesES(caseDetails, authToken);
         if (submitEvents != null && !submitEvents.isEmpty()) {
             SubmitEvent submitEvent = submitEvents.get(0);
-            if (ECCHelper.validCaseForECC(submitEvent, errors)) {
+            if (ECCHelper.validCaseForECC(submitEvent, errors) && !callback.equals(SUBMITTED_CALLBACK)) {
                 switch (callback) {
                     case MID_EVENT_CALLBACK:
                         Helper.midRespondentECC(currentCaseData, submitEvent.getCaseData());
@@ -207,7 +209,15 @@ public class CaseManagementForCaseWorkerService {
                         break;
                     default:
                         sendUpdateSingleCaseECC(authToken, caseDetails, submitEvent.getCaseData(),
-                                String.valueOf(submitEvent.getCaseId()));
+                                String.valueOf(submitEvent.getCaseId()), "");
+                }
+            }
+            else if (callback.equals(SUBMITTED_CALLBACK)) {
+                for (SubmitEvent submitEv : submitEvents){
+                    if (ECCHelper.validCaseForECC(submitEvent, errors)) {
+                        sendUpdateSingleCaseECC(authToken, caseDetails, submitEv.getCaseData(),
+                                String.valueOf(submitEv.getCaseId()), SUBMITTED_CALLBACK);
+                    }
                 }
             }
         } else {
@@ -226,10 +236,14 @@ public class CaseManagementForCaseWorkerService {
     }
 
     private void sendUpdateSingleCaseECC(String authToken, CaseDetails currentCaseDetails,
-                                         CaseData originalCaseData, String caseIdToLink) {
+                                         CaseData originalCaseData, String caseIdToLink, String callback) {
         try {
-            originalCaseData.setCcdID(currentCaseDetails.getCaseId());
-            originalCaseData.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());
+            if (callback != SUBMITTED_CALLBACK){
+                originalCaseData.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());
+            }
+            else {
+                //todo set to eccCases for counterClaims
+            }
             FlagsImageHelper.buildFlagsImageFileName(originalCaseData);
             CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, currentCaseDetails.getCaseTypeId(),
                     currentCaseDetails.getJurisdiction(), caseIdToLink);
