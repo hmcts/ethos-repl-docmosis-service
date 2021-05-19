@@ -136,18 +136,24 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    public void caseDataDefaultsEt3Received() {
+    public void caseDataDefaultsResponseReceived() {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.caseDataDefaults(caseData);
-        assertEquals(NO, caseData.getEt3Received());
+        for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
+            assertEquals(NO, respondentSumTypeItem.getValue().getResponseReceived());
+        }
     }
 
     @Test
-    public void caseDataDefaultsEt3ReceivedDoesNotChange() {
+    public void caseDataDefaultsResponseReceivedDoesNotChange() {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
-        caseData.setEt3Received(YES);
+        caseData.getRespondentCollection().get(0).getValue().setResponseReceived(YES);
         caseManagementForCaseWorkerService.caseDataDefaults(caseData);
-        assertEquals(YES, caseData.getEt3Received());
+        assertEquals(YES,caseData.getRespondentCollection().get(0).getValue().getResponseReceived());
+        for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
+            if (respondentSumTypeItem != caseData.getRespondentCollection().get(0))
+            assertEquals(NO, respondentSumTypeItem.getValue().getResponseReceived());
+        }
     }
 
     @Test
