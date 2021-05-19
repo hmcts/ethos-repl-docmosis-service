@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SignificantItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
@@ -201,6 +202,16 @@ public class Helper {
 
     }
 
+    public static DynamicValueType getDynamicCodeLabel(String code, String label) {
+
+        DynamicValueType dynamicValueType = new DynamicValueType();
+        dynamicValueType.setCode(code);
+        dynamicValueType.setLabel(label);
+
+        return dynamicValueType;
+
+    }
+
     public static List<DynamicValueType> getDefaultBfListItems() {
         return new ArrayList<>(Arrays.asList(
                 getDynamicValue(BF_ACTION_ACAS),
@@ -325,6 +336,15 @@ public class Helper {
 
         caseData.setOfficeCT(dynamicFixedListType);
 
+    }
+
+    public static List<String> getJurCodesCollection(List<JurCodesTypeItem> jurCodesCollection) {
+
+        return jurCodesCollection != null
+                ? jurCodesCollection.stream()
+                .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
+                .collect(Collectors.toList())
+                : new ArrayList<>();
     }
 
 }

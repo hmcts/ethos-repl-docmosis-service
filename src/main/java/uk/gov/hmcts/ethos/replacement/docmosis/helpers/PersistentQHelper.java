@@ -3,8 +3,10 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
@@ -171,6 +173,7 @@ public class PersistentQHelper {
                         : null)
                 .jurCodesType(getJurCodesType(multipleData, caseData))
                 .respondentSumType(getRespondentSumType(multipleData, caseData))
+                .judgementType(getJudgementType(multipleData, caseData))
                 .build();
     }
 
@@ -225,6 +228,37 @@ public class PersistentQHelper {
                 if (respondentSumTypeItemOptional.isPresent()) {
 
                     return respondentSumTypeItemOptional.get().getValue();
+
+                }
+
+            }
+
+        }
+
+        return null;
+
+    }
+
+    private static JudgementType getJudgementType(MultipleData multipleData, CaseData caseData) {
+
+        if (caseData != null) {
+
+            List<JudgementTypeItem> judgementCollection = caseData.getJudgementCollection();
+
+            if (multipleData.getBatchUpdateJudgment().getValue() != null
+                    && judgementCollection != null) {
+
+                String judgementIdToSearch = multipleData.getBatchUpdateJudgment().getValue().getCode();
+
+                Optional<JudgementTypeItem> judgementTypeItemOptional =
+                        judgementCollection.stream()
+                                .filter(judgementTypeItem ->
+                                        judgementTypeItem.getId().equals(judgementIdToSearch))
+                                .findAny();
+
+                if (judgementTypeItemOptional.isPresent()) {
+
+                    return judgementTypeItemOptional.get().getValue();
 
                 }
 
