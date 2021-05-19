@@ -143,7 +143,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    public void caseDataDefaultsEt3ReceivedDoesNotChange() {
+    public void caseDataDefaultsResponseReceivedDoesNotChange() {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
         caseData.getRespondentCollection().get(0).getValue().setResponseReceived(YES);
         caseManagementForCaseWorkerService.caseDataDefaults(caseData);
