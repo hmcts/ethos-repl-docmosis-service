@@ -139,7 +139,9 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void caseDataDefaultsResponseReceived() {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.caseDataDefaults(caseData);
-        assertEquals(NO, caseData.getRespondentCollection().get(0).getValue().getResponseReceived());
+        for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
+            assertEquals(NO, respondentSumTypeItem.getValue().getResponseReceived());
+        }
     }
 
     @Test
@@ -147,7 +149,11 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
         caseData.getRespondentCollection().get(0).getValue().setResponseReceived(YES);
         caseManagementForCaseWorkerService.caseDataDefaults(caseData);
-        assertEquals(YES, caseData.getRespondentCollection().get(0).getValue().getResponseReceived());
+        assertEquals(YES,caseData.getRespondentCollection().get(0).getValue().getResponseReceived());
+        for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
+            if (respondentSumTypeItem != caseData.getRespondentCollection().get(0))
+            assertEquals(NO, respondentSumTypeItem.getValue().getResponseReceived());
+        }
     }
 
     @Test
