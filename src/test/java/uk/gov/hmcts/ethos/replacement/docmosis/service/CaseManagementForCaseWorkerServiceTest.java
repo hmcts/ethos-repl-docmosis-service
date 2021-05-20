@@ -432,6 +432,14 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    public void createECC() {
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        assertEquals("11111", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), ABOUT_TO_SUBMIT_EVENT_CALLBACK).getCaseRefECC());
+    }
+
+    @Test
     public void linkOriginalCaseECC() {
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
@@ -444,6 +452,11 @@ public class CaseManagementForCaseWorkerServiceTest {
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
         assertEquals(Arrays.asList("72632632"), caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases());
+        manchesterCcdRequest.getCaseDetails().getCaseData().setEccCases(Arrays.asList("72632632","63467343"));
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        assertEquals(Arrays.asList("72632632","63467343"), caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
                 new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases());
     }
 
