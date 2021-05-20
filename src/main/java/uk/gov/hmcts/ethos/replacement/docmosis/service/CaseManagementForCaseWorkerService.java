@@ -218,7 +218,7 @@ public class CaseManagementForCaseWorkerService {
             }
             else if (callback.equals(SUBMITTED_CALLBACK)) {
                 for (SubmitEvent submitEv : submitEvents){
-                    if (ECCHelper.validCaseForECC(submitEvent, errors)) {
+                    if (ECCHelper.validCaseForECC(submitEv, errors)) {
                         sendUpdateSingleCaseECC(authToken, caseDetails, submitEv.getCaseData(),
                                 String.valueOf(submitEv.getCaseId()), SUBMITTED_CALLBACK);
                     }
@@ -242,11 +242,16 @@ public class CaseManagementForCaseWorkerService {
     private void sendUpdateSingleCaseECC(String authToken, CaseDetails currentCaseDetails,
                                          CaseData originalCaseData, String caseIdToLink, String callback) {
         try {
-            if (callback != SUBMITTED_CALLBACK){
+            if (!callback.equals(SUBMITTED_CALLBACK)){
                 originalCaseData.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());
             }
             else {
-                //todo set to eccCases for counterClaims
+                if (originalCaseData.getEccCases() != null) {
+                    originalCaseData.getEccCases().add(currentCaseDetails.getCaseData().getEthosCaseReference());
+                } else {
+                    originalCaseData.setEccCases(
+                            new ArrayList<>(Collections.singletonList(currentCaseDetails.getCaseData().getEthosCaseReference())));
+                }
             }
             FlagsImageHelper.buildFlagsImageFileName(originalCaseData);
             CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, currentCaseDetails.getCaseTypeId(),

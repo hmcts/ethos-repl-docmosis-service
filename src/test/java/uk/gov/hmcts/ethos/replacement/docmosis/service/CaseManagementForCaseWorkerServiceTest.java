@@ -98,6 +98,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         casePreAcceptType.setCaseAccepted(YES);
         caseData.setPreAcceptCase(casePreAcceptType);
         caseData.setCaseRefECC("11111");
+        caseData.setEthosCaseReference("72632632");
         caseData.setRespondentECC(createRespondentECC());
         manchesterCaseDetails.setCaseData(caseData);
         manchesterCaseDetails.setCaseId("123456");
@@ -113,6 +114,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         submitCaseData.setRepresentativeClaimantType(createRepresentedTypeC());
         submitCaseData.setRepCollection(createRepCollection(false));
         submitCaseData.setClaimantRepresentedQuestion(YES);
+        submitCaseData.setEthosCaseReference("72632632");
         ClaimantType claimantType = new ClaimantType();
         Address address = new Address();
         address.setAddressLine1("AddressLine1");
@@ -442,14 +444,13 @@ public class CaseManagementForCaseWorkerServiceTest {
                 new ArrayList<>(), SUBMITTED_CALLBACK).getCaseRefECC());
     }
 
-    //Test for eccCases
-//    @Test
-//    public void linkOriginalCaseECCCounterClaims() {
-//        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
-//                .thenReturn(Arrays.asList(submitEvent, submitEvent2));
-//        assertEquals("11111", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
-//                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases());
-//    }
+    @Test
+    public void linkOriginalCaseECCCounterClaims() {
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(Arrays.asList(submitEvent, submitEvent2));
+        assertEquals(Arrays.asList("72632632", "72632632"), caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases());
+    }
 
     @Test(expected = Exception.class)
     public void linkOriginalCaseECCException() throws IOException {
