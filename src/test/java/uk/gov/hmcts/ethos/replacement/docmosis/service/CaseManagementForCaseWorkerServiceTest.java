@@ -47,7 +47,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     private CCDRequest ccdRequest15;
     private CCDRequest manchesterCcdRequest;
     private SubmitEvent submitEvent;
-    private SubmitEvent submitEvent2;
+
     @MockBean
     private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     @MockBean
@@ -98,7 +98,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         casePreAcceptType.setCaseAccepted(YES);
         caseData.setPreAcceptCase(casePreAcceptType);
         caseData.setCaseRefECC("11111");
-        caseData.setEthosCaseReference("72632632");
+        caseData.setEccCases(Arrays.asList("72632632"));
         caseData.setRespondentECC(createRespondentECC());
         manchesterCaseDetails.setCaseData(caseData);
         manchesterCaseDetails.setCaseId("123456");
@@ -107,14 +107,12 @@ public class CaseManagementForCaseWorkerServiceTest {
         manchesterCcdRequest.setCaseDetails(manchesterCaseDetails);
 
         submitEvent = new SubmitEvent();
-        submitEvent2 = new SubmitEvent();
         CaseData submitCaseData = new CaseData();
         submitCaseData.setRespondentCollection(createRespondentCollection(true));
         submitCaseData.setClaimantIndType(createClaimantIndType());
         submitCaseData.setRepresentativeClaimantType(createRepresentedTypeC());
         submitCaseData.setRepCollection(createRepCollection(false));
         submitCaseData.setClaimantRepresentedQuestion(YES);
-        submitCaseData.setEthosCaseReference("72632632");
         ClaimantType claimantType = new ClaimantType();
         Address address = new Address();
         address.setAddressLine1("AddressLine1");
@@ -128,9 +126,6 @@ public class CaseManagementForCaseWorkerServiceTest {
         submitEvent.setState("Accepted");
         submitEvent.setCaseId(123);
         submitEvent.setCaseData(submitCaseData);
-        submitEvent2.setState("Accepted");
-        submitEvent2.setCaseId(456);
-        submitEvent2.setCaseData(submitCaseData);
 
         caseManagementForCaseWorkerService = new CaseManagementForCaseWorkerService(caseRetrievalForCaseWorkerService, ccdClient);
     }
@@ -447,8 +442,8 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void linkOriginalCaseECCCounterClaims() {
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
-                .thenReturn(Arrays.asList(submitEvent, submitEvent2));
-        assertEquals(Arrays.asList("72632632", "72632632"), caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        assertEquals(Arrays.asList("72632632"), caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
                 new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases());
     }
 
