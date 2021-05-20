@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
@@ -213,7 +212,7 @@ public class CaseManagementForCaseWorkerService {
                         break;
                     default:
                         sendUpdateSingleCaseECC(authToken, caseDetails, submitEvent.getCaseData(),
-                                String.valueOf(submitEvent.getCaseId()), callback);
+                                String.valueOf(submitEvent.getCaseId()));
                 }
             }
         } else {
@@ -232,7 +231,7 @@ public class CaseManagementForCaseWorkerService {
     }
 
     private void sendUpdateSingleCaseECC(String authToken, CaseDetails currentCaseDetails,
-                                         CaseData originalCaseData, String caseIdToLink, String callback) {
+                                         CaseData originalCaseData, String caseIdToLink) {
         try {
             if (originalCaseData.getEccCases() != null) {
                 originalCaseData.getEccCases().add(currentCaseDetails.getCaseData().getEthosCaseReference());
