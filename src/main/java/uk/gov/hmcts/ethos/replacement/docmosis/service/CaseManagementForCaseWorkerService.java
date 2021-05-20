@@ -201,7 +201,7 @@ public class CaseManagementForCaseWorkerService {
         List<SubmitEvent> submitEvents = getCasesES(caseDetails, authToken);
         if (submitEvents != null && !submitEvents.isEmpty()) {
             SubmitEvent submitEvent = submitEvents.get(0);
-            if (ECCHelper.validCaseForECC(submitEvent, errors) && !callback.equals(SUBMITTED_CALLBACK)) {
+            if (ECCHelper.validCaseForECC(submitEvent, errors)) {
                 switch (callback) {
                     case MID_EVENT_CALLBACK:
                         Helper.midRespondentECC(currentCaseData, submitEvent.getCaseData());
@@ -213,14 +213,19 @@ public class CaseManagementForCaseWorkerService {
                         break;
                     default:
                         sendUpdateSingleCaseECC(authToken, caseDetails, submitEvent.getCaseData(),
-                                String.valueOf(submitEvent.getCaseId()), "");
+                                String.valueOf(submitEvent.getCaseId()), callback);
                 }
             }
-            else if (callback.equals(SUBMITTED_CALLBACK)) {
+            if (callback.equals(SUBMITTED_CALLBACK)) {
                 for (SubmitEvent submitEv : submitEvents){
                     if (ECCHelper.validCaseForECC(submitEv, errors)) {
-                        sendUpdateSingleCaseECC(authToken, caseDetails, submitEv.getCaseData(),
-                                String.valueOf(submitEv.getCaseId()), SUBMITTED_CALLBACK);
+
+                        if (currentCaseData.getEccCases() != null) {
+                            currentCaseData.getEccCases().add(submitEv.getCaseData().getEthosCaseReference());
+                        } else {
+                            currentCaseData.setEccCases(
+                                        new ArrayList<>(Collections.singletonList(submitEv.getCaseData().getEthosCaseReference())));
+                        }
                     }
                 }
             }
@@ -244,14 +249,6 @@ public class CaseManagementForCaseWorkerService {
         try {
             if (!callback.equals(SUBMITTED_CALLBACK)){
                 originalCaseData.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());
-            }
-            else {
-                if (originalCaseData.getEccCases() != null) {
-                    originalCaseData.getEccCases().add(currentCaseDetails.getCaseData().getEthosCaseReference());
-                } else {
-                    originalCaseData.setEccCases(
-                            new ArrayList<>(Collections.singletonList(currentCaseDetails.getCaseData().getEthosCaseReference())));
-                }
             }
             FlagsImageHelper.buildFlagsImageFileName(originalCaseData);
             CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, currentCaseDetails.getCaseTypeId(),
