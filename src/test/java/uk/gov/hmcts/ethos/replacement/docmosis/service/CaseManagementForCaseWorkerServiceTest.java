@@ -47,6 +47,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     private CCDRequest ccdRequest15;
     private CCDRequest manchesterCcdRequest;
     private SubmitEvent submitEvent;
+
     @MockBean
     private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     @MockBean
@@ -97,6 +98,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         casePreAcceptType.setCaseAccepted(YES);
         caseData.setPreAcceptCase(casePreAcceptType);
         caseData.setCaseRefECC("11111");
+        caseData.setEccCases(Arrays.asList("72632632"));
         caseData.setRespondentECC(createRespondentECC());
         manchesterCaseDetails.setCaseData(caseData);
         manchesterCaseDetails.setCaseId("123456");
@@ -433,8 +435,8 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void createECC() {
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
-        assertEquals("123", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
-                new ArrayList<>(), ABOUT_TO_SUBMIT_EVENT_CALLBACK).getCcdID());
+        assertEquals("11111", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), ABOUT_TO_SUBMIT_EVENT_CALLBACK).getCaseRefECC());
     }
 
     @Test
@@ -443,6 +445,19 @@ public class CaseManagementForCaseWorkerServiceTest {
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
         assertEquals("11111", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
                 new ArrayList<>(), SUBMITTED_CALLBACK).getCaseRefECC());
+    }
+
+    @Test
+    public void linkOriginalCaseECCCounterClaims() {
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        assertEquals(Arrays.asList("72632632"), caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases());
+        manchesterCcdRequest.getCaseDetails().getCaseData().setEccCases(Arrays.asList("72632632","63467343"));
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        assertEquals(Arrays.asList("72632632","63467343"), caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases());
     }
 
     @Test(expected = Exception.class)

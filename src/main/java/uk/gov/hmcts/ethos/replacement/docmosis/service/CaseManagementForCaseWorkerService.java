@@ -233,8 +233,12 @@ public class CaseManagementForCaseWorkerService {
     private void sendUpdateSingleCaseECC(String authToken, CaseDetails currentCaseDetails,
                                          CaseData originalCaseData, String caseIdToLink) {
         try {
-            originalCaseData.setCcdID(currentCaseDetails.getCaseId());
-            originalCaseData.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());
+            if (originalCaseData.getEccCases() != null) {
+                originalCaseData.getEccCases().add(currentCaseDetails.getCaseData().getEthosCaseReference());
+            } else {
+                originalCaseData.setEccCases(
+                        new ArrayList<>(Collections.singletonList(currentCaseDetails.getCaseData().getEthosCaseReference())));
+            }
             FlagsImageHelper.buildFlagsImageFileName(originalCaseData);
             CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, currentCaseDetails.getCaseTypeId(),
                     currentCaseDetails.getJurisdiction(), caseIdToLink);
