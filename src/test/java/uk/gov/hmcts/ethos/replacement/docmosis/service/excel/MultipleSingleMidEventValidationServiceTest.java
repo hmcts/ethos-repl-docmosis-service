@@ -74,6 +74,7 @@ public class MultipleSingleMidEventValidationServiceTest {
         assertEquals(SELECT_NONE_VALUE, multipleDetails.getCaseData().getBatchUpdateClaimantRep().getValue().getCode());
         assertEquals(SELECT_NONE_VALUE, multipleDetails.getCaseData().getBatchUpdateJurisdiction().getValue().getLabel());
         assertEquals(2, multipleDetails.getCaseData().getBatchUpdateRespondent().getListItems().size());
+        assertEquals(SELECT_NONE_VALUE, multipleDetails.getCaseData().getBatchUpdateRespondentRep().getValue().getLabel());
 
     }
 
@@ -162,6 +163,7 @@ public class MultipleSingleMidEventValidationServiceTest {
         assertEquals(2, multipleDetails.getCaseData().getBatchUpdateClaimantRep().getListItems().size());
         assertEquals(2, multipleDetails.getCaseData().getBatchUpdateJurisdiction().getListItems().size());
         assertEquals(2, multipleDetails.getCaseData().getBatchUpdateRespondent().getListItems().size());
+        assertEquals(2, multipleDetails.getCaseData().getBatchUpdateRespondentRep().getListItems().size());
 
     }
 
