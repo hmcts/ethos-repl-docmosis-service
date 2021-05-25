@@ -146,7 +146,7 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
 
-    compile 'com.github.hmcts:ecm-common:0.1.69'
+    compile 'com.github.hmcts:ecm-common:0.1.70'
 
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.5.RELEASE'
     compile group: 'io.github.openfeign', name: 'feign-httpclient', version: '11.1'
