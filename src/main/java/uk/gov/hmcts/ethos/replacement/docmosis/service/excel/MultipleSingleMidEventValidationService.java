@@ -170,6 +170,25 @@ public class MultipleSingleMidEventValidationService {
 
         multipleData.setBatchUpdateJudgment(populateDynamicList(judgementCollection));
 
+        log.info("Checking RepCollection");
+
+        List<DynamicValueType> repCollection = new ArrayList<>();
+
+        if (submitEvent.getCaseData().getRepCollection() != null) {
+
+            repCollection = submitEvent.getCaseData().getRepCollection().stream()
+                    .map(representedTypeRItem ->
+                            Helper.getDynamicCodeLabel(representedTypeRItem.getId(),
+                                    representedTypeRItem.getValue().getNameOfRepresentative()
+                                            + " ("
+                                            + representedTypeRItem.getValue().getRespRepName()
+                                            + ")" ))
+                    .collect(Collectors.toList());
+
+        }
+
+        multipleData.setBatchUpdateRespondentRep(populateDynamicList(repCollection));
+
     }
 
     private DynamicFixedListType populateDynamicList(List<DynamicValueType> listItems) {

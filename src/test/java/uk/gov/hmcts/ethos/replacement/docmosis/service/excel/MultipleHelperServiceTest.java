@@ -398,6 +398,7 @@ public class MultipleHelperServiceTest {
         multipleDetails.getCaseData().setBatchUpdateJurisdiction(MultipleUtil.generateDynamicList("AA"));
         multipleDetails.getCaseData().setBatchUpdateRespondent(MultipleUtil.generateDynamicList("Andrew Smith"));
         multipleDetails.getCaseData().setBatchUpdateJudgment(MultipleUtil.generateDynamicList("JD"));
+        multipleDetails.getCaseData().setBatchUpdateRespondentRep(MultipleUtil.generateDynamicList("1"));
 
         multipleHelperService.sendUpdatesToSinglesWithConfirmation(
                 userToken,
