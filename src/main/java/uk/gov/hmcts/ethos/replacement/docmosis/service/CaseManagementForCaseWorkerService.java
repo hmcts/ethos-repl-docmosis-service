@@ -12,7 +12,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.CounterClaimType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.EccCounterClaimType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
@@ -234,13 +234,13 @@ public class CaseManagementForCaseWorkerService {
     private void sendUpdateSingleCaseECC(String authToken, CaseDetails currentCaseDetails,
                                          CaseData originalCaseData, String caseIdToLink) {
         try {
-            CounterClaimType counterClaimType = new CounterClaimType();
-            counterClaimType.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());
+            EccCounterClaimType eccCounterClaimType= new EccCounterClaimType();
+            eccCounterClaimType.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());
             if (originalCaseData.getEccCases() != null) {
-                originalCaseData.getEccCases().add(counterClaimType);
+                originalCaseData.getEccCases().add(eccCounterClaimType);
             } else {
                 originalCaseData.setEccCases(
-                        new ArrayList<>(Collections.singletonList(counterClaimType)));
+                        new ArrayList<>(Collections.singletonList(eccCounterClaimType)));
             }
             FlagsImageHelper.buildFlagsImageFileName(originalCaseData);
             CCDRequest returnedRequest = ccdClient.startEventForCase(authToken, currentCaseDetails.getCaseTypeId(),
