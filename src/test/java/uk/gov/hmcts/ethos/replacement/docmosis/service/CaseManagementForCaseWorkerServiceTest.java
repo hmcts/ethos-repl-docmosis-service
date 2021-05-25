@@ -98,7 +98,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         casePreAcceptType.setCaseAccepted(YES);
         caseData.setPreAcceptCase(casePreAcceptType);
         caseData.setCaseRefECC("11111");
-        CounterClaimType counterClaimType = new CounterClaimType();
+        EccCounterClaimType counterClaimType = new EccCounterClaimType();
         counterClaimType.setCounterClaim("72632632");
         caseData.setEccCases(Arrays.asList(counterClaimType));
         caseData.setRespondentECC(createRespondentECC());
@@ -455,8 +455,8 @@ public class CaseManagementForCaseWorkerServiceTest {
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
         assertEquals("72632632", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
                 new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases().get(0).getCounterClaim());
-        CounterClaimType c1 = new CounterClaimType();
-        CounterClaimType c2 = new CounterClaimType();
+        EccCounterClaimType c1 = new EccCounterClaimType();
+        EccCounterClaimType c2 = new EccCounterClaimType();
         c1.setCounterClaim("72632632");
         c2.setCounterClaim("63467343");
         manchesterCcdRequest.getCaseDetails().getCaseData().setEccCases(Arrays.asList(c1,c2));
