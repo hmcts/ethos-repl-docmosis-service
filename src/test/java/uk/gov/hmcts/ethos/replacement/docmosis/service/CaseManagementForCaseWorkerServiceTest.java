@@ -12,6 +12,7 @@ import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.*;
+import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.*;
@@ -98,9 +99,15 @@ public class CaseManagementForCaseWorkerServiceTest {
         casePreAcceptType.setCaseAccepted(YES);
         caseData.setPreAcceptCase(casePreAcceptType);
         caseData.setCaseRefECC("11111");
+
+        EccCounterClaimTypeItem eccCounterClaimTypeItem = new EccCounterClaimTypeItem();
         EccCounterClaimType counterClaimType = new EccCounterClaimType();
         counterClaimType.setCounterClaim("72632632");
-        caseData.setEccCases(Arrays.asList(counterClaimType));
+        eccCounterClaimTypeItem.setId(UUID.randomUUID().toString());
+        eccCounterClaimTypeItem.setValue(counterClaimType);
+
+
+        caseData.setEccCases(Arrays.asList(eccCounterClaimTypeItem));
         caseData.setRespondentECC(createRespondentECC());
         manchesterCaseDetails.setCaseData(caseData);
         manchesterCaseDetails.setCaseId("123456");
@@ -454,18 +461,24 @@ public class CaseManagementForCaseWorkerServiceTest {
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
         assertEquals("72632632", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
-                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases().get(0).getCounterClaim());
-        EccCounterClaimType c1 = new EccCounterClaimType();
-        EccCounterClaimType c2 = new EccCounterClaimType();
-        c1.setCounterClaim("72632632");
-        c2.setCounterClaim("63467343");
+                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases().get(0).getValue().getCounterClaim());
+        EccCounterClaimTypeItem c1 = new EccCounterClaimTypeItem();
+        EccCounterClaimTypeItem c2 = new EccCounterClaimTypeItem();
+        EccCounterClaimType counterClaimType1 = new EccCounterClaimType();
+        EccCounterClaimType counterClaimType2 = new EccCounterClaimType();
+        counterClaimType1.setCounterClaim("72632632");
+        counterClaimType2.setCounterClaim("63467343");
+        c1.setId(UUID.randomUUID().toString());
+        c2.setId(UUID.randomUUID().toString());
+        c1.setValue(counterClaimType1);
+        c2.setValue(counterClaimType2);
         manchesterCcdRequest.getCaseDetails().getCaseData().setEccCases(Arrays.asList(c1,c2));
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
-        assertEquals(c1.getCounterClaim(), caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
-                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases().get(0).getCounterClaim());
-        assertEquals(c2.getCounterClaim(), caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
-                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases().get(1).getCounterClaim());
+        assertEquals(c1.getValue().getCounterClaim(), caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases().get(0).getValue().getCounterClaim());
+        assertEquals(c2.getValue().getCounterClaim(), caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases().get(1).getValue().getCounterClaim());
     }
 
     @Test(expected = Exception.class)
