@@ -2,10 +2,10 @@ package uk.gov.hmcts.ethos.replacement.docmosis.domain.tribunaloffice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.Getter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Data
+@Getter
 public class ContactDetails {
     @JsonProperty("address1")
     private String address1;
