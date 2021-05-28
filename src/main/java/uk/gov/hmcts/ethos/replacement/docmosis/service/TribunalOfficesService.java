@@ -19,7 +19,7 @@ public class TribunalOfficesService {
     }
 
     public ContactDetails getTribunalContactDetails(String caseTypeId, String managingOffice) {
-        TribunalOffice tribunalName = null;
+        TribunalOffice tribunalName;
 
         switch (caseTypeId) {
             case MANCHESTER_DEV_CASE_TYPE_ID:
@@ -99,10 +99,13 @@ public class TribunalOfficesService {
                     return TribunalOffice.ABERDEEN;
                 case DUNDEE_OFFICE:
                     return TribunalOffice.DUNDEE;
+                default:
+                    log.warn(String.format("Unexpected managing office %s therefore defaulting to %s", managingOffice, TribunalOffice.GLASGOW));
+                    return TribunalOffice.GLASGOW;
             }
+        } else {
+            return TribunalOffice.GLASGOW;
         }
-
-        return TribunalOffice.GLASGOW;
     }
 }
 
