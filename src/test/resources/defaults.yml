@@ -1,0 +1,149 @@
+case-default-values:
+  claimant-type-of-claimant: Individual
+  position-type: Manually Created
+  case-type: Single
+
+tribunal-offices:
+  contact-details:
+    aberdeen:
+      address1: Ground Floor
+      address2: AB1, 48 Huntly Street
+      town: Aberdeen
+      postcode: AB10 1SH
+      telephone: 01224 593 137
+      fax: 0870 761 7766
+      dx: DX AB77
+      email: aberdeenet@justice.gov.uk
+    bristol:
+      address1: Bristol Civil and Family Justice Centre
+      address2: 2 Redcliff Street
+      town: Bristol
+      postcode: BS1 6GR
+      telephone: 0117 929 8261
+      fax: 0870 739 4009
+      dx: DX 95903 Bristol 3
+      email: bristolet@justice.gov.uk
+    dundee:
+      address1: Ground Floor
+      address2: Endeavour House
+      address3: 1 Greenmarket
+      town: Dundee
+      postcode: DD1 4QB
+      telephone: 01382 221 578
+      fax: 01382 227 136
+      dx: DX DD51
+      email: dundeeet@justice.gov.uk
+    edinburgh:
+      address1: 54-56 Melville Street
+      town: Edinburgh
+      postcode: EH3 7HF
+      telephone: 0131 226 5584
+      fax: 0131 220 6847
+      dx: DX ED147
+      email: edinburghet@justice.gov.uk
+    glasgow:
+      address1: Glasgow Tribunals Centre
+      address2: 3 Atlantic Quay, 20 York Street
+      town: Glasgow
+      postcode: G2 8GT
+      telephone: 0141 204 0730
+      fax: 01264 785 177
+      dx: DX 580003
+      email: glasgowet@justice.gov.uk
+      managing-office: Glasgow
+    leeds:
+      address1: 4th Floor
+      address2: City Exchange
+      address3: 11 Albion Street
+      town: Leeds
+      postcode: LS1 5ES
+      telephone: 0113 245 9741
+      fax: 01264 785136
+      dx: DX 742940 Leeds 75
+      email: LeedsET@justice.gov.uk
+    london_central:
+      address1: Ground Floor
+      address2: Victory House
+      address3: 30-34 Kingsway
+      town: London
+      postcode: WC2B 6EX
+      telephone: 0207 273 8603
+      fax: 01264 785 100
+      dx: DX 141420 Bloomsbury
+      email: londoncentralet@hmcts.gsi.gov.uk
+    london_east:
+      address1: 2nd Floor
+      address2: Import Building
+      address3: 2 Clove Crescent
+      town: London
+      postcode: E14 2BE
+      telephone: 0207 538 6161
+      fax: 08703 240 200
+      email: eastlondon@justice.gov.uk
+    london_south:
+      address1: Montague Court
+      address2: 101 London Road
+      address3: West Croydon
+      town: London
+      postcode: CR0 2RF
+      telephone: 0208 667 9131
+      fax: 0870 324 0174
+      dx: DX 155061 Croydon 39
+      email: londonsouthet@Justice.gov.uk
+    manchester:
+      address1: Manchester Employment Tribunal
+      address2: Alexandra House
+      address3: 14-22 The Parsonage
+      town: Manchester
+      postcode: M3 2JA
+      telephone: 0161 833 6100
+      fax: 0870 739 4433
+      dx: DX 743570
+      email: Manchesteret@justice.gov.uk
+    midlands_east:
+      address1: Nottingham Justice Centre
+      address2: Carrington Street
+      town: Nottingham
+      postcode: NG2 1EE
+      telephone: 0115 947 5701
+      dx: DX 719030 Nottingham 32
+      email: MidlandsEastET@justice.gov.uk
+    midlands_west:
+      address1: 13th Floor
+      address2: Centre City Tower
+      address3: 5-7 Hill Street
+      town: Birmingham
+      postcode: B5 4UU
+      telephone: 0121 600 7780
+      fax: 01264 347 999
+      email: MidlandsWestET@justice.gov.uk
+    newcastle:
+      address1: Employment Tribunal
+      address2: Newcastle Civil Family Courts and Tribunal Centre
+      address3: Barras Bridge
+      town: Newcastle upon Tyne
+      postcode: NE1 8QF
+      telephone: 0191 205 8750
+      fax: 0870 739 4206
+      dx: DX 336901, Newcastle upon Tyne 55
+      email: newcastleet@justice.gov.uk
+    wales:
+      address1: Wales Employment Tribunal
+      address2: 3rd Floor, Cardiff Magistrates' Court
+      address3: Fitzalan Place
+      town: Cardiff
+      postcode: CF24 0RZ
+      telephone: 0292 067 8100
+      fax: 0870 761 7635
+      dx: 317501 Caerdydd/Cardiff 45
+      email: waleset@justice.gov.uk
+    watford:
+      address1: Watford Tribunal Hearing Centre
+      address2: Radius House
+      address3: 51 Clarendon Road
+      town: Watford
+      postcode: WD17 1HP
+      telephone: 0192 328 1750
+      fax: 01264 887 302
+      dx: DX 155650 Watford 3
+      email: watfordet@justice.gov.uk
