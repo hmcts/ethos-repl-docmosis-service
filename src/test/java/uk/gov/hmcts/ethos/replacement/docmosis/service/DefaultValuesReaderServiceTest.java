@@ -96,6 +96,8 @@ public class DefaultValuesReaderServiceTest {
 
     @Before
     public void setUp() {
+        defaultClaimantTypeOfClaimant = INDIVIDUAL_TYPE_CLAIMANT;
+
         listingData = getListingDataSetUp();
         manchesterCaseDetails = getCaseDetails(MANCHESTER_DEV_CASE_TYPE_ID);
         glasgowCaseDetails = getCaseDetails(SCOTLAND_DEV_CASE_TYPE_ID);
@@ -298,7 +300,6 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("edinburghet@justice.gov.uk")
                 .build();
         caseData = new CaseData();
-
     }
 
     @Test
