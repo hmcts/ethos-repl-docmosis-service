@@ -146,8 +146,8 @@ public class CaseCreationForCaseWorkerServiceTest {
         List<String> errors = new ArrayList<>();
         caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals(1, errors.size());
-        assertEquals("There are one or more open Brought Forward actions that must be cleared before this "
-                + "case can be transferred", errors.get(0));
+        assertEquals("There are one or more open Brought Forward actions that must be cleared before the "
+                + "case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " can be transferred", errors.get(0));
     }
 
     @Test
@@ -157,7 +157,7 @@ public class CaseCreationForCaseWorkerServiceTest {
         caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals(1, errors.size());
         assertEquals("There are one or more hearings that have the status Listed. These must be updated "
-                + "before this case can be transferred", errors.get(0));
+                + "before the case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " can be transferred", errors.get(0));
     }
 
     @Test
@@ -168,10 +168,10 @@ public class CaseCreationForCaseWorkerServiceTest {
         List<String> errors = new ArrayList<>();
         caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals(2, errors.size());
-        assertEquals("There are one or more open Brought Forward actions that must be cleared before this "
-                + "case can be transferred", errors.get(0));
+        assertEquals("There are one or more open Brought Forward actions that must be cleared before the "
+                + "case " +  ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " can be transferred", errors.get(0));
         assertEquals("There are one or more hearings that have the status Listed. These must be updated "
-                + "before this case can be transferred", errors.get(1));
+                + "before the case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " can be transferred", errors.get(1));
     }
 
     @Test
