@@ -113,29 +113,27 @@ public class CaseCreationForCaseWorkerService {
 
     public void createCaseTransfer(CaseDetails caseDetails, List<String> errors, String userToken) {
 
-        //CaseData caseData = caseDetails.getCaseData();
         List<CaseData> caseDataList = getAllCasesToBeTransferred(caseDetails, userToken);
         for (CaseData caseData : caseDataList) {
 
             if (!checkBfActionsCleared(caseData)) {
                 errors.add(
-                        "There are one or more open Brought Forward actions that must be cleared before this case can "
+                        "There are one or more open Brought Forward actions that must be cleared before the case "
+                                + caseData.getEthosCaseReference() + " can "
                                 + "be transferred");
             }
 
             if (!checkHearingsNotListed(caseData)) {
-
                 errors.add(
-                        "There are one or more hearings that have the status Listed. These must be updated before this "
-                                + "case can be transferred");
+                        "There are one or more hearings that have the status Listed. These must be updated before the case "
+                                + caseData.getEthosCaseReference() + " can be transferred");
             }
 
             if (!errors.isEmpty()) {
-
                 return;
-
             }
-
+        }
+        for (CaseData caseData : caseDataList) {
             persistentQHelperService.sendCreationEventToSingles(
                     userToken,
                     caseDetails.getCaseTypeId(),
