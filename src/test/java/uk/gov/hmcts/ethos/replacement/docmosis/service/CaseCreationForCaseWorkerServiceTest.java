@@ -27,13 +27,13 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LONDON_CENTRAL_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
@@ -106,6 +106,28 @@ public class CaseCreationForCaseWorkerServiceTest {
         caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
         assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
+    }
+
+    @Test
+    public void createCaseTransferECC() throws IOException {
+        List<String> errors = new ArrayList<>();
+        CaseData caseData = MultipleUtil.getCaseData("3434232323");
+        caseData.setCaseRefNumberCount("2");
+        caseData.setPositionTypeCT("PositionTypeCT1");
+        DynamicFixedListType officeCT = new DynamicFixedListType();
+        DynamicValueType valueType = new DynamicValueType();
+        valueType.setCode(LONDON_CENTRAL_CASE_TYPE_ID);
+        officeCT.setValue(valueType);
+        caseData.setOfficeCT(officeCT);
+        submitEvent.setCaseData(caseData);
+        List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
+        ccdRequest.getCaseDetails().getCaseData().setCounterClaim("3434232323");
+        when(ccdClient.retrieveCasesElasticSearch(anyString(),anyString(), anyList())).thenReturn(submitEventList);
+        caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
+        assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
+        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
+        assertEquals("PositionTypeCT1", submitEventList.get(0).getCaseData().getPositionType());
+        assertEquals("Transferred to " + LONDON_CENTRAL_CASE_TYPE_ID, submitEventList.get(0).getCaseData().getLinkedCaseCT());
     }
 
     @Test
