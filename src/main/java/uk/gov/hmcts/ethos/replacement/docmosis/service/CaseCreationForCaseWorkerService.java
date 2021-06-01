@@ -16,8 +16,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
@@ -90,53 +92,73 @@ public class CaseCreationForCaseWorkerService {
         return true;
     }
 
+    private List<CaseData> getAllCasesToBeTransferred(CaseDetails caseDetails, String userToken) {
+        try {
+            CaseData caseData = caseDetails.getCaseData();
+            List<CaseData> cases = new ArrayList<>();
+            cases.add(caseData);
+            if (caseData.getCounterClaim() != null && !caseData.getCounterClaim().trim().isEmpty()) {
+                cases.addAll(ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(),Arrays.asList(caseData.getCounterClaim())).stream().map(submitEvent -> submitEvent.getCaseData()).collect(Collectors.toList()));
+            }
+            else if (caseData.getEccCases() != null && caseData.getEccCases().size() > 0) {
+                List<String> counterClaimList =  caseData.getEccCases().stream().map(eccCounterClaimTypeItem -> eccCounterClaimTypeItem.getValue().getCounterClaim()).collect(Collectors.toList());
+                cases.addAll(ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(),counterClaimList).stream().map(submitEvent -> submitEvent.getCaseData()).collect(Collectors.toList()));
+            }
+            return cases;
+        }
+        catch (Exception ex) {
+            throw new CaseCreationException(MESSAGE + caseDetails.getCaseTypeId() + ex.getMessage());
+        }
+    }
+
     public void createCaseTransfer(CaseDetails caseDetails, List<String> errors, String userToken) {
 
-        CaseData caseData = caseDetails.getCaseData();
+        //CaseData caseData = caseDetails.getCaseData();
+        List<CaseData> caseDataList = getAllCasesToBeTransferred(caseDetails, userToken);
+        for (CaseData caseData : caseDataList) {
 
-        if (!checkBfActionsCleared(caseData)) {
+            if (!checkBfActionsCleared(caseData)) {
+                errors.add(
+                        "There are one or more open Brought Forward actions that must be cleared before this case can "
+                                + "be transferred");
+            }
 
-            errors.add(
-                    "There are one or more open Brought Forward actions that must be cleared before this case can "
-                            + "be transferred");
+            if (!checkHearingsNotListed(caseData)) {
+
+                errors.add(
+                        "There are one or more hearings that have the status Listed. These must be updated before this "
+                                + "case can be transferred");
+            }
+
+            if (!errors.isEmpty()) {
+
+                return;
+
+            }
+
+            persistentQHelperService.sendCreationEventToSingles(
+                    userToken,
+                    caseDetails.getCaseTypeId(),
+                    caseDetails.getJurisdiction(),
+                    errors,
+                    new ArrayList<>(Collections.singletonList(caseData.getEthosCaseReference())),
+                    caseData.getOfficeCT().getValue().getCode(),
+                    caseData.getPositionTypeCT(),
+                    ccdGatewayBaseUrl,
+                    caseData.getReasonForCT(),
+                    SINGLE_CASE_TYPE,
+                    NO
+            );
+
+            caseData.setLinkedCaseCT("Transferred to " + caseData.getOfficeCT().getValue().getCode());
+            caseData.setPositionType(caseData.getPositionTypeCT());
+
+            log.info("Clearing the CT payload");
+
+            caseData.setOfficeCT(null);
+            caseData.setPositionTypeCT(null);
+            caseData.setStateAPI(null);
         }
-
-        if (!checkHearingsNotListed(caseData)) {
-
-            errors.add(
-                    "There are one or more hearings that have the status Listed. These must be updated before this "
-                            + "case can be transferred");
-        }
-
-        if (!errors.isEmpty()) {
-
-            return;
-
-        }
-
-        persistentQHelperService.sendCreationEventToSingles(
-                userToken,
-                caseDetails.getCaseTypeId(),
-                caseDetails.getJurisdiction(),
-                errors,
-                new ArrayList<>(Collections.singletonList(caseData.getEthosCaseReference())),
-                caseData.getOfficeCT().getValue().getCode(),
-                caseData.getPositionTypeCT(),
-                ccdGatewayBaseUrl,
-                caseData.getReasonForCT(),
-                SINGLE_CASE_TYPE,
-                NO
-        );
-
-        caseData.setLinkedCaseCT("Transferred to " + caseData.getOfficeCT().getValue().getCode());
-        caseData.setPositionType(caseData.getPositionTypeCT());
-
-        log.info("Clearing the CT payload");
-
-        caseData.setOfficeCT(null);
-        caseData.setPositionTypeCT(null);
-        caseData.setStateAPI(null);
-
     }
 
 }
