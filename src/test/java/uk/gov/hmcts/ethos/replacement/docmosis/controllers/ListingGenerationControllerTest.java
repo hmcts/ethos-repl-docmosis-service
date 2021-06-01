@@ -153,7 +153,7 @@ public class ListingGenerationControllerTest {
     @Test
     public void listingHearings() throws Exception {
         when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN))).thenReturn(listingDetails.getCaseData());
-        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class))).thenReturn(defaultValues);
         when(defaultValuesReaderService.getListingData(isA(ListingData.class), isA(DefaultValues.class))).thenReturn(listingData);
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(LISTING_HEARINGS_URL)

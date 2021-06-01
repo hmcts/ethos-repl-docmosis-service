@@ -213,7 +213,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void preDefaultValues() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class))).thenReturn(defaultValues);
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(PRE_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
@@ -227,7 +227,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void postDefaultValuesFromET1WithPositionTypeDefined() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class))).thenReturn(defaultValues);
         when(singleReferenceService.createReference(isA(String.class), isA(Integer.class))).thenReturn("5100001/2019");
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
@@ -242,7 +242,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void postDefaultValues() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class))).thenReturn(defaultValues);
         when(singleReferenceService.createReference(isA(String.class), isA(Integer.class))).thenReturn("5100001/2019");
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
@@ -257,7 +257,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void amendCaseDetails() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenReturn(defaultValues);
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class))).thenReturn(defaultValues);
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
                 .content(requestContent2.toString())
@@ -897,7 +897,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void preDefaultValuesError500() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(defaultValuesReaderService.getClaimantTypeOfClaimant()).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(PRE_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
@@ -908,7 +908,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void postDefaultValuesError500() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(POST_DEFAULT_VALUES_URL)
                 .content(requestContent.toString())
@@ -919,7 +919,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void amendCaseDetailsError500() throws Exception {
-        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class), isA(String.class))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
                 .content(requestContent.toString())

@@ -14,19 +14,9 @@ import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportDocHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.*;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -35,15 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static java.net.HttpURLConnection.HTTP_OK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LETTER_ADDRESS_ALLOCATED_OFFICE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.POST_DEFAULT_XLSX_FILE_PATH;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService.APPLICATION_DOCX_VALUE;
 
 @Slf4j
@@ -113,8 +95,7 @@ public class TornadoService {
     private DefaultValues getAllocatedCourtAddress(CaseData caseData, String caseTypeId, MultipleData multipleData) {
         if ((multipleData != null && isAllocatedOffice(caseTypeId, multipleData.getCorrespondenceScotType()))
                 || isAllocatedOffice(caseTypeId, caseData.getCorrespondenceScotType())) {
-            return defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH,
-                    caseData.getAllocatedOffice(), caseTypeId);
+            return defaultValuesReaderService.getDefaultValues(caseData.getAllocatedOffice(), caseTypeId);
         }
         return null;
     }
