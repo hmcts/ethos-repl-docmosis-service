@@ -84,6 +84,9 @@ public class CaseActionsForCaseWorkerControllerTest {
     private CaseCreationForCaseWorkerService caseCreationForCaseWorkerService;
 
     @MockBean
+    private CaseTransferService caseTransferService;
+
+    @MockBean
     private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
 
     @MockBean

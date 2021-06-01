@@ -23,6 +23,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.AddSingleCaseToMultipleSe
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCreationForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseManagementForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorkerService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseTransferService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseUpdateForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
@@ -55,6 +56,7 @@ public class CaseActionsForCaseWorkerController {
 
     private static final String LOG_MESSAGE = "received notification request for case reference :    ";
 
+    private final CaseTransferService caseTransferService;
     private final CaseCreationForCaseWorkerService caseCreationForCaseWorkerService;
     private final CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     private final CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService;
@@ -810,7 +812,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         List<String> errors = new ArrayList<>();
-        caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, userToken);
+        caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, userToken);
 
         return getCallbackRespEntityErrors(errors, ccdRequest.getCaseDetails().getCaseData());
     }
