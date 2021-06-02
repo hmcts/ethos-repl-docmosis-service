@@ -3,8 +3,10 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.Address;
@@ -14,6 +16,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import uk.gov.hmcts.ethos.replacement.docmosis.config.CaseDefaultValuesConfiguration;
+import uk.gov.hmcts.ethos.replacement.docmosis.config.TribunalOfficesConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,13 +25,18 @@ import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {
+        DefaultValuesReaderService.class,
+        TribunalOfficesService.class,
+})
+@EnableConfigurationProperties({CaseDefaultValuesConfiguration.class, TribunalOfficesConfiguration.class})
 public class DefaultValuesReaderServiceTest {
 
-    @InjectMocks
-    private DefaultValuesReaderService defaultValuesReaderService;
+    @Autowired
+    DefaultValuesReaderService defaultValuesReaderService;
 
-    private DefaultValues preDefaultValues;
+    private String defaultClaimantTypeOfClaimant;
     private DefaultValues postDefaultValuesManchester;
     private DefaultValues postDefaultValuesGlasgow;
     private DefaultValues postDefaultValuesAberdeen;
@@ -87,6 +96,8 @@ public class DefaultValuesReaderServiceTest {
 
     @Before
     public void setUp() {
+        defaultClaimantTypeOfClaimant = INDIVIDUAL_TYPE_CLAIMANT;
+
         listingData = getListingDataSetUp();
         manchesterCaseDetails = getCaseDetails(MANCHESTER_DEV_CASE_TYPE_ID);
         glasgowCaseDetails = getCaseDetails(SCOTLAND_DEV_CASE_TYPE_ID);
@@ -100,7 +111,7 @@ public class DefaultValuesReaderServiceTest {
         newcastleCaseDetails = getCaseDetails(NEWCASTLE_CASE_TYPE_ID);
         walesCaseDetails = getCaseDetails(WALES_CASE_TYPE_ID);
         watfordCaseDetails = getCaseDetails(WATFORD_CASE_TYPE_ID);
-        preDefaultValues = DefaultValues.builder().claimantTypeOfClaimant(INDIVIDUAL_TYPE_CLAIMANT).build();
+
         postDefaultValuesManchester = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
@@ -268,10 +279,10 @@ public class DefaultValuesReaderServiceTest {
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Ground Floor")
-                .tribunalCorrespondenceAddressLine2("Block C, Caledonian House")
-                .tribunalCorrespondenceAddressLine3("Greenmarket")
+                .tribunalCorrespondenceAddressLine2("Endeavour House")
+                .tribunalCorrespondenceAddressLine3("1 Greenmarket")
                 .tribunalCorrespondenceTown("Dundee")
-                .tribunalCorrespondencePostCode("DD1 4QG")
+                .tribunalCorrespondencePostCode("DD1 4QB")
                 .tribunalCorrespondenceTelephone("01382 221 578")
                 .tribunalCorrespondenceFax("01382 227 136")
                 .tribunalCorrespondenceDX("DX DD51")
@@ -289,84 +300,82 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("edinburghet@justice.gov.uk")
                 .build();
         caseData = new CaseData();
-
     }
 
     @Test
     public void getPreDefaultValues() {
-        DefaultValues preDefaultValues1 = defaultValuesReaderService.getDefaultValues(PRE_DEFAULT_XLSX_FILE_PATH, "", glasgowCaseDetails.getCaseTypeId());
-        assertEquals(preDefaultValues, preDefaultValues1);
+        assertEquals(defaultClaimantTypeOfClaimant, defaultValuesReaderService.getClaimantTypeOfClaimant());
     }
 
     @Test
     public void getManchesterPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", manchesterCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", manchesterCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesManchester, postDefaultValues1);
     }
 
     @Test
     public void getBristolPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", bristolCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", bristolCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesBristol, postDefaultValues1);
     }
 
     @Test
     public void getLeedsPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", leedsCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", leedsCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesLeeds, postDefaultValues1);
     }
 
     @Test
     public void getLondonCentralPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", londonCentralCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", londonCentralCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesLondonCentral, postDefaultValues1);
     }
 
     @Test
     public void getLondonEastPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", londonEastCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues("", londonEastCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesLondonEast, postDefaultValues1);
     }
 
     @Test
     public void getLondonSouthPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", londonSouthCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", londonSouthCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesLondonSouth, postDefaultValues1);
     }
 
     @Test
     public void getMidlandsEastPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", midlandsEastCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", midlandsEastCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesMidlandsEast, postDefaultValues1);
     }
 
     @Test
     public void getMidlandsWestPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", midlandsWestCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", midlandsWestCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesMidlandsWest, postDefaultValues1);
     }
 
     @Test
     public void getNewcastlePostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", newcastleCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", newcastleCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesNewcastle, postDefaultValues1);
     }
 
     @Test
     public void getWalesPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", walesCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", walesCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesWales, postDefaultValues1);
     }
 
     @Test
     public void getWatfordPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", watfordCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", watfordCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesWatford, postDefaultValues1);
     }
 
     @Test
     public void getGlasgowDefaultPostDefaultValues() {
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, "", glasgowCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( "", glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesGlasgow, postDefaultValues1);
     }
 
@@ -389,7 +398,7 @@ public class DefaultValuesReaderServiceTest {
                 + "correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, "
                 + "addressLabelsAttributesType=null, caseNotes=null, claimantWorkAddress=null, "
                 + "claimantRepresentedQuestion=null, managingOffice=Glasgow, allocatedOffice=null, "
-                + "caseSource=Manually Created, et3Received=null, conciliationTrack=null, counterClaim=null, "
+                + "caseSource=Manually Created, conciliationTrack=null, counterClaim=null, eccCases=null, "
                 + "restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, "
                 + "targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, "
                 + "docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, multipleRefNumber=null, "
@@ -469,8 +478,8 @@ public class DefaultValuesReaderServiceTest {
                 + "addressLabelCollection=null, addressLabelsAttributesType=null, caseNotes=null, "
                 + "claimantWorkAddress=ClaimantWorkAddressType(claimantWorkAddress=null, "
                 + "claimantWorkPhoneNumber=null), claimantRepresentedQuestion=null, managingOffice=Glasgow, "
-                + "allocatedOffice=null, caseSource=Manually Created, et3Received=null, conciliationTrack=null, "
-                + "counterClaim=null, restrictedReporting=null, printHearingDetails=null, "
+                + "allocatedOffice=null, caseSource=Manually Created, conciliationTrack=null, "
+                + "counterClaim=null, eccCases=null, restrictedReporting=null, printHearingDetails=null, "
                 + "printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, EQP=null, "
                 + "flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, "
                 + "multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, "
@@ -492,28 +501,28 @@ public class DefaultValuesReaderServiceTest {
     @Test
     public void getGlasgowOfficePostDefaultValues() {
         glasgowCaseDetails.getCaseData().setManagingOffice(GLASGOW_OFFICE);
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, GLASGOW_OFFICE, glasgowCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( GLASGOW_OFFICE, glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesGlasgow.toString(), postDefaultValues1.toString());
     }
 
     @Test
     public void getAberdeenOfficePostDefaultValues() {
         glasgowCaseDetails.getCaseData().setManagingOffice(ABERDEEN_OFFICE);
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, ABERDEEN_OFFICE, glasgowCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( ABERDEEN_OFFICE, glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesAberdeen.toString(), postDefaultValues1.toString());
     }
 
     @Test
     public void getDundeeOfficePostDefaultValues() {
         glasgowCaseDetails.getCaseData().setManagingOffice(DUNDEE_OFFICE);
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, DUNDEE_OFFICE, glasgowCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( DUNDEE_OFFICE, glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesDundee, postDefaultValues1);
     }
 
     @Test
     public void getEdinburghOfficePostDefaultValues() {
         glasgowCaseDetails.getCaseData().setManagingOffice(EDINBURGH_OFFICE);
-        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues(POST_DEFAULT_XLSX_FILE_PATH, EDINBURGH_OFFICE, glasgowCaseDetails.getCaseTypeId());
+        DefaultValues postDefaultValues1 = defaultValuesReaderService.getDefaultValues( EDINBURGH_OFFICE, glasgowCaseDetails.getCaseTypeId());
         assertEquals(postDefaultValuesEdinburgh, postDefaultValues1);
     }
 

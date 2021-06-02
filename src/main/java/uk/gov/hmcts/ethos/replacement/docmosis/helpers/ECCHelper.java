@@ -147,7 +147,6 @@ public class ECCHelper {
         caseData.setCaseType(SINGLE_CASE_TYPE);
         caseData.setCaseSource(originalCaseData.getCaseSource());
         caseData.setCounterClaim(originalCaseData.getEthosCaseReference());
-        caseData.setCcdID(originalId);
         caseData.setManagingOffice(originalCaseData.getManagingOffice() != null
                 ? originalCaseData.getManagingOffice() : "");
         caseData.setAllocatedOffice(originalCaseData.getAllocatedOffice() != null

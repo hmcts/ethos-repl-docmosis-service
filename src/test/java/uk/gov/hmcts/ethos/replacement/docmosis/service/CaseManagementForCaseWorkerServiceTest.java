@@ -12,6 +12,7 @@ import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.*;
+import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.*;
@@ -47,6 +48,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     private CCDRequest ccdRequest15;
     private CCDRequest manchesterCcdRequest;
     private SubmitEvent submitEvent;
+
     @MockBean
     private CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     @MockBean
@@ -97,6 +99,15 @@ public class CaseManagementForCaseWorkerServiceTest {
         casePreAcceptType.setCaseAccepted(YES);
         caseData.setPreAcceptCase(casePreAcceptType);
         caseData.setCaseRefECC("11111");
+
+        EccCounterClaimTypeItem eccCounterClaimTypeItem = new EccCounterClaimTypeItem();
+        EccCounterClaimType counterClaimType = new EccCounterClaimType();
+        counterClaimType.setCounterClaim("72632632");
+        eccCounterClaimTypeItem.setId(UUID.randomUUID().toString());
+        eccCounterClaimTypeItem.setValue(counterClaimType);
+
+
+        caseData.setEccCases(Arrays.asList(eccCounterClaimTypeItem));
         caseData.setRespondentECC(createRespondentECC());
         manchesterCaseDetails.setCaseData(caseData);
         manchesterCaseDetails.setCaseId("123456");
@@ -133,6 +144,27 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.caseDataDefaults(caseData);
         assertEquals("Anton Juliet Rodriguez", caseData.getClaimant());
+    }
+
+    @Test
+    public void caseDataDefaultsResponseReceived() {
+        CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
+        caseManagementForCaseWorkerService.caseDataDefaults(caseData);
+        for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
+            assertEquals(NO, respondentSumTypeItem.getValue().getResponseReceived());
+        }
+    }
+
+    @Test
+    public void caseDataDefaultsResponseReceivedDoesNotChange() {
+        CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
+        caseData.getRespondentCollection().get(0).getValue().setResponseReceived(YES);
+        caseManagementForCaseWorkerService.caseDataDefaults(caseData);
+        assertEquals(YES,caseData.getRespondentCollection().get(0).getValue().getResponseReceived());
+        for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
+            if (respondentSumTypeItem != caseData.getRespondentCollection().get(0))
+            assertEquals(NO, respondentSumTypeItem.getValue().getResponseReceived());
+        }
     }
 
     @Test
@@ -412,8 +444,8 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void createECC() {
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
-        assertEquals("123", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
-                new ArrayList<>(), ABOUT_TO_SUBMIT_EVENT_CALLBACK).getCcdID());
+        assertEquals("11111", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), ABOUT_TO_SUBMIT_EVENT_CALLBACK).getCaseRefECC());
     }
 
     @Test
@@ -422,6 +454,31 @@ public class CaseManagementForCaseWorkerServiceTest {
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
         assertEquals("11111", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
                 new ArrayList<>(), SUBMITTED_CALLBACK).getCaseRefECC());
+    }
+
+    @Test
+    public void linkOriginalCaseECCCounterClaims() {
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        assertEquals("72632632", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases().get(0).getValue().getCounterClaim());
+        EccCounterClaimTypeItem c1 = new EccCounterClaimTypeItem();
+        EccCounterClaimTypeItem c2 = new EccCounterClaimTypeItem();
+        EccCounterClaimType counterClaimType1 = new EccCounterClaimType();
+        EccCounterClaimType counterClaimType2 = new EccCounterClaimType();
+        counterClaimType1.setCounterClaim("72632632");
+        counterClaimType2.setCounterClaim("63467343");
+        c1.setId(UUID.randomUUID().toString());
+        c2.setId(UUID.randomUUID().toString());
+        c1.setValue(counterClaimType1);
+        c2.setValue(counterClaimType2);
+        manchesterCcdRequest.getCaseDetails().getCaseData().setEccCases(Arrays.asList(c1,c2));
+        when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
+                .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
+        assertEquals(c1.getValue().getCounterClaim(), caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases().get(0).getValue().getCounterClaim());
+        assertEquals(c2.getValue().getCounterClaim(), caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), SUBMITTED_CALLBACK).getEccCases().get(1).getValue().getCounterClaim());
     }
 
     @Test(expected = Exception.class)

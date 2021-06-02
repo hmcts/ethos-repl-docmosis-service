@@ -75,7 +75,11 @@ public class MultipleBatchUpdate3Service {
                         || (multipleData.getBatchUpdateJurisdiction() != null
                         && !multipleData.getBatchUpdateJurisdiction().getValue().getCode().equals(SELECT_NONE_VALUE))
                         || (multipleData.getBatchUpdateRespondent() != null
-                        && !multipleData.getBatchUpdateRespondent().getValue().getCode().equals(SELECT_NONE_VALUE)));
+                        && !multipleData.getBatchUpdateRespondent().getValue().getCode().equals(SELECT_NONE_VALUE))
+                        || (multipleData.getBatchUpdateJudgment() != null
+                        && !multipleData.getBatchUpdateJudgment().getValue().getCode().equals(SELECT_NONE_VALUE))
+                        || (multipleData.getBatchUpdateRespondentRep() != null
+                        && !multipleData.getBatchUpdateRespondentRep().getValue().getCode().equals(SELECT_NONE_VALUE)));
     }
 
 }

@@ -10,8 +10,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.POST_DEFAULT_XLSX_FILE_PATH;
-
 @Slf4j
 @Service("CaseUpdateForCaseWorkerService")
 public class CaseUpdateForCaseWorkerService {
@@ -38,7 +36,7 @@ public class CaseUpdateForCaseWorkerService {
                     ? caseDetails.getCaseData().getManagingOffice()
                     : "";
             DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(
-                    POST_DEFAULT_XLSX_FILE_PATH, managingOffice, caseDetails.getCaseTypeId());
+                    managingOffice, caseDetails.getCaseTypeId());
             ccdRequest.getCaseDetails().getCaseData().setPositionType(defaultValues.getPositionType());
             log.info("Post Default values added to the case: " + defaultValues);
             return ccdClient.submitEventForCase(authToken, caseDetails.getCaseData(),

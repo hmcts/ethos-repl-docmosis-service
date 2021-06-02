@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
@@ -150,6 +151,43 @@ public class MultipleSingleMidEventValidationService {
         }
 
         multipleData.setBatchUpdateRespondent(populateDynamicList(respondentCollection));
+
+        log.info("Checking JudgementCollection");
+
+        List<DynamicValueType> judgementCollection = new ArrayList<>();
+
+        if (submitEvent.getCaseData().getJudgementCollection() != null
+                && !submitEvent.getCaseData().getJudgementCollection().isEmpty()) {
+
+            for (int i = 0; i < submitEvent.getCaseData().getJudgementCollection().size(); i++) {
+                JudgementTypeItem judgementTypeItem = submitEvent.getCaseData().getJudgementCollection().get(i);
+                judgementCollection.add(Helper.getDynamicCodeLabel(
+                        judgementTypeItem.getId(), i
+                                + " - " + judgementTypeItem.getValue().getJudgementType()
+                                + " - " + judgementTypeItem.getValue().getDateJudgmentMade()));
+            }
+        }
+
+        multipleData.setBatchUpdateJudgment(populateDynamicList(judgementCollection));
+
+        log.info("Checking RepCollection");
+
+        List<DynamicValueType> repCollection = new ArrayList<>();
+
+        if (submitEvent.getCaseData().getRepCollection() != null) {
+
+            repCollection = submitEvent.getCaseData().getRepCollection().stream()
+                    .map(representedTypeRItem ->
+                            Helper.getDynamicCodeLabel(representedTypeRItem.getId(),
+                                    representedTypeRItem.getValue().getNameOfRepresentative()
+                                            + " ("
+                                            + representedTypeRItem.getValue().getRespRepName()
+                                            + ")" ))
+                    .collect(Collectors.toList());
+
+        }
+
+        multipleData.setBatchUpdateRespondentRep(populateDynamicList(repCollection));
 
     }
 

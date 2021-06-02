@@ -9,8 +9,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
@@ -384,9 +386,19 @@ public class MultipleHelperServiceTest {
         jurCodesTypeItem.setValue(jurCodesType);
         submitEventList.get(0).getCaseData().setJurCodesCollection(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
 
+        JudgementTypeItem judgementTypeItem = new JudgementTypeItem();
+        JudgementType judgementType = new JudgementType();
+        judgementType.setJudgementType("JudgementType");
+        judgementType.setDateJudgmentMade("25/01/2021");
+        judgementTypeItem.setValue(judgementType);
+        judgementTypeItem.setId("JD");
+        submitEventList.get(0).getCaseData().setJudgementCollection(new ArrayList<>(Collections.singletonList(judgementTypeItem)));
+
         multipleDetails.getCaseData().setBatchUpdateClaimantRep(MultipleUtil.generateDynamicList("Rep"));
         multipleDetails.getCaseData().setBatchUpdateJurisdiction(MultipleUtil.generateDynamicList("AA"));
         multipleDetails.getCaseData().setBatchUpdateRespondent(MultipleUtil.generateDynamicList("Andrew Smith"));
+        multipleDetails.getCaseData().setBatchUpdateJudgment(MultipleUtil.generateDynamicList("JD"));
+        multipleDetails.getCaseData().setBatchUpdateRespondentRep(MultipleUtil.generateDynamicList("1"));
 
         multipleHelperService.sendUpdatesToSinglesWithConfirmation(
                 userToken,

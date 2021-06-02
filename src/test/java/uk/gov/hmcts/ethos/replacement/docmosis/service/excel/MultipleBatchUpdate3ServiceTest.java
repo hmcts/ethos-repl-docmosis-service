@@ -50,6 +50,9 @@ public class MultipleBatchUpdate3ServiceTest {
         multipleDetails.getCaseData().setBatchUpdateClaimantRep(MultipleUtil.generateDynamicList(SELECT_NONE_VALUE));
         multipleDetails.getCaseData().setBatchUpdateJurisdiction(MultipleUtil.generateDynamicList("AA"));
         multipleDetails.getCaseData().setBatchUpdateRespondent(MultipleUtil.generateDynamicList("Andrew Smith"));
+        multipleDetails.getCaseData().setBatchUpdateJudgment(MultipleUtil.generateDynamicList("JD"));
+        multipleDetails.getCaseData().setBatchUpdateRespondentRep(MultipleUtil
+                .generateDynamicList("Respondent Rep"));
 
         multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
 
@@ -81,6 +84,8 @@ public class MultipleBatchUpdate3ServiceTest {
         multipleDetails.getCaseData().setBatchUpdateClaimantRep(MultipleUtil.generateDynamicList(SELECT_NONE_VALUE));
         multipleDetails.getCaseData().setBatchUpdateJurisdiction(MultipleUtil.generateDynamicList(SELECT_NONE_VALUE));
         multipleDetails.getCaseData().setBatchUpdateRespondent(MultipleUtil.generateDynamicList(SELECT_NONE_VALUE));
+        multipleDetails.getCaseData().setBatchUpdateJudgment(MultipleUtil.generateDynamicList(SELECT_NONE_VALUE));
+        multipleDetails.getCaseData().setBatchUpdateRespondentRep(MultipleUtil.generateDynamicList(SELECT_NONE_VALUE));
 
         multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
 

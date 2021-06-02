@@ -213,6 +213,8 @@ public class MultiplesHelper {
         multipleData.setBatchUpdateRespondent(null);
         multipleData.setBatchUpdateJurisdiction(null);
         multipleData.setBatchUpdateClaimantRep(null);
+        multipleData.setBatchUpdateJudgment(null);
+        multipleData.setBatchUpdateRespondentRep(null);
 
         multipleData.setCorrespondenceType(null);
         multipleData.setCorrespondenceScotType(null);
