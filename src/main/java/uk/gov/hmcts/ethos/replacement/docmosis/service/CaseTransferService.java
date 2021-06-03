@@ -3,12 +3,12 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
@@ -34,15 +34,25 @@ public class CaseTransferService {
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
 
-    private List<CaseData> getAllCasesToBeTransferred(CaseDetails caseDetails, String userToken) {
+    private CaseData getOriginalCase(CaseDetails caseDetails, String userToken) {
         try {
             CaseData caseData = caseDetails.getCaseData();
+            if (caseData.getCounterClaim() != null && !caseData.getCounterClaim().trim().isEmpty()) {
+             List<SubmitEvent> submitEvents =  ccdClient.retrieveCasesElasticSearch(userToken, caseDetails.getCaseTypeId(), Arrays.asList(caseData.getCounterClaim()));
+            return submitEvents.get(0).getCaseData();
+            }
+            return caseDetails.getCaseData();
+        }
+         catch (Exception ex) {
+            throw new CaseCreationException(MESSAGE + caseDetails.getCaseTypeId() + ex.getMessage());
+        }
+    }
+    private List<CaseData> getAllCasesToBeTransferred(CaseDetails caseDetails, String userToken) {
+        try {
+            CaseData caseData = getOriginalCase(caseDetails, userToken);
             List<CaseData> cases = new ArrayList<>();
             cases.add(caseData);
-            if (caseData.getCounterClaim() != null && !caseData.getCounterClaim().trim().isEmpty()) {
-                cases.addAll(ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(), Arrays.asList(caseData.getCounterClaim())).stream().map(submitEvent -> submitEvent.getCaseData()).collect(Collectors.toList()));
-            }
-            else if (caseData.getEccCases() != null && !caseData.getEccCases().isEmpty()) {
+             if (caseData.getEccCases() != null && !caseData.getEccCases().isEmpty()) {
                 List<String> counterClaimList =  caseData.getEccCases().stream().map(eccCounterClaimTypeItem -> eccCounterClaimTypeItem.getValue().getCounterClaim()).collect(Collectors.toList());
                 cases.addAll(ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(),counterClaimList).stream().map(submitEvent -> submitEvent.getCaseData()).collect(Collectors.toList()));
             }
