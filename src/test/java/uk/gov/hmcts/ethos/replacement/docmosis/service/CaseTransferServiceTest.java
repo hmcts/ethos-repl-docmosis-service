@@ -14,16 +14,16 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.EccCounterClaimType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -63,6 +63,7 @@ public class CaseTransferServiceTest {
         caseDetails.setState(ACCEPTED_STATE);
         ccdRequest.setCaseDetails(caseDetails);
         submitEvent = new SubmitEvent();
+        submitEvent.setCaseData(caseData);
         authToken = "authToken";
     }
 
@@ -85,15 +86,24 @@ public class CaseTransferServiceTest {
         valueType.setCode(LONDON_CENTRAL_CASE_TYPE_ID);
         officeCT.setValue(valueType);
         caseData.setOfficeCT(officeCT);
-        submitEvent.setCaseData(caseData);
+        SubmitEvent submitEvent1 = new SubmitEvent();
+        submitEvent1.setCaseData(caseData);
         List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
+        List<SubmitEvent> submitEventList1 = new ArrayList<>(Collections.singletonList(submitEvent1));
         ccdRequest.getCaseDetails().getCaseData().setCounterClaim("3434232323");
-        when(ccdClient.retrieveCasesElasticSearch(anyString(),anyString(), anyList())).thenReturn(submitEventList);
+        EccCounterClaimTypeItem item = new EccCounterClaimTypeItem();
+        EccCounterClaimType type = new EccCounterClaimType();
+        type.setCounterClaim("2123456/2020");
+        item.setId(UUID.randomUUID().toString());
+        item.setValue(type);
+        caseData.setEccCases(Arrays.asList(item));
+        when(ccdClient.retrieveCasesElasticSearch(authToken,ccdRequest.getCaseDetails().getCaseTypeId(), Arrays.asList("3434232323"))).thenReturn(submitEventList1);
+        when(ccdClient.retrieveCasesElasticSearch(authToken,ccdRequest.getCaseDetails().getCaseTypeId(), Arrays.asList("2123456/2020"))).thenReturn(submitEventList);
         caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
         assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
-        assertEquals("PositionTypeCT1", submitEventList.get(0).getCaseData().getPositionType());
-        assertEquals("Transferred to " + LONDON_CENTRAL_CASE_TYPE_ID, submitEventList.get(0).getCaseData().getLinkedCaseCT());
+        assertEquals("PositionTypeCT1", submitEventList1.get(0).getCaseData().getPositionType());
+        assertEquals("Transferred to " + LONDON_CENTRAL_CASE_TYPE_ID, submitEventList1.get(0).getCaseData().getLinkedCaseCT());
     }
 
     @Test
