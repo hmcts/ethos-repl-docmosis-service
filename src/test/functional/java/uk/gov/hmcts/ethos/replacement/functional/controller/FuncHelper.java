@@ -7,11 +7,9 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Assertions;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
@@ -19,7 +17,6 @@ import uk.gov.hmcts.ethos.replacement.functional.util.JsonUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import static io.restassured.RestAssured.baseURI;
 import static uk.gov.hmcts.ethos.replacement.functional.util.ResponseUtil.getProperty;
@@ -27,13 +24,24 @@ import static uk.gov.hmcts.ethos.replacement.functional.util.ResponseUtil.getPro
 @TestPropertySource(locations = "classpath:config.properties")
 public class FuncHelper {
 
-    @Value("${test-url}")
-    private String testUrl;
+    public String environment = "demo";
 
     private String AUTH_TOKEN;
 
     public FuncHelper() throws IOException {
-        baseURI = getProperty("demo.docmosis.api.url");
+        baseURI = getProperty(environment + ".docmosis.api.url");
+        FunctionalCCDReq functionalCcdReq = new FunctionalCCDReq();
+    }
+
+
+    public Integer createIndividualCase(CCDRequest ccdRequest) throws IOException {
+        loadAuthToken();
+            Response response = RestAssured.given()
+                .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
+                .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
+                .body(ccdRequest)
+                .post("/createCase");
+        return response.getStatusCode();
     }
 
     public CCDRequest getCcdRequest(String topLevel, String childLevel, boolean isScotland, String testData)
@@ -45,26 +53,6 @@ public class FuncHelper {
             throws IOException {
         String payload = FileUtils.readFileToString(testDataFile, "UTF-8");
         return getCcdRequest(topLevel, childLevel, isScotland, payload);
-    }
-
-    public String createIndividualCase(List<String> caseList, boolean isScotland, String testData) throws IOException {
-        int count = 1;
-        String ethosCaseRef = "";
-        loadAuthToken();
-        for(String caseDataFilePath: caseList) {
-            ethosCaseRef = RandomStringUtils.randomNumeric(10);
-            String caseDetails = FileUtils.readFileToString(new File(caseDataFilePath), "UTF-8");
-            caseDetails = caseDetails.replace("#ETHOS-CASE-REFERENCE#", ethosCaseRef);
-            CCDRequest ccdRequest = getCcdRequest("1", "", isScotland, caseDetails);
-            Response response = RestAssured.given()
-                .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
-                .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
-                .body(ccdRequest)
-                .post("/createCase");
-//            Assertions.assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusCode());
-            count++;
-        }
-        return testData.replace("#ETHOS-CASE-REFERENCE" + count + "#", ethosCaseRef);
     }
 
     public Response getBulkResponse(BulkRequest bulkRequest, String uri) throws IOException {
@@ -92,7 +80,6 @@ public class FuncHelper {
         if(!AUTH_TOKEN.startsWith("Bearer")) {
             AUTH_TOKEN = "Bearer " + AUTH_TOKEN;
         }
-        System.out.println(AUTH_TOKEN);
         return AUTH_TOKEN;
     }
 
@@ -100,11 +87,10 @@ public class FuncHelper {
         RestAssured.config = RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames());
         RequestSpecification httpRequest = RestAssured.given();
         httpRequest.header("Accept", "*/*");
-//        httpRequest.header("Host", userAuthIdamHost);
         httpRequest.header("Content-Type", "application/x-www-form-urlencoded");
-        httpRequest.formParam("username", getProperty("demo.ccd.username"));
-        httpRequest.formParam("password",  getProperty("demo.ccd.password"));
-        Response response = httpRequest.post(getProperty("demo.idam.auth.url"));
+        httpRequest.formParam("username", getProperty("local.ccd.username"));
+        httpRequest.formParam("password",  getProperty("local.ccd.password"));
+        Response response = httpRequest.post(getProperty("local.idam.auth.url"));
         Assertions.assertEquals(HttpStatus.SC_OK, response.statusCode());
         return response.body().jsonPath().getString("access_token");
     }
