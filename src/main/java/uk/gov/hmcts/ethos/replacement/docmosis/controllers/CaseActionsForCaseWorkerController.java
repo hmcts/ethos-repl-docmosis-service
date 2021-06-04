@@ -17,6 +17,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class CaseActionsForCaseWorkerController {
 
     private static final String LOG_MESSAGE = "received notification request for case reference :    ";
 
+    private final CaseTransferService caseTransferService;
     private final CaseCreationForCaseWorkerService caseCreationForCaseWorkerService;
     private final CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     private final CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService;
@@ -785,7 +787,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         List<String> errors = new ArrayList<>();
-        caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, userToken);
+        caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, userToken);
 
         return getCallbackRespEntityErrors(errors, ccdRequest.getCaseDetails().getCaseData());
     }
