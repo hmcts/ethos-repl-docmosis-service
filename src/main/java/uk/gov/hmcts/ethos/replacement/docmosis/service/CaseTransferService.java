@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import com.google.common.base.Strings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,11 +38,14 @@ public class CaseTransferService {
     private CaseData getOriginalCase(CaseDetails caseDetails, String userToken) {
         try {
             CaseData caseData = caseDetails.getCaseData();
-            if (caseData.getCounterClaim() != null && !caseData.getCounterClaim().trim().isEmpty()) {
+            if (!Strings.isNullOrEmpty(caseData.getCounterClaim())) {
              List<SubmitEvent> submitEvents =  ccdClient.retrieveCasesElasticSearch(userToken, caseDetails.getCaseTypeId(), Arrays.asList(caseData.getCounterClaim()));
             return submitEvents.get(0).getCaseData();
             }
-            return caseDetails.getCaseData();
+            else {
+                return caseDetails.getCaseData();
+            }
+
         }
          catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + caseDetails.getCaseTypeId() + ex.getMessage());
@@ -80,10 +84,10 @@ public class CaseTransferService {
                         "There are one or more hearings that have the status Listed. These must be updated before the case "
                                 + caseData.getEthosCaseReference() + " can be transferred");
             }
+        }
 
-            if (!errors.isEmpty()) {
-                return;
-            }
+        if (!errors.isEmpty()) {
+            return;
         }
         for (CaseData caseData : caseDataList) {
             persistentQHelperService.sendCreationEventToSingles(
