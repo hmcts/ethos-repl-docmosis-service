@@ -623,8 +623,8 @@ public class ListingServiceTest {
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
                 "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=[BFDateTypeItem(id=222, " +
-                "value=BFDateType(caseReference=4210000/2019, broughtForwardAction=null, broughtForwardDate=2019-12-12, broughtForwardDateCleared=, " +
-                "broughtForwardDateReason=null))], clerkResponsible=null, reportType=Brought Forward Report, documentName=null, showAll=null, " +
+                "value=BFDateType(caseNumber=4210000/2019, action=null, dateEntered=null, bfDate=2019-12-12, cleared=, " +
+                "notes=null))], clerkResponsible=null, reportType=Brought Forward Report, documentName=null, showAll=null, " +
                 "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, " +
                 "localReportsDetailHdr=null, localReportsDetail=null)";
         when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
@@ -655,9 +655,9 @@ public class ListingServiceTest {
                 "listingDateFrom=2019-12-09, listingDateTo=2019-12-12, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, " +
                 "listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
                 "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=[BFDateTypeItem(id=111, " +
-                "value=BFDateType(caseReference=4210000/2019, broughtForwardAction=null, broughtForwardDate=2019-12-11, " +
-                "broughtForwardDateCleared=, broughtForwardDateReason=null)), BFDateTypeItem(id=222, value=BFDateType(caseReference=4210000/2019, " +
-                "broughtForwardAction=null, broughtForwardDate=2019-12-12, broughtForwardDateCleared=, broughtForwardDateReason=null))], " +
+                "value=BFDateType(caseNumber=4210000/2019, action=null, dateEntered=null, bfDate=2019-12-11, " +
+                "cleared=, notes=null)), BFDateTypeItem(id=222, value=BFDateType(caseNumber=4210000/2019, " +
+                "action=null, dateEntered=null, bfDate=2019-12-12, cleared=, notes=null))], " +
                 "clerkResponsible=null, reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, " +
                 "localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, " +
                 "localReportsDetail=null)";

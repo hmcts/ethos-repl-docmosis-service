@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -185,10 +186,17 @@ public class ReportHelper {
             boolean clerkResponsibleIsValid = validateClerkResponsible(listingData, caseData);
             if (matchingDateIsValid && clerkResponsibleIsValid) {
                 BFDateType bfDateType = new BFDateType();
-                bfDateType.setCaseReference(caseData.getEthosCaseReference());
-                bfDateType.setBroughtForwardDate(bfActionType.getBfDate());
-                bfDateType.setBroughtForwardDateReason(bfActionType.getNotes());
-                bfDateType.setBroughtForwardDateCleared(bfActionType.getCleared());
+                bfDateType.setCaseNumber(caseData.getEthosCaseReference());
+                if (!Strings.isNullOrEmpty(bfActionType.getAllActions())){
+                    bfDateType.setAction(bfActionType.getAllActions());
+                }
+                else if (!Strings.isNullOrEmpty(bfActionType.getCwActions())){
+                    bfDateType.setAction(bfActionType.getCwActions());
+                }
+                bfDateType.setDateEntered(bfActionType.getDateEntered());
+                bfDateType.setBfDate(bfActionType.getBfDate());
+                bfDateType.setCleared(bfActionType.getCleared());
+                bfDateType.setNotes(bfActionType.getNotes());
                 bfDateTypeItem.setId(String.valueOf(bfActionTypeItem.getId()));
                 bfDateTypeItem.setValue(bfDateType);
             }
