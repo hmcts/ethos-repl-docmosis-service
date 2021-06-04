@@ -9,6 +9,8 @@ plugins {
     id 'net.ltgt.apt' version '0.10'
     id 'com.github.ben-manes.versions' version '0.36.0'
     id 'org.sonarqube' version '3.1.1'
+    id 'au.com.dius.pact' version '4.1.0'
+    id 'io.freefair.lombok' version '5.3.0'
 }
 
 group = 'uk.gov.hmcts.ethos.replacement'
@@ -73,11 +75,22 @@ sourceSets {
         compileClasspath += main.output + test.output
         runtimeClasspath += main.output + test.output
     }
+    contractTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            java.srcDir 'src/test/contractTest/java'
+            resources.srcDir 'src/test/contractTest/resources'
+        }
+        resources.srcDir file('src/test/contractTest/resources')
+    }
 }
 
 configurations {
     functionalCompile.extendsFrom testCompile
     functionalRuntime.extendsFrom testRuntime
+    contractTestCompile.extendsFrom testCompile
+    contractTestRuntime.extendsFrom testRuntime
 }
 
 test {
@@ -107,6 +120,46 @@ task functional(type: Test, description: 'Runs the functional tests.', group: 'V
     maxHeapSize = '1G'
 }
 
+project.ext {
+    pacticipant = 'ethos_replDocmosisService'
+    pacticipantVersion = getCheckedOutGitCommitHash()
+}
+
+def getCheckedOutGitCommitHash() {
+    'git rev-parse --verify --shirt HEAD'.execute().text.trim()
+}
+
+task runContractTests(type: Test, description: 'Runs contract tests.', group: 'Verification') {
+    onlyIf {
+        return System.env.SKIP_CONTRACT_TESTS == null || System.env.SKIP_CONTRACT_TESTS == 'false'
+    }
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.contractTest.output.classesDirs
+    classpath = sourceSets.contractTest.runtimeClasspath
+    systemProperty 'pact.rootDir', "pacts"
+    testLogging.showStandardStreams = true
+}
+
+task runAndPublishConsumerPactTests(type: Test, description: 'Publish pact test to broker.', group: 'Verification') {
+    logger.lifecycle("Runs pact consumer Tests")
+
+    testClassesDirs = sourceSets.contractTest.output.classesDirs
+    classpath = sourceSets.contractTest.runtimeClasspath
+}
+
+runAndPublishConsumerPactTests.finalizedBy pactPublish
+
+pact {
+    broker {
+        pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:80'
+    }
+    publish {
+        pactDirectory = 'pacts'
+        tags = [System.getenv("PACT_BRANCH_NAME") ?: 'Dev']
+        version = project.pacticipantVersion
+    }
+}
+
 // https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
 dependencyCheck {
     // Specifies if the build should be failed if a CVSS score above a specified level is identified.
@@ -127,7 +180,8 @@ repositories {
 def versions = [
         springfoxSwagger: '2.9.2',
         logging         : '5.1.7',
-        serenity        : '2.3.31'
+        serenity        : '2.3.31',
+        pact_version    : '4.1.7'
 ]
 
 dependencies {
@@ -178,6 +232,22 @@ dependencies {
     }
     testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+
+    // Contract Tests
+    contractTestCompile group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
+    contractTestCompile group: 'au.com.dius.pact.consumer', name: 'java8', version: versions.pact_version
+    contractTestCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.3.9.RELEASE'
+    contractTestCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit_jupiter
+    contractTestRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit_jupiter
+    contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit_jupiter
+    contractTestRuntime group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.7.0'
+    contractTestImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.4'
+    contractTestCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.4'
+    contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.7.RELEASE'
+    contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-netflix-ribbon', version: '2.2.7.RELEASE'
+
+    contractTestImplementation sourceSets.main.runtimeClasspath
+    contractTestImplementation sourceSets.test.runtimeClasspath
 }
 
 bootJar {
