@@ -8,7 +8,7 @@ import com.microsoft.azure.servicebus.primitives.ServiceBusException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.LocalQueueClient;
+//import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.LocalQueueClient;
 
 @Configuration
 public class QueueClientConfiguration {
