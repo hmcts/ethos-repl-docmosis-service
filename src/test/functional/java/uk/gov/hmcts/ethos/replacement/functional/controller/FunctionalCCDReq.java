@@ -29,7 +29,7 @@ public class FunctionalCCDReq {
         caseDetails.setCaseId("1234567812345678");
         caseDetails.setJurisdiction("EMPLOYMENT");
         caseDetails.setState("Submitted");
-        caseDetails.setCaseTypeId("LondonS");
+        caseDetails.setCaseTypeId("LondonSouth");
         caseDetails.setCreatedDate(LocalDateTime.now());
         caseDetails.setLastModified(LocalDateTime.now());
         caseDetails.setCaseData(CDData());

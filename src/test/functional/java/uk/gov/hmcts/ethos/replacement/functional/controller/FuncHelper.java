@@ -88,9 +88,9 @@ public class FuncHelper {
         RequestSpecification httpRequest = RestAssured.given();
         httpRequest.header("Accept", "*/*");
         httpRequest.header("Content-Type", "application/x-www-form-urlencoded");
-        httpRequest.formParam("username", getProperty("local.ccd.username"));
-        httpRequest.formParam("password",  getProperty("local.ccd.password"));
-        Response response = httpRequest.post(getProperty("local.idam.auth.url"));
+        httpRequest.formParam("username", getProperty(environment + ".ccd.username"));
+        httpRequest.formParam("password",  getProperty(environment + ".ccd.password"));
+        Response response = httpRequest.post(getProperty(environment + ".idam.auth.url"));
         Assertions.assertEquals(HttpStatus.SC_OK, response.statusCode());
         return response.body().jsonPath().getString("access_token");
     }
