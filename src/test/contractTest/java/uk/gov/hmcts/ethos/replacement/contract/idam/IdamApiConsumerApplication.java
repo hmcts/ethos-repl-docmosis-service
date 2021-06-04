@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ethos.replacement.contractTest.idam;
+package uk.gov.hmcts.ethos.replacement.contract.idam;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;

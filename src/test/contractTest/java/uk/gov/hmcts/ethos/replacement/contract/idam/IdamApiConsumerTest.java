@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ethos.replacement.contractTest.idam;
+package uk.gov.hmcts.ethos.replacement.contract.idam;
 
 import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
 import au.com.dius.pact.consumer.dsl.PactDslJsonRootValue;
