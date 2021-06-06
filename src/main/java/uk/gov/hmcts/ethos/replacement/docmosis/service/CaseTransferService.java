@@ -90,30 +90,13 @@ public class CaseTransferService {
             return;
         }
         for (CaseData caseData : caseDataList) {
-            if (caseData.getOfficeCT() == null) {
-                log.info("Case with caseNumber " + caseData.getEthosCaseReference() + " has null OfficeCT");
-                continue;
-            }
-            else if (caseData.getOfficeCT().getValue() == null) {
-                log.info("Case with caseNumber " + caseData.getEthosCaseReference() + " has null OfficeCT.Value");
-                continue;
-            }
-            else if (caseData.getOfficeCT().getValue().getCode() == null) {
-                log.info("Case with caseNumber " + caseData.getEthosCaseReference() + " has null OfficeCT.Value.Code");
-                continue;
-            }
-            if (caseData.getPositionTypeCT() == null){
-                log.info("Case with caseNumber " + caseData.getEthosCaseReference() + " has null PositionTypeCT");
-                continue;
-            }
-
             persistentQHelperService.sendCreationEventToSingles(
                     userToken,
                     caseDetails.getCaseTypeId(),
                     caseDetails.getJurisdiction(),
                     errors,
                     new ArrayList<>(Collections.singletonList(caseData.getEthosCaseReference())),
-                    caseData.getOfficeCT().getValue().getCode(),
+                    caseDetails.getCaseData().getOfficeCT().getValue().getCode(),
                     caseData.getPositionTypeCT(),
                     ccdGatewayBaseUrl,
                     caseData.getReasonForCT(),
