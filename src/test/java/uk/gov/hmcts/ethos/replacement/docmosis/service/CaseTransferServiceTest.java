@@ -83,7 +83,7 @@ public class CaseTransferServiceTest {
         caseData.setPositionTypeCT("PositionTypeCT1");
         DynamicFixedListType officeCT = new DynamicFixedListType();
         DynamicValueType valueType = new DynamicValueType();
-        valueType.setCode(LONDON_CENTRAL_CASE_TYPE_ID);
+        valueType.setCode(LEEDS_CASE_TYPE_ID);
         officeCT.setValue(valueType);
         caseData.setOfficeCT(officeCT);
         SubmitEvent submitEvent1 = new SubmitEvent();
@@ -103,7 +103,7 @@ public class CaseTransferServiceTest {
         assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
         assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
         assertEquals("PositionTypeCT1", submitEventList1.get(0).getCaseData().getPositionType());
-        assertEquals("Transferred to " + LONDON_CENTRAL_CASE_TYPE_ID, submitEventList1.get(0).getCaseData().getLinkedCaseCT());
+        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, submitEventList1.get(0).getCaseData().getLinkedCaseCT());
     }
 
     @Test
