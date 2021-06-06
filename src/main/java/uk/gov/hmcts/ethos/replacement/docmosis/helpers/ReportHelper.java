@@ -186,17 +186,16 @@ public class ReportHelper {
             boolean clerkResponsibleIsValid = validateClerkResponsible(listingData, caseData);
             if (matchingDateIsValid && clerkResponsibleIsValid) {
                 BFDateType bfDateType = new BFDateType();
-                bfDateType.setCaseNumber(caseData.getEthosCaseReference());
+                bfDateType.setCaseReference(caseData.getEthosCaseReference());
                 if (!Strings.isNullOrEmpty(bfActionType.getAllActions())){
-                    bfDateType.setAction(bfActionType.getAllActions());
+                    bfDateType.setBroughtForwardAction(bfActionType.getAllActions());
                 }
                 else if (!Strings.isNullOrEmpty(bfActionType.getCwActions())){
-                    bfDateType.setAction(bfActionType.getCwActions());
+                    bfDateType.setBroughtForwardAction(bfActionType.getCwActions());
                 }
-                bfDateType.setDateEntered(bfActionType.getDateEntered());
-                bfDateType.setBfDate(bfActionType.getBfDate());
-                bfDateType.setCleared(bfActionType.getCleared());
-                bfDateType.setNotes(bfActionType.getNotes());
+                bfDateType.setBroughtForwardDate(bfActionType.getBfDate());
+                bfDateType.setBroughtForwardDateCleared(bfActionType.getCleared());
+                bfDateType.setBroughtForwardDateReason(bfActionType.getNotes());
                 bfDateTypeItem.setId(String.valueOf(bfActionTypeItem.getId()));
                 bfDateTypeItem.setValue(bfDateType);
             }
