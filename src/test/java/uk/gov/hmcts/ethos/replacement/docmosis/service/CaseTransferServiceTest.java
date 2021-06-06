@@ -103,7 +103,7 @@ public class CaseTransferServiceTest {
         assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
         assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
         assertEquals("PositionTypeCT1", submitEventList1.get(0).getCaseData().getPositionType());
-        assertEquals("Transferred to " + LONDON_CENTRAL_CASE_TYPE_ID, submitEventList1.get(0).getCaseData().getLinkedCaseCT());
+        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, submitEventList1.get(0).getCaseData().getLinkedCaseCT());
     }
 
     @Test
