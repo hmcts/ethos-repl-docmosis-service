@@ -104,15 +104,15 @@ public class CaseTransferService {
                     NO
             );
 
-            caseData.setLinkedCaseCT("Transferred to " + caseData.getOfficeCT().getValue().getCode());
+            caseData.setLinkedCaseCT("Transferred to " + caseDetails.getCaseData().getOfficeCT().getValue().getCode());
             caseData.setPositionType(caseData.getPositionTypeCT());
 
             log.info("Clearing the CT payload");
 
-            caseData.setOfficeCT(null);
             caseData.setPositionTypeCT(null);
             caseData.setStateAPI(null);
         }
+        caseDetails.getCaseData().setOfficeCT(null);
     }
 
     private boolean checkBfActionsCleared(CaseData caseData) {
