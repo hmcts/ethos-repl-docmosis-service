@@ -83,7 +83,7 @@ public class CaseTransferServiceTest {
         caseData.setPositionTypeCT("PositionTypeCT1");
         DynamicFixedListType officeCT = new DynamicFixedListType();
         DynamicValueType valueType = new DynamicValueType();
-        valueType.setCode(LONDON_CENTRAL_CASE_TYPE_ID);
+        valueType.setCode(LEEDS_CASE_TYPE_ID);
         officeCT.setValue(valueType);
         caseData.setOfficeCT(officeCT);
         SubmitEvent submitEvent1 = new SubmitEvent();
