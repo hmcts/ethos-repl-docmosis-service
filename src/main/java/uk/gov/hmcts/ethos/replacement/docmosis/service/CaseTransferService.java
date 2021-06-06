@@ -97,22 +97,22 @@ public class CaseTransferService {
                     errors,
                     new ArrayList<>(Collections.singletonList(caseData.getEthosCaseReference())),
                     caseDetails.getCaseData().getOfficeCT().getValue().getCode(),
-                    caseData.getPositionTypeCT(),
+                    caseDetails.getCaseData().getPositionTypeCT(),
                     ccdGatewayBaseUrl,
-                    caseData.getReasonForCT(),
+                    caseDetails.getCaseData().getReasonForCT(),
                     SINGLE_CASE_TYPE,
                     NO
             );
 
             caseData.setLinkedCaseCT("Transferred to " + caseDetails.getCaseData().getOfficeCT().getValue().getCode());
-            caseData.setPositionType(caseData.getPositionTypeCT());
-
-            log.info("Clearing the CT payload");
-
-            caseData.setPositionTypeCT(null);
-            caseData.setStateAPI(null);
+            caseData.setPositionType(caseDetails.getCaseData().getPositionTypeCT());
         }
+
+        log.info("Clearing the CT payload");
+        caseDetails.getCaseData().setPositionTypeCT(null);
+        caseDetails.getCaseData().setStateAPI(null);
         caseDetails.getCaseData().setOfficeCT(null);
+
     }
 
     private boolean checkBfActionsCleared(CaseData caseData) {

@@ -80,7 +80,6 @@ public class CaseTransferServiceTest {
         List<String> errors = new ArrayList<>();
         CaseData caseData = MultipleUtil.getCaseData("3434232323");
         caseData.setCaseRefNumberCount("2");
-        caseData.setPositionTypeCT("PositionTypeCT1");
         DynamicFixedListType officeCT = new DynamicFixedListType();
         DynamicValueType valueType = new DynamicValueType();
         valueType.setCode(LEEDS_CASE_TYPE_ID);
@@ -102,7 +101,7 @@ public class CaseTransferServiceTest {
         caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
         assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
-        assertEquals("PositionTypeCT1", submitEventList1.get(0).getCaseData().getPositionType());
+        assertEquals("PositionTypeCT", submitEventList1.get(0).getCaseData().getPositionType());
         assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, submitEventList1.get(0).getCaseData().getLinkedCaseCT());
     }
 
