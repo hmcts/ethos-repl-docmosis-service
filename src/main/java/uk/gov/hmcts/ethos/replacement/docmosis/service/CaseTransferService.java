@@ -90,6 +90,23 @@ public class CaseTransferService {
             return;
         }
         for (CaseData caseData : caseDataList) {
+            if (caseData.getOfficeCT() == null) {
+                log.info("Case with caseNumber " + caseData.getEthosCaseReference() + " has null OfficeCT");
+                continue;
+            }
+            else if (caseData.getOfficeCT().getValue() == null) {
+                log.info("Case with caseNumber " + caseData.getEthosCaseReference() + " has null OfficeCT.Value");
+                continue;
+            }
+            else if (caseData.getOfficeCT().getValue().getCode() == null) {
+                log.info("Case with caseNumber " + caseData.getEthosCaseReference() + " has null OfficeCT.Value.Code");
+                continue;
+            }
+            if (caseData.getPositionTypeCT() == null){
+                log.info("Case with caseNumber " + caseData.getEthosCaseReference() + " has null PositionTypeCT");
+                continue;
+            }
+
             persistentQHelperService.sendCreationEventToSingles(
                     userToken,
                     caseDetails.getCaseTypeId(),
