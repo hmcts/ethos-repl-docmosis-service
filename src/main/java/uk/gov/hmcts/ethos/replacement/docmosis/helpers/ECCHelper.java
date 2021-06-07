@@ -42,7 +42,7 @@ public class ECCHelper {
     private ECCHelper() {
     }
 
-    public static void createECCLogic(CaseData caseData, CaseData originalCaseData, String originalId) {
+    public static void createECCLogic(CaseData caseData, CaseData originalCaseData) {
         if (originalCaseData.getRespondentCollection() != null) {
             Optional<RespondentSumTypeItem> respondentChosen = originalCaseData.getRespondentCollection()
                     .stream()
@@ -57,7 +57,7 @@ public class ECCHelper {
         populateRespondentCollectionDetails(caseData, originalCaseData.getClaimantIndType(),
                 originalCaseData.getClaimantType());
         populateTribunalCorrespondenceDetails(caseData, originalCaseData);
-        populateCaseDataDetails(caseData, originalCaseData, originalId);
+        populateCaseDataDetails(caseData, originalCaseData);
         populateRepresentativeClaimantDetails(caseData, originalCaseData);
         populateRepCollectionDetails(caseData, originalCaseData);
         FlagsImageHelper.buildFlagsImageFileName(caseData);
@@ -142,7 +142,7 @@ public class ECCHelper {
         caseData.setTribunalCorrespondenceTelephone(originalCaseData.getTribunalCorrespondenceTelephone());
     }
 
-    private static void populateCaseDataDetails(CaseData caseData, CaseData originalCaseData, String originalId) {
+    private static void populateCaseDataDetails(CaseData caseData, CaseData originalCaseData) {
         caseData.setFeeGroupReference(originalCaseData.getFeeGroupReference());
         caseData.setCaseType(SINGLE_CASE_TYPE);
         caseData.setCaseSource(originalCaseData.getCaseSource());
