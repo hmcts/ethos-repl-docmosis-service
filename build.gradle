@@ -201,7 +201,8 @@ dependencies {
 
 
 
-    compile 'com.github.hmcts:ecm-common:0.1.77'
+    implementation 'com.github.hmcts:ecm-common:ERP-1998-SNAPSHOT'
+
 
 
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.5.RELEASE'
