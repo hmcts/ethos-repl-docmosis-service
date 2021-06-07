@@ -194,6 +194,12 @@ public class CaseActionsForCaseWorkerController {
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.caseDataDefaults(caseData);
             generateEthosCaseReference(caseData, ccdRequest);
+            if (caseData.getEccCases() == null || caseData.getEccCases().isEmpty()) {
+                log.info("No ECC cases present for case number: " + caseData.getEthosCaseReference());
+            }
+            else {
+                log.info("ECC cases for case number " + caseData.getEthosCaseReference() + " includes:" + caseData.getEccCases().get(0).getValue().getCounterClaim());
+            }
             FlagsImageHelper.buildFlagsImageFileName(caseData);
             caseData.setMultipleFlag(caseData.getCaseType() != null
                     && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
