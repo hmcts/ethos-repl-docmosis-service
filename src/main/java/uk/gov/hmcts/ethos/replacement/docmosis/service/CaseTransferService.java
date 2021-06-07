@@ -90,6 +90,9 @@ public class CaseTransferService {
             return;
         }
         for (CaseData caseData : caseDataList) {
+            if (caseData.getEccCases() !=null && !caseData.getEccCases().isEmpty()) {
+                log.info("ECCCases before: " + caseData.getEccCases().get(0).getValue().getCounterClaim());
+            }
             persistentQHelperService.sendCreationEventToSingles(
                     userToken,
                     caseDetails.getCaseTypeId(),
@@ -103,7 +106,9 @@ public class CaseTransferService {
                     SINGLE_CASE_TYPE,
                     NO
             );
-
+            if (caseData.getEccCases() !=null && !caseData.getEccCases().isEmpty()) {
+                log.info("ECCCases after: " + caseData.getEccCases().get(0).getValue().getCounterClaim());
+            }
             caseData.setLinkedCaseCT("Transferred to " + caseDetails.getCaseData().getOfficeCT().getValue().getCode());
             caseData.setPositionType(caseDetails.getCaseData().getPositionTypeCT());
         }
