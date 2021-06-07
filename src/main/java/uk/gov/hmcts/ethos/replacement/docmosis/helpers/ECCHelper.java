@@ -147,6 +147,10 @@ public class ECCHelper {
         caseData.setCaseType(SINGLE_CASE_TYPE);
         caseData.setCaseSource(originalCaseData.getCaseSource());
         caseData.setCounterClaim(originalCaseData.getEthosCaseReference());
+        log.info("CounterClaim added for case: " + caseData.getEthosCaseReference() + " . Original case is: " + originalCaseData.getEthosCaseReference() );
+        if (originalCaseData.getEccCases() !=null && !originalCaseData.getEccCases().isEmpty()){
+            log.info("EccCases: " + originalCaseData.getEccCases().get(0).getValue().getCounterClaim());
+        }
         caseData.setManagingOffice(originalCaseData.getManagingOffice() != null
                 ? originalCaseData.getManagingOffice() : "");
         caseData.setAllocatedOffice(originalCaseData.getAllocatedOffice() != null
