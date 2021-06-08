@@ -475,6 +475,7 @@ public class BulkUpdateService {
                 submitEvent.getCaseData().setLeadClaimant(YES);
             } else {
                 submitEvent.getCaseData().setLeadClaimant(NO);
+                log.info("setLeadClaimant is set to No");
             }
             //Update the value to return
             submitBulkEventSubmitEventType.setSubmitBulkEvent(submitBulkEvent);

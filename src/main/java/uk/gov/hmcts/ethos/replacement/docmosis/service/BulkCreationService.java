@@ -179,6 +179,7 @@ public class BulkCreationService {
             String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
             if (!submitEvent.getCaseData().getEthosCaseReference().equals(leadId)) {
                 submitEvent.getCaseData().setLeadClaimant(NO);
+                log.info("setLeadClaimant is set to No");
             }
             log.info("State SubmitEvent: " + submitEvent.getState());
 
