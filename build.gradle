@@ -201,7 +201,7 @@ dependencies {
 
 
 
-    compile 'com.github.hmcts:ecm-common:0.1.78'
+    compile 'com.github.hmcts:ecm-common:0.1.79'
 
 
 
