@@ -201,7 +201,7 @@ dependencies {
 
 
 
-    implementation 'com.github.hmcts:ecm-common:ERP-1998-SNAPSHOT'
+    compile 'com.github.hmcts:ecm-common:0.1.78'
 
 
 
