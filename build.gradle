@@ -147,7 +147,7 @@ dependencies {
 
 
 
-    compile 'com.github.hmcts:ecm-common:0.1.73'
+    compile 'com.github.hmcts:ecm-common:0.1.79'
 
 
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.5.RELEASE'
