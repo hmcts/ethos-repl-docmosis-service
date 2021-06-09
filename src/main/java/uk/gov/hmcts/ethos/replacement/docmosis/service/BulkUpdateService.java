@@ -141,6 +141,7 @@ public class BulkUpdateService {
                             bulkDetails.getCaseTypeId()),
                             bulkDetails.getJurisdiction(), leadId);
                 }
+                log.info("setLeadClaimant is set to Yes");
                 submitEvent.getCaseData().setLeadClaimant(YES);
                 executor.execute(new BulkUpdateTask(bulkDetails, submitEvent, authToken, ccdClient));
             } catch (IOException e) {
@@ -472,6 +473,7 @@ public class BulkUpdateService {
                 submitBulkEvent.setCaseData(bulkData1);
             }
             if (isThisCaseLead) {
+                log.info("setLeadClaimant is set to Yes");
                 submitEvent.getCaseData().setLeadClaimant(YES);
             } else {
                 submitEvent.getCaseData().setLeadClaimant(NO);
