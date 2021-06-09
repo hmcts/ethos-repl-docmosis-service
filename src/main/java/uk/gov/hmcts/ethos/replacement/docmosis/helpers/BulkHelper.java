@@ -453,6 +453,7 @@ public class BulkHelper {
                     .indexOf(caseId);
             if (index != -1) {
                 SubmitEvent submitEvent = submitEvents.get(index);
+                log.info("setLeadClaimant is set to Yes");
                 submitEvent.getCaseData().setLeadClaimant(YES);
                 submitEvents.remove(index);
                 submitEvents.add(0, submitEvent);
