@@ -108,12 +108,13 @@ public class CaseTransferService {
             caseData.setLinkedCaseCT("Transferred to " + caseDetails.getCaseData().getOfficeCT().getValue().getCode());
             caseData.setPositionType(caseDetails.getCaseData().getPositionTypeCT());
 
+        }
+        for (CaseData caseData : caseDataList) {
             log.info("Clearing the CT payload");
             caseData.setPositionTypeCT(null);
             caseData.setStateAPI(null);
             caseData.setOfficeCT(null);
         }
-
 
 
     }
