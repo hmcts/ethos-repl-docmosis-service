@@ -155,8 +155,7 @@ public class TornadoService {
                                          String documentName, UserDetails userDetails, String caseType)
             throws IOException {
         StringBuilder sb;
-        if (Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT, LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT)
-                .contains(listingData.getReportType())) {
+        if (ListingHelper.isReportType(listingData.getReportType())) {
             sb = ReportDocHelper.buildReportDocumentContent(listingData, tornadoConfiguration.getAccessKey(),
                     documentName, userDetails);
         } else {

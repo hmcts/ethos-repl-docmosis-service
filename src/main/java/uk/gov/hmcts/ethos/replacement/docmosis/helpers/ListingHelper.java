@@ -811,4 +811,10 @@ public class ListingHelper {
                             .thenComparing(getTimeComparatorListingTypeItem()));
         }
     }
+
+    public static boolean isReportType(String reportType) {
+        return Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
+                LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT).contains(reportType);
+    }
+
 }
