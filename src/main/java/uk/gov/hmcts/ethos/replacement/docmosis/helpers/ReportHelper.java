@@ -116,6 +116,7 @@ public class ReportHelper {
             localReportsDetailHdr.setTotal(Integer.toString(totalCases));
             localReportsDetailHdr.setSinglesTotal(Integer.toString(totalSingles));
             localReportsDetailHdr.setMultiplesTotal(Integer.toString(totalMultiples));
+            localReportsDetailHdr.setReportOffice(UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
             listingDetails.getCaseData().setLocalReportsDetailHdr(localReportsDetailHdr);
             listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
         }
@@ -136,6 +137,9 @@ public class ReportHelper {
                     localReportsDetailList.add(localReportsDetailItem);
                 }
             }
+            AdhocReportType localReportsDetailHdr = new AdhocReportType();
+            localReportsDetailHdr.setReportOffice(UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
+            listingDetails.getCaseData().setLocalReportsDetailHdr(localReportsDetailHdr);
             listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
         }
         return clearListingFields(listingDetails.getCaseData());
@@ -159,6 +163,7 @@ public class ReportHelper {
                     }
                 }
             }
+            localReportsDetailHdr.setReportOffice(UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
             listingDetails.getCaseData().setLocalReportsDetailHdr(localReportsDetailHdr);
             listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
         }
