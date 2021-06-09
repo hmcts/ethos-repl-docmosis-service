@@ -143,20 +143,20 @@ public class ListingService {
                 ListingHelper.getListingVenueToSearch(listingData).entrySet().iterator().next();
         String venueToSearchMapping = entry.getKey();
         String venueToSearch = entry.getValue();
+        String dateFrom;
+        String dateTo;
         boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
         if (dateRange) {
-            String dateToSearchFrom = LocalDate.parse(
-                    listingData.getListingDateFrom(), OLD_DATE_TIME_PATTERN2).toString();
-            String dateToSearchTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2).toString();
-            return ccdClient.retrieveCasesVenueAndDateElasticSearch(
-                    authToken, UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()),
-                    dateToSearchFrom, dateToSearchTo, venueToSearch, venueToSearchMapping);
+            dateFrom = listingData.getListingDateFrom();
+            dateTo = listingData.getListingDateTo();
         } else {
-            String dateToSearch = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2).toString();
-            return ccdClient.retrieveCasesVenueAndDateElasticSearch(
-                    authToken, UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()),
-                    dateToSearch, dateToSearch, venueToSearch, venueToSearchMapping);
+            dateFrom = listingData.getListingDate();
+            dateTo = listingData.getListingDate();
         }
+
+        return ccdClient.retrieveCasesVenueAndDateElasticSearch(
+                authToken, UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()),
+                dateFrom, dateTo, venueToSearch, venueToSearchMapping);
     }
 
     private List<ListingTypeItem> getListingTypeItems(HearingTypeItem hearingTypeItem,
