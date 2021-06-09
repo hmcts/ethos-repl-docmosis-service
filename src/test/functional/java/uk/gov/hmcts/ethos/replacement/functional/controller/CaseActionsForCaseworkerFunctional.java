@@ -200,8 +200,19 @@ public class CaseActionsForCaseworkerFunctional {
                 .body(ccdRequest1)
                 .post("/amendCase");
         System.out.println(response1.getStatusCode());
+    }
 
-
+    @Test
+    @Category(FunctionalTest.class)
+    public void aboutToStartDisposal() throws IOException {
+        AUTH_TOKEN = funcHelper.loadAuthToken();
+        CCDRequest ccdRequest = functionalCcdReq.CCDRequest();
+        Response response = RestAssured.given()
+                .header(HttpHeaders.AUTHORIZATION, AUTH_TOKEN)
+                .header(HttpHeaders.CONTENT_TYPE, ContentType.JSON)
+                .body(ccdRequest)
+                .post("/aboutToStartDisposal");
+        Assertions.assertEquals(200, response.getStatusCode());
 
     }
 
