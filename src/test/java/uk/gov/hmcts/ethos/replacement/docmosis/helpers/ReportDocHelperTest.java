@@ -38,44 +38,46 @@ public class ReportDocHelperTest {
 
     @Test
     public void buildClaimsAcceptedReport() {
-        String expected = "{\n" +
-                "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-SCO-ENG-00219.docx\",\n" +
-                "\"outputName\":\"document.docx\",\n" +
-                "\"data\":{\n" +
-                "\"Listed_date_from\":\"1 December 2021\",\n" +
-                "\"Listed_date_to\":\"3 December 2021\",\n" +
-                "\"Report_Office\":\"Manchester\",\n" +
-                "\"Multiple_Claims_Accepted\":\"1\",\n" +
-                "\"Singles_Claims_Accepted\":\"2\",\n" +
-                "\"Total_Claims_Accepted\":\"0\",\n" +
-                "\"Local_Report_By_Type\":[\n" +
-                "{\"Case_Type\":\"Singles\",\n" +
-                "\"Report_List\":[\n" +
-                "{\"Case_Reference\":\"2122323/2020\",\n" +
-                "\"Date_Of_Acceptance\":\"\",\n" +
-                "\"Multiple_Ref\":\"\",\n" +
-                "\"Lead_Case\":\"\",\n" +
-                "\"Position\":\"Position5\",\n" +
-                "\"Date_To_Position\":\"\",\n" +
-                "\"File_Location\":\"\",\n" +
-                "\"Clerk\":\"Anne Fox2\"}]\n" +
-                "},\n" +
-                "{\"Case_Type\":\"Multiples\",\n" +
-                "\"Report_List\":[\n" +
-                "{\"Case_Reference\":\"2122324/2020\",\n" +
-                "\"Date_Of_Acceptance\":\"\",\n" +
-                "\"Multiple_Ref\":\"212323\",\n" +
-                "\"Lead_Case\":\"Yes\",\n" +
-                "\"Position\":\"Position2\",\n" +
-                "\"Date_To_Position\":\"\",\n" +
-                "\"File_Location\":\"\",\n" +
-                "\"Clerk\":\"Anne Fox\"}]\n" +
-                "}],\n" +
-                "\"Report_Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
-                "}\n" +
-                "}\n";
+        String expected = "{\n"
+                + "\"accessKey\":\"\",\n"
+                + "\"templateName\":\"EM-TRB-SCO-ENG-00219.docx\",\n"
+                + "\"outputName\":\"document.docx\",\n"
+                + "\"data\":{\n"
+                + "\"Listed_date_from\":\"1 December 2021\",\n"
+                + "\"Listed_date_to\":\"3 December 2021\",\n"
+                + "\"Report_Office\":\"Manchester\",\n"
+                + "\"Multiple_Claims_Accepted\":\"1\",\n"
+                + "\"Singles_Claims_Accepted\":\"2\",\n"
+                + "\"Total_Claims_Accepted\":\"0\",\n"
+                + "\"Local_Report_By_Type\":[\n"
+                + "{\"Case_Type\":\"Singles\",\n"
+                + "\"Claims_Number\":\"1\",\n"
+                + "\"Report_List\":[\n"
+                + "{\"Case_Reference\":\"2122323/2020\",\n"
+                + "\"Date_Of_Acceptance\":\"\",\n"
+                + "\"Multiple_Ref\":\"\",\n"
+                + "\"Lead_Case\":\"\",\n"
+                + "\"Position\":\"Position5\",\n"
+                + "\"Date_To_Position\":\"\",\n"
+                + "\"File_Location\":\"\",\n"
+                + "\"Clerk\":\"Anne Fox2\"}]\n"
+                + "},\n"
+                + "{\"Case_Type\":\"Multiples\",\n"
+                + "\"Claims_Number\":\"1\",\n"
+                + "\"Report_List\":[\n"
+                + "{\"Case_Reference\":\"2122324/2020\",\n"
+                + "\"Date_Of_Acceptance\":\"\",\n"
+                + "\"Multiple_Ref\":\"212323\",\n"
+                + "\"Lead_Case\":\"Yes\",\n"
+                + "\"Position\":\"Position2\",\n"
+                + "\"Date_To_Position\":\"\",\n"
+                + "\"File_Location\":\"\",\n"
+                + "\"Clerk\":\"Anne Fox\"}]\n"
+                + "}],\n"
+                + "\"Report_Clerk\":\"Mike Jordan\",\n"
+                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n"
+                + "}\n"
+                + "}\n";
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails.getCaseData(), "",
                 "EM-TRB-SCO-ENG-00219", userDetails).toString());
     }

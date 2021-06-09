@@ -114,6 +114,7 @@ public class ReportDocHelper {
             Map.Entry<Boolean, List<AdhocReportTypeItem>> localReportEntry = entries.next();
             String singleOrMultiple = localReportEntry.getKey() ? "Multiples" : "Singles";
             sb.append("{\"Case_Type\":\"").append(singleOrMultiple).append(NEW_LINE);
+            sb.append("\"Claims_Number\":\"").append(localReportEntry.getValue().size()).append(NEW_LINE);
             sb.append("\"Report_List\":[\n");
             for (int i = 0; i < localReportEntry.getValue().size(); i++) {
                 sb.append(getAdhocReportCommonTypeRow(localReportEntry.getValue().get(i).getValue()));

@@ -482,15 +482,17 @@ public class ReportHelper {
             for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
                 JurCodesType jurCodesType = jurCodesTypeItem.getValue();
                 if (jurCodesType.getJudgmentOutcome() != null
-                        && (jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING)
-                        || jurCodesType.getJudgmentOutcome()
-                        .equals(JURISDICTION_OUTCOME_UNSUCCESSFUL_AT_HEARING)
+                        &&
+                        (jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING)
+                        || jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_UNSUCCESSFUL_AT_HEARING)
                         || jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_DISMISSED_AT_HEARING))) {
                     return true;
                 }
             }
+            return false;
+        } else {
+            return true;
         }
-        return false;
     }
 
     private static boolean validHearingForCasesCompetedReport(HearingTypeItem hearingTypeItem) {
