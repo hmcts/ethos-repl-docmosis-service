@@ -50,7 +50,8 @@ jacocoTestCoverageVerification {
 
 def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
                        '**/uk/gov/hmcts/ethos/replacement/docmosis/model/**',
-                       '**/uk/gov/hmcts/reform/ethos/replacement/docmosis/CaseOrchestrationApplication'
+                       '**/uk/gov/hmcts/reform/ethos/replacement/docmosis/CaseOrchestrationApplication',
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis.config.DevQueueClient.java'
 ]
 
 sonarqube {
