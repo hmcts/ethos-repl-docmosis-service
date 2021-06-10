@@ -64,6 +64,7 @@ public class CaseTransferServiceTest {
         ccdRequest.setCaseDetails(caseDetails);
         submitEvent = new SubmitEvent();
         submitEvent.setCaseData(caseData);
+        submitEvent.setCaseId(12345);
         authToken = "authToken";
     }
 
@@ -87,6 +88,7 @@ public class CaseTransferServiceTest {
         caseData.setOfficeCT(officeCT);
         SubmitEvent submitEvent1 = new SubmitEvent();
         submitEvent1.setCaseData(caseData);
+        submitEvent1.setCaseId(12345);
         List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         List<SubmitEvent> submitEventList1 = new ArrayList<>(Collections.singletonList(submitEvent1));
         ccdRequest.getCaseDetails().getCaseData().setCounterClaim("3434232323");
@@ -98,6 +100,7 @@ public class CaseTransferServiceTest {
         caseData.setEccCases(Arrays.asList(item));
         when(ccdClient.retrieveCasesElasticSearch(authToken,ccdRequest.getCaseDetails().getCaseTypeId(), Arrays.asList("3434232323"))).thenReturn(submitEventList1);
         when(ccdClient.retrieveCasesElasticSearch(authToken,ccdRequest.getCaseDetails().getCaseTypeId(), Arrays.asList("2123456/2020"))).thenReturn(submitEventList);
+        when(ccdClient.startEventForCase(authToken, "Manchester", "Employment", "12345")).thenReturn(ccdRequest);
         caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
         assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
