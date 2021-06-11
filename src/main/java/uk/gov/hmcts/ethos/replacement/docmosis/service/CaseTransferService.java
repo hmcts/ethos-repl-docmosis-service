@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 
 import java.util.ArrayList;
@@ -55,10 +57,22 @@ public class CaseTransferService {
         try {
             CaseData caseData = getOriginalCase(caseDetails, userToken);
             List<CaseData> cases = new ArrayList<>();
+            String counterClaim;
             cases.add(caseData);
              if (caseData.getEccCases() != null && !caseData.getEccCases().isEmpty()) {
-                List<String> counterClaimList =  caseData.getEccCases().stream().map(eccCounterClaimTypeItem -> eccCounterClaimTypeItem.getValue().getCounterClaim()).collect(Collectors.toList());
-                cases.addAll(ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(),counterClaimList).stream().map(submitEvent -> submitEvent.getCaseData()).collect(Collectors.toList()));
+
+                 for (EccCounterClaimTypeItem counterClaimItem:caseData.getEccCases()) {
+                     counterClaim =  counterClaimItem.getValue().getCounterClaim();
+                     List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(),new ArrayList<>(Collections.singleton(counterClaim)));
+                     if (submitEvents != null && !submitEvents.isEmpty()) {
+                         CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, caseDetails.getCaseTypeId(),
+                                 caseDetails.getJurisdiction(), String.valueOf(submitEvents.get(0).getCaseId()));
+                         returnedRequest.getCaseDetails().setState(TRANSFERRED_STATE);
+                         ccdClient.submitEventForCase(userToken, submitEvents.get(0).getCaseData(), caseDetails.getCaseTypeId(),
+                                 caseDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvents.get(0).getCaseId()));
+                         cases.add(submitEvents.get(0).getCaseData());
+                     }
+                 }
             }
             return cases;
         }
@@ -104,7 +118,8 @@ public class CaseTransferService {
                     SINGLE_CASE_TYPE,
                     NO
             );
-
+            log.info("State of original case is: " + caseDetails.getState());
+            caseData.setReasonForCT(caseDetails.getCaseData().getReasonForCT());
             caseData.setLinkedCaseCT("Transferred to " + caseDetails.getCaseData().getOfficeCT().getValue().getCode());
             caseData.setPositionType(caseDetails.getCaseData().getPositionTypeCT());
 
