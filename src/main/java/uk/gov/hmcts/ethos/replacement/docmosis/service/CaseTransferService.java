@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
-import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
@@ -65,11 +63,8 @@ public class CaseTransferService {
                      counterClaim =  counterClaimItem.getValue().getCounterClaim();
                      List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(),new ArrayList<>(Collections.singleton(counterClaim)));
                      if (submitEvents != null && !submitEvents.isEmpty()) {
-                         CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, caseDetails.getCaseTypeId(),
-                                 caseDetails.getJurisdiction(), String.valueOf(submitEvents.get(0).getCaseId()));
-                         returnedRequest.getCaseDetails().setState(TRANSFERRED_STATE);
-                         ccdClient.submitEventForCase(userToken, submitEvents.get(0).getCaseData(), caseDetails.getCaseTypeId(),
-                                 caseDetails.getJurisdiction(), returnedRequest, String.valueOf(submitEvents.get(0).getCaseId()));
+                         submitEvents.get(0).setState(TRANSFERRED_STATE);
+                         log.info("State of Case " + submitEvents.get(0).getCaseData().getEthosCaseReference() + " is set to Transferred.");
                          cases.add(submitEvents.get(0).getCaseData());
                      }
                  }
@@ -118,10 +113,10 @@ public class CaseTransferService {
                     SINGLE_CASE_TYPE,
                     NO
             );
-            log.info("State of original case is: " + caseDetails.getState());
             caseData.setReasonForCT(caseDetails.getCaseData().getReasonForCT());
             caseData.setLinkedCaseCT("Transferred to " + caseDetails.getCaseData().getOfficeCT().getValue().getCode());
             caseData.setPositionType(caseDetails.getCaseData().getPositionTypeCT());
+            log.info("reasonForCT for case: " + caseData.getEthosCaseReference() + " is set to: " + caseDetails.getCaseData().getReasonForCT());
 
         }
         for (CaseData caseData : caseDataList) {
