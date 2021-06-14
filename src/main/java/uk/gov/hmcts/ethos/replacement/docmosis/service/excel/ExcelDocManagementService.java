@@ -38,7 +38,7 @@ public class ExcelDocManagementService {
     @Value("${document_management.url}")
     private String ccdDMStoreBaseUrl;
 
-    @Value("${document_management.ccdCaseDocument.url")
+    @Value("${document_management.ccdCaseDocument.url}")
     private String ccdCaseDocumentUrl;
 
     private final DocumentManagementService documentManagementService;
