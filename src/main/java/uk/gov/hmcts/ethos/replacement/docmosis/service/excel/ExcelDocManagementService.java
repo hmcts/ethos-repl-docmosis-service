@@ -38,6 +38,9 @@ public class ExcelDocManagementService {
     @Value("${document_management.url}")
     private String ccdDMStoreBaseUrl;
 
+    @Value("${document_management.ccdCaseDocument.url")
+    private String ccdCaseDocumentUrl;
+
     private final DocumentManagementService documentManagementService;
     private final ExcelCreationService excelCreationService;
     private final UserService userService;
@@ -67,11 +70,10 @@ public class ExcelDocManagementService {
     }
 
     private void addDocumentToMultiple(String userToken, MultipleData multipleData, URI documentSelfPath) {
-
         UploadedDocumentType uploadedDocumentType = new UploadedDocumentType();
-        uploadedDocumentType.setDocumentBinaryUrl(ccdDMStoreBaseUrl + documentSelfPath.getRawPath() + "/binary");
+        uploadedDocumentType.setDocumentBinaryUrl(ccdCaseDocumentUrl + documentSelfPath.getRawPath() + "/binary");
         uploadedDocumentType.setDocumentFilename(MultiplesHelper.generateExcelDocumentName(multipleData));
-        uploadedDocumentType.setDocumentUrl(ccdDMStoreBaseUrl + documentSelfPath.getRawPath());
+        uploadedDocumentType.setDocumentUrl(ccdCaseDocumentUrl + documentSelfPath.getRawPath());
 
         multipleData.setCaseImporterFile(populateCaseImporterFile(userToken, uploadedDocumentType));
     }
