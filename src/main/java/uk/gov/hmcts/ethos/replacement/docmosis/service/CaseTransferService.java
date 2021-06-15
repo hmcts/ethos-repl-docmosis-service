@@ -47,7 +47,8 @@ public class CaseTransferService {
             CaseData caseData = caseDetails.getCaseData();
             if (!Strings.isNullOrEmpty(caseData.getCounterClaim())) {
              List<SubmitEvent> submitEvents =  ccdClient.retrieveCasesElasticSearch(userToken, caseDetails.getCaseTypeId(), Arrays.asList(caseData.getCounterClaim()));
-            return submitEvents.get(0).getCaseData();
+             updateTransferredCase(submitEvents.get(0), caseDetails.getCaseTypeId(), userToken);
+             return submitEvents.get(0).getCaseData();
             }
             else {
                 return caseDetails.getCaseData();
@@ -60,23 +61,28 @@ public class CaseTransferService {
     }
     private List<CaseData> getAllCasesToBeTransferred(CaseDetails caseDetails, String userToken) {
         try {
-            CaseData caseData = getOriginalCase(caseDetails, userToken);
+            CaseData originalCaseData = getOriginalCase(caseDetails, userToken);
             List<CaseData> cases = new ArrayList<>();
+            List<SubmitEvent> submitEventsList = new ArrayList<>();
             String counterClaim;
-            cases.add(caseData);
-             if (caseData.getEccCases() != null && !caseData.getEccCases().isEmpty()) {
+            cases.add(originalCaseData);
+             if (originalCaseData.getEccCases() != null && !originalCaseData.getEccCases().isEmpty()) {
 
-                 for (EccCounterClaimTypeItem counterClaimItem:caseData.getEccCases()) {
+                 for (EccCounterClaimTypeItem counterClaimItem:originalCaseData.getEccCases()) {
                      counterClaim =  counterClaimItem.getValue().getCounterClaim();
                      List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(),new ArrayList<>(Collections.singleton(counterClaim)));
                      if (submitEvents != null && !submitEvents.isEmpty()) {
-                         if (!submitEvents.get(0).getCaseData().getEthosCaseReference().equals(caseDetails.getCaseData().getEthosCaseReference())) {
-                             updateTransferredCase(submitEvents.get(0), caseDetails.getCaseTypeId(),caseDetails.getCaseData().getOfficeCT().getValue().getCode(), caseDetails.getJurisdiction(), userToken, caseDetails.getCaseData().getPositionTypeCT(), caseDetails.getCaseData().getReasonForCT());
-                         }
+                         submitEventsList.add(submitEvents.get(0));
                          cases.add(submitEvents.get(0).getCaseData());
                      }
                  }
             }
+
+             for (SubmitEvent submitEvent: submitEventsList) {
+                 if (!submitEvent.getCaseData().getEthosCaseReference().equals(caseDetails.getCaseData().getEthosCaseReference())) {
+                     updateTransferredCase(submitEvent, caseDetails.getCaseTypeId(), userToken);
+                 }
+             }
             return cases;
         }
         catch (Exception ex) {
@@ -108,14 +114,15 @@ public class CaseTransferService {
     }
 
 
-    private void updateTransferredCase(SubmitEvent submitEvent, String caseTypeId, String caseTypeIdCT,
-                                       String jurisdiction, String accessToken, String positionTypeCT,
-                                       String reasonForCT) throws IOException {
+    private void updateTransferredCase(SubmitEvent submitEvent, String caseTypeIdCT,
+                                        String accessToken) throws IOException {
 
         CCDRequest returnedRequest = ccdClient.startCaseTransfer(accessToken, caseTypeId, jurisdiction,
                 String.valueOf(submitEvent.getCaseId()));
 
-        generateCaseData(submitEvent.getCaseData(), caseTypeIdCT, positionTypeCT, reasonForCT);
+        submitEvent.getCaseData().setLinkedCaseCT("Transferred to " + caseTypeIdCT);
+        submitEvent.getCaseData().setPositionTypeCT(positionTypeCT);
+        submitEvent.getCaseData().setReasonForCT(reasonForCT);
 
         ccdClient.submitEventForCase(accessToken,
                 submitEvent.getCaseData(),
@@ -125,17 +132,6 @@ public class CaseTransferService {
                 String.valueOf(submitEvent.getCaseId()));
 
     }
-
-    private void generateCaseData(CaseData caseData, String caseTypeIdCT, String positionTypeCT, String reasonForCT) {
-
-        caseData.setLinkedCaseCT("Transferred to " + caseTypeIdCT);
-        caseData.setPositionTypeCT(positionTypeCT);
-        caseData.setReasonForCT(reasonForCT);
-
-    }
-
-
-
 
     public void createCaseTransfer(CaseDetails caseDetails, List<String> errors, String userToken) {
 

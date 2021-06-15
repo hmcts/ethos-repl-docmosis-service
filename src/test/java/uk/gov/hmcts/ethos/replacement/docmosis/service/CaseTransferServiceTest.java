@@ -87,8 +87,8 @@ public class CaseTransferServiceTest {
         officeCT.setValue(valueType);
         caseData.setOfficeCT(officeCT);
         SubmitEvent submitEvent1 = new SubmitEvent();
-        submitEvent1.setCaseData(caseData);
         submitEvent1.setCaseId(12345);
+        submitEvent.getCaseData().setReasonForCT("New Reason");
         List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         List<SubmitEvent> submitEventList1 = new ArrayList<>(Collections.singletonList(submitEvent1));
         ccdRequest.getCaseDetails().getCaseData().setCounterClaim("3434232323");
@@ -98,14 +98,17 @@ public class CaseTransferServiceTest {
         item.setId(UUID.randomUUID().toString());
         item.setValue(type);
         caseData.setEccCases(Arrays.asList(item));
+        submitEvent1.setCaseData(caseData);
         when(ccdClient.retrieveCasesElasticSearch(authToken,ccdRequest.getCaseDetails().getCaseTypeId(), Arrays.asList("3434232323"))).thenReturn(submitEventList1);
         when(ccdClient.retrieveCasesElasticSearch(authToken,ccdRequest.getCaseDetails().getCaseTypeId(), Arrays.asList("2123456/2020"))).thenReturn(submitEventList);
         when(ccdClient.startEventForCase(authToken, "Manchester", "Employment", "12345")).thenReturn(ccdRequest);
         caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
-        assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
-        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
-        assertEquals("PositionTypeCT", submitEventList1.get(0).getCaseData().getPositionType());
-        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, submitEventList1.get(0).getCaseData().getLinkedCaseCT());
+        assertEquals("PositionTypeCT", submitEvent.getCaseData().getPositionType());
+        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, submitEvent.getCaseData().getLinkedCaseCT());
+        assertEquals("PositionTypeCT", submitEvent1.getCaseData().getPositionType());
+        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, submitEvent1.getCaseData().getLinkedCaseCT());
+        assertEquals("New Reason", submitEvent.getCaseData().getReasonForCT());
+        assertEquals("New Reason", submitEvent1.getCaseData().getReasonForCT());
     }
 
     @Test
