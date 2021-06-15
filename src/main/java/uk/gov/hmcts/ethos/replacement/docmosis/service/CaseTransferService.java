@@ -32,7 +32,6 @@ public class CaseTransferService {
 
     private final PersistentQHelperService persistentQHelperService;
     private final CcdClient ccdClient;
-    private static final String MESSAGE = "Failed to retrieve the case for case id : ";
     private String caseTypeId;
     private String jurisdiction;
     private String officeCT;
@@ -56,9 +55,10 @@ public class CaseTransferService {
 
         }
          catch (Exception ex) {
-            throw new CaseCreationException(MESSAGE + caseDetails.getCaseTypeId() + ex.getMessage());
+            throw new CaseCreationException("Error getting original case number: " + caseDetails.getCaseData().getEthosCaseReference() + " " + ex.getMessage());
         }
     }
+
     private List<CaseData> getAllCasesToBeTransferred(CaseDetails caseDetails, String userToken) {
         try {
             CaseData originalCaseData = getOriginalCase(caseDetails, userToken);
@@ -70,7 +70,8 @@ public class CaseTransferService {
 
                  for (EccCounterClaimTypeItem counterClaimItem:originalCaseData.getEccCases()) {
                      counterClaim =  counterClaimItem.getValue().getCounterClaim();
-                     List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(),new ArrayList<>(Collections.singleton(counterClaim)));
+                     List<SubmitEvent>   submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(),new ArrayList<>(Collections.singleton(counterClaim)));
+
                      if (submitEvents != null && !submitEvents.isEmpty()) {
                          submitEventsList.add(submitEvents.get(0));
                          cases.add(submitEvents.get(0).getCaseData());
@@ -78,6 +79,7 @@ public class CaseTransferService {
                  }
             }
 
+             if (submitEventsList != null && !submitEventsList.isEmpty())
              for (SubmitEvent submitEvent: submitEventsList) {
                  if (!submitEvent.getCaseData().getEthosCaseReference().equals(caseDetails.getCaseData().getEthosCaseReference())) {
                      updateTransferredCase(submitEvent, caseDetails.getCaseTypeId(), userToken);
@@ -86,7 +88,7 @@ public class CaseTransferService {
             return cases;
         }
         catch (Exception ex) {
-            throw new CaseCreationException(MESSAGE + caseDetails.getCaseTypeId() + ex.getMessage());
+            throw new CaseCreationException("Error getting all cases to be transferred for case number: " + caseDetails.getCaseData().getEthosCaseReference() + " " + ex.getMessage());
         }
     }
 
@@ -117,19 +119,19 @@ public class CaseTransferService {
     private void updateTransferredCase(SubmitEvent submitEvent, String caseTypeIdCT,
                                         String accessToken) throws IOException {
 
-        CCDRequest returnedRequest = ccdClient.startCaseTransfer(accessToken, caseTypeId, jurisdiction,
-                String.valueOf(submitEvent.getCaseId()));
-
-        submitEvent.getCaseData().setLinkedCaseCT("Transferred to " + caseTypeIdCT);
-        submitEvent.getCaseData().setPositionTypeCT(positionTypeCT);
-        submitEvent.getCaseData().setReasonForCT(reasonForCT);
-
-        ccdClient.submitEventForCase(accessToken,
-                submitEvent.getCaseData(),
-                caseTypeId,
-                jurisdiction,
-                returnedRequest,
-                String.valueOf(submitEvent.getCaseId()));
+//        CCDRequest returnedRequest = ccdClient.startCaseTransfer(accessToken, caseTypeId, jurisdiction,
+//                String.valueOf(submitEvent.getCaseId()));
+//
+         submitEvent.getCaseData().setLinkedCaseCT("Transferred to " + caseTypeIdCT);
+         submitEvent.getCaseData().setPositionTypeCT(positionTypeCT);
+         submitEvent.getCaseData().setReasonForCT(reasonForCT);
+//
+//        ccdClient.submitEventForCase(accessToken,
+//                submitEvent.getCaseData(),
+//                caseTypeId,
+//                jurisdiction,
+//                returnedRequest,
+//                String.valueOf(submitEvent.getCaseId()));
 
     }
 
