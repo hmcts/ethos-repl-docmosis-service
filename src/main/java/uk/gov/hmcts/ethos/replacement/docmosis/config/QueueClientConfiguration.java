@@ -8,10 +8,9 @@ import com.microsoft.azure.servicebus.primitives.ServiceBusException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.LocalQueueClient;
 
 @Configuration
-@Profile("!dev")
 public class QueueClientConfiguration {
 
     @Bean("create-updates-send-client")
@@ -19,7 +18,8 @@ public class QueueClientConfiguration {
         @Value("${queue.create-updates.send.connection-string}") String connectionString,
         @Value("${queue.create-updates.queue-name}") String queueName
     ) throws InterruptedException, ServiceBusException {
-        return createQueueClient(connectionString, queueName);
+        //return createQueueClient(connectionString, queueName);
+        return new LocalQueueClient();
     }
 
     private QueueClient createQueueClient(
