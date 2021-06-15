@@ -107,8 +107,6 @@ public class CaseTransferServiceTest {
         assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, submitEvent.getCaseData().getLinkedCaseCT());
         assertEquals("PositionTypeCT", submitEvent1.getCaseData().getPositionType());
         assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, submitEvent1.getCaseData().getLinkedCaseCT());
-        assertEquals("New Reason", submitEvent.getCaseData().getReasonForCT());
-        assertEquals("New Reason", submitEvent1.getCaseData().getReasonForCT());
     }
 
     @Test
