@@ -33,11 +33,11 @@ public class CaseTransferService {
     private final PersistentQHelperService persistentQHelperService;
     private final CcdClient ccdClient;
     private static final String MESSAGE = "Failed to retrieve the case for case id : ";
-    private static String caseTypeId;
-    private static String jurisdiction;
-    private static String officeCT;
-    private static String positionTypeCT;
-    private static String reasonForCT;
+    private String caseTypeId;
+    private String jurisdiction;
+    private String officeCT;
+    private String positionTypeCT;
+    private String reasonForCT;
 
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
