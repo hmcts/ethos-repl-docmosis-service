@@ -33,6 +33,11 @@ public class CaseTransferService {
     private final PersistentQHelperService persistentQHelperService;
     private final CcdClient ccdClient;
     private static final String MESSAGE = "Failed to retrieve the case for case id : ";
+    private static String caseTypeId;
+    private static String jurisdiction;
+    private static String officeCT;
+    private static String positionTypeCT;
+    private static String reasonForCT;
 
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
@@ -53,7 +58,7 @@ public class CaseTransferService {
             throw new CaseCreationException(MESSAGE + caseDetails.getCaseTypeId() + ex.getMessage());
         }
     }
-    private List<CaseData> getAllCasesToBeTransferred(CaseDetails caseDetails, String userToken, String positionTypeCT, String reasonForCT, String caseTypeIdCT) {
+    private List<CaseData> getAllCasesToBeTransferred(CaseDetails caseDetails, String userToken) {
         try {
             CaseData caseData = getOriginalCase(caseDetails, userToken);
             List<CaseData> cases = new ArrayList<>();
@@ -66,7 +71,7 @@ public class CaseTransferService {
                      List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(),new ArrayList<>(Collections.singleton(counterClaim)));
                      if (submitEvents != null && !submitEvents.isEmpty()) {
                          if (!submitEvents.get(0).getCaseData().getEthosCaseReference().equals(caseDetails.getCaseData().getEthosCaseReference())) {
-                             updateTransferredCase(submitEvents.get(0), caseDetails.getCaseTypeId(),caseTypeIdCT, caseDetails.getJurisdiction(), userToken, positionTypeCT, reasonForCT);
+                             updateTransferredCase(submitEvents.get(0), caseDetails.getCaseTypeId(),caseDetails.getCaseData().getOfficeCT().getValue().getCode(), caseDetails.getJurisdiction(), userToken, caseDetails.getCaseData().getPositionTypeCT(), caseDetails.getCaseData().getReasonForCT());
                          }
                          cases.add(submitEvents.get(0).getCaseData());
                      }
@@ -79,7 +84,7 @@ public class CaseTransferService {
         }
     }
 
-    public void createCaseTransferEvent(CaseData caseData, List<String> errors, String caseTypeId, String jurisdiction, String officeCT, String positionTypeCT, String reasonForCT, String userToken) {
+    public void createCaseTransferEvent(CaseData caseData, List<String> errors, String userToken) {
 
         persistentQHelperService.sendCreationEventToSingles(
                 userToken,
@@ -134,13 +139,12 @@ public class CaseTransferService {
 
     public void createCaseTransfer(CaseDetails caseDetails, List<String> errors, String userToken) {
 
-        String caseTypeId = caseDetails.getCaseTypeId();
-        String jurisdiction = caseDetails.getJurisdiction();
-        String officeCT = caseDetails.getCaseData().getOfficeCT().getValue().getCode();
-        String positionTypeCT = caseDetails.getCaseData().getPositionTypeCT();
-        String reasonForCT = caseDetails.getCaseData().getReasonForCT();
-
-        List<CaseData> caseDataList = getAllCasesToBeTransferred(caseDetails, userToken, positionTypeCT, reasonForCT, officeCT);
+        caseTypeId = caseDetails.getCaseTypeId();
+        officeCT = caseDetails.getCaseData().getOfficeCT().getValue().getCode();
+        positionTypeCT = caseDetails.getCaseData().getPositionTypeCT();
+        reasonForCT = caseDetails.getCaseData().getReasonForCT();
+        jurisdiction = caseDetails.getJurisdiction();
+        List<CaseData> caseDataList = getAllCasesToBeTransferred(caseDetails, userToken);
         for (CaseData caseData : caseDataList) {
 
             if (!checkBfActionsCleared(caseData)) {
@@ -162,7 +166,7 @@ public class CaseTransferService {
         }
 
         for (CaseData caseData : caseDataList) {
-            createCaseTransferEvent(caseData, errors, caseTypeId, jurisdiction, officeCT, positionTypeCT, reasonForCT, userToken);
+            createCaseTransferEvent(caseData, errors, userToken);
         }
 
     }
