@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
@@ -15,6 +16,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,6 +33,11 @@ public class CaseTransferService {
     private final PersistentQHelperService persistentQHelperService;
     private final CcdClient ccdClient;
     private static final String MESSAGE = "Failed to retrieve the case for case id : ";
+    private String caseTypeId;
+    private String jurisdiction;
+    private String officeCT;
+    private String positionTypeCT;
+    private String reasonForCT;
 
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
@@ -40,7 +47,8 @@ public class CaseTransferService {
             CaseData caseData = caseDetails.getCaseData();
             if (!Strings.isNullOrEmpty(caseData.getCounterClaim())) {
              List<SubmitEvent> submitEvents =  ccdClient.retrieveCasesElasticSearch(userToken, caseDetails.getCaseTypeId(), Arrays.asList(caseData.getCounterClaim()));
-            return submitEvents.get(0).getCaseData();
+             updateTransferredCase(submitEvents.get(0), caseDetails.getCaseTypeId(), userToken);
+             return submitEvents.get(0).getCaseData();
             }
             else {
                 return caseDetails.getCaseData();
@@ -53,22 +61,28 @@ public class CaseTransferService {
     }
     private List<CaseData> getAllCasesToBeTransferred(CaseDetails caseDetails, String userToken) {
         try {
-            CaseData caseData = getOriginalCase(caseDetails, userToken);
+            CaseData originalCaseData = getOriginalCase(caseDetails, userToken);
             List<CaseData> cases = new ArrayList<>();
+            List<SubmitEvent> submitEventsList = new ArrayList<>();
             String counterClaim;
-            cases.add(caseData);
-             if (caseData.getEccCases() != null && !caseData.getEccCases().isEmpty()) {
+            cases.add(originalCaseData);
+             if (originalCaseData.getEccCases() != null && !originalCaseData.getEccCases().isEmpty()) {
 
-                 for (EccCounterClaimTypeItem counterClaimItem:caseData.getEccCases()) {
+                 for (EccCounterClaimTypeItem counterClaimItem:originalCaseData.getEccCases()) {
                      counterClaim =  counterClaimItem.getValue().getCounterClaim();
                      List<SubmitEvent> submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(),new ArrayList<>(Collections.singleton(counterClaim)));
                      if (submitEvents != null && !submitEvents.isEmpty()) {
-                         submitEvents.get(0).setState(TRANSFERRED_STATE);
-                         log.info("State of Case " + submitEvents.get(0).getCaseData().getEthosCaseReference() + " is set to Transferred.");
+                         submitEventsList.add(submitEvents.get(0));
                          cases.add(submitEvents.get(0).getCaseData());
                      }
                  }
             }
+
+             for (SubmitEvent submitEvent: submitEventsList) {
+                 if (!submitEvent.getCaseData().getEthosCaseReference().equals(caseDetails.getCaseData().getEthosCaseReference())) {
+                     updateTransferredCase(submitEvent, caseDetails.getCaseTypeId(), userToken);
+                 }
+             }
             return cases;
         }
         catch (Exception ex) {
@@ -76,8 +90,56 @@ public class CaseTransferService {
         }
     }
 
+    public void createCaseTransferEvent(CaseData caseData, List<String> errors, String userToken) {
+
+        persistentQHelperService.sendCreationEventToSingles(
+                userToken,
+                caseTypeId,
+                jurisdiction,
+                errors,
+                new ArrayList<>(Collections.singletonList(caseData.getEthosCaseReference())),
+                officeCT,
+                positionTypeCT,
+                ccdGatewayBaseUrl,
+                reasonForCT,
+                SINGLE_CASE_TYPE,
+                NO
+        );
+        caseData.setLinkedCaseCT("Transferred to " + officeCT);
+        caseData.setPositionType(positionTypeCT);
+        log.info("Clearing the CT payload for case: " + caseData.getEthosCaseReference());
+        caseData.setOfficeCT(null);
+        caseData.setPositionTypeCT(null);
+        caseData.setStateAPI(null);
+    }
+
+
+    private void updateTransferredCase(SubmitEvent submitEvent, String caseTypeIdCT,
+                                        String accessToken) throws IOException {
+
+        CCDRequest returnedRequest = ccdClient.startCaseTransfer(accessToken, caseTypeId, jurisdiction,
+                String.valueOf(submitEvent.getCaseId()));
+
+        submitEvent.getCaseData().setLinkedCaseCT("Transferred to " + caseTypeIdCT);
+        submitEvent.getCaseData().setPositionTypeCT(positionTypeCT);
+        submitEvent.getCaseData().setReasonForCT(reasonForCT);
+
+        ccdClient.submitEventForCase(accessToken,
+                submitEvent.getCaseData(),
+                caseTypeId,
+                jurisdiction,
+                returnedRequest,
+                String.valueOf(submitEvent.getCaseId()));
+
+    }
+
     public void createCaseTransfer(CaseDetails caseDetails, List<String> errors, String userToken) {
 
+        caseTypeId = caseDetails.getCaseTypeId();
+        officeCT = caseDetails.getCaseData().getOfficeCT().getValue().getCode();
+        positionTypeCT = caseDetails.getCaseData().getPositionTypeCT();
+        reasonForCT = caseDetails.getCaseData().getReasonForCT();
+        jurisdiction = caseDetails.getJurisdiction();
         List<CaseData> caseDataList = getAllCasesToBeTransferred(caseDetails, userToken);
         for (CaseData caseData : caseDataList) {
 
@@ -98,36 +160,13 @@ public class CaseTransferService {
         if (!errors.isEmpty()) {
             return;
         }
+
         for (CaseData caseData : caseDataList) {
-
-            persistentQHelperService.sendCreationEventToSingles(
-                    userToken,
-                    caseDetails.getCaseTypeId(),
-                    caseDetails.getJurisdiction(),
-                    errors,
-                    new ArrayList<>(Collections.singletonList(caseData.getEthosCaseReference())),
-                    caseDetails.getCaseData().getOfficeCT().getValue().getCode(),
-                    caseDetails.getCaseData().getPositionTypeCT(),
-                    ccdGatewayBaseUrl,
-                    caseDetails.getCaseData().getReasonForCT(),
-                    SINGLE_CASE_TYPE,
-                    NO
-            );
-            caseData.setReasonForCT(caseDetails.getCaseData().getReasonForCT());
-            caseData.setLinkedCaseCT("Transferred to " + caseDetails.getCaseData().getOfficeCT().getValue().getCode());
-            caseData.setPositionType(caseDetails.getCaseData().getPositionTypeCT());
-            log.info("reasonForCT for case: " + caseData.getEthosCaseReference() + " is set to: " + caseDetails.getCaseData().getReasonForCT());
-
+            createCaseTransferEvent(caseData, errors, userToken);
         }
-        for (CaseData caseData : caseDataList) {
-            log.info("Clearing the CT payload");
-            caseData.setPositionTypeCT(null);
-            caseData.setStateAPI(null);
-            caseData.setOfficeCT(null);
-        }
-
 
     }
+
 
     private boolean checkBfActionsCleared(CaseData caseData) {
         if (caseData.getBfActions() != null) {
