@@ -3,14 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.servicebus.CreateUpdatesDto;
 import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.CloseDataModel;
@@ -25,7 +17,6 @@ import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.UpdateDataModel;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 public class PersistentQHelper {
@@ -88,7 +79,7 @@ public class PersistentQHelper {
                     errors,
                     updateSize);
         } else {
-            log.info("Case Ref collection is empty");
+            log.warn("Case Ref collection is empty");
         }
     }
 
@@ -159,149 +150,6 @@ public class PersistentQHelper {
     }
 
     public static UpdateDataModel getUpdateDataModel(MultipleData multipleData, CaseData caseData) {
-        return UpdateDataModel.builder()
-                .managingOffice(multipleData.getManagingOffice())
-                .fileLocation(multipleData.getFileLocation())
-                .fileLocationGlasgow(multipleData.getFileLocationGlasgow())
-                .fileLocationAberdeen(multipleData.getFileLocationAberdeen())
-                .fileLocationDundee(multipleData.getFileLocationDundee())
-                .fileLocationEdinburgh(multipleData.getFileLocationEdinburgh())
-                .clerkResponsible(multipleData.getClerkResponsible())
-                .positionType(multipleData.getPositionType())
-                .receiptDate(multipleData.getReceiptDate())
-                .hearingStage(multipleData.getHearingStage())
-                .representativeClaimantType(caseData != null && caseData.getRepresentativeClaimantType() != null
-                        ? caseData.getRepresentativeClaimantType()
-                        : null)
-                .jurCodesType(getJurCodesType(multipleData, caseData))
-                .respondentSumType(getRespondentSumType(multipleData, caseData))
-                .judgementType(getJudgementType(multipleData, caseData))
-                .representedType(getRespondentRepType(multipleData, caseData))
-                .build();
+        return UpdateDataModelBuilder.build(multipleData, caseData);
     }
-
-    private static JurCodesType getJurCodesType(MultipleData multipleData, CaseData caseData) {
-
-        if (caseData != null) {
-
-            List<JurCodesTypeItem> jurCodesCollection = caseData.getJurCodesCollection();
-
-            if (multipleData.getBatchUpdateJurisdiction().getValue() != null
-                    && jurCodesCollection != null) {
-
-                String jurCodeToSearch = multipleData.getBatchUpdateJurisdiction().getValue().getLabel();
-
-                Optional<JurCodesTypeItem> jurCodesTypeItemOptional =
-                        jurCodesCollection.stream()
-                                .filter(jurCodesTypeItem ->
-                                        jurCodesTypeItem.getValue().getJuridictionCodesList().equals(jurCodeToSearch))
-                                .findAny();
-
-                if (jurCodesTypeItemOptional.isPresent()) {
-
-                    return jurCodesTypeItemOptional.get().getValue();
-
-                }
-
-            }
-
-        }
-
-        return null;
-
-    }
-
-    private static RespondentSumType getRespondentSumType(MultipleData multipleData, CaseData caseData) {
-
-        if (caseData != null) {
-
-            List<RespondentSumTypeItem> respondentCollection = caseData.getRespondentCollection();
-
-            if (multipleData.getBatchUpdateRespondent().getValue() != null
-                    && respondentCollection != null) {
-
-                String respondentToSearch = multipleData.getBatchUpdateRespondent().getValue().getLabel();
-
-                Optional<RespondentSumTypeItem> respondentSumTypeItemOptional =
-                        respondentCollection.stream()
-                                .filter(respondentSumTypeItem ->
-                                        respondentSumTypeItem.getValue().getRespondentName().equals(respondentToSearch))
-                                .findAny();
-
-                if (respondentSumTypeItemOptional.isPresent()) {
-
-                    return respondentSumTypeItemOptional.get().getValue();
-
-                }
-
-            }
-
-        }
-
-        return null;
-
-    }
-
-    private static JudgementType getJudgementType(MultipleData multipleData, CaseData caseData) {
-
-        if (caseData != null) {
-
-            List<JudgementTypeItem> judgementCollection = caseData.getJudgementCollection();
-
-            if (multipleData.getBatchUpdateJudgment().getValue() != null
-                    && judgementCollection != null) {
-
-                String judgementIdToSearch = multipleData.getBatchUpdateJudgment().getValue().getCode();
-
-                Optional<JudgementTypeItem> judgementTypeItemOptional =
-                        judgementCollection.stream()
-                                .filter(judgementTypeItem ->
-                                        judgementTypeItem.getId().equals(judgementIdToSearch))
-                                .findAny();
-
-                if (judgementTypeItemOptional.isPresent()) {
-
-                    return judgementTypeItemOptional.get().getValue();
-
-                }
-
-            }
-
-        }
-
-        return null;
-
-    }
-
-    private static RepresentedTypeR getRespondentRepType(MultipleData multipleData, CaseData caseData) {
-
-        if (caseData != null) {
-
-            List<RepresentedTypeRItem> repCollection = caseData.getRepCollection();
-
-            if (multipleData.getBatchUpdateRespondentRep().getValue() != null
-                    && repCollection != null) {
-
-                String respondentRepIdToSearch = multipleData.getBatchUpdateRespondentRep().getValue().getCode();
-
-                Optional<RepresentedTypeRItem> representedTypeRItemOptional =
-                        repCollection.stream()
-                                .filter(representedTypeRItem ->
-                                        representedTypeRItem.getId().equals(respondentRepIdToSearch))
-                                .findAny();
-
-                if (representedTypeRItemOptional.isPresent()) {
-
-                    return representedTypeRItemOptional.get().getValue();
-
-                }
-
-            }
-
-        }
-
-        return null;
-
-    }
-
 }
