@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
-import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
@@ -16,7 +15,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,36 +41,36 @@ public class CaseTransferService {
 
     private CaseData getOriginalCase(CaseDetails caseDetails, String userToken) {
         try {
-            CaseData caseData = caseDetails.getCaseData();
+            var caseData = caseDetails.getCaseData();
             if (!Strings.isNullOrEmpty(caseData.getCounterClaim())) {
-             List<SubmitEvent> submitEvents =  ccdClient.retrieveCasesElasticSearch(userToken, caseDetails.getCaseTypeId(), Arrays.asList(caseData.getCounterClaim()));
-             return submitEvents.get(0).getCaseData();
+                List<SubmitEvent> submitEvents =  ccdClient.retrieveCasesElasticSearch(userToken, caseDetails.getCaseTypeId(), Arrays.asList(caseData.getCounterClaim()));
+                return submitEvents.get(0).getCaseData();
             }
             else {
                 return caseDetails.getCaseData();
             }
 
         }
-         catch (Exception ex) {
+        catch (Exception ex) {
             throw new CaseCreationException("Error getting original case number: " + caseDetails.getCaseData().getEthosCaseReference() + " " + ex.getMessage());
         }
     }
 
     private List<CaseData> getAllCasesToBeTransferred(CaseDetails caseDetails, String userToken) {
         try {
-            CaseData originalCaseData = getOriginalCase(caseDetails, userToken);
+            var originalCaseData = getOriginalCase(caseDetails, userToken);
             List<CaseData> cases = new ArrayList<>();
             String counterClaim;
             cases.add(originalCaseData);
-             if (originalCaseData.getEccCases() != null && !originalCaseData.getEccCases().isEmpty()) {
+            if (originalCaseData.getEccCases() != null && !originalCaseData.getEccCases().isEmpty()) {
 
-                 for (EccCounterClaimTypeItem counterClaimItem:originalCaseData.getEccCases()) {
-                     counterClaim =  counterClaimItem.getValue().getCounterClaim();
-                     List<SubmitEvent>   submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(),new ArrayList<>(Collections.singleton(counterClaim)));
-                     if (submitEvents != null && !submitEvents.isEmpty()) {
-                         cases.add(submitEvents.get(0).getCaseData());
-                     }
-                 }
+                for (EccCounterClaimTypeItem counterClaimItem:originalCaseData.getEccCases()) {
+                    counterClaim =  counterClaimItem.getValue().getCounterClaim();
+                    List<SubmitEvent>   submitEvents = ccdClient.retrieveCasesElasticSearch(userToken,caseDetails.getCaseTypeId(),new ArrayList<>(Collections.singleton(counterClaim)));
+                    if (submitEvents != null && !submitEvents.isEmpty()) {
+                        cases.add(submitEvents.get(0).getCaseData());
+                    }
+                }
             }
 
             return cases;
@@ -152,14 +150,15 @@ public class CaseTransferService {
     }
 
     private boolean checkHearingsNotListed(CaseData caseData) {
-        if (caseData.getHearingCollection() != null) {
-            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
-                    for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        if (dateListedTypeItem.getValue().getHearingStatus() != null
-                                && dateListedTypeItem.getValue().getHearingStatus().equals(HEARING_STATUS_LISTED)) {
-                            return false;
-                        }
+        if (caseData.getHearingCollection() == null) {
+            return true;
+        }
+        for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+            if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
+                for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                    if (dateListedTypeItem.getValue().getHearingStatus() != null
+                            && dateListedTypeItem.getValue().getHearingStatus().equals(HEARING_STATUS_LISTED)) {
+                        return false;
                     }
                 }
             }
@@ -168,3 +167,4 @@ public class CaseTransferService {
     }
 
 }
+
