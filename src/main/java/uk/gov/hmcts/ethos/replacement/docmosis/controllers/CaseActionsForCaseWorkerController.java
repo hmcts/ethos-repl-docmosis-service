@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.common.Strings;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.*;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,7 @@ public class CaseActionsForCaseWorkerController {
 
     private static final String LOG_MESSAGE = "received notification request for case reference :    ";
 
+    private final CaseTransferService caseTransferService;
     private final CaseCreationForCaseWorkerService caseCreationForCaseWorkerService;
     private final CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     private final CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService;
@@ -221,9 +224,15 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        List<String> errors = eventValidationService.validateReceiptDate(caseData);
-        log.info("Event fields validation: " + errors);
-
+        List<String> errors = new ArrayList<>();
+        String error = eventValidationService.validateCaseState(ccdRequest.getCaseDetails());
+        if (!Strings.isNullOrEmpty(error)){
+            errors.add(error);
+        }
+        if (errors.isEmpty()) {
+            errors.addAll(eventValidationService.validateReceiptDate(caseData));
+        }
+        log.info("Event fields and case state validation for case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + ": " + errors);
         if (errors.isEmpty()) {
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
@@ -785,7 +794,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         List<String> errors = new ArrayList<>();
-        caseCreationForCaseWorkerService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, userToken);
+        caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, userToken);
 
         return getCallbackRespEntityErrors(errors, ccdRequest.getCaseDetails().getCaseData());
     }

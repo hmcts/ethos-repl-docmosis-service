@@ -96,6 +96,7 @@ public class AddSingleCaseToMultipleService {
 
         caseData.setMultipleReference(newMultipleReference);
         caseData.setCaseType(MULTIPLE_CASE_TYPE);
+        log.info("setLeadClaimant is set to " + leadClaimant);
         caseData.setLeadClaimant(leadClaimant);
 
     }

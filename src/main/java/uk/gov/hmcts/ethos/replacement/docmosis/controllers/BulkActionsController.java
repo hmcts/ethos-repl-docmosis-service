@@ -11,13 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkCallbackResponse;
-import uk.gov.hmcts.ecm.common.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.helper.BulkCasesPayload;
-import uk.gov.hmcts.ecm.common.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.BulkCreationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.BulkSearchService;
@@ -45,6 +42,7 @@ public class BulkActionsController {
 
     private static final String LOG_MESSAGE = "received notification request for bulk reference :    ";
     private static final String GENERATED_DOCUMENTS_URL = "Please download the documents from : ";
+    private static final String INVALID_TOKEN = "Invalid Token {}";
 
     private final BulkCreationService bulkCreationService;
     private final BulkUpdateService bulkUpdateService;
@@ -61,20 +59,21 @@ public class BulkActionsController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
+
     @Deprecated public ResponseEntity<BulkCallbackResponse> createBulk(
             @RequestBody BulkRequest bulkRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("CREATE BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(
+        var bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(
                 bulkRequest.getCaseDetails(), userToken, true);
 
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(
+        var bulkRequestPayload = bulkCreationService.bulkCreationLogic(
                 bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, BULK_CREATION_STEP);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -97,7 +96,7 @@ public class BulkActionsController {
         log.info("CREATE BULKES ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
@@ -106,10 +105,10 @@ public class BulkActionsController {
             bulkRequest.getCaseDetails().getCaseData().setMultipleSource(MANUALLY_CREATED_POSITION);
         }
 
-        BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
+        var bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
                 bulkRequest.getCaseDetails(), userToken, true, true);
 
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkCreationLogic(
+        var bulkRequestPayload = bulkCreationService.bulkCreationLogic(
                 bulkRequest.getCaseDetails(), bulkCasesPayload, userToken, BULK_CREATION_STEP);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -132,13 +131,13 @@ public class BulkActionsController {
         log.info("AFTER SUBMITTED BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
         if (bulkRequest.getCaseDetails().getCaseData().getMultipleSource() != null
                 && !bulkRequest.getCaseDetails().getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
-            BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
+            var bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
                     bulkRequest.getCaseDetails(), userToken, true, false);
             bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(), bulkCasesPayload, userToken,
                     UPDATE_SINGLES_STEP);
@@ -164,11 +163,11 @@ public class BulkActionsController {
         log.info("UPDATE BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkUpdateLogic(bulkRequest.getCaseDetails(),
+        var bulkRequestPayload = bulkUpdateService.bulkUpdateLogic(bulkRequest.getCaseDetails(),
                 userToken);
 
         bulkRequestPayload = bulkUpdateService.clearUpFields(bulkRequestPayload);
@@ -193,11 +192,11 @@ public class BulkActionsController {
         log.info("UPDATE BULK CASE IDS ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, userToken,
+        var bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(bulkRequest, userToken,
                 false);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -220,11 +219,11 @@ public class BulkActionsController {
         log.info("GENERATE BULK LETTER ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkDocumentInfo bulkDocumentInfo = documentGenerationService.processBulkDocumentRequest(bulkRequest,
+        var bulkDocumentInfo = documentGenerationService.processBulkDocumentRequest(bulkRequest,
                 userToken);
         bulkRequest.getCaseDetails().getCaseData().setDocMarkUp(bulkDocumentInfo.getMarkUps());
         documentGenerationService.clearUserChoicesForMultiples(bulkRequest.getCaseDetails());
@@ -249,7 +248,7 @@ public class BulkActionsController {
         log.info("GENERATE BULK LETTER CONFIRMATION ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
@@ -275,11 +274,11 @@ public class BulkActionsController {
         log.info("MID SEARCH BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(
+        var bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(
                 bulkRequest.getCaseDetails(), false);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -302,11 +301,11 @@ public class BulkActionsController {
         log.info("SEARCH BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkSearchLogic(bulkRequest.getCaseDetails());
+        var bulkRequestPayload = bulkSearchService.bulkSearchLogic(bulkRequest.getCaseDetails());
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -328,11 +327,11 @@ public class BulkActionsController {
         log.info("MID CREATE SUB MULTIPLE ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(
+        var bulkRequestPayload = bulkSearchService.bulkMidSearchLogic(
                 bulkRequest.getCaseDetails(), true);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -355,11 +354,11 @@ public class BulkActionsController {
         log.info("CREATE SUB MULTIPLE ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = subMultipleService.createSubMultipleLogic(
+        var bulkRequestPayload = subMultipleService.createSubMultipleLogic(
                 bulkRequest.getCaseDetails());
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -382,11 +381,11 @@ public class BulkActionsController {
         log.info("SUB MULTIPLE DYNAMIC LIST ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = subMultipleService.populateSubMultipleDynamicListLogic(
+        var bulkRequestPayload = subMultipleService.populateSubMultipleDynamicListLogic(
                 bulkRequest.getCaseDetails());
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -409,11 +408,11 @@ public class BulkActionsController {
         log.info("FILTER DEFAULTED ALL DYNAMIC LIST ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = subMultipleService.populateFilterDefaultedDynamicListLogic(
+        var bulkRequestPayload = subMultipleService.populateFilterDefaultedDynamicListLogic(
                 bulkRequest.getCaseDetails(), SELECT_ALL_VALUE);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -436,11 +435,11 @@ public class BulkActionsController {
         log.info("FILTER DEFAULTED NONE DYNAMIC LIST ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = subMultipleService.populateFilterDefaultedDynamicListLogic(
+        var bulkRequestPayload = subMultipleService.populateFilterDefaultedDynamicListLogic(
                 bulkRequest.getCaseDetails(), SELECT_NONE_VALUE);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -463,11 +462,11 @@ public class BulkActionsController {
         log.info("MID UPDATE SUB MULTIPLE ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = subMultipleService.bulkMidUpdateLogic(bulkRequest.getCaseDetails());
+        var bulkRequestPayload = subMultipleService.bulkMidUpdateLogic(bulkRequest.getCaseDetails());
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -489,11 +488,11 @@ public class BulkActionsController {
         log.info("UPDATE SUB MULTIPLE ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = subMultipleService.updateSubMultipleLogic(bulkRequest.getCaseDetails());
+        var bulkRequestPayload = subMultipleService.updateSubMultipleLogic(bulkRequest.getCaseDetails());
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -515,11 +514,11 @@ public class BulkActionsController {
         log.info("DELETE SUB MULTIPLE ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = subMultipleService.deleteSubMultipleLogic(bulkRequest.getCaseDetails());
+        var bulkRequestPayload = subMultipleService.deleteSubMultipleLogic(bulkRequest.getCaseDetails());
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
                 .errors(bulkRequestPayload.getErrors())
@@ -541,11 +540,11 @@ public class BulkActionsController {
         log.info("GENERATE BULK SCHEDULE ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkDocumentInfo bulkDocumentInfo = documentGenerationService.processBulkScheduleRequest(
+        var bulkDocumentInfo = documentGenerationService.processBulkScheduleRequest(
                 bulkRequest, userToken);
 
         if (bulkDocumentInfo.getErrors().isEmpty()) {
@@ -577,7 +576,7 @@ public class BulkActionsController {
         log.info("GENERATE BULK SCHEDULE CONFIRMATION ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
@@ -602,14 +601,14 @@ public class BulkActionsController {
         log.info("PRE ACCEPT BULK ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
         List<SubmitEvent> submitEvents =
                 bulkSearchService.retrievalCasesForPreAcceptRequest(bulkRequest.getCaseDetails(), userToken);
 
-        BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(),
+        var bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(),
                 submitEvents, userToken, false);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -619,3 +618,4 @@ public class BulkActionsController {
     }
 
 }
+

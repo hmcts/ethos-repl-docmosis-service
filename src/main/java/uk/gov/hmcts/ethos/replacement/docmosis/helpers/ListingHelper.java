@@ -85,7 +85,7 @@ public class ListingHelper {
     public static ListingType getListingTypeFromCaseData(ListingData listingData, CaseData caseData,
                                                          HearingType hearingType, DateListedType dateListedType,
                                                          int index, int hearingCollectionSize) {
-        ListingType listingType = new ListingType();
+        var listingType = new ListingType();
 
         try {
             log.info("started getListingTypeFromCaseData");
@@ -210,11 +210,11 @@ public class ListingHelper {
                     && !caseData.getRespondentCollection().isEmpty()
                     && caseData.getRespondentCollection().get(0).getValue() != null
                     && DocumentHelper.getRespondentAddressET3(
-                            caseData.getRespondentCollection().get(0).getValue()) != null
+                    caseData.getRespondentCollection().get(0).getValue()) != null
                     && DocumentHelper.getRespondentAddressET3(
-                            caseData.getRespondentCollection().get(0).getValue()).getPostTown() != null
+                    caseData.getRespondentCollection().get(0).getValue()).getPostTown() != null
                     ? DocumentHelper.getRespondentAddressET3(
-                            caseData.getRespondentCollection().get(0).getValue()).getPostTown()
+                    caseData.getRespondentCollection().get(0).getValue()).getPostTown()
                     : " ");
             log.info("getRespOthersName");
             listingType.setRespondentOthers(!isNullOrEmpty(getRespOthersName(caseData))
@@ -237,7 +237,7 @@ public class ListingHelper {
     public static StringBuilder buildListingDocumentContent(ListingData listingData, String accessKey,
                                                             String templateName, UserDetails userDetails,
                                                             String caseType) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
 
         // Start building the instruction
         sb.append("{\n");
@@ -286,7 +286,7 @@ public class ListingHelper {
     private static String getOfficeName(String caseType) {
         int index = findOfficeNameInUpperCase(caseType);
         if (index != 0) {
-            String upperCaseLetter = Character.toString(caseType.charAt(index));
+            var upperCaseLetter = Character.toString(caseType.charAt(index));
             return caseType.replace(upperCaseLetter, " " + upperCaseLetter);
         } else {
             return caseType;
@@ -294,7 +294,7 @@ public class ListingHelper {
     }
 
     private static int findOfficeNameInUpperCase(String caseType) {
-        int count = 0;
+        var count = 0;
         for (int i = 0; i < caseType.length(); i++) {
             if (Character.isUpperCase(caseType.charAt(i))) {
                 count++;
@@ -307,7 +307,7 @@ public class ListingHelper {
     }
 
     private static StringBuilder getLogo(String caseType) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         if (caseType.equals(SCOTLAND_LISTING_CASE_TYPE_ID)) {
             sb.append("\"listing_logo\":\"").append("[userImage:").append("schmcts.png]").append(NEW_LINE);
         } else {
@@ -357,14 +357,14 @@ public class ListingHelper {
     }
 
     private static StringBuilder getCaseCauseListByDate(ListingData listingData, String caseType) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         Iterator<Map.Entry<String, List<ListingTypeItem>>> entries = getEntriesByDate(sb, listingData);
         while (entries.hasNext()) {
             Map.Entry<String, List<ListingTypeItem>> listingEntry = entries.next();
             sb.append("{\"date\":\"").append(listingEntry.getKey()).append(NEW_LINE);
             sb.append("\"case_total\":\"").append(listingEntry.getValue().size()).append(NEW_LINE);
             sb.append("\"listing\":[\n");
-            for (int i = 0; i < listingEntry.getValue().size(); i++) {
+            for (var i = 0; i < listingEntry.getValue().size(); i++) {
                 sb.append(getListingTypeRow(listingEntry.getValue().get(i).getValue(), caseType, listingData));
                 if (i != listingEntry.getValue().size() - 1) {
                     sb.append(",\n");
@@ -381,7 +381,7 @@ public class ListingHelper {
     }
 
     private static StringBuilder getCaseCauseListByRoom(ListingData listingData, String caseType) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         Iterator<Map.Entry<String, List<ListingTypeItem>>> entries = getEntriesByDate(sb, listingData);
         while (entries.hasNext()) {
             Map.Entry<String, List<ListingTypeItem>> listingEntry = entries.next();
@@ -397,7 +397,7 @@ public class ListingHelper {
     }
 
     public static StringBuilder getListingDate(ListingData listingData) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         if (listingData.getHearingDateType() != null
                 && listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
             sb.append("\"Listed_date_from\":\"")
@@ -463,7 +463,7 @@ public class ListingHelper {
 
     private static StringBuilder getListByRoomOrVenue(List<ListingTypeItem> collection, ListingData listingData,
                                                       String caseType, boolean byRoom) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         TreeMap<String, List<ListingTypeItem>> sortedMap = byRoom
                 ? getListHearingsByRoomWithNotAllocated(collection)
                 : getListHearingsByVenueWithNotAllocated(listingData);
@@ -474,7 +474,7 @@ public class ListingHelper {
             String hearingRoomOrVenue = byRoom ? "Hearing_room" : "Hearing_venue";
             sb.append("{\"").append(hearingRoomOrVenue).append("\":\"").append(listingEntry.getKey()).append(NEW_LINE);
             sb.append("\"listing\":[\n");
-            for (int i = 0; i < listingEntry.getValue().size(); i++) {
+            for (var i = 0; i < listingEntry.getValue().size(); i++) {
                 sb.append(getListingTypeRow(listingEntry.getValue().get(i).getValue(), caseType, listingData));
                 if (i != listingEntry.getValue().size() - 1) {
                     sb.append(",\n");
@@ -492,9 +492,9 @@ public class ListingHelper {
 
     private static StringBuilder getCaseCauseList(ListingData listingData, String caseType) {
         List<ListingTypeItem> listingTypeItems = listingData.getListingCollection();
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append("\"listing\":[\n");
-        for (int i = 0; i < listingTypeItems.size(); i++) {
+        for (var i = 0; i < listingTypeItems.size(); i++) {
             sb.append(getListingTypeRow(listingTypeItems.get(i).getValue(), caseType, listingData));
             if (i != listingTypeItems.size() - 1) {
                 sb.append(",\n");
@@ -505,7 +505,7 @@ public class ListingHelper {
     }
 
     private static StringBuilder getListingTypeRow(ListingType listingType, String caseType, ListingData listingData) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append("{\"Judge\":\"").append(nullCheck(extractHearingJudgeName(listingType))).append(NEW_LINE);
         sb.append(getCourtListingData(listingData));
         log.info("Court listing data");
@@ -562,7 +562,7 @@ public class ListingHelper {
     }
 
     private static StringBuilder getCourtListingData(ListingData listingData) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         if (listingData.getTribunalCorrespondenceAddress() != null) {
             sb.append("\"Court_addressLine1\":\"").append(
                     nullCheck(listingData.getTribunalCorrespondenceAddress().getAddressLine1())).append(NEW_LINE);
@@ -592,44 +592,50 @@ public class ListingHelper {
 
     public static String getListingDocName(ListingData listingData) {
         String roomOrNoRoom = !isNullOrEmpty(listingData.getRoomOrNoRoom()) ? listingData.getRoomOrNoRoom() : "";
-        if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
-                && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)
-                && roomOrNoRoom.equals(NO)) {
-            return STAFF_CASE_CAUSE_LIST_TEMPLATE;
-        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
-                && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)
-                && roomOrNoRoom.equals(YES)) {
-            return STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE;
-        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
-                && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC)
-                && roomOrNoRoom.equals(NO)) {
-            return PUBLIC_CASE_CAUSE_LIST_TEMPLATE;
-        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
-                && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC)
-                && roomOrNoRoom.equals(YES)) {
-            return PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE;
-        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
-                && listingData.getHearingDocETCL().equals(HEARING_ETCL_PRESS_LIST)
-                && listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
-            return PRESS_LIST_CAUSE_LIST_RANGE_TEMPLATE;
-        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
-                && listingData.getHearingDocETCL().equals(HEARING_ETCL_PRESS_LIST)
-                && !listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
-            return PRESS_LIST_CAUSE_LIST_SINGLE_TEMPLATE;
-        } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT56)) {
-            return IT56_TEMPLATE;
-        } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT57)) {
-            return IT57_TEMPLATE;
-        } else if (listingData.getHearingDocType().equals(BROUGHT_FORWARD_REPORT)) {
-            return "EM-TRB-SCO-ENG-00218";
-        } else if (listingData.getHearingDocType().equals(CLAIMS_ACCEPTED_REPORT)) {
-            return "EM-TRB-SCO-ENG-00219";
-        } else if (listingData.getHearingDocType().equals(LIVE_CASELOAD_REPORT)) {
-            return "EM-TRB-SCO-ENG-00220";
-        } else if (listingData.getHearingDocType().equals(CASES_COMPLETED_REPORT)) {
-            return "EM-TRB-SCO-ENG-00221";
+        if (listingData.getHearingDocType() != null) {
+            if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                    && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)
+                    && roomOrNoRoom.equals(NO)) {
+                return STAFF_CASE_CAUSE_LIST_TEMPLATE;
+            } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                    && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)
+                    && roomOrNoRoom.equals(YES)) {
+                return STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE;
+            } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                    && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC)
+                    && roomOrNoRoom.equals(NO)) {
+                return PUBLIC_CASE_CAUSE_LIST_TEMPLATE;
+            } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                    && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC)
+                    && roomOrNoRoom.equals(YES)) {
+                return PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE;
+            } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                    && listingData.getHearingDocETCL().equals(HEARING_ETCL_PRESS_LIST)
+                    && listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
+                return PRESS_LIST_CAUSE_LIST_RANGE_TEMPLATE;
+            } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                    && listingData.getHearingDocETCL().equals(HEARING_ETCL_PRESS_LIST)
+                    && !listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
+                return PRESS_LIST_CAUSE_LIST_SINGLE_TEMPLATE;
+            } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT56)) {
+                return IT56_TEMPLATE;
+            } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT57)) {
+                return IT57_TEMPLATE;
+            }
+        } else if (listingData.getReportType() != null) {
+            switch (listingData.getReportType()) {
+                case BROUGHT_FORWARD_REPORT:
+                    return "EM-TRB-SCO-ENG-00218";
+                case CLAIMS_ACCEPTED_REPORT:
+                    return "EM-TRB-SCO-ENG-00219";
+                case LIVE_CASELOAD_REPORT:
+                    return "EM-TRB-SCO-ENG-00220";
+                case CASES_COMPLETED_REPORT:
+                    return "EM-TRB-SCO-ENG-00221";
+                default:
+                    return "No document found";
+            }
         }
-        //TODO
         return "No document found";
     }
 
@@ -725,32 +731,32 @@ public class ListingHelper {
     }
 
     public static boolean getListingDateBetween(String dateToSearchFrom, String dateToSearchTo, String dateToSearch) {
-        LocalDate localDateFrom = LocalDate.parse(dateToSearchFrom, OLD_DATE_TIME_PATTERN2);
-        LocalDate localDate = LocalDate.parse(addMillisToDateToSearch(dateToSearch), OLD_DATE_TIME_PATTERN);
+        var localDateFrom = LocalDate.parse(dateToSearchFrom, OLD_DATE_TIME_PATTERN2);
+        var localDate = LocalDate.parse(addMillisToDateToSearch(dateToSearch), OLD_DATE_TIME_PATTERN);
         if (dateToSearchTo.equals("")) {
             return localDateFrom.isEqual(localDate);
         } else {
-            LocalDate localDateTo = LocalDate.parse(dateToSearchTo, OLD_DATE_TIME_PATTERN2);
+            var localDateTo = LocalDate.parse(dateToSearchTo, OLD_DATE_TIME_PATTERN2);
             return (!localDate.isBefore(localDateFrom)) && (!localDate.isAfter(localDateTo));
         }
     }
 
     public static boolean getMatchingDateBetween(String dateToSearchFrom, String dateToSearchTo,
                                                  String dateToSearch, boolean dateRange) {
-        LocalDate localDate = LocalDate.parse(dateToSearch, OLD_DATE_TIME_PATTERN2);
-        LocalDate localDateFrom = LocalDate.parse(dateToSearchFrom, OLD_DATE_TIME_PATTERN2);
+        var localDate = LocalDate.parse(dateToSearch, OLD_DATE_TIME_PATTERN2);
+        var localDateFrom = LocalDate.parse(dateToSearchFrom, OLD_DATE_TIME_PATTERN2);
         if (!dateRange) {
             return localDateFrom.isEqual(localDate);
         } else {
-            LocalDate localDateTo = LocalDate.parse(dateToSearchTo, OLD_DATE_TIME_PATTERN2);
+            var localDateTo = LocalDate.parse(dateToSearchTo, OLD_DATE_TIME_PATTERN2);
             return (!localDate.isBefore(localDateFrom)) && (!localDate.isAfter(localDateTo));
         }
     }
 
     public static boolean isListingRangeValid(ListingData listingData, List<String> errors) {
         if (listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
-            LocalDate localDateFrom = LocalDate.parse(listingData.getListingDateFrom(), OLD_DATE_TIME_PATTERN2);
-            LocalDate localDateTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2);
+            var localDateFrom = LocalDate.parse(listingData.getListingDateFrom(), OLD_DATE_TIME_PATTERN2);
+            var localDateTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2);
             long noOfDaysBetween = ChronoUnit.DAYS.between(localDateFrom, localDateTo);
             if (localDateFrom.isBefore(localDateTo) && noOfDaysBetween <= 31) {
                 return true;
@@ -811,4 +817,11 @@ public class ListingHelper {
                             .thenComparing(getTimeComparatorListingTypeItem()));
         }
     }
+
+    public static boolean isReportType(String reportType) {
+        return Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
+                LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT).contains(reportType);
+    }
+
 }
+

@@ -248,7 +248,8 @@ public class ListingGenerationController {
 
         List<String> errors = new ArrayList<>();
         ListingData listingData = listingRequest.getCaseDetails().getCaseData();
-        if (listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty()) {
+        if ((listingData.getListingCollection() != null && !listingData.getListingCollection().isEmpty())
+                || ListingHelper.isReportType(listingData.getReportType())) {
             DocumentInfo documentInfo = listingService.processHearingDocument(
                     listingData, listingRequest.getCaseDetails().getCaseTypeId(), userToken);
             listingData.setDocMarkUp(documentInfo.getMarkUp());
