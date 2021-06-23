@@ -146,6 +146,9 @@ task runAndPublishConsumerPactTests(type: Test, description: 'Publish pact test 
     testClassesDirs = sourceSets.contractTest.output.classesDirs
     classpath = sourceSets.contractTest.runtimeClasspath
 }
+rootProject.tasks.named("processContractTestResources") {
+    duplicatesStrategy = 'include'
+}
 
 runAndPublishConsumerPactTests.finalizedBy pactPublish
 
