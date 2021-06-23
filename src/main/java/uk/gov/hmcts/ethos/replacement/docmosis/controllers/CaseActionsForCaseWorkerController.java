@@ -225,10 +225,10 @@ public class CaseActionsForCaseWorkerController {
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = new ArrayList<>();
-        String error = eventValidationService.validateCaseState(ccdRequest.getCaseDetails());
-        if (!Strings.isNullOrEmpty(error)){
-            errors.add(error);
-        }
+//        String error = eventValidationService.validateCaseState(ccdRequest.getCaseDetails());
+//        if (!Strings.isNullOrEmpty(error)){
+//            errors.add(error);
+//        }
         if (errors.isEmpty()) {
             errors.addAll(eventValidationService.validateReceiptDate(caseData));
         }
