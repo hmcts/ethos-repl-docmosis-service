@@ -215,7 +215,7 @@ dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.0.3'
 
     //to remove vulnerability CVE-2021-22118
-    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.7'
+    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.8'
 
     implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: '11.2'
     implementation group: 'io.github.openfeign', name: 'feign-core', version: '11.2'
@@ -231,7 +231,7 @@ dependencies {
       implementation group: 'net.minidev', name: 'json-smart-action', version: '2.4.2'
 
       //To Remove vulnerability CVE-2021-22134
-    implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.11.1'
+    implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.12.0'
 
     //To Remove vulnerability CVE-2021-21409
     implementation group: 'io.netty', name: 'netty-codec-http2', version: '4.1.61.Final'
