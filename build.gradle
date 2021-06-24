@@ -202,6 +202,9 @@ dependencies {
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.10'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    //To remove the vulnerability CVE-2021-31811, CVE-2021-31812:
+    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.24'
+    implementation group: 'org.apache.pdfbox', name: 'pdfbox-app', version: '2.0.24'
 
 
 
