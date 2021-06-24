@@ -504,31 +504,7 @@
         <cve>CVE-2021-10936</cve>
     </suppress>
     <suppress>
-        <notes><![CDATA[ CVE-2021-21295  ]]></notes>
-        <cve>CVE-2021-21295</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ CVE-2018-10936  ]]></notes>
-        <cve>CVE-2018-10936</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ CVE-2021-21409  ]]></notes>
-        <cve>CVE-2021-21409</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ CVE-2021-22134  ]]></notes>
-        <cve>CVE-2021-22134</cve>
-    </suppress>
-    <suppress>
         <notes><![CDATA[ CVE-2020-7791  ]]></notes>
         <cve>CVE-2020-7791</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ CVE-2021-22118  ]]></notes>
-        <cve>CVE-2021-22118</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ CVE-2021-27568  ]]></notes>
-        <cve>CVE-2021-27568</cve>
     </suppress>
 </suppressions>
