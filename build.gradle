@@ -206,7 +206,8 @@ dependencies {
     implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.24'
     implementation group: 'org.apache.pdfbox', name: 'pdfbox-app', version: '2.0.24'
 
-
+    //To remove the vulnerability CVE-2018-10237:
+    implementation group: 'com.google.guava', name: 'guava', version: '24.1.1-jre'
 
     implementation 'com.github.hmcts:ecm-common:0.1.90'
 
@@ -214,8 +215,9 @@ dependencies {
 
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.0.3'
 
-    //to remove vulnerability CVE-2021-22118
-    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.8'
+
+    //to remove vulnerability CVE-2020-11987
+    implementation group: 'org.apache.xmlgraphics', name: 'batik-svgbrowser', version: '1.14'
 
     implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: '11.2'
     implementation group: 'io.github.openfeign', name: 'feign-core', version: '11.2'
@@ -226,19 +228,25 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.1.0'
 
     //To Remove vulnerability CVE-2021-27568
-//   implementation group: 'net.minidev', name: 'json-smart-mini', version: '1.3.2'
       implementation group: 'net.minidev', name: 'json-smart', version: '2.4.2'
       implementation group: 'net.minidev', name: 'json-smart-action', version: '2.4.2'
 
       //To Remove vulnerability CVE-2021-22134
     implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.12.0'
 
+    //To Remove vulnerability CVE-2018-8088
+    implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.0-alpha1'
+
     //To Remove vulnerability CVE-2021-21409
     implementation group: 'io.netty', name: 'netty-codec-http2', version: '4.1.61.Final'
+
 
      //To Remove vulnerability CVE-2021-21295
     implementation group: 'io.netty', name: 'netty-all', version: '4.1.61.Final'
     implementation group: 'io.netty', name: 'netty-codec-http', version: '4.1.61.Final'
+
+    //To Remove vulnerability CVE-2020-11988
+    implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.6'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -268,7 +276,6 @@ dependencies {
     contractTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit_jupiter
     contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit_jupiter
     contractTestRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.7.0'
-    contractTestImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.4'
     contractTestImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.4'
     contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.7.RELEASE'
     contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-netflix-ribbon', version: '2.2.7.RELEASE'
