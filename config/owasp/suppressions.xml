@@ -171,18 +171,6 @@
         <cve>CVE-2014-3488</cve>
     </suppress>
     <suppress>
-        <notes><![CDATA[ CVE-2019-7614  ]]></notes>
-        <cve>CVE-2019-7614</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ CVE-2019-7611  ]]></notes>
-        <cve>CVE-2019-7611</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ CVE-2018-17244  ]]></notes>
-        <cve>CVE-2018-17244</cve>
-    </suppress>
-    <suppress>
         <notes><![CDATA[ CVE-2019-12418  ]]></notes>
         <cve>CVE-2019-12418</cve>
     </suppress>
@@ -263,14 +251,6 @@
         <cve>CVE-2014-9358</cve>
     </suppress>
     <suppress>
-        <notes><![CDATA[ CVE-2014-0047  ]]></notes>
-        <cve>CVE-2014-0047</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ CVE-2014-5282  ]]></notes>
-        <cve>CVE-2014-5282</cve>
-    </suppress>
-    <suppress>
         <notes><![CDATA[ CVE-2014-8179  ]]></notes>
         <cve>CVE-2014-8179</cve>
     </suppress>
@@ -279,28 +259,12 @@
         <cve>CVE-2016-9356</cve>
     </suppress>
     <suppress>
-        <notes><![CDATA[ CVE-2016-8178  ]]></notes>
-        <cve>CVE-2016-8178</cve>
-    </suppress>
-    <suppress>
         <notes><![CDATA[ CVE-2019-16884  ]]></notes>
         <cve>CVE-2019-16884</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[ CVE-2019-15752  ]]></notes>
         <cve>CVE-2019-15752</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ CVE-2015-3627  ]]></notes>
-        <cve>CVE-2015-3627</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ CVE-2014-9356  ]]></notes>
-        <cve>CVE-2014-9356</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ CVE-2014-8178  ]]></notes>
-        <cve>CVE-2014-8178</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[ CVE-2018-1272  ]]></notes>
