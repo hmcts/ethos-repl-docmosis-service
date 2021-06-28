@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import uk.gov.hmcts.ecm.common.servicebus.ServiceBusSender;
 
 @AutoConfigureAfter(QueueClientConfiguration.class)
 @Configuration
+@PropertySource(value={"classpath:application.properties"})
 public class ServiceBusSenderConfiguration {
 
     private final ObjectMapper objectMapper;
