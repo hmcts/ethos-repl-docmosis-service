@@ -212,9 +212,9 @@ dependencies {
     implementation 'com.github.hmcts:ecm-common:0.1.90'
 
     //to remove vulnerability CVE-2021-22118
-    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.7'
+    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.8'
 
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.5.RELEASE'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.0.0'
 
 
     //to remove vulnerability CVE-2020-11987
