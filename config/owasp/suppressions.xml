@@ -410,4 +410,12 @@
         <notes><![CDATA[ CVE-2020-7791  ]]></notes>
         <cve>CVE-2020-7791</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2021-21409  ]]></notes>
+        <cve>CVE-2021-21409</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2021-21295  ]]></notes>
+        <cve>CVE-2021-21295</cve>
+    </suppress>
 </suppressions>
