@@ -207,20 +207,20 @@ dependencies {
     //To remove the vulnerability CVE-2021-31811, CVE-2021-31812:
     implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.24'
     implementation group: 'org.apache.pdfbox', name: 'pdfbox-app', version: '2.0.24'
-
-    //To remove the vulnerability CVE-2018-10237:
-    implementation group: 'com.google.guava', name: 'guava', version: '24.1.1-jre'
-
-    implementation 'com.github.hmcts:ecm-common:0.1.86'
-
-     //to remove vulnerability CVE-2021-22118
-    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.8'
-
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.0.0'
-
-
-    //to remove vulnerability CVE-2020-11987
-    implementation group: 'org.apache.xmlgraphics', name: 'batik-svgbrowser', version: '1.14'
+//
+//    //To remove the vulnerability CVE-2018-10237:
+//    implementation group: 'com.google.guava', name: 'guava', version: '24.1.1-jre'
+//
+      implementation 'com.github.hmcts:ecm-common:0.1.86'
+//
+//     //to remove vulnerability CVE-2021-22118
+//    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.8'
+//
+//    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.5.RELEASE'
+//
+//
+//    //to remove vulnerability CVE-2020-11987
+//    implementation group: 'org.apache.xmlgraphics', name: 'batik-svgbrowser', version: '1.14'
 
     implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: '11.2'
     implementation group: 'io.github.openfeign', name: 'feign-core', version: '11.2'
@@ -230,27 +230,27 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging
     implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.1.0'
 
-    //To Remove vulnerability CVE-2021-27568
-    implementation group: 'net.minidev', name: 'json-smart', version: '2.4.2'
-    implementation group: 'net.minidev', name: 'json-smart-action', version: '2.4.2'
-
-    //To Remove vulnerability CVE-2021-22134
-    implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.13.2'
-
-    //To Remove vulnerability CVE-2018-8088
-    implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.0-alpha1'
-
-    //To Remove vulnerability CVE-2021-21409
-    implementation group: 'io.netty', name: 'netty-codec-http2', version: '4.1.61.Final'
-
-
-    //To Remove vulnerability CVE-2021-21295
-    implementation group: 'io.netty', name: 'netty-all', version: '4.1.61.Final'
-    implementation group: 'io.netty', name: 'netty-codec-http', version: '4.1.61.Final'
-
-    //To Remove vulnerability CVE-2020-11988
-    implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.6'
-
+//    //To Remove vulnerability CVE-2021-27568
+//    implementation group: 'net.minidev', name: 'json-smart', version: '2.4.2'
+//    implementation group: 'net.minidev', name: 'json-smart-action', version: '2.4.2'
+//
+//    //To Remove vulnerability CVE-2021-22134
+//    implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.13.2'
+//
+//    //To Remove vulnerability CVE-2018-8088
+//    implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.0-alpha1'
+//
+//    //To Remove vulnerability CVE-2021-21409
+//    implementation group: 'io.netty', name: 'netty-codec-http2', version: '4.1.61.Final'
+//
+//
+//    //To Remove vulnerability CVE-2021-21295
+//    implementation group: 'io.netty', name: 'netty-all', version: '4.1.61.Final'
+//    implementation group: 'io.netty', name: 'netty-codec-http', version: '4.1.61.Final'
+//
+//    //To Remove vulnerability CVE-2020-11988
+//    implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.6'
+//
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
