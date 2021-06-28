@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
@@ -33,7 +32,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 @Slf4j
 @RequiredArgsConstructor
 @Service("multipleHelperService")
-@PropertySource(value={"classpath:application.properties"})
 public class MultipleHelperService {
 
     private final SingleCasesReadingService singleCasesReadingService;

@@ -2,7 +2,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.servicebus;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ecm.common.helpers.CreateUpdatesHelper;
 import uk.gov.hmcts.ecm.common.model.servicebus.CreateUpdatesDto;
@@ -18,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Slf4j
 @Component
-@PropertySource(value={"classpath:application.properties"})
 public class CreateUpdatesBusSender {
 
     private static final String ERROR_MESSAGE = "Failed to send the message to the queue";
