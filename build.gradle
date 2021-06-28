@@ -4,7 +4,7 @@ plugins {
     id 'jacoco'
 //    id 'checkstyle'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'org.springframework.boot' version '2.3.9.RELEASE'
+    id 'org.springframework.boot' version '2.5.2'
     id 'org.owasp.dependencycheck' version '6.2.2'
     id 'com.github.ben-manes.versions' version '0.39.0'
     id 'org.sonarqube' version '3.3'
@@ -211,9 +211,10 @@ dependencies {
 
     implementation 'com.github.hmcts:ecm-common:0.1.90'
 
+    //to remove vulnerability CVE-2021-22118
+    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.7'
 
-
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.0.3'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.5.RELEASE'
 
 
     //to remove vulnerability CVE-2020-11987
@@ -232,7 +233,7 @@ dependencies {
       implementation group: 'net.minidev', name: 'json-smart-action', version: '2.4.2'
 
       //To Remove vulnerability CVE-2021-22134
-    implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.12.0'
+    implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.13.2'
 
     //To Remove vulnerability CVE-2018-8088
     implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.0-alpha1'
