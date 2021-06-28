@@ -244,6 +244,8 @@ dependencies {
      //To Remove vulnerability CVE-2021-21295
     implementation group: 'io.netty', name: 'netty-all', version: '4.1.61.Final'
     implementation group: 'io.netty', name: 'netty-codec-http', version: '4.1.61.Final'
+    implementation group: 'io.netty', name: 'netty-codec-http2', version: '4.1.61.Final'
+
 
     //To Remove vulnerability CVE-2020-11988
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.6'
