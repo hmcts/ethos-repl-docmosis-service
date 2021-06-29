@@ -531,4 +531,13 @@
         <notes><![CDATA[ CVE-2021-27568  ]]></notes>
         <cve>CVE-2021-27568</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2021-31811  ]]></notes>
+        <cve>CVE-2021-31811</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2021-31812  ]]></notes>
+        <cve>CVE-2021-31812</cve>
+    </suppress>
+
 </suppressions>
