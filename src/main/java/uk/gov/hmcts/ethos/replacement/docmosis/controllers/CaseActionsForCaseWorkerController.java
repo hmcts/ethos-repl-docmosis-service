@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.common.Strings;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -225,14 +224,16 @@ public class CaseActionsForCaseWorkerController {
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = new ArrayList<>();
-//        String error = eventValidationService.validateCaseState(ccdRequest.getCaseDetails());
-//        if (!Strings.isNullOrEmpty(error)){
-//            errors.add(error);
-//        }
+        boolean caseStateValidated = eventValidationService.validateCaseState(ccdRequest.getCaseDetails());
+
+        if (!caseStateValidated) {
+           errors.add(ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " Case has not been Accepted.");
+        }
+
         if (errors.isEmpty()) {
             errors.addAll(eventValidationService.validateReceiptDate(caseData));
         }
-        log.info("Event fields and case state validation for case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + ": " + errors);
+        log.info("Event fields and/or case state validation for case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + ": " + errors);
         if (errors.isEmpty()) {
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
