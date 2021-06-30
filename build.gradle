@@ -206,15 +206,7 @@ dependencies {
         }
     }
 
-//    implementation group: 'net.minidev', name: 'json-smart-mini', version: '1.3.2'
-//    implementation group: 'net.minidev', name: 'json-smart', version: '2.4.2'
-//    implementation group: 'net.minidev', name: 'json-smart-action', version: '2.4.2'
-
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.5.RELEASE'
-    //implementation group: 'org.springframework', name: 'spring-web', version: '5.3.7'
-
-    //To remove the vulnerability CVE-2018-10237:
-    implementation group: 'com.google.guava', name: 'guava', version: '24.1.1-jre'
 
     //to remove vulnerability CVE-2020-11987
     implementation group: 'org.apache.xmlgraphics', name: 'batik-svgbrowser', version: '1.14'
