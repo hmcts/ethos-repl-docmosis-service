@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
-import joptsimple.internal.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -59,13 +58,13 @@ public class EventValidationService {
         return errors;
     }
 
-    public String validateCaseState(CaseDetails caseDetails) {
+    public boolean validateCaseState(CaseDetails caseDetails) {
         log.info("Checking whether the case " + caseDetails.getCaseData().getEthosCaseReference() + " is in accepted state");
-        if (!caseDetails.getState().equals(ACCEPTED_STATE)) {
-            return caseDetails.getCaseData().getEthosCaseReference() + " Case has not been Accepted.";
+        if (caseDetails.getState().equals(SUBMITTED_STATE) && caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+            return false;
         }
         else {
-            return Strings.EMPTY;
+            return true;
         }
 
     }
