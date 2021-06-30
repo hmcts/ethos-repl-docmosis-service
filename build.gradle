@@ -203,7 +203,7 @@ dependencies {
 
 
 
-    compile 'com.github.hmcts:ecm-common:0.1.86'
+    compile 'com.github.hmcts:ecm-common:0.1.91'
 
 
 
