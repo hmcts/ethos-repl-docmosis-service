@@ -921,6 +921,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void amendCaseDetailsError500() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(eventValidationService.validateCaseState(isA(CaseDetails.class))).thenReturn(true);
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)

@@ -223,16 +223,15 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        List<String> errors = new ArrayList<>();
-        boolean caseStateValidated = eventValidationService.validateCaseState(ccdRequest.getCaseDetails());
-
-        if (!caseStateValidated) {
-           errors.add(ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " Case has not been Accepted.");
-        }
+        List<String> errors = eventValidationService.validateReceiptDate(caseData);
 
         if (errors.isEmpty()) {
-            errors.addAll(eventValidationService.validateReceiptDate(caseData));
+            boolean caseStateValidated = eventValidationService.validateCaseState(ccdRequest.getCaseDetails());
+            if (!caseStateValidated) {
+                errors.add(ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " Case has not been Accepted.");
+            }
         }
+
         log.info("Event fields and/or case state validation for case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + ": " + errors);
         if (errors.isEmpty()) {
             DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
