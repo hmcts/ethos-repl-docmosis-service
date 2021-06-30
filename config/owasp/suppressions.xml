@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
 
-    <suppress>
-        <notes><![CDATA[ old version pulled by springfox (swagger) ]]></notes>
-        <gav regex="true">^com\.google\.guava:guava:.*$</gav>
-        <cve>CVE-2018-10237</cve>
-    </suppress>
 
     <suppress>
         <notes><![CDATA[ pulled by latest hystrix ]]></notes>
@@ -20,10 +15,6 @@
         <cve>CVE-2017-16044</cve>
     </suppress>
 
-    <suppress>
-        <notes><![CDATA[ slf4j only has a beta version released with the 'fix', looks like lots of changes in it... ]]></notes>
-        <cve>CVE-2018-8088</cve>
-    </suppress>
 
     <suppress>
         <notes><![CDATA[
@@ -480,14 +471,6 @@
         <cve>CVE-2021-25122</cve>
     </suppress>
     <suppress>
-        <notes><![CDATA[ CVE-2020-11987  ]]></notes>
-        <cve>CVE-2020-11987</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ CVE-2020-11988  ]]></notes>
-        <cve>CVE-2020-11988</cve>
-    </suppress>
-    <suppress>
         <notes><![CDATA[ CVE-2021-22132  ]]></notes>
         <cve>CVE-2021-22132</cve>
     </suppress>
@@ -504,16 +487,8 @@
         <cve>CVE-2021-10936</cve>
     </suppress>
     <suppress>
-        <notes><![CDATA[ CVE-2021-21295  ]]></notes>
-        <cve>CVE-2021-21295</cve>
-    </suppress>
-    <suppress>
         <notes><![CDATA[ CVE-2018-10936  ]]></notes>
         <cve>CVE-2018-10936</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ CVE-2021-21409  ]]></notes>
-        <cve>CVE-2021-21409</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[ CVE-2021-22134  ]]></notes>
@@ -522,5 +497,9 @@
     <suppress>
         <notes><![CDATA[ CVE-2020-7791  ]]></notes>
         <cve>CVE-2020-7791</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2021-22118  ]]></notes>
+        <cve>CVE-2021-22118</cve>
     </suppress>
 </suppressions>
