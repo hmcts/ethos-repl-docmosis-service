@@ -91,6 +91,18 @@ public class EventValidationServiceTest {
     }
 
     @Test
+    public void shouldValidateCaseState() {
+        caseDetails1.setState(SUBMITTED_STATE);
+        caseDetails1.getCaseData().setCaseType(MULTIPLE_CASE_TYPE);
+
+        boolean validated = eventValidationService.validateCaseState(caseDetails1);
+        assertEquals(false, validated);
+        caseDetails1.setState(ACCEPTED_STATE);
+        validated = eventValidationService.validateCaseState(caseDetails1);
+        assertEquals(true, validated);
+    }
+
+    @Test
     public void shouldValidateReceiptDateLaterThanAcceptedDate() {
         caseData.setReceiptDate(CURRENT_RECEIPT_DATE.toString());
         CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
