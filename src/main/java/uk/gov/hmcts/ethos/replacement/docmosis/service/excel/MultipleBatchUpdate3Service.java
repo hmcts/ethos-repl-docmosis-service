@@ -4,14 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
 import java.util.List;
 import java.util.TreeMap;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 @Service("multipleBatchUpdate3Service")
@@ -54,10 +54,18 @@ public class MultipleBatchUpdate3Service {
 
             log.info("Sending updates to single cases with caseSearched");
 
+            //if respondent rep removal is requested
+            if(multipleData != null && multipleData.getBatchRemoveRespondentRep().equals(YES))
+            {
+                var caseData = caseSearched.getCaseData();
+                caseData.getRepCollection().clear();
+                caseSearched.setCaseData(caseData);
+            }
+
             multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
                     multipleObjects, caseSearched.getCaseData());
-
-        } else {
+        }
+        else {
 
             log.info("No changes then move to open state");
 
@@ -79,7 +87,9 @@ public class MultipleBatchUpdate3Service {
                         || (multipleData.getBatchUpdateJudgment() != null
                         && !multipleData.getBatchUpdateJudgment().getValue().getCode().equals(SELECT_NONE_VALUE))
                         || (multipleData.getBatchUpdateRespondentRep() != null
-                        && !multipleData.getBatchUpdateRespondentRep().getValue().getCode().equals(SELECT_NONE_VALUE)));
+                        && !multipleData.getBatchUpdateRespondentRep().getValue().getCode().equals(SELECT_NONE_VALUE)
+                        )
+        );
     }
 
 }
