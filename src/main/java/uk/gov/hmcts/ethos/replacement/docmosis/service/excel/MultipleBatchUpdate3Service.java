@@ -54,12 +54,9 @@ public class MultipleBatchUpdate3Service {
 
             log.info("Sending updates to single cases with caseSearched");
 
-            //if respondent rep removal is requested
-            if(multipleData != null && multipleData.getBatchRemoveRespondentRep().equals(YES))
+            if(respondentRepRemovalIsRequested(multipleData))
             {
-                var caseData = caseSearched.getCaseData();
-                caseData.getRepCollection().clear();
-                caseSearched.setCaseData(caseData);
+                caseSearched.getCaseData().getRepCollection().clear();
             }
 
             multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
@@ -70,9 +67,15 @@ public class MultipleBatchUpdate3Service {
             log.info("No changes then move to open state");
 
             multipleData.setState(OPEN_STATE);
-
         }
 
+    }
+
+    private boolean respondentRepRemovalIsRequested(MultipleData multipleData)
+    {
+        return multipleData != null &&
+               (multipleData.getBatchRemoveRespondentRep() != null &&
+                    multipleData.getBatchRemoveRespondentRep().equals(YES));
     }
 
     private boolean checkAnyChange(MultipleData multipleData) {
