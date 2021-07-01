@@ -223,7 +223,9 @@ public class CaseActionsForCaseWorkerController {
         }
 
         CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
+
 
         if (errors.isEmpty()) {
             boolean caseStateValidated = eventValidationService.validateCaseState(ccdRequest.getCaseDetails());
