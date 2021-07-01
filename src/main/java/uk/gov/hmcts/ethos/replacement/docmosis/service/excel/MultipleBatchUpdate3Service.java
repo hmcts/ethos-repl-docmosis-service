@@ -55,8 +55,9 @@ public class MultipleBatchUpdate3Service {
             log.info("Sending updates to single cases with caseSearched");
 
             //if respondent rep removal is requested
-            if(multipleData != null && multipleData.getBatchRemoveRespondentRep() != null
-                   && multipleData.getBatchRemoveRespondentRep().equals(YES))
+            if(multipleData != null &&
+                    (multipleData.getBatchRemoveRespondentRep() != null &&
+                            multipleData.getBatchRemoveRespondentRep().equals(YES)))
             {
                 var caseData = caseSearched.getCaseData();
                 caseData.getRepCollection().clear();
