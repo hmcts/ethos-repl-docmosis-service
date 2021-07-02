@@ -150,7 +150,7 @@ public class DocumentGenerationController {
                         .getCorrespondenceScotType());
 
         if (errors.isEmpty()) {
-            DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
+            DefaultValues defaultValues = getPostDefaultValues(caseDetails);
             defaultValuesReaderService.getCaseData(caseDetails.getCaseData(), defaultValues);
             DocumentInfo documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
             caseDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
