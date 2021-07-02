@@ -25,8 +25,12 @@
 /nbdist/
 /.nb-gradle/
 
+# macos
+**/.DS_Store
+
 src/test/functional/resources/documents/*
 node_modules/
 example.docx
+document.docx
 target
 
