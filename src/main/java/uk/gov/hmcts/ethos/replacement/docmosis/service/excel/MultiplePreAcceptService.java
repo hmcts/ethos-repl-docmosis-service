@@ -51,9 +51,9 @@ public class MultiplePreAcceptService {
 
         } else {
 
-            log.info("All cases are in Accepted/Rejected state");
+            log.info("Either all cases are in Accepted/Rejected state or are closed.");
 
-            errors.add("All cases are in Accepted/Rejected state");
+            errors.add("Either all cases are in Accepted/Rejected state or are closed.");
 
         }
 
