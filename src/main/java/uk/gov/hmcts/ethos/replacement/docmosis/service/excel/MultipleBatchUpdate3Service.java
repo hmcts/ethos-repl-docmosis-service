@@ -54,10 +54,10 @@ public class MultipleBatchUpdate3Service {
 
             log.info("Sending updates to single cases with caseSearched");
 
-            if(respondentRepRemovalIsRequested(multipleData))
+            /*if(respondentRepRemovalIsRequested(multipleData))
             {
                 caseSearched.getCaseData().getRepCollection().clear();
-            }
+            }*/
 
             multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
                     multipleObjects, caseSearched.getCaseData());
@@ -70,14 +70,14 @@ public class MultipleBatchUpdate3Service {
         }
 
     }
-
+/*
     private boolean respondentRepRemovalIsRequested(MultipleData multipleData)
     {
         return multipleData != null &&
                (multipleData.getBatchRemoveRespondentRep() != null &&
                     multipleData.getBatchRemoveRespondentRep().equals(YES));
     }
-
+*/
     private boolean checkAnyChange(MultipleData multipleData) {
 
         return (
