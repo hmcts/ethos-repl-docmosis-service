@@ -122,6 +122,19 @@ public class ExcelReadingService {
 
     }
 
+    private void filterSubMultiple(Row currentRow,MultipleData multipleData,SortedMap<String, Object> multipleObjects ) {
+        if (isMultipleInFlagsAndBelongsSubMultiple(currentRow, multipleData)) {
+            getSubMultipleObjects(multipleObjects,
+                    getCellValue(currentRow.getCell(0)),
+                    getCellValue(currentRow.getCell(1)));
+        } else {
+            if (isMultipleInFlags(currentRow, multipleData)) {
+                getSubMultipleObjects(multipleObjects,
+                        getCellValue(currentRow.getCell(0)),
+                        NOT_ALLOCATED);
+            }
+        }
+    }
     private void populateMultipleObjects(SortedMap<String, Object> multipleObjects, XSSFSheet datatypeSheet,
                                          MultipleData multipleData, FilterExcelType filter) {
 
@@ -132,17 +145,7 @@ public class ExcelReadingService {
             }
 
             if (filter.equals(FilterExcelType.SUB_MULTIPLE)) {
-                if (isMultipleInFlagsAndBelongsSubMultiple(currentRow, multipleData)) {
-                    getSubMultipleObjects(multipleObjects,
-                            getCellValue(currentRow.getCell(0)),
-                            getCellValue(currentRow.getCell(1)));
-                } else {
-                    if (isMultipleInFlags(currentRow, multipleData)) {
-                        getSubMultipleObjects(multipleObjects,
-                                getCellValue(currentRow.getCell(0)),
-                                NOT_ALLOCATED);
-                    }
-                }
+                filterSubMultiple(currentRow, multipleData, multipleObjects);
 
             } else if (filter.equals(FilterExcelType.FLAGS)) {
                 if (isMultipleInFlags(currentRow, multipleData)) {
