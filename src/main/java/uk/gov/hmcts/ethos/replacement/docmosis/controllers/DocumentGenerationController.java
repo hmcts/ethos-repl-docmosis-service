@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
-import uk.gov.hmcts.ecm.common.model.ccd.SignificantItem;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
@@ -151,7 +148,7 @@ public class DocumentGenerationController {
 
         if (errors.isEmpty()) {
 
-            DefaultValues defaultValues = getPostDefaultValues(caseDetails);
+            var defaultValues = getPostDefaultValues(caseDetails);
             defaultValuesReaderService.getCaseData(caseDetails.getCaseData(), defaultValues);
             var documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
             caseDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
