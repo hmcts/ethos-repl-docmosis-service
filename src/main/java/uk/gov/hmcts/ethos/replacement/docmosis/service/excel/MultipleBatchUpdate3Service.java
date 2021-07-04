@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
@@ -54,11 +53,6 @@ public class MultipleBatchUpdate3Service {
 
             log.info("Sending updates to single cases with caseSearched");
 
-            /*if(respondentRepRemovalIsRequested(multipleData))
-            {
-                caseSearched.getCaseData().getRepCollection().clear();
-            }*/
-
             multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
                     multipleObjects, caseSearched.getCaseData());
         }
@@ -70,14 +64,6 @@ public class MultipleBatchUpdate3Service {
         }
 
     }
-/*
-    private boolean respondentRepRemovalIsRequested(MultipleData multipleData)
-    {
-        return multipleData != null &&
-               (multipleData.getBatchRemoveRespondentRep() != null &&
-                    multipleData.getBatchRemoveRespondentRep().equals(YES));
-    }
-*/
     private boolean checkAnyChange(MultipleData multipleData) {
 
         return (

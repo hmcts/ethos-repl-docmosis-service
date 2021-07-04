@@ -1,29 +1,23 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import com.google.common.collect.Lists;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import static java.util.stream.Collectors.toList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.tasks.ScheduleCallable;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import static java.util.stream.Collectors.toList;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,10 +36,10 @@ public class MultipleScheduleService {
 
         log.info("Read excel for schedule logic");
 
-        FilterExcelType filterExcelType =
+        var filterExcelType =
                 MultiplesScheduleHelper.getFilterExcelTypeByScheduleDoc(multipleDetails.getCaseData());
 
-        TreeMap<String, Object> multipleObjects =
+        SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
@@ -53,7 +47,7 @@ public class MultipleScheduleService {
                         multipleDetails.getCaseData(),
                         filterExcelType);
 
-        DocumentInfo documentInfo = new DocumentInfo();
+        var documentInfo = new DocumentInfo();
 
         log.info("Validate limit of cases to generate schedules");
 
@@ -96,7 +90,7 @@ public class MultipleScheduleService {
                 .collect(toList());
     }
 
-    private List<String> getCaseIdCollectionFromFilter(TreeMap<String, Object> multipleObjects,
+    private List<String> getCaseIdCollectionFromFilter(SortedMap<String, Object> multipleObjects,
                                                        FilterExcelType filterExcelType) {
 
         if (filterExcelType.equals(FilterExcelType.FLAGS)) {
@@ -122,7 +116,7 @@ public class MultipleScheduleService {
 
         for (List<String> partitionCaseIds : Lists.partition(caseIdCollection, ES_PARTITION_SIZE)) {
 
-            ScheduleCallable scheduleCallable =
+            var scheduleCallable =
                     new ScheduleCallable(singleCasesReadingService, userToken, caseTypeId, partitionCaseIds);
 
             resultList.add(executor.submit(scheduleCallable));
@@ -161,11 +155,11 @@ public class MultipleScheduleService {
 
     }
 
-    private DocumentInfo generateSchedule(String userToken, TreeMap<String, Object> multipleObjectsFiltered,
+    private DocumentInfo generateSchedule(String userToken, SortedMap<String, Object> multipleObjectsFiltered,
                                           MultipleDetails multipleDetails, List<SchedulePayload> schedulePayloads,
                                           List<String> errors) {
 
-        DocumentInfo documentInfo = new DocumentInfo();
+        var documentInfo = new DocumentInfo();
 
         if (!multipleObjectsFiltered.keySet().isEmpty()) {
 

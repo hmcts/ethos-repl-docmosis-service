@@ -1,10 +1,14 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
@@ -13,15 +17,6 @@ import uk.gov.hmcts.ecm.common.model.multiples.types.MultipleObjectType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.PersistentQHelperService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.UUID;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.UPDATING_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,7 +34,7 @@ public class MultipleTransferService {
 
         log.info("Multiple transfer logic");
 
-        TreeMap<String, Object> multipleObjects =
+        SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
@@ -70,10 +65,10 @@ public class MultipleTransferService {
     }
 
     private void sendUpdatesToSinglesCT(String userToken, MultipleDetails multipleDetails,
-                                        List<String> errors, TreeMap<String, Object> multipleObjects) {
+                                        List<String> errors, SortedMap<String, Object> multipleObjects) {
 
         List<String> ethosCaseRefCollection = new ArrayList<>(multipleObjects.keySet());
-        MultipleData multipleData = multipleDetails.getCaseData();
+        var multipleData = multipleDetails.getCaseData();
 
         persistentQHelperService.sendCreationEventToSingles(
                 userToken,
@@ -101,7 +96,7 @@ public class MultipleTransferService {
 
             log.info("Retrieve the old multiple data");
 
-            SubmitMultipleEvent oldSubmitMultipleEvent = multipleCasesReadingService.retrieveMultipleCasesWithRetries(
+            var oldSubmitMultipleEvent = multipleCasesReadingService.retrieveMultipleCasesWithRetries(
                     userToken,
                     oldCaseTypeId,
                     multipleReference).get(0);
@@ -130,7 +125,7 @@ public class MultipleTransferService {
                                                                  SubmitMultipleEvent oldSubmitMultipleEvent,
                                                                  List<String> errors) {
 
-        TreeMap<String, Object> multipleObjects =
+        SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(oldSubmitMultipleEvent.getCaseData()),
@@ -143,10 +138,10 @@ public class MultipleTransferService {
         if (!multipleObjects.keySet().isEmpty()) {
 
             multipleObjects.forEach((key, value) -> {
-                MultipleObject multipleObject = (MultipleObject) value;
-                CaseMultipleTypeItem caseMultipleTypeItem = new CaseMultipleTypeItem();
+                var multipleObject = (MultipleObject) value;
+                var caseMultipleTypeItem = new CaseMultipleTypeItem();
 
-                MultipleObjectType multipleObjectType = new MultipleObjectType();
+                var multipleObjectType = new MultipleObjectType();
                 multipleObjectType.setSubMultiple(multipleObject.getSubMultiple());
                 multipleObjectType.setEthosCaseRef(multipleObject.getEthosCaseRef());
 

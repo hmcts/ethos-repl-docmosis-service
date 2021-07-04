@@ -168,7 +168,7 @@ public class MultipleHelperService {
                                                        List<String> errors, List<String> multipleObjectsFiltered,
                                                        String newSubMultipleName) {
 
-        TreeMap<String, Object> multipleObjects =
+        SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(newMultipleData),
@@ -184,7 +184,7 @@ public class MultipleHelperService {
     }
 
     private List<MultipleObject> addCasesInMultiple(List<String> multipleObjectsFiltered,
-                                                    TreeMap<String, Object> multipleObjects,
+                                                    SortedMap<String, Object> multipleObjects,
                                                     String newSubMultipleName) {
 
         List<MultipleObject> multipleObjectsToBeAdded = new ArrayList<>();
@@ -347,7 +347,7 @@ public class MultipleHelperService {
 
     public List<String> getEthosCaseRefCollection(String userToken, MultipleData newMultipleData, List<String> errors) {
 
-        TreeMap<String, Object> multipleObjects =
+        SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(newMultipleData),

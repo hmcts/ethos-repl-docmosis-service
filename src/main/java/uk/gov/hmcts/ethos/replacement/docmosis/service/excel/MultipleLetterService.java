@@ -2,7 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.SortedMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,7 @@ public class MultipleLetterService {
 
         log.info("Read excel for letter logic");
 
-        TreeMap<String, Object> multipleObjects =
+        SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
@@ -77,7 +77,7 @@ public class MultipleLetterService {
     }
 
     private DocumentInfo checkGenerationLetterOrLabel(String userToken, MultipleDetails multipleDetails,
-                                                      TreeMap<String, Object> multipleObjects,
+                                                      SortedMap<String, Object> multipleObjects,
                                                       List<String> errors, DocumentInfo documentInfo,
                                                       boolean validation) {
 
@@ -99,7 +99,7 @@ public class MultipleLetterService {
     }
 
     private DocumentInfo generateLabelLogic(String userToken, MultipleDetails multipleDetails,
-                                    TreeMap<String, Object> multipleObjects, List<String> errors,
+                                    SortedMap<String, Object> multipleObjects, List<String> errors,
                                     DocumentInfo documentInfo, boolean validation) {
 
         var multipleData = multipleDetails.getCaseData();
@@ -144,7 +144,7 @@ public class MultipleLetterService {
     }
 
     private DocumentInfo generateLetterLogic(String userToken, MultipleDetails multipleDetails,
-                                     TreeMap<String, Object> multipleObjects,
+                                     SortedMap<String, Object> multipleObjects,
                                      List<String> errors, DocumentInfo documentInfo) {
 
         log.info("Pull information from first case filtered");

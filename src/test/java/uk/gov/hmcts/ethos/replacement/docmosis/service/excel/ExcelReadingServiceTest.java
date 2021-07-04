@@ -50,7 +50,7 @@ public class ExcelReadingServiceTest {
         body = new ClassPathResource(TESTING_FILE_NAME);
         when(excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl))
                 .thenReturn(body.getInputStream());
-        TreeMap<String, Object> multipleObjects = excelReadingService.readExcel(userToken, documentBinaryUrl,
+        SortedMap<String, Object> multipleObjects = excelReadingService.readExcel(userToken, documentBinaryUrl,
                 errors, multipleData, FilterExcelType.ALL);
         assertEquals(6, multipleObjects.values().size());
         assertEquals("2", ((MultipleObject)multipleObjects.get("1820001/2019")).getFlag2());
@@ -67,7 +67,7 @@ public class ExcelReadingServiceTest {
         body = new ClassPathResource(TESTING_FILE_NAME);
         when(excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl))
                 .thenReturn(body.getInputStream());
-        TreeMap<String, Object> multipleObjects = excelReadingService.readExcel(userToken, documentBinaryUrl,
+        SortedMap<String, Object> multipleObjects = excelReadingService.readExcel(userToken, documentBinaryUrl,
                 errors, multipleData, FilterExcelType.FLAGS);
         assertEquals(3, multipleObjects.values().size());
         assertNull(multipleObjects.get("1820001/2019"));
@@ -81,7 +81,7 @@ public class ExcelReadingServiceTest {
         body = new ClassPathResource(TESTING_FILE_NAME);
         when(excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl))
                 .thenReturn(body.getInputStream());
-        TreeMap<String, Object> multipleObjects = excelReadingService.readExcel(userToken, documentBinaryUrl,
+        SortedMap<String, Object> multipleObjects = excelReadingService.readExcel(userToken, documentBinaryUrl,
                 errors, multipleData, FilterExcelType.SUB_MULTIPLE);
 
         List<String> listSub = (List<String>) multipleObjects.get("Sub");
@@ -101,7 +101,7 @@ public class ExcelReadingServiceTest {
         body = new ClassPathResource(TESTING_FILE_NAME);
         when(excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl))
                 .thenReturn(body.getInputStream());
-        TreeMap<String, Object> multipleObjects = excelReadingService.readExcel(userToken, documentBinaryUrl,
+        SortedMap<String, Object> multipleObjects = excelReadingService.readExcel(userToken, documentBinaryUrl,
                 errors, multipleData, FilterExcelType.DL_FLAGS);
 
         Set<String> flags1 = (HashSet<String>) multipleObjects.get(HEADER_3);
@@ -132,7 +132,7 @@ public class ExcelReadingServiceTest {
         body = new ClassPathResource(TESTING_FILE_NAME_ERROR);
         when(excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl))
                 .thenThrow(new IOException());
-        TreeMap<String, Object> multipleObjects = excelReadingService.readExcel(userToken, documentBinaryUrl,
+        SortedMap<String, Object> multipleObjects = excelReadingService.readExcel(userToken, documentBinaryUrl,
                 errors, multipleData, FilterExcelType.ALL);
         assertEquals("{}", multipleObjects.toString());
     }

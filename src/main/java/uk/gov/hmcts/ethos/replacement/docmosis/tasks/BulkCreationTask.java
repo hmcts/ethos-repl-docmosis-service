@@ -14,12 +14,12 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.PENDING_STATE;
 @Slf4j
 public class BulkCreationTask implements Runnable {
 
-    private BulkDetails bulkDetails;
-    private SubmitEvent submitEvent;
-    private String authToken;
-    private String multipleRef;
-    private String caseType;
-    private CcdClient ccdClient;
+    private final BulkDetails bulkDetails;
+    private final SubmitEvent submitEvent;
+    private final String authToken;
+    private final String multipleRef;
+    private final String caseType;
+    private final CcdClient ccdClient;
 
     public BulkCreationTask(BulkDetails bulkDetails, SubmitEvent submitEvent, String authToken,
                             String multipleRef, String caseType, CcdClient ccdClient) {
@@ -34,7 +34,7 @@ public class BulkCreationTask implements Runnable {
     @Override
     public void run() {
         log.info("Waiting: " + Thread.currentThread().getName());
-        String caseId = String.valueOf(submitEvent.getCaseId());
+        var caseId = String.valueOf(submitEvent.getCaseId());
         CCDRequest returnedRequest;
         log.info("Current state ---> " + submitEvent.getState());
         try {
