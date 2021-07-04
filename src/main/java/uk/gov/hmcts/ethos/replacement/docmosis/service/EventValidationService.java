@@ -59,14 +59,12 @@ public class EventValidationService {
     }
 
     public boolean validateCaseState(CaseDetails caseDetails) {
+        boolean validated = true;
         log.info("Checking whether the case " + caseDetails.getCaseData().getEthosCaseReference() + " is in accepted state");
         if (caseDetails.getState().equals(SUBMITTED_STATE) && caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
-            return false;
+            validated = false;
         }
-        else {
-            return true;
-        }
-
+        return validated;
     }
 
     public List<String> validateReceiptDateMultiple(MultipleData multipleData) {

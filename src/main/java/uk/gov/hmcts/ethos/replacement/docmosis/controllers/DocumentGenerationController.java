@@ -16,7 +16,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SignificantItem;
+import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
@@ -39,6 +41,7 @@ public class DocumentGenerationController {
     private static final String GENERATED_DOCUMENT_URL = "Please download the document from : ";
     private static final String INVALID_TOKEN = "Invalid Token {}";
     private final DocumentGenerationService documentGenerationService;
+    private final DefaultValuesReaderService defaultValuesReaderService;
     private final VerifyTokenService verifyTokenService;
     private final EventValidationService eventValidationService;
 
@@ -147,6 +150,9 @@ public class DocumentGenerationController {
                         .getCorrespondenceScotType());
 
         if (errors.isEmpty()) {
+
+            DefaultValues defaultValues = getPostDefaultValues(caseDetails);
+            defaultValuesReaderService.getCaseData(caseDetails.getCaseData(), defaultValues);
             var documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
             caseDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
 
@@ -190,5 +196,12 @@ public class DocumentGenerationController {
                 .data(ccdRequest.getCaseDetails().getCaseData())
                 .confirmation_header(GENERATED_DOCUMENT_URL + ccdRequest.getCaseDetails().getCaseData().getDocMarkUp())
                 .build());
+    }
+    private DefaultValues getPostDefaultValues(CaseDetails caseDetails) {
+        String caseTypeId = caseDetails.getCaseTypeId();
+        String managingOffice = caseDetails.getCaseData().getManagingOffice() != null
+                ? caseDetails.getCaseData().getManagingOffice() : "";
+
+        return defaultValuesReaderService.getDefaultValues(managingOffice, caseTypeId);
     }
 }
