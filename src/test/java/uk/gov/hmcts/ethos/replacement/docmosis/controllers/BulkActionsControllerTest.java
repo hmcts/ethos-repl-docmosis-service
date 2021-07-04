@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.ArgumentMatchers.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -41,8 +42,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -140,8 +139,8 @@ public class BulkActionsControllerTest {
 
     @Test
     public void createBulkCase() throws Exception {
-        when(bulkSearchService.bulkCasesRetrievalRequest(isA(BulkDetails.class), AUTH_TOKEN, isA(Boolean.class))).thenReturn(bulkCasesPayload);
-        when(bulkCreationService.bulkCreationLogic(isA(BulkDetails.class), isA(BulkCasesPayload.class), AUTH_TOKEN, isA(String.class))).
+        when(bulkSearchService.bulkCasesRetrievalRequest(isA(BulkDetails.class), eq(AUTH_TOKEN), isA(Boolean.class))).thenReturn(bulkCasesPayload);
+        when(bulkCreationService.bulkCreationLogic(isA(BulkDetails.class), isA(BulkCasesPayload.class), eq(AUTH_TOKEN), isA(String.class))).
                 thenReturn(bulkRequestPayload);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(CREATION_BULK_URL)
@@ -156,8 +155,8 @@ public class BulkActionsControllerTest {
 
     @Test
     public void createBulkCaseES() throws Exception {
-        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), AUTH_TOKEN, isA(Boolean.class), isA(Boolean.class))).thenReturn(bulkCasesPayload);
-        when(bulkCreationService.bulkCreationLogic(isA(BulkDetails.class), isA(BulkCasesPayload.class), AUTH_TOKEN, isA(String.class))).
+        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), eq(AUTH_TOKEN), isA(Boolean.class), isA(Boolean.class))).thenReturn(bulkCasesPayload);
+        when(bulkCreationService.bulkCreationLogic(isA(BulkDetails.class), isA(BulkCasesPayload.class), eq(AUTH_TOKEN), isA(String.class))).
                 thenReturn(bulkRequestPayload);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(CREATION_BULK_ES_URL)
@@ -200,7 +199,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void updateBulk() throws Exception {
-        when(bulkUpdateService.bulkUpdateLogic(isA(BulkDetails.class), AUTH_TOKEN)).thenReturn(bulkRequestPayload);
+        when(bulkUpdateService.bulkUpdateLogic(isA(BulkDetails.class), eq(AUTH_TOKEN))).thenReturn(bulkRequestPayload);
         when(bulkUpdateService.clearUpFields(isA(BulkRequestPayload.class))).thenReturn(bulkRequestPayload);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(UPDATE_BULK_URL)
@@ -215,7 +214,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void updateBulkCase() throws Exception {
-        when(bulkCreationService.bulkUpdateCaseIdsLogic(isA(BulkRequest.class), AUTH_TOKEN, isA(Boolean.class))).thenReturn(bulkRequestPayload);
+        when(bulkCreationService.bulkUpdateCaseIdsLogic(isA(BulkRequest.class), eq(AUTH_TOKEN), isA(Boolean.class))).thenReturn(bulkRequestPayload);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(UPDATE_BULK_CASE_URL)
                 .content(requestContent.toString())
@@ -249,7 +248,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void generateBulkLetter() throws Exception {
-        when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), AUTH_TOKEN)).thenReturn(bulkDocumentInfo);
+        when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), eq(AUTH_TOKEN))).thenReturn(bulkDocumentInfo);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(GENERATE_BULK_LETTER_URL)
                 .content(requestContent.toString())
@@ -279,7 +278,7 @@ public class BulkActionsControllerTest {
         BulkDocumentInfo bulkDocumentInfo1 = new BulkDocumentInfo();
         bulkDocumentInfo1.setErrors(new ArrayList<>(Collections.singleton("There are not cases searched to generate letters")));
         bulkDocumentInfo1.setMarkUps("");
-        when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), AUTH_TOKEN)).thenReturn(bulkDocumentInfo1);
+        when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), eq(AUTH_TOKEN))).thenReturn(bulkDocumentInfo1);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(GENERATE_BULK_LETTER_URL)
                 .content(requestContent.toString())
@@ -642,7 +641,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void createBulkCaseError500() throws Exception {
-        when(bulkSearchService.bulkCasesRetrievalRequest(isA(BulkDetails.class), AUTH_TOKEN, isA(Boolean.class))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(bulkSearchService.bulkCasesRetrievalRequest(isA(BulkDetails.class), eq(AUTH_TOKEN), isA(Boolean.class))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(CREATION_BULK_URL)
                 .content(requestContent.toString())
@@ -653,7 +652,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void createBulkCaseESError500() throws Exception {
-        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), AUTH_TOKEN, isA(Boolean.class), isA(Boolean.class))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(bulkSearchService.bulkCasesRetrievalRequestElasticSearch(isA(BulkDetails.class), eq(AUTH_TOKEN), isA(Boolean.class), isA(Boolean.class))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(CREATION_BULK_ES_URL)
                 .content(requestContent.toString())
@@ -686,7 +685,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void updateBulkError500() throws Exception {
-        when(bulkUpdateService.bulkUpdateLogic(isA(BulkDetails.class), AUTH_TOKEN)).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(bulkUpdateService.bulkUpdateLogic(isA(BulkDetails.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(UPDATE_BULK_URL)
                 .content(requestContent.toString())
@@ -697,7 +696,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void updateBulkCaseError500() throws Exception {
-        when(bulkCreationService.bulkUpdateCaseIdsLogic(isA(BulkRequest.class), AUTH_TOKEN, isA(Boolean.class))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(bulkCreationService.bulkUpdateCaseIdsLogic(isA(BulkRequest.class), eq(AUTH_TOKEN), isA(Boolean.class))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(UPDATE_BULK_CASE_URL)
                 .content(requestContent.toString())
@@ -708,7 +707,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void generateBulkLetterError500() throws Exception {
-        when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), AUTH_TOKEN)).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(documentGenerationService.processBulkDocumentRequest(isA(BulkRequest.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(GENERATE_BULK_LETTER_URL)
                 .content(requestContent.toString())
@@ -818,7 +817,7 @@ public class BulkActionsControllerTest {
 
     @Test
     public void preAcceptBulkError500() throws Exception {
-        when(bulkSearchService.retrievalCasesForPreAcceptRequest(isA(BulkDetails.class), AUTH_TOKEN)).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(bulkSearchService.retrievalCasesForPreAcceptRequest(isA(BulkDetails.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(PRE_ACCEPT_BULK_URL)
                 .content(requestContent.toString())
