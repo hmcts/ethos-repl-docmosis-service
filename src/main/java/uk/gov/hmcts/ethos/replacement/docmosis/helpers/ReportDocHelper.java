@@ -24,13 +24,14 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
 public class ReportDocHelper {
+    private static final String REPORT_LIST = "\"Report_List\":[\n";
 
     private ReportDocHelper() {
     }
 
     public static StringBuilder buildReportDocumentContent(ListingData listingData, String accessKey,
                                                            String templateName, UserDetails userDetails) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
 
         sb.append("{\n");
         sb.append("\"accessKey\":\"").append(accessKey).append(NEW_LINE);
@@ -85,7 +86,7 @@ public class ReportDocHelper {
     }
 
     private static StringBuilder getCasesAcceptedReport(ListingData listingData) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         AdhocReportType localReportDetailHdr = listingData.getLocalReportsDetailHdr();
         if (localReportDetailHdr != null) {
             sb.append("\"Multiple_Claims_Accepted\":\"").append(
@@ -103,7 +104,7 @@ public class ReportDocHelper {
     }
 
     private static StringBuilder getClaimsAcceptedByCaseType(ListingData listingData) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         Map<Boolean, List<AdhocReportTypeItem>> unsortedMap = listingData.getLocalReportsDetail().stream()
                 .collect(Collectors.partitioningBy(localReportDetail ->
                         localReportDetail.getValue().getMultipleRef() != null));
@@ -115,8 +116,8 @@ public class ReportDocHelper {
             String singleOrMultiple = localReportEntry.getKey() ? "Multiples" : "Singles";
             sb.append("{\"Case_Type\":\"").append(singleOrMultiple).append(NEW_LINE);
             sb.append("\"Claims_Number\":\"").append(localReportEntry.getValue().size()).append(NEW_LINE);
-            sb.append("\"Report_List\":[\n");
-            for (int i = 0; i < localReportEntry.getValue().size(); i++) {
+            sb.append(REPORT_LIST);
+            for (var i = 0; i < localReportEntry.getValue().size(); i++) {
                 sb.append(getAdhocReportCommonTypeRow(localReportEntry.getValue().get(i).getValue()));
                 if (i != localReportEntry.getValue().size() - 1) {
                     sb.append(",\n");
@@ -133,7 +134,7 @@ public class ReportDocHelper {
     }
 
     private static StringBuilder getAdhocReportCommonTypeRow(AdhocReportType adhocReportType) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append("{\"Case_Reference\":\"").append(
                 nullCheck(adhocReportType.getCaseReference())).append(NEW_LINE);
         sb.append("\"Date_Of_Acceptance\":\"").append(
@@ -154,7 +155,7 @@ public class ReportDocHelper {
     }
 
     private static StringBuilder getCasesCompletedReport(ListingData listingData) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         AdhocReportType localReportDetailHdr = listingData.getLocalReportsDetailHdr();
         if (localReportDetailHdr != null) {
             sb.append("\"Cases_Completed_Hearing\":\"").append(
@@ -195,8 +196,8 @@ public class ReportDocHelper {
 
         if (listingData.getLocalReportsDetail() != null && !listingData.getLocalReportsDetail().isEmpty()) {
             List<AdhocReportTypeItem> adhocReportTypeItems = listingData.getLocalReportsDetail();
-            sb.append("\"Report_List\":[\n");
-            for (int i = 0; i < adhocReportTypeItems.size(); i++) {
+            sb.append(REPORT_LIST);
+            for (var i = 0; i < adhocReportTypeItems.size(); i++) {
                 sb.append(getAdhocReportCompletedTypeRow(adhocReportTypeItems.get(i).getValue()));
                 if (i != adhocReportTypeItems.size() - 1) {
                     sb.append(",\n");
@@ -208,7 +209,7 @@ public class ReportDocHelper {
     }
 
     private static StringBuilder getAdhocReportCompletedTypeRow(AdhocReportType adhocReportType) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append("{\"Case_Reference\":\"").append(
                 nullCheck(adhocReportType.getCaseReference())).append(NEW_LINE);
         sb.append("\"Position\":\"").append(
@@ -231,12 +232,12 @@ public class ReportDocHelper {
     }
 
     private static StringBuilder getLiveCaseLoadReport(ListingData listingData) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
 
         if (listingData.getLocalReportsDetail() != null && !listingData.getLocalReportsDetail().isEmpty()) {
             List<AdhocReportTypeItem> adhocReportTypeItems = listingData.getLocalReportsDetail();
-            sb.append("\"Report_List\":[\n");
-            for (int i = 0; i < adhocReportTypeItems.size(); i++) {
+            sb.append(REPORT_LIST);
+            for (var i = 0; i < adhocReportTypeItems.size(); i++) {
                 sb.append(getAdhocReportCommonTypeRow(adhocReportTypeItems.get(i).getValue()));
                 if (i != adhocReportTypeItems.size() - 1) {
                     sb.append(",\n");

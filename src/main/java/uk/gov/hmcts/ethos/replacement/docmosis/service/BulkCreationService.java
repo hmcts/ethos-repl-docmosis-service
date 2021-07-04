@@ -54,7 +54,7 @@ public class BulkCreationService {
 
     public BulkRequestPayload bulkCreationLogic(BulkDetails bulkDetails, BulkCasesPayload bulkCasesPayload,
                                                 String userToken, String action) {
-        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        var bulkRequestPayload = new BulkRequestPayload();
         if (bulkCasesPayload.getErrors().isEmpty()) {
             // 1) Retrieve cases by ethos reference
             List<SubmitEvent> submitEvents = bulkCasesPayload.getSubmitEvents();
@@ -109,7 +109,7 @@ public class BulkCreationService {
 
     private void createCaseEventsToUpdateMultipleRef(List<SubmitEvent> submitEvents, BulkDetails bulkDetails,
                                                      String userToken) {
-        Instant start = Instant.now();
+        var start = Instant.now();
         ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
         for (SubmitEvent submitEvent : submitEvents) {
             executor.execute(new BulkCreationTask(bulkDetails, submitEvent, userToken,
@@ -120,8 +120,8 @@ public class BulkCreationService {
     }
 
     public BulkRequestPayload bulkUpdateCaseIdsLogic(BulkRequest bulkRequest, String authToken, boolean isPersistentQ) {
-        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
-        BulkCasesPayload bulkCasesPayload = updateBulkRequest(bulkRequest, authToken, isPersistentQ);
+        var bulkRequestPayload = new BulkRequestPayload();
+        var bulkCasesPayload = updateBulkRequest(bulkRequest, authToken, isPersistentQ);
         if (bulkCasesPayload.getErrors().isEmpty()) {
             bulkRequest.setCaseDetails(BulkHelper.setMultipleCollection(bulkRequest.getCaseDetails(),
                     bulkCasesPayload.getMultipleTypeItems()));
@@ -134,8 +134,8 @@ public class BulkCreationService {
     }
 
     BulkCasesPayload updateBulkRequest(BulkRequest bulkRequest, String authToken, boolean isPersistentQ) {
-        BulkDetails bulkDetails = bulkRequest.getCaseDetails();
-        BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
+        var bulkDetails = bulkRequest.getCaseDetails();
+        var bulkCasesPayload = new BulkCasesPayload();
         List<String> errors = new ArrayList<>();
         List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
         List<String> multipleCaseIds = BulkHelper.getMultipleCaseIds(bulkDetails);
@@ -215,7 +215,7 @@ public class BulkCreationService {
 
             log.info("DetachCaseList: " + detachCasesList);
             log.info("AttachCaseList: " + attachCasesList);
-            String updateSize = String.valueOf(detachCasesList.size() + attachCasesList.size());
+            var updateSize = String.valueOf(detachCasesList.size() + attachCasesList.size());
             log.info("UpdateSize: " + updateSize);
             String username = userService.getUserDetails(authToken).getEmail();
 

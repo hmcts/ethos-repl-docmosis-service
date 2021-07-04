@@ -36,9 +36,9 @@ import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_6
 @Slf4j
 public class MultiplesHelper {
 
-    public static List<String> HEADERS = new ArrayList<>(Arrays.asList(
+    public static final List<String> HEADERS = new ArrayList<>(Arrays.asList(
             HEADER_1, HEADER_2, HEADER_3, HEADER_4, HEADER_5, HEADER_6));
-    public static String SELECT_ALL = "All";
+    public static final String SELECT_ALL = "All";
 
     private MultiplesHelper() {
     }
@@ -142,7 +142,7 @@ public class MultiplesHelper {
 
     public static void addLeadToCaseIds(MultipleData multipleData, String leadCase) {
 
-        CaseIdTypeItem caseIdTypeItem = createCaseIdTypeItem(leadCase);
+        var caseIdTypeItem = createCaseIdTypeItem(leadCase);
 
         if (multipleData.getCaseIdCollection() == null) {
 
@@ -158,9 +158,9 @@ public class MultiplesHelper {
 
     public static CaseIdTypeItem createCaseIdTypeItem(String ethosCaseReference) {
 
-        CaseType caseType = new CaseType();
+        var caseType = new CaseType();
         caseType.setEthosCaseReference(ethosCaseReference);
-        CaseIdTypeItem caseIdTypeItem = new CaseIdTypeItem();
+        var caseIdTypeItem = new CaseIdTypeItem();
         caseIdTypeItem.setId(UUID.randomUUID().toString());
         caseIdTypeItem.setValue(caseType);
 
@@ -231,11 +231,11 @@ public class MultiplesHelper {
 
     public static SubMultipleTypeItem createSubMultipleTypeItem(String subMultipleReference, String subMultipleName) {
 
-        SubMultipleType subMultipleType = new SubMultipleType();
+        var subMultipleType = new SubMultipleType();
         subMultipleType.setSubMultipleName(subMultipleName);
         subMultipleType.setSubMultipleRef(subMultipleReference);
 
-        SubMultipleTypeItem subMultipleTypeItem = new SubMultipleTypeItem();
+        var subMultipleTypeItem = new SubMultipleTypeItem();
         subMultipleTypeItem.setId(subMultipleReference);
         subMultipleTypeItem.setValue(subMultipleType);
 
@@ -317,7 +317,7 @@ public class MultiplesHelper {
 
         log.info("Populating dynamic list with offices multiple");
 
-        DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+        var dynamicFixedListType = new DynamicFixedListType();
         dynamicFixedListType.setListItems(Helper.getAvailableOffices(caseTypeId));
 
         multipleData.setOfficeMultipleCT(dynamicFixedListType);

@@ -1,23 +1,17 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.ccd.Address;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_DETAILED_CONFIG;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.schedule.SchedulePayloadES;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantIndType;
 import uk.gov.hmcts.ecm.common.model.schedule.types.ScheduleClaimantType;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_DETAILED_CONFIG;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -74,7 +68,7 @@ public class MultiplesScheduleHelper {
 
             }
 
-            Address address = DocumentHelper.getRespondentAddressET3(respondentCollection.get(0).getValue());
+            var address = DocumentHelper.getRespondentAddressET3(respondentCollection.get(0).getValue());
 
             return getScheduleAddress(field, address);
 
@@ -90,7 +84,7 @@ public class MultiplesScheduleHelper {
 
         if (scheduleClaimantType != null) {
 
-            Address address = scheduleClaimantType.getClaimantAddressUK();
+            var address = scheduleClaimantType.getClaimantAddressUK();
 
             return getScheduleAddress(field, address);
 
@@ -161,7 +155,7 @@ public class MultiplesScheduleHelper {
 
     }
 
-    public static List<String> getSubMultipleCaseIds(TreeMap<String, Object> multipleObjects) {
+    public static List<String> getSubMultipleCaseIds(SortedMap<String, Object> multipleObjects) {
 
         List<String> caseIds = new ArrayList<>();
 
@@ -175,8 +169,8 @@ public class MultiplesScheduleHelper {
 
     }
 
-    public static TreeMap<String, List<SchedulePayload>> getMultipleTreeMap(
-            TreeMap<String, Object> multipleObjectsFiltered, Map<String, SchedulePayload> scheduleEventMap) {
+    public static SortedMap<String, List<SchedulePayload>> getMultipleTreeMap(
+            SortedMap<String, Object> multipleObjectsFiltered, Map<String, SchedulePayload> scheduleEventMap) {
 
         TreeMap<String, List<SchedulePayload>> subMultipleTreeMap = new TreeMap<>();
 

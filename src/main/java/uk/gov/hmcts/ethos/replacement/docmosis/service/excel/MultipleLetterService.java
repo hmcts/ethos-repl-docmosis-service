@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -7,23 +10,17 @@ import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.MAX_NUMBER_LABELS;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.TornadoService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO_CASES_SEARCHED;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper.MAX_NUMBER_LABELS;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -52,7 +49,7 @@ public class MultipleLetterService {
                         multipleDetails.getCaseData(),
                         FilterExcelType.FLAGS);
 
-        DocumentInfo documentInfo = new DocumentInfo();
+        var documentInfo = new DocumentInfo();
 
         if (!multipleObjects.keySet().isEmpty()) {
 
@@ -105,7 +102,7 @@ public class MultipleLetterService {
                                     TreeMap<String, Object> multipleObjects, List<String> errors,
                                     DocumentInfo documentInfo, boolean validation) {
 
-        MultipleData multipleData = multipleDetails.getCaseData();
+        var multipleData = multipleDetails.getCaseData();
 
         List<String> caseRefCollection = new ArrayList<>(multipleObjects.keySet());
 
@@ -137,7 +134,7 @@ public class MultipleLetterService {
 
             log.info("No validation then will generate a label document");
 
-            SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
+            var submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
                     multipleDetails.getCaseTypeId(), multipleObjects.firstKey(), multipleData.getMultipleSource());
 
             return generateLetterOrLabel(userToken, multipleDetails, submitEvent);
@@ -152,7 +149,7 @@ public class MultipleLetterService {
 
         log.info("Pull information from first case filtered");
 
-        SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
+        var submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(), multipleObjects.firstKey(),
                 multipleDetails.getCaseData().getMultipleSource());
 
