@@ -8,7 +8,6 @@ import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 
 @Slf4j
@@ -23,7 +22,7 @@ public class CaseCreationForCaseWorkerService {
 
 
     public SubmitEvent caseCreationRequest(CCDRequest ccdRequest, String userToken) {
-        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+        var caseDetails = ccdRequest.getCaseDetails();
         log.info("EventId: " + ccdRequest.getEventId());
         try {
             return ccdClient.submitCaseCreation(userToken, caseDetails,
@@ -34,7 +33,7 @@ public class CaseCreationForCaseWorkerService {
     }
 
     public CaseData generateCaseRefNumbers(CCDRequest ccdRequest) {
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         if (caseData.getCaseRefNumberCount() != null && Integer.parseInt(caseData.getCaseRefNumberCount()) > 0) {
             log.info("Case Type: " + ccdRequest.getCaseDetails().getCaseTypeId());
             log.info("Count: " + Integer.parseInt(caseData.getCaseRefNumberCount()));

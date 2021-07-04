@@ -1,5 +1,9 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import java.net.URI;
+import java.util.ArrayList;
+import static java.util.Collections.singletonList;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,22 +17,14 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
-import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
 import uk.gov.hmcts.reform.document.domain.Classification;
-import uk.gov.hmcts.reform.document.domain.Document;
 import uk.gov.hmcts.reform.document.domain.UploadResponse;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Objects;
-
-import static java.util.Collections.singletonList;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 
 @Service
 @Slf4j
@@ -62,7 +58,7 @@ public class DocumentManagementService {
     public URI uploadDocument(String authToken, byte[] byteArray, String outputFileName, String type) {
         try {
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, outputFileName, type, byteArray);
-            UserDetails user = userService.getUserDetails(authToken);
+            var user = userService.getUserDetails(authToken);
             UploadResponse response = documentUploadClient.upload(
                     authToken,
                     authTokenGenerator.generate(),
@@ -71,7 +67,7 @@ public class DocumentManagementService {
                     Classification.PUBLIC,
                     singletonList(file)
             );
-            Document document = response.getEmbedded().getDocuments().stream()
+            var document = response.getEmbedded().getDocuments().stream()
                     .findFirst()
                     .orElseThrow(() ->
                             new DocumentManagementException("Document management failed uploading file"
@@ -95,7 +91,7 @@ public class DocumentManagementService {
     }
 
     public UploadedDocument downloadFile(String authToken, String urlString) {
-        UserDetails user = userService.getUserDetails(authToken);
+        var user = userService.getUserDetails(authToken);
         ResponseEntity<Resource> response = documentDownloadClientApi.downloadBinary(
                 authToken,
                 authTokenGenerator.generate(),
@@ -116,7 +112,7 @@ public class DocumentManagementService {
     }
 
     private String getDownloadUrl(String urlString) {
-        String path = urlString.replace(ccdDMStoreBaseUrl, "");
+        var path = urlString.replace(ccdDMStoreBaseUrl, "");
         if (path.startsWith("/")) {
             return path;
         }

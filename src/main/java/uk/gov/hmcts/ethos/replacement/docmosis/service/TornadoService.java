@@ -1,5 +1,12 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import java.io.*;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import static java.net.HttpURLConnection.HTTP_OK;
+import java.net.URI;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,22 +17,12 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.*;
-
-import java.io.*;
-import java.net.ConnectException;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
-import static java.net.HttpURLConnection.HTTP_OK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService.APPLICATION_DOCX_VALUE;
 
 @Slf4j
@@ -35,6 +32,9 @@ public class TornadoService {
 
     private static final String VENUE_ADDRESS_INPUT_STREAM_ERROR = "Failed to get an inputStream for the "
             + "venueAddressValues.xlsx file : ---> ";
+    private static final String UNABLE_TO_CONNECT_TO_DOCMOSIS = "Unable to connect to Docmosis: ";
+    private static final String CONNECTED = "Connected";
+    private static final String PROXY = "If you have a proxy, you will need the Proxy aware example code.";
 
     private final TornadoConfiguration tornadoConfiguration;
     private final DocumentManagementService documentManagementService;
@@ -51,11 +51,11 @@ public class TornadoService {
         HttpURLConnection conn = null;
         OutputStreamWriter outputStreamWriter = null;
         ByteArrayOutputStream os = null;
-        DocumentInfo documentInfo = new DocumentInfo();
+        var documentInfo = new DocumentInfo();
         try {
             conn = createConnection();
-            log.info("Connected");
-            UserDetails userDetails = userService.getUserDetails(authToken);
+            log.info(CONNECTED);
+            var userDetails = userService.getUserDetails(authToken);
             String documentName = Helper.getDocumentName(correspondenceType, correspondenceScotType);
             outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
             buildInstruction(outputStreamWriter, caseData, userDetails, caseTypeId,
@@ -63,8 +63,8 @@ public class TornadoService {
             os = new ByteArrayOutputStream();
             documentInfo = checkResponseStatus(authToken, conn, documentName, os);
         } catch (ConnectException e) {
-            log.error("Unable to connect to Docmosis: " + e.getMessage());
-            log.error("If you have a proxy, you will need the Proxy aware example code.");
+            log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS + e.getMessage());
+            log.error(PROXY);
             System.exit(2);
         } finally {
             releaseResources(conn, outputStreamWriter, os);
@@ -105,7 +105,7 @@ public class TornadoService {
                                   CorrespondenceScotType correspondenceScotType,
                                   MultipleData multipleData) {
 
-        try (InputStream venueAddressInputStream = getClass().getClassLoader()
+        try (var venueAddressInputStream = getClass().getClassLoader()
                 .getResourceAsStream(VENUE_ADDRESS_VALUES_FILE_PATH)) {
             DefaultValues allocatedCourtAddress = getAllocatedCourtAddress(caseData, caseTypeId, multipleData);
             writeOutputStream(outputStreamWriter, DocumentHelper.buildDocumentContent(caseData,
@@ -131,19 +131,19 @@ public class TornadoService {
         HttpURLConnection conn = null;
         OutputStreamWriter outputStreamWriter = null;
         ByteArrayOutputStream os = null;
-        DocumentInfo documentInfo = new DocumentInfo();
+        var documentInfo = new DocumentInfo();
         try {
             conn = createConnection();
-            log.info("Connected");
-            UserDetails userDetails = userService.getUserDetails(authToken);
+            log.info(CONNECTED);
+            var userDetails = userService.getUserDetails(authToken);
             String documentName = ListingHelper.getListingDocName(listingData);
             outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
             buildListingInstruction(outputStreamWriter, listingData, documentName, userDetails, caseType);
             os = new ByteArrayOutputStream();
             documentInfo = checkResponseStatus(authToken, conn, documentName, os);
         } catch (ConnectException e) {
-            log.error("Unable to connect to Docmosis: " + e.getMessage());
-            log.error("If you have a proxy, you will need the Proxy aware example code.");
+            log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS + e.getMessage());
+            log.error(PROXY);
             System.exit(2);
         } finally {
             releaseResources(conn, outputStreamWriter, os);
@@ -169,18 +169,18 @@ public class TornadoService {
         HttpURLConnection conn = null;
         OutputStreamWriter outputStreamWriter = null;
         ByteArrayOutputStream os = null;
-        DocumentInfo documentInfo = new DocumentInfo();
+        var documentInfo = new DocumentInfo();
         try {
             conn = createConnection();
-            log.info("Connected");
+            log.info(CONNECTED);
             String documentName = BulkHelper.getScheduleDocName(bulkData.getScheduleDocName());
             outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
             buildScheduleInstruction(outputStreamWriter, bulkData);
             os = new ByteArrayOutputStream();
             documentInfo = checkResponseStatus(authToken, conn, documentName, os);
         } catch (ConnectException e) {
-            log.error("Unable to connect to Docmosis: " + e.getMessage());
-            log.error("If you have a proxy, you will need the Proxy aware example code.");
+            log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS + e.getMessage());
+            log.error(PROXY);
             System.exit(2);
         } finally {
             releaseResources(conn, outputStreamWriter, os);
@@ -195,14 +195,14 @@ public class TornadoService {
 
     private DocumentInfo checkResponseStatus(String authToken, HttpURLConnection conn, String documentName,
                                              ByteArrayOutputStream os) throws IOException {
-        DocumentInfo documentInfo = new DocumentInfo();
+        var documentInfo = new DocumentInfo();
         int status = conn.getResponseCode();
         if (status == HTTP_OK) {
             documentInfo = createDocument(authToken, conn, documentName, os);
         } else {
             log.error("message:" + conn.getResponseMessage());
-            InputStreamReader inputStreamReader = new InputStreamReader(conn.getErrorStream());
-            BufferedReader errorReader = new BufferedReader(inputStreamReader);
+            var inputStreamReader = new InputStreamReader(conn.getErrorStream());
+            var errorReader = new BufferedReader(inputStreamReader);
             String msg;
             while ((msg = errorReader.readLine()) != null) {
                 log.error(msg);
@@ -214,7 +214,7 @@ public class TornadoService {
     }
 
     private byte[] getBytesFromInputStream(ByteArrayOutputStream os, InputStream is) throws IOException {
-        byte[] buffer = new byte[0xFFFF];
+        var buffer = new byte[0xFFFF];
         for (int len = is.read(buffer); len != -1; len = is.read(buffer)) {
             os.write(buffer, 0, len);
         }
