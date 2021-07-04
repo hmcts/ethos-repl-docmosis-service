@@ -196,7 +196,7 @@ dependencies {
 
 
 
-    implementation 'com.github.hmcts:ecm-common:0.1.91'
+    implementation 'com.github.hmcts:ecm-common:0.1.93'
 
 // For pdfbox and elasticsearch CVEs
     implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.24'
