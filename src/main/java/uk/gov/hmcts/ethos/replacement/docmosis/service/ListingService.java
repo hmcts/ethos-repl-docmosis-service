@@ -117,12 +117,7 @@ public class ListingService {
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null
                             && !submitEvent.getCaseData().getHearingCollection().isEmpty()) {
-                        for (HearingTypeItem hearingTypeItem : submitEvent.getCaseData().getHearingCollection()) {
-                            if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
-                                listingTypeItems.addAll(getListingTypeItems(hearingTypeItem,
-                                        listingDetails.getCaseData(), submitEvent.getCaseData()));
-                            }
-                        }
+                       addListingTypeItems(submitEvent,listingTypeItems,listingDetails );
                     }
                 }
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
@@ -133,6 +128,14 @@ public class ListingService {
         }
     }
 
+    private void addListingTypeItems(SubmitEvent submitEvent, List<ListingTypeItem> listingTypeItems,ListingDetails listingDetails) {
+        for (HearingTypeItem hearingTypeItem : submitEvent.getCaseData().getHearingCollection()) {
+            if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
+                listingTypeItems.addAll(getListingTypeItems(hearingTypeItem,
+                        listingDetails.getCaseData(), submitEvent.getCaseData()));
+            }
+        }
+    }
     private List<SubmitEvent> getListingHearingsSearch(ListingDetails listingDetails, String authToken)
             throws IOException {
         var listingData = listingDetails.getCaseData();
@@ -167,21 +170,16 @@ public class ListingService {
                 log.info("Hearing number: " + hearingTypeItem.getValue().getHearingNumber());
                 var dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
                 boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
-                log.info("isListingVenueValid: " + isListingVenueValid);
-                if (!isListingVenueValid) {
-                    continue;
-                }
                 boolean isListingDateValid = isListingDateValid(listingData, dateListedTypeItem);
+                log.info("isListingVenueValid: " + isListingVenueValid);
                 log.info("isListingDateValid: " + isListingDateValid);
-                if (!isListingDateValid) {
-                    continue;
-                }
+                var isListingStatusValid = true;
                 if (!showAllHearingType(listingData)) {
-                    boolean isListingStatusValid = isListingStatusValid(dateListedTypeItem);
+                     isListingStatusValid = isListingStatusValid(dateListedTypeItem);
                     log.info("isListingStatusValid: " + isListingStatusValid);
-                    if (!isListingStatusValid) {
-                        continue;
-                    }
+                }
+                if (!isListingVenueValid || !isListingDateValid || !isListingStatusValid) {
+                    continue;
                 }
                 var listingTypeItem = new ListingTypeItem();
                 var listingType = ListingHelper.getListingTypeFromCaseData(
