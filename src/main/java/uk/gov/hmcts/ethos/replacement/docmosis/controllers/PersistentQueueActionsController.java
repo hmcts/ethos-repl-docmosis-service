@@ -14,7 +14,6 @@ import uk.gov.hmcts.ecm.common.model.bulk.BulkCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.helper.BulkCasesPayload;
 import uk.gov.hmcts.ecm.common.model.helper.BulkRequestPayload;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.BulkCreationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.BulkSearchService;
@@ -34,6 +33,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.service.BulkCreationServic
 public class PersistentQueueActionsController {
 
     private static final String LOG_MESSAGE = "received notification request for bulk reference :    ";
+    private static final String INVALID_TOKEN = "Invalid Token {}";
 
     private final BulkCreationService bulkCreationService;
     private final BulkUpdateService bulkUpdateService;
@@ -54,15 +54,15 @@ public class PersistentQueueActionsController {
         log.info("AFTER SUBMITTED BULK PERSISTENT Q ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        var bulkRequestPayload = new BulkRequestPayload();
 
         if (bulkRequest.getCaseDetails().getCaseData().getMultipleSource() != null
                 && !bulkRequest.getCaseDetails().getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
-            BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
+            var bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequestElasticSearch(
                     bulkRequest.getCaseDetails(), userToken, true, false);
             bulkRequestPayload = bulkCreationService.bulkCreationLogic(bulkRequest.getCaseDetails(),
                     bulkCasesPayload, userToken, UPDATE_SINGLES_PQ_STEP);
@@ -89,14 +89,14 @@ public class PersistentQueueActionsController {
         log.info("PRE ACCEPT BULK PERSISTENT Q ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
         List<SubmitEvent> submitEvents = bulkSearchService.retrievalCasesForPreAcceptRequest(
                 bulkRequest.getCaseDetails(), userToken);
 
-        BulkRequestPayload bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(),
+        var bulkRequestPayload = bulkUpdateService.bulkPreAcceptLogic(bulkRequest.getCaseDetails(),
                 submitEvents, userToken, true);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
@@ -119,11 +119,11 @@ public class PersistentQueueActionsController {
         log.info("UPDATE BULK CASE IDS PERSISTENT Q ---> " + LOG_MESSAGE + bulkRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        BulkRequestPayload bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(
+        var bulkRequestPayload = bulkCreationService.bulkUpdateCaseIdsLogic(
                 bulkRequest, userToken, true);
 
         return ResponseEntity.ok(BulkCallbackResponse.builder()
