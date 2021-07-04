@@ -461,8 +461,8 @@ public class BulkActionsControllerTest {
 
     @Test
     public void preAcceptBulk() throws Exception {
-        when(bulkSearchService.retrievalCasesForPreAcceptRequest(isA(BulkDetails.class), AUTH_TOKEN)).thenReturn(bulkCasesPayload.getSubmitEvents());
-        when(bulkUpdateService.bulkPreAcceptLogic(isA(BulkDetails.class), any(), AUTH_TOKEN, false)).thenReturn(bulkRequestPayload);
+        when(bulkSearchService.retrievalCasesForPreAcceptRequest(isA(BulkDetails.class), eq(AUTH_TOKEN))).thenReturn(bulkCasesPayload.getSubmitEvents());
+        when(bulkUpdateService.bulkPreAcceptLogic(isA(BulkDetails.class), any(), eq(AUTH_TOKEN), eq(false))).thenReturn(bulkRequestPayload);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(PRE_ACCEPT_BULK_URL)
                 .content(requestContent.toString())
