@@ -235,7 +235,7 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void generateDocumentOk() throws Exception {
-        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), AUTH_TOKEN)).thenReturn(documentInfo);
+        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())
@@ -273,7 +273,7 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void generateDocumentError500() throws Exception {
-        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), AUTH_TOKEN)).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())
@@ -284,7 +284,7 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void generateDocumentOkForbidden() throws Exception {
-        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), AUTH_TOKEN)).thenReturn(documentInfo);
+        when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())
