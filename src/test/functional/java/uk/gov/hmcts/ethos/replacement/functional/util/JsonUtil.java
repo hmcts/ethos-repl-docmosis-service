@@ -14,10 +14,10 @@ public class JsonUtil {
     }
 
     public static String getValue(String testDataJson, String key) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+        var mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(testDataJson);
 
-        JsonNode jsonNode = rootNode.findValue(key);
+        var jsonNode = rootNode.findValue(key);
 
         if (jsonNode != null) {
             return jsonNode.textValue();
@@ -28,12 +28,12 @@ public class JsonUtil {
 
     public static CCDRequest getCaseDetails(String json, String topLevel, String childLevel,
                                             boolean isScotland) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+        var mapper = new ObjectMapper();
 
-        int intTopLevel = Integer.parseInt(topLevel);
+        var intTopLevel = Integer.parseInt(topLevel);
 
         if (isScotland) {
-            int templateNo = 0;
+            var templateNo = 0;
             if (intTopLevel >= 1 && intTopLevel <= 7) {
                 templateNo = 1;
             } else if (intTopLevel >= 8 && intTopLevel <= 14) {
@@ -104,7 +104,7 @@ public class JsonUtil {
     }
 
     public static BulkRequest getBulkDetails(boolean isScotland, String testData) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+        var mapper = new ObjectMapper();
         return mapper.readValue(testData, BulkRequest.class);
     }
 }

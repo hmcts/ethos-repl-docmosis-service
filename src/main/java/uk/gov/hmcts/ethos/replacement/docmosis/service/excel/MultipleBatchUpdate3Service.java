@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,6 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
 import java.util.List;
-import java.util.TreeMap;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
@@ -28,9 +28,9 @@ public class MultipleBatchUpdate3Service {
     }
 
     public void batchUpdate3Logic(String userToken, MultipleDetails multipleDetails,
-                                  List<String> errors, TreeMap<String, Object> multipleObjects) {
+                                  List<String> errors, SortedMap<String, Object> multipleObjects) {
 
-        MultipleData multipleData = multipleDetails.getCaseData();
+        var multipleData = multipleDetails.getCaseData();
 
         log.info("Batch update type = 3");
 

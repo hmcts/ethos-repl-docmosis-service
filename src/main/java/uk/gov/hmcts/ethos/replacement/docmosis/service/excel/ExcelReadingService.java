@@ -76,10 +76,10 @@ public class ExcelReadingService {
     public XSSFSheet checkExcelErrors(String userToken, String documentBinaryUrl, List<String> errors)
             throws IOException {
 
-        InputStream excelInputStream =
+        var excelInputStream =
                 excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl);
 
-        XSSFWorkbook workbook = new XSSFWorkbook(excelInputStream);
+        var workbook = new XSSFWorkbook(excelInputStream);
 
         XSSFSheet datatypeSheet = workbook.getSheet(SHEET_NAME);
 

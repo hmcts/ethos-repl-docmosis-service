@@ -52,7 +52,7 @@ public class AddSingleCaseToMultipleService {
 
             SubmitMultipleEvent multipleEvent = multipleEvents.get(0);
 
-            MultipleData multipleData = multipleEvent.getCaseData();
+            var multipleData = multipleEvent.getCaseData();
 
             List<String> ethosCaseRefCollection =
                     multipleHelperService.getEthosCaseRefCollection(userToken, multipleData, errors);

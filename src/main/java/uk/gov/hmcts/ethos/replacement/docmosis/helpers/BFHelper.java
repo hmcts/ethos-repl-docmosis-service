@@ -30,7 +30,7 @@ public class BFHelper {
 
             for (BFActionTypeItem bfActionTypeItem : bfActions) {
 
-                BFActionType bfActionType = bfActionTypeItem.getValue();
+                var bfActionType = bfActionTypeItem.getValue();
 
                 if (isNullOrEmpty(bfActionType.getDateEntered())) {
 
@@ -54,13 +54,13 @@ public class BFHelper {
 
             for (BFActionTypeItem bfActionTypeItem : bfActionTypeItemList) {
 
-                DynamicFixedListType dynamicFixedListType = bfActionTypeItem.getValue().getAction();
+                var dynamicFixedListType = bfActionTypeItem.getValue().getAction();
 
                 if (dynamicFixedListType != null) {
 
                     log.info("Updating the value of bfActionDynamicLists: " + dynamicFixedListType.getValue());
 
-                    BFActionTypeItem bfActionTypeItemAux = new BFActionTypeItem();
+                    var bfActionTypeItemAux = new BFActionTypeItem();
                     bfActionTypeItemAux.setId(bfActionTypeItem.getId());
                     bfActionTypeItemAux.setValue(bfActionTypeItem.getValue());
                     bfActionTypeItemListAux.add(bfActionTypeItemAux);
@@ -71,12 +71,12 @@ public class BFHelper {
 
             log.info("BF Actions is empty. Creating a dummy one");
 
-            DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+            var dynamicFixedListType = new DynamicFixedListType();
             dynamicFixedListType.setListItems(Helper.getDefaultBfListItems());
             dynamicFixedListType.setValue(Helper.getDynamicValue(BF_ACTION_ACAS));
 
-            BFActionTypeItem bfActionTypeItem = new BFActionTypeItem();
-            BFActionType bfActionType = new BFActionType();
+            var bfActionTypeItem = new BFActionTypeItem();
+            var bfActionType = new BFActionType();
             bfActionType.setAction(dynamicFixedListType);
             bfActionTypeItem.setId(UUID.randomUUID().toString());
             bfActionTypeItem.setValue(bfActionType);

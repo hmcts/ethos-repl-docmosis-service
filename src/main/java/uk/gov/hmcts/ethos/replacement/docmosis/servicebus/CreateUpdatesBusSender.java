@@ -31,7 +31,7 @@ public class CreateUpdatesBusSender {
                                    List<String> errors, String updateSize) {
         log.info("Started sending messages to create-updates queue");
 
-        AtomicInteger successCount = new AtomicInteger(0);
+        var successCount = new AtomicInteger(0);
 
         List<CreateUpdatesMsg> createUpdatesMsgList =
                 CreateUpdatesHelper.getCreateUpdatesMessagesCollection(
