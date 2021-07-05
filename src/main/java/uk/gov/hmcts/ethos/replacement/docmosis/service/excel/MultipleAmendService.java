@@ -1,19 +1,17 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TYPE_AMENDMENT_ADDITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TYPE_AMENDMENT_LEAD;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.stream.Stream;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.TYPE_AMENDMENT_ADDITION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.TYPE_AMENDMENT_LEAD;
 
 @Slf4j
 @Service("multipleAmendService")
@@ -39,7 +37,7 @@ public class MultipleAmendService {
 
         log.info("Read excel to amend multiple");
 
-        TreeMap<String, Object> multipleObjects =
+        SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),

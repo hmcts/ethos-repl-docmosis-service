@@ -1,15 +1,14 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
 import java.util.List;
-import java.util.TreeMap;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
@@ -28,9 +27,9 @@ public class MultipleBatchUpdate3Service {
     }
 
     public void batchUpdate3Logic(String userToken, MultipleDetails multipleDetails,
-                                  List<String> errors, TreeMap<String, Object> multipleObjects) {
+                                  List<String> errors, SortedMap<String, Object> multipleObjects) {
 
-        MultipleData multipleData = multipleDetails.getCaseData();
+        var multipleData = multipleDetails.getCaseData();
 
         log.info("Batch update type = 3");
 
@@ -54,11 +53,6 @@ public class MultipleBatchUpdate3Service {
 
             log.info("Sending updates to single cases with caseSearched");
 
-            /*if(respondentRepRemovalIsRequested(multipleData))
-            {
-                caseSearched.getCaseData().getRepCollection().clear();
-            }*/
-
             multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
                     multipleObjects, caseSearched.getCaseData());
         }
@@ -70,14 +64,6 @@ public class MultipleBatchUpdate3Service {
         }
 
     }
-/*
-    private boolean respondentRepRemovalIsRequested(MultipleData multipleData)
-    {
-        return multipleData != null &&
-               (multipleData.getBatchRemoveRespondentRep() != null &&
-                    multipleData.getBatchRemoveRespondentRep().equals(YES));
-    }
-*/
     private boolean checkAnyChange(MultipleData multipleData) {
 
         return (

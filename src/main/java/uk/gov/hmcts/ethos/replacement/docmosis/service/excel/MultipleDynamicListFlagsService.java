@@ -1,27 +1,20 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.types.MoveCasesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
-
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_2;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_3;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_4;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_5;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_6;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.SELECT_ALL;
 
 @Slf4j
@@ -39,9 +32,9 @@ public class MultipleDynamicListFlagsService {
 
         log.info("Read excel to populate dynamic list flags logic");
 
-        MultipleData multipleData = multipleDetails.getCaseData();
+        var multipleData = multipleDetails.getCaseData();
 
-        TreeMap<String, Object> multipleObjects =
+        SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleData),
@@ -63,7 +56,7 @@ public class MultipleDynamicListFlagsService {
 
     }
 
-    private List<DynamicValueType> getDynamicList(TreeMap<String, Object> multipleObjects, String key) {
+    private List<DynamicValueType> getDynamicList(SortedMap<String, Object> multipleObjects, String key) {
 
         Set<String> values = (Set<String>) multipleObjects.get(key);
         List<DynamicValueType> listItems = new ArrayList<>();
@@ -92,7 +85,7 @@ public class MultipleDynamicListFlagsService {
             dynamicListFlag.setValue(Helper.getDynamicValue(SELECT_ALL));
             return dynamicListFlag;
         } else {
-            DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+            var dynamicFixedListType = new DynamicFixedListType();
             dynamicFixedListType.setListItems(listItems);
             dynamicFixedListType.setValue(Helper.getDynamicValue(SELECT_ALL));
             return dynamicFixedListType;
@@ -102,7 +95,7 @@ public class MultipleDynamicListFlagsService {
 
     private MoveCasesType populateCurrentMultipleRef(String currentMultipleRef) {
 
-        MoveCasesType moveCasesType = new MoveCasesType();
+        var moveCasesType = new MoveCasesType();
 
         moveCasesType.setUpdatedMultipleRef(currentMultipleRef);
 

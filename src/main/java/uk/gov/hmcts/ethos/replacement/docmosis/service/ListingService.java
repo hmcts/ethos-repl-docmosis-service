@@ -14,12 +14,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
-import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 
@@ -70,7 +67,7 @@ public class ListingService {
 
     public ListingData listingCaseCreation(ListingDetails listingDetails) {
 
-        ListingData listingData = listingDetails.getCaseData();
+        var listingData = listingDetails.getCaseData();
 
         if (listingData.getHearingDocType() != null) {
             listingData.setDocumentName(listingData.getHearingDocType());
@@ -84,7 +81,7 @@ public class ListingService {
     }
 
     public CaseData processListingSingleCasesRequest(CaseDetails caseDetails) {
-        CaseData caseData = caseDetails.getCaseData();
+        var caseData = caseDetails.getCaseData();
         List<ListingTypeItem> listingTypeItems = new ArrayList<>();
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
@@ -102,7 +99,7 @@ public class ListingService {
     }
 
     public ListingData setCourtAddressFromCaseData(CaseData caseData) {
-        ListingData listingData = caseData.getPrintHearingCollection();
+        var listingData = caseData.getPrintHearingCollection();
         listingData.setTribunalCorrespondenceAddress(caseData.getTribunalCorrespondenceAddress());
         listingData.setTribunalCorrespondenceTelephone(caseData.getTribunalCorrespondenceTelephone());
         listingData.setTribunalCorrespondenceFax(caseData.getTribunalCorrespondenceFax());
@@ -120,12 +117,7 @@ public class ListingService {
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null
                             && !submitEvent.getCaseData().getHearingCollection().isEmpty()) {
-                        for (HearingTypeItem hearingTypeItem : submitEvent.getCaseData().getHearingCollection()) {
-                            if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
-                                listingTypeItems.addAll(getListingTypeItems(hearingTypeItem,
-                                        listingDetails.getCaseData(), submitEvent.getCaseData()));
-                            }
-                        }
+                       addListingTypeItems(submitEvent,listingTypeItems,listingDetails );
                     }
                 }
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
@@ -136,9 +128,17 @@ public class ListingService {
         }
     }
 
+    private void addListingTypeItems(SubmitEvent submitEvent, List<ListingTypeItem> listingTypeItems,ListingDetails listingDetails) {
+        for (HearingTypeItem hearingTypeItem : submitEvent.getCaseData().getHearingCollection()) {
+            if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
+                listingTypeItems.addAll(getListingTypeItems(hearingTypeItem,
+                        listingDetails.getCaseData(), submitEvent.getCaseData()));
+            }
+        }
+    }
     private List<SubmitEvent> getListingHearingsSearch(ListingDetails listingDetails, String authToken)
             throws IOException {
-        ListingData listingData = listingDetails.getCaseData();
+        var listingData = listingDetails.getCaseData();
         Map.Entry<String, String> entry =
                 ListingHelper.getListingVenueToSearch(listingData).entrySet().iterator().next();
         String venueToSearchMapping = entry.getKey();
@@ -164,30 +164,25 @@ public class ListingService {
         List<ListingTypeItem> listingTypeItems = new ArrayList<>();
         if (isHearingTypeValid(listingData, hearingTypeItem)) {
             int hearingDateCollectionSize = hearingTypeItem.getValue().getHearingDateCollection().size();
-            for (int i = 0; i < hearingDateCollectionSize; i++) {
+            for (var i = 0; i < hearingDateCollectionSize; i++) {
                 log.info("EthosCaseRef Listing: " + caseData.getEthosCaseReference());
                 hearingTypeItem.getValue().getHearingNumber();
                 log.info("Hearing number: " + hearingTypeItem.getValue().getHearingNumber());
-                DateListedTypeItem dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
+                var dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
                 boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
-                log.info("isListingVenueValid: " + isListingVenueValid);
-                if (!isListingVenueValid) {
-                    continue;
-                }
                 boolean isListingDateValid = isListingDateValid(listingData, dateListedTypeItem);
+                log.info("isListingVenueValid: " + isListingVenueValid);
                 log.info("isListingDateValid: " + isListingDateValid);
-                if (!isListingDateValid) {
+                var isListingStatusValid = true;
+                if (!showAllHearingType(listingData)) {
+                     isListingStatusValid = isListingStatusValid(dateListedTypeItem);
+                    log.info("isListingStatusValid: " + isListingStatusValid);
+                }
+                if (!isListingVenueValid || !isListingDateValid || !isListingStatusValid) {
                     continue;
                 }
-                if (!showAllHearingType(listingData)) {
-                    boolean isListingStatusValid = isListingStatusValid(dateListedTypeItem);
-                    log.info("isListingStatusValid: " + isListingStatusValid);
-                    if (!isListingStatusValid) {
-                        continue;
-                    }
-                }
-                ListingTypeItem listingTypeItem = new ListingTypeItem();
-                ListingType listingType = ListingHelper.getListingTypeFromCaseData(
+                var listingTypeItem = new ListingTypeItem();
+                var listingType = ListingHelper.getListingTypeFromCaseData(
                         listingData, caseData, hearingTypeItem.getValue(), dateListedTypeItem.getValue(),
                         i, hearingDateCollectionSize);
                 listingTypeItem.setId(String.valueOf(dateListedTypeItem.getId()));
@@ -222,16 +217,16 @@ public class ListingService {
 
     private List<SubmitEvent> getGenericReportSearch(ListingDetails listingDetails, String authToken)
             throws IOException {
-        ListingData listingData = listingDetails.getCaseData();
+        var listingData = listingDetails.getCaseData();
         boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
         if (!dateRange) {
-            String dateToSearch = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2).toString();
+            var dateToSearch = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2).toString();
             return ccdClient.retrieveCasesGenericReportElasticSearch(authToken, UtilHelper.getListingCaseTypeId(
                     listingDetails.getCaseTypeId()), dateToSearch, dateToSearch, listingData.getReportType());
         } else {
-            String dateToSearchFrom = LocalDate.parse(listingData.getListingDateFrom(),
+            var dateToSearchFrom = LocalDate.parse(listingData.getListingDateFrom(),
                     OLD_DATE_TIME_PATTERN2).toString();
-            String dateToSearchTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2).toString();
+            var dateToSearchTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2).toString();
             return ccdClient.retrieveCasesGenericReportElasticSearch(authToken, UtilHelper.getListingCaseTypeId(
                     listingDetails.getCaseTypeId()), dateToSearchFrom, dateToSearchTo, listingData.getReportType());
         }
@@ -274,7 +269,7 @@ public class ListingService {
     }
 
     private boolean isListingStatusValid(DateListedTypeItem dateListedTypeItem) {
-        DateListedType dateListedType = dateListedTypeItem.getValue();
+        var dateListedType = dateListedTypeItem.getValue();
 
         if (dateListedType.getHearingStatus() != null) {
             List<String> invalidHearingStatuses = Arrays.asList(HEARING_STATUS_SETTLED,
@@ -300,7 +295,7 @@ public class ListingService {
                 && listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
                 && !listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)) {
 
-            HearingType hearingType = hearingTypeItem.getValue();
+            var hearingType = hearingTypeItem.getValue();
 
             if (hearingType.getHearingType() != null) {
                 if (hearingType.getHearingType().equals(HEARING_TYPE_PERLIMINARY_HEARING)

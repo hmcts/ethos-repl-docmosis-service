@@ -25,6 +25,7 @@ import java.net.URL;
 public class DocMosisComponentTest {
 
     private TestUtil testUtil;
+    private final static String BANDERAS = "Mr A Banderas";
 
     @Before
     public void setUp() {
@@ -32,12 +33,12 @@ public class DocMosisComponentTest {
     }
 
     @Test
-    public void verify_payload_eng_claimant_individual_not_represented() throws Exception {
+    public void verifyPayloadEngClaimantIndividual_Not_Represented() throws Exception {
         testUtil.verifyDocMosisPayload("10", "1", false, Constants.TEST_DATA_CASE1);
     }
 
     @Test
-    public void verify_payload_eng_claimant_company_not_represented() throws Exception {
+    public void verify_Payload_Eng_Claimant_Company_Not_Represented() throws Exception {
         testUtil.verifyDocMosisPayload("10", "1", false, Constants.TEST_DATA_CASE2);
     }
 
@@ -74,7 +75,7 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("SmokeTest")
     public void verify_document_eng_claimant_individual_not_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "1", "Mr A Banderas", false, Constants.TEST_DATA_CASE1);
+        testUtil.executeGenerateDocumentTest("10", "1", BANDERAS, false, Constants.TEST_DATA_CASE1);
     }
 
     @Test
@@ -86,19 +87,19 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_eng_claimant_individual_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "1", "Mr A Banderas", false, Constants.TEST_DATA_CASE3);
+        testUtil.executeGenerateDocumentTest("10", "1", BANDERAS, false, Constants.TEST_DATA_CASE3);
     }
 
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_eng_respondant_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("10", "1", "Mr A Banderas", false, Constants.TEST_DATA_CASE4);
+        testUtil.executeGenerateDocumentTest("10", "1", BANDERAS, false, Constants.TEST_DATA_CASE4);
     }
 
     @Test
     @WithTag("SmokeTest")
     public void verify_document_sco_claimant_individual_not_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "", "Mr A Banderas", true, Constants.TEST_DATA_SCOT_CASE1);
+        testUtil.executeGenerateDocumentTest("1", "", BANDERAS, true, Constants.TEST_DATA_SCOT_CASE1);
     }
 
     @Test
@@ -110,13 +111,13 @@ public class DocMosisComponentTest {
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_sco_claimant_individual_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "", "Mr A Banderas", true, Constants.TEST_DATA_SCOT_CASE3);
+        testUtil.executeGenerateDocumentTest("1", "", BANDERAS, true, Constants.TEST_DATA_SCOT_CASE3);
     }
 
     @Test
     @WithTag("FunctionalTest")
     public void verify_document_sco_respondant_represented() throws Exception {
-        testUtil.executeGenerateDocumentTest("1", "", "Mr A Banderas", true, Constants.TEST_DATA_SCOT_CASE4);
+        testUtil.executeGenerateDocumentTest("1", "", BANDERAS, true, Constants.TEST_DATA_SCOT_CASE4);
     }
 
     @Ignore
@@ -139,7 +140,7 @@ public class DocMosisComponentTest {
     public void invoke_pre_default_endpoint_without_payload() throws IOException {
         testUtil.loadAuthToken();
 
-        CCDRequest ccdRequest = new CCDRequest();
+        var ccdRequest = new CCDRequest();
 
         Response response = testUtil.getResponse(ccdRequest, Constants.DOCGEN_URI, 400);
     }

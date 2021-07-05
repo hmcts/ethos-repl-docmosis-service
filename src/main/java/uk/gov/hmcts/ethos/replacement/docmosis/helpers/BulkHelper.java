@@ -14,7 +14,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -72,38 +71,50 @@ public class BulkHelper {
         return bulkDetails;
     }
 
-    private static MultipleType getMultipleTypeFromCaseData(CaseData caseData) {
-        MultipleType multipleType = new MultipleType();
-        multipleType.setEthosCaseReferenceM(Optional.ofNullable(caseData.getEthosCaseReference()).orElse(" "));
-        multipleType.setClerkRespM(Optional.ofNullable(caseData.getClerkResponsible()).orElse(" "));
+    private static void setClaimantSurnameM(CaseData caseData,MultipleType multipleType ) {
         if (caseData.getClaimantIndType() != null && caseData.getClaimantIndType().getClaimantLastName() != null) {
             multipleType.setClaimantSurnameM(caseData.getClaimantIndType().getClaimantLastName());
         } else {
             multipleType.setClaimantSurnameM(" ");
         }
+    }
+    private static void setClaimantAddressLine1M(CaseData caseData,MultipleType multipleType) {
         if (caseData.getClaimantType() != null && caseData.getClaimantType().getClaimantAddressUK() != null
                 && caseData.getClaimantType().getClaimantAddressUK().getAddressLine1() != null) {
             multipleType.setClaimantAddressLine1M(caseData.getClaimantType().getClaimantAddressUK().getAddressLine1());
         } else {
             multipleType.setClaimantAddressLine1M(" ");
         }
+    }
+    private static void setRespondentSurnameM(CaseData caseData,MultipleType multipleType) {
+        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+            var respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+            multipleType.setRespondentSurnameM(respondentSumType.getRespondentName());
+        } else {
+            multipleType.setRespondentSurnameM(" ");
+        }
+    }
+    private static void setClaimantPostCodeM(CaseData caseData,MultipleType multipleType) {
         if (caseData.getClaimantType() != null && caseData.getClaimantType().getClaimantAddressUK() != null
                 && caseData.getClaimantType().getClaimantAddressUK().getPostCode() != null) {
             multipleType.setClaimantPostCodeM(caseData.getClaimantType().getClaimantAddressUK().getPostCode());
         } else {
             multipleType.setClaimantPostCodeM(" ");
         }
-        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
-            RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
-            multipleType.setRespondentSurnameM(respondentSumType.getRespondentName());
-        } else {
-            multipleType.setRespondentSurnameM(" ");
-        }
+    }
+    private static MultipleType getMultipleTypeFromCaseData(CaseData caseData) {
+        var multipleType = new MultipleType();
+        multipleType.setEthosCaseReferenceM(Optional.ofNullable(caseData.getEthosCaseReference()).orElse(" "));
+        multipleType.setClerkRespM(Optional.ofNullable(caseData.getClerkResponsible()).orElse(" "));
+        setClaimantSurnameM(caseData, multipleType);
+        setClaimantAddressLine1M(caseData, multipleType);
+        setClaimantPostCodeM(caseData, multipleType);
+        setRespondentSurnameM(caseData, multipleType);
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()
                 && caseData.getRespondentCollection().get(0).getValue().getRespondentAddress() != null
                 && caseData.getRespondentCollection().get(0).getValue()
                 .getRespondentAddress().getAddressLine1() != null) {
-            RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+            var respondentSumType = caseData.getRespondentCollection().get(0).getValue();
             multipleType.setRespondentAddressLine1M(respondentSumType.getRespondentAddress().getAddressLine1());
         } else {
             multipleType.setRespondentAddressLine1M(" ");
@@ -111,7 +122,7 @@ public class BulkHelper {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()
                 && caseData.getRespondentCollection().get(0).getValue().getRespondentAddress() != null
                 && caseData.getRespondentCollection().get(0).getValue().getRespondentAddress().getPostCode() != null) {
-            RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+            var respondentSumType = caseData.getRespondentCollection().get(0).getValue();
             multipleType.setRespondentPostCodeM(respondentSumType.getRespondentAddress().getPostCode());
         } else {
             multipleType.setRespondentPostCodeM(" ");
@@ -152,13 +163,13 @@ public class BulkHelper {
                                                                               String multipleReference) {
         List<MultipleTypeItem> multipleTypeItemList = new ArrayList<>();
         for (SubmitEvent submitEvent : submitEvents) {
-            CaseData caseData = submitEvent.getCaseData();
-            MultipleType multipleType = getMultipleTypeFromCaseData(caseData);
+            var caseData = submitEvent.getCaseData();
+            var multipleType = getMultipleTypeFromCaseData(caseData);
             multipleType.setCaseIDM(String.valueOf(submitEvent.getCaseId()));
             multipleType.setMultipleReferenceM(Optional.ofNullable(multipleReference).orElse(" "));
             multipleType.setStateM(getSubmitEventState(submitEvent));
 
-            MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
+            var multipleTypeItem = new MultipleTypeItem();
             multipleTypeItem.setId(String.valueOf(submitEvent.getCaseId()));
             multipleTypeItem.setValue(multipleType);
             multipleTypeItemList.add(multipleTypeItem);
@@ -167,13 +178,23 @@ public class BulkHelper {
     }
 
     private static String getSubmitEventState(SubmitEvent submitEvent) {
-        return submitEvent.getState() != null
-                ? (submitEvent.getState().equals(PENDING_STATE) ? SUBMITTED_STATE : submitEvent.getState())
-                : " ";
+        String state = submitEvent.getState();
+        if (state != null) {
+            if (state.equals(PENDING_STATE)) {
+                return SUBMITTED_STATE;
+            }
+            else {
+                return state;
+            }
+        }
+        else {
+            return " ";
+        }
+
     }
 
     public static SearchType getSearchTypeFromMultipleType(MultipleType multipleType) {
-        SearchType searchType = new SearchType();
+        var searchType = new SearchType();
         searchType.setCaseIDS(multipleType.getCaseIDM());
         searchType.setEthosCaseReferenceS(multipleType.getEthosCaseReferenceM());
         searchType.setLeadClaimantS(multipleType.getLeadClaimantM());
@@ -202,8 +223,8 @@ public class BulkHelper {
     }
 
     public static MultipleType getMultipleTypeFromSubmitEvent(SubmitEvent submitEvent) {
-        CaseData caseData = submitEvent.getCaseData();
-        MultipleType multipleType = getMultipleTypeFromCaseData(caseData);
+        var caseData = submitEvent.getCaseData();
+        var multipleType = getMultipleTypeFromCaseData(caseData);
         multipleType.setCaseIDM(String.valueOf(submitEvent.getCaseId()));
         multipleType.setMultipleReferenceM(!isNullOrEmpty(
                 caseData.getMultipleReference()) ? caseData.getMultipleReference() : " ");
@@ -213,9 +234,9 @@ public class BulkHelper {
 
     public static MultipleTypeItem getMultipleTypeItemFromSubmitEvent(SubmitEvent submitEvent,
                                                                       String multipleReference) {
-        MultipleTypeItem multipleTypeItem = new MultipleTypeItem();
+        var multipleTypeItem = new MultipleTypeItem();
         multipleTypeItem.setId(String.valueOf(submitEvent.getCaseId()));
-        MultipleType multipleType = BulkHelper.getMultipleTypeFromSubmitEvent(submitEvent);
+        var multipleType = BulkHelper.getMultipleTypeFromSubmitEvent(submitEvent);
         multipleType.setMultipleReferenceM(multipleReference);
         multipleTypeItem.setValue(multipleType);
         return multipleTypeItem;
@@ -295,9 +316,9 @@ public class BulkHelper {
             List<String> codes = new ArrayList<>(Arrays.asList(jurCodesStringList.split(", ")));
             jurCodesTypeItems = codes.stream()
                     .map(code -> {
-                        JurCodesType jurCodesType = new JurCodesType();
+                        var jurCodesType = new JurCodesType();
                         jurCodesType.setJuridictionCodesList(code);
-                        JurCodesTypeItem jurCodesTypeItem = new JurCodesTypeItem();
+                        var jurCodesTypeItem = new JurCodesTypeItem();
                         jurCodesTypeItem.setValue(jurCodesType);
                         jurCodesTypeItem.setId(code);
                         return jurCodesTypeItem;
@@ -313,7 +334,7 @@ public class BulkHelper {
     }
 
     public static StringBuilder buildScheduleDocumentContent(BulkData bulkData, String accessKey) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         // Start building the instruction
         sb.append("{\n");
         sb.append("\"accessKey\":\"").append(accessKey).append(NEW_LINE);
@@ -343,9 +364,9 @@ public class BulkHelper {
     }
 
     private static StringBuilder getScheduleData(List<SearchTypeItem> searchTypeItems) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append("\"multiple\":[\n");
-        for (int i = 0; i < searchTypeItems.size(); i++) {
+        for (var i = 0; i < searchTypeItems.size(); i++) {
             sb.append(getMultipleTypeRow(searchTypeItems.get(i).getValue()));
             if (i != searchTypeItems.size() - 1) {
                 sb.append(",\n");
@@ -356,7 +377,7 @@ public class BulkHelper {
     }
 
     private static StringBuilder getMultipleTypeRow(SearchType searchType) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append("{\"Claimant\":\"").append(
                 nullCheck(searchType.getClaimantSurnameS())).append(NEW_LINE);
         sb.append("\"Current_position\":\"").append(
@@ -379,7 +400,7 @@ public class BulkHelper {
     }
 
     private static StringBuilder getScheduleBySubMultipleData(BulkData bulkData) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         Map<String, List<SearchType>> multipleMap = getSearchedCasesBySubMultipleRefMap(bulkData);
         if (!multipleMap.isEmpty()) {
             sb.append("\"subMultiple\":[\n");
@@ -390,7 +411,7 @@ public class BulkHelper {
                 sb.append("\"SubMultiple_title\":\"").append(getSubMultipleTitle(subMultipleEntry.getKey(), bulkData))
                         .append(NEW_LINE);
                 sb.append("\"multiple\":[\n");
-                for (int i = 0; i < subMultipleEntry.getValue().size(); i++) {
+                for (var i = 0; i < subMultipleEntry.getValue().size(); i++) {
                     sb.append(getMultipleTypeRow(subMultipleEntry.getValue().get(i)));
                     if (i != subMultipleEntry.getValue().size() - 1) {
                         sb.append(",\n");
@@ -452,7 +473,7 @@ public class BulkHelper {
                     .collect(Collectors.toList())
                     .indexOf(caseId);
             if (index != -1) {
-                SubmitEvent submitEvent = submitEvents.get(index);
+                var submitEvent = submitEvents.get(index);
                 log.info("setLeadClaimant is set to Yes");
                 submitEvent.getCaseData().setLeadClaimant(YES);
                 submitEvents.remove(index);

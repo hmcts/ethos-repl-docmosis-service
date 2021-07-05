@@ -273,7 +273,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void amendCaseDetailsWithErrors() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class))).thenReturn(defaultValues);
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         when(eventValidationService.validateCaseState(isA(CaseDetails.class))).thenReturn(false);
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
                 .content(requestContent2.toString())

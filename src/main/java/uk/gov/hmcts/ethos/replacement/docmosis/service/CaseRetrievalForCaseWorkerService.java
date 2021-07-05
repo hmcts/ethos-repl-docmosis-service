@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class CaseRetrievalForCaseWorkerService {
     }
 
     public List<SubmitEvent> casesRetrievalRequest(CCDRequest ccdRequest, String authToken) {
-        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+        var caseDetails = ccdRequest.getCaseDetails();
         log.info("EventId: " + ccdRequest.getEventId());
         try {
             return ccdClient.retrieveCases(authToken, caseDetails.getCaseTypeId(), caseDetails.getJurisdiction());

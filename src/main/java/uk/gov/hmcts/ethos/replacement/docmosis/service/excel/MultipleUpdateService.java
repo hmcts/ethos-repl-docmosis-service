@@ -1,18 +1,14 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.util.List;
+import java.util.SortedMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-
-import java.util.List;
-import java.util.TreeMap;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BATCH_UPDATE_TYPE_1;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BATCH_UPDATE_TYPE_2;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.UPDATING_STATE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,7 +24,7 @@ public class MultipleUpdateService {
 
         log.info("Read excel to update logic");
 
-        TreeMap<String, Object> multipleObjects =
+        SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
@@ -59,7 +55,7 @@ public class MultipleUpdateService {
     }
 
     private void batchUpdateLogic(String userToken, MultipleDetails multipleDetails,
-                                  List<String> errors, TreeMap<String, Object> multipleObjects) {
+                                  List<String> errors, SortedMap<String, Object> multipleObjects) {
 
         String batchUpdateType = multipleDetails.getCaseData().getBatchUpdateType();
 

@@ -74,7 +74,7 @@ public class MultipleCreationService {
 
     private void multipleCreationUI(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
-        MultipleData multipleData = multipleDetails.getCaseData();
+        var multipleData = multipleDetails.getCaseData();
 
         multipleData.setPreAcceptDone(YES);
 
@@ -152,7 +152,7 @@ public class MultipleCreationService {
 
             for (CaseMultipleTypeItem caseMultipleTypeItem : caseMultipleTypeItemList) {
 
-                MultipleObjectType multipleObjectType = caseMultipleTypeItem.getValue();
+                var multipleObjectType = caseMultipleTypeItem.getValue();
 
                 if (multipleObjectType.getSubMultiple() != null
                         && !multipleObjectType.getSubMultiple().trim().isEmpty()
@@ -195,7 +195,7 @@ public class MultipleCreationService {
 
     private String generateMultipleRef(MultipleDetails multipleDetails) {
 
-        MultipleData multipleData = multipleDetails.getCaseData();
+        var multipleData = multipleDetails.getCaseData();
 
         if (multipleData.getMultipleReference() == null
                 || multipleData.getMultipleReference().trim().equals("")) {
@@ -224,7 +224,7 @@ public class MultipleCreationService {
 
     private void getLeadMarkUpAndAddLeadToCaseIds(String userToken, MultipleDetails multipleDetails) {
 
-        MultipleData multipleData = multipleDetails.getCaseData();
+        var multipleData = multipleDetails.getCaseData();
 
         String leadCase;
 

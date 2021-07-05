@@ -1,15 +1,12 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleActionType;
-
-import java.util.List;
-
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.AMEND_ACTION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CREATE_ACTION;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
 @Slf4j
 @Service("subMultipleMidEventValidationService")
@@ -19,9 +16,9 @@ public class SubMultipleMidEventValidationService {
 
         log.info("Validating subMultiple");
 
-        MultipleData multipleData = multipleDetails.getCaseData();
+        var multipleData = multipleDetails.getCaseData();
 
-        SubMultipleActionType subMultipleActionType = multipleData.getSubMultipleAction();
+        var subMultipleActionType = multipleData.getSubMultipleAction();
 
         String actionType = subMultipleActionType.getActionType();
 

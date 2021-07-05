@@ -91,7 +91,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void midAddressLabelsOk() throws Exception {
         when(documentGenerationService.midAddressLabels(isA(CaseData.class))).thenReturn(submitEvent.getCaseData());
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MID_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -114,7 +114,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void midAddressLabelsError500() throws Exception {
         when(documentGenerationService.midAddressLabels(isA(CaseData.class))).thenThrow(new InternalException(ERROR_MESSAGE));
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MID_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -125,7 +125,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void midAddressLabelsForbidden() throws Exception {
         when(documentGenerationService.midAddressLabels(isA(CaseData.class))).thenReturn(submitEvent.getCaseData());
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(MID_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -136,7 +136,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void midSelectedAddressLabelsOk() throws Exception {
         when(documentGenerationService.midSelectedAddressLabels(isA(CaseData.class))).thenReturn(submitEvent.getCaseData());
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MID_SELECTED_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -159,7 +159,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void midSelectedAddressLabelsError500() throws Exception {
         when(documentGenerationService.midSelectedAddressLabels(isA(CaseData.class))).thenThrow(new InternalException(ERROR_MESSAGE));
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MID_SELECTED_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -170,7 +170,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void midSelectedAddressLabelsForbidden() throws Exception {
         when(documentGenerationService.midSelectedAddressLabels(isA(CaseData.class))).thenReturn(submitEvent.getCaseData());
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(MID_SELECTED_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -181,7 +181,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void midValidateAddressLabelsOk() throws Exception {
         when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class))).thenReturn(new ArrayList<>(Collections.singletonList("")));
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MID_VALIDATE_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -195,7 +195,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void midValidateAddressLabelsErrors() throws Exception {
         when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class))).thenReturn(new ArrayList<>(Collections.singletonList("Errors")));
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MID_VALIDATE_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -218,7 +218,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void midValidateAddressLabelsError500() throws Exception {
         when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class))).thenThrow(new InternalException(ERROR_MESSAGE));
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(MID_VALIDATE_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -229,7 +229,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void midValidateAddressLabelsForbidden() throws Exception {
         when(documentGenerationService.midValidateAddressLabels(isA(CaseData.class))).thenReturn(new ArrayList<>(Collections.singletonList("Error")));
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(MID_VALIDATE_ADDRESS_LABELS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -240,7 +240,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void generateDocumentOk() throws Exception {
         when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -255,7 +255,7 @@ public class DocumentGenerationControllerTest {
     public void generateDocumentValidationErrors() throws Exception {
         when(eventValidationService.validateHearingNumber(any(), any(), any()))
                 .thenReturn(new ArrayList<>(Collections.singletonList("Error")));
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -278,7 +278,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void generateDocumentError500() throws Exception {
         when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -289,7 +289,7 @@ public class DocumentGenerationControllerTest {
     @Test
     public void generateDocumentOkForbidden() throws Exception {
         when(documentGenerationService.processDocumentRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(GEN_DOC_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -299,7 +299,7 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void generateDocumentConfirmationOk() throws Exception {
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(GEN_DOC_CONFIRMATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -321,7 +321,7 @@ public class DocumentGenerationControllerTest {
 
     @Test
     public void generateDocumentConfirmationForbidden() throws Exception {
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(GEN_DOC_CONFIRMATION_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)

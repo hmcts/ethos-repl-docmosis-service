@@ -1,5 +1,10 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -7,35 +12,14 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.*;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesSchedulePrinter;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIST_CASES_CONFIG;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_DETAILED_CONFIG;
-import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_1;
-import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_2;
-import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_3;
-import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_4;
-import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_5;
-import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_6;
-import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_SCHEDULE;
-import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.NEW_LINE_CELL;
-import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.SCHEDULE_SHEET_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.SUB_ZERO;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesSchedulePrinter;
 
 @Slf4j
 @Service("scheduleCreationService")
@@ -46,10 +30,10 @@ public class ScheduleCreationService {
     private final List<String> subMultipleHeaders = new ArrayList<>(Arrays.asList(HEADER_1, HEADER_5, HEADER_6));
 
     public byte[] writeSchedule(MultipleData multipleData, List<SchedulePayload> schedulePayloads,
-                                TreeMap<String, Object> multipleObjectsFiltered) {
+                                SortedMap<String, Object> multipleObjectsFiltered) {
 
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet(SCHEDULE_SHEET_NAME);
+        var workbook = new XSSFWorkbook();
+        var sheet = workbook.createSheet(SCHEDULE_SHEET_NAME);
 
         initializeHeaders(workbook, sheet, multipleData);
 
@@ -66,7 +50,7 @@ public class ScheduleCreationService {
 
         MultiplesSchedulePrinter.adjustColumnSize(sheet);
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        var bos = new ByteArrayOutputStream();
 
         try {
 
@@ -92,13 +76,13 @@ public class ScheduleCreationService {
 
         if (multipleData.getScheduleDocName().equals(LIST_CASES_CONFIG)) {
 
-            CellStyle header1CellStyle = MultiplesSchedulePrinter.getHeader1CellStyle(workbook);
+            var header1CellStyle = MultiplesSchedulePrinter.getHeader1CellStyle(workbook);
             createCell(rowHead1, 0, "List of cases for ", header1CellStyle);
             createCell(rowHead1, 1, multipleTitle, header1CellStyle);
 
         } else {
 
-            CellStyle header2CellStyle = MultiplesSchedulePrinter.getHeader2CellStyle(workbook);
+            var header2CellStyle = MultiplesSchedulePrinter.getHeader2CellStyle(workbook);
             createCell(rowHead1, 1, HEADER_SCHEDULE, MultiplesSchedulePrinter.getHeader1CellStyle(workbook));
             XSSFRow rowHead2 = sheet.createRow(1);
             createCell(rowHead2, 0, "Multiple: ", header2CellStyle);
@@ -122,8 +106,8 @@ public class ScheduleCreationService {
     private void initializeData(XSSFWorkbook workbook, XSSFSheet sheet,
                                        List<SchedulePayload> schedulePayloads, String scheduleTemplate) {
 
-        CellStyle cellStyle = MultiplesSchedulePrinter.getRowCellStyle(workbook);
-        int startingRow = 4;
+        var cellStyle = MultiplesSchedulePrinter.getRowCellStyle(workbook);
+        var startingRow = 4;
         XSSFRow tableTitleRow = sheet.createRow(3);
 
         if (!schedulePayloads.isEmpty()) {
@@ -131,14 +115,14 @@ public class ScheduleCreationService {
             if (scheduleTemplate.equals(MULTIPLE_SCHEDULE_CONFIG)) {
 
                 log.info("Multiple schedule");
-                for (int j = 0; j < multipleHeaders.size(); j++) {
+                for (var j = 0; j < multipleHeaders.size(); j++) {
                     createCell(tableTitleRow, j, multipleHeaders.get(j),
                             MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
                 }
-                for (int i = 0; i < schedulePayloads.size(); i++) {
-                    SchedulePayload schedulePayload = schedulePayloads.get(i);
+                for (var i = 0; i < schedulePayloads.size(); i++) {
+                    var schedulePayload = schedulePayloads.get(i);
 
-                    for (int j = 0; j < multipleHeaders.size(); j++) {
+                    for (var j = 0; j < multipleHeaders.size(); j++) {
                         XSSFRow row = sheet.createRow(i + startingRow);
                         createCell(row, j++, schedulePayload.getEthosCaseRef(), cellStyle);
                         createCell(row, j++, getClaimantVsRespondent(schedulePayload), cellStyle);
@@ -148,14 +132,14 @@ public class ScheduleCreationService {
             } else if (scheduleTemplate.equals(MULTIPLE_SCHEDULE_DETAILED_CONFIG)) {
 
                 log.info("Multiple schedule detailed");
-                for (int j = 0; j < multipleDetailedHeaders.size(); j++) {
+                for (var j = 0; j < multipleDetailedHeaders.size(); j++) {
                     createCell(tableTitleRow, j, multipleDetailedHeaders.get(j),
                             MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
                 }
-                for (int i = 0; i < schedulePayloads.size(); i++) {
-                    SchedulePayload schedulePayload = schedulePayloads.get(i);
+                for (var i = 0; i < schedulePayloads.size(); i++) {
+                    var schedulePayload = schedulePayloads.get(i);
 
-                    for (int j = 0; j < multipleDetailedHeaders.size(); j++) {
+                    for (var j = 0; j < multipleDetailedHeaders.size(); j++) {
                         XSSFRow row = sheet.createRow(i + startingRow);
                         row.setHeightInPoints(((float)4.5 * sheet.getDefaultRowHeightInPoints()));
                         createCell(row, j++, schedulePayload.getEthosCaseRef(), cellStyle);
@@ -169,7 +153,7 @@ public class ScheduleCreationService {
     }
 
     private String getClaimantAddress(SchedulePayload schedulePayload) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append(schedulePayload.getClaimantName());
         if (!isNullOrEmpty(schedulePayload.getClaimantAddressLine1())) {
             sb.append(NEW_LINE_CELL).append(schedulePayload.getClaimantAddressLine1());
@@ -190,7 +174,7 @@ public class ScheduleCreationService {
     }
 
     private String getRespondentAddress(SchedulePayload schedulePayload) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append(schedulePayload.getRespondentName());
         if (!isNullOrEmpty(schedulePayload.getRespondentAddressLine1())) {
             sb.append(NEW_LINE_CELL).append(schedulePayload.getRespondentAddressLine1());
@@ -237,10 +221,10 @@ public class ScheduleCreationService {
     }
 
     private void initializeSubMultipleData(XSSFWorkbook workbook, XSSFSheet sheet, MultipleData multipleData,
-                                                  TreeMap<String, List<SchedulePayload>> schedulePayloadTreeMap) {
+                                                  SortedMap<String, List<SchedulePayload>> schedulePayloadTreeMap) {
 
-        CellStyle cellStyle = MultiplesSchedulePrinter.getRowCellStyle(workbook);
-        int startingRow = 2;
+        var cellStyle = MultiplesSchedulePrinter.getRowCellStyle(workbook);
+        var startingRow = 2;
 
         if (!schedulePayloadTreeMap.isEmpty()) {
             log.info("Sub Multiple schedule");
@@ -253,15 +237,15 @@ public class ScheduleCreationService {
                         MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
                 //SUBTITLE ROW
                 XSSFRow tableTitleRow = sheet.createRow(startingRow + 1);
-                for (int j = 0; j < subMultipleHeaders.size(); j++) {
+                for (var j = 0; j < subMultipleHeaders.size(); j++) {
                     createCell(tableTitleRow, j, subMultipleHeaders.get(j),
                             MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
                 }
                 //DATA ROWS
-                for (int i = 0; i < schedulePayloads.size(); i++) {
-                    SchedulePayload schedulePayload = schedulePayloads.get(i);
+                for (var i = 0; i < schedulePayloads.size(); i++) {
+                    var schedulePayload = schedulePayloads.get(i);
                     XSSFRow row = sheet.createRow(startingRow + 2 + i);
-                    for (int j = 0; j < subMultipleHeaders.size(); j++) {
+                    for (var j = 0; j < subMultipleHeaders.size(); j++) {
                         createCell(row, j++, schedulePayload.getEthosCaseRef(), cellStyle);
                         createCell(row, j++, schedulePayload.getClaimantName(), cellStyle);
                         createCell(row, j++, schedulePayload.getPositionType(), cellStyle);
@@ -275,12 +259,12 @@ public class ScheduleCreationService {
 
     private void initializeSubMultipleDataLogic(XSSFWorkbook workbook, XSSFSheet sheet,
                                                 MultipleData multipleData, List<SchedulePayload> schedulePayloads,
-                                                TreeMap<String, Object> multipleObjectsFiltered) {
+                                                SortedMap<String, Object> multipleObjectsFiltered) {
 
         Map<String, SchedulePayload> scheduleEventMap = schedulePayloads.stream()
                 .collect(Collectors.toMap(SchedulePayload::getEthosCaseRef, schedulePayload -> schedulePayload));
 
-        TreeMap<String, List<SchedulePayload>> schedulePayloadTreeMap =
+        SortedMap<String, List<SchedulePayload>> schedulePayloadTreeMap =
                 MultiplesScheduleHelper.getMultipleTreeMap(multipleObjectsFiltered, scheduleEventMap);
 
         initializeSubMultipleData(workbook, sheet, multipleData, schedulePayloadTreeMap);

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,7 +28,7 @@ public class MultipleAmendCaseIdsService {
     }
 
     public List<MultipleObject> bulkAmendCaseIdsLogic(String userToken, MultipleDetails multipleDetails,
-                                                      List<String> errors, TreeMap<String, Object> multipleObjects) {
+                                                      List<String> errors, SortedMap<String, Object> multipleObjects) {
 
         List<String> newEthosCaseRefCollection = MultiplesHelper.getCaseIds(multipleDetails.getCaseData());
 
@@ -65,7 +65,7 @@ public class MultipleAmendCaseIdsService {
 
     }
 
-    private List<String> concatNewAndOldCases(TreeMap<String, Object> multipleObjects,
+    private List<String> concatNewAndOldCases(SortedMap<String, Object> multipleObjects,
                                               List<String> newEthosCaseRefCollection) {
 
         log.info("EthosCaseRefCollection: " + newEthosCaseRefCollection);
@@ -76,7 +76,7 @@ public class MultipleAmendCaseIdsService {
     }
 
     private List<MultipleObject> generateMultipleObjects(List<String> unionLists,
-                                                         TreeMap<String, Object> multipleObjects) {
+                                                         SortedMap<String, Object> multipleObjects) {
 
         List<MultipleObject> multipleObjectList = new ArrayList<>();
 

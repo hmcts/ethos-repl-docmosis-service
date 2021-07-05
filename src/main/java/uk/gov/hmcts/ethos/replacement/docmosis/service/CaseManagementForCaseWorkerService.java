@@ -78,7 +78,7 @@ public class CaseManagementForCaseWorkerService {
 
     private void respondentDefaults(CaseData caseData) {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
-            RespondentSumType respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+            var respondentSumType = caseData.getRespondentCollection().get(0).getValue();
             caseData.setRespondent(nullCheck(respondentSumType.getRespondentName()));
             for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
                 if (respondentSumTypeItem.getValue().getResponseReceived() == null) {
@@ -114,12 +114,12 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public CaseData struckOutRespondents(CCDRequest ccdRequest) {
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             List<RespondentSumTypeItem> activeRespondent = new ArrayList<>();
             List<RespondentSumTypeItem> struckRespondent = new ArrayList<>();
             for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
-                RespondentSumType respondentSumType = respondentSumTypeItem.getValue();
+                var respondentSumType = respondentSumTypeItem.getValue();
                 if (respondentSumType.getResponseStruckOut() != null) {
                     if (respondentSumType.getResponseStruckOut().equals(YES)) {
                         struckRespondent.add(respondentSumTypeItem);
@@ -146,12 +146,12 @@ public class CaseManagementForCaseWorkerService {
     public void amendHearing(CaseData caseData, String caseTypeId) {
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                HearingType hearingType =  hearingTypeItem.getValue();
+                var hearingType =  hearingTypeItem.getValue();
                 if (hearingTypeItem.getValue().getHearingDateCollection() != null
                         && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty()) {
                     for (DateListedTypeItem dateListedTypeItem
                             : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        DateListedType dateListedType = dateListedTypeItem.getValue();
+                        var dateListedType = dateListedTypeItem.getValue();
                         if (dateListedType.getHearingStatus() == null) {
                             dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
                         }
@@ -193,10 +193,10 @@ public class CaseManagementForCaseWorkerService {
     }
 
     public CaseData createECC(CaseDetails caseDetails, String authToken, List<String> errors, String callback) {
-        CaseData currentCaseData = caseDetails.getCaseData();
+        var currentCaseData = caseDetails.getCaseData();
         List<SubmitEvent> submitEvents = getCasesES(caseDetails, authToken);
         if (submitEvents != null && !submitEvents.isEmpty()) {
-            SubmitEvent submitEvent = submitEvents.get(0);
+            var submitEvent = submitEvents.get(0);
             if (ECCHelper.validCaseForECC(submitEvent, errors)) {
                 switch (callback) {
                     case MID_EVENT_CALLBACK:
@@ -229,8 +229,8 @@ public class CaseManagementForCaseWorkerService {
     private void sendUpdateSingleCaseECC(String authToken, CaseDetails currentCaseDetails,
                                          CaseData originalCaseData, String caseIdToLink) {
         try {
-            EccCounterClaimTypeItem eccCounterClaimTypeItem = new EccCounterClaimTypeItem();
-            EccCounterClaimType eccCounterClaimType = new EccCounterClaimType();
+            var eccCounterClaimTypeItem = new EccCounterClaimTypeItem();
+            var eccCounterClaimType = new EccCounterClaimType();
             eccCounterClaimType.setCounterClaim(currentCaseDetails.getCaseData().getEthosCaseReference());
             eccCounterClaimTypeItem.setId(UUID.randomUUID().toString());
             eccCounterClaimTypeItem.setValue(eccCounterClaimType);

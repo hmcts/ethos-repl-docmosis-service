@@ -46,7 +46,7 @@ public class PersistentQHelper {
                                               String updateSize) {
         log.info("Case Ref collection: " + ethosCaseRefCollection);
         if (!ethosCaseRefCollection.isEmpty()) {
-            CreateUpdatesDto createUpdatesDto = PersistentQHelper.getCreateUpdatesDto(bulkDetails,
+            var createUpdatesDto = PersistentQHelper.getCreateUpdatesDto(bulkDetails,
                     ethosCaseRefCollection, username, multipleRef);
 
             createUpdatesBusSender.sendUpdatesToQueue(
@@ -70,7 +70,7 @@ public class PersistentQHelper {
                                                     CreateUpdatesBusSender createUpdatesBusSender, String updateSize) {
         log.info("Case Ref collection: " + ethosCaseRefCollection);
         if (!ethosCaseRefCollection.isEmpty()) {
-            CreateUpdatesDto createUpdatesDto = PersistentQHelper.getMultipleCreateUpdatesDto(caseTypeId, jurisdiction,
+            var createUpdatesDto = PersistentQHelper.getMultipleCreateUpdatesDto(caseTypeId, jurisdiction,
                     ethosCaseRefCollection, username, multipleRef, confirmation);
 
             createUpdatesBusSender.sendUpdatesToQueue(

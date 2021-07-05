@@ -70,23 +70,25 @@ public class ReportHelper {
             log.info(CASES_SEARCHED + submitEvents.size());
             List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
             for (SubmitEvent submitEvent : submitEvents) {
-                if (submitEvent.getCaseData().getBfActions() != null
-                        && !submitEvent.getCaseData().getBfActions().isEmpty()) {
-                    for (BFActionTypeItem bfActionTypeItem : submitEvent.getCaseData().getBfActions()) {
-                        var bfDateTypeItem = getBFDateTypeItem(bfActionTypeItem,
-                                listingDetails.getCaseData(), submitEvent.getCaseData());
-                        if (bfDateTypeItem.getValue() != null) {
-                            bfDateTypeItems.add(bfDateTypeItem);
-                        }
-                    }
-                }
+               addBfDateTypeItems(submitEvent, listingDetails, bfDateTypeItems);
             }
             listingDetails.getCaseData().setBfDateCollection(bfDateTypeItems);
         }
         return clearListingFields(listingDetails.getCaseData());
 
     }
-
+    private static void addBfDateTypeItems(SubmitEvent submitEvent, ListingDetails listingDetails,List<BFDateTypeItem> bfDateTypeItems ){
+        if (submitEvent.getCaseData().getBfActions() != null
+                && !submitEvent.getCaseData().getBfActions().isEmpty()) {
+            for (BFActionTypeItem bfActionTypeItem : submitEvent.getCaseData().getBfActions()) {
+                var bfDateTypeItem = getBFDateTypeItem(bfActionTypeItem,
+                        listingDetails.getCaseData(), submitEvent.getCaseData());
+                if (bfDateTypeItem.getValue() != null) {
+                    bfDateTypeItems.add(bfDateTypeItem);
+                }
+            }
+        }
+    }
     public static ListingData processClaimsAcceptedRequest(ListingDetails listingDetails,
                                                            List<SubmitEvent> submitEvents) {
 
