@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
@@ -412,8 +413,8 @@ public class ExcelActionsController {
 
     private void logJson(MultipleDetails multipleDetails) {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(multipleDetails);
+            var objectMapper = new ObjectMapper();
+            var json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(multipleDetails);
             log.info(json);
         } catch (JsonProcessingException e) {
             log.error("Unexpected error logging json", e);
