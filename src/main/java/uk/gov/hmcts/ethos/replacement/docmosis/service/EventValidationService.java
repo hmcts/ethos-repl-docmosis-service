@@ -7,6 +7,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.joining;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -94,7 +95,7 @@ public class EventValidationService {
                 index = repItr.nextIndex() + 1;
                 String respRepName = repItr.next().getValue().getRespRepName();
                 if (!isNullOrEmpty(respRepName)
-                        && caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+                        && !CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
                         ListIterator<RespondentSumTypeItem> respItr = caseData.getRespondentCollection().listIterator();
                         var validLink = false;
                         while (respItr.hasNext()) {

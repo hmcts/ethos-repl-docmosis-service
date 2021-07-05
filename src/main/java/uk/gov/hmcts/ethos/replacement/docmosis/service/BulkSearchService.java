@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -233,8 +234,7 @@ public class BulkSearchService {
         for (SubmitEvent submitEvent : submitEvents) {
             var caseData = submitEvent.getCaseData();
             if (caseIds.contains(caseData.getEthosCaseReference()) &&
-                    checkErrors && caseData.getMultipleReference() != null &&
-                    !caseData.getMultipleReference().trim().isEmpty()) {
+                    checkErrors && !Strings.isNullOrEmpty(caseData.getMultipleReference())) {
                         if (creationFlag) {
                             log.info("Creation");
                             alreadyTakenIds.add(caseData.getEthosCaseReference());

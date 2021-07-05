@@ -178,12 +178,13 @@ public class BulkHelper {
     }
 
     private static String getSubmitEventState(SubmitEvent submitEvent) {
-        if (submitEvent.getState() != null) {
-            if (submitEvent.getState().equals(PENDING_STATE)) {
+        String state = submitEvent.getState();
+        if (state != null) {
+            if (state.equals(PENDING_STATE)) {
                 return SUBMITTED_STATE;
             }
             else {
-                return submitEvent.getState();
+                return state;
             }
         }
         else {

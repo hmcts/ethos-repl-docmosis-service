@@ -77,7 +77,7 @@ public class ReportHelper {
         return clearListingFields(listingDetails.getCaseData());
 
     }
-    public static void addBfDateTypeItems(SubmitEvent submitEvent, ListingDetails listingDetails,List<BFDateTypeItem> bfDateTypeItems ){
+    private static void addBfDateTypeItems(SubmitEvent submitEvent, ListingDetails listingDetails,List<BFDateTypeItem> bfDateTypeItems ){
         if (submitEvent.getCaseData().getBfActions() != null
                 && !submitEvent.getCaseData().getBfActions().isEmpty()) {
             for (BFActionTypeItem bfActionTypeItem : submitEvent.getCaseData().getBfActions()) {
