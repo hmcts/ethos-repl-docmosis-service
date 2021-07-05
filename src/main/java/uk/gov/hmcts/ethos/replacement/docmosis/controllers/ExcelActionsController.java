@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -403,7 +405,19 @@ public class ExcelActionsController {
 
         multipleSingleMidEventValidationService.multipleSingleValidationLogic(userToken, multipleDetails, errors);
 
+        logJson(multipleDetails);
+
         return getMultipleCallbackRespEntity(errors, multipleDetails);
+    }
+
+    private void logJson(MultipleDetails multipleDetails) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(multipleDetails);
+            log.info(json);
+        } catch (JsonProcessingException e) {
+            log.error("Unexpected error logging json", e);
+        }
     }
 
     @PostMapping(value = "/multipleMidBatch1Validation", consumes = APPLICATION_JSON_VALUE)
