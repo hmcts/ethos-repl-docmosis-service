@@ -1,29 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
-import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.Address;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
-import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-
+import com.google.common.base.Strings;
+import static com.google.common.base.Strings.isNullOrEmpty;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,24 +12,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_PAGE_SIZE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LABEL;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LBL;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.util.CollectionUtils;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.Address;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.items.*;
+import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -263,7 +239,14 @@ public class DocumentHelper {
         log.info("Respondent Data");
         var sb = new StringBuilder();
         List<RepresentedTypeRItem> representedTypeRList = caseData.getRepCollection();
-        if (representedTypeRList != null && !representedTypeRList.isEmpty()) {
+        List<RespondentSumTypeItem> respondentSumTypeItemList = !CollectionUtils.isEmpty(caseData.getRespondentCollection())
+                && !CollectionUtils.isEmpty(caseData.getRepCollection()) ? caseData.getRespondentCollection().stream()
+                .filter(a-> a.getValue().getRespondentName()
+                        .equals(caseData.getRepCollection().get(0).getValue().getRespRepName())).collect(Collectors.toList()): new ArrayList<>();
+        boolean responseNotStruckOut = CollectionUtils.isEmpty(respondentSumTypeItemList)
+                || Strings.isNullOrEmpty(respondentSumTypeItemList.get(0).getValue().getResponseStruckOut())
+                || respondentSumTypeItemList.get(0).getValue().getResponseStruckOut().equals(NO);
+        if (!CollectionUtils.isEmpty(representedTypeRList) && responseNotStruckOut) {
             log.info("Respondent represented");
             var representedTypeR = representedTypeRList.get(0).getValue();
             sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(representedTypeR
@@ -276,7 +259,8 @@ public class DocumentHelper {
             sb.append("\"respondent_reference\":\"").append(nullCheck(representedTypeR.getRepresentativeReference()))
                     .append(NEW_LINE);
             sb.append("\"respondent_rep_organisation\":\"").append(nullCheck(representedTypeR.getNameOfOrganisation()))
-                    .append(NEW_LINE);
+                        .append(NEW_LINE);
+
         } else {
             log.info("Respondent not represented");
             if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
