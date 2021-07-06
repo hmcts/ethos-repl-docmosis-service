@@ -167,4 +167,44 @@ public class MultipleSingleMidEventValidationServiceTest {
 
     }
 
+    /**
+     * This test is for the scenario where CCD returns the case data with a
+     * representativeClaimantType as a RepresentedTypeC object with no values set
+     */
+    @Test
+    public void shouldHandleRepresentativeClaimantWithNoValues() {
+        multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
+
+        RepresentedTypeC representedTypeC = new RepresentedTypeC();
+        submitEventList.get(0).getCaseData().setRepresentativeClaimantType(representedTypeC);
+
+        JurCodesTypeItem jurCodesTypeItem = new JurCodesTypeItem();
+        JurCodesType jurCodesType = new JurCodesType();
+        jurCodesType.setJuridictionCodesList("AA");
+        jurCodesTypeItem.setValue(jurCodesType);
+        submitEventList.get(0).getCaseData().setJurCodesCollection(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
+
+        when(singleCasesReadingService.retrieveSingleCase(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getCaseData().getBatchUpdateCase(),
+                multipleDetails.getCaseData().getMultipleSource()))
+                .thenReturn(submitEventList.get(0));
+
+        when(multipleHelperService.getEthosCaseRefCollection(userToken,
+                multipleDetails.getCaseData(),
+                errors))
+                .thenReturn(caseIdCollection);
+
+        multipleSingleMidEventValidationService.multipleSingleValidationLogic(
+                userToken,
+                multipleDetails,
+                errors);
+
+        assertEquals(0, errors.size());
+        assertEquals(1, multipleDetails.getCaseData().getBatchUpdateClaimantRep().getListItems().size());
+        assertEquals(2, multipleDetails.getCaseData().getBatchUpdateJurisdiction().getListItems().size());
+        assertEquals(2, multipleDetails.getCaseData().getBatchUpdateRespondent().getListItems().size());
+        assertEquals(2, multipleDetails.getCaseData().getBatchUpdateRespondentRep().getListItems().size());
+    }
+
 }
