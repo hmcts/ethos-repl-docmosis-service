@@ -170,7 +170,7 @@ public class ListingService {
                 log.info("Hearing number: " + hearingTypeItem.getValue().getHearingNumber());
                 var dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
 
-                if (!isListingVenueValid(listingData, dateListedTypeItem) || !isListingDateValid(listingData, dateListedTypeItem) || (!showAllHearingType(listingData) && !isListingStatusValid(dateListedTypeItem))) {
+                if (!isListingValid(listingData, dateListedTypeItem)) {
                     continue;
                 }
                 var listingTypeItem = new ListingTypeItem();
@@ -184,7 +184,11 @@ public class ListingService {
         }
         return listingTypeItems;
     }
-
+    private boolean isListingValid(ListingData listingData, DateListedTypeItem dateListedTypeItem) {
+        return (!isListingVenueValid(listingData, dateListedTypeItem)
+                || !isListingDateValid(listingData, dateListedTypeItem)
+                || (!showAllHearingType(listingData) && !isListingStatusValid(dateListedTypeItem)));
+    }
     public ListingData generateReportData(ListingDetails listingDetails, String authToken) {
 
         try {
