@@ -185,9 +185,9 @@ public class ListingService {
         return listingTypeItems;
     }
     private boolean isListingValid(ListingData listingData, DateListedTypeItem dateListedTypeItem) {
-        return (!isListingVenueValid(listingData, dateListedTypeItem)
-                || !isListingDateValid(listingData, dateListedTypeItem)
-                || (!showAllHearingType(listingData) && !isListingStatusValid(dateListedTypeItem)));
+        return (isListingVenueValid(listingData, dateListedTypeItem)
+                && isListingDateValid(listingData, dateListedTypeItem)
+                && (!showAllHearingType(listingData) && isListingStatusValid(dateListedTypeItem)));
     }
     public ListingData generateReportData(ListingDetails listingDetails, String authToken) {
 
