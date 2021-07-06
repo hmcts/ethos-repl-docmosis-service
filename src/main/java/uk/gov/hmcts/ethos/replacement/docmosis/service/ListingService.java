@@ -169,16 +169,8 @@ public class ListingService {
                 hearingTypeItem.getValue().getHearingNumber();
                 log.info("Hearing number: " + hearingTypeItem.getValue().getHearingNumber());
                 var dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
-                boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
-                boolean isListingDateValid = isListingDateValid(listingData, dateListedTypeItem);
-                log.info("isListingVenueValid: " + isListingVenueValid);
-                log.info("isListingDateValid: " + isListingDateValid);
-                var isListingStatusValid = true;
-                if (!showAllHearingType(listingData)) {
-                     isListingStatusValid = isListingStatusValid(dateListedTypeItem);
-                    log.info("isListingStatusValid: " + isListingStatusValid);
-                }
-                if (!isListingVenueValid || !isListingDateValid || !isListingStatusValid) {
+
+                if (!isListingVenueValid(listingData, dateListedTypeItem) || !isListingDateValid(listingData, dateListedTypeItem) || (!showAllHearingType(listingData) && !isListingStatusValid(dateListedTypeItem))) {
                     continue;
                 }
                 var listingTypeItem = new ListingTypeItem();
