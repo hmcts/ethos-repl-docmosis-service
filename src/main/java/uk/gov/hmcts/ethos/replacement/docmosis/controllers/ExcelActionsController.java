@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -15,24 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleAmendService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleCreationMidEventValidationService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleCreationService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleDynamicListFlagsService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleHelperService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleMidEventValidationService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultiplePreAcceptService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleSingleMidEventValidationService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleUpdateService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleUploadService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.SubMultipleMidEventValidationService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.SubMultipleUpdateService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleTransferService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -406,19 +391,7 @@ public class ExcelActionsController {
 
         multipleSingleMidEventValidationService.multipleSingleValidationLogic(userToken, multipleDetails, errors);
 
-        logJson(multipleDetails);
-
         return getMultipleCallbackRespEntity(errors, multipleDetails);
-    }
-
-    private void logJson(MultipleDetails multipleDetails) {
-        try {
-            var objectMapper = new ObjectMapper();
-            var json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(multipleDetails);
-            log.info(json);
-        } catch (JsonProcessingException e) {
-            log.error("Unexpected error logging json", e);
-        }
     }
 
     @PostMapping(value = "/multipleMidBatch1Validation", consumes = APPLICATION_JSON_VALUE)

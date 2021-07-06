@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
+
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
@@ -108,7 +110,7 @@ public class MultipleSingleMidEventValidationService {
 
         List<DynamicValueType> claimantDynamicList = new ArrayList<>();
 
-        if (submitEvent.getCaseData().getRepresentativeClaimantType() != null) {
+        if (hasRepresentativeClaimant(submitEvent.getCaseData())) {
 
             claimantDynamicList = new ArrayList<>(Collections.singletonList(
                     Helper.getDynamicValue(
@@ -185,6 +187,11 @@ public class MultipleSingleMidEventValidationService {
 
         multipleData.setBatchUpdateRespondentRep(populateDynamicList(repCollection));
 
+    }
+
+    private boolean hasRepresentativeClaimant(CaseData caseData) {
+        var representativeClaimantType = caseData.getRepresentativeClaimantType();
+        return representativeClaimantType != null && representativeClaimantType.getNameOfRepresentative() != null;
     }
 
     private DynamicFixedListType populateDynamicList(List<DynamicValueType> listItems) {
