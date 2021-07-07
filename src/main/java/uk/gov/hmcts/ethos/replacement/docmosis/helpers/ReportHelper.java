@@ -28,6 +28,18 @@ public class ReportHelper {
     private ReportHelper() {
     }
 
+    public static boolean validateMatchingDate(ListingData listingData, String matchingDate) {
+        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
+        if (!dateRange) {
+            String dateToSearch = listingData.getListingDate();
+            return ListingHelper.getMatchingDateBetween(dateToSearch, "", matchingDate, false);
+        } else {
+            String dateToSearchFrom = listingData.getListingDateFrom();
+            String dateToSearchTo = listingData.getListingDateTo();
+            return ListingHelper.getMatchingDateBetween(dateToSearchFrom, dateToSearchTo, matchingDate, true);
+        }
+    }
+
     public static ListingData processBroughtForwardDatesRequest(ListingDetails listingDetails,
                                                                 List<SubmitEvent> submitEvents) {
 
@@ -171,18 +183,6 @@ public class ReportHelper {
             }
         }
         return adhocReportTypeItem;
-    }
-
-    private static boolean validateMatchingDate(ListingData listingData, String matchingDate) {
-        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
-        if (!dateRange) {
-            String dateToSearch = listingData.getListingDate();
-            return ListingHelper.getMatchingDateBetween(dateToSearch, "", matchingDate, false);
-        } else {
-            String dateToSearchFrom = listingData.getListingDateFrom();
-            String dateToSearchTo = listingData.getListingDateTo();
-            return ListingHelper.getMatchingDateBetween(dateToSearchFrom, dateToSearchTo, matchingDate, true);
-        }
     }
 
     private static boolean validateClerkResponsible(ListingData listingData, CaseData caseData) {

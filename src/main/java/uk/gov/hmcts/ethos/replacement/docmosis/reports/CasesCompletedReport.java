@@ -14,6 +14,7 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -28,27 +29,58 @@ public class CasesCompletedReport {
 
     public static final String CASES_SEARCHED = "Cases searched: ";
 
+    static final String ZERO = "0";
+
     public ListingData generateReportData(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
+        initReport(listingDetails);
+
         if (CollectionUtils.isNotEmpty(submitEvents)) {
-            log.info(CASES_SEARCHED + submitEvents.size());
-            var localReportsDetailHdr = new AdhocReportType();
-            List<AdhocReportTypeItem> localReportsDetailList = new ArrayList<>();
-            for (SubmitEvent submitEvent : submitEvents) {
-                if (validCaseForCasesCompletedReport(submitEvent) && caseContainsHearings(submitEvent.getCaseData())) {
-                    AdhocReportTypeItem localReportsDetailItem =
-                            getCasesCompletedDetailItem(listingDetails, submitEvent.getCaseData());
-                    if (localReportsDetailItem.getValue() != null) {
-                        updateCasesCompletedDetailHdr(localReportsDetailItem, localReportsDetailHdr);
-                        localReportsDetailList.add(localReportsDetailItem);
-                    }
-                }
-            }
-            localReportsDetailHdr.setReportOffice(UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
-            listingDetails.getCaseData().setLocalReportsDetailHdr(localReportsDetailHdr);
-            listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
+            executeReport(listingDetails, submitEvents);
         }
+
         listingDetails.getCaseData().clearReportFields();
         return listingDetails.getCaseData();
+    }
+
+    private void initReport(ListingDetails listingDetails) {
+        AdhocReportType adhocReportType = new AdhocReportType();
+
+        adhocReportType.setCasesCompletedHearingTotal(ZERO);
+        adhocReportType.setSessionDaysTotal(ZERO);
+        adhocReportType.setCompletedPerSessionTotal(ZERO);
+        adhocReportType.setConNoneCasesCompletedHearing(ZERO);
+        adhocReportType.setConNoneSessionDays(ZERO);
+        adhocReportType.setConNoneCompletedPerSession(ZERO);
+        adhocReportType.setConFastCasesCompletedHearing(ZERO);
+        adhocReportType.setConFastSessionDays(ZERO);
+        adhocReportType.setConFastCompletedPerSession(ZERO);
+        adhocReportType.setConStdCasesCompletedHearing(ZERO);
+        adhocReportType.setConStdSessionDays(ZERO);
+        adhocReportType.setConStdCompletedPerSession(ZERO);
+        adhocReportType.setConOpenCasesCompletedHearing(ZERO);
+        adhocReportType.setConOpenSessionDays(ZERO);
+        adhocReportType.setConOpenCompletedPerSession(ZERO);
+        adhocReportType.setReportOffice(UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
+
+        ListingData listingData = listingDetails.getCaseData();
+        listingData.setLocalReportsDetailHdr(adhocReportType);
+        listingData.setLocalReportsDetail(new ArrayList<>());
+    }
+
+    private void executeReport(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
+        log.info(CASES_SEARCHED + submitEvents.size());
+        var localReportsDetailHdr = listingDetails.getCaseData().getLocalReportsDetailHdr();
+        List<AdhocReportTypeItem> localReportsDetailList = listingDetails.getCaseData().getLocalReportsDetail();
+        for (SubmitEvent submitEvent : submitEvents) {
+            if (validCaseForCasesCompletedReport(submitEvent) && caseContainsHearings(submitEvent.getCaseData())) {
+                AdhocReportTypeItem localReportsDetailItem =
+                        getCasesCompletedDetailItem(listingDetails, submitEvent.getCaseData());
+                if (localReportsDetailItem.getValue() != null) {
+                    updateCasesCompletedDetailHdr(localReportsDetailItem, localReportsDetailHdr);
+                    localReportsDetailList.add(localReportsDetailItem);
+                }
+            }
+        }
     }
 
     private boolean validCaseForCasesCompletedReport(SubmitEvent submitEvent) {
@@ -99,7 +131,7 @@ public class CasesCompletedReport {
     }
 
     private boolean caseContainsHearings(CaseData caseData) {
-        return (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty());
+        return CollectionUtils.isNotEmpty (caseData.getHearingCollection());
     }
 
     private boolean caseContainsHearingDates(HearingTypeItem hearingTypeItem) {
@@ -229,7 +261,7 @@ public class CasesCompletedReport {
                     String dateToSearch = ListingHelper.addMillisToDateToSearch(maxDateListedType.getListedDate());
                     var listedDate =  LocalDateTime.parse(dateToSearch,
                             OLD_DATE_TIME_PATTERN).toLocalDate().toString();
-                    boolean matchingDateIsValid = validateMatchingDate(listingData, listedDate);
+                    boolean matchingDateIsValid = ReportHelper.validateMatchingDate(listingData, listedDate);
                     boolean casesCompletedIsValid = casesCompletedIsValid(adhocReportTypeItem, maxDateListedType);
                     if (matchingDateIsValid && casesCompletedIsValid) {
                         var adhocReportType = new AdhocReportType();
@@ -249,18 +281,6 @@ public class CasesCompletedReport {
             }
         }
         return adhocReportTypeItem;
-    }
-
-    private boolean validateMatchingDate(ListingData listingData, String matchingDate) {
-        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
-        if (!dateRange) {
-            String dateToSearch = listingData.getListingDate();
-            return ListingHelper.getMatchingDateBetween(dateToSearch, "", matchingDate, false);
-        } else {
-            String dateToSearchFrom = listingData.getListingDateFrom();
-            String dateToSearchTo = listingData.getListingDateTo();
-            return ListingHelper.getMatchingDateBetween(dateToSearchFrom, dateToSearchTo, matchingDate, true);
-        }
     }
 
     private boolean casesCompletedIsValid(AdhocReportTypeItem adhocReportTypeItem,
