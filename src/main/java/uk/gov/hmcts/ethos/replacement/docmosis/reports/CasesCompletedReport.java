@@ -30,6 +30,7 @@ public class CasesCompletedReport {
     public static final String CASES_SEARCHED = "Cases searched: ";
 
     static final String ZERO = "0";
+    static final String ZERO_DECIMAL = "0.0";
 
     public ListingData generateReportData(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
         initReport(listingDetails);
@@ -47,19 +48,19 @@ public class CasesCompletedReport {
 
         adhocReportType.setCasesCompletedHearingTotal(ZERO);
         adhocReportType.setSessionDaysTotal(ZERO);
-        adhocReportType.setCompletedPerSessionTotal(ZERO);
+        adhocReportType.setCompletedPerSessionTotal(ZERO_DECIMAL);
         adhocReportType.setConNoneCasesCompletedHearing(ZERO);
         adhocReportType.setConNoneSessionDays(ZERO);
-        adhocReportType.setConNoneCompletedPerSession(ZERO);
+        adhocReportType.setConNoneCompletedPerSession(ZERO_DECIMAL);
         adhocReportType.setConFastCasesCompletedHearing(ZERO);
         adhocReportType.setConFastSessionDays(ZERO);
-        adhocReportType.setConFastCompletedPerSession(ZERO);
+        adhocReportType.setConFastCompletedPerSession(ZERO_DECIMAL);
         adhocReportType.setConStdCasesCompletedHearing(ZERO);
         adhocReportType.setConStdSessionDays(ZERO);
-        adhocReportType.setConStdCompletedPerSession(ZERO);
+        adhocReportType.setConStdCompletedPerSession(ZERO_DECIMAL);
         adhocReportType.setConOpenCasesCompletedHearing(ZERO);
         adhocReportType.setConOpenSessionDays(ZERO);
-        adhocReportType.setConOpenCompletedPerSession(ZERO);
+        adhocReportType.setConOpenCompletedPerSession(ZERO_DECIMAL);
         adhocReportType.setReportOffice(UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
 
         ListingData listingData = listingDetails.getCaseData();
