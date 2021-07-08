@@ -136,8 +136,7 @@ public class CasesCompletedReport {
     }
 
     private boolean caseContainsHearingDates(HearingTypeItem hearingTypeItem) {
-        return (hearingTypeItem.getValue().getHearingDateCollection() != null
-                && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty());
+        return CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection());
     }
 
     private void updateCasesCompletedDetailHdr(AdhocReportTypeItem localReportsDetailItem,
@@ -300,20 +299,16 @@ public class CasesCompletedReport {
     }
 
     private String getConciliationTrackNumber(String conciliationTrack) {
-        if (!isNullOrEmpty(conciliationTrack)) {
-            switch (conciliationTrack) {
-                case CONCILIATION_TRACK_NO_CONCILIATION:
-                    return CONCILIATION_TRACK_NUMBER_ONE;
-                case CONCILIATION_TRACK_FAST_TRACK:
-                    return CONCILIATION_TRACK_NUMBER_TWO;
-                case CONCILIATION_TRACK_STANDARD_TRACK:
-                    return CONCILIATION_TRACK_NUMBER_THREE;
-                case CONCILIATION_TRACK_OPEN_TRACK:
-                    return CONCILIATION_TRACK_NUMBER_FOUR;
-                default:
-                    return "0";
-            }
+        if (CONCILIATION_TRACK_NO_CONCILIATION.equals(conciliationTrack)) {
+            return CONCILIATION_TRACK_NUMBER_ONE;
+        } else if (CONCILIATION_TRACK_FAST_TRACK.equals(conciliationTrack)) {
+            return CONCILIATION_TRACK_NUMBER_TWO;
+        } else if (CONCILIATION_TRACK_STANDARD_TRACK.equals(conciliationTrack)) {
+            return CONCILIATION_TRACK_NUMBER_THREE;
+        } else if (CONCILIATION_TRACK_OPEN_TRACK.equals(conciliationTrack)) {
+            return CONCILIATION_TRACK_NUMBER_FOUR;
+        } else {
+            return "0";
         }
-        return "0";
     }
 }
