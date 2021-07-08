@@ -47,15 +47,15 @@ public class MultipleBatchUpdate3Service {
 
         if (checkAnyChange(multipleData)) {
 
-            log.info("Removing caseSearched from filtered cases");
+            //log.info("Removing caseSearched from filtered cases");
 
-            multipleObjects.remove(caseSearched.getCaseData().getEthosCaseReference());
+            //multipleObjects.remove(caseSearched.getCaseData().getEthosCaseReference());
 
             log.info("Sending updates to single cases with caseSearched");
-            if (YES.equals(multipleData.getBatchRemoveRespondentRep())) {
-                caseSearched.getCaseData().setRepresentativeClaimantType(null);
-                caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
-            }
+//            if (YES.equals(multipleData.getBatchRemoveRespondentRep())) {
+//                caseSearched.getCaseData().setRepresentativeClaimantType(null);
+//                caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
+//            }
             multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
                     multipleObjects, caseSearched.getCaseData());
         }
