@@ -382,6 +382,79 @@ public class CaseCompletedReportTest {
         verifyReportDetails(reportListingData, 1);
     }
 
+    @Test
+    public void testMultipleCasesAreSummedUpInTotals() {
+        // given we have multiple cases that are valid
+        // when we generate report data
+        // then we have data for all cases
+
+        String searchDate = "1970-01-01";
+        String listingDate = "1970-01-01T00:00:00";
+
+        ListingDetails listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        ListingData listingData = new ListingData();
+        listingData.setListingDate(searchDate);
+        listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
+        listingDetails.setCaseData(listingData);
+
+        List<SubmitEvent> submitEvents = new ArrayList<>();
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, listingDate, YES));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_NO_CONCILIATION));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_FAST_TRACK));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_STANDARD_TRACK));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_OPEN_TRACK));
+
+        CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
+        ListingData reportListingData = casesCompletedReport.generateReportData(listingDetails, submitEvents);
+
+        ReportHeaderValues reportHeaderValues = new ReportHeaderValues(
+                4, 4, 1.0, "Newcastle",
+                1, 1, 1.0,
+                1, 1, 1.0,
+                1, 1, 1.0,
+                1, 1, 1.0);
+        verifyReportHeader(reportListingData, reportHeaderValues);
+        verifyReportDetails(reportListingData, 4);
+    }
+
+    @Test
+    public void testMultipleCasesOnlyValidAreSummedUpInTotals() {
+        // given we have two cases that are valid
+        // given we have two cases that are not valid
+        // when we generate report data
+        // then we have data for only valid cases
+
+        String searchDate = "1970-01-01";
+        String listingDate = "1970-01-01T00:00:00";
+
+        ListingDetails listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        ListingData listingData = new ListingData();
+        listingData.setListingDate(searchDate);
+        listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
+        listingDetails.setCaseData(listingData);
+
+        List<SubmitEvent> submitEvents = new ArrayList<>();
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, listingDate, YES));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_NO_CONCILIATION));
+        submitEvents.add(createSubmitEvent(SUBMITTED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_FAST_TRACK));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_STANDARD_TRACK));
+        submitEvents.add(createSubmitEvent(SUBMITTED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_OPEN_TRACK));
+
+        CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
+        ListingData reportListingData = casesCompletedReport.generateReportData(listingDetails, submitEvents);
+
+        ReportHeaderValues reportHeaderValues = new ReportHeaderValues(
+                2, 2, 1.0, "Newcastle",
+                1, 1, 1.0,
+                0, 0, 0,
+                1, 1, 1.0,
+                0, 0, 0);
+        verifyReportHeader(reportListingData, reportHeaderValues);
+        verifyReportDetails(reportListingData, 2);
+    }
+
     private SubmitEvent createSubmitEvent(String state) {
         return createSubmitEvent(state, null, null);
     }
