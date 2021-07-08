@@ -55,6 +55,12 @@ public class MultipleBatchUpdate3Service {
                 caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
             }
             log.info("Sending updates to single cases with caseSearched");
+
+            if (YES.equals(multipleData.getBatchRemoveRespondentRep())) {
+                caseSearched.getCaseData().setRepresentativeClaimantType(null);
+                caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
+            }
+
             multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
                     multipleObjects, caseSearched.getCaseData());
         }
