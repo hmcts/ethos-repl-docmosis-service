@@ -61,8 +61,6 @@ public class CaseCompletedReportTest {
         verifyReportHeaderIsZero(listingData);
     }
 
-
-
     @Test
     public void testIgnoreCaseIfPositionTypeInvalid() {
         // given case is closed
@@ -75,7 +73,7 @@ public class CaseCompletedReportTest {
 
         listingDetails.setCaseData(listingData);
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        submitEvents.add(createSubmitEvent(SUBMITTED_STATE));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE));
 
         List<String> invalidPositionTypes = Arrays.asList(POSITION_TYPE_CASE_INPUT_IN_ERROR,
                 POSITION_TYPE_CASE_TRANSFERRED_SAME_COUNTRY,
@@ -135,7 +133,7 @@ public class CaseCompletedReportTest {
 
         listingDetails.setCaseData(caseData);
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        submitEvents.add(createSubmitEvent(SUBMITTED_STATE, "A valid outcome", Collections.emptyList()));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, "A valid outcome", Collections.emptyList()));
 
         CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
         ListingData listingData = casesCompletedReport.generateReportData(listingDetails, submitEvents);
