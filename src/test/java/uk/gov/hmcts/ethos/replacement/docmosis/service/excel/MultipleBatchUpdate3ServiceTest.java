@@ -70,7 +70,7 @@ public class MultipleBatchUpdate3ServiceTest {
                 new ArrayList<>(),
                 multipleObjectsFlags);
 
-        assertEquals(2, multipleObjectsFlags.size());
+        assertEquals(3, multipleObjectsFlags.size());
 
         verify(multipleHelperService, times(1))
                 .sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, new ArrayList<>(),
