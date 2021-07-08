@@ -61,7 +61,8 @@ public class MultipleBatchUpdate3Service {
                  log.info("Checking if respondent representative is null and if not trying to remove it...");
                 if (representedTypeR != null) {
                     log.info("RepresentedTypeRItem to be removed from main case:" + representedTypeR.getRespRepName());
-                    caseSearched.getCaseData().getRepCollection().removeIf(a-> a.getValue().equals(representedTypeR));
+                   boolean isRemoved = caseSearched.getCaseData().getRepCollection().removeIf(a-> a.getValue().equals(representedTypeR));
+                    log.info("RepresentedTypeRItem is removed from main case:" + isRemoved);
                 }
             }
             multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
