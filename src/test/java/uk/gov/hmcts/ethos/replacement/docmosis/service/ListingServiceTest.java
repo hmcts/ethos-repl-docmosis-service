@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.*;
@@ -13,6 +14,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -37,6 +40,8 @@ public class ListingServiceTest {
     private TornadoService tornadoService;
     @Mock
     private CcdClient ccdClient;
+    @Spy
+    private CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
     private CaseDetails caseDetails;
     private ListingDetails listingDetails;
     private ListingDetails listingDetailsRange;
@@ -921,6 +926,52 @@ public class ListingServiceTest {
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertEquals(result, listingDataResult.toString());
         submitEvents.get(0).getCaseData().setPositionType("Awaiting ET3");
+    }
+
+    @Test
+    public void generateCasesCompletedReportDataForEnglandWithConTrackNone() throws IOException {
+        listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
+        listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
+        assertNotNull(listingDataResult.getLocalReportsDetailHdr());
+        assertEquals(1, listingDataResult.getLocalReportsDetail().size());
+    }
+
+    @Test
+    public void generateCasesCompletedReportDataForEnglandWithConTrackFast() throws IOException {
+        listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
+        listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_FAST_TRACK);
+        ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
+        assertNotNull(listingDataResult.getLocalReportsDetailHdr());
+        assertEquals(1, listingDataResult.getLocalReportsDetail().size());
+        submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
+    }
+
+    @Test
+    public void generateCasesCompletedReportDataForEnglandWithConTrackStandard() throws IOException {
+        listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
+        listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_STANDARD_TRACK);
+        ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
+        assertNotNull(listingDataResult.getLocalReportsDetailHdr());
+        assertEquals(1, listingDataResult.getLocalReportsDetail().size());
+        submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
+    }
+
+    @Test
+    public void generateCasesCompletedReportDataForEnglandWithConTrackOpen() throws IOException {
+        listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
+        listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_OPEN_TRACK);
+        ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
+        assertNotNull(listingDataResult.getLocalReportsDetailHdr());
+        assertEquals(1, listingDataResult.getLocalReportsDetail().size());
+        submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
     }
 
     @Test(expected = Exception.class)
