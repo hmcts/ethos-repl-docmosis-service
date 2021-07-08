@@ -13,13 +13,11 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport.COMPLETED_PER_SESSION_FORMAT;
 
 public class CaseCompletedReportTest {
 
@@ -157,7 +155,8 @@ public class CaseCompletedReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_REMEDY, null, YES));
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed("1970-01-01T00:00:00", HEARING_STATUS_HEARD, YES);
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_REMEDY, dateListedTypeItem));
         submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings));
 
         CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
@@ -187,7 +186,8 @@ public class CaseCompletedReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, listingDate, YES));
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed(listingDate, HEARING_STATUS_HEARD, YES);
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
         submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings));
 
         CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
@@ -217,7 +217,8 @@ public class CaseCompletedReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, listingDate, NO));
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed(listingDate, HEARING_STATUS_HEARD, NO);
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
         submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings));
 
         CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
@@ -249,7 +250,8 @@ public class CaseCompletedReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, listingDate, YES));
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed(listingDate, HEARING_STATUS_HEARD, YES);
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
         submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_NO_CONCILIATION));
 
         CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
@@ -288,7 +290,8 @@ public class CaseCompletedReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, listingDate, YES));
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed(listingDate, HEARING_STATUS_HEARD, YES);
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
         submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_FAST_TRACK));
 
         CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
@@ -327,7 +330,8 @@ public class CaseCompletedReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, listingDate, YES));
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed(listingDate, HEARING_STATUS_HEARD, YES);
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
         submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_STANDARD_TRACK));
 
         CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
@@ -366,7 +370,8 @@ public class CaseCompletedReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, listingDate, YES));
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed(listingDate, HEARING_STATUS_HEARD, YES);
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
         submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_OPEN_TRACK));
 
         CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
@@ -399,7 +404,8 @@ public class CaseCompletedReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, listingDate, YES));
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed(listingDate, HEARING_STATUS_HEARD, YES);
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
         submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_NO_CONCILIATION));
         submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_FAST_TRACK));
         submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_STANDARD_TRACK));
@@ -436,7 +442,8 @@ public class CaseCompletedReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, listingDate, YES));
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed(listingDate, HEARING_STATUS_HEARD, YES);
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
         submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_NO_CONCILIATION));
         submitEvents.add(createSubmitEvent(SUBMITTED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_FAST_TRACK));
         submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_STANDARD_TRACK));
@@ -455,12 +462,172 @@ public class CaseCompletedReportTest {
         verifyReportDetails(reportListingData, 2);
     }
 
+    @Test
+    public void testSessionDaysSingleCase() {
+        // given the case is valid
+        // given the case has a single hearing over multiple days
+        // when we generate report data
+        // then we have some data
+
+        String searchDate = "1970-01-04";
+
+        ListingDetails listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        ListingData listingData = new ListingData();
+        listingData.setListingDate(searchDate);
+        listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
+        listingDetails.setCaseData(listingData);
+
+        List<SubmitEvent> submitEvents = new ArrayList<>();
+        DateListedTypeItem[] dateListedTypeItem = new DateListedTypeItem[] {
+                createHearingDateListed("1970-01-01T00:00:00", HEARING_STATUS_HEARD, NO),
+                createHearingDateListed("1970-01-02T00:00:00", HEARING_STATUS_WITHDRAWN, NO), // should be ignored
+                createHearingDateListed("1970-01-03T00:00:00", HEARING_STATUS_HEARD, NO),
+                createHearingDateListed("1970-01-04T00:00:00", HEARING_STATUS_HEARD, YES),
+                createHearingDateListed("1970-01-05T00:00:00", HEARING_STATUS_WITHDRAWN, YES)
+        };
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_NO_CONCILIATION));
+
+        CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
+        ListingData reportListingData = casesCompletedReport.generateReportData(listingDetails, submitEvents);
+
+        ReportHeaderValues reportHeaderValues = new ReportHeaderValues(
+                1, 3, 0.33, "Newcastle",
+                1, 3, 0.33,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0);
+        verifyReportHeader(reportListingData, reportHeaderValues);
+        verifyReportDetails(reportListingData, 1);
+    }
+
+    @Test
+    public void testSessionDaysMultipleCases() {
+        // given there are multiple valid cases
+        // when we generate report data
+        // then we have some data
+
+        String searchDate = "1970-01-04";
+
+        ListingDetails listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        ListingData listingData = new ListingData();
+        listingData.setListingDate(searchDate);
+        listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
+        listingDetails.setCaseData(listingData);
+
+        List<SubmitEvent> submitEvents = new ArrayList<>();
+
+        // Case 1: 4 session days no conciliation
+        DateListedTypeItem[] dateListedTypeItem = new DateListedTypeItem[] {
+                createHearingDateListed("1970-01-01T00:00:00", HEARING_STATUS_HEARD, NO),
+                createHearingDateListed("1970-01-02T00:00:00", HEARING_STATUS_HEARD, NO),
+                createHearingDateListed("1970-01-03T00:00:00", HEARING_STATUS_HEARD, NO),
+                createHearingDateListed("1970-01-04T00:00:00", HEARING_STATUS_HEARD, YES),
+                createHearingDateListed("1970-01-05T00:00:00", HEARING_STATUS_WITHDRAWN, YES)
+        };
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_NO_CONCILIATION));
+
+        // Case 2: 2 session days fast track
+        dateListedTypeItem = new DateListedTypeItem[] {
+                createHearingDateListed("1970-01-03T00:00:00", HEARING_STATUS_HEARD, NO),
+                createHearingDateListed("1970-01-04T00:00:00", HEARING_STATUS_HEARD, YES)
+        };
+        hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_FAST_TRACK));
+
+        // Case 3: 1 session day standard conciliation
+        dateListedTypeItem = new DateListedTypeItem[] {
+                createHearingDateListed("1970-01-04T00:00:00", HEARING_STATUS_HEARD, YES)
+        };
+        hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_STANDARD_TRACK));
+
+        // Case 4: 2 session day open conciliation
+        dateListedTypeItem = new DateListedTypeItem[] {
+                createHearingDateListed("1970-01-03T00:00:00", HEARING_STATUS_HEARD, YES),
+                createHearingDateListed("1970-01-04T00:00:00", HEARING_STATUS_HEARD, YES)
+        };
+        hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_OPEN_TRACK));
+
+        CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
+        ListingData reportListingData = casesCompletedReport.generateReportData(listingDetails, submitEvents);
+
+        ReportHeaderValues reportHeaderValues = new ReportHeaderValues(
+                4, 9, 0.44, "Newcastle",
+                1, 4, 0.25,
+                1, 2, 0.5,
+                1, 1, 1.0,
+                1, 2, 0.5);
+        verifyReportHeader(reportListingData, reportHeaderValues);
+        verifyReportDetails(reportListingData, 4);
+    }
+
+    @Test
+    public void testSessionDaysMultipleTracks() {
+        // given there are multiple valid cases for different conciliation tracks
+        // when we generate report data
+        // then we have some data
+
+        String searchDate = "1970-01-04";
+
+        ListingDetails listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        ListingData listingData = new ListingData();
+        listingData.setListingDate(searchDate);
+        listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
+        listingDetails.setCaseData(listingData);
+
+        List<SubmitEvent> submitEvents = new ArrayList<>();
+
+        // Case 1: 4 session days
+        DateListedTypeItem[] dateListedTypeItem = new DateListedTypeItem[] {
+                createHearingDateListed("1970-01-01T00:00:00", HEARING_STATUS_HEARD, NO),
+                createHearingDateListed("1970-01-02T00:00:00", HEARING_STATUS_HEARD, NO),
+                createHearingDateListed("1970-01-03T00:00:00", HEARING_STATUS_HEARD, NO),
+                createHearingDateListed("1970-01-04T00:00:00", HEARING_STATUS_HEARD, YES),
+                createHearingDateListed("1970-01-05T00:00:00", HEARING_STATUS_WITHDRAWN, YES)
+        };
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_NO_CONCILIATION));
+
+        // Case 2: 2 session days
+        dateListedTypeItem = new DateListedTypeItem[] {
+                createHearingDateListed("1970-01-03T00:00:00", HEARING_STATUS_HEARD, NO),
+                createHearingDateListed("1970-01-04T00:00:00", HEARING_STATUS_HEARD, YES)
+        };
+        hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_NO_CONCILIATION));
+
+        // Case 3: 1 session days
+        dateListedTypeItem = new DateListedTypeItem[] {
+                createHearingDateListed("1970-01-04T00:00:00", HEARING_STATUS_HEARD, YES)
+        };
+        hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, CONCILIATION_TRACK_NO_CONCILIATION));
+
+        CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
+        ListingData reportListingData = casesCompletedReport.generateReportData(listingDetails, submitEvents);
+
+        ReportHeaderValues reportHeaderValues = new ReportHeaderValues(
+                3, 7, 0.43, "Newcastle",
+                3, 7, 0.43,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0);
+        verifyReportHeader(reportListingData, reportHeaderValues);
+        verifyReportDetails(reportListingData, 3);
+    }
+
     private SubmitEvent createSubmitEvent(String state) {
         return createSubmitEvent(state, null, null);
     }
 
     private SubmitEvent createSubmitEvent(String state, String jurisdictionOutcome, List<HearingTypeItem> hearingCollection) {
-        return createSubmitEvent(state, jurisdictionOutcome, hearingCollection, null);
+        return createSubmitEvent(state, jurisdictionOutcome, hearingCollection, CONCILIATION_TRACK_NO_CONCILIATION);
     }
 
     private SubmitEvent createSubmitEvent(String state, String jurisdictionOutcome, List<HearingTypeItem> hearingCollection, String conciliationTrack) {
@@ -489,20 +656,26 @@ public class CaseCompletedReportTest {
         return jurCodesTypeItem;
     }
 
-    private HearingTypeItem createHearing(String type, String listedDate, String disposed) {
+    private DateListedTypeItem createHearingDateListed(String listedDate, String status, String disposed) {
+        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
+        DateListedType dateListedType = new DateListedType();
+        dateListedType.setListedDate(listedDate);
+        dateListedType.setHearingStatus(status);
+        dateListedType.setHearingCaseDisposed(disposed);
+        dateListedTypeItem.setValue(dateListedType);
+
+        return dateListedTypeItem;
+    }
+
+    private HearingTypeItem createHearing(String type, DateListedTypeItem... dateListedTypeItems) {
         HearingTypeItem hearingTypeItem = new HearingTypeItem();
         HearingType hearingType = new HearingType();
         hearingType.setHearingType(type);
 
-        List<DateListedTypeItem> dateListedTypeItems = new ArrayList<>();
-        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
-        DateListedType dateListedType = new DateListedType();
-        dateListedType.setListedDate(listedDate);
-        dateListedType.setHearingCaseDisposed(disposed);
-        dateListedTypeItem.setValue(dateListedType);
-        dateListedTypeItems.add(dateListedTypeItem);
+        List<DateListedTypeItem> hearingDateCollection = new ArrayList<>();
+        Collections.addAll(hearingDateCollection, dateListedTypeItems);
 
-        hearingType.setHearingDateCollection(dateListedTypeItems);
+        hearingType.setHearingDateCollection(hearingDateCollection);
         hearingTypeItem.setValue(hearingType);
         return hearingTypeItem;
     }
@@ -530,28 +703,28 @@ public class CaseCompletedReportTest {
         // Report header
         assertEquals(String.valueOf(reportHeaderValues.casesCompletedHearingTotal), adhocReportType.getCasesCompletedHearingTotal());
         assertEquals(String.valueOf(reportHeaderValues.sessionDaysTotal), adhocReportType.getSessionDaysTotal());
-        assertEquals(String.valueOf(reportHeaderValues.completedPerSessionTotal), adhocReportType.getCompletedPerSessionTotal());
+        assertEquals(String.format(COMPLETED_PER_SESSION_FORMAT, reportHeaderValues.completedPerSessionTotal), adhocReportType.getCompletedPerSessionTotal());
         assertEquals(reportHeaderValues.reportOffice, adhocReportType.getReportOffice());
 
         // Conciliation - No Conciliation
         assertEquals(String.valueOf(reportHeaderValues.conNoneCasesCompletedHearing), adhocReportType.getConNoneCasesCompletedHearing());
         assertEquals(String.valueOf(reportHeaderValues.conNoneSessionDays), adhocReportType.getConNoneSessionDays());
-        assertEquals(String.valueOf(reportHeaderValues.conNoneCompletedPerSession), adhocReportType.getConNoneCompletedPerSession());
+        assertEquals(String.format(COMPLETED_PER_SESSION_FORMAT, reportHeaderValues.conNoneCompletedPerSession), adhocReportType.getConNoneCompletedPerSession());
 
         // Conciliation - Fast Track
         assertEquals(String.valueOf(reportHeaderValues.conFastCasesCompletedHearing), adhocReportType.getConFastCasesCompletedHearing());
         assertEquals(String.valueOf(reportHeaderValues.conFastSessionDays), adhocReportType.getConFastSessionDays());
-        assertEquals(String.valueOf(reportHeaderValues.conFastCompletedPerSession), adhocReportType.getConFastCompletedPerSession());
+        assertEquals(String.format(COMPLETED_PER_SESSION_FORMAT, reportHeaderValues.conFastCompletedPerSession), adhocReportType.getConFastCompletedPerSession());
 
         // Conciliation - Standard Track
         assertEquals(String.valueOf(reportHeaderValues.conStdCasesCompletedHearing), adhocReportType.getConStdCasesCompletedHearing());
         assertEquals(String.valueOf(reportHeaderValues.conStdSessionDays), adhocReportType.getConStdSessionDays());
-        assertEquals(String.valueOf(reportHeaderValues.conStdCompletedPerSession), adhocReportType.getConStdCompletedPerSession());
+        assertEquals(String.format(COMPLETED_PER_SESSION_FORMAT, reportHeaderValues.conStdCompletedPerSession), adhocReportType.getConStdCompletedPerSession());
 
         // Conciliation - Open Track
         assertEquals(String.valueOf(reportHeaderValues.conOpenCasesCompletedHearing), adhocReportType.getConOpenCasesCompletedHearing());
         assertEquals(String.valueOf(reportHeaderValues.conOpenSessionDays), adhocReportType.getConOpenSessionDays());
-        assertEquals(String.valueOf(reportHeaderValues.conOpenCompletedPerSession), adhocReportType.getConOpenCompletedPerSession());
+        assertEquals(String.format(COMPLETED_PER_SESSION_FORMAT, reportHeaderValues.conOpenCompletedPerSession), adhocReportType.getConOpenCompletedPerSession());
     }
 
     private void verifyReportDetails(ListingData listingData, int size) {

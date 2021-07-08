@@ -80,7 +80,7 @@ public class ListingServiceTest {
 
         DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
         DateListedType dateListedType = new DateListedType();
-        dateListedType.setHearingStatus(null);
+        dateListedType.setHearingStatus(HEARING_STATUS_HEARD);
         dateListedType.setHearingClerk("Clerk");
         dateListedType.setHearingRoomGlasgow("Tribunal 4");
         dateListedType.setHearingAberdeen("AberdeenVenue");
@@ -91,7 +91,7 @@ public class ListingServiceTest {
 
         DateListedTypeItem dateListedTypeItem1 = new DateListedTypeItem();
         DateListedType dateListedType1 = new DateListedType();
-        dateListedType.setHearingStatus("Heard");
+        dateListedType.setHearingStatus(HEARING_STATUS_HEARD);
         dateListedType1.setHearingClerk("Clerk");
         dateListedType1.setHearingRoomGlasgow("Tribunal 4");
         dateListedType1.setHearingAberdeen("AberdeenVenue");
@@ -102,7 +102,7 @@ public class ListingServiceTest {
 
         DateListedTypeItem dateListedTypeItem2 = new DateListedTypeItem();
         DateListedType dateListedType2 = new DateListedType();
-        dateListedType.setHearingStatus(null);
+        dateListedType.setHearingStatus(HEARING_STATUS_HEARD);
         dateListedType2.setHearingClerk("Clerk1");
         dateListedType2.setHearingCaseDisposed(YES);
         dateListedType2.setHearingRoomGlasgow("Tribunal 5");
@@ -114,7 +114,7 @@ public class ListingServiceTest {
 
         DateListedTypeItem dateListedTypeItem3 = new DateListedTypeItem();
         DateListedType dateListedType3 = new DateListedType();
-        dateListedType3.setHearingStatus(null);
+        dateListedType3.setHearingStatus(HEARING_STATUS_HEARD);
         dateListedType3.setHearingClerk("Clerk3");
         dateListedType3.setHearingCaseDisposed(YES);
         dateListedType3.setHearingRoomGlasgow("Tribunal 5");
