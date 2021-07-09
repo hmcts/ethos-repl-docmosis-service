@@ -1,14 +1,10 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import java.util.Optional;
 import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
@@ -56,15 +52,7 @@ public class MultipleBatchUpdate3Service {
             multipleObjects.remove(caseSearched.getCaseData().getEthosCaseReference());
 
             log.info("Sending updates to single cases with caseSearched");
-            if (YES.equals(multipleData.getBatchRemoveRespondentRep())) {
-                var representedTypeR = getRespondentRepType(multipleData, caseSearched.getCaseData());
-                 log.info("Checking if respondent representative is null and if not trying to remove it...");
-                if (representedTypeR != null) {
-                    log.info("RepresentedTypeRItem to be removed from main case:" + representedTypeR.getRespRepName());
-                   boolean isRemoved = caseSearched.getCaseData().getRepCollection().removeIf(a-> a.getValue().equals(representedTypeR));
-                    log.info("RepresentedTypeRItem is removed from main case:" + isRemoved);
-                }
-            }
+
             multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
                     multipleObjects, caseSearched.getCaseData());
         }
@@ -75,29 +63,6 @@ public class MultipleBatchUpdate3Service {
             multipleData.setState(OPEN_STATE);
         }
 
-    }
-
-    private static RepresentedTypeR getRespondentRepType(MultipleData multipleData, CaseData caseData) {
-        if (caseData == null) {
-            return null;
-        }
-        List<RepresentedTypeRItem> repCollection = caseData.getRepCollection();
-
-        if (multipleData.getBatchUpdateRespondentRep().getValue() != null
-                && repCollection != null) {
-            String respondentRepIdToSearch = multipleData.getBatchUpdateRespondentRep().getValue().getCode();
-            Optional<RepresentedTypeRItem> representedTypeRItemOptional =
-                    repCollection.stream()
-                            .filter(representedTypeRItem ->
-                                    representedTypeRItem.getId().equals(respondentRepIdToSearch))
-                            .findAny();
-
-            if (representedTypeRItemOptional.isPresent()) {
-                return representedTypeRItemOptional.get().getValue();
-            }
-        }
-
-        return null;
     }
     private boolean checkAnyChange(MultipleData multipleData) {
 
@@ -112,7 +77,7 @@ public class MultipleBatchUpdate3Service {
                         && !multipleData.getBatchUpdateJudgment().getValue().getCode().equals(SELECT_NONE_VALUE))
                         || (multipleData.getBatchUpdateRespondentRep() != null
                         && !multipleData.getBatchUpdateRespondentRep().getValue().getCode().equals(SELECT_NONE_VALUE)
-                        )
+                )
         );
     }
 
