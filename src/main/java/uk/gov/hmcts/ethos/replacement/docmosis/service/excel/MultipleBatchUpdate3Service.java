@@ -77,7 +77,7 @@ public class MultipleBatchUpdate3Service {
                         && !multipleData.getBatchUpdateJudgment().getValue().getCode().equals(SELECT_NONE_VALUE))
                         || (multipleData.getBatchUpdateRespondentRep() != null
                         && !multipleData.getBatchUpdateRespondentRep().getValue().getCode().equals(SELECT_NONE_VALUE)
-                        )
+                )
         );
     }
 
