@@ -16,8 +16,26 @@ import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_REMEDY;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_DISMISSED_AT_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_INPUT_IN_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_OTHER_COUNTRY;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_SAME_COUNTRY;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport.COMPLETED_PER_SESSION_FORMAT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport.CONCILIATION_TRACK_FAST_TRACK;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport.CONCILIATION_TRACK_NO_CONCILIATION;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport.CONCILIATION_TRACK_OPEN_TRACK;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport.CONCILIATION_TRACK_STANDARD_TRACK;
 
 public class CaseCompletedReportTest {
 

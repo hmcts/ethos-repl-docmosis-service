@@ -21,7 +21,20 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_DISMISSED_AT_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_UNSUCCESSFUL_AT_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_INPUT_IN_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_OTHER_COUNTRY;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_SAME_COUNTRY;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Service
 @Slf4j
@@ -29,6 +42,15 @@ public class CasesCompletedReport {
     static final String ZERO = "0";
     static final String ZERO_DECIMAL = "0.00";
     static final String COMPLETED_PER_SESSION_FORMAT = "%.2f";
+
+    static final String CONCILIATION_TRACK_NUMBER_ONE = "1";
+    static final String CONCILIATION_TRACK_NO_CONCILIATION = "No track";
+    static final String CONCILIATION_TRACK_NUMBER_TWO = "2";
+    static final String CONCILIATION_TRACK_FAST_TRACK = "Short track";
+    static final String CONCILIATION_TRACK_NUMBER_THREE = "3";
+    static final String CONCILIATION_TRACK_STANDARD_TRACK = "Standard track";
+    static final String CONCILIATION_TRACK_NUMBER_FOUR = "4";
+    static final String CONCILIATION_TRACK_OPEN_TRACK = "Open track";
 
     public ListingData generateReportData(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
         initReport(listingDetails);
