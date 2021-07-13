@@ -62,6 +62,8 @@ public class ExcelActionsControllerTest {
     private static final String RESET_MULTIPLE_STATE_URL = "/resetMultipleState";
     private static final String DYNAMIC_LIST_OFFICES_MULTIPLE_URL = "/dynamicListOfficesMultiple";
     private static final String MULTIPLE_TRANSFER_URL = "/multipleTransfer";
+    private static final String LISTINGS_DATE_RANGE_MID_EVENT_VALIDATION_URL = "/listingsDateRangeMidEventValidation";
+
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -113,11 +115,15 @@ public class ExcelActionsControllerTest {
 
     private MockMvc mvc;
     private JsonNode requestContent;
+    private JsonNode listingsValidationRequestContent;
 
     private void doRequestSetUp() throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
         requestContent = objectMapper.readTree(new File(getClass()
                 .getResource("/exampleMultiplesV1.json").toURI()));
+
+        listingsValidationRequestContent = objectMapper.readTree(new File(getClass()
+                .getResource("/exampleListingV3.json").toURI()));
     }
 
     @Before
@@ -878,6 +884,31 @@ public class ExcelActionsControllerTest {
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void listingsDateRangeMidEventValidationValidRange() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(LISTINGS_DATE_RANGE_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+    @Test
+    public void listingsDateRangeMidEventValidationInvalidRange() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(LISTINGS_DATE_RANGE_MID_EVENT_VALIDATION_URL)
+                .content(listingsValidationRequestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
 }
