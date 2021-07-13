@@ -14,7 +14,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadES;
 
 import java.time.LocalDate;
@@ -94,8 +93,8 @@ public class Helper {
         List<DynamicValueType> listItems = new ArrayList<>();
         if (respondentCollection != null) {
             for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
-                DynamicValueType dynamicValueType = new DynamicValueType();
-                RespondentSumType respondentSumType = respondentSumTypeItem.getValue();
+                var dynamicValueType = new DynamicValueType();
+                var respondentSumType = respondentSumTypeItem.getValue();
                 dynamicValueType.setCode(respondentSumType.getRespondentName());
                 dynamicValueType.setLabel(respondentSumType.getRespondentName() + " - "
                         + respondentSumType.getRespondentAddress().toString());
@@ -111,7 +110,7 @@ public class Helper {
             if (caseData.getClaimantWorkAddressQRespondent() != null) {
                 caseData.getClaimantWorkAddressQRespondent().setListItems(listItems);
             } else {
-                DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+                var dynamicFixedListType = new DynamicFixedListType();
                 dynamicFixedListType.setListItems(listItems);
                 caseData.setClaimantWorkAddressQRespondent(dynamicFixedListType);
             }
@@ -164,10 +163,10 @@ public class Helper {
         List<DynamicValueType> listItems = new ArrayList<>();
         if (respondentCollection != null) {
             for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
-                RespondentSumType respondentSumType = respondentSumTypeItem.getValue();
+                var respondentSumType = respondentSumTypeItem.getValue();
                 if (respondentSumType.getResponseStruckOut() == null
                         || respondentSumType.getResponseStruckOut().equals(NO)) {
-                    DynamicValueType dynamicValueType = new DynamicValueType();
+                    var dynamicValueType = new DynamicValueType();
                     dynamicValueType.setCode(respondentSumType.getRespondentName());
                     dynamicValueType.setLabel(respondentSumType.getRespondentName());
                     listItems.add(dynamicValueType);
@@ -183,7 +182,7 @@ public class Helper {
             if (caseData.getRespondentECC() != null) {
                 caseData.getRespondentECC().setListItems(listItems);
             } else {
-                DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+                var dynamicFixedListType = new DynamicFixedListType();
                 dynamicFixedListType.setListItems(listItems);
                 caseData.setRespondentECC(dynamicFixedListType);
             }
@@ -194,7 +193,7 @@ public class Helper {
 
     public static DynamicValueType getDynamicValue(String value) {
 
-        DynamicValueType dynamicValueType = new DynamicValueType();
+        var dynamicValueType = new DynamicValueType();
         dynamicValueType.setCode(value);
         dynamicValueType.setLabel(value);
 
@@ -204,7 +203,7 @@ public class Helper {
 
     public static DynamicValueType getDynamicCodeLabel(String code, String label) {
 
-        DynamicValueType dynamicValueType = new DynamicValueType();
+        var dynamicValueType = new DynamicValueType();
         dynamicValueType.setCode(code);
         dynamicValueType.setLabel(label);
 
@@ -272,7 +271,7 @@ public class Helper {
                     for (DateListedTypeItem dateListedTypeItem
                             : hearingTypeItem.getValue().getHearingDateCollection()) {
 
-                        DateListedType dateListedType = dateListedTypeItem.getValue();
+                        var dateListedType = dateListedTypeItem.getValue();
                         if (isHearingStatusPostponed(dateListedType) && dateListedType.getPostponedDate() == null) {
                             dateListedType.setPostponedDate(UtilHelper.formatCurrentDate2(LocalDate.now()));
                         }
@@ -331,7 +330,7 @@ public class Helper {
 
         log.info("Populating dynamic list with offices");
 
-        DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+        var dynamicFixedListType = new DynamicFixedListType();
         dynamicFixedListType.setListItems(getAvailableOffices(caseTypeId));
 
         caseData.setOfficeCT(dynamicFixedListType);

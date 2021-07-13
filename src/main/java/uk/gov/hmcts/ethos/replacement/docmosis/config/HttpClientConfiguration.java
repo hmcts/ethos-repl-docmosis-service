@@ -13,13 +13,13 @@ public class HttpClientConfiguration {
 
     @Bean
     public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
+        var restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(getHttpClient()));
         return restTemplate;
     }
 
     private CloseableHttpClient getHttpClient() {
-        int timeout = 30000;
+        var timeout = 30000;
         RequestConfig config = RequestConfig.custom()
             .setConnectTimeout(timeout)
             .setConnectionRequestTimeout(timeout)

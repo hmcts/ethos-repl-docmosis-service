@@ -84,7 +84,7 @@ public class SingleReferenceService {
     private final SingleRefLondonEastRepository singleRefLondonEastRepository;
 
     public synchronized String createReference(String caseTypeId, int numberCases) {
-        String currentYear = String.valueOf(LocalDate.now().getYear());
+        var currentYear = String.valueOf(LocalDate.now().getYear());
         switch (caseTypeId) {
             case MANCHESTER_DEV_CASE_TYPE_ID:
             case MANCHESTER_USERS_CASE_TYPE_ID:

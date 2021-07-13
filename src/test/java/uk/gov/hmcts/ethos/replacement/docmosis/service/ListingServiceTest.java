@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.*;
@@ -13,6 +14,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -37,6 +40,8 @@ public class ListingServiceTest {
     private TornadoService tornadoService;
     @Mock
     private CcdClient ccdClient;
+    @Spy
+    private CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
     private CaseDetails caseDetails;
     private ListingDetails listingDetails;
     private ListingDetails listingDetailsRange;
@@ -75,7 +80,7 @@ public class ListingServiceTest {
 
         DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
         DateListedType dateListedType = new DateListedType();
-        dateListedType.setHearingStatus(null);
+        dateListedType.setHearingStatus(HEARING_STATUS_HEARD);
         dateListedType.setHearingClerk("Clerk");
         dateListedType.setHearingRoomGlasgow("Tribunal 4");
         dateListedType.setHearingAberdeen("AberdeenVenue");
@@ -86,7 +91,7 @@ public class ListingServiceTest {
 
         DateListedTypeItem dateListedTypeItem1 = new DateListedTypeItem();
         DateListedType dateListedType1 = new DateListedType();
-        dateListedType.setHearingStatus("Heard");
+        dateListedType.setHearingStatus(HEARING_STATUS_HEARD);
         dateListedType1.setHearingClerk("Clerk");
         dateListedType1.setHearingRoomGlasgow("Tribunal 4");
         dateListedType1.setHearingAberdeen("AberdeenVenue");
@@ -97,7 +102,7 @@ public class ListingServiceTest {
 
         DateListedTypeItem dateListedTypeItem2 = new DateListedTypeItem();
         DateListedType dateListedType2 = new DateListedType();
-        dateListedType.setHearingStatus(null);
+        dateListedType.setHearingStatus(HEARING_STATUS_HEARD);
         dateListedType2.setHearingClerk("Clerk1");
         dateListedType2.setHearingCaseDisposed(YES);
         dateListedType2.setHearingRoomGlasgow("Tribunal 5");
@@ -109,7 +114,7 @@ public class ListingServiceTest {
 
         DateListedTypeItem dateListedTypeItem3 = new DateListedTypeItem();
         DateListedType dateListedType3 = new DateListedType();
-        dateListedType3.setHearingStatus(null);
+        dateListedType3.setHearingStatus(HEARING_STATUS_HEARD);
         dateListedType3.setHearingClerk("Clerk3");
         dateListedType3.setHearingCaseDisposed(YES);
         dateListedType3.setHearingRoomGlasgow("Tribunal 5");
@@ -925,183 +930,47 @@ public class ListingServiceTest {
 
     @Test
     public void generateCasesCompletedReportDataForEnglandWithConTrackNone() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
-                "reportType=Cases Completed, documentName=null, showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
-                "localReportsSummary2=null, " +
-                "localReportsDetailHdr=AdhocReportType(reportDate=null, reportOffice=Manchester, receiptDate=null, hearingDate=null, date=null, full=null, " +
-                "half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=null, multipleRef=null, multSub=null, hearingNumber=null, " +
-                "hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, clerk=null, hearingSitAlone=null, hearingJudge=null, " +
-                "judgeType=null, judgementDateSent=null, position=null, dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, " +
-                "fileLocationDundee=null, fileLocationEdinburgh=null, casesCompletedHearingTotal=1, casesCompletedHearing=null, sessionType=null, sessionDays=null, " +
-                "sessionDaysTotal=1, sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=1.0, ftSessionDays=null, ftSessionDaysTotal=null, " +
-                "ptSessionDays=null, ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, conciliationTrack=null, " +
-                "conciliationTrackNo=null, ConNoneCasesCompletedHearing=1, ConNoneSessionDays=1, ConNoneCompletedPerSession=1.0, ConFastCasesCompletedHearing=null, " +
-                "ConFastSessionDays=null, ConFastCompletedPerSession=null, ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, " +
-                "ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, Total26wkPerCent=null, " +
-                "Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, " +
-                "bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, " +
-                "hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, reconsider=null, subSplit=null, leadCase=null, et3ReceivedDate=null, " +
-                "judicialMediation=null, caseType=null, singlesTotal=null, multiplesTotal=null, dateOfAcceptance=null, respondentET3=null, respondentET4=null, listingHistory=null), " +
-                "localReportsDetail=[AdhocReportTypeItem(id=null, value=AdhocReportType(reportDate=null, reportOffice=null, receiptDate=null, hearingDate=2019-12-12T12:11:55.000, " +
-                "date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=4210000/2019, multipleRef=null, multSub=null, hearingNumber=null, " +
-                "hearingType=Preliminary Hearing, hearingTelConf=null, hearingDuration=null, hearingClerk=Clerk3, clerk=null, hearingSitAlone=null, hearingJudge=null, judgeType=null, " +
-                "judgementDateSent=null, position=null, dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, " +
-                "fileLocationEdinburgh=null, casesCompletedHearingTotal=null, casesCompletedHearing=null, sessionType=null, sessionDays=1, sessionDaysTotal=null, " +
-                "sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=null, ftSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, " +
-                "ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=1, " +
-                "ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=null, ConFastSessionDays=null, " +
-                "ConFastCompletedPerSession=null, ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, " +
-                "ConOpenSessionDays=null, ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, " +
-                "Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, " +
-                "hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, " +
-                "reconsider=null, subSplit=null, leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=null, singlesTotal=null, multiplesTotal=null, dateOfAcceptance=null, " +
-                "respondentET3=null, respondentET4=null, listingHistory=null))])";
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
         when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
-        assertEquals(result, listingDataResult.toString());
+        assertNotNull(listingDataResult.getLocalReportsDetailHdr());
+        assertEquals(1, listingDataResult.getLocalReportsDetail().size());
     }
 
     @Test
     public void generateCasesCompletedReportDataForEnglandWithConTrackFast() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
-                "reportType=Cases Completed, documentName=null, showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
-                "localReportsSummary2=null, " +
-                "localReportsDetailHdr=AdhocReportType(reportDate=null, reportOffice=Manchester, receiptDate=null, hearingDate=null, date=null, full=null, " +
-                "half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=null, multipleRef=null, multSub=null, hearingNumber=null, " +
-                "hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, clerk=null, hearingSitAlone=null, hearingJudge=null, " +
-                "judgeType=null, judgementDateSent=null, position=null, dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, " +
-                "fileLocationDundee=null, fileLocationEdinburgh=null, casesCompletedHearingTotal=1, casesCompletedHearing=null, sessionType=null, sessionDays=null, " +
-                "sessionDaysTotal=1, sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=1.0, ftSessionDays=null, ftSessionDaysTotal=null, " +
-                "ptSessionDays=null, ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, conciliationTrack=null, " +
-                "conciliationTrackNo=null, ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=1, " +
-                "ConFastSessionDays=1, ConFastCompletedPerSession=1.0, ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, " +
-                "ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, Total26wkPerCent=null, " +
-                "Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, " +
-                "bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, " +
-                "hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, reconsider=null, subSplit=null, leadCase=null, et3ReceivedDate=null, " +
-                "judicialMediation=null, caseType=null, singlesTotal=null, multiplesTotal=null, dateOfAcceptance=null, respondentET3=null, respondentET4=null, listingHistory=null), " +
-                "localReportsDetail=[AdhocReportTypeItem(id=null, value=AdhocReportType(reportDate=null, reportOffice=null, receiptDate=null, hearingDate=2019-12-12T12:11:55.000, " +
-                "date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=4210000/2019, multipleRef=null, multSub=null, hearingNumber=null, " +
-                "hearingType=Preliminary Hearing, hearingTelConf=null, hearingDuration=null, hearingClerk=Clerk3, clerk=null, hearingSitAlone=null, hearingJudge=null, judgeType=null, " +
-                "judgementDateSent=null, position=null, dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, " +
-                "fileLocationEdinburgh=null, casesCompletedHearingTotal=null, casesCompletedHearing=null, sessionType=null, sessionDays=1, sessionDaysTotal=null, " +
-                "sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=null, ftSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, " +
-                "ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=2, " +
-                "ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=null, ConFastSessionDays=null, " +
-                "ConFastCompletedPerSession=null, ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, " +
-                "ConOpenSessionDays=null, ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, " +
-                "Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, " +
-                "hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, " +
-                "reconsider=null, subSplit=null, leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=null, singlesTotal=null, multiplesTotal=null, dateOfAcceptance=null, " +
-                "respondentET3=null, respondentET4=null, listingHistory=null))])";
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
         when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_FAST_TRACK);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
-        assertEquals(result, listingDataResult.toString());
+        assertNotNull(listingDataResult.getLocalReportsDetailHdr());
+        assertEquals(1, listingDataResult.getLocalReportsDetail().size());
         submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
     }
 
     @Test
     public void generateCasesCompletedReportDataForEnglandWithConTrackStandard() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
-                "reportType=Cases Completed, documentName=null, showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
-                "localReportsSummary2=null, " +
-                "localReportsDetailHdr=AdhocReportType(reportDate=null, reportOffice=Manchester, receiptDate=null, hearingDate=null, date=null, full=null, " +
-                "half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=null, multipleRef=null, multSub=null, hearingNumber=null, " +
-                "hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, clerk=null, hearingSitAlone=null, hearingJudge=null, " +
-                "judgeType=null, judgementDateSent=null, position=null, dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, " +
-                "fileLocationDundee=null, fileLocationEdinburgh=null, casesCompletedHearingTotal=1, casesCompletedHearing=null, sessionType=null, sessionDays=null, " +
-                "sessionDaysTotal=1, sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=1.0, ftSessionDays=null, ftSessionDaysTotal=null, " +
-                "ptSessionDays=null, ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, conciliationTrack=null, " +
-                "conciliationTrackNo=null, ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=null, " +
-                "ConFastSessionDays=null, ConFastCompletedPerSession=null, ConStdCasesCompletedHearing=1, ConStdSessionDays=1, ConStdCompletedPerSession=1.0, " +
-                "ConOpenCasesCompletedHearing=null, ConOpenSessionDays=null, ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, Total26wkPerCent=null, " +
-                "Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, " +
-                "bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, " +
-                "hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, reconsider=null, subSplit=null, leadCase=null, et3ReceivedDate=null, " +
-                "judicialMediation=null, caseType=null, singlesTotal=null, multiplesTotal=null, dateOfAcceptance=null, respondentET3=null, respondentET4=null, listingHistory=null), " +
-                "localReportsDetail=[AdhocReportTypeItem(id=null, value=AdhocReportType(reportDate=null, reportOffice=null, receiptDate=null, hearingDate=2019-12-12T12:11:55.000, " +
-                "date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=4210000/2019, multipleRef=null, multSub=null, hearingNumber=null, " +
-                "hearingType=Preliminary Hearing, hearingTelConf=null, hearingDuration=null, hearingClerk=Clerk3, clerk=null, hearingSitAlone=null, hearingJudge=null, judgeType=null, " +
-                "judgementDateSent=null, position=null, dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, " +
-                "fileLocationEdinburgh=null, casesCompletedHearingTotal=null, casesCompletedHearing=null, sessionType=null, sessionDays=1, sessionDaysTotal=null, " +
-                "sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=null, ftSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, " +
-                "ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=3, " +
-                "ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=null, ConFastSessionDays=null, " +
-                "ConFastCompletedPerSession=null, ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, " +
-                "ConOpenSessionDays=null, ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, " +
-                "Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, " +
-                "hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, " +
-                "reconsider=null, subSplit=null, leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=null, singlesTotal=null, multiplesTotal=null, dateOfAcceptance=null, " +
-                "respondentET3=null, respondentET4=null, listingHistory=null))])";
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
         when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_STANDARD_TRACK);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
-        assertEquals(result, listingDataResult.toString());
+        assertNotNull(listingDataResult.getLocalReportsDetailHdr());
+        assertEquals(1, listingDataResult.getLocalReportsDetail().size());
         submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
     }
 
     @Test
     public void generateCasesCompletedReportDataForEnglandWithConTrackOpen() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=null, clerkResponsible=null, " +
-                "reportType=Cases Completed, documentName=null, showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, " +
-                "localReportsSummary2=null, " +
-                "localReportsDetailHdr=AdhocReportType(reportDate=null, reportOffice=Manchester, receiptDate=null, hearingDate=null, date=null, full=null, " +
-                "half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=null, multipleRef=null, multSub=null, hearingNumber=null, " +
-                "hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, clerk=null, hearingSitAlone=null, hearingJudge=null, " +
-                "judgeType=null, judgementDateSent=null, position=null, dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, " +
-                "fileLocationDundee=null, fileLocationEdinburgh=null, casesCompletedHearingTotal=1, casesCompletedHearing=null, sessionType=null, sessionDays=null, " +
-                "sessionDaysTotal=1, sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=1.0, ftSessionDays=null, ftSessionDaysTotal=null, " +
-                "ptSessionDays=null, ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, conciliationTrack=null, " +
-                "conciliationTrackNo=null, ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=null, " +
-                "ConFastSessionDays=null, ConFastCompletedPerSession=null, ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, " +
-                "ConOpenCasesCompletedHearing=1, ConOpenSessionDays=1, ConOpenCompletedPerSession=1.0, totalCases=null, Total26wk=null, Total26wkPerCent=null, " +
-                "Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, " +
-                "bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, " +
-                "hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, reconsider=null, subSplit=null, leadCase=null, et3ReceivedDate=null, " +
-                "judicialMediation=null, caseType=null, singlesTotal=null, multiplesTotal=null, dateOfAcceptance=null, respondentET3=null, respondentET4=null, listingHistory=null), " +
-                "localReportsDetail=[AdhocReportTypeItem(id=null, value=AdhocReportType(reportDate=null, reportOffice=null, receiptDate=null, hearingDate=2019-12-12T12:11:55.000, " +
-                "date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=4210000/2019, multipleRef=null, multSub=null, hearingNumber=null, " +
-                "hearingType=Preliminary Hearing, hearingTelConf=null, hearingDuration=null, hearingClerk=Clerk3, clerk=null, hearingSitAlone=null, hearingJudge=null, judgeType=null, " +
-                "judgementDateSent=null, position=null, dateToPosition=null, fileLocation=null, fileLocationGlasgow=null, fileLocationAberdeen=null, fileLocationDundee=null, " +
-                "fileLocationEdinburgh=null, casesCompletedHearingTotal=null, casesCompletedHearing=null, sessionType=null, sessionDays=1, sessionDaysTotal=null, " +
-                "sessionDaysTotalDetail=null, completedPerSession=null, completedPerSessionTotal=null, ftSessionDays=null, ftSessionDaysTotal=null, ptSessionDays=null, " +
-                "ptSessionDaysTotal=null, ptSessionDaysPerCent=null, otherSessionDaysTotal=null, otherSessionDays=null, conciliationTrack=null, conciliationTrackNo=4, " +
-                "ConNoneCasesCompletedHearing=null, ConNoneSessionDays=null, ConNoneCompletedPerSession=null, ConFastCasesCompletedHearing=null, ConFastSessionDays=null, " +
-                "ConFastCompletedPerSession=null, ConStdCasesCompletedHearing=null, ConStdSessionDays=null, ConStdCompletedPerSession=null, ConOpenCasesCompletedHearing=null, " +
-                "ConOpenSessionDays=null, ConOpenCompletedPerSession=null, totalCases=null, Total26wk=null, Total26wkPerCent=null, Totalx26wk=null, Totalx26wkPerCent=null, Total4wk=null, " +
-                "Total4wkPerCent=null, Totalx4wk=null, Totalx4wkPerCent=null, respondentName=null, actioned=null, bfDate=null, bfDateCleared=null, reservedHearing=null, hearingCM=null, " +
-                "hearingInterloc=null, hearingPH=null, hearingPrelim=null, stage=null, hearingStage1=null, hearingStage2=null, hearingFull=null, hearing=null, remedy=null, review=null, " +
-                "reconsider=null, subSplit=null, leadCase=null, et3ReceivedDate=null, judicialMediation=null, caseType=null, singlesTotal=null, multiplesTotal=null, dateOfAcceptance=null, " +
-                "respondentET3=null, respondentET4=null, listingHistory=null))])";
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
         when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_OPEN_TRACK);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
-        assertEquals(result, listingDataResult.toString());
+        assertNotNull(listingDataResult.getLocalReportsDetailHdr());
+        assertEquals(1, listingDataResult.getLocalReportsDetail().size());
         submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
     }
 

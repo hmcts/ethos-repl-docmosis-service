@@ -166,6 +166,7 @@ public class ListingHelper {
         listingType.setRespondentOthers(" ");
         listingType.setClaimantRepresentative(" ");
         listingType.setRespondentRepresentative(" ");
+
         boolean isPublicType = listingData.getHearingDocType() != null
                 && listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
                 && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC);
@@ -295,7 +296,7 @@ public class ListingHelper {
 
     private static int findOfficeNameInUpperCase(String caseType) {
         var count = 0;
-        for (int i = 0; i < caseType.length(); i++) {
+        for (var i = 0; i < caseType.length(); i++) {
             if (Character.isUpperCase(caseType.charAt(i))) {
                 count++;
             }

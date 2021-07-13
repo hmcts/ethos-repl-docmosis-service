@@ -259,6 +259,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void amendCaseDetails() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class))).thenReturn(defaultValues);
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(eventValidationService.validateCaseState(isA(CaseDetails.class))).thenReturn(true);
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -266,6 +267,21 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors", notNullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void amendCaseDetailsWithErrors() throws Exception {
+        when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class))).thenReturn(defaultValues);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        when(eventValidationService.validateCaseState(isA(CaseDetails.class))).thenReturn(false);
+        mvc.perform(post(AMEND_CASE_DETAILS_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors[0]", is("null Case has not been Accepted.")))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
@@ -921,6 +937,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void amendCaseDetailsError500() throws Exception {
         when(defaultValuesReaderService.getDefaultValues(isA(String.class), isA(String.class))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(eventValidationService.validateCaseState(isA(CaseDetails.class))).thenReturn(true);
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)

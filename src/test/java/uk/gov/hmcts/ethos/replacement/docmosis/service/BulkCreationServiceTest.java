@@ -165,6 +165,7 @@ public class BulkCreationServiceTest {
 
     @Test
     public void caseCreationRequest() throws IOException {
+        submitEvent.getCaseData().setMultipleReference("123345");
         List<SubmitEvent> submitEventList = new ArrayList<>(Collections.singletonList(submitEvent));
         when(ccdClient.retrieveCases(anyString(), anyString(), anyString())).thenReturn(submitEventList);
         BulkCasesPayload bulkCasesPayload = bulkSearchService.bulkCasesRetrievalRequest(getBulkDetails(YES, "Single"), "authToken", true);

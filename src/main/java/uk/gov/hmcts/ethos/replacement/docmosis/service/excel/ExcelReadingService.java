@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.io.IOException;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -10,25 +12,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.TreeMap;
-
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.CONSTRAINT_KEY;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_2;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_3;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_4;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_5;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_6;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.SELECT_ALL;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
 
@@ -46,10 +33,10 @@ public class ExcelReadingService {
         this.excelDocManagementService = excelDocManagementService;
     }
 
-    public TreeMap<String, Object> readExcel(String userToken, String documentBinaryUrl, List<String> errors,
-                                             MultipleData multipleData, FilterExcelType filter) {
+    public SortedMap<String, Object> readExcel(String userToken, String documentBinaryUrl, List<String> errors,
+                                               MultipleData multipleData, FilterExcelType filter) {
 
-        TreeMap<String, Object> multipleObjects = new TreeMap<>();
+        SortedMap<String, Object> multipleObjects = new TreeMap<>();
 
         try {
 
@@ -76,10 +63,10 @@ public class ExcelReadingService {
     public XSSFSheet checkExcelErrors(String userToken, String documentBinaryUrl, List<String> errors)
             throws IOException {
 
-        InputStream excelInputStream =
+        var excelInputStream =
                 excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl);
 
-        XSSFWorkbook workbook = new XSSFWorkbook(excelInputStream);
+        var workbook = new XSSFWorkbook(excelInputStream);
 
         XSSFSheet datatypeSheet = workbook.getSheet(SHEET_NAME);
 
@@ -97,7 +84,7 @@ public class ExcelReadingService {
 
     }
 
-    private void getSubMultipleObjects(TreeMap<String, Object> multipleObjects, String ethosCaseRef,
+    private void getSubMultipleObjects(SortedMap<String, Object> multipleObjects, String ethosCaseRef,
                                        String subMultiple) {
 
         if (multipleObjects.containsKey(subMultiple)) {
@@ -111,7 +98,7 @@ public class ExcelReadingService {
 
     }
 
-    private void getFlagObjects(TreeMap<String, Object> multipleObjects, String subMultiple,
+    private void getFlagObjects(SortedMap<String, Object> multipleObjects, String subMultiple,
                                 String flag1, String flag2, String flag3, String flag4) {
 
         populateTreeMapWithSet(multipleObjects, HEADER_2, subMultiple);
@@ -122,7 +109,7 @@ public class ExcelReadingService {
 
     }
 
-    private void populateTreeMapWithSet(TreeMap<String, Object> multipleObjects, String key, String value) {
+    private void populateTreeMapWithSet(SortedMap<String, Object> multipleObjects, String key, String value) {
 
         if (multipleObjects.containsKey(key)) {
             HashSet<String> set = (HashSet<String>) multipleObjects.get(key);
@@ -135,7 +122,20 @@ public class ExcelReadingService {
 
     }
 
-    private void populateMultipleObjects(TreeMap<String, Object> multipleObjects, XSSFSheet datatypeSheet,
+    private void filterSubMultiple(Row currentRow,MultipleData multipleData,SortedMap<String, Object> multipleObjects ) {
+        if (isMultipleInFlagsAndBelongsSubMultiple(currentRow, multipleData)) {
+            getSubMultipleObjects(multipleObjects,
+                    getCellValue(currentRow.getCell(0)),
+                    getCellValue(currentRow.getCell(1)));
+        } else {
+            if (isMultipleInFlags(currentRow, multipleData)) {
+                getSubMultipleObjects(multipleObjects,
+                        getCellValue(currentRow.getCell(0)),
+                        NOT_ALLOCATED);
+            }
+        }
+    }
+    private void populateMultipleObjects(SortedMap<String, Object> multipleObjects, XSSFSheet datatypeSheet,
                                          MultipleData multipleData, FilterExcelType filter) {
 
         for (Row currentRow : datatypeSheet) {
@@ -145,17 +145,7 @@ public class ExcelReadingService {
             }
 
             if (filter.equals(FilterExcelType.SUB_MULTIPLE)) {
-                if (isMultipleInFlagsAndBelongsSubMultiple(currentRow, multipleData)) {
-                    getSubMultipleObjects(multipleObjects,
-                            getCellValue(currentRow.getCell(0)),
-                            getCellValue(currentRow.getCell(1)));
-                } else {
-                    if (isMultipleInFlags(currentRow, multipleData)) {
-                        getSubMultipleObjects(multipleObjects,
-                                getCellValue(currentRow.getCell(0)),
-                                NOT_ALLOCATED);
-                    }
-                }
+                filterSubMultiple(currentRow, multipleData, multipleObjects);
 
             } else if (filter.equals(FilterExcelType.FLAGS)) {
                 if (isMultipleInFlags(currentRow, multipleData)) {

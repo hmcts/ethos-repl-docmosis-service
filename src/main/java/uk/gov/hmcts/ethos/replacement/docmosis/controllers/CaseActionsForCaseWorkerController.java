@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.common.Strings;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +32,8 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 public class CaseActionsForCaseWorkerController {
 
     private static final String LOG_MESSAGE = "received notification request for case reference :    ";
-
+    private static final String INVALID_TOKEN = "Invalid Token {}";
+    private static final String EVENT_FIELDS_VALIDATION = "Event fields validation: ";
     private final CaseTransferService caseTransferService;
     private final CaseCreationForCaseWorkerService caseCreationForCaseWorkerService;
     private final CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
@@ -60,11 +60,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("CREATE CASE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        SubmitEvent submitEvent = caseCreationForCaseWorkerService.caseCreationRequest(ccdRequest, userToken);
+        var submitEvent = caseCreationForCaseWorkerService.caseCreationRequest(ccdRequest, userToken);
         log.info("Case created correctly with case Id: " + submitEvent.getCaseId());
 
         return getCallbackRespEntityNoErrors(ccdRequest.getCaseDetails().getCaseData());
@@ -84,11 +84,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("RETRIEVE CASE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        SubmitEvent submitEvent = caseRetrievalForCaseWorkerService.caseRetrievalRequest(userToken,
+        var submitEvent = caseRetrievalForCaseWorkerService.caseRetrievalRequest(userToken,
                 ccdRequest.getCaseDetails().getCaseTypeId(),
                 ccdRequest.getCaseDetails().getJurisdiction(), "1550576532211563");
         log.info("Case received correctly with id: " + submitEvent.getCaseId());
@@ -110,7 +110,7 @@ public class CaseActionsForCaseWorkerController {
         log.info("RETRIEVE CASES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
@@ -135,11 +135,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("UPDATE CASE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        SubmitEvent submitEvent = caseUpdateForCaseWorkerService.caseUpdateRequest(ccdRequest, userToken);
+        var submitEvent = caseUpdateForCaseWorkerService.caseUpdateRequest(ccdRequest, userToken);
         log.info("Case updated correctly with id: " + submitEvent.getCaseId());
 
         return getCallbackRespEntityNoErrors(ccdRequest.getCaseDetails().getCaseData());
@@ -159,7 +159,7 @@ public class CaseActionsForCaseWorkerController {
         log.info("PRE DEFAULT VALUES ---> " + LOG_MESSAGE);
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
@@ -182,16 +182,16 @@ public class CaseActionsForCaseWorkerController {
         log.info("POST DEFAULT VALUES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
 
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
 
         if (errors.isEmpty()) {
-            DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
+            var defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.caseDataDefaults(caseData);
             generateEthosCaseReference(caseData, ccdRequest);
@@ -219,22 +219,25 @@ public class CaseActionsForCaseWorkerController {
         log.info("AMEND CASE DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
-        List<String> errors = new ArrayList<>();
-//        String error = eventValidationService.validateCaseState(ccdRequest.getCaseDetails());
-//        if (!Strings.isNullOrEmpty(error)){
-//            errors.add(error);
-//        }
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
+
+        List<String> errors = eventValidationService.validateReceiptDate(caseData);
+
+
         if (errors.isEmpty()) {
-            errors.addAll(eventValidationService.validateReceiptDate(caseData));
+            boolean caseStateValidated = eventValidationService.validateCaseState(ccdRequest.getCaseDetails());
+            if (!caseStateValidated) {
+                errors.add(ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " Case has not been Accepted.");
+            }
         }
-        log.info("Event fields and case state validation for case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + ": " + errors);
+
+        log.info("Event fields and/or case state validation for case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + ": " + errors);
         if (errors.isEmpty()) {
-            DefaultValues defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
+            var defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
             log.info("Post Default values loaded: " + defaultValues);
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
@@ -264,11 +267,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("AMEND CLAIMANT DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.claimantDefaults(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
@@ -288,11 +291,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("AMEND RESPONDENT DETAILS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = eventValidationService.validateActiveRespondents(caseData);
         if (errors.isEmpty()) {
             errors = eventValidationService.validateET3ResponseFields(caseData);
@@ -301,7 +304,7 @@ public class CaseActionsForCaseWorkerController {
             }
         }
 
-        log.info("Event fields validation: " + errors);
+        log.info(EVENT_FIELDS_VALIDATION + errors);
 
         return getCallbackRespEntityErrors(errors, caseData);
     }
@@ -320,14 +323,14 @@ public class CaseActionsForCaseWorkerController {
         log.info("AMEND RESPONDENT REPRESENTATIVE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = eventValidationService.validateRespRepNames(caseData);
 
-        log.info("Event fields validation: " + errors);
+        log.info(EVENT_FIELDS_VALIDATION + errors);
 
         return getCallbackRespEntityErrors(errors, caseData);
     }
@@ -346,11 +349,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("UPDATE HEARING ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+        var caseDetails = ccdRequest.getCaseDetails();
         FlagsImageHelper.buildFlagsImageFileName(caseDetails.getCaseData());
 
         return getCallbackRespEntityNoErrors(caseDetails.getCaseData());
@@ -370,11 +373,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("ALLOCATE HEARING ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         Helper.updatePostponedDate(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
@@ -394,11 +397,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("RESTRICTED CASES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
@@ -418,11 +421,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("AMEND HEARING ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         caseManagementForCaseWorkerService.amendHearing(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
 
         return getCallbackRespEntityNoErrors(caseData);
@@ -442,16 +445,16 @@ public class CaseActionsForCaseWorkerController {
         log.info("AMEND CASE STATE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
         List<String> errors = new ArrayList<>();
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
 
         if (ccdRequest.getCaseDetails().getState().equals(CLOSED_STATE)) {
             errors = eventValidationService.validateJurisdictionOutcome(caseData);
-            log.info("Event fields validation: " + errors);
+            log.info(EVENT_FIELDS_VALIDATION + errors);
         }
 
         return getCallbackRespEntityErrors(errors, caseData);
@@ -471,11 +474,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("MID RESPONDENT ADDRESS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = Helper.midRespondentAddress(ccdRequest.getCaseDetails().getCaseData());
+        var caseData = Helper.midRespondentAddress(ccdRequest.getCaseDetails().getCaseData());
 
         return getCallbackRespEntityNoErrors(caseData);
     }
@@ -494,14 +497,14 @@ public class CaseActionsForCaseWorkerController {
         log.info("JURISDICTION VALIDATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
         List<String> errors = new ArrayList<>();
-        CaseData caseData =  ccdRequest.getCaseDetails().getCaseData();
+        var caseData =  ccdRequest.getCaseDetails().getCaseData();
         eventValidationService.validateJurisdictionCodes(caseData, errors);
-        log.info("Event fields validation: " + errors);
+        log.info(EVENT_FIELDS_VALIDATION + errors);
 
         return getCallbackRespEntityErrors(errors, caseData);
     }
@@ -520,11 +523,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("GENERATE CASE REF NUMBERS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = caseCreationForCaseWorkerService.generateCaseRefNumbers(ccdRequest);
+        var caseData = caseCreationForCaseWorkerService.generateCaseRefNumbers(ccdRequest);
 
         return getCallbackRespEntityNoErrors(caseData);
     }
@@ -543,11 +546,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("MID RESPONDENT ECC ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
         List<String> errors = new ArrayList<>();
-        CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(),
+        var caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(),
                 userToken, errors, MID_EVENT_CALLBACK);
 
         return getCallbackRespEntityErrors(errors, caseData);
@@ -567,12 +570,12 @@ public class CaseActionsForCaseWorkerController {
         log.info("CREATE ECC ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
         List<String> errors = new ArrayList<>();
-        CaseData caseData = caseManagementForCaseWorkerService.createECC(
+        var caseData = caseManagementForCaseWorkerService.createECC(
                 ccdRequest.getCaseDetails(), userToken, errors, ABOUT_TO_SUBMIT_EVENT_CALLBACK);
         generateEthosCaseReference(caseData, ccdRequest);
 
@@ -593,11 +596,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("LINK ORIGINAL CASE ECC ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
         List<String> errors = new ArrayList<>();
-        CaseData caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(),
+        var caseData = caseManagementForCaseWorkerService.createECC(ccdRequest.getCaseDetails(),
                 userToken, errors, SUBMITTED_CALLBACK);
 
         return getCallbackRespEntityErrors(errors, caseData);
@@ -618,12 +621,12 @@ public class CaseActionsForCaseWorkerController {
                 + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
         List<String> errors = new ArrayList<>();
-        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+        var caseDetails = ccdRequest.getCaseDetails();
 
         singleCaseMultipleMidEventValidationService.singleCaseMultipleValidationLogic(
                 userToken, caseDetails, errors);
@@ -645,11 +648,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("HEARING MID EVENT VALIDATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+        var caseDetails = ccdRequest.getCaseDetails();
         List<String> errors = Helper.hearingMidEventValidation(caseDetails.getCaseData());
 
         return getCallbackRespEntity(errors, caseDetails);
@@ -669,11 +672,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("DYNAMIC LIST BF ACTIONS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         BFHelper.populateDynamicListBfActions(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
@@ -693,11 +696,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("BF ACTIONS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         BFHelper.updateBfActionItems(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
@@ -717,11 +720,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("JUDGEMENT VALIDATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData =  ccdRequest.getCaseDetails().getCaseData();
+        var caseData =  ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(caseData);
 
         return getCallbackRespEntityErrors(errors, caseData);
@@ -741,11 +744,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("DEPOSIT VALIDATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData =  ccdRequest.getCaseDetails().getCaseData();
+        var caseData =  ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = eventValidationService.validateDepositRefunded(caseData);
 
         return getCallbackRespEntityErrors(errors, caseData);
@@ -765,11 +768,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("DYNAMIC LIST OFFICES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         Helper.populateDynamicListOffices(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
 
         return getCallbackRespEntityNoErrors(caseData);
@@ -789,7 +792,7 @@ public class CaseActionsForCaseWorkerController {
         log.info("CREATE CASE TRANSFER ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
@@ -813,11 +816,11 @@ public class CaseActionsForCaseWorkerController {
         log.info("ABOUT TO START DISPOSAL ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         Helper.updatePositionTypeToClosed(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);

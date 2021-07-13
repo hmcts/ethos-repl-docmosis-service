@@ -1,23 +1,21 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
+
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
 
 @Slf4j
 @Service("multipleSingleMidEventValidationService")
@@ -35,7 +33,7 @@ public class MultipleSingleMidEventValidationService {
 
     public void multipleSingleValidationLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
-        MultipleData multipleData = multipleDetails.getCaseData();
+        var multipleData = multipleDetails.getCaseData();
 
         String caseToSearch = multipleData.getBatchUpdateCase();
 
@@ -102,7 +100,7 @@ public class MultipleSingleMidEventValidationService {
     private void populateDynamicLists(String userToken, String caseTypeId,
                                       MultipleData multipleData, String caseToSearch) {
 
-        SubmitEvent submitEvent = singleCasesReadingService.retrieveSingleCase(
+        var submitEvent = singleCasesReadingService.retrieveSingleCase(
                 userToken,
                 caseTypeId,
                 caseToSearch,
@@ -112,7 +110,7 @@ public class MultipleSingleMidEventValidationService {
 
         List<DynamicValueType> claimantDynamicList = new ArrayList<>();
 
-        if (submitEvent.getCaseData().getRepresentativeClaimantType() != null) {
+        if (hasRepresentativeClaimant(submitEvent.getCaseData())) {
 
             claimantDynamicList = new ArrayList<>(Collections.singletonList(
                     Helper.getDynamicValue(
@@ -159,8 +157,8 @@ public class MultipleSingleMidEventValidationService {
         if (submitEvent.getCaseData().getJudgementCollection() != null
                 && !submitEvent.getCaseData().getJudgementCollection().isEmpty()) {
 
-            for (int i = 0; i < submitEvent.getCaseData().getJudgementCollection().size(); i++) {
-                JudgementTypeItem judgementTypeItem = submitEvent.getCaseData().getJudgementCollection().get(i);
+            for (var i = 0; i < submitEvent.getCaseData().getJudgementCollection().size(); i++) {
+                var judgementTypeItem = submitEvent.getCaseData().getJudgementCollection().get(i);
                 judgementCollection.add(Helper.getDynamicCodeLabel(
                         judgementTypeItem.getId(), i
                                 + " - " + judgementTypeItem.getValue().getJudgementType()
@@ -191,11 +189,16 @@ public class MultipleSingleMidEventValidationService {
 
     }
 
+    private boolean hasRepresentativeClaimant(CaseData caseData) {
+        var representativeClaimantType = caseData.getRepresentativeClaimantType();
+        return representativeClaimantType != null && representativeClaimantType.getNameOfRepresentative() != null;
+    }
+
     private DynamicFixedListType populateDynamicList(List<DynamicValueType> listItems) {
 
         listItems.add(0, Helper.getDynamicValue(SELECT_NONE_VALUE));
 
-        DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+        var dynamicFixedListType = new DynamicFixedListType();
 
         dynamicFixedListType.setListItems(listItems);
 

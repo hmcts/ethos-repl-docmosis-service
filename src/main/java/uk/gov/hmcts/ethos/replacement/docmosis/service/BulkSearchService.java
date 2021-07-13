@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,6 @@ import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
 import uk.gov.hmcts.ecm.common.model.bulk.items.MidSearchTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.items.MultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.items.SearchTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.helper.BulkCasesPayload;
@@ -64,7 +64,7 @@ public class BulkSearchService {
         List<MidSearchTypeItem> midSearchedList = new ArrayList<>();
         for (MultipleTypeItem multipleTypeItem : multipleTypeItemToSearchBy) {
             log.info("Case found searching: " + multipleTypeItem.getValue().getEthosCaseReferenceM());
-            MidSearchTypeItem midSearchTypeItem = new MidSearchTypeItem();
+            var midSearchTypeItem = new MidSearchTypeItem();
             midSearchTypeItem.setId(multipleTypeItem.getValue().getEthosCaseReferenceM());
             midSearchTypeItem.setValue(multipleTypeItem.getValue().getEthosCaseReferenceM());
             midSearchedList.add(midSearchTypeItem);
@@ -74,7 +74,7 @@ public class BulkSearchService {
 
     public BulkRequestPayload bulkMidSearchLogic(BulkDetails bulkDetails, boolean subMultiple) {
         List<MultipleTypeItem> multipleTypeItemToSearchBy = getMultipleCollectionForFilter(bulkDetails);
-        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        var bulkRequestPayload = new BulkRequestPayload();
         List<String> errors = new ArrayList<>();
         if (multipleTypeItemToSearchBy != null) {
             List<MidSearchTypeItem> midSearchedList;
@@ -95,7 +95,7 @@ public class BulkSearchService {
     }
 
     public BulkRequestPayload bulkSearchLogic(BulkDetails bulkDetails) {
-        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        var bulkRequestPayload = new BulkRequestPayload();
         List<String> errors = new ArrayList<>();
         if (bulkDetails.getCaseData().getMidSearchCollection() != null) {
             List<SearchTypeItem> searchTypeItemList = new ArrayList<>();
@@ -107,7 +107,7 @@ public class BulkSearchService {
                                 multipleValue.getValue().getEthosCaseReferenceM().equals(refNumbersFiltered.getValue()))
                         .findFirst();
                 if (multipleTypeItem.isPresent()) {
-                    SearchTypeItem searchTypeItem = new SearchTypeItem();
+                    var searchTypeItem = new SearchTypeItem();
                     searchTypeItem.setId(multipleTypeItem.get().getId());
                     searchTypeItem.setValue(
                             BulkHelper.getSearchTypeFromMultipleType(multipleTypeItem.get().getValue()));
@@ -160,7 +160,7 @@ public class BulkSearchService {
 
     public BulkCasesPayload bulkCasesRetrievalRequest(BulkDetails bulkDetails, String authToken, boolean checkErrors) {
         try {
-            BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
+            var bulkCasesPayload = new BulkCasesPayload();
             List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
             if (caseIds != null && !caseIds.isEmpty()) {
                 List<SubmitEvent> submitEvents = ccdClient.retrieveCases(
@@ -183,7 +183,7 @@ public class BulkSearchService {
     public BulkCasesPayload bulkCasesRetrievalRequestElasticSearch(BulkDetails bulkDetails, String authToken,
                                                                    boolean creationFlag, boolean filter) {
         try {
-            BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
+            var bulkCasesPayload = new BulkCasesPayload();
             List<String> caseIds = BulkHelper.getCaseIds(bulkDetails);
             if (caseIds != null && !caseIds.isEmpty()) {
                 log.info("CaseIds: " + caseIds);
@@ -227,15 +227,14 @@ public class BulkSearchService {
     BulkCasesPayload filterSubmitEvents(List<SubmitEvent> submitEvents, List<String> caseIds,
                                         String multipleReference, boolean creationFlag, boolean checkErrors) {
         log.info("Cases found: " + submitEvents.size());
-        BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
+        var bulkCasesPayload = new BulkCasesPayload();
         List<String> alreadyTakenIds = new ArrayList<>();
         List<String> unprocessableState = new ArrayList<>();
         List<SubmitEvent> submitEventFiltered = new ArrayList<>();
         for (SubmitEvent submitEvent : submitEvents) {
-            CaseData caseData = submitEvent.getCaseData();
-            if (caseIds.contains(caseData.getEthosCaseReference())) {
-                if (checkErrors) {
-                    if (caseData.getMultipleReference() != null && !caseData.getMultipleReference().trim().isEmpty()) {
+            var caseData = submitEvent.getCaseData();
+            if (caseIds.contains(caseData.getEthosCaseReference()) &&
+                    checkErrors && !Strings.isNullOrEmpty(caseData.getMultipleReference())) {
                         if (creationFlag) {
                             log.info("Creation");
                             alreadyTakenIds.add(caseData.getEthosCaseReference());
@@ -244,11 +243,11 @@ public class BulkSearchService {
                             log.info("Update");
                             alreadyTakenIds.add(caseData.getEthosCaseReference());
                         }
-                    }
+
                     if (submitEvent.getState().equals(SUBMITTED_STATE)) {
                         unprocessableState.add(submitEvent.getCaseData().getEthosCaseReference());
                     }
-                }
+
                 submitEventFiltered.add(submitEvent);
             }
         }
@@ -260,7 +259,7 @@ public class BulkSearchService {
     BulkCasesPayload filterSubmitEventsElasticSearch(List<SubmitEvent> submitEvents, String multipleReference,
                                                      boolean creationFlag, BulkDetails bulkDetails) {
         log.info("Cases found ES: " + submitEvents.size());
-        BulkCasesPayload bulkCasesPayload = new BulkCasesPayload();
+        var bulkCasesPayload = new BulkCasesPayload();
         List<String> alreadyTakenIds = new ArrayList<>();
         List<String> unprocessableState = new ArrayList<>();
         if (bulkDetails.getCaseData().getFilterCases() != null
@@ -268,9 +267,8 @@ public class BulkSearchService {
             log.info("No filtering");
         } else {
             for (SubmitEvent submitEvent : submitEvents) {
-                CaseData caseData = submitEvent.getCaseData();
-                if (caseData.getMultipleReference() != null
-                        && !caseData.getMultipleReference().trim().isEmpty()
+                var caseData = submitEvent.getCaseData();
+                if (caseData.getMultipleReference() != null && !caseData.getMultipleReference().trim().isEmpty()
                         && !bulkDetails.getCaseData().getMultipleSource().equals(ET1_ONLINE_CASE_SOURCE)) {
                     if (creationFlag) {
                         log.info("Creation");
@@ -307,7 +305,7 @@ public class BulkSearchService {
     List<MidSearchTypeItem> midSearchCasesByFieldsRequest(List<MultipleTypeItem> multipleTypeItemToSearchBy,
                                                           BulkDetails bulkDetails, boolean subMultiple) {
         try {
-            BulkData bulkData = bulkDetails.getCaseData();
+            var bulkData = bulkDetails.getCaseData();
             String claimantFilter = bulkData.getClaimantSurname();
             String respondentFilter = bulkData.getRespondentSurname();
             String claimantRepFilter = bulkData.getClaimantRep();
@@ -354,7 +352,7 @@ public class BulkSearchService {
                         && BulkHelper.containsAllJurCodes(jurCodesTypeItemsFilter,
                                 BulkHelper.getJurCodesListFromString(d.getValue().getJurCodesCollectionM()));
                 List<MultipleTypeItem> searchedList = new ArrayList<>();
-                boolean filtered = false;
+                var filtered = false;
                 if (subMultiple) {
                     searchedList = filterByField(multipleTypeItemToSearchBy, subMultipleDuplicatePredicate);
                     filtered = true;

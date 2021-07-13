@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
-import uk.gov.hmcts.ecm.common.model.ccd.SignificantItem;
+import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
@@ -37,8 +36,9 @@ public class DocumentGenerationController {
 
     private static final String LOG_MESSAGE = "received notification request for case reference : ";
     private static final String GENERATED_DOCUMENT_URL = "Please download the document from : ";
-
+    private static final String INVALID_TOKEN = "Invalid Token {}";
     private final DocumentGenerationService documentGenerationService;
+    private final DefaultValuesReaderService defaultValuesReaderService;
     private final VerifyTokenService verifyTokenService;
     private final EventValidationService eventValidationService;
 
@@ -56,12 +56,12 @@ public class DocumentGenerationController {
         log.info("MID ADDRESS LABELS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
         List<String> errors = new ArrayList<>();
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         caseData = documentGenerationService.midAddressLabels(caseData);
 
         if (caseData.getAddressLabelCollection() != null && caseData.getAddressLabelCollection().isEmpty()) {
@@ -86,11 +86,11 @@ public class DocumentGenerationController {
         log.info("MID SELECTED ADDRESS LABELS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         caseData = documentGenerationService.midSelectedAddressLabels(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
@@ -110,12 +110,12 @@ public class DocumentGenerationController {
         log.info("MID VALIDATE ADDRESS LABELS ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
         List<String> errors;
-        CaseData caseData = ccdRequest.getCaseDetails().getCaseData();
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
         errors = documentGenerationService.midValidateAddressLabels(caseData);
         log.info("Event fields validation: " + errors);
 
@@ -136,23 +136,26 @@ public class DocumentGenerationController {
         log.info("GENERATE LETTER ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+        var caseDetails = ccdRequest.getCaseDetails();
 
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails.getCaseData(),
                 caseDetails.getCaseData().getCorrespondenceType(), caseDetails.getCaseData()
                         .getCorrespondenceScotType());
 
         if (errors.isEmpty()) {
-            DocumentInfo documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
+
+            var defaultValues = getPostDefaultValues(caseDetails);
+            defaultValuesReaderService.getCaseData(caseDetails.getCaseData(), defaultValues);
+            var documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
             caseDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
 
             documentGenerationService.clearUserChoices(caseDetails);
 
-            SignificantItem significantItem = Helper.generateSignificantItem(documentInfo, errors);
+            var significantItem = Helper.generateSignificantItem(documentInfo, errors);
 
             if (errors.isEmpty()) {
                 return ResponseEntity.ok(CCDCallbackResponse.builder()
@@ -182,7 +185,7 @@ public class DocumentGenerationController {
         log.info("GENERATE LETTER CONFIRMATION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
@@ -190,5 +193,12 @@ public class DocumentGenerationController {
                 .data(ccdRequest.getCaseDetails().getCaseData())
                 .confirmation_header(GENERATED_DOCUMENT_URL + ccdRequest.getCaseDetails().getCaseData().getDocMarkUp())
                 .build());
+    }
+    private DefaultValues getPostDefaultValues(CaseDetails caseDetails) {
+        String caseTypeId = caseDetails.getCaseTypeId();
+        String managingOffice = caseDetails.getCaseData().getManagingOffice() != null
+                ? caseDetails.getCaseData().getManagingOffice() : "";
+
+        return defaultValuesReaderService.getDefaultValues(managingOffice, caseTypeId);
     }
 }

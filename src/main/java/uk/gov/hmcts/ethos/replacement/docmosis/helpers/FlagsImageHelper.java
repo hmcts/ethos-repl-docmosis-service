@@ -38,8 +38,8 @@ public class FlagsImageHelper {
     }
 
     public static void buildFlagsImageFileName(CaseData caseData) {
-        StringBuilder flagsImageFileName = new StringBuilder();
-        StringBuilder flagsImageAltText = new StringBuilder();
+        var flagsImageFileName = new StringBuilder();
+        var flagsImageAltText = new StringBuilder();
 
         flagsImageFileName.append(IMAGE_FILE_PRECEDING);
         setFlagImageFor(FLAG_WITH_OUTSTATION, flagsImageFileName, flagsImageAltText, caseData);

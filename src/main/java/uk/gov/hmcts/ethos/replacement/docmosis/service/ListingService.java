@@ -14,14 +14,12 @@ import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
-import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -31,25 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PRIVATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
 
 @Slf4j
@@ -58,19 +38,21 @@ public class ListingService {
 
     private final TornadoService tornadoService;
     private final CcdClient ccdClient;
+    private final CasesCompletedReport casesCompletedReport;
 
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
     @Autowired
-    public ListingService(TornadoService tornadoService, CcdClient ccdClient) {
+    public ListingService(TornadoService tornadoService, CcdClient ccdClient, CasesCompletedReport casesCompletedReport) {
         this.tornadoService = tornadoService;
         this.ccdClient = ccdClient;
+        this.casesCompletedReport = casesCompletedReport;
     }
 
     public ListingData listingCaseCreation(ListingDetails listingDetails) {
 
-        ListingData listingData = listingDetails.getCaseData();
+        var listingData = listingDetails.getCaseData();
 
         if (listingData.getHearingDocType() != null) {
             listingData.setDocumentName(listingData.getHearingDocType());
@@ -84,7 +66,7 @@ public class ListingService {
     }
 
     public CaseData processListingSingleCasesRequest(CaseDetails caseDetails) {
-        CaseData caseData = caseDetails.getCaseData();
+        var caseData = caseDetails.getCaseData();
         List<ListingTypeItem> listingTypeItems = new ArrayList<>();
         if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
@@ -97,12 +79,13 @@ public class ListingService {
         }
         caseData.setPrintHearingCollection(caseData.getPrintHearingDetails());
         caseData.getPrintHearingCollection().setListingCollection(listingTypeItems);
-        caseData.setPrintHearingCollection(ReportHelper.clearListingFields(caseData.getPrintHearingCollection()));
+        caseData.getPrintHearingCollection().clearReportFields();
+
         return caseData;
     }
 
     public ListingData setCourtAddressFromCaseData(CaseData caseData) {
-        ListingData listingData = caseData.getPrintHearingCollection();
+        var listingData = caseData.getPrintHearingCollection();
         listingData.setTribunalCorrespondenceAddress(caseData.getTribunalCorrespondenceAddress());
         listingData.setTribunalCorrespondenceTelephone(caseData.getTribunalCorrespondenceTelephone());
         listingData.setTribunalCorrespondenceFax(caseData.getTribunalCorrespondenceFax());
@@ -120,25 +103,30 @@ public class ListingService {
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null
                             && !submitEvent.getCaseData().getHearingCollection().isEmpty()) {
-                        for (HearingTypeItem hearingTypeItem : submitEvent.getCaseData().getHearingCollection()) {
-                            if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
-                                listingTypeItems.addAll(getListingTypeItems(hearingTypeItem,
-                                        listingDetails.getCaseData(), submitEvent.getCaseData()));
-                            }
-                        }
+                       addListingTypeItems(submitEvent,listingTypeItems,listingDetails );
                     }
                 }
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
             }
-            return ReportHelper.clearListingFields(listingDetails.getCaseData());
+
+            listingDetails.getCaseData().clearReportFields();
+            return listingDetails.getCaseData();
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
         }
     }
 
+    private void addListingTypeItems(SubmitEvent submitEvent, List<ListingTypeItem> listingTypeItems,ListingDetails listingDetails) {
+        for (HearingTypeItem hearingTypeItem : submitEvent.getCaseData().getHearingCollection()) {
+            if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
+                listingTypeItems.addAll(getListingTypeItems(hearingTypeItem,
+                        listingDetails.getCaseData(), submitEvent.getCaseData()));
+            }
+        }
+    }
     private List<SubmitEvent> getListingHearingsSearch(ListingDetails listingDetails, String authToken)
             throws IOException {
-        ListingData listingData = listingDetails.getCaseData();
+        var listingData = listingDetails.getCaseData();
         Map.Entry<String, String> entry =
                 ListingHelper.getListingVenueToSearch(listingData).entrySet().iterator().next();
         String venueToSearchMapping = entry.getKey();
@@ -164,30 +152,17 @@ public class ListingService {
         List<ListingTypeItem> listingTypeItems = new ArrayList<>();
         if (isHearingTypeValid(listingData, hearingTypeItem)) {
             int hearingDateCollectionSize = hearingTypeItem.getValue().getHearingDateCollection().size();
-            for (int i = 0; i < hearingDateCollectionSize; i++) {
+            for (var i = 0; i < hearingDateCollectionSize; i++) {
                 log.info("EthosCaseRef Listing: " + caseData.getEthosCaseReference());
                 hearingTypeItem.getValue().getHearingNumber();
                 log.info("Hearing number: " + hearingTypeItem.getValue().getHearingNumber());
-                DateListedTypeItem dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
-                boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
-                log.info("isListingVenueValid: " + isListingVenueValid);
-                if (!isListingVenueValid) {
+                var dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
+
+                if (!isListingValid(listingData, dateListedTypeItem)) {
                     continue;
                 }
-                boolean isListingDateValid = isListingDateValid(listingData, dateListedTypeItem);
-                log.info("isListingDateValid: " + isListingDateValid);
-                if (!isListingDateValid) {
-                    continue;
-                }
-                if (!showAllHearingType(listingData)) {
-                    boolean isListingStatusValid = isListingStatusValid(dateListedTypeItem);
-                    log.info("isListingStatusValid: " + isListingStatusValid);
-                    if (!isListingStatusValid) {
-                        continue;
-                    }
-                }
-                ListingTypeItem listingTypeItem = new ListingTypeItem();
-                ListingType listingType = ListingHelper.getListingTypeFromCaseData(
+                var listingTypeItem = new ListingTypeItem();
+                var listingType = ListingHelper.getListingTypeFromCaseData(
                         listingData, caseData, hearingTypeItem.getValue(), dateListedTypeItem.getValue(),
                         i, hearingDateCollectionSize);
                 listingTypeItem.setId(String.valueOf(dateListedTypeItem.getId()));
@@ -197,7 +172,11 @@ public class ListingService {
         }
         return listingTypeItems;
     }
-
+    private boolean isListingValid(ListingData listingData, DateListedTypeItem dateListedTypeItem) {
+        return (isListingVenueValid(listingData, dateListedTypeItem)
+                && isListingDateValid(listingData, dateListedTypeItem)
+                && (!showAllHearingType(listingData) && isListingStatusValid(dateListedTypeItem)));
+    }
     public ListingData generateReportData(ListingDetails listingDetails, String authToken) {
 
         try {
@@ -210,7 +189,7 @@ public class ListingService {
                 case LIVE_CASELOAD_REPORT:
                     return ReportHelper.processLiveCaseloadRequest(listingDetails, submitEvents);
                 case CASES_COMPLETED_REPORT:
-                    return ReportHelper.processCasesCompletedRequest(listingDetails, submitEvents);
+                    return casesCompletedReport.generateReportData(listingDetails, submitEvents);
                 default:
                     return listingDetails.getCaseData();
             }
@@ -222,16 +201,16 @@ public class ListingService {
 
     private List<SubmitEvent> getGenericReportSearch(ListingDetails listingDetails, String authToken)
             throws IOException {
-        ListingData listingData = listingDetails.getCaseData();
+        var listingData = listingDetails.getCaseData();
         boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
         if (!dateRange) {
-            String dateToSearch = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2).toString();
+            var dateToSearch = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2).toString();
             return ccdClient.retrieveCasesGenericReportElasticSearch(authToken, UtilHelper.getListingCaseTypeId(
                     listingDetails.getCaseTypeId()), dateToSearch, dateToSearch, listingData.getReportType());
         } else {
-            String dateToSearchFrom = LocalDate.parse(listingData.getListingDateFrom(),
+            var dateToSearchFrom = LocalDate.parse(listingData.getListingDateFrom(),
                     OLD_DATE_TIME_PATTERN2).toString();
-            String dateToSearchTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2).toString();
+            var dateToSearchTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2).toString();
             return ccdClient.retrieveCasesGenericReportElasticSearch(authToken, UtilHelper.getListingCaseTypeId(
                     listingDetails.getCaseTypeId()), dateToSearchFrom, dateToSearchTo, listingData.getReportType());
         }
@@ -274,7 +253,7 @@ public class ListingService {
     }
 
     private boolean isListingStatusValid(DateListedTypeItem dateListedTypeItem) {
-        DateListedType dateListedType = dateListedTypeItem.getValue();
+        var dateListedType = dateListedTypeItem.getValue();
 
         if (dateListedType.getHearingStatus() != null) {
             List<String> invalidHearingStatuses = Arrays.asList(HEARING_STATUS_SETTLED,
@@ -300,7 +279,7 @@ public class ListingService {
                 && listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
                 && !listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)) {
 
-            HearingType hearingType = hearingTypeItem.getValue();
+            var hearingType = hearingTypeItem.getValue();
 
             if (hearingType.getHearingType() != null) {
                 if (hearingType.getHearingType().equals(HEARING_TYPE_PERLIMINARY_HEARING)

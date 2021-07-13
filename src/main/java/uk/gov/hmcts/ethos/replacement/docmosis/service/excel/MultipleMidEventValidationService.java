@@ -1,15 +1,11 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-import uk.gov.hmcts.ecm.common.model.multiples.types.MoveCasesType;
-
-import java.util.List;
-
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
 @Slf4j
 @Service("multipleDMidEventValidationService")
@@ -26,9 +22,9 @@ public class MultipleMidEventValidationService {
 
         log.info("Validating multiple and subMultiple");
 
-        MultipleData multipleData = multipleDetails.getCaseData();
+        var multipleData = multipleDetails.getCaseData();
 
-        MoveCasesType moveCasesType = multipleData.getMoveCases();
+        var moveCasesType = multipleData.getMoveCases();
 
         String convertToSingle = moveCasesType.getConvertToSingle();
 

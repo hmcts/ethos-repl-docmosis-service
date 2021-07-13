@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 
 @Slf4j
 @Service("CaseUpdateForCaseWorkerService")
@@ -26,7 +24,7 @@ public class CaseUpdateForCaseWorkerService {
     }
 
     public SubmitEvent caseUpdateRequest(CCDRequest ccdRequest, String authToken) {
-        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+        var caseDetails = ccdRequest.getCaseDetails();
         log.info("EventId: " + ccdRequest.getEventId());
         try {
             String caseId = ccdRequest.getCaseDetails().getCaseId();
@@ -35,7 +33,7 @@ public class CaseUpdateForCaseWorkerService {
             String managingOffice = caseDetails.getCaseData().getManagingOffice() != null
                     ? caseDetails.getCaseData().getManagingOffice()
                     : "";
-            DefaultValues defaultValues = defaultValuesReaderService.getDefaultValues(
+            var defaultValues = defaultValuesReaderService.getDefaultValues(
                     managingOffice, caseDetails.getCaseTypeId());
             ccdRequest.getCaseDetails().getCaseData().setPositionType(defaultValues.getPositionType());
             log.info("Post Default values added to the case: " + defaultValues);

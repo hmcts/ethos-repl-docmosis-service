@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,12 +12,6 @@ import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.reference.ReferenceSubmitEvent;
-import uk.gov.hmcts.ecm.common.model.reference.types.ClerkType;
-import uk.gov.hmcts.ecm.common.model.reference.types.JudgeType;
-import uk.gov.hmcts.ecm.common.model.reference.types.VenueType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Service("referenceService")
@@ -33,7 +29,7 @@ public class ReferenceService {
     }
 
     public CaseData fetchHearingVenueRefData(CaseDetails caseDetails, String authToken) {
-        CaseData caseData = caseDetails.getCaseData();
+        var caseData = caseDetails.getCaseData();
         try {
             List<ReferenceSubmitEvent> referenceSubmitEvents = ccdClient.retrieveReferenceDataCases(authToken,
                     GOTHAM_REF_DATA_CASE_TYPE_ID, caseDetails.getJurisdiction());
@@ -49,7 +45,7 @@ public class ReferenceService {
     }
 
     public CaseData fetchDateListedRefData(CaseDetails caseDetails, String authToken) {
-        CaseData caseData = caseDetails.getCaseData();
+        var caseData = caseDetails.getCaseData();
         try {
             List<ReferenceSubmitEvent> referenceSubmitEvents = ccdClient.retrieveReferenceDataCases(authToken,
                     GOTHAM_REF_DATA_CASE_TYPE_ID, caseDetails.getJurisdiction());
@@ -78,8 +74,8 @@ public class ReferenceService {
         List<DynamicValueType> listItems = new ArrayList<>();
         for (ReferenceSubmitEvent referenceSubmitEvent : referenceSubmitEvents) {
             if (referenceSubmitEvent.getCaseData().getVenueType() != null) {
-                VenueType venueType = referenceSubmitEvent.getCaseData().getVenueType();
-                DynamicValueType dynamicValueType = new DynamicValueType();
+                var venueType = referenceSubmitEvent.getCaseData().getVenueType();
+                var dynamicValueType = new DynamicValueType();
                 dynamicValueType.setCode(venueType.getVenueName());
                 dynamicValueType.setLabel(venueType.getVenueName());
                 listItems.add(dynamicValueType);
@@ -92,8 +88,8 @@ public class ReferenceService {
         List<DynamicValueType> listItems = new ArrayList<>();
         for (ReferenceSubmitEvent referenceSubmitEvent : referenceSubmitEvents) {
             if (referenceSubmitEvent.getCaseData().getClerkType() != null) {
-                ClerkType clerkType = referenceSubmitEvent.getCaseData().getClerkType();
-                DynamicValueType dynamicValueType = new DynamicValueType();
+                var clerkType = referenceSubmitEvent.getCaseData().getClerkType();
+                var dynamicValueType = new DynamicValueType();
                 dynamicValueType.setCode(clerkType.getFirstName() + " " + clerkType.getLastName());
                 dynamicValueType.setLabel(clerkType.getFirstName() + " " + clerkType.getLastName());
                 listItems.add(dynamicValueType);
@@ -106,8 +102,8 @@ public class ReferenceService {
         List<DynamicValueType> listItems = new ArrayList<>();
         for (ReferenceSubmitEvent referenceSubmitEvent : referenceSubmitEvents) {
             if (referenceSubmitEvent.getCaseData().getJudgeType() != null) {
-                JudgeType judgeType = referenceSubmitEvent.getCaseData().getJudgeType();
-                DynamicValueType dynamicValueType = new DynamicValueType();
+                var judgeType = referenceSubmitEvent.getCaseData().getJudgeType();
+                var dynamicValueType = new DynamicValueType();
                 dynamicValueType.setCode(judgeType.getJudgeDisplayName());
                 dynamicValueType.setLabel(judgeType.getJudgeDisplayName());
                 listItems.add(dynamicValueType);
@@ -117,7 +113,7 @@ public class ReferenceService {
     }
 
     private DynamicFixedListType bindDynamicGenericFixedList(List<DynamicValueType> listItems) {
-        DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+        var dynamicFixedListType = new DynamicFixedListType();
         dynamicFixedListType.setValue(listItems.get(0));
         dynamicFixedListType.setListItems(listItems);
         return dynamicFixedListType;
@@ -128,7 +124,7 @@ public class ReferenceService {
             if (caseData.getHearingVenue() != null) {
                 caseData.getHearingVenue().setListItems(listItems);
             } else {
-                DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+                var dynamicFixedListType = new DynamicFixedListType();
                 dynamicFixedListType.setValue(listItems.get(0));
                 dynamicFixedListType.setListItems(listItems);
                 caseData.setHearingVenue(dynamicFixedListType);
@@ -141,7 +137,7 @@ public class ReferenceService {
             if (caseData.getHearingClerk() != null) {
                 caseData.getHearingClerk().setListItems(listItems);
             } else {
-                DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+                var dynamicFixedListType = new DynamicFixedListType();
                 dynamicFixedListType.setValue(listItems.get(0));
                 dynamicFixedListType.setListItems(listItems);
                 caseData.setHearingClerk(dynamicFixedListType);
@@ -154,7 +150,7 @@ public class ReferenceService {
             if (caseData.getHearingJudge() != null) {
                 caseData.getHearingJudge().setListItems(listItems);
             } else {
-                DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+                var dynamicFixedListType = new DynamicFixedListType();
                 dynamicFixedListType.setValue(listItems.get(0));
                 dynamicFixedListType.setListItems(listItems);
                 caseData.setHearingJudge(dynamicFixedListType);

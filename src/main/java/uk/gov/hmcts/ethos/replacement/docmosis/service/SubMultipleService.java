@@ -29,6 +29,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
 public class SubMultipleService {
 
     private final SubMultipleReferenceService subMultipleReferenceService;
+    private static final String NO_SUB_MULTIPLES_FOUND = "No sub multiples have been found";
 
     @Autowired
     public SubMultipleService(SubMultipleReferenceService subMultipleReferenceService) {
@@ -46,7 +47,7 @@ public class SubMultipleService {
     }
 
     public BulkRequestPayload createSubMultipleLogic(BulkDetails bulkDetails) {
-        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        var bulkRequestPayload = new BulkRequestPayload();
         List<String> errors = new ArrayList<>();
         if (bulkDetails.getCaseData().getMidSearchCollection() != null) {
             List<String> subMultiplesList = new ArrayList<>();
@@ -85,10 +86,10 @@ public class SubMultipleService {
     }
 
     private BulkData addSubMultipleTypeToCase(BulkData bulkData, String subMultipleRefNumber) {
-        SubMultipleType subMultipleType = new SubMultipleType();
+        var subMultipleType = new SubMultipleType();
         subMultipleType.setSubMultipleNameT(bulkData.getSubMultipleName());
         subMultipleType.setSubMultipleRefT(subMultipleRefNumber);
-        SubMultipleTypeItem subMultipleTypeItem = new SubMultipleTypeItem();
+        var subMultipleTypeItem = new SubMultipleTypeItem();
         subMultipleTypeItem.setId(subMultipleRefNumber);
         subMultipleTypeItem.setValue(subMultipleType);
         List<SubMultipleTypeItem> subMultipleTypeItems = bulkData.getSubMultipleCollection();
@@ -102,14 +103,14 @@ public class SubMultipleService {
     }
 
     public BulkRequestPayload populateSubMultipleDynamicListLogic(BulkDetails bulkDetails) {
-        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        var bulkRequestPayload = new BulkRequestPayload();
         List<String> errors = new ArrayList<>();
         if (bulkDetails.getCaseData().getSubMultipleCollection() != null) {
             List<DynamicValueType> listItems = new ArrayList<>();
             bulkDetails.setCaseData(createSubMultipleDynamicList(bulkDetails.getCaseData(),
                     getSubMultipleListItems(bulkDetails, listItems)));
         } else {
-            errors.add("No sub multiples have been found");
+            errors.add(NO_SUB_MULTIPLES_FOUND);
             bulkRequestPayload.setErrors(errors);
         }
         bulkRequestPayload.setBulkDetails(bulkDetails);
@@ -118,7 +119,7 @@ public class SubMultipleService {
 
     private List<DynamicValueType> createDynamicFixListWithDefaultValue(String defaultCode, String defaultValue) {
         List<DynamicValueType> listItems = new ArrayList<>();
-        DynamicValueType defaultDynamicValueType = new DynamicValueType();
+        var defaultDynamicValueType = new DynamicValueType();
         defaultDynamicValueType.setCode(defaultCode);
         defaultDynamicValueType.setLabel(defaultValue);
         listItems.add(defaultDynamicValueType);
@@ -126,7 +127,7 @@ public class SubMultipleService {
     }
 
     public BulkRequestPayload populateFilterDefaultedDynamicListLogic(BulkDetails bulkDetails, String defaultValue) {
-        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        var bulkRequestPayload = new BulkRequestPayload();
         List<DynamicValueType> subMultipleItems =
                 createDynamicFixListWithDefaultValue(DEFAULT_SELECT_ALL_VALUE, defaultValue);
         bulkDetails.setCaseData(createSubMultipleDynamicList(
@@ -144,7 +145,7 @@ public class SubMultipleService {
         if (bulkDetails.getCaseData().getJurCodesCollection() != null
                 && bulkDetails.getCaseData().getSearchCollection() != null) {
             for (JurCodesTypeItem jurCodesTypeItem : bulkDetails.getCaseData().getJurCodesCollection()) {
-                DynamicValueType dynamicValueType = new DynamicValueType();
+                var dynamicValueType = new DynamicValueType();
                 dynamicValueType.setCode(jurCodesTypeItem.getValue().getJuridictionCodesList());
                 dynamicValueType.setLabel(jurCodesTypeItem.getValue().getJuridictionCodesList());
                 listItems.add(dynamicValueType);
@@ -156,7 +157,7 @@ public class SubMultipleService {
     private List<DynamicValueType> getSubMultipleListItems(BulkDetails bulkDetails, List<DynamicValueType> listItems) {
         if (bulkDetails.getCaseData().getSubMultipleCollection() != null) {
             for (SubMultipleTypeItem subMultipleTypeItem : bulkDetails.getCaseData().getSubMultipleCollection()) {
-                DynamicValueType dynamicValueType = new DynamicValueType();
+                var dynamicValueType = new DynamicValueType();
                 dynamicValueType.setCode(subMultipleTypeItem.getValue().getSubMultipleRefT());
                 dynamicValueType.setLabel(subMultipleTypeItem.getValue().getSubMultipleNameT());
                 listItems.add(dynamicValueType);
@@ -169,7 +170,7 @@ public class SubMultipleService {
         if (bulkData.getJurCodesDynamicList() != null) {
             bulkData.getJurCodesDynamicList().setListItems(listItems);
         } else {
-            DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+            var dynamicFixedListType = new DynamicFixedListType();
             dynamicFixedListType.setListItems(listItems);
             bulkData.setJurCodesDynamicList(dynamicFixedListType);
         }
@@ -182,7 +183,7 @@ public class SubMultipleService {
         if (bulkData.getSubMultipleDynamicList() != null) {
             bulkData.getSubMultipleDynamicList().setListItems(listItems);
         } else {
-            DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
+            var dynamicFixedListType = new DynamicFixedListType();
             dynamicFixedListType.setListItems(listItems);
             bulkData.setSubMultipleDynamicList(dynamicFixedListType);
         }
@@ -192,7 +193,7 @@ public class SubMultipleService {
     }
 
     public BulkRequestPayload deleteSubMultipleLogic(BulkDetails bulkDetails) {
-        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        var bulkRequestPayload = new BulkRequestPayload();
         List<String> errors = new ArrayList<>();
         if (bulkDetails.getCaseData().getSubMultipleDynamicList() != null) {
             String refSelected = bulkDetails.getCaseData().getSubMultipleDynamicList().getValue().getCode();
@@ -202,7 +203,7 @@ public class SubMultipleService {
             bulkDetails.setCaseData(
                     removeSubMultipleRefFromMultiplesCollection(bulkDetails.getCaseData(), refSelected));
         } else {
-            errors.add("No sub multiples have been found");
+            errors.add(NO_SUB_MULTIPLES_FOUND);
             bulkRequestPayload.setErrors(errors);
         }
         bulkDetails.getCaseData().setSubMultipleDynamicList(null);
@@ -224,7 +225,7 @@ public class SubMultipleService {
     }
 
     public BulkRequestPayload bulkMidUpdateLogic(BulkDetails bulkDetails) {
-        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        var bulkRequestPayload = new BulkRequestPayload();
         List<String> errors = new ArrayList<>();
         if (bulkDetails.getCaseData().getSubMultipleDynamicList() != null) {
             String refSelected = bulkDetails.getCaseData().getSubMultipleDynamicList().getValue().getCode();
@@ -240,7 +241,7 @@ public class SubMultipleService {
             bulkDetails.getCaseData().setMidSearchCollection(
                     retrieveMidSearchCollectionBySubMultipleRef(bulkDetails.getCaseData(), refSelected));
         } else {
-            errors.add("No sub multiples have been found");
+            errors.add(NO_SUB_MULTIPLES_FOUND);
             bulkRequestPayload.setErrors(errors);
         }
         bulkDetails.getCaseData().setSubMultipleDynamicList(null);
@@ -252,7 +253,7 @@ public class SubMultipleService {
         List<MidSearchTypeItem> midSearchTypeItems = new ArrayList<>();
         for (MultipleTypeItem multipleTypeItem : bulkData.getMultipleCollection()) {
             if (multipleTypeItem.getValue().getSubMultipleM().equals(refSelected)) {
-                MidSearchTypeItem midSearchTypeItem = new MidSearchTypeItem();
+                var midSearchTypeItem = new MidSearchTypeItem();
                 midSearchTypeItem.setId(multipleTypeItem.getId());
                 midSearchTypeItem.setValue(multipleTypeItem.getValue().getEthosCaseReferenceM());
                 midSearchTypeItems.add(midSearchTypeItem);
@@ -262,7 +263,7 @@ public class SubMultipleService {
     }
 
     public BulkRequestPayload updateSubMultipleLogic(BulkDetails bulkDetails) {
-        BulkData bulkData = bulkDetails.getCaseData();
+        var bulkData = bulkDetails.getCaseData();
         String subMultipleRefNumber = bulkData.getSubMultipleRef();
         bulkData.setSubMultipleCollection(amendSubMultipleDetails(bulkData, subMultipleRefNumber));
         if (bulkData.getMidSearchCollection() != null) {
@@ -286,7 +287,7 @@ public class SubMultipleService {
             bulkData.setMultipleCollection(auxMultiplesList);
         }
         bulkDetails.setCaseData(clearUpFields(bulkData));
-        BulkRequestPayload bulkRequestPayload = new BulkRequestPayload();
+        var bulkRequestPayload = new BulkRequestPayload();
         bulkRequestPayload.setBulkDetails(bulkDetails);
         return bulkRequestPayload;
     }

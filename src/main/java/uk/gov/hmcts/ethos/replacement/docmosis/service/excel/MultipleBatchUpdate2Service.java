@@ -1,24 +1,18 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
-import uk.gov.hmcts.ecm.common.model.multiples.types.MoveCasesType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.TreeMap;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("multipleBatchUpdate2Service")
@@ -41,13 +35,13 @@ public class MultipleBatchUpdate2Service {
     }
 
     public void batchUpdate2Logic(String userToken, MultipleDetails multipleDetails,
-                                  List<String> errors, TreeMap<String, Object> multipleObjects) {
+                                  List<String> errors, SortedMap<String, Object> multipleObjects) {
 
-        MultipleData multipleData = multipleDetails.getCaseData();
+        var multipleData = multipleDetails.getCaseData();
 
         log.info("Batch update type = 2");
 
-        String convertToSingle = multipleData.getMoveCases().getConvertToSingle();
+        var convertToSingle = multipleData.getMoveCases().getConvertToSingle();
 
         log.info("Convert to singles " + convertToSingle);
 
@@ -68,7 +62,7 @@ public class MultipleBatchUpdate2Service {
 
         } else {
 
-            MoveCasesType moveCasesType = multipleData.getMoveCases();
+            var moveCasesType = multipleData.getMoveCases();
             String updatedMultipleRef = moveCasesType.getUpdatedMultipleRef();
             String updatedSubMultipleRef = moveCasesType.getUpdatedSubMultipleRef();
             String currentMultipleRef = multipleData.getMultipleReference();
@@ -158,7 +152,7 @@ public class MultipleBatchUpdate2Service {
                                            MultipleDetails multipleDetails,
                                            List<String> errors,
                                            List<String> multipleObjectsFiltered,
-                                           TreeMap<String, Object> multipleObjects,
+                                           SortedMap<String, Object> multipleObjects,
                                            String updatedMultipleRef,
                                            String updatedSubMultipleRef) {
 
@@ -167,7 +161,7 @@ public class MultipleBatchUpdate2Service {
         SubmitMultipleEvent updatedMultiple = getUpdatedMultiple(userToken,
                 multipleDetails.getCaseTypeId(), updatedMultipleRef);
 
-        MultipleData updatedMultipleData = updatedMultiple.getCaseData();
+        var updatedMultipleData = updatedMultiple.getCaseData();
 
         String updatedCaseTypeId = multipleDetails.getCaseTypeId();
 
@@ -198,13 +192,9 @@ public class MultipleBatchUpdate2Service {
 
     private String checkIfNewMultipleWasEmpty(String updatedLeadCase, List<String> multipleObjectsFiltered) {
 
-        if (updatedLeadCase.isEmpty()) {
-
-            if (!multipleObjectsFiltered.isEmpty()) {
+        if (updatedLeadCase.isEmpty() && !multipleObjectsFiltered.isEmpty()) {
 
                 return multipleObjectsFiltered.get(0);
-
-            }
 
         }
 
@@ -216,7 +206,7 @@ public class MultipleBatchUpdate2Service {
                                                List<String> errors, List<String> multipleObjectsFiltered,
                                                String updatedSubMultipleRef) {
 
-        TreeMap<String, Object> multipleObjects =
+        SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleData),
@@ -232,13 +222,13 @@ public class MultipleBatchUpdate2Service {
     }
 
     private List<MultipleObject> addSubMultipleRefToMultipleObjects(List<String> multipleObjectsFiltered,
-                                                                    TreeMap<String, Object> multipleObjects,
+                                                                    SortedMap<String, Object> multipleObjects,
                                                                     String updatedSubMultipleRef) {
 
         List<MultipleObject> newMultipleObjectsUpdated = new ArrayList<>();
 
         multipleObjects.forEach((key, value) -> {
-            MultipleObject multipleObject = (MultipleObject) value;
+            var multipleObject = (MultipleObject) value;
             if (multipleObjectsFiltered.contains(key)) {
                 multipleObject.setSubMultiple(updatedSubMultipleRef);
             }
@@ -252,7 +242,7 @@ public class MultipleBatchUpdate2Service {
     private void readCurrentExcelAndRemoveCasesInMultiple(String userToken, MultipleData multipleData,
                                                           List<String> errors, List<String> multipleObjectsFiltered) {
 
-        TreeMap<String, Object> multipleObjects =
+        SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleData),
@@ -268,12 +258,12 @@ public class MultipleBatchUpdate2Service {
     }
 
     private List<MultipleObject> removeCasesInMultiple(List<String> multipleObjectsFiltered,
-                                                       TreeMap<String, Object> multipleObjects) {
+                                                       SortedMap<String, Object> multipleObjects) {
 
         List<MultipleObject> newMultipleObjectsUpdated = new ArrayList<>();
 
         multipleObjects.forEach((key, value) -> {
-            MultipleObject multipleObject = (MultipleObject) value;
+            var multipleObject = (MultipleObject) value;
             if (!multipleObjectsFiltered.contains(key)) {
                 newMultipleObjectsUpdated.add(multipleObject);
             }

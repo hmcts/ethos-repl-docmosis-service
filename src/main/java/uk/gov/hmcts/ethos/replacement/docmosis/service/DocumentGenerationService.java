@@ -1,48 +1,24 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
-import uk.gov.hmcts.ecm.common.model.bulk.BulkData;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
-import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.*;
 import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsAttributesType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsSelectionType;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_AVAILABLE_ADDRESSES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_ADDRESS;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_AND_CLAIMANT_REP_ADDRESSES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_AND_RESPONDENTS_ADDRESSES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_AND_RESPONDENTS_REPS_ADDRESSES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_REP_ADDRESS;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_REP_AND_RESPONDENTS_ADDRESSES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_REP_AND_RESPONDENTS_REPS_ADDRESSES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CUSTOMISE_SELECTED_ADDRESSES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_ADDRESSES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_AND_RESPONDENTS_REPS_ADDRESSES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_REPS_ADDRESSES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_BULK_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("documentGenerationService")
@@ -133,7 +109,7 @@ public class DocumentGenerationService {
     }
 
     public void clearUserChoices(CaseDetails caseDetails) {
-        CaseData caseData = caseDetails.getCaseData();
+        var caseData = caseDetails.getCaseData();
 
         if (caseDetails.getCaseTypeId().equals(SCOTLAND_CASE_TYPE_ID)) {
             caseData.setCorrespondenceScotType(null);
@@ -147,7 +123,7 @@ public class DocumentGenerationService {
     }
 
     public void clearUserChoicesForMultiples(BulkDetails bulkDetails) {
-        BulkData bulkData = bulkDetails.getCaseData();
+        var bulkData = bulkDetails.getCaseData();
 
         if (bulkDetails.getCaseTypeId().equals(SCOTLAND_BULK_CASE_TYPE_ID)) {
             bulkData.setCorrespondenceScotType(null);
@@ -157,7 +133,7 @@ public class DocumentGenerationService {
     }
 
     public DocumentInfo processDocumentRequest(CCDRequest ccdRequest, String authToken) {
-        CaseDetails caseDetails = ccdRequest.getCaseDetails();
+        var caseDetails = ccdRequest.getCaseDetails();
         try {
             return tornadoService.documentGeneration(authToken, caseDetails.getCaseData(), caseDetails.getCaseTypeId(),
                     caseDetails.getCaseData().getCorrespondenceType(),
@@ -168,10 +144,10 @@ public class DocumentGenerationService {
     }
 
     public BulkDocumentInfo processBulkDocumentRequest(BulkRequest bulkRequest, String authToken) {
-        BulkDocumentInfo bulkDocumentInfo = new BulkDocumentInfo();
-        BulkDetails bulkDetails = bulkRequest.getCaseDetails();
+        var bulkDocumentInfo = new BulkDocumentInfo();
+        var bulkDetails = bulkRequest.getCaseDetails();
         List<String> errors = new ArrayList<>();
-        String markUps = "";
+        var markUps = "";
         try {
             List<DocumentInfo> documentInfoList = new ArrayList<>();
             if (bulkDetails.getCaseData().getSearchCollection() != null
@@ -206,10 +182,10 @@ public class DocumentGenerationService {
     }
 
     public BulkDocumentInfo processBulkScheduleRequest(BulkRequest bulkRequest, String authToken) {
-        BulkDocumentInfo bulkDocumentInfo = new BulkDocumentInfo();
-        BulkData bulkData = bulkRequest.getCaseDetails().getCaseData();
+        var bulkDocumentInfo = new BulkDocumentInfo();
+        var bulkData = bulkRequest.getCaseDetails().getCaseData();
         List<String> errors = new ArrayList<>();
-        DocumentInfo documentInfo = new DocumentInfo();
+        var documentInfo = new DocumentInfo();
         try {
             if (bulkData.getSearchCollection() != null && !bulkData.getSearchCollection().isEmpty()) {
                 documentInfo = tornadoService.scheduleGeneration(authToken, bulkData);
@@ -228,7 +204,7 @@ public class DocumentGenerationService {
     private List<AddressLabelTypeItem> customiseSelectedAddresses(CaseData caseData) {
 
         if (caseData.getAddressLabelsSelectionType() != null) {
-            AddressLabelsSelectionType addressLabelsSelection = caseData.getAddressLabelsSelectionType();
+            var addressLabelsSelection = caseData.getAddressLabelsSelectionType();
             if (addressLabelsSelection.getClaimantAddressLabel() != null
                     && addressLabelsSelection.getClaimantRepAddressLabel() != null
                     && addressLabelsSelection.getRespondentsAddressLabel() != null
@@ -242,7 +218,7 @@ public class DocumentGenerationService {
 
                 addressLabelTypeItems.add(LabelsHelper.getClaimantAddressLabelCaseData(caseData, printClaimantLabel));
 
-                AddressLabelTypeItem addressLabelTypeItem =
+                var addressLabelTypeItem =
                         LabelsHelper.getClaimantRepAddressLabelCaseData(caseData, printClaimantRepLabel);
                 if (addressLabelTypeItem != null) {
                     addressLabelTypeItems.add(addressLabelTypeItem);
@@ -283,7 +259,7 @@ public class DocumentGenerationService {
 
         addressLabelTypeItems.add(LabelsHelper.getClaimantAddressLabelCaseData(caseData, YES));
 
-        AddressLabelTypeItem addressLabelTypeItem = LabelsHelper.getClaimantRepAddressLabelCaseData(caseData, YES);
+        var addressLabelTypeItem = LabelsHelper.getClaimantRepAddressLabelCaseData(caseData, YES);
         if (addressLabelTypeItem != null) {
             addressLabelTypeItems.add(addressLabelTypeItem);
         }
@@ -317,7 +293,7 @@ public class DocumentGenerationService {
 
         List<AddressLabelTypeItem> addressLabelTypeItems = new ArrayList<>();
 
-        AddressLabelTypeItem addressLabelTypeItem = LabelsHelper.getClaimantRepAddressLabelCaseData(caseData, YES);
+        var addressLabelTypeItem = LabelsHelper.getClaimantRepAddressLabelCaseData(caseData, YES);
         if (addressLabelTypeItem != null) {
             addressLabelTypeItems.add(addressLabelTypeItem);
         }
@@ -332,7 +308,7 @@ public class DocumentGenerationService {
 
         addressLabelTypeItems.add(LabelsHelper.getClaimantAddressLabelCaseData(caseData, YES));
 
-        AddressLabelTypeItem addressLabelTypeItem = LabelsHelper.getClaimantRepAddressLabelCaseData(caseData, YES);
+        var addressLabelTypeItem = LabelsHelper.getClaimantRepAddressLabelCaseData(caseData, YES);
         if (addressLabelTypeItem != null) {
             addressLabelTypeItems.add(addressLabelTypeItem);
         }
@@ -408,7 +384,7 @@ public class DocumentGenerationService {
 
         List<AddressLabelTypeItem> addressLabelTypeItems = new ArrayList<>();
 
-        AddressLabelTypeItem addressLabelTypeItem = LabelsHelper.getClaimantRepAddressLabelCaseData(caseData, YES);
+        var addressLabelTypeItem = LabelsHelper.getClaimantRepAddressLabelCaseData(caseData, YES);
         if (addressLabelTypeItem != null) {
             addressLabelTypeItems.add(addressLabelTypeItem);
         }
@@ -443,7 +419,7 @@ public class DocumentGenerationService {
 
         List<AddressLabelTypeItem> addressLabelTypeItems = new ArrayList<>();
 
-        AddressLabelTypeItem addressLabelTypeItem = LabelsHelper.getClaimantRepAddressLabelCaseData(caseData, YES);
+        var addressLabelTypeItem = LabelsHelper.getClaimantRepAddressLabelCaseData(caseData, YES);
         if (addressLabelTypeItem != null) {
             addressLabelTypeItems.add(addressLabelTypeItem);
         }

@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
-import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
@@ -38,6 +35,7 @@ public class MultipleDocGenerationController {
 
     private static final String LOG_MESSAGE = "received notification request for multiple reference : ";
     private static final String GENERATED_DOCUMENT_URL = "Please download the document from : ";
+    private static final String INVALID_TOKEN = "Invalid Token {}";
 
     private final MultipleScheduleService multipleScheduleService;
     private final MultipleLetterService multipleLetterService;
@@ -58,14 +56,14 @@ public class MultipleDocGenerationController {
         log.info("PRINT SCHEDULE ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
         List<String> errors = new ArrayList<>();
-        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
+        var multipleDetails = multipleRequest.getCaseDetails();
 
-        DocumentInfo documentInfo = multipleScheduleService.bulkScheduleLogic(userToken, multipleDetails, errors);
+        var documentInfo = multipleScheduleService.bulkScheduleLogic(userToken, multipleDetails, errors);
 
         return getMultipleCallbackRespEntityDocInfo(errors, multipleDetails, documentInfo);
     }
@@ -84,14 +82,14 @@ public class MultipleDocGenerationController {
         log.info("PRINT LETTER ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
         List<String> errors = new ArrayList<>();
-        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
+        var multipleDetails = multipleRequest.getCaseDetails();
 
-        DocumentInfo documentInfo = multipleLetterService.bulkLetterLogic(userToken, multipleDetails,
+        var documentInfo = multipleLetterService.bulkLetterLogic(userToken, multipleDetails,
                 errors, false);
 
         return getMultipleCallbackRespEntityDocInfo(errors, multipleDetails, documentInfo);
@@ -111,11 +109,11 @@ public class MultipleDocGenerationController {
         log.info("PRINT DOCUMENT CONFIRMATION ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        MultipleData multipleData = multipleRequest.getCaseDetails().getCaseData();
+        var multipleData = multipleRequest.getCaseDetails().getCaseData();
 
         return ResponseEntity.ok(MultipleCallbackResponse.builder()
                 .data(multipleData)
@@ -138,12 +136,12 @@ public class MultipleDocGenerationController {
                 + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
         List<String> errors = new ArrayList<>();
-        MultipleDetails multipleDetails = multipleRequest.getCaseDetails();
+        var multipleDetails = multipleRequest.getCaseDetails();
 
         multipleDocGenerationService.midSelectedAddressLabelsMultiple(userToken, multipleDetails, errors);
         LabelsHelper.validateNumberOfSelectedLabels(multipleDetails.getCaseData(), errors);
@@ -166,7 +164,7 @@ public class MultipleDocGenerationController {
                 + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error("Invalid Token {}", userToken);
+            log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 

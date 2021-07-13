@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,10 +9,8 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 
 import java.util.List;
-import java.util.TreeMap;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 @Service("multipleBatchUpdate3Service")
@@ -28,9 +27,9 @@ public class MultipleBatchUpdate3Service {
     }
 
     public void batchUpdate3Logic(String userToken, MultipleDetails multipleDetails,
-                                  List<String> errors, TreeMap<String, Object> multipleObjects) {
+                                  List<String> errors, SortedMap<String, Object> multipleObjects) {
 
-        MultipleData multipleData = multipleDetails.getCaseData();
+        var multipleData = multipleDetails.getCaseData();
 
         log.info("Batch update type = 3");
 
@@ -56,17 +55,15 @@ public class MultipleBatchUpdate3Service {
 
             multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
                     multipleObjects, caseSearched.getCaseData());
-
-        } else {
+        }
+        else {
 
             log.info("No changes then move to open state");
 
             multipleData.setState(OPEN_STATE);
-
         }
 
     }
-
     private boolean checkAnyChange(MultipleData multipleData) {
 
         return (
@@ -79,7 +76,9 @@ public class MultipleBatchUpdate3Service {
                         || (multipleData.getBatchUpdateJudgment() != null
                         && !multipleData.getBatchUpdateJudgment().getValue().getCode().equals(SELECT_NONE_VALUE))
                         || (multipleData.getBatchUpdateRespondentRep() != null
-                        && !multipleData.getBatchUpdateRespondentRep().getValue().getCode().equals(SELECT_NONE_VALUE)));
+                        && !multipleData.getBatchUpdateRespondentRep().getValue().getCode().equals(SELECT_NONE_VALUE)
+                )
+        );
     }
 
 }
