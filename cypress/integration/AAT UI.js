@@ -77,7 +77,7 @@ function caseDetails() {
 }
 
 describe('Login into AAT, create a case and accept it', () => {
-    it('should create a case', function () {
+    it('should create a case in Leeds', function () {
         cy.aatLogin()
         createCase('Leeds - Singles')
         cy.acceptCase()
