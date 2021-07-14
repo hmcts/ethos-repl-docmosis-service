@@ -56,10 +56,12 @@ public class MultipleBatchUpdate3Service {
             }
             log.info("Sending updates to single cases with caseSearched");
 
+
             if (YES.equals(multipleData.getBatchRemoveRespondentRep())) {
                 caseSearched.getCaseData().setRepresentativeClaimantType(null);
                 caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
             }
+
 
             multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
                     multipleObjects, caseSearched.getCaseData());
@@ -85,7 +87,7 @@ public class MultipleBatchUpdate3Service {
                         && !multipleData.getBatchUpdateJudgment().getValue().getCode().equals(SELECT_NONE_VALUE))
                         || (multipleData.getBatchUpdateRespondentRep() != null
                         && !multipleData.getBatchUpdateRespondentRep().getValue().getCode().equals(SELECT_NONE_VALUE)
-                        )
+                )
         );
     }
 
