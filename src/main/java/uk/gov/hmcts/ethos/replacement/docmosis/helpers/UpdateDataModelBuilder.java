@@ -30,6 +30,10 @@ public class UpdateDataModelBuilder {
                 .positionType(multipleData.getPositionType())
                 .receiptDate(multipleData.getReceiptDate())
                 .hearingStage(multipleData.getHearingStage())
+
+                .isRespondentRepRemovalUpdate(multipleData.getBatchRemoveRespondentRep())
+                .isClaimantRepRemovalUpdate(multipleData.getBatchRemoveClaimantRep())
+
                 .representativeClaimantType(getRepresentativeClaimantType(multipleData, caseData))
                 .jurCodesType(getJurCodesType(multipleData, caseData))
                 .respondentSumType(getRespondentSumType(multipleData, caseData))
