@@ -12,10 +12,10 @@
       "tribunalCorrespondenceFax" : "07577126570",
       "tribunalCorrespondenceDX" : "123456",
       "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
-      "listingDate": "2020-01-20",
-      "listingDateFrom": "2020-01-11",
+      "listingDate": "2021-10-20",
+      "listingDateFrom": "2020-11-12",
       "hearingDateType": "Range",
-      "listingDateTo":  "2020-01-20",
+      "listingDateTo":  "2020-12-13",
       "listingCollection": [
         {
           "value": {
