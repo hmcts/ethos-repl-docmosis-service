@@ -305,12 +305,12 @@ public class EventValidationService {
         return errors;
     }
 
-    public List<String> validateListingDateRange(ListingData listingData) {
-        List<String> errors = new ArrayList<>();
+    public List<String> validateListingDateRange(String listingFrom,  String listingTo){
 
-        if (listingData.getListingDateFrom() != null && listingData.getListingDateTo() != null) {
-            var startDate = LocalDateTime.parse(listingData.getListingDateFrom());
-            var endDate = LocalDateTime.parse(listingData.getListingDateTo());
+        List<String> errors = new ArrayList<>();
+        if (listingFrom != null && listingTo != null) {
+            var startDate = LocalDate.parse(listingFrom);
+            var endDate = LocalDate.parse(listingTo);
             var numberOfDays = ChronoUnit.DAYS.between(startDate, endDate);
             if(numberOfDays > 31)
             {

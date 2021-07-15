@@ -439,10 +439,13 @@ public class ExcelActionsController {
                 return ResponseEntity.status(FORBIDDEN.value()).build();
             }
 
-        var listingDetails = listingRequest.getCaseDetails();
-        List<String> errors = eventValidationService.validateListingDateRange(listingDetails.getCaseData());
-        log.info("LISTING DATE RANGE VALIDATION - erro count ---> " + errors.size());
-        return getListingCallbackRespEntity(errors, listingDetails.getCaseData());
+            var caseData = listingRequest.getCaseDetails().getCaseData();
+            var startDate = caseData.getListingDateFrom() != null ? caseData.getListingDateFrom() : null;
+            var endDate = caseData.getListingDateTo() != null ? caseData.getListingDateTo() : null;
+
+        List<String> errors = eventValidationService.validateListingDateRange(startDate, endDate);
+
+        return getListingCallbackRespEntity(errors, caseData);
     }
 
 

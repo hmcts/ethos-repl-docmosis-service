@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
@@ -888,7 +889,7 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
-    public void listingsDateRangeMidEventValidationValidRange() throws Exception {
+    public void listingsDateRangeMidEventValidationOk() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(LISTINGS_DATE_RANGE_MID_EVENT_VALIDATION_URL)
                 .content(requestContent.toString())
@@ -900,4 +901,25 @@ public class ExcelActionsControllerTest {
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
+    @Test
+    public void listingsDateRangeMidEventValidationForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(LISTINGS_DATE_RANGE_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void listingsDateRangeMidEventValidationError500() throws Exception {
+        doThrow(new InternalException(ERROR_MESSAGE)).when(eventValidationService).validateListingDateRange(
+                isA(String.class), isA(String.class));
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(LISTINGS_DATE_RANGE_MID_EVENT_VALIDATION_URL)
+                .content(listingsValidationRequestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
 }
