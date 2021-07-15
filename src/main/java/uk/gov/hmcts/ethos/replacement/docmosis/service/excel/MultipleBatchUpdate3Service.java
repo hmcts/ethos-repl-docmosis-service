@@ -51,6 +51,8 @@ public class MultipleBatchUpdate3Service {
 
             multipleObjects.remove(caseSearched.getCaseData().getEthosCaseReference());
             if (YES.equals(multipleData.getBatchRemoveClaimantRep())) {
+                log.info("Claimant Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
+                        + "of multiple: " + multipleData.getMultipleReference());
                 caseSearched.getCaseData().setRepresentativeClaimantType(null);
                 caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
             }
