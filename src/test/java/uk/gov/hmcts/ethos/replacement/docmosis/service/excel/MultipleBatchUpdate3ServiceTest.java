@@ -53,7 +53,6 @@ public class MultipleBatchUpdate3ServiceTest {
         multipleDetails.getCaseData().setBatchUpdateJudgment(MultipleUtil.generateDynamicList("JD"));
         multipleDetails.getCaseData().setBatchUpdateRespondentRep(MultipleUtil
                 .generateDynamicList("Respondent Rep"));
-        multipleDetails.getCaseData().setBatchRemoveRespondentRep(NO);
 
         multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
 

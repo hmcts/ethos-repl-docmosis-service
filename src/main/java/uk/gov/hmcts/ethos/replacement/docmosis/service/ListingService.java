@@ -19,6 +19,7 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -28,25 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PRIVATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
 
 @Slf4j
@@ -55,14 +38,16 @@ public class ListingService {
 
     private final TornadoService tornadoService;
     private final CcdClient ccdClient;
+    private final CasesCompletedReport casesCompletedReport;
 
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
     @Autowired
-    public ListingService(TornadoService tornadoService, CcdClient ccdClient) {
+    public ListingService(TornadoService tornadoService, CcdClient ccdClient, CasesCompletedReport casesCompletedReport) {
         this.tornadoService = tornadoService;
         this.ccdClient = ccdClient;
+        this.casesCompletedReport = casesCompletedReport;
     }
 
     public ListingData listingCaseCreation(ListingDetails listingDetails) {
@@ -94,7 +79,8 @@ public class ListingService {
         }
         caseData.setPrintHearingCollection(caseData.getPrintHearingDetails());
         caseData.getPrintHearingCollection().setListingCollection(listingTypeItems);
-        caseData.setPrintHearingCollection(ReportHelper.clearListingFields(caseData.getPrintHearingCollection()));
+        caseData.getPrintHearingCollection().clearReportFields();
+
         return caseData;
     }
 
@@ -122,7 +108,9 @@ public class ListingService {
                 }
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
             }
-            return ReportHelper.clearListingFields(listingDetails.getCaseData());
+
+            listingDetails.getCaseData().clearReportFields();
+            return listingDetails.getCaseData();
         } catch (Exception ex) {
             throw new CaseCreationException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
         }
@@ -201,7 +189,7 @@ public class ListingService {
                 case LIVE_CASELOAD_REPORT:
                     return ReportHelper.processLiveCaseloadRequest(listingDetails, submitEvents);
                 case CASES_COMPLETED_REPORT:
-                    return ReportHelper.processCasesCompletedRequest(listingDetails, submitEvents);
+                    return casesCompletedReport.generateReportData(listingDetails, submitEvents);
                 default:
                     return listingDetails.getCaseData();
             }

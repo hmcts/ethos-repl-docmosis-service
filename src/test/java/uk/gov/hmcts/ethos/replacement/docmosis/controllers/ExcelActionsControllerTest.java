@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
@@ -62,6 +63,8 @@ public class ExcelActionsControllerTest {
     private static final String RESET_MULTIPLE_STATE_URL = "/resetMultipleState";
     private static final String DYNAMIC_LIST_OFFICES_MULTIPLE_URL = "/dynamicListOfficesMultiple";
     private static final String MULTIPLE_TRANSFER_URL = "/multipleTransfer";
+    private static final String LISTINGS_DATE_RANGE_MID_EVENT_VALIDATION_URL = "/listingsDateRangeMidEventValidation";
+
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -113,11 +116,16 @@ public class ExcelActionsControllerTest {
 
     private MockMvc mvc;
     private JsonNode requestContent;
+    private JsonNode listingsValidationRequestContent;
 
     private void doRequestSetUp() throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
         requestContent = objectMapper.readTree(new File(getClass()
                 .getResource("/exampleMultiplesV1.json").toURI()));
+
+        ObjectMapper dateValidationObjectMapper = new ObjectMapper();
+        listingsValidationRequestContent = dateValidationObjectMapper.readTree(new File(getClass()
+                .getResource("/exampleListingV3.json").toURI()));
     }
 
     @Before
@@ -880,4 +888,38 @@ public class ExcelActionsControllerTest {
                 .andExpect(status().isForbidden());
     }
 
+    @Test
+    public void listingsDateRangeMidEventValidationOk() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(LISTINGS_DATE_RANGE_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void listingsDateRangeMidEventValidationForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(LISTINGS_DATE_RANGE_MID_EVENT_VALIDATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void listingsDateRangeMidEventValidationError500() throws Exception {
+        doThrow(new InternalException(ERROR_MESSAGE)).when(eventValidationService).validateListingDateRange(
+                isA(String.class), isA(String.class));
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(LISTINGS_DATE_RANGE_MID_EVENT_VALIDATION_URL)
+                .content(listingsValidationRequestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
 }
