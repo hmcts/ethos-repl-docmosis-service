@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
@@ -71,6 +73,43 @@ public class MultipleBatchUpdate3ServiceTest {
 
         assertEquals(2, multipleObjectsFlags.size());
 
+        verify(multipleHelperService, times(1))
+                .sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, new ArrayList<>(),
+                        multipleObjectsFlags, submitEvents.get(0).getCaseData());
+        verifyNoMoreInteractions(multipleHelperService);
+
+    }
+
+    @Test
+    public void batchUpdate3LogicClaimantRepRemoval() {
+
+        multipleDetails.getCaseData().setBatchUpdateClaimantRep(MultipleUtil.generateDynamicList(SELECT_NONE_VALUE));
+        multipleDetails.getCaseData().setBatchUpdateJurisdiction(MultipleUtil.generateDynamicList("AA"));
+        multipleDetails.getCaseData().setBatchUpdateRespondent(MultipleUtil.generateDynamicList("Andrew Smith"));
+        multipleDetails.getCaseData().setBatchUpdateJudgment(MultipleUtil.generateDynamicList("JD"));
+        multipleDetails.getCaseData().setBatchUpdateRespondentRep(MultipleUtil
+                .generateDynamicList("Respondent Rep"));
+        multipleDetails.getCaseData().setBatchRemoveClaimantRep(YES);
+        multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
+        RepresentedTypeC representedTypeC = new RepresentedTypeC();
+        representedTypeC.setNameOfRepresentative("ABC");
+        representedTypeC.setNameOfOrganisation("FDS");
+        submitEvents.get(0).getCaseData().setRepresentativeClaimantType(representedTypeC);
+        assertEquals(3, multipleObjectsFlags.size());
+
+        when(singleCasesReadingService.retrieveSingleCase(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getCaseData().getBatchUpdateCase(),
+                multipleDetails.getCaseData().getMultipleSource()))
+                .thenReturn(submitEvents.get(0));
+
+        multipleBatchUpdate3Service.batchUpdate3Logic(userToken,
+                multipleDetails,
+                new ArrayList<>(),
+                multipleObjectsFlags);
+
+        assertEquals(2, multipleObjectsFlags.size());
+        assertNull(submitEvents.get(0).getCaseData().getRepresentativeClaimantType());
         verify(multipleHelperService, times(1))
                 .sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, new ArrayList<>(),
                         multipleObjectsFlags, submitEvents.get(0).getCaseData());
