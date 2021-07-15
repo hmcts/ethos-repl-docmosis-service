@@ -440,10 +440,11 @@ public class ExcelActionsController {
             }
 
             var caseData = listingRequest.getCaseDetails().getCaseData();
-            var startDate = caseData.getListingDateFrom() != null ? caseData.getListingDateFrom() : null;
-            var endDate = caseData.getListingDateTo() != null ? caseData.getListingDateTo() : null;
 
-        List<String> errors = eventValidationService.validateListingDateRange(startDate, endDate);
+        List<String> errors = eventValidationService.validateListingDateRange(
+                caseData.getListingDateFrom(),
+                caseData.getListingDateTo()
+        );
 
         return getListingCallbackRespEntity(errors, caseData);
     }
