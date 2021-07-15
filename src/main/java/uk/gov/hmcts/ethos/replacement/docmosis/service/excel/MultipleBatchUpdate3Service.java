@@ -1,16 +1,17 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.util.List;
 import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
-
-import java.util.List;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 @Service("multipleBatchUpdate3Service")
@@ -18,12 +19,14 @@ public class MultipleBatchUpdate3Service {
 
     private final MultipleHelperService multipleHelperService;
     private final SingleCasesReadingService singleCasesReadingService;
+    private final CcdClient ccdClient;
 
     @Autowired
     public MultipleBatchUpdate3Service(MultipleHelperService multipleHelperService,
-                                       SingleCasesReadingService singleCasesReadingService) {
+                                       SingleCasesReadingService singleCasesReadingService, CcdClient ccdClient) {
         this.multipleHelperService = multipleHelperService;
         this.singleCasesReadingService = singleCasesReadingService;
+        this.ccdClient = ccdClient;
     }
 
     public void batchUpdate3Logic(String userToken, MultipleDetails multipleDetails,
@@ -51,10 +54,8 @@ public class MultipleBatchUpdate3Service {
 
             multipleObjects.remove(caseSearched.getCaseData().getEthosCaseReference());
             if (YES.equals(multipleData.getBatchRemoveClaimantRep())) {
-                log.info("Claimant Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
-                        + "of multiple: " + multipleData.getMultipleReference());
-                caseSearched.getCaseData().setRepresentativeClaimantType(null);
-                caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
+
+                removeClaimantRep(userToken, caseSearched, multipleData, multipleDetails);
             }
             log.info("Sending updates to single cases with caseSearched");
 
@@ -71,6 +72,22 @@ public class MultipleBatchUpdate3Service {
         }
 
     }
+    private void removeClaimantRep(String userToken, SubmitEvent caseSearched, MultipleData multipleData, MultipleDetails multipleDetails) {
+        try {
+            log.info("Claimant Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
+                    + " of multiple: " + multipleData.getMultipleReference());
+            caseSearched.getCaseData().setRepresentativeClaimantType(null);
+            caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
+            CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, multipleDetails.getCaseTypeId(),
+                    multipleDetails.getJurisdiction(), String.valueOf(caseSearched.getCaseId()));
+            ccdClient.submitEventForCase(userToken, caseSearched.getCaseData(), multipleDetails.getCaseTypeId(),
+                    multipleDetails.getJurisdiction(), returnedRequest,String.valueOf(caseSearched.getCaseId()));
+        }
+        catch (Exception e) {
+            throw new CaseCreationException("Error while removing claimant representative: " + caseSearched.getCaseId() + e.toString());
+        }
+    }
+
     private boolean checkAnyChange(MultipleData multipleData) {
 
         return (
