@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import java.io.IOException;
 import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,6 +8,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
@@ -28,6 +31,8 @@ public class MultipleBatchUpdate3ServiceTest {
     private SingleCasesReadingService singleCasesReadingService;
     @Mock
     private MultipleHelperService multipleHelperService;
+    @Mock
+    private CcdClient ccdClient;
 
     @InjectMocks
     private MultipleBatchUpdate3Service multipleBatchUpdate3Service;
@@ -81,7 +86,7 @@ public class MultipleBatchUpdate3ServiceTest {
     }
 
     @Test
-    public void batchUpdate3LogicClaimantRepRemoval() {
+    public void batchUpdate3LogicClaimantRepRemoval() throws IOException {
 
         multipleDetails.getCaseData().setBatchUpdateClaimantRep(MultipleUtil.generateDynamicList(SELECT_NONE_VALUE));
         multipleDetails.getCaseData().setBatchUpdateJurisdiction(MultipleUtil.generateDynamicList("AA"));
@@ -102,7 +107,9 @@ public class MultipleBatchUpdate3ServiceTest {
                 multipleDetails.getCaseData().getBatchUpdateCase(),
                 multipleDetails.getCaseData().getMultipleSource()))
                 .thenReturn(submitEvents.get(0));
-
+        CCDRequest returnedRequest = new CCDRequest();
+        when(ccdClient.startEventForCase(anyString(), anyString(), anyString(), anyString()))
+                .thenReturn(returnedRequest);
         multipleBatchUpdate3Service.batchUpdate3Logic(userToken,
                 multipleDetails,
                 new ArrayList<>(),
