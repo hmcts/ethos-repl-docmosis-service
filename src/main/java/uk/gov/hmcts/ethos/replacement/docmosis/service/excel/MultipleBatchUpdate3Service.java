@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
@@ -76,6 +77,8 @@ public class MultipleBatchUpdate3Service {
         try {
             log.info("Claimant Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
                     + " of multiple: " + multipleData.getMultipleReference());
+            var representedTypeC = new RepresentedTypeC();
+            caseSearched.getCaseData().setRepresentativeClaimantType(representedTypeC);
             caseSearched.getCaseData().setRepresentativeClaimantType(null);
             caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
             CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, multipleDetails.getCaseTypeId(),
