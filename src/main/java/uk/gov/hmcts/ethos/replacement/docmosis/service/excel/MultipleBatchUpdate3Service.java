@@ -76,7 +76,6 @@ public class MultipleBatchUpdate3Service {
         try {
             log.info("Claimant Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
                     + " of multiple: " + multipleData.getMultipleReference());
-            caseSearched.getCaseData().getRepresentativeClaimantType().setNameOfRepresentative("");
             caseSearched.getCaseData().setRepresentativeClaimantType(null);
             caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
             CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, multipleDetails.getCaseTypeId(),
