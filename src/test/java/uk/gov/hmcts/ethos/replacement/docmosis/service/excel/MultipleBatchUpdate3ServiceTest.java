@@ -1,28 +1,24 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import java.io.IOException;
-import static org.junit.Assert.assertNull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleBatchUpdate3ServiceTest {
@@ -116,7 +112,7 @@ public class MultipleBatchUpdate3ServiceTest {
                 multipleObjectsFlags);
 
         assertEquals(2, multipleObjectsFlags.size());
-        assertNull(submitEvents.get(0).getCaseData().getRepresentativeClaimantType());
+        assertEquals(submitEvents.get(0).getCaseData().getRepresentativeClaimantType(), new RepresentedTypeC());
         verify(multipleHelperService, times(1))
                 .sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, new ArrayList<>(),
                         multipleObjectsFlags, submitEvents.get(0).getCaseData());
