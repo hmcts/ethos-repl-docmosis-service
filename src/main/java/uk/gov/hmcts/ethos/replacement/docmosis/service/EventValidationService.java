@@ -312,7 +312,7 @@ public class EventValidationService {
             var startDate = LocalDate.parse(listingFrom);
             var endDate = LocalDate.parse(listingTo);
             var numberOfDays = ChronoUnit.DAYS.between(startDate, endDate);
-            if(numberOfDays > 31)
+            if(!(numberOfDays < 31))
             {
                 errors.add(INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE);
             }

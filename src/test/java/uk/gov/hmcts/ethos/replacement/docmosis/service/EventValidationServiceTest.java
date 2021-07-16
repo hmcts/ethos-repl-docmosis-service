@@ -47,8 +47,8 @@ public class EventValidationServiceTest {
     private CaseDetails caseDetails5;
     private ListingRequest listingRequestValidDateRange;
     private ListingRequest listingRequestInvalidDateRange;
-    private ListingRequest listingRequest32DaysInvalidRange;
-    private ListingRequest listingRequest31DaysValidRange;
+    private ListingRequest listingRequest31DaysInvalidRange;
+    private ListingRequest listingRequest30DaysValidRange;
 
     private CaseData caseData;
     private MultipleData multipleData;
@@ -65,8 +65,8 @@ public class EventValidationServiceTest {
 
         listingRequestValidDateRange = generateListingDetails("exampleListingV1.json");
         listingRequestInvalidDateRange = generateListingDetails("exampleListingV3.json");
-        listingRequest32DaysInvalidRange = generateListingDetails("exampleListingV4.json");
-        listingRequest31DaysValidRange = generateListingDetails("exampleListingV5.json");
+        listingRequest31DaysInvalidRange = generateListingDetails("exampleListingV5.json");
+        listingRequest30DaysValidRange = generateListingDetails("exampleListingV4.json");
 
         caseData = new CaseData();
         multipleData = new MultipleData();
@@ -394,9 +394,9 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateReportDateRangeValidDates_31Days() {
+    public void shouldValidateReportDateRangeValidDates_30Days() {
 
-        var listingsCase = listingRequest31DaysValidRange.getCaseDetails().getCaseData();
+        var listingsCase = listingRequest30DaysValidRange.getCaseDetails().getCaseData();
         var errors = eventValidationService.validateListingDateRange(
                 listingsCase.getListingDateFrom(),
                 listingsCase.getListingDateTo()
@@ -417,9 +417,9 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateReportDateRangeInvalidDates_32Days() {
+    public void shouldValidateReportDateRangeInvalidDates_31Days() {
 
-        var listingsCase = listingRequest32DaysInvalidRange.getCaseDetails().getCaseData();
+        var listingsCase = listingRequest31DaysInvalidRange.getCaseDetails().getCaseData();
         var errors = eventValidationService.validateListingDateRange(
                 listingsCase.getListingDateFrom(),
                 listingsCase.getListingDateTo()

@@ -21,6 +21,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
+import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.ListingService;
@@ -30,8 +32,11 @@ import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
@@ -74,6 +79,7 @@ public class ListingGenerationControllerTest {
     private JsonNode requestContent1;
     private JsonNode requestContentSingleCase;
     private JsonNode requestContentSingleCase1;
+    private JsonNode listingsGenerationRequestContent;
     private ListingDetails listingDetails;
     private ListingData listingData;
     private CaseData caseData;
@@ -90,6 +96,10 @@ public class ListingGenerationControllerTest {
                 .getResource("/exampleListingSingleV1.json").toURI()));
         requestContentSingleCase1 = objectMapper.readTree(new File(getClass()
                 .getResource("/exampleListingSingleV2.json").toURI()));
+
+        ObjectMapper dateValidationObjectMapper = new ObjectMapper();
+        listingsGenerationRequestContent = dateValidationObjectMapper.readTree(new File(getClass()
+                .getResource("/exampleListingV3.json").toURI()));
     }
 
     private ListingData getListingData() {
@@ -106,6 +116,9 @@ public class ListingGenerationControllerTest {
         address.setCountry("UK");
         address.setPostCode("L1 122");
         listingData.setTribunalCorrespondenceAddress(address);
+        var listingTypeItems = new ArrayList<ListingTypeItem>();
+        listingTypeItems.add(new ListingTypeItem());
+        listingData.setListingCollection(listingTypeItems);
         return listingData;
     }
 
@@ -264,17 +277,47 @@ public class ListingGenerationControllerTest {
     }
 
     @Test
-    public void generateReport() throws Exception {
-        when(listingService.generateReportData(isA(ListingDetails.class), eq(AUTH_TOKEN))).thenReturn(listingDetails.getCaseData());
+    public void generateReportOk() throws Exception {
+        //when(listingService.processHearingDocument(isA(ListingData.class), isA(String.class), eq(AUTH_TOKEN))).thenReturn(documentInfo);
+        //when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(GENERATE_REPORT_URL)
+                .content(listingsGenerationRequestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+               // .andExpect(jsonPath("$.data", notNullValue()))
+               // .andExpect(jsonPath("$.errors", notNullValue()))
+               // .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void generateReportError400() throws Exception {
+        mvc.perform(post(GENERATE_REPORT_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void generateReportError500() throws Exception {
+        when(listingService.generateReportData(isA(ListingDetails.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(GENERATE_REPORT_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", notNullValue()))
-                .andExpect(jsonPath("$.errors", nullValue()))
-                .andExpect(jsonPath("$.warnings", nullValue()));
+                .andExpect(status().isInternalServerError());
+    }
+
+
+    @Test
+    public void generateHearingDocumentError400() throws Exception {
+        mvc.perform(post(GENERATE_HEARING_DOCUMENT_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -296,15 +339,6 @@ public class ListingGenerationControllerTest {
     }
 
     @Test
-    public void generateHearingDocumentError400() throws Exception {
-        mvc.perform(post(GENERATE_HEARING_DOCUMENT_URL)
-                .content("error")
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     public void listingSingleCasesError400() throws Exception {
         mvc.perform(post(LISTING_SINGLE_CASES_URL)
                 .content("error")
@@ -316,15 +350,6 @@ public class ListingGenerationControllerTest {
     @Test
     public void generateListingsDocSingleCasesError400() throws Exception {
         mvc.perform(post(GENERATE_LISTINGS_DOC_SINGLE_CASES_URL)
-                .content("error")
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void generateReportError400() throws Exception {
-        mvc.perform(post(GENERATE_REPORT_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -381,17 +406,6 @@ public class ListingGenerationControllerTest {
         when(listingService.processListingHearingsRequest(isA(ListingDetails.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
         mvc.perform(post(LISTING_HEARINGS_URL)
-                .content(requestContent.toString())
-                .header("Authorization", AUTH_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void generateReportError500() throws Exception {
-        when(listingService.generateReportData(isA(ListingDetails.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
-        mvc.perform(post(GENERATE_REPORT_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
