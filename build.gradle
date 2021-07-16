@@ -203,7 +203,6 @@ dependencies {
             strictly '7.13.2'
         }
     }
-    implementation group: 'org.apache.tomcat', name: 'tomcat-coyote', version: '9.0.48'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.5.RELEASE'
 
     //to remove vulnerability CVE-2020-11987
