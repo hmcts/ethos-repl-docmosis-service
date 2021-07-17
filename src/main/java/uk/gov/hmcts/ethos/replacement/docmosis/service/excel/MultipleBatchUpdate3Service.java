@@ -54,16 +54,14 @@ public class MultipleBatchUpdate3Service {
             log.info("Removing caseSearched from filtered cases");
 
             multipleObjects.remove(caseSearched.getCaseData().getEthosCaseReference());
-            if (YES.equals(multipleData.getBatchRemoveClaimantRep())) {
 
-                removeClaimantRep(userToken, caseSearched, multipleData, multipleDetails);
-            }
             log.info("Sending updates to single cases with caseSearched");
-
-
 
             multipleHelperService.sendUpdatesToSinglesWithConfirmation(userToken, multipleDetails, errors,
                     multipleObjects, caseSearched.getCaseData());
+            if (YES.equals(multipleData.getBatchRemoveClaimantRep())) {
+                removeClaimantRep(userToken, caseSearched, multipleData, multipleDetails);
+            }
         }
         else {
 
