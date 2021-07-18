@@ -226,31 +226,6 @@ public class ListingGenerationController {
 
     }
 
-    @PostMapping(value = "/generateHearingDocument", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "generate a listing document.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<ListingCallbackResponse> generateHearingDocument(
-            @RequestBody ListingRequest listingRequest,
-            @RequestHeader(value = "Authorization") String userToken) {
-        log.info("GENERATE HEARING DOCUMENT ---> " + LOG_MESSAGE + listingRequest.getCaseDetails().getCaseId());
-
-        if (!verifyTokenService.verifyTokenSignature(userToken)) {
-            log.error(INVALID_TOKEN, userToken);
-            return ResponseEntity.status(FORBIDDEN.value()).build();
-        }
-
-        var listingData = listingRequest.getCaseDetails().getCaseData();
-        var caseTypeId = listingRequest.getCaseDetails().getCaseTypeId();
-
-        return getResponseEntity(listingData,caseTypeId, userToken);
-
-    }
-
     private ResponseEntity getResponseEntity(ListingData listingData, String caseTypeId, String userToken){
         List<String> errors = new ArrayList<>();
 
@@ -290,6 +265,31 @@ public class ListingGenerationController {
     private List<String> setNoListingsErrorMessage(List<String> errors){
         errors.add("No hearings have been found for your search criteria");
         return errors;
+    }
+
+    @PostMapping(value = "/generateHearingDocument", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "generate a listing document.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<ListingCallbackResponse> generateHearingDocument(
+            @RequestBody ListingRequest listingRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("GENERATE HEARING DOCUMENT ---> " + LOG_MESSAGE + listingRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        var listingData = listingRequest.getCaseDetails().getCaseData();
+        var caseTypeId = listingRequest.getCaseDetails().getCaseTypeId();
+
+        return getResponseEntity(listingData,caseTypeId, userToken);
+
     }
 
     @PostMapping(value = "/generateHearingDocumentConfirmation", consumes = APPLICATION_JSON_VALUE)

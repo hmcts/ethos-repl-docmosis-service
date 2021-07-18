@@ -128,7 +128,10 @@
           "id": "f4ef21b6-df93-4835-972b-ddcb6ac4122e"
         }
       ],
-      "listingVenue": "Manchester"
+      "listingVenue": "Manchester",
+      "docMarkUp": "test doc markup -example listing version 3",
+      "documentName":"test doc name",
+      "docType":"test hearing doc type"
     },
     "id": "232323232",
     "jurisdiction": "Employment",
