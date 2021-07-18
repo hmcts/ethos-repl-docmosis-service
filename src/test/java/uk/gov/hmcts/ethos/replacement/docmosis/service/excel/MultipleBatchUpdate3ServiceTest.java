@@ -159,7 +159,7 @@ public class MultipleBatchUpdate3ServiceTest {
                 multipleObjectsFlags);
 
         assertEquals(2, multipleObjectsFlags.size());
-        assertNull(null, submitEvents.get(0).getCaseData().getRepCollection());
+        assertNull( submitEvents.get(0).getCaseData().getRepCollection().get(0).getValue());
     }
 
     @Test
