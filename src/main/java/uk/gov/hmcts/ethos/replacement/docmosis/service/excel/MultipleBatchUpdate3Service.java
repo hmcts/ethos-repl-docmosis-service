@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -11,6 +12,7 @@ import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
@@ -108,13 +110,19 @@ public class MultipleBatchUpdate3Service {
 
             if (CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRespondentCollection())
             && CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRepCollection())
-            && representedTypeRToBeRemoved != null) {
-                caseSearched.getCaseData().getRepCollection().removeIf(a-> a.getValue().equals(representedTypeRToBeRemoved));
+            && representedTypeRToBeRemoved != null
+            && getOptionalRepresentedTypeRItem(caseSearched,representedTypeRToBeRemoved).isPresent()) {
+                getOptionalRepresentedTypeRItem(caseSearched,representedTypeRToBeRemoved).get().setValue(new RepresentedTypeR());
             }
         }
         catch (Exception e) {
             throw new CaseCreationException("Error while removing claimant representative: " + caseSearched.getCaseId() + e.toString());
         }
+    }
+    private Optional<RepresentedTypeRItem> getOptionalRepresentedTypeRItem(SubmitEvent caseSearched,RepresentedTypeR representedTypeRToBeRemoved) {
+        return caseSearched.getCaseData()
+                .getRepCollection().stream().filter(a-> a.getValue().equals(representedTypeRToBeRemoved))
+                .findFirst();
     }
     private boolean checkAnyChange(MultipleData multipleData) {
 
