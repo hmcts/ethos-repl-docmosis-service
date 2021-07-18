@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedMap;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,14 +107,19 @@ public class MultipleBatchUpdate3Service {
         try {
             log.info("Respondent Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
                     + " of multiple: " + multipleData.getMultipleReference());
-            RepresentedTypeR representedTypeRToBeRemoved = UpdateDataModelBuilder.getRespondentRepType(multipleData, caseSearched.getCaseData());
+            var representedTypeRToBeRemoved = UpdateDataModelBuilder.getRespondentRepType(multipleData, caseSearched.getCaseData());
 
             if (CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRespondentCollection())
             && CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRepCollection())
-            && representedTypeRToBeRemoved != null
-            && getOptionalRepresentedTypeRItem(caseSearched,representedTypeRToBeRemoved).isPresent()) {
-                getOptionalRepresentedTypeRItem(caseSearched,representedTypeRToBeRemoved).get().setValue(new RepresentedTypeR());
-            }
+            && representedTypeRToBeRemoved != null) {
+           Optional<RepresentedTypeRItem> item = getOptionalRepresentedTypeRItem(caseSearched,representedTypeRToBeRemoved);
+           if (item.isPresent()) {
+               caseSearched.getCaseData()
+                       .getRepCollection().stream()
+                       .filter(a-> a.getValue().equals(representedTypeRToBeRemoved)).collect(Collectors.toList())
+                       .get(0).setValue(new RepresentedTypeR());
+           }
+         }
         }
         catch (Exception e) {
             throw new CaseCreationException("Error while removing claimant representative: " + caseSearched.getCaseId() + e.toString());
