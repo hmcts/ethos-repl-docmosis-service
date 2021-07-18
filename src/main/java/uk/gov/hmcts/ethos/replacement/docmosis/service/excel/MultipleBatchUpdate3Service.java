@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -104,25 +103,22 @@ public class MultipleBatchUpdate3Service {
     }
     private void removeRespondentRep(SubmitEvent caseSearched, MultipleData multipleData) {
 
-            log.info("Respondent Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
+        log.info("Respondent Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
                     + " of multiple: " + multipleData.getMultipleReference());
             var representedTypeRToBeRemoved = UpdateDataModelBuilder.getRespondentRepType(multipleData, caseSearched.getCaseData());
 
             if (CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRespondentCollection())
             && CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRepCollection())
             && representedTypeRToBeRemoved != null) {
-                Optional<RepresentedTypeRItem> r = caseSearched.getCaseData().getRepCollection().stream().
-                        filter(a-> a.getValue().equals(representedTypeRToBeRemoved)).findFirst();
-                if (r.isPresent()) {
-                    r.get().setValue(new RepresentedTypeR());
+                for (RepresentedTypeRItem rItem:caseSearched.getCaseData().getRepCollection()) {
+                    if (rItem.getValue().equals(representedTypeRToBeRemoved)) {
+                        rItem.setValue(new RepresentedTypeR());
+                    }
+                }
                     if (caseSearched.getCaseData().getRepCollection().size() == 1) {
                         caseSearched.getCaseData().setRepCollection(null);
                     }
-                }
-
-         }
-
-
+            }
     }
 
     private boolean checkAnyChange(MultipleData multipleData) {
