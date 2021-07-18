@@ -154,7 +154,7 @@ public class MultipleBatchUpdate3ServiceTest {
                 multipleObjectsFlags);
 
         assertEquals(2, multipleObjectsFlags.size());
-        assertEquals( 0, submitEvents.get(0).getCaseData().getRepCollection().size());
+        assertEquals( new RepresentedTypeR(), submitEvents.get(0).getCaseData().getRepCollection().get(0).getValue());
     }
 
     @Test
