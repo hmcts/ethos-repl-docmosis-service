@@ -14,6 +14,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
@@ -70,7 +71,8 @@ public class MultipleBatchUpdate3Service {
                 removeClaimantRep(caseSearched, multipleData);
             }
             if (YES.equals(multipleData.getBatchRemoveRespondentRep())) {
-                removeRespondentRep(caseSearched, multipleData);
+                var representedTypeRToBeRemoved = UpdateDataModelBuilder.getRespondentRepType(multipleData, caseSearched.getCaseData());
+                removeRespondentRep(caseSearched.getCaseData(), representedTypeRToBeRemoved);
             }
             if (YES.equals(multipleData.getBatchRemoveClaimantRep()) || YES.equals(multipleData.getBatchRemoveRespondentRep())) {
                 submitEventForCase(userToken, multipleDetails.getCaseTypeId(),
@@ -103,34 +105,31 @@ public class MultipleBatchUpdate3Service {
             caseSearched.getCaseData().setRepresentativeClaimantType(representedTypeC);
             caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
     }
-    private void removeRespondentRep(SubmitEvent caseSearched, MultipleData multipleData) {
 
-        log.info("Respondent Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
-                + " of multiple: " + multipleData.getMultipleReference());
-        var caseData = caseSearched.getCaseData();
-        var representedTypeRToBeRemoved = UpdateDataModelBuilder.getRespondentRepType(multipleData, caseData);
+    private void removeRespondentRep(CaseData caseData, RepresentedTypeR representedType) {
 
-        if (CollectionUtils.isNotEmpty(caseData.getRespondentCollection())
-                && CollectionUtils.isNotEmpty(caseData.getRepCollection())
-                && representedTypeRToBeRemoved != null) {
-            Optional<RepresentedTypeRItem> item = getOptionalRepresentedTypeRItem(caseData,representedTypeRToBeRemoved);
-            if (item.isPresent()) {
-                caseData
-                        .getRepCollection().stream()
-                        .filter(a-> a.getValue().equals(representedTypeRToBeRemoved)).collect(Collectors.toList())
-                        .get(0).setValue(new RepresentedTypeR());
-                if (caseData.getRepCollection().size() == 1) {
-                    caseData.setRepCollection(null);
+        if (caseData.getRespondentCollection() != null) {
+            Optional<RespondentSumTypeItem> respondentSumTypeItemOptional =
+                    caseData.getRespondentCollection().stream()
+                            .filter(respondentSumTypeItem ->
+                                    respondentSumTypeItem.getValue().getRespondentName()
+                                            .equals(representedType.getRespRepName()))
+                            .findAny();
+
+            if (respondentSumTypeItemOptional.isPresent() && CollectionUtils.isNotEmpty(caseData.getRepCollection())) {
+                List<RepresentedTypeRItem> toBeRemoved = caseData.getRepCollection().stream().filter(a-> a.getValue().getRespRepName().equals(representedType.getRespRepName())).collect(Collectors.toList());
+                if (CollectionUtils.isNotEmpty(toBeRemoved)) {
+                    log.info("Respondent representatives to be removed are: " + toBeRemoved.size());
+                    for (RepresentedTypeRItem r: toBeRemoved) {
+                       caseData.getRepCollection().stream().filter(a-> a.getValue().equals(r.getValue()))
+                                .findFirst().ifPresent(representedTypeRItem -> representedTypeRItem.setValue(new RepresentedTypeR()));
+                    }
                 }
-            }
 
+            }
         }
     }
-    private Optional<RepresentedTypeRItem> getOptionalRepresentedTypeRItem(CaseData caseData,RepresentedTypeR representedTypeRToBeRemoved) {
-        return caseData
-                .getRepCollection().stream().filter(a-> a.getValue().equals(representedTypeRToBeRemoved))
-                .findFirst();
-    }
+
 
     private boolean checkAnyChange(MultipleData multipleData) {
 

@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -135,7 +134,8 @@ public class MultipleBatchUpdate3ServiceTest {
                 .generateDynamicList("Respondent Rep"));
         multipleDetails.getCaseData().setBatchRemoveRespondentRep(YES);
         multipleDetails.getCaseData().setBatchUpdateCase("245000/2020");
-        RepresentedTypeR representedTypeR = new RepresentedTypeR();
+        var representedTypeR = new RepresentedTypeR();
+        representedTypeR.setRespRepName("Andrew Smith");
         representedTypeR.setNameOfRepresentative("Respondent Rep");
         var representedTypeRItem = new RepresentedTypeRItem();
         representedTypeRItem.setId("Respondent Rep");
@@ -158,7 +158,7 @@ public class MultipleBatchUpdate3ServiceTest {
                 multipleObjectsFlags);
 
         assertEquals(2, multipleObjectsFlags.size());
-        assertNull(submitEvents.get(0).getCaseData().getRepCollection());
+        assertEquals(new RepresentedTypeR(), submitEvents.get(0).getCaseData().getRepCollection().get(0).getValue());
     }
 
     @Test
