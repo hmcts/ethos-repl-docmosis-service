@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -11,7 +12,9 @@ import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
@@ -108,7 +111,14 @@ public class MultipleBatchUpdate3Service {
             if (CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRespondentCollection())
             && CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRepCollection())
             && representedTypeRToBeRemoved != null) {
-               caseSearched.getCaseData().getRepCollection().removeIf(a-> a.getValue().equals(representedTypeRToBeRemoved));
+                Optional<RepresentedTypeRItem> r = caseSearched.getCaseData().getRepCollection().stream().
+                        filter(a-> a.getValue().equals(representedTypeRToBeRemoved)).findFirst();
+                if (r.isPresent()) {
+                    r.get().setValue(new RepresentedTypeR());
+                    if (caseSearched.getCaseData().getRepCollection().size() == 1) {
+                        caseSearched.getCaseData().setRepCollection(null);
+                    }
+                }
 
          }
 
