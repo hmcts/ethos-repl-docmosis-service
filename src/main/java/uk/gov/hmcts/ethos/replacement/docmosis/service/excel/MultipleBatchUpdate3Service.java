@@ -122,12 +122,11 @@ public class MultipleBatchUpdate3Service {
                     log.info("Respondent representatives to be removed are: " + toBeRemoved.size());
                     for (RepresentedTypeRItem r: toBeRemoved) {
                        caseData.getRepCollection().stream().filter(a-> a.getValue().equals(r.getValue()))
-                                .findFirst().ifPresent(representedTypeRItem -> representedTypeRItem.setValue(new RepresentedTypeR()));
+                                .findFirst().ifPresent(representedTypeRItem -> representedTypeRItem.setId(null));
+                        caseData.getRepCollection().stream().filter(a-> a.getValue().equals(r.getValue()))
+                                .findFirst().ifPresent(representedTypeRItem -> representedTypeRItem.setValue(null));
                     }
                     log.info("Size of rep collection:" + caseData.getRepCollection().size());
-                    if (caseData.getRepCollection().size() == 1) {
-                        caseData.setRepCollection(null);
-                    }
                 }
 
             }
