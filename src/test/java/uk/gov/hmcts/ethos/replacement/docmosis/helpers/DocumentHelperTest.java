@@ -1704,7 +1704,7 @@ public class DocumentHelperTest {
                 + "\"Hearing_date_time\":\"1 November 2019 at 12:11\",\n"
                 + "\"Hearing_time\":\"12:11\",\n"
                 + "\"Hearing_venue\":\"Ground Floor, AB1, 48 Huntly Street, Aberdeen, AB10 1SH\",\n"
-                + "\"Hearing_duration\":\"3 days\",\n"
+                + "\"Hearing_duration\":\"1 day\",\n"
                 + "\"t_Scot_34\":\"true\",\n"
                 + "\"Court_addressLine1\":\"Aberdeen Address Line1\",\n"
                 + "\"Court_addressLine2\":\"Aberdeen Address Line2\",\n"
