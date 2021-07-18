@@ -1,7 +1,9 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedMap;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,21 +106,30 @@ public class MultipleBatchUpdate3Service {
     private void removeRespondentRep(SubmitEvent caseSearched, MultipleData multipleData) {
 
         log.info("Respondent Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
-                    + " of multiple: " + multipleData.getMultipleReference());
-            var representedTypeRToBeRemoved = UpdateDataModelBuilder.getRespondentRepType(multipleData, caseSearched.getCaseData());
+                + " of multiple: " + multipleData.getMultipleReference());
+        var caseData = caseSearched.getCaseData();
+        var representedTypeRToBeRemoved = UpdateDataModelBuilder.getRespondentRepType(multipleData, caseData);
 
-            if (CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRespondentCollection())
-            && CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRepCollection())
-            && representedTypeRToBeRemoved != null) {
-                for (RepresentedTypeRItem rItem:caseSearched.getCaseData().getRepCollection()) {
-                    if (rItem.getValue().equals(representedTypeRToBeRemoved)) {
-                        rItem.setValue(new RepresentedTypeR());
-                    }
+        if (CollectionUtils.isNotEmpty(caseData.getRespondentCollection())
+                && CollectionUtils.isNotEmpty(caseData.getRepCollection())
+                && representedTypeRToBeRemoved != null) {
+            Optional<RepresentedTypeRItem> item = getOptionalRepresentedTypeRItem(caseData,representedTypeRToBeRemoved);
+            if (item.isPresent()) {
+                caseData
+                        .getRepCollection().stream()
+                        .filter(a-> a.getValue().equals(representedTypeRToBeRemoved)).collect(Collectors.toList())
+                        .get(0).setValue(new RepresentedTypeR());
+                if (caseData.getRepCollection().size() == 1) {
+                    caseData.setRepCollection(null);
                 }
-                    if (caseSearched.getCaseData().getRepCollection().size() == 1) {
-                        caseSearched.getCaseData().setRepCollection(null);
-                    }
             }
+
+        }
+    }
+    private Optional<RepresentedTypeRItem> getOptionalRepresentedTypeRItem(CaseData caseData,RepresentedTypeR representedTypeRToBeRemoved) {
+        return caseData
+                .getRepCollection().stream().filter(a-> a.getValue().equals(representedTypeRToBeRemoved))
+                .findFirst();
     }
 
     private boolean checkAnyChange(MultipleData multipleData) {
