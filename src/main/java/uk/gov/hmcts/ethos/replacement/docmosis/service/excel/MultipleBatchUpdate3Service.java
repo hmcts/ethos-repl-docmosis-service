@@ -124,6 +124,10 @@ public class MultipleBatchUpdate3Service {
                        caseData.getRepCollection().stream().filter(a-> a.getValue().equals(r.getValue()))
                                 .findFirst().ifPresent(representedTypeRItem -> representedTypeRItem.setValue(new RepresentedTypeR()));
                     }
+                    log.info("Size of rep collection:" + caseData.getRepCollection().size());
+                    if (caseData.getRepCollection().size() == 1) {
+                        caseData.setRepCollection(null);
+                    }
                 }
 
             }
