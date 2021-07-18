@@ -114,7 +114,7 @@ public class UpdateDataModelBuilder {
         return null;
     }
 
-    private static RepresentedTypeR getRespondentRepType(MultipleData multipleData, CaseData caseData) {
+    public static RepresentedTypeR getRespondentRepType(MultipleData multipleData, CaseData caseData) {
         if (caseData == null) {
             return null;
         }
