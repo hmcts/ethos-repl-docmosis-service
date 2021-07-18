@@ -1,9 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.SortedMap;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +11,7 @@ import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
@@ -104,7 +100,7 @@ public class MultipleBatchUpdate3Service {
             caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
     }
     private void removeRespondentRep(SubmitEvent caseSearched, MultipleData multipleData) {
-        try {
+
             log.info("Respondent Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
                     + " of multiple: " + multipleData.getMultipleReference());
             var representedTypeRToBeRemoved = UpdateDataModelBuilder.getRespondentRepType(multipleData, caseSearched.getCaseData());
@@ -112,24 +108,13 @@ public class MultipleBatchUpdate3Service {
             if (CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRespondentCollection())
             && CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRepCollection())
             && representedTypeRToBeRemoved != null) {
-           Optional<RepresentedTypeRItem> item = getOptionalRepresentedTypeRItem(caseSearched,representedTypeRToBeRemoved);
-           if (item.isPresent()) {
-               caseSearched.getCaseData()
-                       .getRepCollection().stream()
-                       .filter(a-> a.getValue().equals(representedTypeRToBeRemoved)).collect(Collectors.toList())
-                       .get(0).setValue(new RepresentedTypeR());
-           }
+               caseSearched.getCaseData().getRepCollection().removeIf(a-> a.getValue().equals(representedTypeRToBeRemoved));
+
          }
-        }
-        catch (Exception e) {
-            throw new CaseCreationException("Error while removing claimant representative: " + caseSearched.getCaseId() + e.toString());
-        }
+
+
     }
-    private Optional<RepresentedTypeRItem> getOptionalRepresentedTypeRItem(SubmitEvent caseSearched,RepresentedTypeR representedTypeRToBeRemoved) {
-        return caseSearched.getCaseData()
-                .getRepCollection().stream().filter(a-> a.getValue().equals(representedTypeRToBeRemoved))
-                .findFirst();
-    }
+
     private boolean checkAnyChange(MultipleData multipleData) {
 
         return (
