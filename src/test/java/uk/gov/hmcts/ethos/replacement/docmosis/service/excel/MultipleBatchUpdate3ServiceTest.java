@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -157,7 +158,7 @@ public class MultipleBatchUpdate3ServiceTest {
                 multipleObjectsFlags);
 
         assertEquals(2, multipleObjectsFlags.size());
-        assertEquals( 0, submitEvents.get(0).getCaseData().getRepCollection().size());
+        assertNull(submitEvents.get(0).getCaseData().getRepCollection());
     }
 
     @Test

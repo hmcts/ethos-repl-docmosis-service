@@ -11,7 +11,9 @@ import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
@@ -101,18 +103,22 @@ public class MultipleBatchUpdate3Service {
     }
     private void removeRespondentRep(SubmitEvent caseSearched, MultipleData multipleData) {
 
-            log.info("Respondent Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
+        log.info("Respondent Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
                     + " of multiple: " + multipleData.getMultipleReference());
             var representedTypeRToBeRemoved = UpdateDataModelBuilder.getRespondentRepType(multipleData, caseSearched.getCaseData());
 
             if (CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRespondentCollection())
             && CollectionUtils.isNotEmpty(caseSearched.getCaseData().getRepCollection())
             && representedTypeRToBeRemoved != null) {
-               caseSearched.getCaseData().getRepCollection().removeIf(a-> a.getValue().equals(representedTypeRToBeRemoved));
-
-         }
-
-
+                for (RepresentedTypeRItem rItem:caseSearched.getCaseData().getRepCollection()) {
+                    if (rItem.getValue().equals(representedTypeRToBeRemoved)) {
+                        rItem.setValue(new RepresentedTypeR());
+                    }
+                }
+                    if (caseSearched.getCaseData().getRepCollection().size() == 1) {
+                        caseSearched.getCaseData().setRepCollection(null);
+                    }
+            }
     }
 
     private boolean checkAnyChange(MultipleData multipleData) {
