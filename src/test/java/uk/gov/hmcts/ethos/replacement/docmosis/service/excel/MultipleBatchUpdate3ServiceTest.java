@@ -1,7 +1,10 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.TreeMap;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -154,7 +157,7 @@ public class MultipleBatchUpdate3ServiceTest {
                 multipleObjectsFlags);
 
         assertEquals(2, multipleObjectsFlags.size());
-        assertEquals( new RepresentedTypeR(), submitEvents.get(0).getCaseData().getRepCollection().get(0).getValue());
+        assertEquals( 0, submitEvents.get(0).getCaseData().getRepCollection().size());
     }
 
     @Test
