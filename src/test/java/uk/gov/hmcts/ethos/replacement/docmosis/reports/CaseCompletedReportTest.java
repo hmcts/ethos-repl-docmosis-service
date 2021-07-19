@@ -246,6 +246,46 @@ public class CaseCompletedReportTest {
     }
 
     @Test
+    public void testValidNullConciliationTrackCaseIsAddedToReport() {
+        // given case is closed
+        // given case position type is valid
+        // given case jurisdiction outcome is valid
+        // given case has a hearing with a valid type
+        // given case has a hearing that was disposed
+        // given case has a hearing listed date that is within report search range
+        // given case has a null conciliation track i.e. it is not set
+        // when we generate report data
+        // then we have some data
+
+        String searchDate = "1970-01-01";
+        String listingDate = "1970-01-01T00:00:00";
+
+        ListingDetails listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        ListingData listingData = new ListingData();
+        listingData.setListingDate(searchDate);
+        listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
+        listingDetails.setCaseData(listingData);
+
+        List<SubmitEvent> submitEvents = new ArrayList<>();
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed(listingDate, HEARING_STATUS_HEARD, YES);
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING, dateListedTypeItem));
+        submitEvents.add(createSubmitEvent(CLOSED_STATE, JURISDICTION_OUTCOME_DISMISSED_AT_HEARING, hearings, null));
+
+        CasesCompletedReport casesCompletedReport = new CasesCompletedReport();
+        ListingData reportListingData = casesCompletedReport.generateReportData(listingDetails, submitEvents);
+
+        ReportHeaderValues reportHeaderValues = new ReportHeaderValues(
+                1, 1, 1.0, "Newcastle",
+                1, 1, 1.0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0);
+        verifyReportHeader(reportListingData, reportHeaderValues);
+        verifyReportDetails(reportListingData, 1);
+    }
+
+    @Test
     public void testValidNoneConciliationTrackCaseIsAddedToReport() {
         // given case is closed
         // given case position type is valid

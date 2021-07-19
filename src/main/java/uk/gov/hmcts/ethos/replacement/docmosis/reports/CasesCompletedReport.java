@@ -234,7 +234,7 @@ public class CasesCompletedReport {
         } else if (CONCILIATION_TRACK_OPEN_TRACK.equals(conciliationTrack)) {
             return CONCILIATION_TRACK_NUMBER_FOUR;
         } else {
-            return "0";
+            return CONCILIATION_TRACK_NUMBER_ONE;
         }
     }
 
