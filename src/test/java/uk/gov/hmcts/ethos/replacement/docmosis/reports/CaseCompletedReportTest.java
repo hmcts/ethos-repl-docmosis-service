@@ -18,6 +18,10 @@ import java.util.*;
 import static org.junit.Assert.*;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_REMEDY;
@@ -32,10 +36,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport.COMPLETED_PER_SESSION_FORMAT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport.CONCILIATION_TRACK_FAST_TRACK;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport.CONCILIATION_TRACK_NO_CONCILIATION;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport.CONCILIATION_TRACK_OPEN_TRACK;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport.CONCILIATION_TRACK_STANDARD_TRACK;
 
 public class CaseCompletedReportTest {
 

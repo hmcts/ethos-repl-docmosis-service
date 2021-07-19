@@ -22,6 +22,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NUMBER_FOUR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NUMBER_ONE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NUMBER_THREE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NUMBER_TWO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
@@ -42,15 +50,6 @@ public class CasesCompletedReport {
     static final String ZERO = "0";
     static final String ZERO_DECIMAL = "0.00";
     static final String COMPLETED_PER_SESSION_FORMAT = "%.2f";
-
-    static final String CONCILIATION_TRACK_NUMBER_ONE = "1";
-    static final String CONCILIATION_TRACK_NO_CONCILIATION = "No track";
-    static final String CONCILIATION_TRACK_NUMBER_TWO = "2";
-    static final String CONCILIATION_TRACK_FAST_TRACK = "Short track";
-    static final String CONCILIATION_TRACK_NUMBER_THREE = "3";
-    static final String CONCILIATION_TRACK_STANDARD_TRACK = "Standard track";
-    static final String CONCILIATION_TRACK_NUMBER_FOUR = "4";
-    static final String CONCILIATION_TRACK_OPEN_TRACK = "Open track";
 
     public ListingData generateReportData(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
         initReport(listingDetails);
