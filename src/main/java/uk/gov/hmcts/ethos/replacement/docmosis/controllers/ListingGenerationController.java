@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -227,7 +228,7 @@ public class ListingGenerationController {
     }
 
     private ResponseEntity getResponseEntity(ListingData listingData, String caseTypeId, String userToken){
-        List<String> errors = new ArrayList<>();
+        List<String> errorsList = new ArrayList<>();
 
         if(hasNonEmptyListings(listingData)){
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
@@ -235,11 +236,12 @@ public class ListingGenerationController {
             updateListingDocMarkUp(listingData, documentInfo);
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .data(listingData)
-                    .significant_item(Helper.generateSignificantItem(documentInfo, errors))
+                    .significant_item(Helper.generateSignificantItem(documentInfo, errorsList))
                     .build());
         } else{
+            errorsList.add("No hearings have been found for your search criteria");
             return ResponseEntity.ok(ListingCallbackResponse.builder()
-                    .errors(setNoListingsErrorMessage(errors))
+                    .errors(errorsList)
                     .data(listingData)
                     .build());
         }
@@ -255,16 +257,10 @@ public class ListingGenerationController {
 
     private boolean hasNonEmptyListings(ListingData listingData) {
 
-        var isListingsCollNotEmpty = listingData.getListingCollection() != null &&
-                !listingData.getListingCollection().isEmpty();
+        var isListingsCollNotEmpty = CollectionUtils.isNotEmpty(listingData.getListingCollection());
         var isAllowedReportType = ListingHelper.isReportType(listingData.getReportType());
 
         return (isListingsCollNotEmpty || isAllowedReportType);
-    }
-
-    private List<String> setNoListingsErrorMessage(List<String> errors){
-        errors.add("No hearings have been found for your search criteria");
-        return errors;
     }
 
     @PostMapping(value = "/generateHearingDocument", consumes = APPLICATION_JSON_VALUE)
