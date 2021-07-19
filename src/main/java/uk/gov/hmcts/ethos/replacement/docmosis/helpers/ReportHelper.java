@@ -119,9 +119,7 @@ public class ReportHelper {
             localReportsDetailHdr.setReportOffice(UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
             listingDetails.getCaseData().setLocalReportsDetailHdr(localReportsDetailHdr);
             listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
-
-            //listingDetails.getCaseData().setLocalReportsSummaryHdr(localReportsDetailHdr);
-
+            
         }
 
         listingDetails.getCaseData().clearReportFields();
