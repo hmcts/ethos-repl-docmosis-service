@@ -123,7 +123,7 @@
       }
     ],
     "localReportsDetailHdr": {
-      "hearingDate": "20 October 2020",
+      "hearingDate": "2020-10-20T10:00:00.000",
       "reportOffice": "Manchester",
       "elmoCaseReference": "111222",
       "multiplesTotal": "1",
@@ -142,7 +142,7 @@
     "localReportsDetail": [
       {
         "value": {
-          "hearingDate": "12 October 2020",
+          "hearingDate": "2020-10-12T10:00:00.000",
           "reportOffice": "Manchester",
           "elmoCaseReference": "1112",
           "multipleRef": "212323",
@@ -161,7 +161,7 @@
       },
       {
         "value": {
-          "hearingDate": "15 October 2020",
+          "hearingDate": "2020-10-15T10:00:00.000",
           "reportOffice": "Manchester",
           "caseReference": "2122323/2020",
           "elmoCaseReference": "111332",

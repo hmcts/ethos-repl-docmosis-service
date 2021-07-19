@@ -221,7 +221,7 @@ public class ReportDocHelper {
         sb.append("\"Hearing_Number\":\"").append(
                 nullCheck(adhocReportType.getHearingNumber())).append(NEW_LINE);
         sb.append("\"Hearing_Date\":\"").append(
-                nullCheck(adhocReportType.getHearingDate())).append(NEW_LINE);
+                UtilHelper.formatLocalDate(adhocReportType.getHearingDate())).append(NEW_LINE);
         sb.append("\"Hearing_Type\":\"").append(
                 nullCheck(adhocReportType.getHearingType())).append(NEW_LINE);
         sb.append("\"Hearing_Judge\":\"").append(
