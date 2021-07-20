@@ -37,7 +37,6 @@ Cypress.Commands.add('aatLogin', () => {
 Cypress.Commands.add('rejectCase' , () => {
     cy.get('#next-step').select('Accept/Reject Case');
     cy.get('.button:nth-child(2)').click();
-    cy.get('.event-trigger').submit();
     cy.get('#preAcceptCase_caseAccepted_No').click();
     cy.wait(1000)
     cy.get('#dateRejected-day').type(date.getDate().toString());
@@ -53,7 +52,6 @@ Cypress.Commands.add('rejectCase' , () => {
 Cypress.Commands.add('acceptCase', () => {
     cy.get('#next-step').select('Accept/Reject Case');
     cy.get('.button:nth-child(2)').click();
-    cy.get('.event-trigger').submit();
     cy.get('#preAcceptCase_caseAccepted_Yes').click();
     cy.get('#dateAccepted-day').type(date.getDate().toString());
     cy.get('#dateAccepted-month').type((date.getMonth()+1).toString());
@@ -63,5 +61,52 @@ Cypress.Commands.add('acceptCase', () => {
     // Submit page
     cy.get('.button:nth-child(2)').click();
     cy.get('.check-your-answers').submit();
-    cy.wait(5000)
+    cy.wait(1000)
+})
+
+Cypress.Commands.add('addClaimantRepresentative', () => {
+    cy.get('#next-step').select('Claimant Representative');
+    cy.get('.button:nth-child(2)').click();
+    cy.get('#claimantRepresentedQuestion_Yes').click();
+    cy.get('#representativeClaimantType_name_of_representative').type('Claimant Rep');
+    cy.get('#representativeClaimantType_name_of_organisation').type('Claimant Org');
+    cy.get('#representativeClaimantType_representative_occupation').select('Solicitor');
+    cy.get('#representativeClaimantType_representative_address_representative_address_postcodeInput').type('B44 8AS');
+    cy.get('.button-30').click();
+    cy.wait(1000)
+    cy.get('#representativeClaimantType_representative_address_representative_address_addressList').select('16: Object');
+    cy.get('.button:nth-child(2)').click();
+    cy.get('.form').submit();
+    cy.get('.button:nth-child(2)').click();
+    cy.get('.check-your-answers').submit();
+})
+
+Cypress.Commands.add('addRespondentRepresentative', () => {
+    cy.get('#next-step').select('Respondent Representative');
+    cy.get('.button:nth-child(2)').click();
+    cy.get('.panel > .button').click();
+    cy.get('#repCollection_0_resp_rep_name').type('Test Resp').should('have.value', 'Test Resp');
+    cy.get('#repCollection_0_name_of_representative').type('Respondent Representative One').should('have.value', 'Respondent Representative One');
+    cy.get('#repCollection_0_representative_occupation').select('Union');
+    cy.get('#repCollection_0_representative_address_representative_address_postcodeInput').type('B44 8AS').should('have.value', 'B44 8AS')
+    cy.get('.button-30').click();
+    cy.wait(1000)
+    cy.get('#repCollection_0_representative_address_representative_address_addressList').select('5: Object');
+    cy.get('.button:nth-child(3)').click();
+    cy.get('.form').submit();
+    cy.get('.check-your-answers').submit();
+})
+
+Cypress.Commands.add('addJurisdictions', () => {
+    cy.get('#next-step').select('Jurisdiction');
+    cy.get('.button:nth-child(2)').click();
+    cy.get('.panel > .button').click()
+    cy.get('#jurCodesCollection_0_juridictionCodesList').select('ADG');
+    cy.get('#jurCodesCollection_0_judgmentOutcome').select('Not allocated');
+    cy.get('.button:nth-child(4)').click();
+    cy.get('#jurCodesCollection_1_juridictionCodesList').select('ADT');
+    cy.get('#jurCodesCollection_1_judgmentOutcome').select('Not allocated');
+    cy.get('.form-group > .button:nth-child(2)').click();
+    cy.get('.form').submit();
+    cy.get('.check-your-answers').submit();
 })

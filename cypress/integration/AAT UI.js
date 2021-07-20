@@ -99,3 +99,12 @@ describe('Login into AAT, create a case and modify details', () => {
         caseDetails()
     });
 })
+
+describe('Login, create, accept, claimant rep', () => {
+    it('should create a case in Leeds', function () {
+        cy.aatLogin()
+        createCase('Leeds - Singles')
+        cy.acceptCase()
+        cy.addClaimantRepresentative()
+    });
+})
