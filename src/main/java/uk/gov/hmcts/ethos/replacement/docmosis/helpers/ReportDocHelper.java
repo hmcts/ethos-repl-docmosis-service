@@ -214,8 +214,8 @@ public class ReportDocHelper {
                 nullCheck(adhocReportType.getCaseReference())).append(NEW_LINE);
         sb.append("\"Position\":\"").append(
                 nullCheck(adhocReportType.getPosition())).append(NEW_LINE);
-        sb.append("\"Conciliation_Track_No\":\"").append(
-                nullCheck(adhocReportType.getConciliationTrackNo())).append(NEW_LINE);
+        sb.append("\"Conciliation_Track\":\"").append(
+                nullCheck(adhocReportType.getConciliationTrack())).append(NEW_LINE);
         sb.append("\"Session_Days\":\"").append(
                 nullCheck(adhocReportType.getSessionDays())).append(NEW_LINE);
         sb.append("\"Hearing_Number\":\"").append(
