@@ -106,5 +106,7 @@ describe('Login, create, accept, claimant rep', () => {
         createCase('Leeds - Singles')
         cy.acceptCase()
         cy.addClaimantRepresentative()
+        cy.addRespondentRepresentative()
+        cy.addJurisdictions();
     });
 })
