@@ -156,8 +156,16 @@ public class ListingService {
                 hearingTypeItem.getValue().getHearingNumber();
                 log.info("Hearing number: " + hearingTypeItem.getValue().getHearingNumber());
                 var dateListedTypeItem = hearingTypeItem.getValue().getHearingDateCollection().get(i);
-
-                if (!isListingValid(listingData, dateListedTypeItem)) {
+                boolean isListingVenueValid = isListingVenueValid(listingData, dateListedTypeItem);
+                boolean isListingDateValid = isListingDateValid(listingData, dateListedTypeItem);
+                log.info("isListingVenueValid: " + isListingVenueValid);
+                log.info("isListingDateValid: " + isListingDateValid);
+                var isListingStatusValid = true;
+                if (!showAllHearingType(listingData)) {
+                    isListingStatusValid = isListingStatusValid(dateListedTypeItem);
+                    log.info("isListingStatusValid: " + isListingStatusValid);
+                }
+                if (!isListingVenueValid || !isListingDateValid || !isListingStatusValid) {
                     continue;
                 }
                 var listingTypeItem = new ListingTypeItem();
@@ -171,11 +179,7 @@ public class ListingService {
         }
         return listingTypeItems;
     }
-    private boolean isListingValid(ListingData listingData, DateListedTypeItem dateListedTypeItem) {
-        return (!isListingVenueValid(listingData, dateListedTypeItem)
-                || !isListingDateValid(listingData, dateListedTypeItem)
-                || (!showAllHearingType(listingData) && !isListingStatusValid(dateListedTypeItem)));
-    }
+
     public ListingData generateReportData(ListingDetails listingDetails, String authToken) {
 
         try {
