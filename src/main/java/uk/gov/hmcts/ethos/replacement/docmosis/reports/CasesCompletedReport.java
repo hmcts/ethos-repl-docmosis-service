@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -49,6 +50,22 @@ public class CasesCompletedReport {
     static final String ZERO = "0";
     static final String ZERO_DECIMAL = "0.00";
     static final String COMPLETED_PER_SESSION_FORMAT = "%.2f";
+
+    static final List<String> INVALID_POSITION_TYPES = Arrays.asList(
+            POSITION_TYPE_CASE_INPUT_IN_ERROR,
+            POSITION_TYPE_CASE_TRANSFERRED_SAME_COUNTRY,
+            POSITION_TYPE_CASE_TRANSFERRED_OTHER_COUNTRY);
+
+    static final List<String> VALID_JURISDICTION_OUTCOMES = Arrays.asList(
+            JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING,
+            JURISDICTION_OUTCOME_UNSUCCESSFUL_AT_HEARING,
+            JURISDICTION_OUTCOME_DISMISSED_AT_HEARING);
+
+    static final List<String> VALID_HEARING_TYPES = Arrays.asList(
+            HEARING_TYPE_JUDICIAL_HEARING,
+            HEARING_TYPE_PERLIMINARY_HEARING,
+            HEARING_TYPE_PERLIMINARY_HEARING_CM,
+            HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC);
 
     public ListingData generateReportData(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
         initReport(listingDetails);
@@ -112,10 +129,7 @@ public class CasesCompletedReport {
 
     private boolean isValidPositionType(CaseData caseData) {
         if (caseData.getPositionType() != null) {
-            var invalidPositionTypes = Arrays.asList(POSITION_TYPE_CASE_INPUT_IN_ERROR,
-                    POSITION_TYPE_CASE_TRANSFERRED_SAME_COUNTRY,
-                    POSITION_TYPE_CASE_TRANSFERRED_OTHER_COUNTRY);
-            return invalidPositionTypes.stream().noneMatch(str -> str.equals(caseData.getPositionType()));
+            return !INVALID_POSITION_TYPES.contains(caseData.getPositionType());
         } else {
             return true;
         }
@@ -129,11 +143,7 @@ public class CasesCompletedReport {
         if (CollectionUtils.isNotEmpty(caseData.getJurCodesCollection())) {
             for (var jurCodesTypeItem : caseData.getJurCodesCollection()) {
                 var jurCodesType = jurCodesTypeItem.getValue();
-                if (jurCodesType.getJudgmentOutcome() != null
-                        &&
-                        (jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING)
-                                || jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_UNSUCCESSFUL_AT_HEARING)
-                                || jurCodesType.getJudgmentOutcome().equals(JURISDICTION_OUTCOME_DISMISSED_AT_HEARING))) {
+                if (VALID_JURISDICTION_OUTCOMES.contains(jurCodesType.getJudgmentOutcome())) {
                     return true;
                 }
             }
@@ -166,15 +176,7 @@ public class CasesCompletedReport {
             return false;
         }
 
-        if (hearingTypeItem.getValue().getHearingType() != null) {
-            var validHearingTypes = Arrays.asList(HEARING_TYPE_JUDICIAL_HEARING,
-                    HEARING_TYPE_PERLIMINARY_HEARING,
-                    HEARING_TYPE_PERLIMINARY_HEARING_CM,
-                    HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC);
-            return validHearingTypes.stream().anyMatch(str -> str.equals(hearingTypeItem.getValue().getHearingType()));
-        } else {
-            return false;
-        }
+        return VALID_HEARING_TYPES.contains(hearingTypeItem.getValue().getHearingType());
     }
 
     private DateListedType getLatestDisposedHearingSession(List<DateListedTypeItem> hearings, ListingData listingData) {
@@ -208,6 +210,7 @@ public class CasesCompletedReport {
         var adhocReportType = new AdhocReportType();
         adhocReportType.setCaseReference(caseData.getEthosCaseReference());
         adhocReportType.setPosition(caseData.getCurrentPosition());
+        adhocReportType.setConciliationTrack(getConciliationTrack(caseData));
         adhocReportType.setConciliationTrackNo(getConciliationTrackNumber(caseData.getConciliationTrack()));
 
         var latestSessionDate = LocalDate.parse(latestSession.getListedDate().substring(0, 10), OLD_DATE_TIME_PATTERN2);
@@ -221,6 +224,11 @@ public class CasesCompletedReport {
         adhocReportType.setHearingClerk(latestSession.getHearingClerk());
 
         return adhocReportType;
+    }
+
+    private String getConciliationTrack(CaseData caseData) {
+        return StringUtils.isNotBlank(caseData.getConciliationTrack() ) ?
+                caseData.getConciliationTrack() : CONCILIATION_TRACK_NO_CONCILIATION;
     }
 
     private String getConciliationTrackNumber(String conciliationTrack) {
