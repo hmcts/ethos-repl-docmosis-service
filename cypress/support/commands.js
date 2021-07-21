@@ -110,3 +110,27 @@ Cypress.Commands.add('addJurisdictions', () => {
     cy.get('.form').submit();
     cy.get('.check-your-answers').submit();
 })
+
+Cypress.Commands.add('listHearing', () => {
+    cy.get('#next-step').select('List Hearing');
+    cy.get('.button:nth-child(2)').click();
+    cy.get('.panel > .button').click();
+    cy.get('#hearingCollection_0_hearingNumber').type('1');
+    cy.get('#hearingCollection_0_Hearing_type').select('Preliminary Hearing');
+    cy.get('#hearingCollection_0_hearingPublicPrivate').select('Public');
+    cy.get('#hearingCollection_0_hearingFormat-Hybrid').click();        
+    cy.get('#hearingCollection_0_Hearing_venue').select('Leeds');
+    cy.get('#hearingCollection_0_hearingEstLengthNum').type('1');
+    cy.get('#hearingCollection_0_hearingEstLengthNumType').select('Days');
+    cy.get('#hearingCollection_0_hearingSitAlone-Sit\ Alone').select();
+    cy.get('#hearingCollection_0_hearingSitAlone-Sit\ Alone').click();
+    cy.get('#hearingCollection_0_hearingDateCollection .button').click();
+    cy.get('#listedDate-day').type('21');
+    cy.get('#listedDate-month').type('07');
+    cy.get('#listedDate-year').type('2021');
+    cy.get('#listedDate-hour').type('14');
+    cy.get('.form-group > .button:nth-child(2)').click();
+    cy.get('.form').submit();
+    cy.get('.button:nth-child(2)').click();
+    cy.get('.check-your-answers').submit();
+})
