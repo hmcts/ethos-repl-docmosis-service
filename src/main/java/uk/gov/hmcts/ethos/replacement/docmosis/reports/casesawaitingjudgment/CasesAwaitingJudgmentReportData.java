@@ -1,19 +1,25 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment;
 
+import lombok.Getter;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class CasesAwaitingJudgmentReportData {
 
-    private ListingData listingData;
-    private List<ReportDetail> reportDetails = new ArrayList<>();
+    private final ListingData listingData;
+    private final ReportSummary reportSummary;
+    private final List<ReportDetail> reportDetails = new ArrayList<>();
 
-    public static CasesAwaitingJudgmentReportData of(ListingData listingData) {
-        CasesAwaitingJudgmentReportData casesAwaitingJudgmentReportData = new CasesAwaitingJudgmentReportData();
-        casesAwaitingJudgmentReportData.listingData = listingData;
-        return casesAwaitingJudgmentReportData;
+    public CasesAwaitingJudgmentReportData(ListingData listingData, ReportSummary reportSummary) {
+        this.listingData = listingData;
+        this.reportSummary = reportSummary;
+    }
+
+    public ReportSummary getReportSummary() {
+        return reportSummary;
     }
 
     public void addReportDetail(ReportDetail reportDetail) {
@@ -23,4 +29,6 @@ public class CasesAwaitingJudgmentReportData {
     public List<ReportDetail> getReportDetails() {
         return reportDetails;
     }
+
+
 }

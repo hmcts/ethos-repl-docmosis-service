@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.model.helper.Constants;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
@@ -38,19 +39,17 @@ public class CasesAwaitingJudgmentReport {
     }
 
     public CasesAwaitingJudgmentReportData runReport(ListingData listingData, Collection<String> caseTypeIds, String user) {
-        CasesAwaitingJudgmentReportData reportData = CasesAwaitingJudgmentReportData.of(listingData);
-
-        initReport(reportData);
-
         var submitEvents = getCases(caseTypeIds);
 
+        var reportData = initReport(listingData, user);
         populateData(reportData, submitEvents);
 
         return reportData;
     }
 
-    private void initReport(CasesAwaitingJudgmentReportData reportData) {
-
+    private CasesAwaitingJudgmentReportData initReport(ListingData listingData, String user) {
+        var reportSummary = new ReportSummary(user);
+        return new CasesAwaitingJudgmentReportData(listingData, reportSummary);
     }
 
     private List<SubmitEvent> getCases(Collection<String> caseTypeIds) {
@@ -64,8 +63,13 @@ public class CasesAwaitingJudgmentReport {
             }
 
             var reportDetail = new ReportDetail();
+            var caseData = submitEvent.getCaseData();
+            reportDetail.setPositionType(caseData.getPositionType());
+            reportDetail.setCaseNumber(caseData.getEthosCaseReference());
             reportData.addReportDetail(reportDetail);
         }
+
+        addReportSummary(reportData);
     }
 
     private boolean isValidCase(SubmitEvent submitEvent) {
@@ -117,5 +121,12 @@ public class CasesAwaitingJudgmentReport {
 
     private boolean isCaseAwaitingJudgment(CaseData caseData) {
         return CollectionUtils.isEmpty(caseData.getJudgementCollection());
+    }
+
+    private void addReportSummary(CasesAwaitingJudgmentReportData reportData) {
+        var positionTypes = new HashMap<String, Integer>();
+        reportData.getReportDetails().forEach(rd -> positionTypes.merge(rd.getPositionType(), 1, Integer::sum));
+
+        reportData.getReportSummary().getPositionTypes().putAll(positionTypes);
     }
 }

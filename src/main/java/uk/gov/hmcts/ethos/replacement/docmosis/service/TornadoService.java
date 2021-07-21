@@ -133,18 +133,18 @@ public class TornadoService {
         ByteArrayOutputStream os = null;
         var documentInfo = new DocumentInfo();
         try {
-            //conn = createConnection();
+            conn = createConnection();
             log.info(CONNECTED);
             var userDetails = userService.getUserDetails(authToken);
             String documentName = ListingHelper.getListingDocName(listingData);
-            //outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
+            outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
             buildListingInstruction(outputStreamWriter, listingData, documentName, userDetails, caseType);
             os = new ByteArrayOutputStream();
             documentInfo = checkResponseStatus(authToken, conn, documentName, os);
         } catch (ConnectException e) {
             log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS + e.getMessage());
             log.error(PROXY);
-            //System.exit(2);
+            System.exit(2);
         } finally {
             releaseResources(conn, outputStreamWriter, os);
         }
@@ -171,17 +171,17 @@ public class TornadoService {
         ByteArrayOutputStream os = null;
         var documentInfo = new DocumentInfo();
         try {
-           // conn = createConnection();
+            conn = createConnection();
             log.info(CONNECTED);
             String documentName = BulkHelper.getScheduleDocName(bulkData.getScheduleDocName());
-            //outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
+            outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
             buildScheduleInstruction(outputStreamWriter, bulkData);
             os = new ByteArrayOutputStream();
             documentInfo = checkResponseStatus(authToken, conn, documentName, os);
         } catch (ConnectException e) {
             log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS + e.getMessage());
             log.error(PROXY);
-            //System.exit(2);
+            System.exit(2);
         } finally {
             releaseResources(conn, outputStreamWriter, os);
         }
@@ -247,8 +247,8 @@ public class TornadoService {
     }
 
     private void writeOutputStream(OutputStreamWriter outputStreamWriter, StringBuilder sb) throws IOException {
-       // outputStreamWriter.write(sb.toString());
-       // outputStreamWriter.flush();
+        outputStreamWriter.write(sb.toString());
+        outputStreamWriter.flush();
     }
 
 }

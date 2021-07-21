@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -42,14 +43,17 @@ public class CasesAwaitingJudgmentReportTest {
 
     List<SubmitEvent> submitEvents = new ArrayList<>();
 
-    static String validPositionType;
+    final String validPositionType;
+    static final String USER = "Test User";
+
+    public CasesAwaitingJudgmentReportTest() {
+        validPositionType = CasesAwaitingJudgmentReport.VALID_POSITION_TYPES.stream().findAny().orElseThrow();
+    }
 
     @Before
     public void setup() {
         submitEvents.clear();
         when(reportDataSource.getData(anyList())).thenReturn(submitEvents);
-
-        validPositionType = CasesAwaitingJudgmentReport.VALID_POSITION_TYPES.stream().findAny().orElseThrow();
     }
 
     @Test
@@ -59,10 +63,10 @@ public class CasesAwaitingJudgmentReportTest {
         // Then the case should not be in the report data
 
         submitEvents.add(createSubmitEvent(Constants.CLOSED_STATE));
-        ListingData listingData = new ListingData();
+        var listingData = new ListingData();
 
-        CasesAwaitingJudgmentReportData reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), "User 1");
+        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
         assertNotNull(reportData);
         assertTrue(reportData.getReportDetails().isEmpty());
     }
@@ -74,11 +78,11 @@ public class CasesAwaitingJudgmentReportTest {
         // When I request report data
         // Then the case should not be in the report data
         submitEvents.add(createSubmitEventAccepted("An invalid position type"));
-        ListingData listingData = new ListingData();
+        var listingData = new ListingData();
 
-        CasesAwaitingJudgmentReportData reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), "User 1");
-        assertNotNull(reportData);
+        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
+        assertEquals(USER, reportData.getReportSummary().getUser());
         assertTrue(reportData.getReportDetails().isEmpty());
     }
 
@@ -91,11 +95,11 @@ public class CasesAwaitingJudgmentReportTest {
         // Then the case should not be in the report data
 
         submitEvents.add(createSubmitEventAccepted(validPositionType));
-        ListingData listingData = new ListingData();
+        var listingData = new ListingData();
 
-        CasesAwaitingJudgmentReportData reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), "User 1");
-        assertNotNull(reportData);
+        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
+        assertEquals(USER, reportData.getReportSummary().getUser());
         assertTrue(reportData.getReportDetails().isEmpty());
     }
 
@@ -108,11 +112,11 @@ public class CasesAwaitingJudgmentReportTest {
         // Then the case should not be in the report data
 
         submitEvents.add(createSubmitEventWithHearing(validPositionType, HEARING_STATUS_LISTED));
-        ListingData listingData = new ListingData();
+        var listingData = new ListingData();
 
-        CasesAwaitingJudgmentReportData reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), "User 1");
-        assertNotNull(reportData);
+        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
+        assertEquals(USER, reportData.getReportSummary().getUser());
         assertTrue(reportData.getReportDetails().isEmpty());
     }
 
@@ -126,11 +130,11 @@ public class CasesAwaitingJudgmentReportTest {
         // Then the case should not be in the report data
 
         submitEvents.add(createSubmitEventWithJudgment(validPositionType));
-        ListingData listingData = new ListingData();
+        var listingData = new ListingData();
 
-        CasesAwaitingJudgmentReportData reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), "User 1");
-        assertNotNull(reportData);
+        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
+        assertEquals(USER, reportData.getReportSummary().getUser());
         assertTrue(reportData.getReportDetails().isEmpty());
     }
 
@@ -141,7 +145,14 @@ public class CasesAwaitingJudgmentReportTest {
         // And is awaiting judgment
         // When I request report data
         // Then the case is in the report data
-        fail();
+
+        submitEvents.add(createSubmitEventWithHearing(validPositionType, HEARING_STATUS_HEARD));
+        var listingData = new ListingData();
+
+        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
+        assertEquals(USER, reportData.getReportSummary().getUser());
+        assertEquals(1, reportData.getReportDetails().size());
     }
 
     @Test
@@ -149,7 +160,19 @@ public class CasesAwaitingJudgmentReportTest {
         // Given I have 3 valid cases with position type Draft with Members
         // When I request report data
         // Then the report summary shows 3 Draft with Members
-        fail();
+        var positionType = "Draft with members";
+        submitEvents.add(createSubmitEventWithHearing(positionType, HEARING_STATUS_HEARD));
+        submitEvents.add(createSubmitEventWithHearing(positionType, HEARING_STATUS_HEARD));
+        submitEvents.add(createSubmitEventWithHearing(positionType, HEARING_STATUS_HEARD));
+        var listingData = new ListingData();
+
+        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
+        assertEquals(USER, reportData.getReportSummary().getUser());
+        assertEquals(3, reportData.getReportDetails().size());
+        assertEquals(1, reportData.getReportSummary().getPositionTypes().size());
+        assertTrue(reportData.getReportSummary().getPositionTypes().containsKey(positionType));
+        assertEquals(3, reportData.getReportSummary().getPositionTypes().get(positionType).intValue());
     }
 
     @Test
@@ -162,14 +185,65 @@ public class CasesAwaitingJudgmentReportTest {
         //    | Draft with members                   | 3 |
         //    | Awaiting written reasons             | 2 |
         //    | Fair copy, to chairman for signature | 1 |
-        fail();
+        var positionType1 = "Draft with members";
+        submitEvents.add(createSubmitEventWithHearing(positionType1, HEARING_STATUS_HEARD));
+        submitEvents.add(createSubmitEventWithHearing(positionType1, HEARING_STATUS_HEARD));
+        submitEvents.add(createSubmitEventWithHearing(positionType1, HEARING_STATUS_HEARD));
+        var positionType2 = "Awaiting written reasons";
+        submitEvents.add(createSubmitEventWithHearing(positionType2, HEARING_STATUS_HEARD));
+        submitEvents.add(createSubmitEventWithHearing(positionType2, HEARING_STATUS_HEARD));
+        var positionType3 = "Fair copy, to chairman for signature";
+        submitEvents.add(createSubmitEventWithHearing(positionType3, HEARING_STATUS_HEARD));
+
+        var listingData = new ListingData();
+
+        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
+        assertEquals(USER, reportData.getReportSummary().getUser());
+        assertEquals(6, reportData.getReportDetails().size());
+        assertEquals(3, reportData.getReportSummary().getPositionTypes().size());
+
+        assertTrue(reportData.getReportSummary().getPositionTypes().containsKey(positionType1));
+        assertEquals(3, reportData.getReportSummary().getPositionTypes().get(positionType1).intValue());
+        assertTrue(reportData.getReportSummary().getPositionTypes().containsKey(positionType2));
+        assertEquals(2, reportData.getReportSummary().getPositionTypes().get(positionType2).intValue());
+        assertTrue(reportData.getReportSummary().getPositionTypes().containsKey(positionType3));
+        assertEquals(1, reportData.getReportSummary().getPositionTypes().get(positionType3).intValue());
+    }
+
+    @Test
+    public void shouldContainCorrectDetailValuesForSingleHearingCase() {
+        // Given I have a valid case
+        // When I request report data
+        // Then I have correct report detail values for the case
+        var listedDate = "2021-07-21T10:00:00";
+        var expectedWeeksSinceHearing = 2;
+        var expectedDaysSinceHearing = 100;
+        var caseReference = "2500123/2021";
+        var expectedMultipleReference = ReportDetail.NO_MULTIPLE_REFERENCE;
+        var expectedLastHeardHearingDate = listedDate;
+        var hearingNumber = 1;
+        var hearingType = Constants.HEARING_TYPE_JUDICIAL_COSTS_HEARING;
+        var judge = "Hugh Parkfield";
+
+        submitEvents.add(createSubmitEventWithHearing(validPositionType, HEARING_STATUS_HEARD));
+        var caseData = submitEvents.get(0).getCaseData();
+        caseData.setEthosCaseReference(caseReference);
+        var listingData = new ListingData();
+
+        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
+        assertEquals(USER, reportData.getReportSummary().getUser());
+        assertEquals(1, reportData.getReportDetails().size());
+        var reportDetail = reportData.getReportDetails().get(0);
+        assertEquals(caseReference, reportDetail.getCaseNumber());
+
     }
 
 
-
     private SubmitEvent createSubmitEventWithJudgment(String positionType) {
-        SubmitEvent submitEvent = createSubmitEventWithHearing(positionType, HEARING_STATUS_HEARD);
-        CaseData caseData = submitEvent.getCaseData();
+        var submitEvent = createSubmitEventWithHearing(positionType, HEARING_STATUS_HEARD);
+        var caseData = submitEvent.getCaseData();
 
         var judgementType = new JudgementType();
         var judgementTypeItem = new JudgementTypeItem();
@@ -184,19 +258,19 @@ public class CasesAwaitingJudgmentReportTest {
     }
 
     private SubmitEvent createSubmitEventWithHearing(String positionType, String hearingStatus) {
-        SubmitEvent submitEvent = createSubmitEvent(ACCEPTED_STATE);
+        var submitEvent = createSubmitEvent(ACCEPTED_STATE);
         submitEvent.setCaseData(createCaseData(positionType,  hearingStatus));
         return submitEvent;
     }
 
     private SubmitEvent createSubmitEventAccepted(String positionType) {
-        SubmitEvent submitEvent = createSubmitEvent(ACCEPTED_STATE);
+        var submitEvent = createSubmitEvent(ACCEPTED_STATE);
         submitEvent.setCaseData(createCaseData(positionType,  null));
         return submitEvent;
     }
 
     private CaseData createCaseData(String positionType, String hearingStatus) {
-        CaseData caseData = new CaseData();
+        var caseData = new CaseData();
         caseData.setPositionType(positionType);
 
         if (hearingStatus != null) {
@@ -213,7 +287,7 @@ public class CasesAwaitingJudgmentReportTest {
 
             var hearingTypeItem = new HearingTypeItem();
             hearingTypeItem.setValue(hearingType);
-            List<HearingTypeItem> hearings = Collections.singletonList(hearingTypeItem);
+            var hearings = Collections.singletonList(hearingTypeItem);
             caseData.setHearingCollection(hearings);
         }
 
@@ -221,7 +295,7 @@ public class CasesAwaitingJudgmentReportTest {
     }
 
     private SubmitEvent createSubmitEvent(String state) {
-        SubmitEvent submitEvent = new SubmitEvent();
+        var submitEvent = new SubmitEvent();
         submitEvent.setState(state);
 
         return submitEvent;
