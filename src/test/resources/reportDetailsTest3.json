@@ -135,6 +135,9 @@
       "ConFastCasesCompletedHearing": "8",
       "ConFastSessionDays": "3",
       "ConStdCasesCompletedHearing": "2",
+      "casesCompletedHearingTotal": "2",
+      "sessionDaysTotal": "6",
+      "completedPerSessionTotal": "1",
       "clerk": "Anne Fox",
       "hearingNumber": "1",
       "resp_others": "Mark Taylor2, Tony Jones, Steve Thomas"
