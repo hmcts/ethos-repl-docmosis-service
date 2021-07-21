@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -209,7 +210,7 @@ public class CasesCompletedReport {
         var adhocReportType = new AdhocReportType();
         adhocReportType.setCaseReference(caseData.getEthosCaseReference());
         adhocReportType.setPosition(caseData.getCurrentPosition());
-        adhocReportType.setConciliationTrack(caseData.getConciliationTrack());
+        adhocReportType.setConciliationTrack(getConciliationTrack(caseData));
         adhocReportType.setConciliationTrackNo(getConciliationTrackNumber(caseData.getConciliationTrack()));
 
         var latestSessionDate = LocalDate.parse(latestSession.getListedDate().substring(0, 10), OLD_DATE_TIME_PATTERN2);
@@ -223,6 +224,11 @@ public class CasesCompletedReport {
         adhocReportType.setHearingClerk(latestSession.getHearingClerk());
 
         return adhocReportType;
+    }
+
+    private String getConciliationTrack(CaseData caseData) {
+        return StringUtils.isNotBlank(caseData.getConciliationTrack() ) ?
+                caseData.getConciliationTrack() : CONCILIATION_TRACK_NO_CONCILIATION;
     }
 
     private String getConciliationTrackNumber(String conciliationTrack) {
