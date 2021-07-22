@@ -8,8 +8,8 @@ public class ReportDetail {
     static final String NO_MULTIPLE_REFERENCE = "0/0";
 
     private String positionType;
-    private int weeksSinceHearing;
-    private int daysSinceHeard;
+    private long weeksSinceHearing;
+    private long daysSinceHearing;
     private String caseNumber;
     private String multipleReference;
     private String lastHeardHearingDate;

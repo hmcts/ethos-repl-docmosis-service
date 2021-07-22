@@ -2,36 +2,39 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.helper.Constants;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.CaseDataBuilder;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_COSTS_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 public class CasesAwaitingJudgmentReportTest {
 
-    @Mock
     ReportDataSource reportDataSource;
 
-    @InjectMocks
+    Clock clock;
+
     CasesAwaitingJudgmentReport casesAwaitingJudgmentReport;
 
     CaseDataBuilder caseDataBuilder;
@@ -40,7 +43,8 @@ public class CasesAwaitingJudgmentReportTest {
 
     final String validPositionType;
     static final String USER = "Test User";
-    static final String LISTING_DATE = "1970-01-01T00:00:00";
+    static final String DATE_NOW = "2021-07-31T10:00:00Z";
+    static final String LISTING_DATE = "1970-01-01T00:00:00.000";
 
     public CasesAwaitingJudgmentReportTest() {
         caseDataBuilder = new CaseDataBuilder();
@@ -50,7 +54,19 @@ public class CasesAwaitingJudgmentReportTest {
     @Before
     public void setup() {
         submitEvents.clear();
-        when(reportDataSource.getData(anyList())).thenReturn(submitEvents);
+
+        reportDataSource = mock(ReportDataSource.class);
+        when(reportDataSource.getData(NEWCASTLE_CASE_TYPE_ID)).thenReturn(submitEvents);
+
+        clock = Clock.fixed(Instant.parse(DATE_NOW), ZoneId.of("UTC"));
+
+        casesAwaitingJudgmentReport = new CasesAwaitingJudgmentReport(reportDataSource, clock);
+    }
+
+    private void assertCommonValues(CasesAwaitingJudgmentReportData reportData) {
+        assertNotNull(reportData);
+        assertNotNull(reportData.getListingData());
+        assertEquals(USER, reportData.getReportSummary().getUser());
     }
 
     @Test
@@ -63,8 +79,8 @@ public class CasesAwaitingJudgmentReportTest {
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
-        assertNotNull(reportData);
+                NEWCASTLE_CASE_TYPE_ID, USER);
+        assertCommonValues(reportData);
         assertTrue(reportData.getReportDetails().isEmpty());
     }
 
@@ -79,9 +95,8 @@ public class CasesAwaitingJudgmentReportTest {
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
-        assertEquals(USER, reportData.getReportSummary().getUser());
-        assertTrue(reportData.getReportDetails().isEmpty());
+                NEWCASTLE_CASE_TYPE_ID, USER);
+        assertCommonValues(reportData);
     }
 
     @Test
@@ -96,8 +111,8 @@ public class CasesAwaitingJudgmentReportTest {
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
-        assertEquals(USER, reportData.getReportSummary().getUser());
+                NEWCASTLE_CASE_TYPE_ID, USER);
+        assertCommonValues(reportData);
         assertTrue(reportData.getReportDetails().isEmpty());
     }
 
@@ -116,8 +131,8 @@ public class CasesAwaitingJudgmentReportTest {
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
-        assertEquals(USER, reportData.getReportSummary().getUser());
+                NEWCASTLE_CASE_TYPE_ID, USER);
+        assertCommonValues(reportData);
         assertTrue(reportData.getReportDetails().isEmpty());
     }
 
@@ -138,8 +153,8 @@ public class CasesAwaitingJudgmentReportTest {
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
-        assertEquals(USER, reportData.getReportSummary().getUser());
+                NEWCASTLE_CASE_TYPE_ID, USER);
+        assertCommonValues(reportData);
         assertTrue(reportData.getReportDetails().isEmpty());
     }
 
@@ -158,8 +173,8 @@ public class CasesAwaitingJudgmentReportTest {
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
-        assertEquals(USER, reportData.getReportSummary().getUser());
+                NEWCASTLE_CASE_TYPE_ID, USER);
+        assertCommonValues(reportData);
         assertEquals(1, reportData.getReportDetails().size());
     }
 
@@ -175,8 +190,8 @@ public class CasesAwaitingJudgmentReportTest {
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
-        assertEquals(USER, reportData.getReportSummary().getUser());
+                NEWCASTLE_CASE_TYPE_ID, USER);
+        assertCommonValues(reportData);
         assertEquals(3, reportData.getReportDetails().size());
         assertEquals(1, reportData.getReportSummary().getPositionTypes().size());
         assertTrue(reportData.getReportSummary().getPositionTypes().containsKey(positionType));
@@ -206,8 +221,8 @@ public class CasesAwaitingJudgmentReportTest {
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
-        assertEquals(USER, reportData.getReportSummary().getUser());
+                NEWCASTLE_CASE_TYPE_ID, USER);
+        assertCommonValues(reportData);
         assertEquals(6, reportData.getReportDetails().size());
         assertEquals(3, reportData.getReportSummary().getPositionTypes().size());
 
@@ -220,22 +235,68 @@ public class CasesAwaitingJudgmentReportTest {
     }
 
     @Test
-    public void shouldContainCorrectDetailValuesForSingleHearingCase() {
+    public void shouldContainCorrectDetailValuesForCaseWithOneHearing() {
         // Given I have a valid case
         // When I request report data
         // Then I have correct report detail values for the case
-        var listedDate = "2021-07-21T10:00:00";
+        var listedDate = "2021-07-16T10:00:00.000";
         var expectedWeeksSinceHearing = 2;
-        var expectedDaysSinceHearing = 100;
+        var expectedDaysSinceHearing = 15;
         var caseReference = "2500123/2021";
-        var expectedMultipleReference = ReportDetail.NO_MULTIPLE_REFERENCE;
-        var expectedLastHeardHearingDate = listedDate;
-        var hearingNumber = 1;
-        var hearingType = Constants.HEARING_TYPE_JUDICIAL_COSTS_HEARING;
+        var currentPosition = MANUALLY_CREATED_POSITION;
+        var dateToPosition = "2021-07-10";
+        var conciliationTrack = CONCILIATION_TRACK_FAST_TRACK;
+        var hearingNumber = "1";
+        var hearingType = HEARING_TYPE_JUDICIAL_COSTS_HEARING;
         var judge = "Hugh Parkfield";
 
-        SubmitEvent submitEvent = caseDataBuilder.withEthosCaseReference(caseReference)
+        var submitEvent = caseDataBuilder.withEthosCaseReference(caseReference)
                 .withPositionType(validPositionType)
+                .withSingleCaseType()
+                .withCurrentPosition(currentPosition)
+                .withDateToPosition(dateToPosition)
+                .withConciliationTrack(conciliationTrack)
+                .withHearing(listedDate, HEARING_STATUS_HEARD, hearingNumber, hearingType, judge)
+                .buildAsSubmitEvent(ACCEPTED_STATE);
+        submitEvents.add(submitEvent);
+        var caseData = submitEvents.get(0).getCaseData();
+        caseData.setEthosCaseReference(caseReference);
+        var listingData = new ListingData();
+
+        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+                NEWCASTLE_CASE_TYPE_ID, USER);
+        assertCommonValues(reportData);
+        assertEquals(1, reportData.getReportDetails().size());
+
+        var reportDetail = reportData.getReportDetails().get(0);
+        assertEquals(validPositionType, reportDetail.getPositionType());
+
+        assertEquals(expectedWeeksSinceHearing, reportDetail.getWeeksSinceHearing());
+        assertEquals(expectedDaysSinceHearing, reportDetail.getDaysSinceHearing());
+        assertEquals(caseReference, reportDetail.getCaseNumber());
+        assertEquals(ReportDetail.NO_MULTIPLE_REFERENCE, reportDetail.getMultipleReference());
+        assertEquals(listedDate, reportDetail.getLastHeardHearingDate());
+        assertEquals(hearingNumber, reportDetail.getHearingNumber());
+        assertEquals(hearingType, reportDetail.getHearingType());
+        assertEquals(judge, reportDetail.getJudge());
+        assertEquals(currentPosition, reportDetail.getCurrentPosition());
+        assertEquals(dateToPosition, reportDetail.getDateToPosition());
+        assertEquals(conciliationTrack, reportDetail.getConciliationTrack());
+    }
+
+    @Test
+    public void shouldContainCorrectMultipleReferenceIfInMultiple() {
+        // Given I have a valid case
+        // And the case is a Multiple case type
+        // When I request report data
+        // Then I have correct Multiple Reference value in the report data
+        var listedDate = "2021-07-16T10:00:00.000";
+        var caseReference = "2500123/2021";
+        var multipleReference = "250999/2021";
+
+        var submitEvent = caseDataBuilder.withEthosCaseReference(caseReference)
+                .withPositionType(validPositionType)
+                .withMultipleCaseType(multipleReference)
                 .withHearing(listedDate, HEARING_STATUS_HEARD)
                 .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEvent);
@@ -244,12 +305,58 @@ public class CasesAwaitingJudgmentReportTest {
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
-                List.of(NEWCASTLE_CASE_TYPE_ID), USER);
-        assertEquals(USER, reportData.getReportSummary().getUser());
+                NEWCASTLE_CASE_TYPE_ID, USER);
+        assertCommonValues(reportData);
         assertEquals(1, reportData.getReportDetails().size());
-        var reportDetail = reportData.getReportDetails().get(0);
-        assertEquals(caseReference, reportDetail.getCaseNumber());
 
+        var reportDetail = reportData.getReportDetails().get(0);
+        assertEquals(multipleReference, reportDetail.getMultipleReference());
+    }
+
+    @Test
+    public void shouldContainCorrectDetailValuesForCaseWithMultipleHearings() {
+        // Given I have a valid case
+        // And the case has the following hearings:
+        // | Listed Date | Hearing Number | Status |
+        // | 2021-07-01 | 1 | Heard |
+        // | 2021-07-02 | 2 | Postponed |
+        // | 2021-07-05 | 3 | Heard |
+        // | 2021-07-06 | 4 | Withdrawn |
+        // When I request report data
+        // Then I have correct hearing values for hearing #3
+        var expectedWeeksSinceHearing = 3;
+        var expectedDaysSinceHearing = 26;
+        var caseReference = "2500123/2021";
+        var judge = "Hugh Parkfield";
+
+        var submitEvent = caseDataBuilder.withEthosCaseReference(caseReference)
+                .withPositionType(validPositionType)
+                .withSingleCaseType()
+                .withHearing("2021-07-01T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withHearing("2021-07-02T10:00:00.000", HEARING_STATUS_POSTPONED, "2", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, "3", HEARING_TYPE_JUDICIAL_MEDIATION, judge)
+                .withHearing("2021-07-06T10:00:00.000", HEARING_STATUS_WITHDRAWN, "4", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .buildAsSubmitEvent(ACCEPTED_STATE);
+        submitEvents.add(submitEvent);
+        var caseData = submitEvents.get(0).getCaseData();
+        caseData.setEthosCaseReference(caseReference);
+        var listingData = new ListingData();
+
+        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+                NEWCASTLE_CASE_TYPE_ID, USER);
+        assertCommonValues(reportData);
+        assertEquals(1, reportData.getReportDetails().size());
+
+        var reportDetail = reportData.getReportDetails().get(0);
+        assertEquals(validPositionType, reportDetail.getPositionType());
+
+        assertEquals(expectedWeeksSinceHearing, reportDetail.getWeeksSinceHearing());
+        assertEquals(expectedDaysSinceHearing, reportDetail.getDaysSinceHearing());
+        assertEquals(caseReference, reportDetail.getCaseNumber());
+        assertEquals("2021-07-05T10:00:00.000", reportDetail.getLastHeardHearingDate());
+        assertEquals("3", reportDetail.getHearingNumber());
+        assertEquals(HEARING_TYPE_JUDICIAL_MEDIATION, reportDetail.getHearingType());
+        assertEquals(judge, reportDetail.getJudge());
     }
 
     private SubmitEvent createValidSubmitEvent(String positionType) {

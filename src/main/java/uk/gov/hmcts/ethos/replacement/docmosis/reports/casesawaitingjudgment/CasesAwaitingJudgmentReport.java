@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -8,11 +9,21 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.helper.Constants;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportDetail.NO_MULTIPLE_REFERENCE;
 
 @Service
 public class CasesAwaitingJudgmentReport {
@@ -33,13 +44,20 @@ public class CasesAwaitingJudgmentReport {
     );
 
     private final ReportDataSource reportDataSource;
+    private final Clock clock;
 
+    @Autowired
     public CasesAwaitingJudgmentReport(ReportDataSource reportDataSource) {
-        this.reportDataSource = reportDataSource;
+        this(reportDataSource, Clock.systemDefaultZone());
     }
 
-    public CasesAwaitingJudgmentReportData runReport(ListingData listingData, Collection<String> caseTypeIds, String user) {
-        var submitEvents = getCases(caseTypeIds);
+    public CasesAwaitingJudgmentReport(ReportDataSource reportDataSource, Clock clock) {
+        this.reportDataSource = reportDataSource;
+        this.clock = clock;
+    }
+
+    public CasesAwaitingJudgmentReportData runReport(ListingData listingData, String caseTypeId, String user) {
+        var submitEvents = getCases(caseTypeId);
 
         var reportData = initReport(listingData, user);
         populateData(reportData, submitEvents);
@@ -52,8 +70,8 @@ public class CasesAwaitingJudgmentReport {
         return new CasesAwaitingJudgmentReportData(listingData, reportSummary);
     }
 
-    private List<SubmitEvent> getCases(Collection<String> caseTypeIds) {
-        return reportDataSource.getData(caseTypeIds);
+    private List<SubmitEvent> getCases(String caseTypeId) {
+        return reportDataSource.getData(caseTypeId);
     }
 
     private void populateData(CasesAwaitingJudgmentReportData reportData, List<SubmitEvent> submitEvents) {
@@ -64,8 +82,28 @@ public class CasesAwaitingJudgmentReport {
 
             var reportDetail = new ReportDetail();
             var caseData = submitEvent.getCaseData();
+            var heardHearing = getLatestHeardHearing(caseData.getHearingCollection());
+            LocalDate today = LocalDate.now(clock);
+            LocalDate listedDate = LocalDate.parse(heardHearing.listedDate, OLD_DATE_TIME_PATTERN);
+
             reportDetail.setPositionType(caseData.getPositionType());
+            reportDetail.setWeeksSinceHearing(getWeeksSinceHearing(listedDate, today));
+            reportDetail.setDaysSinceHearing(getDaysSinceHearing(listedDate, today));
             reportDetail.setCaseNumber(caseData.getEthosCaseReference());
+            if (MULTIPLE_CASE_TYPE.equals(caseData.getCaseType())) {
+                reportDetail.setMultipleReference(caseData.getMultipleReference());
+            } else {
+                reportDetail.setMultipleReference(NO_MULTIPLE_REFERENCE);
+            }
+
+            reportDetail.setHearingNumber(heardHearing.hearingNumber);
+            reportDetail.setHearingType(heardHearing.hearingType);
+            reportDetail.setLastHeardHearingDate(heardHearing.listedDate);
+            reportDetail.setJudge(heardHearing.judge);
+            reportDetail.setCurrentPosition(caseData.getCurrentPosition());
+            reportDetail.setDateToPosition(caseData.getDateToPosition());
+            reportDetail.setConciliationTrack(caseData.getConciliationTrack());
+
             reportData.addReportDetail(reportDetail);
         }
 
@@ -129,4 +167,41 @@ public class CasesAwaitingJudgmentReport {
 
         reportData.getReportSummary().getPositionTypes().putAll(positionTypes);
     }
+
+    private HeardHearing getLatestHeardHearing(List<HearingTypeItem> hearings) {
+        var heardHearings = new ArrayList<HeardHearing>();
+        for (var hearingTypeItem : hearings) {
+            var hearingType = hearingTypeItem.getValue();
+            for (var dateListedTypeItem : hearingType.getHearingDateCollection()) {
+                var dateListedType = dateListedTypeItem.getValue();
+                if (HEARING_STATUS_HEARD.equals(dateListedType.getHearingStatus())) {
+                    var heardHearing = new HeardHearing();
+                    heardHearing.listedDate = dateListedType.getListedDate();
+                    heardHearing.hearingNumber = hearingType.getHearingNumber();
+                    heardHearing.hearingType = hearingType.getHearingType();
+                    heardHearing.judge = hearingType.getJudge();
+
+                    heardHearings.add(heardHearing);
+                }
+            }
+        }
+
+        return Collections.max(heardHearings, Comparator.comparing(h -> h.listedDate));
+    }
+
+    private long getWeeksSinceHearing(LocalDate listedDate, LocalDate today) {
+        return ChronoUnit.WEEKS.between(listedDate, today);
+    }
+
+    private long getDaysSinceHearing(LocalDate listedDate, LocalDate today) {
+        return ChronoUnit.DAYS.between(listedDate, today);
+    }
+
+}
+
+class HeardHearing {
+    String listedDate;
+    String hearingNumber;
+    String hearingType;
+    String judge;
 }
