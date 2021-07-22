@@ -6,28 +6,21 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.helper.Constants;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.CaseDataBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
@@ -41,12 +34,16 @@ public class CasesAwaitingJudgmentReportTest {
     @InjectMocks
     CasesAwaitingJudgmentReport casesAwaitingJudgmentReport;
 
+    CaseDataBuilder caseDataBuilder;
+
     List<SubmitEvent> submitEvents = new ArrayList<>();
 
     final String validPositionType;
     static final String USER = "Test User";
+    static final String LISTING_DATE = "1970-01-01T00:00:00";
 
     public CasesAwaitingJudgmentReportTest() {
+        caseDataBuilder = new CaseDataBuilder();
         validPositionType = CasesAwaitingJudgmentReport.VALID_POSITION_TYPES.stream().findAny().orElseThrow();
     }
 
@@ -62,7 +59,7 @@ public class CasesAwaitingJudgmentReportTest {
         // When I request report data
         // Then the case should not be in the report data
 
-        submitEvents.add(createSubmitEvent(Constants.CLOSED_STATE));
+        submitEvents.add(caseDataBuilder.buildAsSubmitEvent(CLOSED_STATE));
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
@@ -77,7 +74,8 @@ public class CasesAwaitingJudgmentReportTest {
         // And a case has an invalid position type
         // When I request report data
         // Then the case should not be in the report data
-        submitEvents.add(createSubmitEventAccepted("An invalid position type"));
+
+        submitEvents.add(caseDataBuilder.withPositionType("An invalid position type").buildAsSubmitEvent(ACCEPTED_STATE));
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
@@ -94,7 +92,7 @@ public class CasesAwaitingJudgmentReportTest {
         // When I request report data
         // Then the case should not be in the report data
 
-        submitEvents.add(createSubmitEventAccepted(validPositionType));
+        submitEvents.add(caseDataBuilder.withPositionType(validPositionType).buildAsSubmitEvent(ACCEPTED_STATE));
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
@@ -111,7 +109,10 @@ public class CasesAwaitingJudgmentReportTest {
         // When I request report data
         // Then the case should not be in the report data
 
-        submitEvents.add(createSubmitEventWithHearing(validPositionType, HEARING_STATUS_LISTED));
+        var submitEvent = caseDataBuilder.withPositionType(validPositionType)
+                .withHearing(LISTING_DATE, HEARING_STATUS_LISTED)
+                .buildAsSubmitEvent(ACCEPTED_STATE);
+        submitEvents.add(submitEvent);
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
@@ -129,7 +130,11 @@ public class CasesAwaitingJudgmentReportTest {
         // When I request report data
         // Then the case should not be in the report data
 
-        submitEvents.add(createSubmitEventWithJudgment(validPositionType));
+        var submitEvent = caseDataBuilder.withPositionType(validPositionType)
+                .withHearing(LISTING_DATE, HEARING_STATUS_HEARD)
+                .withJudgment()
+                .buildAsSubmitEvent(ACCEPTED_STATE);
+        submitEvents.add(submitEvent);
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
@@ -146,7 +151,10 @@ public class CasesAwaitingJudgmentReportTest {
         // When I request report data
         // Then the case is in the report data
 
-        submitEvents.add(createSubmitEventWithHearing(validPositionType, HEARING_STATUS_HEARD));
+        var submitEvent = caseDataBuilder.withPositionType(validPositionType)
+                .withHearing(LISTING_DATE, HEARING_STATUS_HEARD)
+                .buildAsSubmitEvent(ACCEPTED_STATE);
+        submitEvents.add(submitEvent);
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
@@ -161,9 +169,9 @@ public class CasesAwaitingJudgmentReportTest {
         // When I request report data
         // Then the report summary shows 3 Draft with Members
         var positionType = "Draft with members";
-        submitEvents.add(createSubmitEventWithHearing(positionType, HEARING_STATUS_HEARD));
-        submitEvents.add(createSubmitEventWithHearing(positionType, HEARING_STATUS_HEARD));
-        submitEvents.add(createSubmitEventWithHearing(positionType, HEARING_STATUS_HEARD));
+        submitEvents.add(createValidSubmitEvent(positionType));
+        submitEvents.add(createValidSubmitEvent(positionType));
+        submitEvents.add(createValidSubmitEvent(positionType));
         var listingData = new ListingData();
 
         var reportData = casesAwaitingJudgmentReport.runReport(listingData,
@@ -186,14 +194,14 @@ public class CasesAwaitingJudgmentReportTest {
         //    | Awaiting written reasons             | 2 |
         //    | Fair copy, to chairman for signature | 1 |
         var positionType1 = "Draft with members";
-        submitEvents.add(createSubmitEventWithHearing(positionType1, HEARING_STATUS_HEARD));
-        submitEvents.add(createSubmitEventWithHearing(positionType1, HEARING_STATUS_HEARD));
-        submitEvents.add(createSubmitEventWithHearing(positionType1, HEARING_STATUS_HEARD));
+        submitEvents.add(createValidSubmitEvent(positionType1));
+        submitEvents.add(createValidSubmitEvent(positionType1));
+        submitEvents.add(createValidSubmitEvent(positionType1));
         var positionType2 = "Awaiting written reasons";
-        submitEvents.add(createSubmitEventWithHearing(positionType2, HEARING_STATUS_HEARD));
-        submitEvents.add(createSubmitEventWithHearing(positionType2, HEARING_STATUS_HEARD));
+        submitEvents.add(createValidSubmitEvent(positionType2));
+        submitEvents.add(createValidSubmitEvent(positionType2));
         var positionType3 = "Fair copy, to chairman for signature";
-        submitEvents.add(createSubmitEventWithHearing(positionType3, HEARING_STATUS_HEARD));
+        submitEvents.add(createValidSubmitEvent(positionType3));
 
         var listingData = new ListingData();
 
@@ -226,7 +234,11 @@ public class CasesAwaitingJudgmentReportTest {
         var hearingType = Constants.HEARING_TYPE_JUDICIAL_COSTS_HEARING;
         var judge = "Hugh Parkfield";
 
-        submitEvents.add(createSubmitEventWithHearing(validPositionType, HEARING_STATUS_HEARD));
+        SubmitEvent submitEvent = caseDataBuilder.withEthosCaseReference(caseReference)
+                .withPositionType(validPositionType)
+                .withHearing(listedDate, HEARING_STATUS_HEARD)
+                .buildAsSubmitEvent(ACCEPTED_STATE);
+        submitEvents.add(submitEvent);
         var caseData = submitEvents.get(0).getCaseData();
         caseData.setEthosCaseReference(caseReference);
         var listingData = new ListingData();
@@ -240,64 +252,11 @@ public class CasesAwaitingJudgmentReportTest {
 
     }
 
-
-    private SubmitEvent createSubmitEventWithJudgment(String positionType) {
-        var submitEvent = createSubmitEventWithHearing(positionType, HEARING_STATUS_HEARD);
-        var caseData = submitEvent.getCaseData();
-
-        var judgementType = new JudgementType();
-        var judgementTypeItem = new JudgementTypeItem();
-        judgementTypeItem.setValue(judgementType);
-
-        var judgments = new ArrayList<JudgementTypeItem>();
-        judgments.add(judgementTypeItem);
-
-        caseData.setJudgementCollection(judgments);
-
-        return submitEvent;
+    private SubmitEvent createValidSubmitEvent(String positionType) {
+        caseDataBuilder = new CaseDataBuilder();
+        return caseDataBuilder.withPositionType(positionType)
+                .withHearing(LISTING_DATE, HEARING_STATUS_HEARD)
+                .buildAsSubmitEvent(ACCEPTED_STATE);
     }
 
-    private SubmitEvent createSubmitEventWithHearing(String positionType, String hearingStatus) {
-        var submitEvent = createSubmitEvent(ACCEPTED_STATE);
-        submitEvent.setCaseData(createCaseData(positionType,  hearingStatus));
-        return submitEvent;
-    }
-
-    private SubmitEvent createSubmitEventAccepted(String positionType) {
-        var submitEvent = createSubmitEvent(ACCEPTED_STATE);
-        submitEvent.setCaseData(createCaseData(positionType,  null));
-        return submitEvent;
-    }
-
-    private CaseData createCaseData(String positionType, String hearingStatus) {
-        var caseData = new CaseData();
-        caseData.setPositionType(positionType);
-
-        if (hearingStatus != null) {
-            var dateListedType = new DateListedType();
-            dateListedType.setHearingStatus(hearingStatus);
-            var dateListedTypeItem = new DateListedTypeItem();
-            dateListedTypeItem.setValue(dateListedType);
-
-            var hearingDates = new ArrayList<DateListedTypeItem>();
-            hearingDates.add(dateListedTypeItem);
-
-            var hearingType = new HearingType();
-            hearingType.setHearingDateCollection(hearingDates);
-
-            var hearingTypeItem = new HearingTypeItem();
-            hearingTypeItem.setValue(hearingType);
-            var hearings = Collections.singletonList(hearingTypeItem);
-            caseData.setHearingCollection(hearings);
-        }
-
-        return caseData;
-    }
-
-    private SubmitEvent createSubmitEvent(String state) {
-        var submitEvent = new SubmitEvent();
-        submitEvent.setState(state);
-
-        return submitEvent;
-    }
 }
