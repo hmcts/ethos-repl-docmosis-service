@@ -1,8 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
@@ -25,7 +24,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportDetail.NO_MULTIPLE_REFERENCE;
 
-@Service
 public class CasesAwaitingJudgmentReport {
 
     static final Collection<String> VALID_POSITION_TYPES = List.of(
@@ -46,7 +44,6 @@ public class CasesAwaitingJudgmentReport {
     private final ReportDataSource reportDataSource;
     private final Clock clock;
 
-    @Autowired
     public CasesAwaitingJudgmentReport(ReportDataSource reportDataSource) {
         this(reportDataSource, Clock.systemDefaultZone());
     }
@@ -59,14 +56,15 @@ public class CasesAwaitingJudgmentReport {
     public CasesAwaitingJudgmentReportData runReport(ListingData listingData, String caseTypeId, String user) {
         var submitEvents = getCases(caseTypeId);
 
-        var reportData = initReport(listingData, user);
+        var reportData = initReport(listingData, caseTypeId, user);
         populateData(reportData, submitEvents);
 
         return reportData;
     }
 
-    private CasesAwaitingJudgmentReportData initReport(ListingData listingData, String user) {
-        var reportSummary = new ReportSummary(user);
+    private CasesAwaitingJudgmentReportData initReport(ListingData listingData, String caseTypeId, String user) {
+        var office = UtilHelper.getListingCaseTypeId(caseTypeId);
+        var reportSummary = new ReportSummary(office, user, LocalDate.now(clock));
         return new CasesAwaitingJudgmentReportData(listingData, reportSummary);
     }
 
