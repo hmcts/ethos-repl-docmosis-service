@@ -96,7 +96,7 @@ public class AddSingleCaseToMultipleService {
                 caseData.getMultipleReference().toString() : "";
         var ethosReference = caseData.getEthosCaseReference() != null ?
                 caseData.getEthosCaseReference().toString() : "";
-        var url =  "<a href=\"../cases/case-details/"+ethosReference+"\">"+
+        var url =  "<a href=\"../cases/case-details/" + ethosReference+"\">" +
                     newMultipleReference+"</a>";
         log.info("setMultipleReferenceLink is set to " + url);
         return url;
