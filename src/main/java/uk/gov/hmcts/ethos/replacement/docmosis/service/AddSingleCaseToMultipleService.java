@@ -15,9 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -92,13 +90,25 @@ public class AddSingleCaseToMultipleService {
 
     }
 
+    private String createMultipleReferenceLink(CaseData caseData)
+    {
+        var newMultipleReference = caseData.getMultipleReference() != null ?
+                caseData.getMultipleReference().toString() : "";
+        var ethosReference = caseData.getEthosCaseReference() != null ?
+                caseData.getEthosCaseReference().toString() : "";
+        var url =  "<a href=\"../cases/case-details/"+ethosReference+"\">"+
+                    newMultipleReference+"</a>";
+        log.info("setMultipleReferenceLink is set to " + url);
+        return url;
+    }
+
     private void updateCaseDataForMultiple(CaseData caseData, String newMultipleReference, String leadClaimant) {
 
         caseData.setMultipleReference(newMultipleReference);
         caseData.setCaseType(MULTIPLE_CASE_TYPE);
         log.info("setLeadClaimant is set to " + leadClaimant);
         caseData.setLeadClaimant(leadClaimant);
-
+        caseData.setMultipleReferenceLink(createMultipleReferenceLink(caseData));
     }
 
     private void addNewLeadToMultiple(String userToken, String multipleCaseTypeId, String jurisdiction,
