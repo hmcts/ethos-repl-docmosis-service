@@ -13,6 +13,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.domain.tribunaloffice.ContactDeta
 
 import java.util.Optional;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
@@ -85,6 +86,7 @@ public class DefaultValuesReaderService {
         listingData.setTribunalCorrespondenceEmail(defaultValues.getTribunalCorrespondenceEmail());
         return listingData;
     }
+
 
     private DefaultValues createDefaultValues(ContactDetails contactDetails) {
         return DefaultValues.builder()
