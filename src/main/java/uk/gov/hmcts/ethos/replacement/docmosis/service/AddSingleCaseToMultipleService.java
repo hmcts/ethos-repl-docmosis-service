@@ -92,12 +92,8 @@ public class AddSingleCaseToMultipleService {
 
     private String createMultipleReferenceLink(CaseData caseData)
     {
-        var newMultipleReference = caseData.getMultipleReference() != null ?
-                caseData.getMultipleReference().toString() : "";
-        var ethosReference = caseData.getEthosCaseReference() != null ?
-                caseData.getEthosCaseReference().toString() : "";
-        var url =  "<a href=\"../cases/case-details/" + ethosReference+"\">" +
-                    newMultipleReference+"</a>";
+        var url =  "<a href=\"../cases/case-details/" + caseData.getEthosCaseReference() + "\">" +
+                caseData.getMultipleReference() + "</a>";
         log.info("setMultipleReferenceLink is set to " + url);
         return url;
     }
