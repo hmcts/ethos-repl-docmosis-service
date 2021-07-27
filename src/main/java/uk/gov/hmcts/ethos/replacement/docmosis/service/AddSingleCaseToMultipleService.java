@@ -60,9 +60,7 @@ public class AddSingleCaseToMultipleService {
             log.info("If multiple is empty the single will be always the lead");
 
             if (ethosCaseRefCollection.isEmpty()) {
-
                 leadClaimant = YES;
-
             }
 
             addNewLeadToMultiple(userToken, multipleCaseTypeId, jurisdiction,
@@ -85,13 +83,10 @@ public class AddSingleCaseToMultipleService {
             log.info("Update check multiple flag");
 
             caseData.setMultipleFlag(YES);
-
         }
-
     }
 
-    private String createMultipleReferenceLink(CaseData caseData)
-    {
+    private String createMultipleReferenceLink(CaseData caseData) {
         var url =  "<a href=\"../cases/case-details/" + caseData.getMultipleReference() + "\">" +
                 caseData.getMultipleReference() + "</a>";
         log.info("setMultipleReferenceLink is set to " + url);
@@ -99,7 +94,6 @@ public class AddSingleCaseToMultipleService {
     }
 
     private void updateCaseDataForMultiple(CaseData caseData, String newMultipleReference, String leadClaimant) {
-
         caseData.setMultipleReference(newMultipleReference);
         caseData.setCaseType(MULTIPLE_CASE_TYPE);
         log.info("setLeadClaimant is set to " + leadClaimant);
@@ -110,7 +104,6 @@ public class AddSingleCaseToMultipleService {
     private void addNewLeadToMultiple(String userToken, String multipleCaseTypeId, String jurisdiction,
                                       MultipleData multipleData, String leadClaimant,
                                       String newEthosCaseReferenceToAdd, String caseId, List<String> errors) {
-
         if (leadClaimant.equals(YES)) {
 
             log.info("Checking if there was a lead");
@@ -131,9 +124,7 @@ public class AddSingleCaseToMultipleService {
 
             multipleHelperService.addLeadMarkUp(
                     userToken, multipleCaseTypeId, multipleData, newEthosCaseReferenceToAdd, caseId);
-
         }
-
     }
 
 }
