@@ -39,6 +39,7 @@ public class AddSingleCaseToMultipleServiceTest {
     private MultipleDetails multipleDetails;
     private List<SubmitMultipleEvent> submitMultipleEvents;
     private List<String> caseIdCollection;
+    private String multipleRefLink;
 
     @Before
     public void setUp() {
@@ -54,6 +55,7 @@ public class AddSingleCaseToMultipleServiceTest {
         submitMultipleEvents = MultipleUtil.getSubmitMultipleEvents();
         caseIdCollection = new ArrayList<>(Arrays.asList("21006/2020", "245000/2020", "245001/2020"));
         userToken = "authString";
+        multipleRefLink = "<a href=\"../cases/case-details/246000" + "\">" + "246000" + "</a>";
     }
 
     @Test
@@ -113,6 +115,7 @@ public class AddSingleCaseToMultipleServiceTest {
         assertEquals(MULTIPLE_CASE_TYPE, caseDetails.getCaseData().getCaseType());
         assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
         assertEquals(YES, caseDetails.getCaseData().getLeadClaimant());
+        assertEquals(multipleRefLink, caseDetails.getCaseData().getMultipleReferenceLink());
 
     }
 
@@ -161,6 +164,7 @@ public class AddSingleCaseToMultipleServiceTest {
         assertEquals(MULTIPLE_CASE_TYPE, caseDetails.getCaseData().getCaseType());
         assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
         assertEquals(NO, caseDetails.getCaseData().getLeadClaimant());
+        assertEquals(multipleRefLink, caseDetails.getCaseData().getMultipleReferenceLink());
 
     }
 
@@ -218,7 +222,8 @@ public class AddSingleCaseToMultipleServiceTest {
         assertEquals(MULTIPLE_CASE_TYPE, caseDetails.getCaseData().getCaseType());
         assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
         assertEquals(YES, caseDetails.getCaseData().getLeadClaimant());
-
+        assertEquals(multipleRefLink, caseDetails.getCaseData().getMultipleReferenceLink());
+        
     }
 
 }
