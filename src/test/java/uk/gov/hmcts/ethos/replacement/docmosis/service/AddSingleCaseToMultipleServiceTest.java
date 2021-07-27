@@ -223,7 +223,7 @@ public class AddSingleCaseToMultipleServiceTest {
         assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
         assertEquals(YES, caseDetails.getCaseData().getLeadClaimant());
         assertEquals(multipleRefLink, caseDetails.getCaseData().getMultipleReferenceLink());
-        
+
     }
 
 }
