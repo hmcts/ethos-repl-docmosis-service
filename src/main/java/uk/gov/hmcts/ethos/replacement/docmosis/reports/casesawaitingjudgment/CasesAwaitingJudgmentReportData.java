@@ -7,14 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class CasesAwaitingJudgmentReportData {
+public class CasesAwaitingJudgmentReportData extends ListingData {
 
-    private final ListingData listingData;
     private final ReportSummary reportSummary;
     private final List<ReportDetail> reportDetails = new ArrayList<>();
 
-    public CasesAwaitingJudgmentReportData(ListingData listingData, ReportSummary reportSummary) {
-        this.listingData = listingData;
+    public CasesAwaitingJudgmentReportData(ReportSummary reportSummary) {
         this.reportSummary = reportSummary;
     }
 

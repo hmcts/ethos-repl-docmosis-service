@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.CaseDataBuilder;
 
 import java.time.Clock;
@@ -27,6 +26,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITH
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_COSTS_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 
@@ -56,7 +56,7 @@ public class CasesAwaitingJudgmentReportTest {
         submitEvents.clear();
 
         reportDataSource = mock(ReportDataSource.class);
-        when(reportDataSource.getData(NEWCASTLE_LISTING_CASE_TYPE_ID)).thenReturn(submitEvents);
+        when(reportDataSource.getData(NEWCASTLE_CASE_TYPE_ID)).thenReturn(submitEvents);
 
         var now = "2021-07-31T10:00:00Z";
         clock = Clock.fixed(Instant.parse(now), ZoneId.of("UTC"));
@@ -71,9 +71,8 @@ public class CasesAwaitingJudgmentReportTest {
         // Then the case should not be in the report data
 
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent(CLOSED_STATE));
-        var listingData = new ListingData();
 
-        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+        var reportData = casesAwaitingJudgmentReport.runReport(
                 NEWCASTLE_LISTING_CASE_TYPE_ID, USER);
         assertCommonValues(reportData);
         assertTrue(reportData.getReportDetails().isEmpty());
@@ -86,10 +85,11 @@ public class CasesAwaitingJudgmentReportTest {
         // When I request report data
         // Then the case should not be in the report data
 
-        submitEvents.add(caseDataBuilder.withPositionType("An invalid position type").buildAsSubmitEvent(ACCEPTED_STATE));
-        var listingData = new ListingData();
+        submitEvents.add(caseDataBuilder
+                .withPositionType("An invalid position type")
+                .buildAsSubmitEvent(ACCEPTED_STATE));
 
-        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+        var reportData = casesAwaitingJudgmentReport.runReport(
                 NEWCASTLE_LISTING_CASE_TYPE_ID, USER);
         assertCommonValues(reportData);
     }
@@ -102,10 +102,11 @@ public class CasesAwaitingJudgmentReportTest {
         // When I request report data
         // Then the case should not be in the report data
 
-        submitEvents.add(caseDataBuilder.withPositionType(validPositionType).buildAsSubmitEvent(ACCEPTED_STATE));
-        var listingData = new ListingData();
+        submitEvents.add(caseDataBuilder
+                .withPositionType(validPositionType)
+                .buildAsSubmitEvent(ACCEPTED_STATE));
 
-        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+        var reportData = casesAwaitingJudgmentReport.runReport(
                 NEWCASTLE_LISTING_CASE_TYPE_ID, USER);
         assertCommonValues(reportData);
         assertTrue(reportData.getReportDetails().isEmpty());
@@ -119,13 +120,12 @@ public class CasesAwaitingJudgmentReportTest {
         // When I request report data
         // Then the case should not be in the report data
 
-        var submitEvent = caseDataBuilder.withPositionType(validPositionType)
+        submitEvents.add(caseDataBuilder
+                .withPositionType(validPositionType)
                 .withHearing(LISTING_DATE, HEARING_STATUS_LISTED)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
-        submitEvents.add(submitEvent);
-        var listingData = new ListingData();
+                .buildAsSubmitEvent(ACCEPTED_STATE));
 
-        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+        var reportData = casesAwaitingJudgmentReport.runReport(
                 NEWCASTLE_LISTING_CASE_TYPE_ID, USER);
         assertCommonValues(reportData);
         assertTrue(reportData.getReportDetails().isEmpty());
@@ -140,14 +140,13 @@ public class CasesAwaitingJudgmentReportTest {
         // When I request report data
         // Then the case should not be in the report data
 
-        var submitEvent = caseDataBuilder.withPositionType(validPositionType)
+        submitEvents.add(caseDataBuilder
+                .withPositionType(validPositionType)
                 .withHearing(LISTING_DATE, HEARING_STATUS_HEARD)
                 .withJudgment()
-                .buildAsSubmitEvent(ACCEPTED_STATE);
-        submitEvents.add(submitEvent);
-        var listingData = new ListingData();
+                .buildAsSubmitEvent(ACCEPTED_STATE));
 
-        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+        var reportData = casesAwaitingJudgmentReport.runReport(
                 NEWCASTLE_LISTING_CASE_TYPE_ID, USER);
         assertCommonValues(reportData);
         assertTrue(reportData.getReportDetails().isEmpty());
@@ -161,13 +160,12 @@ public class CasesAwaitingJudgmentReportTest {
         // When I request report data
         // Then the case is in the report data
 
-        var submitEvent = caseDataBuilder.withPositionType(validPositionType)
+        submitEvents.add(caseDataBuilder
+                .withPositionType(validPositionType)
                 .withHearing(LISTING_DATE, HEARING_STATUS_HEARD)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
-        submitEvents.add(submitEvent);
-        var listingData = new ListingData();
+                .buildAsSubmitEvent(ACCEPTED_STATE));
 
-        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+        var reportData = casesAwaitingJudgmentReport.runReport(
                 NEWCASTLE_LISTING_CASE_TYPE_ID, USER);
         assertCommonValues(reportData);
         assertEquals(1, reportData.getReportDetails().size());
@@ -182,52 +180,51 @@ public class CasesAwaitingJudgmentReportTest {
         submitEvents.add(createValidSubmitEvent(positionType));
         submitEvents.add(createValidSubmitEvent(positionType));
         submitEvents.add(createValidSubmitEvent(positionType));
-        var listingData = new ListingData();
 
-        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+        var reportData = casesAwaitingJudgmentReport.runReport(
                 NEWCASTLE_LISTING_CASE_TYPE_ID, USER);
         assertCommonValues(reportData);
         assertEquals(3, reportData.getReportDetails().size());
         assertEquals(1, reportData.getReportSummary().getPositionTypes().size());
-        assertTrue(reportData.getReportSummary().getPositionTypes().containsKey(positionType));
-        assertEquals(3, reportData.getReportSummary().getPositionTypes().get(positionType).intValue());
+        assertEquals(positionType, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeName());
+        assertEquals(3, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeCount());
     }
 
     @Test
-    public void shouldShowMultiplePositionValuesInSummary() {
+    public void shouldShowMultiplePositionValuesInSummaryInOrder() {
         // Given I have 3 valid cases with position type Draft with Members
         // And I have 2 valid cases with position type Awaiting written reasons
         // And I have 1 valid case with position type Fair copy, to chairman for signature
         // When I request report data
-        // Then the report summary shows 3 rows:
-        //    | Draft with members                   | 3 |
-        //    | Awaiting written reasons             | 2 |
+        // Then the report summary shows 3 rows in total count order:
         //    | Fair copy, to chairman for signature | 1 |
+        //    | Awaiting written reasons             | 2 |
+        //    | Draft with members                   | 3 |
+
         var positionType1 = "Draft with members";
-        submitEvents.add(createValidSubmitEvent(positionType1));
-        submitEvents.add(createValidSubmitEvent(positionType1));
-        submitEvents.add(createValidSubmitEvent(positionType1));
         var positionType2 = "Awaiting written reasons";
-        submitEvents.add(createValidSubmitEvent(positionType2));
-        submitEvents.add(createValidSubmitEvent(positionType2));
         var positionType3 = "Fair copy, to chairman for signature";
+        submitEvents.add(createValidSubmitEvent(positionType2));
+        submitEvents.add(createValidSubmitEvent(positionType1));
+        submitEvents.add(createValidSubmitEvent(positionType1));
+        submitEvents.add(createValidSubmitEvent(positionType1));
         submitEvents.add(createValidSubmitEvent(positionType3));
+        submitEvents.add(createValidSubmitEvent(positionType2));
 
-        var listingData = new ListingData();
-
-        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+        var reportData = casesAwaitingJudgmentReport.runReport(
                 NEWCASTLE_LISTING_CASE_TYPE_ID, USER);
         assertCommonValues(reportData);
         assertEquals(6, reportData.getReportDetails().size());
         assertEquals(3, reportData.getReportSummary().getPositionTypes().size());
 
-        assertTrue(reportData.getReportSummary().getPositionTypes().containsKey(positionType1));
-        assertEquals(3, reportData.getReportSummary().getPositionTypes().get(positionType1).intValue());
-        assertTrue(reportData.getReportSummary().getPositionTypes().containsKey(positionType2));
-        assertEquals(2, reportData.getReportSummary().getPositionTypes().get(positionType2).intValue());
-        assertTrue(reportData.getReportSummary().getPositionTypes().containsKey(positionType3));
-        assertEquals(1, reportData.getReportSummary().getPositionTypes().get(positionType3).intValue());
+        assertEquals(positionType3, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeName());
+        assertEquals(1, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeCount());
+        assertEquals(positionType2, reportData.getReportSummary().getPositionTypes().get(1).getPositionTypeName());
+        assertEquals(2, reportData.getReportSummary().getPositionTypes().get(1).getPositionTypeCount());
+        assertEquals(positionType1, reportData.getReportSummary().getPositionTypes().get(2).getPositionTypeName());
+        assertEquals(3, reportData.getReportSummary().getPositionTypes().get(2).getPositionTypeCount());
     }
+
 
     @Test
     public void shouldContainCorrectDetailValuesForCaseWithOneHearing() {
@@ -245,20 +242,17 @@ public class CasesAwaitingJudgmentReportTest {
         var hearingType = HEARING_TYPE_JUDICIAL_COSTS_HEARING;
         var judge = "Hugh Parkfield";
 
-        var submitEvent = caseDataBuilder.withEthosCaseReference(caseReference)
+        submitEvents.add(caseDataBuilder
+                .withEthosCaseReference(caseReference)
                 .withPositionType(validPositionType)
                 .withSingleCaseType()
                 .withCurrentPosition(currentPosition)
                 .withDateToPosition(dateToPosition)
                 .withConciliationTrack(conciliationTrack)
                 .withHearing(listedDate, HEARING_STATUS_HEARD, hearingNumber, hearingType, judge)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
-        submitEvents.add(submitEvent);
-        var caseData = submitEvents.get(0).getCaseData();
-        caseData.setEthosCaseReference(caseReference);
-        var listingData = new ListingData();
+                .buildAsSubmitEvent(ACCEPTED_STATE));
 
-        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+        var reportData = casesAwaitingJudgmentReport.runReport(
                 NEWCASTLE_LISTING_CASE_TYPE_ID, USER);
         assertCommonValues(reportData);
         assertEquals(1, reportData.getReportDetails().size());
@@ -289,17 +283,14 @@ public class CasesAwaitingJudgmentReportTest {
         var caseReference = "2500123/2021";
         var multipleReference = "250999/2021";
 
-        var submitEvent = caseDataBuilder.withEthosCaseReference(caseReference)
+        submitEvents.add(caseDataBuilder
+                .withEthosCaseReference(caseReference)
                 .withPositionType(validPositionType)
                 .withMultipleCaseType(multipleReference)
                 .withHearing(listedDate, HEARING_STATUS_HEARD)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
-        submitEvents.add(submitEvent);
-        var caseData = submitEvents.get(0).getCaseData();
-        caseData.setEthosCaseReference(caseReference);
-        var listingData = new ListingData();
+                .buildAsSubmitEvent(ACCEPTED_STATE));
 
-        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+        var reportData = casesAwaitingJudgmentReport.runReport(
                 NEWCASTLE_LISTING_CASE_TYPE_ID, USER);
         assertCommonValues(reportData);
         assertEquals(1, reportData.getReportDetails().size());
@@ -324,20 +315,17 @@ public class CasesAwaitingJudgmentReportTest {
         var caseReference = "2500123/2021";
         var judge = "Hugh Parkfield";
 
-        var submitEvent = caseDataBuilder.withEthosCaseReference(caseReference)
+        submitEvents.add(caseDataBuilder
+                .withEthosCaseReference(caseReference)
                 .withPositionType(validPositionType)
                 .withSingleCaseType()
                 .withHearing("2021-07-01T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
                 .withHearing("2021-07-02T10:00:00.000", HEARING_STATUS_POSTPONED, "2", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
                 .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, "3", HEARING_TYPE_JUDICIAL_MEDIATION, judge)
                 .withHearing("2021-07-06T10:00:00.000", HEARING_STATUS_WITHDRAWN, "4", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
-                .buildAsSubmitEvent(ACCEPTED_STATE);
-        submitEvents.add(submitEvent);
-        var caseData = submitEvents.get(0).getCaseData();
-        caseData.setEthosCaseReference(caseReference);
-        var listingData = new ListingData();
+                .buildAsSubmitEvent(ACCEPTED_STATE));
 
-        var reportData = casesAwaitingJudgmentReport.runReport(listingData,
+        var reportData = casesAwaitingJudgmentReport.runReport(
                 NEWCASTLE_LISTING_CASE_TYPE_ID, USER);
         assertCommonValues(reportData);
         assertEquals(1, reportData.getReportDetails().size());
@@ -354,6 +342,65 @@ public class CasesAwaitingJudgmentReportTest {
         assertEquals(judge, reportDetail.getJudge());
     }
 
+
+
+    @Test
+    public void shouldOrderReportDetailsInDaysSinceHeardDescOrder() {
+        // Given I have valid cases
+        // And the cases have the following listed dates
+        // | Case Number | Listed Date |
+        // | Case 1 | 2021-07-10 |
+        // | Case 2 | 2021-07-02 |
+        // | Case 3 | 2021-07-05 |
+        // | Case 4 | 2021-07-01 |
+        // When I request report data
+        // Then I have report details in the following order:
+        // | Case Number |
+        // | Case 4 |
+        // | Case 2 |
+        // | Case 3 |
+        // | Case 1 |
+
+        submitEvents.add(caseDataBuilder
+                .withPositionType(validPositionType)
+                .withEthosCaseReference("Case 1")
+                .withSingleCaseType()
+                .withHearing("2021-07-10T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .buildAsSubmitEvent(ACCEPTED_STATE));
+        caseDataBuilder = new CaseDataBuilder();
+        submitEvents.add(caseDataBuilder
+                .withPositionType(validPositionType)
+                .withEthosCaseReference("Case 2")
+                .withSingleCaseType()
+                .withHearing("2021-07-02T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .buildAsSubmitEvent(ACCEPTED_STATE));
+        caseDataBuilder = new CaseDataBuilder();
+        submitEvents.add(caseDataBuilder
+                .withPositionType(validPositionType)
+                .withEthosCaseReference("Case 3")
+                .withSingleCaseType()
+                .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .buildAsSubmitEvent(ACCEPTED_STATE));
+        caseDataBuilder = new CaseDataBuilder();
+        submitEvents.add(caseDataBuilder
+                .withPositionType(validPositionType)
+                .withEthosCaseReference("Case 4")
+                .withSingleCaseType()
+                .withHearing("2021-07-01T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .buildAsSubmitEvent(ACCEPTED_STATE));
+        caseDataBuilder = new CaseDataBuilder();
+
+        var reportData = casesAwaitingJudgmentReport.runReport(
+                NEWCASTLE_LISTING_CASE_TYPE_ID, USER);
+        assertCommonValues(reportData);
+        assertEquals(4, reportData.getReportDetails().size());
+
+        assertEquals("Case 4", reportData.getReportDetails().get(0).getCaseNumber());
+        assertEquals("Case 2", reportData.getReportDetails().get(1).getCaseNumber());
+        assertEquals("Case 3", reportData.getReportDetails().get(2).getCaseNumber());
+        assertEquals("Case 1", reportData.getReportDetails().get(3).getCaseNumber());
+    }
+
     private SubmitEvent createValidSubmitEvent(String positionType) {
         caseDataBuilder = new CaseDataBuilder();
         return caseDataBuilder.withPositionType(positionType)
@@ -363,7 +410,6 @@ public class CasesAwaitingJudgmentReportTest {
 
     private void assertCommonValues(CasesAwaitingJudgmentReportData reportData) {
         assertNotNull(reportData);
-        assertNotNull(reportData.getListingData());
         assertEquals("Newcastle", reportData.getReportSummary().getOffice());
         assertEquals(USER, reportData.getReportSummary().getUser());
         assertEquals("2021-07-31", reportData.getReportSummary().getReportRunDate().format(OLD_DATE_TIME_PATTERN2));

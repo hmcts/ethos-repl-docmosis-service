@@ -6,7 +6,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.helper.Constants;
-import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -53,23 +52,23 @@ public class CasesAwaitingJudgmentReport {
         this.clock = clock;
     }
 
-    public CasesAwaitingJudgmentReportData runReport(ListingData listingData, String caseTypeId, String user) {
+    public CasesAwaitingJudgmentReportData runReport(String caseTypeId, String user) {
         var submitEvents = getCases(caseTypeId);
 
-        var reportData = initReport(listingData, caseTypeId, user);
+        var reportData = initReport(caseTypeId, user);
         populateData(reportData, submitEvents);
 
         return reportData;
     }
 
-    private CasesAwaitingJudgmentReportData initReport(ListingData listingData, String caseTypeId, String user) {
+    private CasesAwaitingJudgmentReportData initReport(String caseTypeId, String user) {
         var office = UtilHelper.getListingCaseTypeId(caseTypeId);
         var reportSummary = new ReportSummary(office, user, LocalDate.now(clock));
-        return new CasesAwaitingJudgmentReportData(listingData, reportSummary);
+        return new CasesAwaitingJudgmentReportData(reportSummary);
     }
 
     private List<SubmitEvent> getCases(String caseTypeId) {
-        return reportDataSource.getData(caseTypeId);
+        return reportDataSource.getData(UtilHelper.getListingCaseTypeId(caseTypeId));
     }
 
     private void populateData(CasesAwaitingJudgmentReportData reportData, List<SubmitEvent> submitEvents) {
@@ -105,6 +104,7 @@ public class CasesAwaitingJudgmentReport {
             reportData.addReportDetail(reportDetail);
         }
 
+        sortReportDetails(reportData);
         addReportSummary(reportData);
     }
 
@@ -159,11 +159,20 @@ public class CasesAwaitingJudgmentReport {
         return CollectionUtils.isEmpty(caseData.getJudgementCollection());
     }
 
-    private void addReportSummary(CasesAwaitingJudgmentReportData reportData) {
-        var positionTypes = new HashMap<String, Integer>();
-        reportData.getReportDetails().forEach(rd -> positionTypes.merge(rd.getPositionType(), 1, Integer::sum));
+    private void sortReportDetails(CasesAwaitingJudgmentReportData reportData) {
+        var comparator = Comparator.comparingLong(ReportDetail::getDaysSinceHearing).reversed();
+        reportData.getReportDetails().sort(comparator);
+    }
 
-        reportData.getReportSummary().getPositionTypes().putAll(positionTypes);
+    private void addReportSummary(CasesAwaitingJudgmentReportData reportData) {
+        var positionTypeCounts = new HashMap<String, Integer>();
+        reportData.getReportDetails().forEach(rd -> positionTypeCounts.merge(rd.getPositionType(), 1, Integer::sum));
+
+        var positionTypes = reportData.getReportSummary().getPositionTypes();
+        positionTypeCounts.forEach((k,v)->positionTypes.add(new PositionTypeSummary(k,v)));
+
+        Comparator<PositionTypeSummary> comparator = Comparator.comparingInt(PositionTypeSummary::getPositionTypeCount);
+        positionTypes.sort(comparator);
     }
 
     private HeardHearing getLatestHeardHearing(List<HearingTypeItem> hearings) {

@@ -21,6 +21,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CcdReportDataSource;
 
 import java.io.IOException;
@@ -210,14 +211,16 @@ public class ListingService {
         }
     }
 
-    private ListingData getCasesAwaitingJudgmentReport(ListingDetails listingDetails, String authToken) {
+    private CasesAwaitingJudgmentReportData getCasesAwaitingJudgmentReport(ListingDetails listingDetails, String authToken) {
         var userDetails = userService.getUserDetails(authToken);
         var reportDataSource = new CcdReportDataSource(authToken, ccdClient);
-        var caseTypeId = UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId());
 
         var casesAwaitingJudgmentReport = new CasesAwaitingJudgmentReport(reportDataSource);
-        casesAwaitingJudgmentReport.runReport(listingDetails.getCaseData(), caseTypeId, userDetails.getName());
-        return listingDetails.getCaseData();
+        CasesAwaitingJudgmentReportData reportData =
+                casesAwaitingJudgmentReport.runReport(listingDetails.getCaseTypeId(), userDetails.getName());
+        reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
+        reportData.setReportType(listingDetails.getCaseData().getReportType());
+        return reportData;
     }
 
     private ListingData getDateRangeReport(ListingDetails listingDetails, String authToken) throws IOException {
