@@ -37,7 +37,6 @@ public class AddSingleCaseToMultipleService {
 
             String leadClaimant = caseData.getLeadClaimant();
             String updatedMultipleReference = caseData.getMultipleReference();
-
             String multipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseTypeId);
 
             log.info("Pulling the multiple case: " + updatedMultipleReference);
@@ -87,12 +86,12 @@ public class AddSingleCaseToMultipleService {
     }
 
     private void updateCaseDataForMultiple(CaseData caseData, String newMultipleReference, String leadClaimant,
-                                           Long multipleCaseId) {
+                                           long multipleCaseId) {
         caseData.setMultipleReference(newMultipleReference);
         caseData.setCaseType(MULTIPLE_CASE_TYPE);
         log.info("setLeadClaimant is set to " + leadClaimant);
         caseData.setLeadClaimant(leadClaimant);
-        caseData.setMultipleReferenceLink(multipleCaseId.toString());
+        caseData.setMultipleReferenceLink(String.valueOf(multipleCaseId));
     }
 
     private void addNewLeadToMultiple(String userToken, String multipleCaseTypeId, String jurisdiction,
