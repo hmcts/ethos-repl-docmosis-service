@@ -206,11 +206,12 @@ public class ListingService {
                 return getDateRangeReport(listingDetails, authToken);
             }
         } catch (Exception ex) {
-            throw new CaseRetrievalException(MESSAGE + listingDetails.getCaseId() + ex.getMessage());
+            throw new CaseRetrievalException(MESSAGE + listingDetails.getCaseId(), ex);
         }
     }
 
     private CasesAwaitingJudgmentReportData getCasesAwaitingJudgmentReport(ListingDetails listingDetails, String authToken) {
+        log.info("Cases Awaiting Judgment for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new CcdReportDataSource(authToken, ccdClient);
 
         var casesAwaitingJudgmentReport = new CasesAwaitingJudgmentReport(reportDataSource);
@@ -338,7 +339,7 @@ public class ListingService {
         try {
             return tornadoService.listingGeneration(authToken, listingData, caseTypeId);
         } catch (Exception ex) {
-            throw new DocumentManagementException(MESSAGE + ex.getMessage());
+            throw new DocumentManagementException(MESSAGE + caseTypeId, ex);
         }
     }
 }

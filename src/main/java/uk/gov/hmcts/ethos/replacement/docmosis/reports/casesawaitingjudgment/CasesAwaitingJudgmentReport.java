@@ -85,6 +85,8 @@ public class CasesAwaitingJudgmentReport {
 
             var reportDetail = new ReportDetail();
             var caseData = submitEvent.getCaseData();
+            log.info("Adding case {} to Cases Awaiting Judgment report", caseData.getEthosCaseReference());
+
             var heardHearing = getLatestHeardHearing(caseData.getHearingCollection());
             LocalDate today = LocalDate.now(clock);
             LocalDate listedDate = LocalDate.parse(heardHearing.listedDate, OLD_DATE_TIME_PATTERN);
