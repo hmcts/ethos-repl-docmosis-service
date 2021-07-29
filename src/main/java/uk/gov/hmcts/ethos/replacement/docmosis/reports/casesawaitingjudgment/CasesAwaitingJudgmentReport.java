@@ -58,18 +58,18 @@ public class CasesAwaitingJudgmentReport {
         this.clock = clock;
     }
 
-    public CasesAwaitingJudgmentReportData runReport(String caseTypeId, String user) {
+    public CasesAwaitingJudgmentReportData runReport(String caseTypeId) {
         var submitEvents = getCases(caseTypeId);
 
-        var reportData = initReport(caseTypeId, user);
+        var reportData = initReport(caseTypeId);
         populateData(reportData, submitEvents);
 
         return reportData;
     }
 
-    private CasesAwaitingJudgmentReportData initReport(String caseTypeId, String user) {
+    private CasesAwaitingJudgmentReportData initReport(String caseTypeId) {
         var office = UtilHelper.getListingCaseTypeId(caseTypeId);
-        var reportSummary = new ReportSummary(office, user, LocalDate.now(clock));
+        var reportSummary = new ReportSummary(office);
         return new CasesAwaitingJudgmentReportData(reportSummary);
     }
 

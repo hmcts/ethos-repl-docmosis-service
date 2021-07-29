@@ -189,7 +189,7 @@ public class ReportDocHelperTest {
     }
 
     private CasesAwaitingJudgmentReportData getCasesAwaitingJudgementReportData() {
-        var reportSummary = new ReportSummary("Newcastle", "Lurleen Lumpkin", LocalDate.now());
+        var reportSummary = new ReportSummary("Newcastle");
         reportSummary.getPositionTypes().add(new PositionTypeSummary("Signed fair copy received", 1));
         reportSummary.getPositionTypes().add(new PositionTypeSummary("Heard awaiting judgment being sent to the parties", 5));
         reportSummary.getPositionTypes().add(new PositionTypeSummary("Draft with members", 10));

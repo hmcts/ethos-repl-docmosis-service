@@ -62,7 +62,6 @@ public class ListingService {
     private final TornadoService tornadoService;
     private final CcdClient ccdClient;
     private final CasesCompletedReport casesCompletedReport;
-    private final UserService userService;
 
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
@@ -212,12 +211,10 @@ public class ListingService {
     }
 
     private CasesAwaitingJudgmentReportData getCasesAwaitingJudgmentReport(ListingDetails listingDetails, String authToken) {
-        var userDetails = userService.getUserDetails(authToken);
         var reportDataSource = new CcdReportDataSource(authToken, ccdClient);
 
         var casesAwaitingJudgmentReport = new CasesAwaitingJudgmentReport(reportDataSource);
-        CasesAwaitingJudgmentReportData reportData =
-                casesAwaitingJudgmentReport.runReport(listingDetails.getCaseTypeId(), userDetails.getName());
+        var reportData = casesAwaitingJudgmentReport.runReport(listingDetails.getCaseTypeId());
         reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
         reportData.setReportType(listingDetails.getCaseData().getReportType());
         return reportData;
