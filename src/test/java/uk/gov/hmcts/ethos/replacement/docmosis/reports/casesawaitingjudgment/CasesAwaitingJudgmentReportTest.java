@@ -237,6 +237,8 @@ public class CasesAwaitingJudgmentReportTest {
         var caseReference = "2500123/2021";
         var currentPosition = MANUALLY_CREATED_POSITION;
         var dateToPosition = "2021-07-10";
+        var expectedDateToPosition = "10/07/2021";
+        var expectedLastHeardHearingDate = "16/07/2021";
         var conciliationTrack = CONCILIATION_TRACK_FAST_TRACK;
         var hearingNumber = "1";
         var hearingType = HEARING_TYPE_JUDICIAL_COSTS_HEARING;
@@ -264,12 +266,12 @@ public class CasesAwaitingJudgmentReportTest {
         assertEquals(expectedDaysSinceHearing, reportDetail.getDaysSinceHearing());
         assertEquals(caseReference, reportDetail.getCaseNumber());
         assertEquals(ReportDetail.NO_MULTIPLE_REFERENCE, reportDetail.getMultipleReference());
-        assertEquals(listedDate, reportDetail.getLastHeardHearingDate());
+        assertEquals(expectedLastHeardHearingDate, reportDetail.getLastHeardHearingDate());
         assertEquals(hearingNumber, reportDetail.getHearingNumber());
         assertEquals(hearingType, reportDetail.getHearingType());
         assertEquals(judge, reportDetail.getJudge());
         assertEquals(currentPosition, reportDetail.getCurrentPosition());
-        assertEquals(dateToPosition, reportDetail.getDateToPosition());
+        assertEquals(expectedDateToPosition, reportDetail.getDateToPosition());
         assertEquals(conciliationTrack, reportDetail.getConciliationTrack());
     }
 
@@ -312,6 +314,7 @@ public class CasesAwaitingJudgmentReportTest {
         // Then I have correct hearing values for hearing #3
         var expectedWeeksSinceHearing = 3;
         var expectedDaysSinceHearing = 26;
+        var expectedLastHeardHearingDate = "05/07/2021";
         var caseReference = "2500123/2021";
         var judge = "Hugh Parkfield";
 
@@ -336,13 +339,11 @@ public class CasesAwaitingJudgmentReportTest {
         assertEquals(expectedWeeksSinceHearing, reportDetail.getWeeksSinceHearing());
         assertEquals(expectedDaysSinceHearing, reportDetail.getDaysSinceHearing());
         assertEquals(caseReference, reportDetail.getCaseNumber());
-        assertEquals("2021-07-05T10:00:00.000", reportDetail.getLastHeardHearingDate());
+        assertEquals(expectedLastHeardHearingDate, reportDetail.getLastHeardHearingDate());
         assertEquals("3", reportDetail.getHearingNumber());
         assertEquals(HEARING_TYPE_JUDICIAL_MEDIATION, reportDetail.getHearingType());
         assertEquals(judge, reportDetail.getJudge());
     }
-
-
 
     @Test
     public void shouldOrderReportDetailsInDaysSinceHeardDescOrder() {

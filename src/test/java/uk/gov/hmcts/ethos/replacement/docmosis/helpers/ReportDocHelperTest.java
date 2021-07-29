@@ -180,6 +180,8 @@ public class ReportDocHelperTest {
     public void buildCasesAwaitingJudgmentReport() throws URISyntaxException, IOException {
         var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
                 .getResource("casesAwaitingJudgmentExpected.json")).toURI())));
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        expectedJson = expectedJson.replace("replace-with-current-date", today);
 
         var reportData = getCasesAwaitingJudgementReportData();
         var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "", "EM-TRB-SCO-ENG-00749", userDetails).toString();

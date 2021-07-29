@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -8,7 +10,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.helper.Constants;
 
 import java.time.Clock;
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,8 +25,10 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportDetail.NO_MULTIPLE_REFERENCE;
 
+@Slf4j
 public class CasesAwaitingJudgmentReport {
 
     static final Collection<String> VALID_POSITION_TYPES = List.of(
@@ -95,10 +101,10 @@ public class CasesAwaitingJudgmentReport {
 
             reportDetail.setHearingNumber(heardHearing.hearingNumber);
             reportDetail.setHearingType(heardHearing.hearingType);
-            reportDetail.setLastHeardHearingDate(heardHearing.listedDate);
+            reportDetail.setLastHeardHearingDate(formatDate(OLD_DATE_TIME_PATTERN, heardHearing.listedDate));
             reportDetail.setJudge(heardHearing.judge);
             reportDetail.setCurrentPosition(caseData.getCurrentPosition());
-            reportDetail.setDateToPosition(caseData.getDateToPosition());
+            reportDetail.setDateToPosition(formatDate(OLD_DATE_TIME_PATTERN2, caseData.getDateToPosition()));
             reportDetail.setConciliationTrack(caseData.getConciliationTrack());
 
             reportData.addReportDetail(reportDetail);
@@ -204,6 +210,19 @@ public class CasesAwaitingJudgmentReport {
         return ChronoUnit.DAYS.between(listedDate, today);
     }
 
+    private String formatDate(DateTimeFormatter sourceFormatter, String sourceDate) {
+        if (StringUtils.isBlank(sourceDate)) {
+            return sourceDate;
+        }
+        try {
+            var date = sourceFormatter.parse(sourceDate);
+            var targetFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            return targetFormatter.format(date);
+        } catch (DateTimeException e) {
+            log.warn(String.format("Unable to parse %s", sourceDate), e);
+            return sourceDate;
+        }
+    }
 }
 
 class HeardHearing {

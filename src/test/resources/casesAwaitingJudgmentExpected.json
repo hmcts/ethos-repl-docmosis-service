@@ -5,9 +5,9 @@
 "data":{
 "Report_Office":"Newcastle",
 "positionTypes":[
-{"positionTypeName":"Signed fair copy received","positionTypeCount":1},
-{"positionTypeName":"Heard awaiting judgment being sent to the parties","positionTypeCount":5},
-{"positionTypeName":"Draft with members","positionTypeCount":10}
+{"positionTypeName":"Signed fair copy received","ptCount":1},
+{"positionTypeName":"Heard awaiting judgment being sent to the parties","ptCount":5},
+{"positionTypeName":"Draft with members","ptCount":10}
 ],
 "reportDetails":[
 {"wsh":2,"dsh":16,"cn":"250003/2021","mr":"250002/2021","lhhd":"12 Jul 2021","hn":"1","ht":"Preliminary Hearing","judge":"Mrs White","cp":"Manually Created","dtp":"2 Jul 2021","ct":"Open Track"},
@@ -15,6 +15,6 @@
 {"wsh":0,"dsh":1,"cn":"250004/2021","mr":"0/0","lhhd":"27 Jul 2021","hn":"5","ht":"Judgment","judge":"Mr Yellow","cp":"Manually Created","dtp":"10 Jul 2021","ct":"Standard Track"}
 ],
 "Report_Clerk":"Mike Jordan",
-"Today_date":"28 July 2021"
+"Today_date":"replace-with-current-date"
 }
 }
