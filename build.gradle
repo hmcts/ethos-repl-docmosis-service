@@ -164,7 +164,6 @@ dependencyCheck {
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
     jcenter()
     maven { url "https://repo.maven.apache.org/maven2" }
@@ -180,7 +179,7 @@ def versions = [
 ]
 
 dependencies {
-    implementation 'com.github.hmcts:ecm-common:0.1.118-ecm139'
+    implementation 'com.github.hmcts:ecm-common:0.1.120'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -195,6 +194,11 @@ dependencies {
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.10.1'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
+
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.48'
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.48'
+
 
 // For pdfbox and elasticsearch CVEs
     implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.24'

@@ -186,11 +186,11 @@ public class ReportDocHelper {
         AdhocReportType localReportDetailHdr = listingData.getLocalReportsDetailHdr();
         if (localReportDetailHdr != null) {
             sb.append("\"Cases_Completed_Hearing\":\"").append(
-                    nullCheck(localReportDetailHdr.getConNoneCasesCompletedHearing())).append(NEW_LINE);
+                    nullCheck(localReportDetailHdr.getCasesCompletedHearingTotal())).append(NEW_LINE);
             sb.append("\"Session_Days_Taken\":\"").append(
-                    nullCheck(localReportDetailHdr.getConNoneSessionDays())).append(NEW_LINE);
+                    nullCheck(localReportDetailHdr.getSessionDaysTotal())).append(NEW_LINE);
             sb.append("\"Completed_Per_Session_Day\":\"").append(
-                    nullCheck(localReportDetailHdr.getConNoneCompletedPerSession())).append(NEW_LINE);
+                    nullCheck(localReportDetailHdr.getCompletedPerSessionTotal())).append(NEW_LINE);
 
             sb.append("\"No_Conciliation_1\":\"").append(
                     nullCheck(localReportDetailHdr.getConNoneCasesCompletedHearing())).append(NEW_LINE);
