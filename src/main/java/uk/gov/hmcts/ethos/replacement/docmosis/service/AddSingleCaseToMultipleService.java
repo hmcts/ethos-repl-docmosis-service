@@ -37,7 +37,6 @@ public class AddSingleCaseToMultipleService {
 
             String leadClaimant = caseData.getLeadClaimant();
             String updatedMultipleReference = caseData.getMultipleReference();
-
             String multipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseTypeId);
 
             log.info("Pulling the multiple case: " + updatedMultipleReference);
@@ -73,8 +72,8 @@ public class AddSingleCaseToMultipleService {
                     multipleData, new ArrayList<>(Collections.singletonList(newEthosCaseReferenceToAdd)), errors);
 
             log.info("Update multipleRef, multiple and lead");
-
-            updateCaseDataForMultiple(caseData, updatedMultipleReference, leadClaimant);
+            var multipleCaseId = multipleEvent.getCaseId();
+            updateCaseDataForMultiple(caseData, updatedMultipleReference, leadClaimant, multipleCaseId);
 
             log.info("Reset mid fields");
 
@@ -86,19 +85,13 @@ public class AddSingleCaseToMultipleService {
         }
     }
 
-    private String createMultipleReferenceLink(CaseData caseData) {
-        var url =  "<a href=\"../cases/case-details/" + caseData.getMultipleReference() + "\">" +
-                caseData.getMultipleReference() + "</a>";
-        log.info("setMultipleReferenceLink is set to " + url);
-        return url;
-    }
-
-    private void updateCaseDataForMultiple(CaseData caseData, String newMultipleReference, String leadClaimant) {
+    private void updateCaseDataForMultiple(CaseData caseData, String newMultipleReference, String leadClaimant,
+                                           long multipleCaseId) {
         caseData.setMultipleReference(newMultipleReference);
         caseData.setCaseType(MULTIPLE_CASE_TYPE);
         log.info("setLeadClaimant is set to " + leadClaimant);
         caseData.setLeadClaimant(leadClaimant);
-        caseData.setMultipleReferenceLink(createMultipleReferenceLink(caseData));
+        caseData.setMultipleReferenceLink(String.valueOf(multipleCaseId));
     }
 
     private void addNewLeadToMultiple(String userToken, String multipleCaseTypeId, String jurisdiction,
