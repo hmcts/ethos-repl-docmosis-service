@@ -5,8 +5,15 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import uk.gov.hmcts.ecm.common.model.helper.Constants;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.PositionTypeSummary;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportDetail;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportSummary;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -119,7 +126,7 @@ public class ReportDocHelperTest {
 
     @Test
     public void buildCasesCompletedReport() {
-        String expected = "{\n" +
+        var expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
                 "\"templateName\":\"EM-TRB-SCO-ENG-00221.docx\",\n" +
                 "\"outputName\":\"document.docx\",\n" +
@@ -167,5 +174,72 @@ public class ReportDocHelperTest {
                 "}\n";
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails3.getCaseData(), "",
                 "EM-TRB-SCO-ENG-00221", userDetails).toString());
+    }
+
+    @Test
+    public void buildCasesAwaitingJudgmentReport() throws URISyntaxException, IOException {
+        var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+                .getResource("casesAwaitingJudgmentExpected.json")).toURI())));
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        expectedJson = expectedJson.replace("replace-with-current-date", today);
+
+        var reportData = getCasesAwaitingJudgementReportData();
+        var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "", "EM-TRB-SCO-ENG-00749", userDetails).toString();
+        assertEquals(expectedJson, actualJson);
+    }
+
+    private CasesAwaitingJudgmentReportData getCasesAwaitingJudgementReportData() {
+        var reportSummary = new ReportSummary("Newcastle");
+        reportSummary.getPositionTypes().add(new PositionTypeSummary("Signed fair copy received", 1));
+        reportSummary.getPositionTypes().add(new PositionTypeSummary("Heard awaiting judgment being sent to the parties", 5));
+        reportSummary.getPositionTypes().add(new PositionTypeSummary("Draft with members", 10));
+
+        var reportData = new CasesAwaitingJudgmentReportData(reportSummary);
+        reportData.setReportType(Constants.CASES_AWAITING_JUDGMENT_REPORT);
+        reportData.setDocumentName("TestDocument");
+
+        var reportDetail = new ReportDetail();
+        reportDetail.setWeeksSinceHearing(2);
+        reportDetail.setDaysSinceHearing(16);
+        reportDetail.setCaseNumber("250003/2021");
+        reportDetail.setMultipleReference("250002/2021");
+        reportDetail.setLastHeardHearingDate("12 Jul 2021");
+        reportDetail.setHearingNumber("1");
+        reportDetail.setHearingType("Preliminary Hearing");
+        reportDetail.setJudge("Mrs White");
+        reportDetail.setCurrentPosition("Manually Created");
+        reportDetail.setDateToPosition("2 Jul 2021");
+        reportDetail.setConciliationTrack("Open Track");
+        reportData.getReportDetails().add(reportDetail);
+
+        reportDetail = new ReportDetail();
+        reportDetail.setWeeksSinceHearing(1);
+        reportDetail.setDaysSinceHearing(8);
+        reportDetail.setCaseNumber("250001/2021");
+        reportDetail.setMultipleReference("0/0");
+        reportDetail.setLastHeardHearingDate("20 Jul 2021");
+        reportDetail.setHearingNumber("1");
+        reportDetail.setHearingType("Judgment");
+        reportDetail.setJudge("Mr Blue");
+        reportDetail.setCurrentPosition("Manually Created");
+        reportDetail.setDateToPosition("1 Jul 2021");
+        reportDetail.setConciliationTrack("No Conciliation");
+        reportData.getReportDetails().add(reportDetail);
+
+        reportDetail = new ReportDetail();
+        reportDetail.setWeeksSinceHearing(0);
+        reportDetail.setDaysSinceHearing(1);
+        reportDetail.setCaseNumber("250004/2021");
+        reportDetail.setMultipleReference("0/0");
+        reportDetail.setLastHeardHearingDate("27 Jul 2021");
+        reportDetail.setHearingNumber("5");
+        reportDetail.setHearingType("Judgment");
+        reportDetail.setJudge("Mr Yellow");
+        reportDetail.setCurrentPosition("Manually Created");
+        reportDetail.setDateToPosition("10 Jul 2021");
+        reportDetail.setConciliationTrack("Standard Track");
+        reportData.getReportDetails().add(reportDetail);
+
+        return reportData;
     }
 }

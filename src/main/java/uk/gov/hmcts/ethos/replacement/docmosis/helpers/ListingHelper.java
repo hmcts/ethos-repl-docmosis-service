@@ -35,6 +35,7 @@ import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
@@ -78,6 +79,9 @@ public class ListingHelper {
 
     private static final String ROOM_NOT_ALLOCATED = "* Not Allocated";
     private static final int NUMBER_CHAR_PARSING_DATE = 20;
+
+    static final List<String> REPORTS = Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
+        LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT);
 
     private ListingHelper() {
     }
@@ -633,6 +637,8 @@ public class ListingHelper {
                     return "EM-TRB-SCO-ENG-00220";
                 case CASES_COMPLETED_REPORT:
                     return "EM-TRB-SCO-ENG-00221";
+                case CASES_AWAITING_JUDGMENT_REPORT:
+                    return "EM-TRB-SCO-ENG-00749";
                 default:
                     return "No document found";
             }
@@ -820,9 +826,7 @@ public class ListingHelper {
     }
 
     public static boolean isReportType(String reportType) {
-        return Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
-                LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT).contains(reportType);
+        return REPORTS.contains(reportType);
     }
-
 }
 
