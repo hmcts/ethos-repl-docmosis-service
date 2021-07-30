@@ -5,8 +5,8 @@ version: 0.2.7
 description: HMCTS Ethos Replacement Docmosis Service
 maintainers:
   - name: HMCTS ETHOS Team
-    email: javier.carretero@hmcts.net
+    email: james.turnbull@justice.gov.uk
 dependencies:
   - name: java
-    version: 3.4.5
+    version: 3.6.0
     repository: '@hmctspublic'
