@@ -122,7 +122,7 @@ public class CasesAwaitingJudgmentReport {
         }
 
         var caseData = submitEvent.getCaseData();
-        if (!VALID_POSITION_TYPES.contains(caseData.getPositionType())) {
+        if (!isValidPositionType(caseData.getPositionType())) {
             return false;
         }
 
@@ -131,6 +131,10 @@ public class CasesAwaitingJudgmentReport {
         }
 
         return isCaseAwaitingJudgment(caseData);
+    }
+
+    private boolean isValidPositionType(String positionType) {
+        return StringUtils.isNotBlank(positionType) && VALID_POSITION_TYPES.contains(positionType);
     }
 
     private boolean isCaseWithValidHearing(CaseData caseData) {
