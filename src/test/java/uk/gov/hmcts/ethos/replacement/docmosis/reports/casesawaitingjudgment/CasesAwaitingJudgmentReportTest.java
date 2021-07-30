@@ -90,6 +90,7 @@ public class CasesAwaitingJudgmentReportTest {
 
             var reportData = casesAwaitingJudgmentReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
             assertCommonValues(reportData);
+            assertTrue(reportData.getReportDetails().isEmpty());
         }
     }
 
