@@ -120,6 +120,7 @@ public class ReportHelper {
             listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
 
             var localReportsSummaryHdr = new AdhocReportType();
+
             var singlesTotal = getSinglesTotal(localReportsDetailList);
             var multiplesTotal = getMultiplesTotal(localReportsDetailList);
             var total = singlesTotal + multiplesTotal;
