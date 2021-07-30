@@ -74,15 +74,23 @@ public class CasesAwaitingJudgmentReportTest {
     public void shouldNotShowCaseWithInvalidPositionType() {
         // Given a case is not closed
         // And a case has an invalid position type
+        // Examples
+        // | An invalid position type |
+        // | null |
         // When I request report data
         // Then the case should not be in the report data
 
-        submitEvents.add(caseDataBuilder
-                .withPositionType("An invalid position type")
-                .buildAsSubmitEvent(ACCEPTED_STATE));
+        var invalidPositionTypes = new String[] { "An invalid position type", null};
+        for (var invalidPositionType : invalidPositionTypes) {
+            submitEvents.clear();
+            caseDataBuilder = new CaseDataBuilder();
+            submitEvents.add(caseDataBuilder
+                    .withPositionType(invalidPositionType)
+                    .buildAsSubmitEvent(ACCEPTED_STATE));
 
-        var reportData = casesAwaitingJudgmentReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
-        assertCommonValues(reportData);
+            var reportData = casesAwaitingJudgmentReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
+            assertCommonValues(reportData);
+        }
     }
 
     @Test
