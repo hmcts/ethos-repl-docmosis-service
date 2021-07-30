@@ -42,7 +42,6 @@ public class ReportHelper {
 
     public static ListingData processBroughtForwardDatesRequest(ListingDetails listingDetails,
                                                                 List<SubmitEvent> submitEvents) {
-
         if (submitEvents != null && !submitEvents.isEmpty()) {
             log.info(CASES_SEARCHED + submitEvents.size());
             List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
@@ -70,7 +69,6 @@ public class ReportHelper {
 
     public static ListingData processClaimsAcceptedRequest(ListingDetails listingDetails,
                                                            List<SubmitEvent> submitEvents) {
-
         if (submitEvents != null && !submitEvents.isEmpty()) {
             log.info(CASES_SEARCHED + submitEvents.size());
             var totalCases = 0;
@@ -104,10 +102,10 @@ public class ReportHelper {
 
     public static ListingData processLiveCaseloadRequest(ListingDetails listingDetails,
                                                          List<SubmitEvent> submitEvents) {
-
         if (submitEvents != null && !submitEvents.isEmpty()) {
             log.info(CASES_SEARCHED + submitEvents.size());
             List<AdhocReportTypeItem> localReportsDetailList = new ArrayList<>();
+
             for (SubmitEvent submitEvent : submitEvents) {
                 AdhocReportTypeItem localReportsDetailItem =
                         getLiveCaseloadDetailItem(listingDetails, submitEvent.getCaseData());
@@ -122,22 +120,36 @@ public class ReportHelper {
             listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
 
             var localReportsSummaryHdr = new AdhocReportType();
-            var singlesTotal = localReportsDetailList.stream().distinct()
-                    .filter(reportItem->reportItem.getValue().getCaseType().equals(SINGLE_CASE_TYPE)).count();
-            localReportsSummaryHdr.setSinglesTotal(String.valueOf(singlesTotal));
-
-            var multiplesTotal = localReportsDetailList.stream().distinct()
-                    .filter(reportItem->reportItem.getValue().getCaseType().equals(MULTIPLE_CASE_TYPE)).count();
-            localReportsSummaryHdr.setMultiplesTotal(String.valueOf(multiplesTotal));
-
+            var singlesTotal = getSinglesTotal(localReportsDetailList);
+            var multiplesTotal = getMultiplesTotal(localReportsDetailList);
             var total = singlesTotal + multiplesTotal;
+
+            localReportsSummaryHdr.setSinglesTotal(String.valueOf(singlesTotal));
+            localReportsSummaryHdr.setMultiplesTotal(String.valueOf(multiplesTotal));
             localReportsSummaryHdr.setTotal(String.valueOf(total));
             listingDetails.getCaseData().setLocalReportsSummaryHdr(localReportsSummaryHdr);
-
         }
 
         listingDetails.getCaseData().clearReportFields();
         return listingDetails.getCaseData();
+    }
+
+    private static long getSinglesTotal(List<AdhocReportTypeItem> localReportsDetailList) {
+        long singlesTotal = 0;
+        if(!localReportsDetailList.isEmpty() && localReportsDetailList.size() > 0) {
+            singlesTotal = localReportsDetailList.stream().distinct()
+                    .filter(reportItem -> SINGLE_CASE_TYPE.equals(reportItem.getValue().getCaseType())).count();
+        }
+        return singlesTotal;
+    }
+
+    private static long getMultiplesTotal(List<AdhocReportTypeItem> localReportsDetailList) {
+        long multiplesTotal = 0;
+        if(!localReportsDetailList.isEmpty() && localReportsDetailList.size() > 0) {
+            multiplesTotal = localReportsDetailList.stream().distinct()
+                    .filter(reportItem -> MULTIPLE_CASE_TYPE.equals(reportItem.getValue().getCaseType())).count();
+        }
+        return multiplesTotal;
     }
 
     private static BFDateTypeItem getBFDateTypeItem(BFActionTypeItem bfActionTypeItem,

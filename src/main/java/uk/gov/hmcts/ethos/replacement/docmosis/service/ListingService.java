@@ -223,6 +223,7 @@ public class ListingService {
 
     private ListingData getDateRangeReport(ListingDetails listingDetails, String authToken) throws IOException {
         List<SubmitEvent> submitEvents = getDateRangeReportSearch(listingDetails, authToken);
+
         switch (listingDetails.getCaseData().getReportType()) {
             case BROUGHT_FORWARD_REPORT:
                 return ReportHelper.processBroughtForwardDatesRequest(listingDetails, submitEvents);
@@ -240,8 +241,8 @@ public class ListingService {
     private List<SubmitEvent> getDateRangeReportSearch(ListingDetails listingDetails, String authToken)
             throws IOException {
         var listingData = listingDetails.getCaseData();
-        boolean dateRange = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
-        if (!dateRange) {
+        boolean isRangeHearingDateType = listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE);
+        if (!isRangeHearingDateType) {
             var dateToSearch = LocalDate.parse(listingData.getListingDate(), OLD_DATE_TIME_PATTERN2).toString();
             return ccdClient.retrieveCasesGenericReportElasticSearch(authToken, UtilHelper.getListingCaseTypeId(
                     listingDetails.getCaseTypeId()), dateToSearch, dateToSearch, listingData.getReportType());
