@@ -1,6 +1,13 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.config;
 
-import com.microsoft.azure.servicebus.*;
+import com.microsoft.azure.servicebus.IMessage;
+import com.microsoft.azure.servicebus.IMessageHandler;
+import com.microsoft.azure.servicebus.IQueueClient;
+import com.microsoft.azure.servicebus.ISessionHandler;
+import com.microsoft.azure.servicebus.MessageHandlerOptions;
+import com.microsoft.azure.servicebus.ReceiveMode;
+import com.microsoft.azure.servicebus.SessionHandlerOptions;
+import com.microsoft.azure.servicebus.TransactionContext;
 import com.microsoft.azure.servicebus.primitives.ServiceBusException;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -12,11 +19,12 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
+/**
+ * {@link IQueueClient} implementation for use during development only.
+ */
+@SuppressWarnings("ALL")
 @Component("create-updates-send-client")
 @Profile("dev")
-/**
- * {@link IQueueClient} implementation for use during development only
- */
 public class DevQueueClient implements IQueueClient {
 
     @Override
@@ -35,17 +43,21 @@ public class DevQueueClient implements IQueueClient {
     }
 
     @Override
-    public void registerMessageHandler(IMessageHandler handler, ExecutorService executorService) throws InterruptedException, ServiceBusException {
+    public void registerMessageHandler(IMessageHandler handler, ExecutorService executorService)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
     @Override
-    public void registerMessageHandler(IMessageHandler handler, MessageHandlerOptions handlerOptions) throws InterruptedException, ServiceBusException {
+    public void registerMessageHandler(IMessageHandler handler, MessageHandlerOptions handlerOptions)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
     @Override
-    public void registerMessageHandler(IMessageHandler handler, MessageHandlerOptions handlerOptions, ExecutorService executorService) throws InterruptedException, ServiceBusException {
+    public void registerMessageHandler(IMessageHandler handler, MessageHandlerOptions handlerOptions,
+                                       ExecutorService executorService)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
@@ -55,17 +67,21 @@ public class DevQueueClient implements IQueueClient {
     }
 
     @Override
-    public void registerSessionHandler(ISessionHandler handler, ExecutorService executorService) throws InterruptedException, ServiceBusException {
+    public void registerSessionHandler(ISessionHandler handler, ExecutorService executorService)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
     @Override
-    public void registerSessionHandler(ISessionHandler handler, SessionHandlerOptions handlerOptions) throws InterruptedException, ServiceBusException {
+    public void registerSessionHandler(ISessionHandler handler, SessionHandlerOptions handlerOptions)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
     @Override
-    public void registerSessionHandler(ISessionHandler handler, SessionHandlerOptions handlerOptions, ExecutorService executorService) throws InterruptedException, ServiceBusException {
+    public void registerSessionHandler(ISessionHandler handler, SessionHandlerOptions handlerOptions,
+                                       ExecutorService executorService)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
@@ -75,17 +91,20 @@ public class DevQueueClient implements IQueueClient {
     }
 
     @Override
-    public void abandon(UUID lockToken, TransactionContext transaction) throws InterruptedException, ServiceBusException {
+    public void abandon(UUID lockToken, TransactionContext transaction)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
     @Override
-    public void abandon(UUID lockToken, Map<String, Object> propertiesToModify) throws InterruptedException, ServiceBusException {
+    public void abandon(UUID lockToken, Map<String, Object> propertiesToModify)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
     @Override
-    public void abandon(UUID lockToken, Map<String, Object> propertiesToModify, TransactionContext transaction) throws InterruptedException, ServiceBusException {
+    public void abandon(UUID lockToken, Map<String, Object> propertiesToModify, TransactionContext transaction)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
@@ -105,7 +124,8 @@ public class DevQueueClient implements IQueueClient {
     }
 
     @Override
-    public CompletableFuture<Void> abandonAsync(UUID lockToken, Map<String, Object> propertiesToModify, TransactionContext transaction) {
+    public CompletableFuture<Void> abandonAsync(UUID lockToken, Map<String, Object> propertiesToModify,
+                                                TransactionContext transaction) {
         return null;
     }
 
@@ -115,7 +135,8 @@ public class DevQueueClient implements IQueueClient {
     }
 
     @Override
-    public void complete(UUID lockToken, TransactionContext transaction) throws InterruptedException, ServiceBusException {
+    public void complete(UUID lockToken, TransactionContext transaction) throws InterruptedException,
+            ServiceBusException {
         // No implementation required
     }
 
@@ -135,37 +156,45 @@ public class DevQueueClient implements IQueueClient {
     }
 
     @Override
-    public void deadLetter(UUID lockToken, TransactionContext transaction) throws InterruptedException, ServiceBusException {
+    public void deadLetter(UUID lockToken, TransactionContext transaction)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
     @Override
-    public void deadLetter(UUID lockToken, Map<String, Object> propertiesToModify) throws InterruptedException, ServiceBusException {
+    public void deadLetter(UUID lockToken, Map<String, Object> propertiesToModify)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
     @Override
-    public void deadLetter(UUID lockToken, Map<String, Object> propertiesToModify, TransactionContext transaction) throws InterruptedException, ServiceBusException {
+    public void deadLetter(UUID lockToken, Map<String, Object> propertiesToModify, TransactionContext transaction)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
     @Override
-    public void deadLetter(UUID lockToken, String deadLetterReason, String deadLetterErrorDescription) throws InterruptedException, ServiceBusException {
+    public void deadLetter(UUID lockToken, String deadLetterReason, String deadLetterErrorDescription)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
     @Override
-    public void deadLetter(UUID lockToken, String deadLetterReason, String deadLetterErrorDescription, TransactionContext transaction) throws InterruptedException, ServiceBusException {
+    public void deadLetter(UUID lockToken, String deadLetterReason, String deadLetterErrorDescription,
+                           TransactionContext transaction) throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
     @Override
-    public void deadLetter(UUID lockToken, String deadLetterReason, String deadLetterErrorDescription, Map<String, Object> propertiesToModify) throws InterruptedException, ServiceBusException {
+    public void deadLetter(UUID lockToken, String deadLetterReason, String deadLetterErrorDescription,
+                           Map<String, Object> propertiesToModify) throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
     @Override
-    public void deadLetter(UUID lockToken, String deadLetterReason, String deadLetterErrorDescription, Map<String, Object> propertiesToModify, TransactionContext transaction) throws InterruptedException, ServiceBusException {
+    public void deadLetter(UUID lockToken, String deadLetterReason, String deadLetterErrorDescription,
+                           Map<String, Object> propertiesToModify, TransactionContext transaction)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
@@ -185,27 +214,35 @@ public class DevQueueClient implements IQueueClient {
     }
 
     @Override
-    public CompletableFuture<Void> deadLetterAsync(UUID lockToken, Map<String, Object> propertiesToModify, TransactionContext transaction) {
+    public CompletableFuture<Void> deadLetterAsync(UUID lockToken, Map<String, Object> propertiesToModify,
+                                                   TransactionContext transaction) {
         return null;
     }
 
     @Override
-    public CompletableFuture<Void> deadLetterAsync(UUID lockToken, String deadLetterReason, String deadLetterErrorDescription) {
+    public CompletableFuture<Void> deadLetterAsync(UUID lockToken, String deadLetterReason,
+                                                   String deadLetterErrorDescription) {
         return null;
     }
 
     @Override
-    public CompletableFuture<Void> deadLetterAsync(UUID lockToken, String deadLetterReason, String deadLetterErrorDescription, TransactionContext transaction) {
+    public CompletableFuture<Void> deadLetterAsync(UUID lockToken, String deadLetterReason,
+                                                   String deadLetterErrorDescription, TransactionContext transaction) {
         return null;
     }
 
     @Override
-    public CompletableFuture<Void> deadLetterAsync(UUID lockToken, String deadLetterReason, String deadLetterErrorDescription, Map<String, Object> propertiesToModify) {
+    public CompletableFuture<Void> deadLetterAsync(UUID lockToken, String deadLetterReason,
+                                                   String deadLetterErrorDescription,
+                                                   Map<String, Object> propertiesToModify) {
         return null;
     }
 
     @Override
-    public CompletableFuture<Void> deadLetterAsync(UUID lockToken, String deadLetterReason, String deadLetterErrorDescription, Map<String, Object> propertiesToModify, TransactionContext transaction) {
+    public CompletableFuture<Void> deadLetterAsync(UUID lockToken, String deadLetterReason,
+                                                   String deadLetterErrorDescription,
+                                                   Map<String, Object> propertiesToModify,
+                                                   TransactionContext transaction) {
         return null;
     }
 
@@ -225,7 +262,8 @@ public class DevQueueClient implements IQueueClient {
     }
 
     @Override
-    public void send(IMessage message, TransactionContext transaction) throws InterruptedException, ServiceBusException {
+    public void send(IMessage message, TransactionContext transaction)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
@@ -235,7 +273,8 @@ public class DevQueueClient implements IQueueClient {
     }
 
     @Override
-    public void sendBatch(Collection<? extends IMessage> messages, TransactionContext transaction) throws InterruptedException, ServiceBusException {
+    public void sendBatch(Collection<? extends IMessage> messages, TransactionContext transaction)
+            throws InterruptedException, ServiceBusException {
         // No implementation required
     }
 
@@ -255,7 +294,8 @@ public class DevQueueClient implements IQueueClient {
     }
 
     @Override
-    public CompletableFuture<Void> sendBatchAsync(Collection<? extends IMessage> messages, TransactionContext transaction) {
+    public CompletableFuture<Void> sendBatchAsync(Collection<? extends IMessage> messages,
+                                                  TransactionContext transaction) {
         return null;
     }
 
@@ -265,7 +305,8 @@ public class DevQueueClient implements IQueueClient {
     }
 
     @Override
-    public CompletableFuture<Long> scheduleMessageAsync(IMessage message, Instant scheduledEnqueueTimeUtc, TransactionContext transaction) {
+    public CompletableFuture<Long> scheduleMessageAsync(IMessage message, Instant scheduledEnqueueTimeUtc,
+                                                        TransactionContext transaction) {
         return null;
     }
 
@@ -275,12 +316,14 @@ public class DevQueueClient implements IQueueClient {
     }
 
     @Override
-    public long scheduleMessage(IMessage message, Instant scheduledEnqueueTimeUtc) throws InterruptedException, ServiceBusException {
+    public long scheduleMessage(IMessage message, Instant scheduledEnqueueTimeUtc)
+            throws InterruptedException, ServiceBusException {
         return 0;
     }
 
     @Override
-    public long scheduleMessage(IMessage message, Instant scheduledEnqueueTimeUtc, TransactionContext transaction) throws InterruptedException, ServiceBusException {
+    public long scheduleMessage(IMessage message, Instant scheduledEnqueueTimeUtc, TransactionContext transaction)
+            throws InterruptedException, ServiceBusException {
         return 0;
     }
 
