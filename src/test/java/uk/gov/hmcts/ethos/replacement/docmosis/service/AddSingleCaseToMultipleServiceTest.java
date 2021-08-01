@@ -113,6 +113,8 @@ public class AddSingleCaseToMultipleServiceTest {
         assertEquals(MULTIPLE_CASE_TYPE, caseDetails.getCaseData().getCaseType());
         assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
         assertEquals(YES, caseDetails.getCaseData().getLeadClaimant());
+        var expected = String.valueOf(submitMultipleEvents.get(0).getCaseId());
+        assertEquals(expected, caseDetails.getCaseData().getMultipleReferenceLink());
 
     }
 
@@ -161,6 +163,8 @@ public class AddSingleCaseToMultipleServiceTest {
         assertEquals(MULTIPLE_CASE_TYPE, caseDetails.getCaseData().getCaseType());
         assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
         assertEquals(NO, caseDetails.getCaseData().getLeadClaimant());
+        var expected = String.valueOf(submitMultipleEvents.get(0).getCaseId());
+        assertEquals(expected, caseDetails.getCaseData().getMultipleReferenceLink());
 
     }
 
@@ -218,6 +222,8 @@ public class AddSingleCaseToMultipleServiceTest {
         assertEquals(MULTIPLE_CASE_TYPE, caseDetails.getCaseData().getCaseType());
         assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
         assertEquals(YES, caseDetails.getCaseData().getLeadClaimant());
+        var expected = String.valueOf(submitMultipleEvents.get(0).getCaseId());
+        assertEquals(expected, caseDetails.getCaseData().getMultipleReferenceLink());
 
     }
 

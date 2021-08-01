@@ -15,9 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,7 +37,6 @@ public class AddSingleCaseToMultipleService {
 
             String leadClaimant = caseData.getLeadClaimant();
             String updatedMultipleReference = caseData.getMultipleReference();
-
             String multipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseTypeId);
 
             log.info("Pulling the multiple case: " + updatedMultipleReference);
@@ -62,9 +59,7 @@ public class AddSingleCaseToMultipleService {
             log.info("If multiple is empty the single will be always the lead");
 
             if (ethosCaseRefCollection.isEmpty()) {
-
                 leadClaimant = YES;
-
             }
 
             addNewLeadToMultiple(userToken, multipleCaseTypeId, jurisdiction,
@@ -77,8 +72,8 @@ public class AddSingleCaseToMultipleService {
                     multipleData, new ArrayList<>(Collections.singletonList(newEthosCaseReferenceToAdd)), errors);
 
             log.info("Update multipleRef, multiple and lead");
-
-            updateCaseDataForMultiple(caseData, updatedMultipleReference, leadClaimant);
+            var multipleCaseId = multipleEvent.getCaseId();
+            updateCaseDataForMultiple(caseData, updatedMultipleReference, leadClaimant, multipleCaseId);
 
             log.info("Reset mid fields");
 
@@ -87,24 +82,21 @@ public class AddSingleCaseToMultipleService {
             log.info("Update check multiple flag");
 
             caseData.setMultipleFlag(YES);
-
         }
-
     }
 
-    private void updateCaseDataForMultiple(CaseData caseData, String newMultipleReference, String leadClaimant) {
-
+    private void updateCaseDataForMultiple(CaseData caseData, String newMultipleReference, String leadClaimant,
+                                           long multipleCaseId) {
         caseData.setMultipleReference(newMultipleReference);
         caseData.setCaseType(MULTIPLE_CASE_TYPE);
         log.info("setLeadClaimant is set to " + leadClaimant);
         caseData.setLeadClaimant(leadClaimant);
-
+        caseData.setMultipleReferenceLink(String.valueOf(multipleCaseId));
     }
 
     private void addNewLeadToMultiple(String userToken, String multipleCaseTypeId, String jurisdiction,
                                       MultipleData multipleData, String leadClaimant,
                                       String newEthosCaseReferenceToAdd, String caseId, List<String> errors) {
-
         if (leadClaimant.equals(YES)) {
 
             log.info("Checking if there was a lead");
@@ -125,9 +117,7 @@ public class AddSingleCaseToMultipleService {
 
             multipleHelperService.addLeadMarkUp(
                     userToken, multipleCaseTypeId, multipleData, newEthosCaseReferenceToAdd, caseId);
-
         }
-
     }
 
 }
