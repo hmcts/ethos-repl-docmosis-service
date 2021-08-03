@@ -4,10 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.helper.Constants;
+import uk.gov.hmcts.ecm.common.model.reports.casesawaitingjudgment.CaseData;
+import uk.gov.hmcts.ecm.common.model.reports.casesawaitingjudgment.CasesAwaitingJudgmentSubmitEvent;
 
 import java.time.Clock;
 import java.time.DateTimeException;
@@ -46,6 +46,13 @@ public class CasesAwaitingJudgmentReport {
             "Awaiting written reasons"
     );
 
+    static class HeardHearing {
+        String listedDate;
+        String hearingNumber;
+        String hearingType;
+        String judge;
+    }
+
     private final ReportDataSource reportDataSource;
     private final Clock clock;
 
@@ -73,12 +80,13 @@ public class CasesAwaitingJudgmentReport {
         return new CasesAwaitingJudgmentReportData(reportSummary);
     }
 
-    private List<SubmitEvent> getCases(String caseTypeId) {
+    private List<CasesAwaitingJudgmentSubmitEvent> getCases(String caseTypeId) {
         return reportDataSource.getData(UtilHelper.getListingCaseTypeId(caseTypeId));
     }
 
-    private void populateData(CasesAwaitingJudgmentReportData reportData, List<SubmitEvent> submitEvents) {
-        for (SubmitEvent submitEvent : submitEvents) {
+    private void populateData(CasesAwaitingJudgmentReportData reportData,
+                              List<CasesAwaitingJudgmentSubmitEvent> submitEvents) {
+        for (CasesAwaitingJudgmentSubmitEvent submitEvent : submitEvents) {
             if (!isValidCase(submitEvent)) {
                 continue;
             }
@@ -116,10 +124,11 @@ public class CasesAwaitingJudgmentReport {
         addReportSummary(reportData);
     }
 
-    private boolean isValidCase(SubmitEvent submitEvent) {
+    private boolean isValidCase(CasesAwaitingJudgmentSubmitEvent submitEvent) {
         if (CLOSED_STATE.equals(submitEvent.getState())) {
             return false;
         }
+
 
         var caseData = submitEvent.getCaseData();
         if (!isValidPositionType(caseData.getPositionType())) {
@@ -181,7 +190,7 @@ public class CasesAwaitingJudgmentReport {
         reportData.getReportDetails().forEach(rd -> positionTypeCounts.merge(rd.getPositionType(), 1, Integer::sum));
 
         var positionTypes = reportData.getReportSummary().getPositionTypes();
-        positionTypeCounts.forEach((k,v)->positionTypes.add(new PositionTypeSummary(k,v)));
+        positionTypeCounts.forEach((k, v) -> positionTypes.add(new PositionTypeSummary(k, v)));
 
         Comparator<PositionTypeSummary> comparator = Comparator.comparingInt(PositionTypeSummary::getPositionTypeCount);
         positionTypes.sort(comparator);
@@ -229,11 +238,4 @@ public class CasesAwaitingJudgmentReport {
             return sourceDate;
         }
     }
-}
-
-class HeardHearing {
-    String listedDate;
-    String hearingNumber;
-    String hearingType;
-    String judge;
 }
