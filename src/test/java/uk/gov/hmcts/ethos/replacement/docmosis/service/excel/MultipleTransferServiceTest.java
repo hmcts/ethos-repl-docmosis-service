@@ -57,6 +57,7 @@ public class MultipleTransferServiceTest {
 
     @Test
     public void multipleTransferLogic() {
+
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjects);
         multipleTransferService.multipleTransferLogic(userToken,
@@ -74,22 +75,27 @@ public class MultipleTransferServiceTest {
                 null,
                 multipleDetails.getCaseData().getReasonForCT(),
                 multipleDetails.getCaseData().getMultipleReference(),
-                YES);
+                YES,
+                multipleDetails.getCaseId());
         verifyNoMoreInteractions(persistentQHelperService);
+
     }
 
     @Test
     public void multipleTransferLogicEmptyCollection() {
+
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(new TreeMap<>());
         multipleTransferService.multipleTransferLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());
         verifyNoMoreInteractions(persistentQHelperService);
+
     }
 
     @Test
     public void populateDataIfComingFromCT() {
+
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjects);
         when(multipleCasesReadingService.retrieveMultipleCasesWithRetries(userToken,
@@ -113,6 +119,7 @@ public class MultipleTransferServiceTest {
                 + "flag2=null, flag3=null, flag4=null)", caseMultipleTypeItemList.get(1).getValue().toString());
         assertEquals("MultipleObjectType(ethosCaseRef=245004/2020, subMultiple=245002, flag1=null, "
                 + "flag2=null, flag3=null, flag4=null)", caseMultipleTypeItemList.get(2).getValue().toString());
+
     }
 
 }

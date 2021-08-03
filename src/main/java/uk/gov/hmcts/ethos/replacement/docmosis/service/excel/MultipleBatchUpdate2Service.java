@@ -124,7 +124,8 @@ public class MultipleBatchUpdate2Service {
                 multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(
                         userToken, multipleDetails.getCaseTypeId(),
                         multipleDetails.getJurisdiction(), multipleDetails.getCaseData(), errors,
-                        new ArrayList<>(Collections.singletonList(newLeadCase)), newLeadCase);
+                        new ArrayList<>(Collections.singletonList(newLeadCase)), newLeadCase,
+                        multipleDetails.getCaseId());
 
             }
 
@@ -186,7 +187,8 @@ public class MultipleBatchUpdate2Service {
 
         multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken, updatedCaseTypeId,
                 updatedJurisdiction, updatedMultipleData, errors,
-                new ArrayList<>(multipleObjects.keySet()), updatedLeadCase);
+                new ArrayList<>(multipleObjects.keySet()), updatedLeadCase,
+                String.valueOf(updatedMultiple.getCaseId()));
 
     }
 
