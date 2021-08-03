@@ -934,6 +934,7 @@ public class DocumentHelper {
 
         log.info("Get respondent address ET3");
 
+
         return (!Strings.isNullOrEmpty(respondentSumType.getResponseReceived())
                 && respondentSumType.getResponseReceived().equals(YES)
                 && respondentSumType.getResponseRespondentAddress() != null
