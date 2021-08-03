@@ -52,8 +52,10 @@ public class AddSingleCaseToMultipleServiceTest {
         caseDetails.setCaseData(MultipleUtil.getCaseDataForSinglesToBeMoved());
         caseDetails.setCaseId("12321321");
         submitMultipleEvents = MultipleUtil.getSubmitMultipleEvents();
+        submitMultipleEvents.get(0).setCaseId(12121212);
         caseIdCollection = new ArrayList<>(Arrays.asList("21006/2020", "245000/2020", "245001/2020"));
         userToken = "authString";
+
     }
 
     @Test
@@ -84,14 +86,16 @@ public class AddSingleCaseToMultipleServiceTest {
                 submitMultipleEvents.get(0).getCaseData(),
                 errors);
 
-        verify(multipleHelperService, times(1)).sendCreationUpdatesToSinglesWithoutConfirmation(
+        verify(multipleHelperService, times(1))
+                .sendCreationUpdatesToSinglesWithoutConfirmation(
                 userToken,
-                multipleCaseTypeId,
+                multipleDetails.getCaseTypeId(),
                 multipleDetails.getJurisdiction(),
                 submitMultipleEvents.get(0).getCaseData(),
                 errors,
                 new ArrayList<>(Collections.singletonList("21006/2020")),
-                "");
+                "",
+                multipleDetails.getCaseId());
 
         verify(multipleHelperService, times(1)).addLeadMarkUp(
                 userToken,
@@ -114,7 +118,7 @@ public class AddSingleCaseToMultipleServiceTest {
         assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
         assertEquals(YES, caseDetails.getCaseData().getLeadClaimant());
         var expected = String.valueOf(submitMultipleEvents.get(0).getCaseId());
-        assertEquals(expected, caseDetails.getCaseData().getMultipleReferenceLink());
+        assertEquals(expected, caseDetails.getCaseData().getParentMultipleCaseId());
 
     }
 
@@ -164,7 +168,7 @@ public class AddSingleCaseToMultipleServiceTest {
         assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
         assertEquals(NO, caseDetails.getCaseData().getLeadClaimant());
         var expected = String.valueOf(submitMultipleEvents.get(0).getCaseId());
-        assertEquals(expected, caseDetails.getCaseData().getMultipleReferenceLink());
+        assertEquals(expected, caseDetails.getCaseData().getParentMultipleCaseId());
 
     }
 
@@ -223,7 +227,7 @@ public class AddSingleCaseToMultipleServiceTest {
         assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
         assertEquals(YES, caseDetails.getCaseData().getLeadClaimant());
         var expected = String.valueOf(submitMultipleEvents.get(0).getCaseId());
-        assertEquals(expected, caseDetails.getCaseData().getMultipleReferenceLink());
+        assertEquals(expected, caseDetails.getCaseData().getParentMultipleCaseId());
 
     }
 

@@ -171,7 +171,6 @@ dependencyCheck {
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
     jcenter()
     maven { url "https://repo.maven.apache.org/maven2" }
@@ -187,7 +186,7 @@ def versions = [
 ]
 
 dependencies {
-    implementation 'com.github.hmcts:ecm-common:0.1.122'
+    implementation 'com.github.hmcts:ecm-common:0.1.123'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'

@@ -205,9 +205,12 @@ public class MultipleHelperService {
     }
 
     public void sendCreationUpdatesToSinglesWithoutConfirmation(String userToken, String caseTypeId,
-                                                                String jurisdiction, MultipleData updatedMultipleData,
+                                                                String jurisdiction,
+                                                                MultipleData updatedMultipleData,
                                                                 List<String> errors,
-                                                                List<String> multipleObjectsFiltered, String leadId) {
+                                                                List<String> multipleObjectsFiltered,
+                                                                String leadId,
+                                                                String parentMultipleCaseId) {
 
         String username = userService.getUserDetails(userToken).getEmail();
 
@@ -221,7 +224,8 @@ public class MultipleHelperService {
                 updatedMultipleData.getMultipleReference(),
                 NO,
                 createUpdatesBusSender,
-                String.valueOf(multipleObjectsFiltered.size()));
+                String.valueOf(multipleObjectsFiltered.size()),
+                parentMultipleCaseId);
 
     }
 
@@ -241,7 +245,8 @@ public class MultipleHelperService {
                 multipleData.getMultipleReference(),
                 NO,
                 createUpdatesBusSender,
-                String.valueOf(multipleObjectsFiltered.size()));
+                String.valueOf(multipleObjectsFiltered.size()),
+                multipleDetails.getCaseId());
 
     }
 
@@ -262,7 +267,8 @@ public class MultipleHelperService {
                 multipleData.getMultipleReference(),
                 YES,
                 createUpdatesBusSender,
-                String.valueOf(multipleObjectsFiltered.size()));
+                String.valueOf(multipleObjectsFiltered.size()),
+                multipleDetails.getCaseId());
 
     }
 
@@ -322,12 +328,13 @@ public class MultipleHelperService {
                 multipleData.getMultipleReference(),
                 confirmation,
                 createUpdatesBusSender,
-                String.valueOf(ethosCaseRefCollection.size()));
+                String.valueOf(ethosCaseRefCollection.size()),
+                multipleDetails.getCaseId());
 
     }
 
     public void sendResetMultipleStateWithoutConfirmation(String userToken, String caseTypeId, String jurisdiction,
-                                                          MultipleData multipleData, List<String> errors) {
+                                                          MultipleData multipleData, List<String> errors, String parentMultipleCaseId) {
 
         String caseToSend = MultiplesHelper.getCurrentLead(multipleData.getLeadCase());
         String username = userService.getUserDetails(userToken).getEmail();
@@ -341,7 +348,8 @@ public class MultipleHelperService {
                 multipleData.getMultipleReference(),
                 NO,
                 createUpdatesBusSender,
-                "1");
+                "1",
+                parentMultipleCaseId);
 
     }
 
@@ -383,7 +391,8 @@ public class MultipleHelperService {
                     multipleDetails.getCaseData(),
                     errors,
                     new ArrayList<>(Collections.singletonList(oldLeadCase)),
-                    newLeadCase);
+                    newLeadCase,
+                    multipleDetails.getCaseId());
 
         }
 
@@ -410,7 +419,8 @@ public class MultipleHelperService {
                 multipleDetails.getCaseData(),
                 errors,
                 newEthosCaseRefCollection,
-                newLeadCase);
+                newLeadCase,
+                multipleDetails.getCaseId());
 
     }
 
