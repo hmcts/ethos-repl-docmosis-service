@@ -1,14 +1,13 @@
-package uk.gov.hmcts.ethos.replacement.docmosis.utils;
+package uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment;
 
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
-import uk.gov.hmcts.ecm.common.model.helper.Constants;
+import uk.gov.hmcts.ecm.common.model.reports.casesawaitingjudgment.CaseData;
+import uk.gov.hmcts.ecm.common.model.reports.casesawaitingjudgment.CasesAwaitingJudgmentSubmitEvent;
 
 import java.util.ArrayList;
 
@@ -103,8 +102,8 @@ public class CaseDataBuilder {
         return caseData;
     }
 
-    public SubmitEvent buildAsSubmitEvent(String state) {
-        var submitEvent = new SubmitEvent();
+    public CasesAwaitingJudgmentSubmitEvent buildAsSubmitEvent(String state) {
+        var submitEvent = new CasesAwaitingJudgmentSubmitEvent();
         submitEvent.setCaseData(caseData);
         submitEvent.setState(state);
 
