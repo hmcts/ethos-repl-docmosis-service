@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -22,7 +23,7 @@ public class CcdReportDataSourceTest {
         var ccdClient = mock(CcdClient.class);
         var submitEvent = new CasesAwaitingJudgmentSubmitEvent();
         var submitEvents = List.of(submitEvent);
-        when(ccdClient.casesAwaitingJudgmentSearch(authToken, caseTypeId)).thenReturn(submitEvents);
+        when(ccdClient.casesAwaitingJudgmentSearch(anyString(), anyString(), anyString())).thenReturn(submitEvents);
 
         var ccdReportDataSource = new CcdReportDataSource(authToken, ccdClient);
 
@@ -36,7 +37,7 @@ public class CcdReportDataSourceTest {
         var authToken = "A test token";
         var caseTypeId = "A test case type";
         var ccdClient = mock(CcdClient.class);
-        when(ccdClient.casesAwaitingJudgmentSearch(authToken, caseTypeId)).thenThrow(new IOException());
+        when(ccdClient.casesAwaitingJudgmentSearch(anyString(), anyString(), anyString())).thenThrow(new IOException());
 
         var ccdReportDataSource = new CcdReportDataSource(authToken, ccdClient);
         ccdReportDataSource.getData(caseTypeId);
