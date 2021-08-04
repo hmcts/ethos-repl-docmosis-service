@@ -258,8 +258,27 @@ public class ReportDocHelper {
         return sb;
     }
 
+    private static StringBuilder getLiveCaseLoadReportSummaryHdr(ListingData listingData) {
+        var sb = new StringBuilder();
+        AdhocReportType localReportSummaryHdr = listingData.getLocalReportsSummaryHdr();
+        if (localReportSummaryHdr != null) {
+            sb.append("\"Multiples_Total\":\"").append(
+                    nullCheck(localReportSummaryHdr.getMultiplesTotal())).append(NEW_LINE);
+            sb.append("\"Singles_Total\":\"").append(
+                    nullCheck(localReportSummaryHdr.getSinglesTotal())).append(NEW_LINE);
+            sb.append("\"Total\":\"").append(
+                    nullCheck(localReportSummaryHdr.getTotal())).append(NEW_LINE);
+        }
+
+        return sb;
+    }
+
     private static StringBuilder getLiveCaseLoadReport(ListingData listingData) {
         var sb = new StringBuilder();
+
+        if (listingData.getLocalReportsSummaryHdr() != null) {
+           sb = getLiveCaseLoadReportSummaryHdr(listingData);
+        }
 
         if (listingData.getLocalReportsDetail() != null && !listingData.getLocalReportsDetail().isEmpty()) {
             List<AdhocReportTypeItem> adhocReportTypeItems = listingData.getLocalReportsDetail();
