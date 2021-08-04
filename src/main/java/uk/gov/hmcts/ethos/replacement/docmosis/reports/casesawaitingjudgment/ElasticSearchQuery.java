@@ -9,7 +9,11 @@ import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MAX_ES_SIZE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReport.VALID_POSITION_TYPES;
 
-public class ElasticSearchQuery {
+class ElasticSearchQuery {
+
+    private ElasticSearchQuery() {
+        // Access through static methods
+    }
 
     static String create() {
         var boolQueryBuilder = boolQuery()
