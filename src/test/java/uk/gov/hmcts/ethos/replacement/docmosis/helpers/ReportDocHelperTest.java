@@ -99,6 +99,9 @@ public class ReportDocHelperTest {
                 "\"Listed_date_from\":\"1 December 2021\",\n" +
                 "\"Listed_date_to\":\"3 December 2021\",\n" +
                 "\"Report_Office\":\"Manchester\",\n" +
+                "\"Multiples_Total\":\"0\",\n" +
+                "\"Singles_Total\":\"2\",\n" +
+                "\"Total\":\"2\",\n" +
                 "\"Report_List\":[\n" +
                 "{\"Case_Reference\":\"2122324/2020\",\n" +
                 "\"Date_Of_Acceptance\":\"\",\n" +
