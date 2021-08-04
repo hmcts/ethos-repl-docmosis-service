@@ -18,7 +18,7 @@ class ElasticSearchQuery {
     static String create() {
         var boolQueryBuilder = boolQuery()
                 .mustNot(new MatchQueryBuilder("state.keyword", "Closed"))
-                .mustNot(new ExistsQueryBuilder("data.JudgementCollection"))
+                .mustNot(new ExistsQueryBuilder("data.judgementCollection"))
                 .must(new ExistsQueryBuilder("data.hearingCollection"))
                 .filter(new TermsQueryBuilder("data.positionType.keyword", VALID_POSITION_TYPES));
 
