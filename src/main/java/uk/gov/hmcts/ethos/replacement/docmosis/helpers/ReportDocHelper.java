@@ -100,7 +100,8 @@ public class ReportDocHelper {
         return sb;
     }
 
-    private static void addJsonCollection(String name, Iterator<?> iterator, StringBuilder sb) throws JsonProcessingException {
+    private static void addJsonCollection(String name, Iterator<?> iterator, StringBuilder sb)
+            throws JsonProcessingException {
         sb.append("\"").append(name).append("\":[\n");
         var objectMapper = new ObjectMapper();
         while (iterator.hasNext()) {
@@ -261,31 +262,28 @@ public class ReportDocHelper {
 
     private static StringBuilder getLiveCaseLoadReportSummaryHdr(ListingData listingData) {
         var sb = new StringBuilder();
-        var localReportSummaryHdr = listingData.getLocalReportsSummaryHdr();
+        String singlesTotal = "0";
+        String multiplesTotal = "0";
+        String total = "0";
+        var summaryHdr = listingData.getLocalReportsSummaryHdr();
 
-        if (localReportSummaryHdr != null) {
-            sb.append("\"Multiples_Total\":\"").append(
-                    nullCheck(localReportSummaryHdr.getMultiplesTotal())).append(NEW_LINE);
-            sb.append("\"Singles_Total\":\"").append(
-                    nullCheck(localReportSummaryHdr.getSinglesTotal())).append(NEW_LINE);
-            sb.append("\"Total\":\"").append(
-                    nullCheck(localReportSummaryHdr.getTotal())).append(NEW_LINE);
+        if (summaryHdr != null) {
+            singlesTotal = nullCheck(summaryHdr.getSinglesTotal());
+            multiplesTotal = nullCheck(summaryHdr.getMultiplesTotal());
+            total = nullCheck(summaryHdr.getTotal());
         }
-        else {
-            sb.append("\"Multiples_Total\":\"").append("0").append(NEW_LINE);
-            sb.append("\"Singles_Total\":\"").append("0").append(NEW_LINE);
-            sb.append("\"Total\":\"").append("0").append(NEW_LINE);
-        }
+
+        sb.append("\"Multiples_Total\":\"").append(multiplesTotal).append(NEW_LINE);
+        sb.append("\"Singles_Total\":\"").append(singlesTotal).append(NEW_LINE);
+        sb.append("\"Total\":\"").append(total).append(NEW_LINE);
 
         return sb;
     }
 
     private static StringBuilder getLiveCaseLoadReport(ListingData listingData) {
-        var sb = new StringBuilder();
-            sb = getLiveCaseLoadReportSummaryHdr(listingData);
+        var sb = getLiveCaseLoadReportSummaryHdr(listingData);
 
-        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail()))
-        {
+        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())) {
             List<AdhocReportTypeItem> adhocReportTypeItems = listingData.getLocalReportsDetail();
             sb.append(REPORT_LIST);
             for (var i = 0; i < adhocReportTypeItems.size(); i++) {

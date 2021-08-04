@@ -431,15 +431,15 @@ public class ExcelActionsController {
     public ResponseEntity<ListingCallbackResponse> listingsDateRangeMidEventValidation(
             @RequestBody ListingRequest listingRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-            log.info("LISTING DATE RANGE VALIDATION ---> " + LOG_MESSAGE +
-                    listingRequest.getCaseDetails().getCaseId());
+        log.info("LISTING DATE RANGE VALIDATION ---> " + LOG_MESSAGE +
+                listingRequest.getCaseDetails().getCaseId());
 
-            if (!verifyTokenService.verifyTokenSignature(userToken)) {
-                log.error(INVALID_TOKEN, userToken);
-                return ResponseEntity.status(FORBIDDEN.value()).build();
-            }
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
 
-            var caseData = listingRequest.getCaseDetails().getCaseData();
+        var caseData = listingRequest.getCaseDetails().getCaseData();
 
         List<String> errors = eventValidationService.validateListingDateRange(
                 caseData.getListingDateFrom(),
@@ -587,6 +587,5 @@ public class ExcelActionsController {
 
         return getMultipleCallbackRespEntity(errors, multipleDetails);
     }
-
 
 }
