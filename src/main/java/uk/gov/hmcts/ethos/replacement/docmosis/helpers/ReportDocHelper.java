@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
@@ -260,7 +261,8 @@ public class ReportDocHelper {
 
     private static StringBuilder getLiveCaseLoadReportSummaryHdr(ListingData listingData) {
         var sb = new StringBuilder();
-        AdhocReportType localReportSummaryHdr = listingData.getLocalReportsSummaryHdr();
+        var localReportSummaryHdr = listingData.getLocalReportsSummaryHdr();
+
         if (localReportSummaryHdr != null) {
             sb.append("\"Multiples_Total\":\"").append(
                     nullCheck(localReportSummaryHdr.getMultiplesTotal())).append(NEW_LINE);
@@ -269,18 +271,21 @@ public class ReportDocHelper {
             sb.append("\"Total\":\"").append(
                     nullCheck(localReportSummaryHdr.getTotal())).append(NEW_LINE);
         }
+        else {
+            sb.append("\"Multiples_Total\":\"").append("0").append(NEW_LINE);
+            sb.append("\"Singles_Total\":\"").append("0").append(NEW_LINE);
+            sb.append("\"Total\":\"").append("0").append(NEW_LINE);
+        }
 
         return sb;
     }
 
     private static StringBuilder getLiveCaseLoadReport(ListingData listingData) {
         var sb = new StringBuilder();
+            sb = getLiveCaseLoadReportSummaryHdr(listingData);
 
-        if (listingData.getLocalReportsSummaryHdr() != null) {
-           sb = getLiveCaseLoadReportSummaryHdr(listingData);
-        }
-
-        if (listingData.getLocalReportsDetail() != null && !listingData.getLocalReportsDetail().isEmpty()) {
+        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail()))
+        {
             List<AdhocReportTypeItem> adhocReportTypeItems = listingData.getLocalReportsDetail();
             sb.append(REPORT_LIST);
             for (var i = 0; i < adhocReportTypeItems.size(); i++) {
