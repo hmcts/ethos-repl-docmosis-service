@@ -18,7 +18,8 @@ public class CcdReportDataSource implements ReportDataSource {
     @Override
     public List<CasesAwaitingJudgmentSubmitEvent> getData(String caseTypeId) {
         try {
-            return ccdClient.casesAwaitingJudgmentSearch(authToken, caseTypeId);
+            var query = ElasticSearchQuery.create();
+            return ccdClient.casesAwaitingJudgmentSearch(authToken, caseTypeId, query);
         } catch (Exception e) {
             throw new ReportException(String.format(
                     "Failed to get Cases Awaiting Judgment search results for case type id %s", caseTypeId), e);
