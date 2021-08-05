@@ -62,6 +62,8 @@ Cypress.Commands.add('acceptCase', () => {
     cy.get('.button:nth-child(2)').click();
     cy.get('.check-your-answers').submit();
     cy.wait(1000)
+    cy.get('#caseStateDesc > dt > ccd-markdown > div > .markdown > h4').contains('Case Status: Accepted');
+
 })
 
 Cypress.Commands.add('addClaimantRepresentative', () => {
@@ -118,19 +120,61 @@ Cypress.Commands.add('listHearing', () => {
     cy.get('#hearingCollection_0_hearingNumber').type('1');
     cy.get('#hearingCollection_0_Hearing_type').select('Preliminary Hearing');
     cy.get('#hearingCollection_0_hearingPublicPrivate').select('Public');
-    cy.get('#hearingCollection_0_hearingFormat-Hybrid').click();        
-    cy.get('#hearingCollection_0_Hearing_venue').select('Leeds');
+    cy.get('#hearingCollection_0_hearingFormat-Hybrid').click();
+    cy.get('#hearingCollection_0_Hearing_venue').select('Barnstaple'); // needs reworking due to other offices
     cy.get('#hearingCollection_0_hearingEstLengthNum').type('1');
     cy.get('#hearingCollection_0_hearingEstLengthNumType').select('Days');
-    cy.get('#hearingCollection_0_hearingSitAlone-Sit\ Alone').select();
-    cy.get('#hearingCollection_0_hearingSitAlone-Sit\ Alone').click();
+    cy.get('#hearingCollection_0_hearingSitAlone > fieldset > :nth-child(3) > .form-label').click();
     cy.get('#hearingCollection_0_hearingDateCollection .button').click();
-    cy.get('#listedDate-day').type('21');
-    cy.get('#listedDate-month').type('07');
-    cy.get('#listedDate-year').type('2021');
-    cy.get('#listedDate-hour').type('14');
+    cy.get('#listedDate-day').type((date.getDate() + 1).toString());
+    cy.get('#listedDate-month').type((date.getMonth() + 1).toString());
+    cy.get('#listedDate-year').type((date.getFullYear()).toString());
     cy.get('.form-group > .button:nth-child(2)').click();
+    cy.get('.form').submit();
+    cy.get('.check-your-answers').submit();
+})
+
+Cypress.Commands.add('allocateHearing', () => {
+    cy.get('#next-step').select('Allocate Hearing');
+    cy.get('.button:nth-child(2)').click();
+    cy.get('#hearingCollection_0_judge').select('A Judge');
+    cy.get('#hearingCollection_0_hearingERMember').select('ER Member');
+    cy.get('#hearingCollection_0_hearingEEMember').select('EE Member');
+    cy.get('#hearingCollection_0_hearingDateCollection_0_hearingRoomBarnstaple').select('* Not Allocated');
+    cy.get('#hearingCollection_0_hearingDateCollection_0_Hearing_clerk').select('A Clerk');
+    cy.wait(2000)
+    cy.get('.form-group > .button:nth-child(2)').click();
+    cy.get('.form').submit();
+    cy.wait(2000)
+    cy.get('.button:nth-child(2)').click();
+    cy.get('.check-your-answers').submit();
+})
+
+Cypress.Commands.add('hearingDetails', () => {
+    cy.get('#next-step').select('Hearing Details');
+    cy.get('.button:nth-child(2)').click();
+    cy.get('#hearingCollection_0_hearingDateCollection_0_Hearing_status').select('Heard')
+    cy.get('#hearingCollection_0_hearingDateCollection_0_hearingCaseDisposed_Yes').click();
+    cy.get('#hearingCollection_0_hearingDateCollection_0_Hearing_part_heard_radio > .multiple-choice:nth-child(1) > .form-label').click();
+    cy.get('#hearingCollection_0_hearingDateCollection_0_Hearing_part_heard_No').click();
+    cy.get('#hearingCollection_0_hearingDateCollection_0_Hearing_reserved_judgement_radio > .multiple-choice:nth-child(1) > .form-label').click();
+    cy.get('#hearingCollection_0_hearingDateCollection_0_Hearing_reserved_judgement_No').click();
+    cy.get('.form-group > .button:nth-child(2)').click();
+    cy.get('.form').submit();
+    cy.wait(2000)
+    cy.get('.button:nth-child(2)').click();
+    cy.get('.check-your-answers').submit();
+})
+
+Cypress.Commands.add('closeCase', () => {
+    cy.get('#next-step').select('Close Case');
+    cy.get('.button:nth-child(2)').click();
+    cy.get('#clerkResponsible').select('A Clerk');
+    cy.get('#fileLocation').select('DORMANT');
+    cy.get('#caseNotes').type('Case Closed');
+    cy.get('.button:nth-child(2)').click();
     cy.get('.form').submit();
     cy.get('.button:nth-child(2)').click();
     cy.get('.check-your-answers').submit();
+    cy.get('#caseStateDesc > dt > ccd-markdown > div > .markdown > h4').contains('Case Status: Closed');
 })

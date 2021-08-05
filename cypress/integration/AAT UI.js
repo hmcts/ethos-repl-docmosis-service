@@ -77,17 +77,18 @@ function caseDetails() {
 }
 
 describe('Login into AAT, create a case and accept it', () => {
-    it('should create a case in Leeds', function () {
+    it.only('should create a case in Leeds', function () {
         cy.aatLogin()
-        createCase('Leeds - Singles')
+        createCase('Bristol - Singles')
         cy.acceptCase()
+        cy.listHearing()
     });
 })
 
 describe('Login into AAT, create a case and reject it', () => {
     it('should create a case', function () {
         cy.aatLogin()
-        createCase('Leeds - Singles')
+        createCase('Bristol - Singles')
         cy.rejectCase()
     });
 })
@@ -95,7 +96,7 @@ describe('Login into AAT, create a case and reject it', () => {
 describe('Login into AAT, create a case and modify details', () => {
     it('should create a case', function () {
         cy.aatLogin()
-        createCase('Leeds - Singles')
+        createCase('Bristol - Singles')
         caseDetails()
     });
 })
@@ -103,7 +104,7 @@ describe('Login into AAT, create a case and modify details', () => {
 describe('Login, create, accept, claimant rep', () => {
     it('should create a case in Leeds', function () {
         cy.aatLogin()
-        createCase('Leeds - Singles')
+        createCase('Bristol - Singles')
         cy.acceptCase()
         cy.addClaimantRepresentative()
         cy.addRespondentRepresentative()
