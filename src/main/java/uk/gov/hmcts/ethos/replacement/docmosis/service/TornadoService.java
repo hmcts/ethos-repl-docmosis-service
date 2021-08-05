@@ -12,7 +12,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
@@ -29,7 +28,6 @@ import java.io.OutputStreamWriter;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -47,7 +45,7 @@ public class TornadoService {
             + "venueAddressValues.xlsx file : ---> ";
     private static final String UNABLE_TO_CONNECT_TO_DOCMOSIS = "Unable to connect to Docmosis: ";
 
-    private final TornadoConfiguration tornadoConfiguration;
+    private final TornadoConnection tornadoConnection;
     private final DocumentManagementService documentManagementService;
     private final UserService userService;
     private final DefaultValuesReaderService defaultValuesReaderService;
@@ -69,7 +67,7 @@ public class TornadoService {
             return checkResponseStatus(authToken, conn, documentName);
         } catch (ConnectException e) {
             log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS, e);
-            return new DocumentInfo();
+            throw e;
         } finally {
             closeConnection(conn);
         }
@@ -78,20 +76,18 @@ public class TornadoService {
     private void buildInstruction(HttpURLConnection conn, CaseData caseData, String authToken,
                                   String caseTypeId, CorrespondenceType correspondenceType,
                                   CorrespondenceScotType correspondenceScotType,
-                                  MultipleData multipleData) {
+                                  MultipleData multipleData) throws IOException {
         try (var venueAddressInputStream = getVenueAddressInputStream();
             var os = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
             var allocatedCourtAddress = getAllocatedCourtAddress(caseData, caseTypeId, multipleData);
             var userDetails = userService.getUserDetails(authToken);
 
             var documentContent = DocumentHelper.buildDocumentContent(caseData,
-                    tornadoConfiguration.getAccessKey(),
+                    tornadoConnection.getAccessKey(),
                     userDetails, caseTypeId, venueAddressInputStream, correspondenceType,
                     correspondenceScotType, multipleData, allocatedCourtAddress);
 
             writeOutputStream(os, documentContent);
-        } catch (Exception ex) {
-            log.error(VENUE_ADDRESS_INPUT_STREAM_ERROR, ex);
         }
     }
 
@@ -123,7 +119,7 @@ public class TornadoService {
             return checkResponseStatus(authToken, conn, documentName);
         } catch (ConnectException e) {
             log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS, e);
-            return new DocumentInfo();
+            throw e;
         } finally {
             closeConnection(conn);
         }
@@ -134,10 +130,10 @@ public class TornadoService {
         var userDetails = userService.getUserDetails(authToken);
         StringBuilder sb;
         if (ListingHelper.isReportType(listingData.getReportType())) {
-            sb = ReportDocHelper.buildReportDocumentContent(listingData, tornadoConfiguration.getAccessKey(),
+            sb = ReportDocHelper.buildReportDocumentContent(listingData, tornadoConnection.getAccessKey(),
                     documentName, userDetails);
         } else {
-            sb = ListingHelper.buildListingDocumentContent(listingData, tornadoConfiguration.getAccessKey(),
+            sb = ListingHelper.buildListingDocumentContent(listingData, tornadoConnection.getAccessKey(),
                     documentName, userDetails, caseType);
         }
 
@@ -156,14 +152,14 @@ public class TornadoService {
             return checkResponseStatus(authToken, conn, documentName);
         } catch (ConnectException e) {
             log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS, e);
-            return new DocumentInfo();
+            throw e;
         } finally {
             closeConnection(conn);
         }
     }
 
     private void buildScheduleInstruction(HttpURLConnection conn, BulkData bulkData) throws IOException {
-        var sb = BulkHelper.buildScheduleDocumentContent(bulkData, tornadoConfiguration.getAccessKey());
+        var sb = BulkHelper.buildScheduleDocumentContent(bulkData, tornadoConnection.getAccessKey());
 
         try (var outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
             writeOutputStream(outputStreamWriter, sb);
@@ -171,16 +167,7 @@ public class TornadoService {
     }
 
     private HttpURLConnection createConnection() throws IOException {
-        var tornadoURL = tornadoConfiguration.getUrl();
-        log.info("Tornado URL: " + tornadoURL);
-        var conn = (HttpURLConnection) new URL(tornadoURL).openConnection();
-        conn.setRequestMethod("POST");
-        conn.setUseCaches(false);
-        conn.setDoOutput(true);
-        conn.setDoInput(true);
-        conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-        conn.connect();
-        return conn;
+        return tornadoConnection.createConnection();
     }
 
     private void closeConnection(HttpURLConnection conn) {

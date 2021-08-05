@@ -30,12 +30,9 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 public class TornadoServiceTest {
-
-    @InjectMocks
     private TornadoService tornadoService;
-    @Mock
+    private TornadoConnection tornadoConnection;
     private DocumentManagementService documentManagementService;
     private UserService userService;
     private DocumentInfo documentInfo;
@@ -46,44 +43,56 @@ public class TornadoServiceTest {
     private String userToken;
 
     @Before
-    public void setUp() {
-        documentInfo = new DocumentInfo();
-        TornadoConfiguration tornadoConfiguration = new TornadoConfiguration();
-        tornadoConfiguration.setUrl("http://google.com");
-        caseData = new CaseData();
-        bulkData = new BulkData();
-        bulkData.setScheduleDocName(LIST_CASES_CONFIG);
-        bulkData.setSearchCollection(new ArrayList<>());
-        listingData = new ListingData();
-        ListingTypeItem listingTypeItem = new ListingTypeItem();
-        ListingType listingType = new ListingType();
-        listingType.setCauseListDate("2019-12-12");
-        listingTypeItem.setId("1111");
-        listingTypeItem.setValue(listingType);
-        listingData.setHearingDocType(HEARING_DOC_ETCL);
-        listingData.setHearingDocETCL(HEARING_ETCL_STAFF);
-        listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
-        listingData.setListingVenue("Glasgow");
-        listingData.setListingCollection(new ArrayList<>(Collections.singleton(listingTypeItem)));
-        userDetails = HelperTest.getUserDetails();
-        IdamApi idamApi = authorisation -> userDetails;
-        userService = new UserService(idamApi);
-        tornadoService = new TornadoService(tornadoConfiguration, documentManagementService, userService, null);
-        userToken = "authToken";
+    public void setUp() throws IOException {
+        createUserService();
+        mockTornadoConnection();
+        mockDocumentManagement();
+        mockDefaultValuesReaderService();
+
+        tornadoService = new TornadoService(tornadoConnection, documentManagementService, userService, defaultValuesReaderService);
     }
 
-    @Test(expected = Exception.class)
-    public void documentGenerationError() throws IOException {
-        when(userService.getUserDetails(anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
-        tornadoService.documentGeneration(userToken, caseData, MANCHESTER_CASE_TYPE_ID,
+    @Test(expected = IOException.class)
+    public void documentGenerationNoTornadoConnectionShouldThrowException() throws IOException {
+        var caseData = new CaseData();
+        when(tornadoConnection.createConnection()).thenThrow(IOException.class);
+
+        tornadoService.documentGeneration(authToken, caseData, MANCHESTER_CASE_TYPE_ID,
+                caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
+    }
+
+    @Test(expected = IOException.class)
+    public void listingGenerationNoTornadoConnectionShouldThrowException() throws IOException {
+        when(tornadoConnection.createConnection()).thenThrow(IOException.class);
+
+        tornadoService.listingGeneration(authToken, createListingData(), MANCHESTER_LISTING_CASE_TYPE_ID);
+    }
+
+    @Test(expected = IOException.class)
+    public void scheduleGenerationNoTornadoConnectionShouldThrowException() throws IOException {
+        when(tornadoConnection.createConnection()).thenThrow(IOException.class);
+
+        tornadoService.scheduleGeneration(authToken, createBulkData());
+    }
+
+    @Test(expected = IOException.class)
+    public void shouldThrowExceptionWhenTornadoReturnsErrorResponse() throws IOException {
+        mockConnectionError();
+        var caseData = new CaseData();
+
+        tornadoService.documentGeneration(authToken, caseData, MANCHESTER_CASE_TYPE_ID,
                 caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
     }
 
     @Test
-    public void documentGeneration() throws IOException {
-        DocumentInfo documentInfo1 = tornadoService.documentGeneration(userToken, caseData, MANCHESTER_CASE_TYPE_ID,
+    public void shouldCreateDocumentInfoForDocumentGeneration() throws IOException {
+        mockConnectionSuccess();
+        var caseData = new CaseData();
+
+        var documentInfo = tornadoService.documentGeneration(authToken, caseData, MANCHESTER_CASE_TYPE_ID,
                 caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
-        assertEquals(documentInfo.toString(), documentInfo1.toString());
+
+        verifyDocumentInfo(documentInfo);
     }
 
     @Test
