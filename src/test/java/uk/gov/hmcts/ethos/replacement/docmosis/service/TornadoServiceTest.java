@@ -2,45 +2,56 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
+import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.ListingType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-import uk.gov.hmcts.ethos.replacement.docmosis.config.TornadoConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
-import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
+import uk.gov.hmcts.ethos.replacement.docmosis.utils.MockHttpURLConnectionFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
+import static java.net.HttpURLConnection.HTTP_OK;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LETTER_ADDRESS_ALLOCATED_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIST_CASES_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_LISTING_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
 
 public class TornadoServiceTest {
     private TornadoService tornadoService;
     private TornadoConnection tornadoConnection;
     private DocumentManagementService documentManagementService;
     private UserService userService;
-    private DocumentInfo documentInfo;
-    private CaseData caseData;
-    private BulkData bulkData;
-    private ListingData listingData;
-    private UserDetails userDetails;
-    private String userToken;
+    private DefaultValuesReaderService defaultValuesReaderService;
+    private HttpURLConnection mockConnection;
+    private final String authToken = "a-test-auth-token";
+    private final String documentInfoMarkup = "<a>some test markup</a>";
 
     @Before
     public void setUp() throws IOException {
@@ -96,43 +107,144 @@ public class TornadoServiceTest {
     }
 
     @Test
-    public void documentGenerationAllocatedOffice() throws IOException {
+    public void shouldCreateDocumentInfoForDocumentGenerationAllocatedOffice() throws IOException {
+        mockConnectionSuccess();
+        var defaultValues = mock(DefaultValues.class);
+        when(defaultValuesReaderService.getDefaultValues(GLASGOW_OFFICE, SCOTLAND_CASE_TYPE_ID)).thenReturn(defaultValues);
+        var caseData = new CaseData();
         caseData.setAllocatedOffice(GLASGOW_OFFICE);
-        CorrespondenceScotType correspondenceScotType = new CorrespondenceScotType();
+        var correspondenceScotType = new CorrespondenceScotType();
+        correspondenceScotType.setTopLevelScotDocuments("test-template");
         correspondenceScotType.setLetterAddress(LETTER_ADDRESS_ALLOCATED_OFFICE);
         caseData.setCorrespondenceScotType(correspondenceScotType);
-        DocumentInfo documentInfo1 = tornadoService.documentGeneration(userToken, caseData, SCOTLAND_CASE_TYPE_ID,
+
+        var documentInfo = tornadoService.documentGeneration(authToken, caseData, SCOTLAND_CASE_TYPE_ID,
                 caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), null);
-        assertEquals(documentInfo.toString(), documentInfo1.toString());
+
+        verifyDocumentInfo(documentInfo);
     }
 
     @Test
-    public void documentGenerationAllocatedOfficeMultiples() throws IOException {
+    public void shouldCreateDocumentInfoForDocumentGenerationAllocatedOfficeMultiples() throws IOException {
+        mockConnectionSuccess();
+        var defaultValues = mock(DefaultValues.class);
+        when(defaultValuesReaderService.getDefaultValues(GLASGOW_OFFICE, SCOTLAND_CASE_TYPE_ID)).thenReturn(defaultValues);
+        var caseData = new CaseData();
         caseData.setAllocatedOffice(GLASGOW_OFFICE);
-        CorrespondenceScotType correspondenceScotType = new CorrespondenceScotType();
+        var correspondenceScotType = new CorrespondenceScotType();
+        correspondenceScotType.setTopLevelScotDocuments("test-template");
         correspondenceScotType.setLetterAddress(LETTER_ADDRESS_ALLOCATED_OFFICE);
         caseData.setCorrespondenceScotType(correspondenceScotType);
-        DocumentInfo documentInfo1 = tornadoService.documentGeneration(userToken, caseData, SCOTLAND_CASE_TYPE_ID,
+
+        var documentInfo = tornadoService.documentGeneration(authToken, caseData, SCOTLAND_CASE_TYPE_ID,
                 caseData.getCorrespondenceType(), caseData.getCorrespondenceScotType(), new MultipleData());
-        assertEquals(documentInfo.toString(), documentInfo1.toString());
+
+        verifyDocumentInfo(documentInfo);
     }
 
     @Test
-    public void listingGeneration() throws IOException {
-        DocumentInfo documentInfo1 = tornadoService.listingGeneration(userToken, listingData, MANCHESTER_LISTING_CASE_TYPE_ID);
-        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    public void shouldCreateDocumentInfoForListingGeneration() throws IOException {
+        mockConnectionSuccess();
+        var listingData = createListingData();
+
+        var documentInfo = tornadoService.listingGeneration(authToken, listingData, MANCHESTER_LISTING_CASE_TYPE_ID);
+
+        verifyDocumentInfo(documentInfo);
     }
 
     @Test
-    public void scheduleGeneration() throws IOException {
-        DocumentInfo documentInfo1 = tornadoService.scheduleGeneration(userToken, bulkData);
-        assertEquals(documentInfo.toString(), documentInfo1.toString());
+    public void shouldCreateDocumentInforForScheduleGeneration() throws IOException {
+        mockConnectionSuccess();
+        var bulkData = new BulkData();
+        bulkData.setScheduleDocName(LIST_CASES_CONFIG);
+        bulkData.setSearchCollection(new ArrayList<>());
+
+        var documentInfo = tornadoService.scheduleGeneration(authToken, bulkData);
+
+        verifyDocumentInfo(documentInfo);
     }
 
     @Test
-    public void reportGeneration() throws IOException {
+    public void shouldCreateDocumentInfoForReportGeneration() throws IOException {
+        mockConnectionSuccess();
+        var listingData = createListingData();
         listingData.setReportType(CLAIMS_ACCEPTED_REPORT);
-        DocumentInfo documentInfo1 = tornadoService.listingGeneration(userToken, listingData, MANCHESTER_LISTING_CASE_TYPE_ID);
-        assertEquals(documentInfo.toString(), documentInfo1.toString());
+
+        var documentInfo = tornadoService.listingGeneration(authToken, listingData,
+                MANCHESTER_LISTING_CASE_TYPE_ID);
+
+        verifyDocumentInfo(documentInfo);
+    }
+
+    private void createUserService() {
+        var userDetails = HelperTest.getUserDetails();
+        IdamApi idamApi = authorisation -> userDetails;
+        userService = new UserService(idamApi);
+    }
+
+    private void mockTornadoConnection() throws IOException {
+        mockConnection = MockHttpURLConnectionFactory.create("http://testdocmosis");
+        tornadoConnection = mock(TornadoConnection.class);
+        when(tornadoConnection.createConnection()).thenReturn(mockConnection);
+    }
+
+    private void mockDocumentManagement() {
+        documentManagementService = mock(DocumentManagementService.class);
+        var documentUrl = "http://testdocumentserver/testdocument";
+        var uri = URI.create(documentUrl);
+        when(documentManagementService.uploadDocument(anyString(), any(byte[].class), anyString(), anyString())).thenReturn(uri);
+        when(documentManagementService.generateDownloadableURL(uri)).thenReturn(documentUrl);
+        when(documentManagementService.generateMarkupDocument(anyString())).thenReturn(documentInfoMarkup);
+    }
+
+    private void mockDefaultValuesReaderService() {
+        defaultValuesReaderService = mock(DefaultValuesReaderService.class);
+    }
+
+    private void mockConnectionSuccess() throws IOException {
+        var mockInputStream = mock(InputStream.class);
+        when(mockInputStream.read(any(byte[].class))).thenReturn(-1);
+        var mockOutputStream = mock(OutputStream.class);
+        when(mockConnection.getInputStream()).thenReturn(mockInputStream);
+        when(mockConnection.getOutputStream()).thenReturn(mockOutputStream);
+        when(mockConnection.getResponseCode()).thenReturn(HTTP_OK);
+    }
+
+    private void mockConnectionError() throws IOException {
+        var mockInputStream = mock(InputStream.class);
+        when(mockInputStream.read(any(byte[].class))).thenReturn(-1);
+        when(mockInputStream.read(any(byte[].class), anyInt(), anyInt())).thenReturn(-1);
+        var mockOutputStream = mock(OutputStream.class);
+        when(mockConnection.getErrorStream()).thenReturn(mockInputStream);
+        when(mockConnection.getOutputStream()).thenReturn(mockOutputStream);
+        when(mockConnection.getResponseCode()).thenReturn(HTTP_INTERNAL_ERROR);
+    }
+
+    private ListingData createListingData() {
+        var listingData = new ListingData();
+        var listingTypeItem = new ListingTypeItem();
+        var listingType = new ListingType();
+        listingType.setCauseListDate("2019-12-12");
+        listingTypeItem.setId("1111");
+        listingTypeItem.setValue(listingType);
+        listingData.setHearingDocType(HEARING_DOC_ETCL);
+        listingData.setHearingDocETCL(HEARING_ETCL_STAFF);
+        listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
+        listingData.setListingVenue("Glasgow");
+        listingData.setListingCollection(new ArrayList<>(Collections.singleton(listingTypeItem)));
+
+        return listingData;
+    }
+
+    private BulkData createBulkData() {
+        var bulkData = new BulkData();
+        bulkData.setScheduleDocName(LIST_CASES_CONFIG);
+        bulkData.setSearchCollection(new ArrayList<>());
+        return bulkData;
+    }
+
+    private void verifyDocumentInfo(DocumentInfo documentInfo) {
+        assertEquals(documentInfoMarkup, documentInfo.getMarkUp());
+        assertEquals(SignificantItemType.DOCUMENT.name(), documentInfo.getType());
     }
 }

@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -41,8 +40,6 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagement
 @RequiredArgsConstructor
 @Service("tornadoService")
 public class TornadoService {
-    private static final String VENUE_ADDRESS_INPUT_STREAM_ERROR = "Failed to get an inputStream for the "
-            + "venueAddressValues.xlsx file : ---> ";
     private static final String UNABLE_TO_CONNECT_TO_DOCMOSIS = "Unable to connect to Docmosis: ";
 
     private final TornadoConnection tornadoConnection;
@@ -65,7 +62,7 @@ public class TornadoService {
                     correspondenceType, correspondenceScotType, multipleData);
             var documentName = Helper.getDocumentName(correspondenceType, correspondenceScotType);
             return checkResponseStatus(authToken, conn, documentName);
-        } catch (ConnectException e) {
+        } catch (IOException e) {
             log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS, e);
             throw e;
         } finally {
@@ -117,7 +114,7 @@ public class TornadoService {
             var documentName = ListingHelper.getListingDocName(listingData);
             buildListingInstruction(conn, listingData, documentName, authToken, caseType);
             return checkResponseStatus(authToken, conn, documentName);
-        } catch (ConnectException e) {
+        } catch (IOException e) {
             log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS, e);
             throw e;
         } finally {
@@ -150,7 +147,7 @@ public class TornadoService {
             var documentName = BulkHelper.getScheduleDocName(bulkData.getScheduleDocName());
             buildScheduleInstruction(conn, bulkData);
             return checkResponseStatus(authToken, conn, documentName);
-        } catch (ConnectException e) {
+        } catch (IOException e) {
             log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS, e);
             throw e;
         } finally {
@@ -179,11 +176,12 @@ public class TornadoService {
     private DocumentInfo checkResponseStatus(String authToken, HttpURLConnection conn, String documentName)
             throws IOException {
         try (var os = new ByteArrayOutputStream()) {
-            if (conn.getResponseCode() == HTTP_OK) {
+            var responseCode = conn.getResponseCode();
+            if (responseCode == HTTP_OK) {
                 return createDocument(authToken, conn, documentName, os);
             } else {
                 logResponseErrorMessage(conn);
-                return new DocumentInfo();
+                throw new IOException(String.format("Invalid response code %d received from Tornado", responseCode));
             }
         }
     }
@@ -194,10 +192,9 @@ public class TornadoService {
                 getBytesFromInputStream(os, conn.getInputStream()),
                 OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE);
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
-        return generateDocumentInfo(documentName,
-                documentSelfPath,
-                documentManagementService.generateMarkupDocument(documentManagementService
-                        .generateDownloadableURL(documentSelfPath)));
+        var downloadUrl = documentManagementService.generateDownloadableURL(documentSelfPath);
+        var markup = documentManagementService.generateMarkupDocument(downloadUrl);
+        return generateDocumentInfo(documentName, documentSelfPath, markup);
     }
 
     private byte[] getBytesFromInputStream(ByteArrayOutputStream os, InputStream is) throws IOException {
