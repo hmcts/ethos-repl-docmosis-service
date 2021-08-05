@@ -249,6 +249,7 @@ public class MultipleCreationService {
                 log.info("Getting lead case from the case ids collection");
 
                 leadCase = MultiplesHelper.getLeadFromCaseIds(multipleData);
+
             }
 
         }
@@ -271,7 +272,8 @@ public class MultipleCreationService {
                     multipleDetails.getCaseData(),
                     errors,
                     ethosCaseRefCollection,
-                    ethosCaseRefCollection.get(0));
+                    ethosCaseRefCollection.get(0),
+                    multipleDetails.getCaseId());
 
         } else {
 

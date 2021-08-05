@@ -93,7 +93,8 @@ public class CaseTransferService {
                 ccdGatewayBaseUrl,
                 reasonForCT,
                 SINGLE_CASE_TYPE,
-                NO
+                NO,
+                null
         );
         caseData.setLinkedCaseCT("Transferred to " + officeCT);
         caseData.setPositionType(positionTypeCT);

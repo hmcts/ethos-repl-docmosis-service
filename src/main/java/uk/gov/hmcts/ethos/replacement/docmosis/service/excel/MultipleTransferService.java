@@ -81,8 +81,8 @@ public class MultipleTransferService {
                 ccdGatewayBaseUrl,
                 multipleData.getReasonForCT(),
                 multipleData.getMultipleReference(),
-                YES
-        );
+                YES,
+                multipleDetails.getCaseId());
 
     }
 

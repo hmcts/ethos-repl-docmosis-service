@@ -527,7 +527,7 @@ public class ExcelActionsController {
         var multipleDetails = multipleRequest.getCaseDetails();
 
         multipleHelperService.sendResetMultipleStateWithoutConfirmation(userToken, multipleDetails.getCaseTypeId(),
-                multipleDetails.getJurisdiction(), multipleDetails.getCaseData(), errors);
+                multipleDetails.getJurisdiction(), multipleDetails.getCaseData(), errors, multipleDetails.getCaseId());
 
         multipleDetails.getCaseData().setState(OPEN_STATE);
 
