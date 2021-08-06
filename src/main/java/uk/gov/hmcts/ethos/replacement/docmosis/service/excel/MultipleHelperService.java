@@ -219,7 +219,7 @@ public class MultipleHelperService {
                 username,
                 multipleObjectsFiltered,
                 PersistentQHelper.getCreationDataModel(leadId,
-                        updatedMultipleData.getMultipleReference()),
+                        updatedMultipleData.getMultipleReference(), parentMultipleCaseId),
                 errors,
                 updatedMultipleData.getMultipleReference(),
                 NO,
