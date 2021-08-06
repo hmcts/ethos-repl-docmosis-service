@@ -93,16 +93,17 @@ public class PersistentQHelper {
                 .jurisdiction(jurisdiction)
                 .multipleRef(multipleRef)
                 .username(email)
-                .parentMultipleCaseId(parentMultipleId)
                 .confirmation(confirmation)
                 .ethosCaseRefCollection(ethosCaseRefCollection)
+                .parentMultipleCaseId(parentMultipleId)
                 .build();
     }
 
-    public static CreationDataModel getCreationDataModel(String lead, String multipleRef) {
+    public static CreationDataModel getCreationDataModel(String lead, String multipleRef, String parentMultipleCaseId) {
         return CreationDataModel.builder()
                 .lead(lead)
                 .multipleRef(multipleRef)
+                .parentMultipleCaseId(parentMultipleCaseId)
                 .build();
     }
 

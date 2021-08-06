@@ -449,7 +449,6 @@ public class ExcelActionsController {
         return getListingCallbackRespEntity(errors, caseData);
     }
 
-
     @PostMapping(value = "/closeMultiple", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Closes a multiple and sends updates to all singles to be closed.")
     @ApiResponses(value = {

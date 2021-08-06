@@ -43,7 +43,8 @@ public class CaseTransferService {
         try {
             var caseData = caseDetails.getCaseData();
             if (!Strings.isNullOrEmpty(caseData.getCounterClaim())) {
-                List<SubmitEvent> submitEvents =  ccdClient.retrieveCasesElasticSearch(userToken, caseDetails.getCaseTypeId(), Arrays.asList(caseData.getCounterClaim()));
+                List<SubmitEvent> submitEvents =  ccdClient.retrieveCasesElasticSearch(userToken,
+                        caseDetails.getCaseTypeId(), Arrays.asList(caseData.getCounterClaim()));
                 return submitEvents.get(0).getCaseData();
             }
             else {
