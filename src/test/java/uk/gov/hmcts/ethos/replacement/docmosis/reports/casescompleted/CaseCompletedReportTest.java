@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ethos.replacement.docmosis.reports;
+package uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted;
 
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -13,7 +13,10 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -35,7 +38,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.CasesCompletedReport.COMPLETED_PER_SESSION_FORMAT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.CasesCompletedReport.COMPLETED_PER_SESSION_FORMAT;
 
 public class CaseCompletedReportTest {
 
