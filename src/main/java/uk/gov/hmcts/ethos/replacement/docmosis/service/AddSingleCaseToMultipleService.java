@@ -30,17 +30,15 @@ public class AddSingleCaseToMultipleService {
 
         log.info("Adding single case to multiple logic");
 
-        if (caseData.getMultipleFlag().equals(NO)
-                && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+        if (caseData.getMultipleFlag().equals(NO) &&
+            caseData.getCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
             log.info("Case was single and now will be multiple");
-
             String leadClaimant = caseData.getLeadClaimant();
             String updatedMultipleReference = caseData.getMultipleReference();
             String multipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseTypeId);
 
             log.info("Pulling the multiple case: " + updatedMultipleReference);
-
             List<SubmitMultipleEvent> multipleEvents =
                     multipleCasesReadingService.retrieveMultipleCases(
                             userToken,
