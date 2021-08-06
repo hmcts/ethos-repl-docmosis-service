@@ -215,7 +215,6 @@ public class TornadoServiceTest {
         when(mockInputStream.read(any(byte[].class))).thenReturn(-1);
         when(mockInputStream.read(any(byte[].class), anyInt(), anyInt())).thenReturn(-1);
         var mockOutputStream = mock(OutputStream.class);
-        when(mockConnection.getErrorStream()).thenReturn(mockInputStream);
         when(mockConnection.getOutputStream()).thenReturn(mockOutputStream);
         when(mockConnection.getResponseCode()).thenReturn(HTTP_INTERNAL_ERROR);
     }

@@ -19,11 +19,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportDocHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -180,17 +178,22 @@ public class TornadoService {
             if (responseCode == HTTP_OK) {
                 return createDocument(authToken, conn, documentName, os);
             } else {
-                logResponseErrorMessage(conn);
-                throw new IOException(String.format("Invalid response code %d received from Tornado", responseCode));
+                throw new IOException(String.format("Invalid response code %d received from Tornado: %s", responseCode,
+                        conn.getResponseMessage()));
             }
         }
     }
 
     private DocumentInfo createDocument(String authToken, HttpURLConnection conn, String documentName,
                                         ByteArrayOutputStream os) throws IOException {
-        var documentSelfPath = documentManagementService.uploadDocument(authToken,
-                getBytesFromInputStream(os, conn.getInputStream()),
-                OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE);
+
+        byte[] bytes;
+        try (var is = conn.getInputStream()) {
+            bytes = getBytesFromInputStream(os, is);
+        }
+
+        var documentSelfPath = documentManagementService.uploadDocument(authToken, bytes, OUTPUT_FILE_NAME,
+                APPLICATION_DOCX_VALUE);
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
         var downloadUrl = documentManagementService.generateDownloadableURL(documentSelfPath);
         var markup = documentManagementService.generateMarkupDocument(downloadUrl);
@@ -212,18 +215,6 @@ public class TornadoService {
                 .markUp(markupURL)
                 .url(ccdGatewayBaseUrl + documentSelfPath.getRawPath() + "/binary")
                 .build();
-    }
-
-    private void logResponseErrorMessage(HttpURLConnection conn) throws IOException {
-        log.error("Response message:" + conn.getResponseMessage());
-
-        try (var inputStreamReader = new InputStreamReader(conn.getErrorStream());
-             var errorReader = new BufferedReader(inputStreamReader)) {
-            String msg;
-            while ((msg = errorReader.readLine()) != null) {
-                log.error(msg);
-            }
-        }
     }
 
     private void writeOutputStream(OutputStreamWriter outputStreamWriter, StringBuilder sb) throws IOException {
