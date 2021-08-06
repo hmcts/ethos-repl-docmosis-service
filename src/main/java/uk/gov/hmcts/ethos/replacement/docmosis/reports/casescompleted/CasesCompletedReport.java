@@ -7,23 +7,14 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
@@ -34,7 +25,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NUMBER_TWO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
@@ -42,11 +32,9 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIM
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_DISMISSED_AT_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_UNSUCCESSFUL_AT_HEARING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_INPUT_IN_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_OTHER_COUNTRY;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_SAME_COUNTRY;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Service
 @Slf4j
@@ -110,13 +98,15 @@ public class CasesCompletedReport {
     private void executeReport(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
         log.info(String.format("Cases Completed report case type id %s search results: %d",
                 listingDetails.getCaseTypeId(), submitEvents.size()));
+
         var localReportsDetailHdr = listingDetails.getCaseData().getLocalReportsDetailHdr();
         var localReportsDetailList = listingDetails.getCaseData().getLocalReportsDetail();
+
         for (var submitEvent : submitEvents) {
             if (isValidCaseForCasesCompletedReport(submitEvent)) {
                 var localReportsDetailItem =
                         getCasesCompletedDetailItem(listingDetails, submitEvent.getCaseData());
-                if (localReportsDetailItem.getValue() != null) {
+                if (localReportsDetailItem != null) {
                     updateCasesCompletedDetailHdr(localReportsDetailItem, localReportsDetailHdr);
                     localReportsDetailList.add(localReportsDetailItem);
                 }
@@ -125,8 +115,7 @@ public class CasesCompletedReport {
     }
 
     private boolean isValidCaseForCasesCompletedReport(SubmitEvent submitEvent) {
-        return (submitEvent.getState() != null
-                && submitEvent.getState().equals(CLOSED_STATE)
+        return (CLOSED_STATE.equals(submitEvent.getState())
                 && isCaseWithHearings(submitEvent.getCaseData())
                 && isValidPositionType(submitEvent.getCaseData())
                 && isValidJurisdictionOutcome(submitEvent.getCaseData()));
@@ -158,74 +147,33 @@ public class CasesCompletedReport {
         }
     }
 
+    private HearingSession getLatestDisposedHearingSession(ListingData listingData, CaseData caseData) {
+        var sessionDays = new SessionDays(listingData, caseData);
+        return sessionDays.getLatestDisposedHearingSession();
+    }
+
     private AdhocReportTypeItem getCasesCompletedDetailItem(ListingDetails listingDetails, CaseData caseData) {
-        var adhocReportTypeItem = new AdhocReportTypeItem();
-
-        var listingData = listingDetails.getCaseData();
-        for (var hearingTypeItem : caseData.getHearingCollection()) {
-            if (isValidHearing(hearingTypeItem)) {
-                var hearingType = hearingTypeItem.getValue();
-
-                var latestSession = getLatestDisposedHearingSession(hearingType.getHearingDateCollection(),
-                        listingData);
-                if (latestSession != null) {
-                    var reportDetail = createReportDetail(caseData, hearingType, latestSession);
-                    adhocReportTypeItem.setValue(reportDetail);
-                }
-            }
-        }
-        return adhocReportTypeItem;
-    }
-
-    private boolean isValidHearing(HearingTypeItem hearingTypeItem) {
-        if (CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
-            return false;
-        }
-
-        return VALID_HEARING_TYPES.contains(hearingTypeItem.getValue().getHearingType());
-    }
-
-    private DateListedType getLatestDisposedHearingSession(List<DateListedTypeItem> hearings, ListingData listingData) {
-        var filteredHearingSessions = hearings.stream()
-                .filter(h -> HEARING_STATUS_HEARD.equals(h.getValue().getHearingStatus()))
-                .filter(h -> YES.equals(h.getValue().getHearingCaseDisposed()))
-                .filter(h -> {
-                    var listingDate = h.getValue().getListedDate().substring(0, 10);
-                    return ReportHelper.validateMatchingDate(listingData, listingDate);
-                })
-                .collect(Collectors.toList());
-
-        if (filteredHearingSessions.isEmpty()) {
-            return null;
+        var hearingSession = getLatestDisposedHearingSession(listingDetails.getCaseData(), caseData);
+        if (hearingSession != null) {
+            var reportDetail = createReportDetail(caseData, hearingSession);
+            var adhocReportTypeItem = new AdhocReportTypeItem();
+            adhocReportTypeItem.setValue(reportDetail);
+            return adhocReportTypeItem;
         } else {
-            return Collections.max(filteredHearingSessions,
-                    Comparator.comparing(c -> c.getValue().getListedDate())).getValue();
+            return null;
         }
     }
 
-    private long getSessionDays(List<DateListedTypeItem> hearings, LocalDate latestSessionDate) {
-        return hearings.stream()
-                .filter(h -> HEARING_STATUS_HEARD.equals(h.getValue().getHearingStatus()))
-                .filter(h -> {
-                    var sessionDate = LocalDate.parse(h.getValue().getListedDate().substring(0, 10),
-                            OLD_DATE_TIME_PATTERN2);
-                    return !sessionDate.isAfter(latestSessionDate);
-                }).count();
-    }
+    private AdhocReportType createReportDetail(CaseData caseData, HearingSession hearingSession) {
+        var latestSession = hearingSession.getDateListedType();
+        var hearingType = hearingSession.getHearingType();
 
-    private AdhocReportType createReportDetail(CaseData caseData, HearingType hearingType,
-                                               DateListedType latestSession) {
         var adhocReportType = new AdhocReportType();
         adhocReportType.setCaseReference(caseData.getEthosCaseReference());
         adhocReportType.setPosition(caseData.getCurrentPosition());
         adhocReportType.setConciliationTrack(getConciliationTrack(caseData));
         adhocReportType.setConciliationTrackNo(getConciliationTrackNumber(caseData.getConciliationTrack()));
-
-        var latestSessionDate = LocalDate.parse(latestSession.getListedDate().substring(0, 10),
-                OLD_DATE_TIME_PATTERN2);
-        var sessionDays = getSessionDays(hearingType.getHearingDateCollection(), latestSessionDate);
-        adhocReportType.setSessionDays(String.valueOf(sessionDays));
-
+        adhocReportType.setSessionDays(String.valueOf(hearingSession.getSessionDays()));
         adhocReportType.setHearingNumber(hearingType.getHearingNumber());
         adhocReportType.setHearingDate(latestSession.getListedDate());
         adhocReportType.setHearingType(hearingType.getHearingType());
