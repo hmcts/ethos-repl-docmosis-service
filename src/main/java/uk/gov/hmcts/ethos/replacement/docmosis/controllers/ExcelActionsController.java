@@ -431,15 +431,15 @@ public class ExcelActionsController {
     public ResponseEntity<ListingCallbackResponse> listingsDateRangeMidEventValidation(
             @RequestBody ListingRequest listingRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-            log.info("LISTING DATE RANGE VALIDATION ---> " + LOG_MESSAGE +
-                    listingRequest.getCaseDetails().getCaseId());
+        log.info("LISTING DATE RANGE VALIDATION ---> " + LOG_MESSAGE +
+                listingRequest.getCaseDetails().getCaseId());
 
-            if (!verifyTokenService.verifyTokenSignature(userToken)) {
-                log.error(INVALID_TOKEN, userToken);
-                return ResponseEntity.status(FORBIDDEN.value()).build();
-            }
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
 
-            var caseData = listingRequest.getCaseDetails().getCaseData();
+        var caseData = listingRequest.getCaseDetails().getCaseData();
 
         List<String> errors = eventValidationService.validateListingDateRange(
                 caseData.getListingDateFrom(),
@@ -448,7 +448,6 @@ public class ExcelActionsController {
 
         return getListingCallbackRespEntity(errors, caseData);
     }
-
 
     @PostMapping(value = "/closeMultiple", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Closes a multiple and sends updates to all singles to be closed.")
@@ -527,7 +526,7 @@ public class ExcelActionsController {
         var multipleDetails = multipleRequest.getCaseDetails();
 
         multipleHelperService.sendResetMultipleStateWithoutConfirmation(userToken, multipleDetails.getCaseTypeId(),
-                multipleDetails.getJurisdiction(), multipleDetails.getCaseData(), errors);
+                multipleDetails.getJurisdiction(), multipleDetails.getCaseData(), errors, multipleDetails.getCaseId());
 
         multipleDetails.getCaseData().setState(OPEN_STATE);
 
@@ -587,6 +586,5 @@ public class ExcelActionsController {
 
         return getMultipleCallbackRespEntity(errors, multipleDetails);
     }
-
 
 }

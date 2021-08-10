@@ -171,6 +171,7 @@ dependencyCheck {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     jcenter()
     maven { url "https://repo.maven.apache.org/maven2" }
@@ -186,8 +187,7 @@ def versions = [
 ]
 
 dependencies {
-    implementation 'com.github.hmcts:ecm-common:0.1.121'
-
+    implementation 'com.github.hmcts:ecm-common:0.1.126'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
@@ -201,7 +201,7 @@ dependencies {
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.10.1'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
-
+    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.21'
 
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.48'
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.48'
@@ -211,7 +211,7 @@ dependencies {
     implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.24'
     implementation('org.elasticsearch:elasticsearch') {
         version {
-            strictly '7.13.2'
+            strictly '7.13.4'
         }
     }
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.5.RELEASE'

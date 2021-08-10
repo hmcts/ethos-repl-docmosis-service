@@ -67,11 +67,12 @@ public class PersistentQHelper {
                                                     List<String> ethosCaseRefCollection,
                                                     DataModelParent dataModelParent,
                                                     List<String> errors, String multipleRef, String confirmation,
-                                                    CreateUpdatesBusSender createUpdatesBusSender, String updateSize) {
+                                                    CreateUpdatesBusSender createUpdatesBusSender, String updateSize,
+                                                    String parentMultipleId) {
         log.info("Case Ref collection: " + ethosCaseRefCollection);
         if (!ethosCaseRefCollection.isEmpty()) {
             var createUpdatesDto = PersistentQHelper.getMultipleCreateUpdatesDto(caseTypeId, jurisdiction,
-                    ethosCaseRefCollection, username, multipleRef, confirmation);
+                    ethosCaseRefCollection, username, multipleRef, confirmation, parentMultipleId);
 
             createUpdatesBusSender.sendUpdatesToQueue(
                     createUpdatesDto,
@@ -85,7 +86,8 @@ public class PersistentQHelper {
 
     private static CreateUpdatesDto getMultipleCreateUpdatesDto(String caseTypeId, String jurisdiction,
                                                                 List<String> ethosCaseRefCollection, String email,
-                                                                String multipleRef, String confirmation) {
+                                                                String multipleRef, String confirmation,
+                                                                String parentMultipleId) {
         return CreateUpdatesDto.builder()
                 .caseTypeId(caseTypeId)
                 .jurisdiction(jurisdiction)
@@ -93,13 +95,15 @@ public class PersistentQHelper {
                 .username(email)
                 .confirmation(confirmation)
                 .ethosCaseRefCollection(ethosCaseRefCollection)
+                .parentMultipleCaseId(parentMultipleId)
                 .build();
     }
 
-    public static CreationDataModel getCreationDataModel(String lead, String multipleRef) {
+    public static CreationDataModel getCreationDataModel(String lead, String multipleRef, String parentMultipleCaseId) {
         return CreationDataModel.builder()
                 .lead(lead)
                 .multipleRef(multipleRef)
+                .parentMultipleCaseId(parentMultipleCaseId)
                 .build();
     }
 

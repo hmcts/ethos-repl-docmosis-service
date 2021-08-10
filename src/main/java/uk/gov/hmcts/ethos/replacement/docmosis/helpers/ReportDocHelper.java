@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
@@ -99,7 +100,8 @@ public class ReportDocHelper {
         return sb;
     }
 
-    private static void addJsonCollection(String name, Iterator<?> iterator, StringBuilder sb) throws JsonProcessingException {
+    private static void addJsonCollection(String name, Iterator<?> iterator, StringBuilder sb)
+            throws JsonProcessingException {
         sb.append("\"").append(name).append("\":[\n");
         var objectMapper = new ObjectMapper();
         while (iterator.hasNext()) {
@@ -258,10 +260,30 @@ public class ReportDocHelper {
         return sb;
     }
 
-    private static StringBuilder getLiveCaseLoadReport(ListingData listingData) {
+    private static StringBuilder getLiveCaseLoadReportSummaryHdr(ListingData listingData) {
         var sb = new StringBuilder();
+        String singlesTotal = "0";
+        String multiplesTotal = "0";
+        String total = "0";
+        var summaryHdr = listingData.getLocalReportsSummaryHdr();
 
-        if (listingData.getLocalReportsDetail() != null && !listingData.getLocalReportsDetail().isEmpty()) {
+        if (summaryHdr != null) {
+            singlesTotal = nullCheck(summaryHdr.getSinglesTotal());
+            multiplesTotal = nullCheck(summaryHdr.getMultiplesTotal());
+            total = nullCheck(summaryHdr.getTotal());
+        }
+
+        sb.append("\"Multiples_Total\":\"").append(multiplesTotal).append(NEW_LINE);
+        sb.append("\"Singles_Total\":\"").append(singlesTotal).append(NEW_LINE);
+        sb.append("\"Total\":\"").append(total).append(NEW_LINE);
+
+        return sb;
+    }
+
+    private static StringBuilder getLiveCaseLoadReport(ListingData listingData) {
+        var sb = getLiveCaseLoadReportSummaryHdr(listingData);
+
+        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())) {
             List<AdhocReportTypeItem> adhocReportTypeItems = listingData.getLocalReportsDetail();
             sb.append(REPORT_LIST);
             for (var i = 0; i < adhocReportTypeItems.size(); i++) {

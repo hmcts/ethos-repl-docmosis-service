@@ -2,8 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment;
 
 import org.junit.Before;
 import org.junit.Test;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ethos.replacement.docmosis.utils.CaseDataBuilder;
+import uk.gov.hmcts.ecm.common.model.reports.casesawaitingjudgment.CasesAwaitingJudgmentSubmitEvent;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -34,7 +33,7 @@ public class CasesAwaitingJudgmentReportTest {
     ReportDataSource reportDataSource;
     CasesAwaitingJudgmentReport casesAwaitingJudgmentReport;
     CaseDataBuilder caseDataBuilder;
-    List<SubmitEvent> submitEvents = new ArrayList<>();
+    List<CasesAwaitingJudgmentSubmitEvent> submitEvents = new ArrayList<>();
 
     final String validPositionType;
     static final String LISTING_DATE = "1970-01-01T00:00:00.000";
@@ -392,7 +391,7 @@ public class CasesAwaitingJudgmentReportTest {
         assertEquals("Case 1", reportData.getReportDetails().get(3).getCaseNumber());
     }
 
-    private SubmitEvent createValidSubmitEvent(String positionType) {
+    private CasesAwaitingJudgmentSubmitEvent createValidSubmitEvent(String positionType) {
         caseDataBuilder = new CaseDataBuilder();
         return caseDataBuilder.withPositionType(positionType)
                 .withHearing(LISTING_DATE, HEARING_STATUS_HEARD)

@@ -30,17 +30,15 @@ public class AddSingleCaseToMultipleService {
 
         log.info("Adding single case to multiple logic");
 
-        if (caseData.getMultipleFlag().equals(NO)
-                && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+        if (caseData.getMultipleFlag().equals(NO) &&
+            caseData.getCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
             log.info("Case was single and now will be multiple");
-
             String leadClaimant = caseData.getLeadClaimant();
             String updatedMultipleReference = caseData.getMultipleReference();
             String multipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseTypeId);
 
             log.info("Pulling the multiple case: " + updatedMultipleReference);
-
             List<SubmitMultipleEvent> multipleEvents =
                     multipleCasesReadingService.retrieveMultipleCases(
                             userToken,
@@ -62,8 +60,9 @@ public class AddSingleCaseToMultipleService {
                 leadClaimant = YES;
             }
 
+            var parentMultipleCaseId = String.valueOf(multipleEvent.getCaseId());
             addNewLeadToMultiple(userToken, multipleCaseTypeId, jurisdiction,
-                    multipleData, leadClaimant, newEthosCaseReferenceToAdd, caseId, errors);
+                    multipleData, leadClaimant, newEthosCaseReferenceToAdd, caseId, errors, parentMultipleCaseId);
 
             log.info("Generate and upload excel with sub multiple and send update to multiple");
 
@@ -91,12 +90,13 @@ public class AddSingleCaseToMultipleService {
         caseData.setCaseType(MULTIPLE_CASE_TYPE);
         log.info("setLeadClaimant is set to " + leadClaimant);
         caseData.setLeadClaimant(leadClaimant);
-        caseData.setMultipleReferenceLink(String.valueOf(multipleCaseId));
+        caseData.setParentMultipleCaseId(String.valueOf(multipleCaseId));
     }
 
     private void addNewLeadToMultiple(String userToken, String multipleCaseTypeId, String jurisdiction,
                                       MultipleData multipleData, String leadClaimant,
-                                      String newEthosCaseReferenceToAdd, String caseId, List<String> errors) {
+                                      String newEthosCaseReferenceToAdd, String caseId, List<String> errors,
+                                      String parentMultipleCaseId) {
         if (leadClaimant.equals(YES)) {
 
             log.info("Checking if there was a lead");
@@ -109,7 +109,7 @@ public class AddSingleCaseToMultipleService {
 
                 multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken, multipleCaseTypeId,
                         jurisdiction, multipleData, errors,
-                        new ArrayList<>(Collections.singletonList(currentLeadCase)), "");
+                        new ArrayList<>(Collections.singletonList(currentLeadCase)), "", parentMultipleCaseId);
 
             }
 
