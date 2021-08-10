@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class CcdReportDataSource implements ReportDataSource {
+public class CcdTimeToFirstHearingReportDataSource implements TimeToFirstHearingReportDataSource {
 
     private final String authToken;
     private final CcdClient ccdClient;
@@ -19,8 +19,8 @@ public class CcdReportDataSource implements ReportDataSource {
     @Override
     public List<SubmitEvent> getData(String caseTypeId) {
         try {
-            var query = ESHelper.getNotMatchQuery("state", "Closed");
-            return ccdClient.executeElasticSearch(authToken, caseTypeId, query);
+            //var query = ESHelper.getNotMatchQuery("state", "Closed");
+            return ccdClient.executeElasticSearch(authToken, caseTypeId, "query");
         } catch (IOException e) {
             throw new ReportException(String.format("Failed to get report data for case type id %s", caseTypeId), e);
         }

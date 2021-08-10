@@ -34,6 +34,8 @@ import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.CcdTimeToFirstHearingReportDataSource;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -201,6 +203,17 @@ public class ListingService {
 
         var casesAwaitingJudgmentReport = new CasesAwaitingJudgmentReport(reportDataSource);
         var reportData = casesAwaitingJudgmentReport.runReport(listingDetails.getCaseTypeId());
+        reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
+        reportData.setReportType(listingDetails.getCaseData().getReportType());
+        return reportData;
+    }
+
+    private TimeToFirstHearingReport getTimeToFirstHearingReport(ListingDetails listingDetails, String authToken) {
+        log.info("Time to First hearing for {}", listingDetails.getCaseTypeId());
+        var timeToFirstHearingReportDataSource = new CcdTimeToFirstHearingReportDataSource(authToken, ccdClient);
+
+        var timeToFirstHearingReport = new TimeToFirstHearingReport(timeToFirstHearingReportDataSource);
+        var reportData = timeToFirstHearingReport.runReport(listingDetails.getCaseTypeId());
         reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
         reportData.setReportType(listingDetails.getCaseData().getReportType());
         return reportData;
