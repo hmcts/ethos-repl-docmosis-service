@@ -1,6 +1,7 @@
 plugins {
     id 'application'
     id 'java'
+    id 'checkstyle'
     id 'jacoco'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.springframework.boot' version '2.3.11.RELEASE'
@@ -36,6 +37,12 @@ jacocoTestCoverageVerification {
             }
         }
     }
+}
+
+checkstyle {
+    maxWarnings = 567
+    sourceSets = [project.sourceSets.main]
+    toolVersion = '8.29'
 }
 
 def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
@@ -164,6 +171,7 @@ dependencyCheck {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     jcenter()
     maven { url "https://repo.maven.apache.org/maven2" }
@@ -179,8 +187,7 @@ def versions = [
 ]
 
 dependencies {
-    implementation 'com.github.hmcts:ecm-common:0.1.117'
-
+    implementation 'com.github.hmcts:ecm-common:0.1.126'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
