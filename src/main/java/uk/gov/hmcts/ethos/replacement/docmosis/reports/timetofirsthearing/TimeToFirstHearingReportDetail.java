@@ -2,7 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ReportDetail {
+public class TimeToFirstHearingReportDetail {
 
     @JsonProperty("reportOffice")
     private String reportOffice;

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class ReportSummaryHdr {
+public class TimeToFirstHearingReportSummaryHdr {
     private final long totalCases;
     private final long wk26Total;
     private final float wk26TotalPercent;

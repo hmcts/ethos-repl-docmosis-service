@@ -1,13 +1,47 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 
-import java.time.LocalDate;
+import java.time.Clock;
 import java.util.List;
 
 @Slf4j
 public class TimeToFirstHearingReport {
+
+    private final TimeToFirstHearingReportDataSource reportDataSource;
+    private final Clock clock;
+
+    public TimeToFirstHearingReport(TimeToFirstHearingReportDataSource reportDataSource) {
+        this(reportDataSource, Clock.systemDefaultZone());
+    }
+
+    public TimeToFirstHearingReport(TimeToFirstHearingReportDataSource reportDataSource, Clock clock) {
+        this.reportDataSource = reportDataSource;
+        this.clock = clock;
+    }
+
+    public TimeToFirstHearingReportData runReport(String caseTypeId) {
+        var submitEvents = getCases(caseTypeId);
+
+        var reportData = initReport(caseTypeId);
+        populateData(reportData, submitEvents);
+
+        return reportData;
+    }
+
+    private TimeToFirstHearingReportData initReport(String caseTypeId) {
+        var office = UtilHelper.getListingCaseTypeId(caseTypeId);
+
+       // var reportSummary = new TimeToFirstHearingReportSummary();
+        return null;
+       // return new TimeToFirstHearingReportData(reportSummary);
+    }
+
+    private List<SubmitEvent> getCases(String caseTypeId) {
+        return reportDataSource.getData(UtilHelper.getListingCaseTypeId(caseTypeId));
+    }
 
     private void populateData(TimeToFirstHearingReportData reportData, List<SubmitEvent> submitEvents) {
         for (SubmitEvent submitEvent : submitEvents) {

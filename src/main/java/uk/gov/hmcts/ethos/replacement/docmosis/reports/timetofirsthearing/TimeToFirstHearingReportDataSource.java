@@ -4,6 +4,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 
 import java.util.List;
 
-public interface ReportDataSource {
+public interface TimeToFirstHearingReportDataSource {
     List<SubmitEvent> getData(String caseTypeId);
 }

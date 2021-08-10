@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class ReportSummary {
+public class TimeToFirstHearingReportSummary {
     private final String ConNoneTotal;
     private final String ConStdTotal;
     private final String ConFastTotal;
@@ -26,4 +26,5 @@ public class ReportSummary {
     private final String xConStd26wkTotalPerCent;
     private final String xConFast26wkTotalPerCent;
     private final String xConOpen26wkTotalPerCent;
+
 }
