@@ -34,7 +34,6 @@ import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.CcdTimeToFirstHearingReportDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
 
 @RequiredArgsConstructor
@@ -45,6 +44,7 @@ public class ListingService {
     private final TornadoService tornadoService;
     private final CcdClient ccdClient;
     private final CasesCompletedReport casesCompletedReport;
+    private final TimeToFirstHearingReport timeToFirstHearingReport;
 
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
@@ -185,10 +185,6 @@ public class ListingService {
             String reportType = listingDetails.getCaseData().getReportType();
             if (CASES_AWAITING_JUDGMENT_REPORT.equals(reportType)) {
                 return getCasesAwaitingJudgmentReport(listingDetails, authToken);
-            } else if (TIME_TO_FIRST_HEARING_REPORT.equals(reportType)) {
-
-            // todo
-            return null;
             } else {
                 return getDateRangeReport(listingDetails, authToken);
             }
@@ -208,17 +204,6 @@ public class ListingService {
         return reportData;
     }
 
-    private TimeToFirstHearingReport getTimeToFirstHearingReport(ListingDetails listingDetails, String authToken) {
-        log.info("Time to First hearing for {}", listingDetails.getCaseTypeId());
-        var timeToFirstHearingReportDataSource = new CcdTimeToFirstHearingReportDataSource(authToken, ccdClient);
-
-        var timeToFirstHearingReport = new TimeToFirstHearingReport(timeToFirstHearingReportDataSource);
-        var reportData = timeToFirstHearingReport.runReport(listingDetails.getCaseTypeId());
-        reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
-        reportData.setReportType(listingDetails.getCaseData().getReportType());
-        return reportData;
-    }
-
     private ListingData getDateRangeReport(ListingDetails listingDetails, String authToken) throws IOException {
         List<SubmitEvent> submitEvents = getDateRangeReportSearch(listingDetails, authToken);
 
@@ -231,6 +216,8 @@ public class ListingService {
                 return ReportHelper.processLiveCaseloadRequest(listingDetails, submitEvents);
             case CASES_COMPLETED_REPORT:
                 return casesCompletedReport.generateReportData(listingDetails, submitEvents);
+            case TIME_TO_FIRST_HEARING_REPORT:
+                return timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
             default:
                 return listingDetails.getCaseData();
         }
