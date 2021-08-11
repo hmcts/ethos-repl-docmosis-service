@@ -3,47 +3,56 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 
+import java.io.IOException;
 import java.time.Clock;
 import java.util.List;
 
 @Slf4j
 public class TimeToFirstHearingReport {
 
-    private final TimeToFirstHearingReportDataSource reportDataSource;
-    private final Clock clock;
 
-    public TimeToFirstHearingReport(TimeToFirstHearingReportDataSource reportDataSource) {
-        this(reportDataSource, Clock.systemDefaultZone());
-    }
+    public ListingData generateReportData(ListingDetails listingDetails, List<SubmitEvent> submitEvents) throws IOException {
 
-    public TimeToFirstHearingReport(TimeToFirstHearingReportDataSource reportDataSource, Clock clock) {
-        this.reportDataSource = reportDataSource;
-        this.clock = clock;
-    }
-
-    public TimeToFirstHearingReportData runReport(String caseTypeId) {
-        var submitEvents = getCases(caseTypeId);
-
-        var reportData = initReport(caseTypeId);
+        var reportData = initReport(listingDetails.getCaseTypeId());
         populateData(reportData, submitEvents);
 
         return reportData;
     }
 
-    private TimeToFirstHearingReportData initReport(String caseTypeId) {
-        var office = UtilHelper.getListingCaseTypeId(caseTypeId);
+    private ListingData initReport(String caseTypeId) {
 
-       // var reportSummary = new TimeToFirstHearingReportSummary();
+        String ConNoneTotal;
+        String ConStdTotal;
+        String ConFastTotal;
+        String ConOpenTotal;
+        String ConNone26wkTotal;
+        String ConStd26wkTotal;
+        String ConFast26wkTotal;
+        String ConOpen26wkTotal;
+        String ConNone26wkTotalPerCent;
+        String ConStd26wkTotalPerCent;
+        String ConFast26wkTotalPerCent;
+        String ConOpen26wkTotalPerCent;
+        String xConNone26wkTotal;
+        String xConStd26wkTotal;
+        String xConFast26wkTotal;
+        String xConOpen26wkTotal;
+        String xConNone26wkTotalPerCent;
+        String xConStd26wkTotalPerCent;
+        String xConFast26wkTotalPerCent;
+        String xConOpen26wkTotalPerCent;
+
+
+
+
         return null;
        // return new TimeToFirstHearingReportData(reportSummary);
     }
 
-    private List<SubmitEvent> getCases(String caseTypeId) {
-        return reportDataSource.getData(UtilHelper.getListingCaseTypeId(caseTypeId));
-    }
-
-    private void populateData(TimeToFirstHearingReportData reportData, List<SubmitEvent> submitEvents) {
+    private void populateData(ListingData reportData, List<SubmitEvent> submitEvents) {
         for (SubmitEvent submitEvent : submitEvents) {
             if (!isValidCase(submitEvent)) {
                 continue;
