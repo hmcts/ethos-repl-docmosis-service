@@ -223,31 +223,31 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        var caseData = ccdRequest.getCaseDetails().getCaseData();
-
+        var caseDetails = ccdRequest.getCaseDetails();
+        var caseData = caseDetails.getCaseData();
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
 
-
         if (errors.isEmpty()) {
-            boolean caseStateValidated = eventValidationService.validateCaseState(ccdRequest.getCaseDetails());
+            boolean caseStateValidated = eventValidationService.validateCaseState(caseDetails);
             if (!caseStateValidated) {
-                errors.add(ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " Case has not been Accepted.");
+                errors.add(caseData.getEthosCaseReference() + " Case has not been Accepted.");
             }
         }
 
-        log.info("Event fields and/or case state validation for case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + ": " + errors);
+        log.info("Event fields and/or case state validation for case " +
+                caseData.getEthosCaseReference() + ": " + errors);
+
         if (errors.isEmpty()) {
-            var defaultValues = getPostDefaultValues(ccdRequest.getCaseDetails());
+            var defaultValues = getPostDefaultValues(caseDetails);
             log.info("Post Default values loaded: " + defaultValues);
             defaultValuesReaderService.getCaseData(caseData, defaultValues);
             caseManagementForCaseWorkerService.dateToCurrentPosition(caseData);
             FlagsImageHelper.buildFlagsImageFileName(caseData);
 
             addSingleCaseToMultipleService.addSingleCaseToMultipleLogic(
-                    userToken, caseData, ccdRequest.getCaseDetails().getCaseTypeId(),
-                    ccdRequest.getCaseDetails().getJurisdiction(),
-                    ccdRequest.getCaseDetails().getCaseId(), errors);
-
+                    userToken, caseData, caseDetails.getCaseTypeId(),
+                    caseDetails.getJurisdiction(),
+                    caseDetails.getCaseId(), errors);
         }
 
         return getCallbackRespEntityErrors(errors, caseData);

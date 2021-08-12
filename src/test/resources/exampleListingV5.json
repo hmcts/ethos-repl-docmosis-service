@@ -1,0 +1,141 @@
+{
+  "case_details": {
+    "case_data": {
+      "tribunalCorrespondenceAddress": {
+        "AddressLine1": "Manchester Employment Tribunal",
+        "AddressLine2": "Alexandra House",
+        "AddressLine3": "14-22 The Parsonage",
+        "PostCode": "M3 2JA",
+        "PostTown": "Manchester"
+      },
+      "tribunalCorrespondenceTelephone" : "03577131270",
+      "tribunalCorrespondenceFax" : "07577126570",
+      "tribunalCorrespondenceDX" : "123456",
+      "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
+      "listingDate": "2021-02-01",
+      "listingDateFrom": "2021-01-01",
+      "hearingDateType": "Range",
+      "listingDateTo":  "2021-02-01",
+      "listingCollection": [
+        {
+          "value": {
+            "causeListDate": "12 October 2020",
+            "causeListTime": "00:00",
+            "causeListVenue": "Manchester",
+            "elmoCaseReference": "1112",
+            "jurisdictionCodesList": "ADG, COM",
+            "hearingType": "Hearing",
+            "positionType": "Manually Created",
+            "hearingJudgeName": "Ms AM Aspden",
+            "hearingEEMember": " ",
+            "hearingERMember": " ",
+            "hearingClerk": "Anne Fox",
+            "Hearing_room_M": "Tribunal 2",
+            "Hearing_room_L": " ",
+            "Hearing_room_CM": " ",
+            "Hearing_room_CC": " ",
+            "hearingDay": "1 of 3",
+            "claimantName": "Mr s sdfs",
+            "claimantTown": "claimantTown",
+            "claimantRepresentative": "Rep",
+            "respondent": "sdf",
+            "respondentTown": "respondentTown",
+            "respondentRepresentative": "Org",
+            "estHearingLength": "12 Days"
+          },
+          "id": "97087d19-795a-4886-8cdb-06489b8b2ef5"
+        },
+        {
+          "value": {
+            "causeListDate": "12 October 2020",
+            "causeListTime": "00:00",
+            "causeListVenue": "Manchester",
+            "elmoCaseReference": "1112",
+            "jurisdictionCodesList": "ADG, DCD",
+            "hearingType": "Hearing",
+            "positionType": "Manually Created",
+            "hearingJudgeName": "Ms AM Judge",
+            "hearingEEMember": " ",
+            "hearingERMember": " ",
+            "hearingClerk": "Andrew Pearl",
+            "Hearing_room_M": "Tribunal 2",
+            "Hearing_room_L": " ",
+            "Hearing_room_CM": " ",
+            "Hearing_room_CC": " ",
+            "hearingDay": "2 of 3",
+            "claimantName": "Mr s sdfs",
+            "claimantTown": "claimantTown1",
+            "claimantRepresentative": "Rep2",
+            "respondent": "sdf2",
+            "respondentTown": "respondentTown1",
+            "respondentRepresentative": "Org2",
+            "estHearingLength": "12 Days"
+          },
+          "id": "97087d19-795a-4886-8cdb-06489b8b2ef7"
+        },
+        {
+          "value": {
+            "causeListDate": "12 October 2020",
+            "causeListTime": "00:00",
+            "causeListVenue": "Manchester",
+            "elmoCaseReference": "1112",
+            "jurisdictionCodesList": "ADG, COM",
+            "hearingType": "Preliminary Hearing (CM)",
+            "positionType": "Manually Created",
+            "hearingJudgeName": "Judge For Tribunal4",
+            "hearingEEMember": " ",
+            "hearingERMember": " ",
+            "hearingClerk": "Anne Fox",
+            "Hearing_room_M": "Tribunal 4",
+            "Hearing_room_L": " ",
+            "Hearing_room_CM": " ",
+            "Hearing_room_CC": " ",
+            "hearingDay": "2 of 3",
+            "claimantName": "Mr s sdfs",
+            "claimantTown": "claimantTown2",
+            "claimantRepresentative": "Rep",
+            "respondent": "sdf",
+            "respondentTown": "respondentTown2",
+            "respondentRepresentative": "Org",
+            "estHearingLength": "12 Minutes"
+          },
+          "id": "f4ef21b6-df93-4835-972b-ddcb6ac4992e"
+        },
+        {
+          "value": {
+            "causeListDate": "12 October 2020",
+            "causeListTime": "00:00",
+            "causeListVenue": "Manchester",
+            "elmoCaseReference": "1112",
+            "jurisdictionCodesList": "ADG, COM",
+            "hearingType": "Preliminary Hearing (CM)",
+            "positionType": "Manually Created",
+            "hearingJudgeName": "Another Judge",
+            "hearingEEMember": " ",
+            "hearingERMember": " ",
+            "hearingClerk": "Juan Fox",
+            "Hearing_room_M": "Tribunal 4",
+            "Hearing_room_L": " ",
+            "Hearing_room_CM": " ",
+            "Hearing_room_CC": " ",
+            "hearingDay": "2 of 3",
+            "claimantName": "Mr s Dominguez",
+            "claimantRepresentative": "Representative",
+            "respondent": "Respondent",
+            "respondentRepresentative": "Organization",
+            "estHearingLength": "3 Minutes"
+          },
+          "id": "f4ef21b6-df93-4835-972b-ddcb6ac4122e"
+        }
+      ],
+      "listingVenue": "Manchester"
+    },
+    "id": "232323232",
+    "jurisdiction": "Employment",
+    "case_type_id" : "Manchester_Listings",
+    "state": "UK"
+  },
+  "event_id": "1212121",
+  "token": "string"
+}
+

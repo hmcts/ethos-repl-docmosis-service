@@ -1,11 +1,16 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 
 import java.time.LocalDate;
 import java.util.Iterator;
@@ -14,6 +19,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
@@ -31,6 +37,8 @@ public class ReportDocHelper {
 
     public static StringBuilder buildReportDocumentContent(ListingData listingData, String accessKey,
                                                            String templateName, UserDetails userDetails) {
+        log.info("Building {} report document data", listingData.getReportType());
+
         var sb = new StringBuilder();
 
         sb.append("{\n");
@@ -38,41 +46,35 @@ public class ReportDocHelper {
         sb.append("\"templateName\":\"").append(templateName).append(FILE_EXTENSION).append(NEW_LINE);
         sb.append("\"outputName\":\"").append(OUTPUT_FILE_NAME).append(NEW_LINE);
 
-        log.info("Building report document data");
-
         sb.append("\"data\":{\n");
 
-        sb.append(ListingHelper.getListingDate(listingData));
+        if (CASES_AWAITING_JUDGMENT_REPORT.equals(listingData.getReportType())) {
+            try {
+                sb.append(getCasesAwaitingJudgmentReport(listingData));
+            } catch (JsonProcessingException e) {
+                throw new ReportException("Unable to create report data", e);
+            }
+        } else {
+            sb.append(ListingHelper.getListingDate(listingData));
 
-        if (listingData.getLocalReportsDetailHdr() != null) {
-            sb.append("\"Report_Office\":\"").append(
-                    nullCheck(listingData.getLocalReportsDetailHdr().getReportOffice())).append(NEW_LINE);
-        }
+            if (listingData.getLocalReportsDetailHdr() != null) {
+                sb.append("\"Report_Office\":\"").append(
+                        nullCheck(listingData.getLocalReportsDetailHdr().getReportOffice())).append(NEW_LINE);
+            }
 
-        switch (listingData.getReportType()) {
-            case CLAIMS_ACCEPTED_REPORT:
-
-                log.info("Claims accepted report");
-
-                sb.append(getCasesAcceptedReport(listingData));
-
-                break;
-            case LIVE_CASELOAD_REPORT:
-
-                log.info("Live case load report");
-
-                sb.append(getLiveCaseLoadReport(listingData));
-
-                break;
-            case CASES_COMPLETED_REPORT:
-
-                log.info("Cases completed report");
-
-                sb.append(getCasesCompletedReport(listingData));
-
-                break;
-            default:
-                throw new IllegalStateException("Report type - Unexpected value: " + listingData.getReportType());
+            switch (listingData.getReportType()) {
+                case CLAIMS_ACCEPTED_REPORT:
+                    sb.append(getCasesAcceptedReport(listingData));
+                    break;
+                case LIVE_CASELOAD_REPORT:
+                    sb.append(getLiveCaseLoadReport(listingData));
+                    break;
+                case CASES_COMPLETED_REPORT:
+                    sb.append(getCasesCompletedReport(listingData));
+                    break;
+                default:
+                    throw new IllegalStateException("Report type - Unexpected value: " + listingData.getReportType());
+            }
         }
 
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
@@ -83,6 +85,33 @@ public class ReportDocHelper {
         sb.append("}\n");
         sb.append("}\n");
         return sb;
+    }
+
+    private static StringBuilder getCasesAwaitingJudgmentReport(ListingData listingData) throws JsonProcessingException {
+        if (!(listingData instanceof CasesAwaitingJudgmentReportData)) {
+            throw new IllegalStateException(("ListingData is not instanceof CasesAwaitingJudgmentReportData"));
+        }
+        var reportData = (CasesAwaitingJudgmentReportData) listingData;
+
+        var sb = new StringBuilder();
+        sb.append("\"Report_Office\":\"").append(reportData.getReportSummary().getOffice()).append(NEW_LINE);
+        addJsonCollection("positionTypes", reportData.getReportSummary().getPositionTypes().iterator(), sb);
+        addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
+        return sb;
+    }
+
+    private static void addJsonCollection(String name, Iterator<?> iterator, StringBuilder sb)
+            throws JsonProcessingException {
+        sb.append("\"").append(name).append("\":[\n");
+        var objectMapper = new ObjectMapper();
+        while (iterator.hasNext()) {
+            sb.append(objectMapper.writeValueAsString(iterator.next()));
+            if (iterator.hasNext()) {
+                sb.append(",");
+            }
+            sb.append("\n");
+        }
+        sb.append("],\n");
     }
 
     private static StringBuilder getCasesAcceptedReport(ListingData listingData) {
@@ -159,11 +188,11 @@ public class ReportDocHelper {
         AdhocReportType localReportDetailHdr = listingData.getLocalReportsDetailHdr();
         if (localReportDetailHdr != null) {
             sb.append("\"Cases_Completed_Hearing\":\"").append(
-                    nullCheck(localReportDetailHdr.getConNoneCasesCompletedHearing())).append(NEW_LINE);
+                    nullCheck(localReportDetailHdr.getCasesCompletedHearingTotal())).append(NEW_LINE);
             sb.append("\"Session_Days_Taken\":\"").append(
-                    nullCheck(localReportDetailHdr.getConNoneSessionDays())).append(NEW_LINE);
+                    nullCheck(localReportDetailHdr.getSessionDaysTotal())).append(NEW_LINE);
             sb.append("\"Completed_Per_Session_Day\":\"").append(
-                    nullCheck(localReportDetailHdr.getConNoneCompletedPerSession())).append(NEW_LINE);
+                    nullCheck(localReportDetailHdr.getCompletedPerSessionTotal())).append(NEW_LINE);
 
             sb.append("\"No_Conciliation_1\":\"").append(
                     nullCheck(localReportDetailHdr.getConNoneCasesCompletedHearing())).append(NEW_LINE);
@@ -214,14 +243,14 @@ public class ReportDocHelper {
                 nullCheck(adhocReportType.getCaseReference())).append(NEW_LINE);
         sb.append("\"Position\":\"").append(
                 nullCheck(adhocReportType.getPosition())).append(NEW_LINE);
-        sb.append("\"Conciliation_Track_No\":\"").append(
-                nullCheck(adhocReportType.getConciliationTrackNo())).append(NEW_LINE);
+        sb.append("\"Conciliation_Track\":\"").append(
+                nullCheck(adhocReportType.getConciliationTrack())).append(NEW_LINE);
         sb.append("\"Session_Days\":\"").append(
                 nullCheck(adhocReportType.getSessionDays())).append(NEW_LINE);
         sb.append("\"Hearing_Number\":\"").append(
                 nullCheck(adhocReportType.getHearingNumber())).append(NEW_LINE);
         sb.append("\"Hearing_Date\":\"").append(
-                nullCheck(adhocReportType.getHearingDate())).append(NEW_LINE);
+                UtilHelper.formatLocalDate(adhocReportType.getHearingDate())).append(NEW_LINE);
         sb.append("\"Hearing_Type\":\"").append(
                 nullCheck(adhocReportType.getHearingType())).append(NEW_LINE);
         sb.append("\"Hearing_Judge\":\"").append(
@@ -231,10 +260,30 @@ public class ReportDocHelper {
         return sb;
     }
 
-    private static StringBuilder getLiveCaseLoadReport(ListingData listingData) {
+    private static StringBuilder getLiveCaseLoadReportSummaryHdr(ListingData listingData) {
         var sb = new StringBuilder();
+        String singlesTotal = "0";
+        String multiplesTotal = "0";
+        String total = "0";
+        var summaryHdr = listingData.getLocalReportsSummaryHdr();
 
-        if (listingData.getLocalReportsDetail() != null && !listingData.getLocalReportsDetail().isEmpty()) {
+        if (summaryHdr != null) {
+            singlesTotal = nullCheck(summaryHdr.getSinglesTotal());
+            multiplesTotal = nullCheck(summaryHdr.getMultiplesTotal());
+            total = nullCheck(summaryHdr.getTotal());
+        }
+
+        sb.append("\"Multiples_Total\":\"").append(multiplesTotal).append(NEW_LINE);
+        sb.append("\"Singles_Total\":\"").append(singlesTotal).append(NEW_LINE);
+        sb.append("\"Total\":\"").append(total).append(NEW_LINE);
+
+        return sb;
+    }
+
+    private static StringBuilder getLiveCaseLoadReport(ListingData listingData) {
+        var sb = getLiveCaseLoadReportSummaryHdr(listingData);
+
+        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())) {
             List<AdhocReportTypeItem> adhocReportTypeItems = listingData.getLocalReportsDetail();
             sb.append(REPORT_LIST);
             for (var i = 0; i < adhocReportTypeItems.size(); i++) {

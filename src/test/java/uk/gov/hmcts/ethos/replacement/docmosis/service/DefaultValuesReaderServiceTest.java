@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +15,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.CaseDefaultValuesConfiguration;
@@ -21,9 +23,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.config.TribunalOfficesConfigurati
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -161,7 +160,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceTelephone("0207 273 8603")
                 .tribunalCorrespondenceFax("01264 785 100")
                 .tribunalCorrespondenceDX("DX 141420 Bloomsbury")
-                .tribunalCorrespondenceEmail("londoncentralet@hmcts.gsi.gov.uk")
+                .tribunalCorrespondenceEmail("londoncentralet@justice.gov.uk")
                 .build();
         postDefaultValuesLondonEast = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
@@ -385,7 +384,7 @@ public class DefaultValuesReaderServiceTest {
                 + "20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
                 + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
                 + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=Single, "
-                + "multipleReference=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, "
+                + "multipleReference=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, "
                 + "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, "
                 + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, "
                 + "claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
@@ -452,7 +451,7 @@ public class DefaultValuesReaderServiceTest {
                 + "20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
                 + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
                 + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=Single, "
-                + "multipleReference=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, "
+                + "multipleReference=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, "
                 + "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, "
                 + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, "
                 + "claimantWorkAddressQuestion=Yes, claimantWorkAddressQRespondent=null, "

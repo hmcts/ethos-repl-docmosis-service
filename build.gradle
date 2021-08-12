@@ -1,6 +1,7 @@
 plugins {
     id 'application'
     id 'java'
+    id 'checkstyle'
     id 'jacoco'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.springframework.boot' version '2.3.11.RELEASE'
@@ -36,6 +37,12 @@ jacocoTestCoverageVerification {
             }
         }
     }
+}
+
+checkstyle {
+    maxWarnings = 567
+    sourceSets = [project.sourceSets.main]
+    toolVersion = '8.29'
 }
 
 def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
@@ -164,9 +171,9 @@ dependencyCheck {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     jcenter()
-    maven { url "https://dl.bintray.com/hmcts/hmcts-maven" }
     maven { url "https://repo.maven.apache.org/maven2" }
     maven { url 'https://repo.spring.io/libs-milestone' }
     maven { url "https://jitpack.io" }
@@ -180,6 +187,7 @@ def versions = [
 ]
 
 dependencies {
+    implementation 'com.github.hmcts:ecm-common:0.1.126'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
@@ -193,17 +201,19 @@ dependencies {
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.10.1'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.21'
 
-    implementation 'com.github.hmcts:ecm-common:0.1.103'
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.48'
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.48'
+
 
 // For pdfbox and elasticsearch CVEs
     implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.24'
     implementation('org.elasticsearch:elasticsearch') {
         version {
-            strictly '7.13.2'
+            strictly '7.13.4'
         }
     }
-
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.5.RELEASE'
 
     //to remove vulnerability CVE-2020-11987

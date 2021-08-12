@@ -495,9 +495,19 @@ public class DocumentHelper {
     }
 
     static String getHearingDuration(HearingType hearingType) {
-        return String.join(" ",
-                hearingType.getHearingEstLengthNum(), hearingType.getHearingEstLengthNumType());
-    }
+        String numType = hearingType.getHearingEstLengthNumType();
+        try {
+            int tmp = Integer.parseInt(hearingType.getHearingEstLengthNum());
+            if (tmp == 1) {
+                numType = numType.substring(0, numType.length() - 1);
+            }
+        } catch (NumberFormatException e) {
+            log.error(e.toString());
+            numType = hearingType.getHearingEstLengthNumType();
+        }
+            return String.join(" ",
+                    hearingType.getHearingEstLengthNum(), numType);
+        }
 
     public static String getTemplateName(CorrespondenceType correspondenceType,
                                          CorrespondenceScotType correspondenceScotType) {
@@ -924,7 +934,9 @@ public class DocumentHelper {
 
         log.info("Get respondent address ET3");
 
-        return respondentSumType.getResponseRespondentAddress() != null
+        return (YES.equals(respondentSumType.getResponseReceived())
+                && respondentSumType.getResponseRespondentAddress() != null
+                && !Strings.isNullOrEmpty(respondentSumType.getResponseRespondentAddress().toString()))
                 ? respondentSumType.getResponseRespondentAddress()
                 : respondentSumType.getRespondentAddress();
 

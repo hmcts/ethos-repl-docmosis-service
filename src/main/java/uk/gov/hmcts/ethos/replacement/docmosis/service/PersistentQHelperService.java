@@ -19,7 +19,7 @@ public class PersistentQHelperService {
     public void sendCreationEventToSingles(String userToken, String caseTypeId, String jurisdiction,
                                            List<String> errors, List<String> ethosCaseRefCollection, String officeCT,
                                            String positionTypeCT, String ccdGatewayBaseUrl,
-                                           String reasonForCT, String multipleRef, String confirmation) {
+                                           String reasonForCT, String multipleRef, String confirmation, String parentMultipleCaseId) {
 
         String username = userService.getUserDetails(userToken).getEmail();
 
@@ -32,7 +32,9 @@ public class PersistentQHelperService {
                 multipleRef,
                 confirmation,
                 createUpdatesBusSender,
-                String.valueOf(ethosCaseRefCollection.size()));
+                String.valueOf(ethosCaseRefCollection.size()),
+                parentMultipleCaseId
+                );
 
     }
 

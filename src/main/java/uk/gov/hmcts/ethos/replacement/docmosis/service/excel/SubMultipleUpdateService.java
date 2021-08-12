@@ -103,7 +103,9 @@ public class SubMultipleUpdateService {
 
     }
 
-    private List<MultipleObject> amendAction(MultipleDetails multipleDetails, SortedMap<String, Object> multipleObjects) {
+    private List<MultipleObject> amendAction(
+            MultipleDetails multipleDetails,
+            SortedMap<String, Object> multipleObjects) {
 
         String existingSubMultipleName =
                 multipleDetails.getCaseData().getSubMultipleAction().getAmendSubMultipleNameExisting();
@@ -114,11 +116,11 @@ public class SubMultipleUpdateService {
 
         multipleDetails.getCaseData().setSubMultipleCollection(
                 multipleDetails.getCaseData().getSubMultipleCollection().stream()
-                .map(subMultipleTypeItem ->
-                        !subMultipleTypeItem.getValue().getSubMultipleName().equals(existingSubMultipleName)
-                                ? subMultipleTypeItem
-                                : updateSubMultipleName(subMultipleTypeItem, newSubMultipleName))
-                .collect(Collectors.toList()));
+                        .map(subMultipleTypeItem ->
+                                !subMultipleTypeItem.getValue().getSubMultipleName().equals(existingSubMultipleName)
+                                        ? subMultipleTypeItem
+                                        : updateSubMultipleName(subMultipleTypeItem, newSubMultipleName))
+                        .collect(Collectors.toList()));
 
         log.info("Generating the multiple object list with the new sub multiple name updated");
 

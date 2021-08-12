@@ -122,6 +122,12 @@
         "id": "f4ef21b6-df93-4835-972b-ddcb6ac4122e"
       }
     ],
+    "localReportsSummaryHdr":
+      {
+        "multiplesTotal": "0",
+        "singlesTotal": "2",
+        "total": "2"
+      },
     "localReportsDetailHdr": {
       "hearingDate": "20 October 2020",
       "reportOffice": "Manchester",

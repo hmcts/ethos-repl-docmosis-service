@@ -2,6 +2,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -17,6 +19,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
@@ -46,8 +50,10 @@ public class EventValidationService {
 
     public boolean validateCaseState(CaseDetails caseDetails) {
         var validated = true;
-        log.info("Checking whether the case " + caseDetails.getCaseData().getEthosCaseReference() + " is in accepted state");
-        if (caseDetails.getState().equals(SUBMITTED_STATE) && caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+        log.info("Checking whether the case " + caseDetails.getCaseData().getEthosCaseReference() +
+                " is in accepted state");
+        if (caseDetails.getState().equals(SUBMITTED_STATE) &&
+                caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
             validated = false;
         }
         return validated;
@@ -96,21 +102,20 @@ public class EventValidationService {
                 String respRepName = repItr.next().getValue().getRespRepName();
                 if (!isNullOrEmpty(respRepName)
                         && !CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
-                        ListIterator<RespondentSumTypeItem> respItr = caseData.getRespondentCollection().listIterator();
-                        var validLink = false;
-                        while (respItr.hasNext()) {
-                            var respondentSumType = respItr.next().getValue();
-                            if ((respRepName.equals(respondentSumType.getRespondentName()))
-                                    || (respondentSumType.getResponseRespondentName() != null
-                                    && respRepName.equals(respondentSumType.getResponseRespondentName()))) {
-                                validLink = true;
-                                break;
-                            }
+                    ListIterator<RespondentSumTypeItem> respItr = caseData.getRespondentCollection().listIterator();
+                    var validLink = false;
+                    while (respItr.hasNext()) {
+                        var respondentSumType = respItr.next().getValue();
+                        if ((respRepName.equals(respondentSumType.getRespondentName()))
+                                || (respondentSumType.getResponseRespondentName() != null
+                                && respRepName.equals(respondentSumType.getResponseRespondentName()))) {
+                            validLink = true;
+                            break;
                         }
-                        if (!validLink) {
-                            errors.add(RESP_REP_NAME_MISMATCH_ERROR_MESSAGE + " - " + index);
-                        }
-
+                    }
+                    if (!validLink) {
+                        errors.add(RESP_REP_NAME_MISMATCH_ERROR_MESSAGE + " - " + index);
+                    }
                 }
             }
         }
@@ -294,8 +299,22 @@ public class EventValidationService {
                         && (isNullOrEmpty(depositTypeItem.getValue().getDepositAmount())
                         || Integer.parseInt(depositTypeItem.getValue().getDepositAmountRefunded())
                         > Integer.parseInt(depositTypeItem.getValue().getDepositAmount()))) {
-                        errors.add(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR);
+                    errors.add(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR);
                 }
+            }
+        }
+        return errors;
+    }
+
+    public List<String> validateListingDateRange(String listingFrom, String listingTo) {
+
+        List<String> errors = new ArrayList<>();
+        if (listingFrom != null && listingTo != null) {
+            var startDate = LocalDate.parse(listingFrom);
+            var endDate = LocalDate.parse(listingTo);
+            var numberOfDays = ChronoUnit.DAYS.between(startDate, endDate);
+            if (numberOfDays > 30) {
+                errors.add(INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE);
             }
         }
         return errors;

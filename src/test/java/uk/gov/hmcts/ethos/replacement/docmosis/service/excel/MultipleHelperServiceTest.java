@@ -50,7 +50,6 @@ public class MultipleHelperServiceTest {
 
     @InjectMocks
     private MultipleHelperService multipleHelperService;
-
     private MultipleDetails multipleDetails;
     private String userToken;
     private List<SubmitEvent> submitEventList;
@@ -109,6 +108,7 @@ public class MultipleHelperServiceTest {
 
     @Test
     public void addLeadMarkUpEmptyCase() {
+
         when(singleCasesReadingService.retrieveSingleCase(userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getCaseData().getLeadCase(),
@@ -120,6 +120,7 @@ public class MultipleHelperServiceTest {
                 multipleDetails.getCaseData().getLeadCase(),
                 "");
         assertEquals("21006/2020", multipleDetails.getCaseData().getLeadCase());
+
     }
 
     @Test
@@ -318,7 +319,8 @@ public class MultipleHelperServiceTest {
                 multipleDetails.getCaseData(),
                 new ArrayList<>(),
                 new ArrayList<>(),
-                ""
+                "",
+                multipleDetails.getCaseId()
         );
 
         verify(userService).getUserDetails(userToken);
@@ -349,7 +351,8 @@ public class MultipleHelperServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getJurisdiction(),
                 multipleDetails.getCaseData(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                multipleDetails.getCaseId()
         );
 
         verify(userService).getUserDetails(userToken);
