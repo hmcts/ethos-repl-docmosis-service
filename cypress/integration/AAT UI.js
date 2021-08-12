@@ -64,9 +64,9 @@ function caseDetails() {
     cy.get('#next-step').select('Case Details');
     cy.get('.button:nth-child(2)').click();
     cy.get('.event-trigger').submit();
-    cy.get('#clerkResponsible').select('1: Abu Mamaniyat');
-    cy.get('#fileLocation').select('Casework Table');
-    cy.get('#conciliationTrack').select('No Track');
+    cy.get('#clerkResponsible').select('A Clerk');
+    cy.get('#fileLocation').select('Awaiting ET3');
+    cy.get('#conciliationTrack').select('No track');
     cy.get('.button:nth-child(2)').click();
     cy.get('.form').submit();
     cy.get('.button:nth-child(2)').click();
@@ -76,38 +76,12 @@ function caseDetails() {
 
 }
 
-describe('Login into AAT, create a case and accept it', () => {
-    it.only('should create a case in Leeds', function () {
-        cy.aatLogin()
-        createCase('Bristol - Singles')
-        cy.acceptCase()
-        cy.listHearing()
-    });
-})
-
-describe('Login into AAT, create a case and reject it', () => {
-    it('should create a case', function () {
-        cy.aatLogin()
-        createCase('Bristol - Singles')
-        cy.rejectCase()
-    });
-})
-
-describe('Login into AAT, create a case and modify details', () => {
-    it('should create a case', function () {
-        cy.aatLogin()
-        createCase('Bristol - Singles')
-        caseDetails()
-    });
-})
 
 describe('Login, create, accept, claimant rep', () => {
     it('should create a case in Leeds', function () {
         cy.aatLogin()
         createCase('Bristol - Singles')
         cy.acceptCase()
-        cy.addClaimantRepresentative()
-        cy.addRespondentRepresentative()
-        cy.addJurisdictions();
+        caseDetails()
     });
 })
