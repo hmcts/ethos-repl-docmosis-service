@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
@@ -17,7 +18,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
-import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +33,7 @@ public class TimeToFirstHearingReport {
     static final String ZERO = "0";
     static final String ZERO_DECIMAL = "0.00";
 
-    public ListingData generateReportData(ListingDetails listingDetails, List<SubmitEvent> submitEvents) throws IOException {
+    public ListingData generateReportData(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
 
         initReport(listingDetails);
 
@@ -40,7 +41,7 @@ public class TimeToFirstHearingReport {
            executeReport(listingDetails, submitEvents);
         }
 
-       // listingDetails.getCaseData().clearReportFields();
+        listingDetails.getCaseData().clearReportFields();
         return listingDetails.getCaseData();
     }
 
@@ -95,57 +96,64 @@ public class TimeToFirstHearingReport {
         log.info(String.format("Time to first hearing report case type id %s search results: %d",
                 listingDetails.getCaseTypeId(), submitEvents.size()));
         populateLocalReportSummary(listingDetails.getCaseData(), submitEvents);
-        populateLocalReportSummaryHdr(listingDetails.getCaseData(), submitEvents);
-       // populateLocalReportSummaryDetail(listingDetails, submitEvents);
+        populateLocalReportSummaryHdr(listingDetails.getCaseData());
+        populateLocalReportSummaryDetail(listingDetails, submitEvents);
 
     }
-//
-//    private void populateLocalReportSummaryDetail(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
-//        var localReportsDetailList = listingDetails.getCaseData().getLocalReportsDetail();
-//
-//        for (var submitEvent : submitEvents) {
-//            if (isValidCaseForCasesCompletedReport(submitEvent)) {
-//                var localReportsDetailItem =
-//                        getLocalReportsDetail(listingDetails, submitEvent.getCaseData());
-//                if (localReportsDetailItem != null) {
-//                    localReportsDetailList.add(localReportsDetailItem);
-//                }
-//            }
-//        }
-//    }
-//
-//
-//    private AdhocReportTypeItem getLocalReportsDetail(ListingDetails listingDetails, CaseData caseData) {
-//        AdhocReportType adhocReportType = new AdhocReportType();
-//        adhocReportType.setReportOffice(listingDetails.getCaseTypeId());
-//        adhocReportType.setCaseReference(caseData.getEthosCaseReference());
-//        adhocReportType.setConciliationTrack(getConciliationTrack(caseData));
-//        adhocReportType.setReceiptDate(caseData.getReceiptDate());
-//
-//        adhocReportType.setHearingDate(latestSession.getListedDate());
-//        adhocReportType.setDays
-//
-//                office, caseno, track, receiptDate, HearingDate, Days
-//    }
-    private void populateLocalReportSummaryHdr(ListingData listingData, List<SubmitEvent> submitEvents) {
+
+    private void populateLocalReportSummaryDetail(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
+        var localReportsDetailList = listingDetails.getCaseData().getLocalReportsDetail();
+        for (var submitEvent : submitEvents) {
+                var localReportsDetailItem =
+                        getLocalReportsDetail(listingDetails, submitEvent.getCaseData());
+                if (localReportsDetailItem != null) {
+                    localReportsDetailList.add(localReportsDetailItem);
+                }
+        }
+        listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
+    }
+
+    private AdhocReportTypeItem getLocalReportsDetail(ListingDetails listingDetails, CaseData caseData) {
+
+        var firstHearingDate = getFirstHearingDate(caseData);
+        if (firstHearingDate == null || isFirstHearingWithin26Weeks(caseData, firstHearingDate)) {
+            return null;
+        }
+        var adhocReportType = new AdhocReportType();
+        adhocReportType.setHearingDate(firstHearingDate.toString());
+        adhocReportType.setReportOffice(listingDetails.getCaseTypeId());
+        adhocReportType.setCaseReference(caseData.getEthosCaseReference());
+        adhocReportType.setConciliationTrack(getConciliationTrack(caseData));
+        if (!Strings.isNullOrEmpty(caseData.getReceiptDate())) {
+            var duration = Duration.between(firstHearingDate, LocalDate.parse(caseData.getReceiptDate()));
+            adhocReportType.setDelayedDaysForFirstHearing(String.valueOf(duration.toDays()));
+            adhocReportType.setReceiptDate(caseData.getReceiptDate());
+        }
+        var adhocReportTypeItem = new AdhocReportTypeItem();
+        adhocReportTypeItem.setId(UUID.randomUUID().toString());
+        adhocReportTypeItem.setValue(adhocReportType);
+        return adhocReportTypeItem;
+
+    }
+    private void populateLocalReportSummaryHdr(ListingData listingData) {
        var adhocReportType = listingData.getLocalReportsSummary().get(0).getValue();
-       int totalCases = Integer.valueOf(adhocReportType.getConOpenTotal())
-               + Integer.valueOf(adhocReportType.getConStdTotal())
-               + Integer.valueOf(adhocReportType.getConFastTotal())
-               + Integer.valueOf(adhocReportType.getConNoneTotal());
+       int totalCases = Integer.parseInt(adhocReportType.getConOpenTotal())
+               + Integer.parseInt(adhocReportType.getConStdTotal())
+               + Integer.parseInt(adhocReportType.getConFastTotal())
+               + Integer.parseInt(adhocReportType.getConNoneTotal());
 
-        int totalCasesWithin26Weeks = Integer.valueOf(adhocReportType.getConOpen26wkTotal())
-                + Integer.valueOf(adhocReportType.getConStd26wkTotal())
-                + Integer.valueOf(adhocReportType.getConFast26wkTotal())
-                + Integer.valueOf(adhocReportType.getConNone26wkTotal());
+        int totalCasesWithin26Weeks = Integer.parseInt(adhocReportType.getConOpen26wkTotal())
+                + Integer.parseInt(adhocReportType.getConStd26wkTotal())
+                + Integer.parseInt(adhocReportType.getConFast26wkTotal())
+                + Integer.parseInt(adhocReportType.getConNone26wkTotal());
 
-        int totalCasesNotWithin26Weeks = Integer.valueOf(adhocReportType.getXConOpen26wkTotal())
-                + Integer.valueOf(adhocReportType.getXConStd26wkTotal())
-                + Integer.valueOf(adhocReportType.getXConFast26wkTotal())
-                + Integer.valueOf(adhocReportType.getXConNone26wkTotal());
+        int totalCasesNotWithin26Weeks = Integer.parseInt(adhocReportType.getXConOpen26wkTotal())
+                + Integer.parseInt(adhocReportType.getXConStd26wkTotal())
+                + Integer.parseInt(adhocReportType.getXConFast26wkTotal())
+                + Integer.parseInt(adhocReportType.getXConNone26wkTotal());
 
-        float totalCasesWithin26WeeksPercent = (totalCasesWithin26Weeks * totalCases) / 100;
-        float totalCasesNotWithin26WeeksPercent = (totalCasesNotWithin26Weeks * totalCases) / 100;
+        float totalCasesWithin26WeeksPercent = ((float)totalCasesWithin26Weeks * totalCases) / 100;
+        float totalCasesNotWithin26WeeksPercent = ((float)totalCasesNotWithin26Weeks * totalCases) / 100;
 
         adhocReportType.setTotalCases(String.valueOf(totalCases));
         adhocReportType.setTotal26wk(String.valueOf(totalCasesWithin26Weeks));
@@ -166,18 +174,10 @@ public class TimeToFirstHearingReport {
         var conStd26wkTotal = 0;
         var conFast26wkTotal = 0;
         var conOpen26wkTotal = 0;
-        var conNone26wkTotalPerCent = 0.00;
-        var conStd26wkTotalPerCent = 0.00;
-        var conFast26wkTotalPerCent = 0.00;
-        var conOpen26wkTotalPerCent = 0.00;
         var xConNone26wkTotal = 0;
         var xConStd26wkTotal = 0;
         var xConFast26wkTotal = 0;
         var xConOpen26wkTotal = 0;
-        var xConNone26wkTotalPerCent = 0.00;
-        var xConStd26wkTotalPerCent = 0.00;
-        var xConFast26wkTotalPerCent = 0.00;
-        var xConOpen26wkTotalPerCent = 0.00;
         var adhocReportType = listingData.getLocalReportsDetailHdr();
         LocalDate firstHearingDate;
         for (var submitEvent : submitEvents) {
@@ -214,7 +214,6 @@ public class TimeToFirstHearingReport {
                 } else {
                        xConFast26wkTotal = xConFast26wkTotal + 1;
                 }
-
             }
             if (getConciliationTrack(submitEvent.getCaseData()).equals(CONCILIATION_TRACK_OPEN_TRACK)) {
                conOpenTotal = conOpenTotal + 1;
@@ -227,15 +226,7 @@ public class TimeToFirstHearingReport {
 
         }
 
-        conNone26wkTotalPerCent = (conNone26wkTotal / conNoneTotal) * 100;
-        conStd26wkTotalPerCent = (conStd26wkTotal / conStdTotal) * 100;
-        conFast26wkTotalPerCent = (conFast26wkTotal / conFastTotal) * 100;
-        conOpen26wkTotalPerCent = (conOpen26wkTotal / conOpenTotal) * 100;
 
-        xConNone26wkTotalPerCent = (xConNone26wkTotal / conNoneTotal) * 100;
-        xConStd26wkTotalPerCent = (xConStd26wkTotal / conStdTotal) * 100;
-        xConFast26wkTotalPerCent = (xConFast26wkTotal / conFastTotal) * 100;
-        xConOpen26wkTotalPerCent = (xConOpen26wkTotal / conOpenTotal) * 100;
 
         adhocReportType.setConNoneTotal(String.valueOf(conNoneTotal));
         adhocReportType.setConStdTotal(String.valueOf(conStdTotal));
@@ -249,14 +240,7 @@ public class TimeToFirstHearingReport {
         adhocReportType.setXConStd26wkTotal(String.valueOf(xConStd26wkTotal));
         adhocReportType.setXConFast26wkTotal(String.valueOf(xConFast26wkTotal));
         adhocReportType.setXConOpen26wkTotal(String.valueOf(xConOpen26wkTotal));
-        adhocReportType.setConNone26wkTotalPerCent(String.valueOf(conNone26wkTotalPerCent));
-        adhocReportType.setConStd26wkTotalPerCent(String.valueOf(conStd26wkTotalPerCent));
-        adhocReportType.setConFast26wkTotalPerCent(String.valueOf(conFast26wkTotalPerCent));
-        adhocReportType.setConOpen26wkTotalPerCent(String.valueOf(conOpen26wkTotalPerCent));
-        adhocReportType.setXConNone26wkTotalPerCent(String.valueOf(xConNone26wkTotalPerCent));
-        adhocReportType.setXConStd26wkTotalPerCent(String.valueOf(xConStd26wkTotalPerCent));
-        adhocReportType.setXConFast26wkTotalPerCent(String.valueOf(xConFast26wkTotalPerCent));
-        adhocReportType.setXConOpen26wkTotalPerCent(String.valueOf(xConOpen26wkTotalPerCent));
+        setPercent(adhocReportType);
 
         var adhocReportTypeItem = new AdhocReportTypeItem();
         adhocReportTypeItem.setId(UUID.randomUUID().toString());
@@ -265,6 +249,26 @@ public class TimeToFirstHearingReport {
 
     }
 
+    private void setPercent(AdhocReportType adhocReportType) {
+        var conNone26wkTotalPerCent = (Integer.parseInt(adhocReportType.getConNoneTotal()) != 0) ? (Double.parseDouble(adhocReportType.getConNone26wkTotal()) / Integer.parseInt(adhocReportType.getConNoneTotal())) * 100 : 0;
+        var conStd26wkTotalPerCent = (Integer.parseInt(adhocReportType.getConStdTotal()) != 0) ? (Double.parseDouble(adhocReportType.getConStd26wkTotal()) / Integer.parseInt(adhocReportType.getConStdTotal())) * 100 : 0;
+        var conFast26wkTotalPerCent = (Integer.parseInt(adhocReportType.getConFastTotal()) != 0) ? (Double.parseDouble(adhocReportType.getConFast26wkTotal()) / Integer.parseInt(adhocReportType.getConFastTotal())) * 100 : 0;
+        var conOpen26wkTotalPerCent = (Integer.parseInt(adhocReportType.getConOpenTotal()) != 0) ? (Double.parseDouble(adhocReportType.getConOpen26wkTotal()) / Integer.parseInt(adhocReportType.getConOpenTotal())) * 100 : 0;
+
+        var xConNone26wkTotalPerCent = (Integer.parseInt(adhocReportType.getConNoneTotal()) != 0) ? (Double.parseDouble(adhocReportType.getXConNone26wkTotal()) / Integer.parseInt(adhocReportType.getConNoneTotal())) * 100 : 0;
+        var xConStd26wkTotalPerCent = (Integer.parseInt(adhocReportType.getConStdTotal()) != 0) ? (Double.parseDouble(adhocReportType.getXConStd26wkTotal()) / Integer.parseInt(adhocReportType.getConStdTotal())) * 100 : 0;
+        var  xConFast26wkTotalPerCent = (Integer.parseInt(adhocReportType.getConFastTotal()) != 0) ? (Double.parseDouble(adhocReportType.getXConFast26wkTotal()) / Integer.parseInt(adhocReportType.getConFastTotal())) * 100 : 0;
+        var  xConOpen26wkTotalPerCent = (Integer.parseInt(adhocReportType.getConOpenTotal()) != 0) ? ((float)Double.parseDouble(adhocReportType.getXConOpen26wkTotal()) / Integer.parseInt(adhocReportType.getConOpenTotal())) * 100 : 0;
+
+        adhocReportType.setConNone26wkTotalPerCent(String.valueOf(conNone26wkTotalPerCent));
+        adhocReportType.setConStd26wkTotalPerCent(String.valueOf(conStd26wkTotalPerCent));
+        adhocReportType.setConFast26wkTotalPerCent(String.valueOf(conFast26wkTotalPerCent));
+        adhocReportType.setConOpen26wkTotalPerCent(String.valueOf(conOpen26wkTotalPerCent));
+        adhocReportType.setXConNone26wkTotalPerCent(String.valueOf(xConNone26wkTotalPerCent));
+        adhocReportType.setXConStd26wkTotalPerCent(String.valueOf(xConStd26wkTotalPerCent));
+        adhocReportType.setXConFast26wkTotalPerCent(String.valueOf(xConFast26wkTotalPerCent));
+        adhocReportType.setXConOpen26wkTotalPerCent(String.valueOf(xConOpen26wkTotalPerCent));
+    }
     private String getConciliationTrack(CaseData caseData) {
         return StringUtils.isNotBlank(caseData.getConciliationTrack())
                 ? caseData.getConciliationTrack() : CONCILIATION_TRACK_NO_CONCILIATION;
@@ -275,14 +279,14 @@ public class TimeToFirstHearingReport {
             return null;
         }
         List<LocalDate> mainDatesList = new ArrayList<>();
-        List<LocalDate> datesList = new ArrayList<>();
+        List<LocalDate> datesList;
         for (var hearingTypeItem : caseData.getHearingCollection()) {
             datesList = getHearingDateList(hearingTypeItem);
             if (CollectionUtils.isNotEmpty(datesList)) {
                 mainDatesList.addAll(datesList);
             }
         }
-        if (mainDatesList.size() > 0) {
+        if (CollectionUtils.isNotEmpty(mainDatesList)) {
             Collections.sort(mainDatesList);
             return mainDatesList.get(0);
         }
@@ -293,14 +297,14 @@ public class TimeToFirstHearingReport {
         var hearingType = hearingTypeItem.getValue();
         List<LocalDate> datesList = new ArrayList<>();
         if (hearingType == null || CollectionUtils.isEmpty(hearingType.getHearingDateCollection())) {
-            return null;
+            return datesList;
         }
         if (Constants.HEARING_TYPE_JUDICIAL_HEARING.equals(hearingType.getHearingType())
                 || HEARING_TYPE_PERLIMINARY_HEARING.equals(hearingType.getHearingType())) {
             for (var dateListedItemType : hearingType.getHearingDateCollection()) {
                 if (Constants.HEARING_STATUS_HEARD.equals(dateListedItemType.getValue().getHearingStatus())) {
-                    LocalDate a = LocalDate.parse(dateListedItemType.getValue().getListedDate());
-                    datesList.add(a);
+                    var date = LocalDate.parse(dateListedItemType.getValue().getListedDate());
+                    datesList.add(date);
                 }
             }
         }
@@ -309,10 +313,6 @@ public class TimeToFirstHearingReport {
 
     private boolean isFirstHearingWithin26Weeks(CaseData caseData, LocalDate firstHearingDate) {
         var receiptDate = LocalDate.parse(caseData.getReceiptDate());
-        if (receiptDate.plusWeeks(26).equals(firstHearingDate) || receiptDate.plusWeeks(26).isAfter(firstHearingDate)) {
-            return true;
-        } else {
-            return false;
-        }
+        return receiptDate.plusWeeks(26).equals(firstHearingDate) || receiptDate.plusWeeks(26).isAfter(firstHearingDate);
     }
 }
