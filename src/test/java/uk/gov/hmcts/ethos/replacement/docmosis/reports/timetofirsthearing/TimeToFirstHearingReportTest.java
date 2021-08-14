@@ -95,11 +95,11 @@ public class TimeToFirstHearingReportTest {
         ListingData reportListingData = timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
 
         AdhocReportType adhocReportType = reportListingData.getLocalReportsDetailHdr();
-        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getTotal())?0:Integer.parseInt(adhocReportType.getTotal()));
+        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getTotalCases())?0:Integer.parseInt(adhocReportType.getTotalCases()));
         assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getTotal26wk())?0:Integer.parseInt(adhocReportType.getTotal26wk()));
         assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotalx26wk())?0:Integer.parseInt(adhocReportType.getTotalx26wk()));
-        assertEquals(100, Strings.isNullOrEmpty(adhocReportType.getTotal26wkPerCent())?0:Integer.parseInt(adhocReportType.getTotal26wkPerCent()));
-        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotalx26wkPerCent())?0:Integer.parseInt(adhocReportType.getTotalx26wkPerCent()));
+        assertEquals(100, Strings.isNullOrEmpty(adhocReportType.getTotal26wkPerCent())?0:Float.parseFloat(adhocReportType.getTotal26wkPerCent()), .00);
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotalx26wkPerCent())?0:Float.parseFloat(adhocReportType.getTotalx26wkPerCent()), .00);
     }
 
     @Test
@@ -111,47 +111,24 @@ public class TimeToFirstHearingReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        DateListedTypeItem dateListedTypeItem = createHearingDateListed("2021-01-01T00:00:00",
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed("2021-01-01",
                 HEARING_STATUS_HEARD);
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING,
                 dateListedTypeItem));
-        submitEvents.add(createSubmitEvent(hearings,CONCILIATION_TRACK_FAST_TRACK, "2020-04-01T00:00:00"));
+        submitEvents.add(createSubmitEvent(hearings,CONCILIATION_TRACK_FAST_TRACK, "2020-04-01"));
 
         TimeToFirstHearingReport timeToFirstHearingReport = new TimeToFirstHearingReport();
         ListingData reportListingData = timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
 
-        AdhocReportType adhocReportType = listingData.getLocalReportsDetailHdr();
-        assertEquals(1, Integer.parseInt(adhocReportType.getTotal()));
+        AdhocReportType adhocReportType = reportListingData.getLocalReportsDetailHdr();
+        assertEquals(1, Integer.parseInt(adhocReportType.getTotalCases()));
         assertEquals(0, Integer.parseInt(adhocReportType.getTotal26wk()));
         assertEquals(1, Integer.parseInt(adhocReportType.getTotalx26wk()));
-        assertEquals(0, Integer.parseInt(adhocReportType.getTotal26wkPerCent()));
-        assertEquals(100, Integer.parseInt(adhocReportType.getTotalx26wkPerCent()));
+        assertEquals(0, Float.parseFloat(adhocReportType.getTotal26wkPerCent()), .00);
+        assertEquals(100, Float.parseFloat(adhocReportType.getTotalx26wkPerCent()), .00);
     }
 
-    @Test
-    public void testIgnoreCaseIfHearingListingDateNotInSearchRange() {
 
-        String searchDate = "1970-01-01";
-        String listingDate = "1970-01-02T00:00:00";
-
-        ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
-        ListingData listingData = new ListingData();
-        listingData.setListingDate(searchDate);
-        listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
-        listingDetails.setCaseData(listingData);
-
-        List<SubmitEvent> submitEvents = new ArrayList<>();
-        DateListedTypeItem dateListedTypeItem = createHearingDateListed(listingDate, HEARING_STATUS_HEARD);
-        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_PERLIMINARY_HEARING,
-                dateListedTypeItem));
-        submitEvents.add(createSubmitEvent(hearings, CONCILIATION_TRACK_OPEN_TRACK, "1969-01-02T00:00:00"));
-
-        TimeToFirstHearingReport timeToFirstHearingReport = new TimeToFirstHearingReport();
-        ListingData reportListingData = timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
-
-        verifyReportHeaderIsZero(reportListingData);
-    }
 
     private SubmitEvent createSubmitEvent(List<HearingTypeItem> hearingCollection,
                                           String conciliationTrack, String receiptDate) {
