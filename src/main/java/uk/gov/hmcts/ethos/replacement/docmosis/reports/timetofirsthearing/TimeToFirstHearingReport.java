@@ -125,7 +125,7 @@ public class TimeToFirstHearingReport {
         adhocReportType.setCaseReference(caseData.getEthosCaseReference());
         adhocReportType.setConciliationTrack(getConciliationTrack(caseData));
         if (!Strings.isNullOrEmpty(caseData.getReceiptDate())) {
-            var duration = Duration.between(firstHearingDate, LocalDate.parse(caseData.getReceiptDate()));
+            var duration = Duration.between(firstHearingDate.atStartOfDay(), LocalDate.parse(caseData.getReceiptDate()).atStartOfDay());
             adhocReportType.setDelayedDaysForFirstHearing(String.valueOf(duration.toDays()));
             adhocReportType.setReceiptDate(caseData.getReceiptDate());
         }
@@ -152,8 +152,8 @@ public class TimeToFirstHearingReport {
                 + Integer.parseInt(adhocReportType.getXConFast26wkTotal())
                 + Integer.parseInt(adhocReportType.getXConNone26wkTotal());
 
-        float totalCasesWithin26WeeksPercent = ((float)totalCasesWithin26Weeks * totalCases) / 100;
-        float totalCasesNotWithin26WeeksPercent = ((float)totalCasesNotWithin26Weeks * totalCases) / 100;
+        float totalCasesWithin26WeeksPercent = (totalCases != 0) ? ((float)totalCasesWithin26Weeks / totalCases) * 100 : 0;
+        float totalCasesNotWithin26WeeksPercent = (totalCases != 0) ? ((float)totalCasesNotWithin26Weeks / totalCases) * 100 : 0;
 
         adhocReportType.setTotalCases(String.valueOf(totalCases));
         adhocReportType.setTotal26wk(String.valueOf(totalCasesWithin26Weeks));
