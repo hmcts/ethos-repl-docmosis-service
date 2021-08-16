@@ -16,12 +16,13 @@
   },
   "dependencies": {
     "@hapi/hoek": "^9.2.0",
-    "cypress": "^7.7.0",
     "randomstring": "^1.2.1",
     "require-directory": "^2.1.1"
   },
   "devDependencies": {
     "codeceptjs": "^3.0.7",
+    "cypress": "^8.2.0",
+    "cypress-file-upload": "^5.0.8",
     "eslint": "7.30.0",
     "eslint-plugin-mocha": "9.0.0",
     "istanbul": "0.4.5",

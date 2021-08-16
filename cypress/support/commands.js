@@ -23,6 +23,8 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import 'cypress-file-upload';
+
 const date = new Date();
 
 Cypress.Commands.add('aatLogin', () => {
@@ -53,8 +55,7 @@ Cypress.Commands.add('rejectCase' , () => {
 Cypress.Commands.add('acceptCase', () => {
     cy.get('#next-step').select('Accept/Reject Case');
     cy.get('.button:nth-child(2)').click();
-    cy.wait(3000)
-    cy.get('#preAcceptCase_caseAccepted_Yes').click();
+    cy.get('#preAcceptCase_caseAccepted_radio > :nth-child(1) > .form-label', {timeout: 10000}).should('be.visible').click();
     cy.get('#dateAccepted-day').type(date.getDate().toString());
     cy.get('#dateAccepted-month').type((date.getMonth()+1).toString());
     cy.get('#dateAccepted-year').type(date.getFullYear().toString());
@@ -284,6 +285,37 @@ Cypress.Commands.add('reinstateCase', () => {
     cy.wait(1000)
     cy.get('#positionType').select('Case input in error');
     cy.get('.button:nth-child(2)').click();
+    cy.get('.form').submit();
+    cy.wait(1000)
+    cy.get('.button:nth-child(2)').click();
+    cy.get('.check-your-answers').submit();
+})
+
+Cypress.Commands.add('caseTransfer', () => {
+    cy.get('#next-step').select('Case Transfer');
+    cy.get('.button:nth-child(2)').click();
+    cy.wait(1000)
+    cy.get('#officeCT').select('Manchester');
+    cy.get('#positionTypeCT').select('Case transferred - same country');
+    cy.get('#reasonForCT').type('Test Transfer');
+    cy.get('.button:nth-child(2)').click();
+    cy.get('.form').submit();
+    cy.wait(1000)
+    cy.get('.button:nth-child(2)').click();
+    cy.get('.check-your-answers').submit();
+    cy.get('#caseStateDesc > dt > ccd-markdown > div > .markdown > h4').contains('Case Status: Transferred');
+})
+
+Cypress.Commands.add('uploadDocument', () => {
+    cy.get('#next-step').select('Upload Document');
+    cy.get('.button:nth-child(2)').click();
+    cy.wait(1000)
+    cy.get('.panel > .button').click();
+    cy.get('#documentCollection_0_typeOfDocument').select('ET1');
+    cy.get('input[type="file"]').attachFile('files/ECMTestDoc.docx')
+    cy.get('#documentCollection_0_shortDescription').type('Test');
+    cy.wait(1000)
+    cy.get('.form-group > .button:nth-child(2)').click();
     cy.get('.form').submit();
     cy.wait(1000)
     cy.get('.button:nth-child(2)').click();
