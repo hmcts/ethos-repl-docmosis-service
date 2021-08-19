@@ -13,6 +13,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.multiples.bulkaddsingles.BulkAddSinglesService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.multiples.bulkaddsingles.BulkAddSinglesValidator;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -21,12 +22,15 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 @RestController
 @Slf4j
 public class BulkAddSinglesController {
+    private final BulkAddSinglesValidator bulkAddSinglesValidator;
     private final BulkAddSinglesService bulkAddSinglesService;
     private final VerifyTokenService verifyTokenService;
     private static final String INVALID_TOKEN = "Invalid Token {}";
 
-    public BulkAddSinglesController(BulkAddSinglesService bulkAddSinglesService,
+    public BulkAddSinglesController(BulkAddSinglesValidator bulkAddSinglesValidator,
+                                    BulkAddSinglesService bulkAddSinglesService,
                                     VerifyTokenService verifyTokenService) {
+        this.bulkAddSinglesValidator = bulkAddSinglesValidator;
         this.bulkAddSinglesService = bulkAddSinglesService;
         this.verifyTokenService = verifyTokenService;
     }
@@ -48,8 +52,7 @@ public class BulkAddSinglesController {
         }
 
         var multipleDetails = multipleRequest.getCaseDetails();
-        var errors = bulkAddSinglesService.validate(multipleDetails, userToken);
-        log.info("There are " + errors.size() + " import errors");
+        var errors = bulkAddSinglesValidator.validate(multipleDetails, userToken);
 
         return getMultipleCallbackRespEntity(errors, multipleDetails);
     }

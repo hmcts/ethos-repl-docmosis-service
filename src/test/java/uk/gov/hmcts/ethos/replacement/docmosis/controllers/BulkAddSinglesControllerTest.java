@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.multiples.bulkaddsingles.BulkAddSinglesService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.multiples.bulkaddsingles.BulkAddSinglesValidator;
 
 import java.util.List;
 
@@ -19,17 +20,20 @@ import static org.mockito.Mockito.when;
 public class BulkAddSinglesControllerTest {
     private BulkAddSinglesController bulkAddSinglesController;
     private VerifyTokenService verifyTokenService;
+    private BulkAddSinglesValidator bulkAddSinglesValidator;
     private BulkAddSinglesService bulkAddSinglesService;
     private MultipleRequest multipleRequest;
     private String authToken;
 
     @Before
     public void setup() {
+        bulkAddSinglesValidator = mock(BulkAddSinglesValidator.class);
         bulkAddSinglesService = mock(BulkAddSinglesService.class);
         authToken = "some-token";
         verifyTokenService = mock(VerifyTokenService.class);
         multipleRequest = mock(MultipleRequest.class);
-        bulkAddSinglesController = new BulkAddSinglesController(bulkAddSinglesService, verifyTokenService);
+        bulkAddSinglesController = new BulkAddSinglesController(bulkAddSinglesValidator, bulkAddSinglesService,
+                verifyTokenService);
     }
 
     @Test
@@ -53,7 +57,7 @@ public class BulkAddSinglesControllerTest {
         var multipleDetails = mock(MultipleDetails.class);
         when(multipleRequest.getCaseDetails()).thenReturn(multipleDetails);
         var errors = List.of("Error 1", "Error 2", "Error 3");
-        when(bulkAddSinglesService.validate(multipleDetails, authToken)).thenReturn(errors);
+        when(bulkAddSinglesValidator.validate(multipleDetails, authToken)).thenReturn(errors);
 
         var response = bulkAddSinglesController.bulkAddSingleCasesImportFileMidEventValidation(multipleRequest, authToken);
         verifyResponse(response);
