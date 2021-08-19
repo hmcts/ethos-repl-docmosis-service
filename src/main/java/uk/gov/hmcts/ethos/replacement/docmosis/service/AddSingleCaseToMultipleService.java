@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -24,6 +25,9 @@ public class AddSingleCaseToMultipleService {
 
     private final MultipleHelperService multipleHelperService;
     private final MultipleCasesReadingService multipleCasesReadingService;
+
+    @Value("${ccd_gateway_base_url}")
+    private String ccdGatewayBaseUrl;
 
     public void addSingleCaseToMultipleLogic(String userToken, CaseData caseData, String caseTypeId,
                                              String jurisdiction, String caseId, List<String> errors) {
@@ -90,7 +94,8 @@ public class AddSingleCaseToMultipleService {
         caseData.setCaseType(MULTIPLE_CASE_TYPE);
         log.info("setLeadClaimant is set to " + leadClaimant);
         caseData.setLeadClaimant(leadClaimant);
-        caseData.setParentMultipleCaseId(String.valueOf(multipleCaseId));
+        var url = generateMarkUp(ccdGatewayBaseUrl, String.valueOf(multipleCaseId), newMultipleReference);
+        caseData.setParentMultipleCaseId(url);
     }
 
     private void addNewLeadToMultiple(String userToken, String multipleCaseTypeId, String jurisdiction,
@@ -120,4 +125,8 @@ public class AddSingleCaseToMultipleService {
         }
     }
 
+    public static String generateMarkUp(String ccdGatewayBaseUrl, String caseId, String ethosCaseRef) {
+        String url = ccdGatewayBaseUrl + "/cases/case-details/" + caseId;
+        return "<a target=\"_blank\" href=\"" + url + "\">" + ethosCaseRef + "</a>";
+    }
 }
