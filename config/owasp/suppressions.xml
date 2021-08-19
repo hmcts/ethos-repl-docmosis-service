@@ -11,7 +11,7 @@
         <notes>
             <![CDATA[file name: lang-tag-1.4.4.jar]]>
         </notes>
-        <packageUrl regex="true">^pkg:maven/com\.nimbusds/lang-tagl@.*$</packageUrl>
-        <vulnerabilityName>CVE-2021-28170</vulnerabilityName>
+        <packageUrl regex="true">^pkg:maven/com\.nimbusds/lang-tag@.*$</packageUrl>
+        <vulnerabilityName>CVE-2020-23171</vulnerabilityName>
     </suppress>
 </suppressions>
