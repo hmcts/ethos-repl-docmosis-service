@@ -123,7 +123,6 @@ public class ReportHelper {
             listingDetails.getCaseData().setLocalReportsDetail(localReportsDetailList);
 
             var localReportsSummaryHdr = new AdhocReportType();
-
             var singlesTotal = getSinglesTotal(localReportsDetailList);
             var multiplesTotal = getMultiplesTotal(localReportsDetailList);
             var total = singlesTotal + multiplesTotal;
@@ -236,6 +235,7 @@ public class ReportHelper {
         adhocReportType.setDateToPosition(caseData.getDateToPosition());
         adhocReportType.setFileLocation(getFileLocation(listingDetails, caseData));
         adhocReportType.setClerk(caseData.getClerkResponsible());
+        adhocReportType.setCaseType(caseData.getCaseType());
     }
 
     private static String getFileLocation(ListingDetails listingDetails, CaseData caseData) {
