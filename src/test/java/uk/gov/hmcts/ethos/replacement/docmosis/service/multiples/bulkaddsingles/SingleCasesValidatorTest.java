@@ -16,8 +16,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_BULK_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 
 public class SingleCasesValidatorTest {
@@ -42,7 +44,7 @@ public class SingleCasesValidatorTest {
         var ethosReference = "case1";
         var multipleReference = "multiple1";
         caseIds.add(ethosReference);
-        submitEvents.add(createSubmitEvent(ethosReference, SUBMITTED_STATE, null));
+        submitEvents.add(createSubmitEvent(ethosReference, SINGLE_CASE_TYPE, SUBMITTED_STATE, null));
 
         var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID,
                 multipleReference, authToken);
@@ -58,11 +60,23 @@ public class SingleCasesValidatorTest {
         var multipleReference = "multiple1";
         var otherMultipleReference = "other-multiple";
         caseIds.add(ethosReference);
-        submitEvents.add(createSubmitEvent(ethosReference, ACCEPTED_STATE, otherMultipleReference));
+        submitEvents.add(createSubmitEvent(ethosReference, MULTIPLE_CASE_TYPE, ACCEPTED_STATE, otherMultipleReference));
 
         var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID,
                 multipleReference, authToken);
         verify(validatedCases, ethosReference, false, "Case already assigned to " + otherMultipleReference);
+    }
+
+    @Test
+    public void shouldSetCaseAlreadyInMultipleAsValid() throws IOException {
+        var ethosReference = "case1";
+        var multipleReference = "multiple1";
+        caseIds.add(ethosReference);
+        submitEvents.add(createSubmitEvent(ethosReference, MULTIPLE_CASE_TYPE, ACCEPTED_STATE, multipleReference));
+
+        var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID,
+                multipleReference, authToken);
+        verify(validatedCases, ethosReference, true, null);
     }
 
     @Test
@@ -77,23 +91,29 @@ public class SingleCasesValidatorTest {
     }
 
     @Test
-    public void shouldSetCaseAsValid() throws IOException {
+    public void shouldSetSingleAcceptedCaseAsValid() throws IOException {
         var ethosReference = "case1";
         var multipleReference = "multiple1";
         caseIds.add(ethosReference);
-        submitEvents.add(createSubmitEvent(ethosReference, ACCEPTED_STATE, null));
+        submitEvents.add(createSubmitEvent(ethosReference, SINGLE_CASE_TYPE, ACCEPTED_STATE, null));
 
         var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID,
                 multipleReference, authToken);
         verify(validatedCases, ethosReference, true, null);
     }
 
+    /**
+     * This unit test is to check the scenario where a single case still has a multiple reference assigned.
+     * (which is actually a bug)
+     * @throws IOException an exception
+     */
     @Test
-    public void shouldSetCaseAsValidSameMultiple() throws IOException {
+    public void shouldSetSingleAcceptedCaseWithMultipleReferenceAsValid() throws IOException {
         var ethosReference = "case1";
         var multipleReference = "multiple1";
+        var otherMultipleReference = "multiple2";
         caseIds.add(ethosReference);
-        submitEvents.add(createSubmitEvent(ethosReference, ACCEPTED_STATE, multipleReference));
+        submitEvents.add(createSubmitEvent(ethosReference, SINGLE_CASE_TYPE, ACCEPTED_STATE, otherMultipleReference));
 
         var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID,
                 multipleReference, authToken);
@@ -105,10 +125,10 @@ public class SingleCasesValidatorTest {
         var multipleReference = "multiple1";
         var otherMultipleReference = "multiple2";
         caseIds.addAll(List.of("case1", "case2", "case3", "case4", "case5"));
-        submitEvents.add(createSubmitEvent("case1", SUBMITTED_STATE, null));
-        submitEvents.add(createSubmitEvent("case2", ACCEPTED_STATE, null));
-        submitEvents.add(createSubmitEvent("case3", ACCEPTED_STATE, multipleReference));
-        submitEvents.add(createSubmitEvent("case4", ACCEPTED_STATE, otherMultipleReference));
+        submitEvents.add(createSubmitEvent("case1", SINGLE_CASE_TYPE, SUBMITTED_STATE, null));
+        submitEvents.add(createSubmitEvent("case2", SINGLE_CASE_TYPE, ACCEPTED_STATE, null));
+        submitEvents.add(createSubmitEvent("case3", SINGLE_CASE_TYPE, ACCEPTED_STATE, multipleReference));
+        submitEvents.add(createSubmitEvent("case4", MULTIPLE_CASE_TYPE, ACCEPTED_STATE, otherMultipleReference));
 
         var validatedCases = singleCasesValidator.getValidatedCases(caseIds, NEWCASTLE_BULK_CASE_TYPE_ID,
                 multipleReference, authToken);
@@ -120,11 +140,13 @@ public class SingleCasesValidatorTest {
         verify(validatedCases.get(4), "case5", false, "Case not found");
     }
 
-    private SubmitEvent createSubmitEvent(String ethosReference, String state, String multipleReference) {
+    private SubmitEvent createSubmitEvent(String ethosReference, String caseType, String state,
+                                          String multipleReference) {
         var submitEvent = new SubmitEvent();
         submitEvent.setState(state);
         var caseData = new CaseData();
         caseData.setEthosCaseReference(ethosReference);
+        caseData.setCaseType(caseType);
         caseData.setMultipleReference(multipleReference);
         submitEvent.setCaseData(caseData);
 

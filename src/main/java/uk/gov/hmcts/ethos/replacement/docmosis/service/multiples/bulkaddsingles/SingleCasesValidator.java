@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 
 @Service
 @Slf4j
@@ -40,6 +41,7 @@ class SingleCasesValidator {
                     caseReferences,
                     MANUALLY_CREATED_POSITION);
             log.info("Search returned {} results", submitEvents.size());
+
             for (var ethosCaseReference : caseReferences) {
                 log.info(ethosCaseReference);
                 var searchResult = submitEvents.stream()
@@ -62,6 +64,10 @@ class SingleCasesValidator {
                         "Case is in state " + submitEvent.getState());
             }
 
+            if (isSingleCaseType(submitEvent)) {
+                return ValidatedSingleCase.createValidCase(ethosCaseReference);
+            }
+
             var existingMultipleReference = getExistingMultipleReference(submitEvent, multipleEthosReference);
             if (existingMultipleReference != null) {
                 return ValidatedSingleCase.createInvalidCase(ethosCaseReference,
@@ -76,6 +82,10 @@ class SingleCasesValidator {
 
     private boolean isAccepted(SubmitEvent submitEvent) {
         return ACCEPTED_STATE.equals(submitEvent.getState());
+    }
+
+    private boolean isSingleCaseType(SubmitEvent submitEvent) {
+        return SINGLE_CASE_TYPE.equals(submitEvent.getCaseData().getCaseType());
     }
 
     private String getExistingMultipleReference(SubmitEvent submitEvent, String multipleEthosReference) {
