@@ -21,7 +21,7 @@ public class ExcelFileSingleCasesImporterTest {
         var downloadUrl = "a-test-download-url";
         var multipleData = createMultipleData(downloadUrl);
         var authToken = "some-token";
-        var ethosCaseReferences = List.of("case1", "case2", "", "case3");
+        var ethosCaseReferences = List.of("header", "case1", "case2", "", "case3");
         var workbook = createWorkbook(ethosCaseReferences);
         var excelReadingService = mock(ExcelReadingService.class);
         when(excelReadingService.readWorkbook(authToken, downloadUrl)).thenReturn(workbook);

@@ -42,7 +42,12 @@ class ExcelFileSingleCasesImporter implements SingleCasesImporter {
         var sheet = workbook.getSheetAt(0);
 
         var ethosCaseReferences = new ArrayList<String>();
+
         for (var row : sheet) {
+            // Skip header row
+            if (row.getRowNum() == 0) {
+                continue;
+            }
             var cell = row.getCell(0);
             var ethosReference = cell.getStringCellValue();
             if (StringUtils.isNotBlank(ethosReference)) {
