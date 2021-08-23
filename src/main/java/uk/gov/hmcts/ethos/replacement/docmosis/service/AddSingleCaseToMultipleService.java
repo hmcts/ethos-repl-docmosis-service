@@ -94,8 +94,8 @@ public class AddSingleCaseToMultipleService {
         caseData.setCaseType(MULTIPLE_CASE_TYPE);
         log.info("setLeadClaimant is set to " + leadClaimant);
         caseData.setLeadClaimant(leadClaimant);
-        var url = generateMarkUp(ccdGatewayBaseUrl, String.valueOf(multipleCaseId), newMultipleReference);
-        caseData.setParentMultipleCaseId(url);
+//        var url = generateMarkUp(ccdGatewayBaseUrl, String.valueOf(multipleCaseId), newMultipleReference);
+        caseData.setParentMultipleCaseId(String.valueOf(multipleCaseId));
     }
 
     private void addNewLeadToMultiple(String userToken, String multipleCaseTypeId, String jurisdiction,
