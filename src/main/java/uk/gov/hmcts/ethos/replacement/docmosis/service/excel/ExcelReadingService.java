@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import java.io.IOException;
-import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -12,10 +10,25 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.CONSTRAINT_KEY;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_2;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_3;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_4;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_5;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HEADER_6;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.SELECT_ALL;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
 
@@ -31,6 +44,12 @@ public class ExcelReadingService {
     @Autowired
     public ExcelReadingService(ExcelDocManagementService excelDocManagementService) {
         this.excelDocManagementService = excelDocManagementService;
+    }
+
+    public XSSFWorkbook readWorkbook(String userToken, String documentBinaryUrl) throws IOException {
+        var excelInputStream =
+                excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl);
+        return new XSSFWorkbook(excelInputStream);
     }
 
     public SortedMap<String, Object> readExcel(String userToken, String documentBinaryUrl, List<String> errors,
@@ -63,10 +82,7 @@ public class ExcelReadingService {
     public XSSFSheet checkExcelErrors(String userToken, String documentBinaryUrl, List<String> errors)
             throws IOException {
 
-        var excelInputStream =
-                excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl);
-
-        var workbook = new XSSFWorkbook(excelInputStream);
+        var workbook = readWorkbook(userToken, documentBinaryUrl);
 
         XSSFSheet datatypeSheet = workbook.getSheet(SHEET_NAME);
 
@@ -122,7 +138,8 @@ public class ExcelReadingService {
 
     }
 
-    private void filterSubMultiple(Row currentRow,MultipleData multipleData,SortedMap<String, Object> multipleObjects ) {
+    private void filterSubMultiple(Row currentRow, MultipleData multipleData,
+                                   SortedMap<String, Object> multipleObjects) {
         if (isMultipleInFlagsAndBelongsSubMultiple(currentRow, multipleData)) {
             getSubMultipleObjects(multipleObjects,
                     getCellValue(currentRow.getCell(0)),
@@ -135,6 +152,7 @@ public class ExcelReadingService {
             }
         }
     }
+
     private void populateMultipleObjects(SortedMap<String, Object> multipleObjects, XSSFSheet datatypeSheet,
                                          MultipleData multipleData, FilterExcelType filter) {
 

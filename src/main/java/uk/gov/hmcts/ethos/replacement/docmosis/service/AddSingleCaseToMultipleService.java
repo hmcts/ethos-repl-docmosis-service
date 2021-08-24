@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -24,6 +25,9 @@ public class AddSingleCaseToMultipleService {
 
     private final MultipleHelperService multipleHelperService;
     private final MultipleCasesReadingService multipleCasesReadingService;
+
+    @Value("${ccd_gateway_base_url}")
+    private String ccdGatewayBaseUrl;
 
     public void addSingleCaseToMultipleLogic(String userToken, CaseData caseData, String caseTypeId,
                                              String jurisdiction, String caseId, List<String> errors) {
@@ -119,5 +123,4 @@ public class AddSingleCaseToMultipleService {
                     userToken, multipleCaseTypeId, multipleData, newEthosCaseReferenceToAdd, caseId);
         }
     }
-
 }
