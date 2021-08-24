@@ -174,11 +174,4 @@ public class TimeToFirstHearingReportTest {
         return hearingTypeItems;
     }
 
-
-
-
-
-    private void verifyReportDetails(ListingData listingData, int size) {
-        assertEquals(size, listingData.getLocalReportsDetail().size());
-    }
 }
