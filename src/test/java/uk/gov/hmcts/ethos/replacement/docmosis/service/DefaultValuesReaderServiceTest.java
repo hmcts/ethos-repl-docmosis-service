@@ -208,6 +208,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondencePostCode("B5 4UU")
                 .tribunalCorrespondenceTelephone("0121 600 7780")
                 .tribunalCorrespondenceFax("01264 347 999")
+                .tribunalCorrespondenceDX("DX 360601 - Birmingham 5")
                 .tribunalCorrespondenceEmail("MidlandsWestET@justice.gov.uk")
                 .build();
         postDefaultValuesNewcastle = DefaultValues.builder()

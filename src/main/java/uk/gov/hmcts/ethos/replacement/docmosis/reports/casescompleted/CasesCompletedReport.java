@@ -15,6 +15,7 @@ import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
@@ -236,7 +237,7 @@ public class CasesCompletedReport {
 
         localReportsDetailHdr.setConNoneCasesCompletedHearing(Integer.toString(completedAtHearingPerTrack));
         localReportsDetailHdr.setConNoneSessionDays(Integer.toString(sessionDaysTakenPerTrack));
-        localReportsDetailHdr.setConNoneCompletedPerSession(String.format(COMPLETED_PER_SESSION_FORMAT,
+        localReportsDetailHdr.setConNoneCompletedPerSession(String.format(Locale.ROOT, COMPLETED_PER_SESSION_FORMAT,
                 completedPerSessionDayPerTrack));
     }
 
@@ -250,7 +251,7 @@ public class CasesCompletedReport {
 
         localReportsDetailHdr.setConFastCasesCompletedHearing(Integer.toString(completedAtHearingPerTrack));
         localReportsDetailHdr.setConFastSessionDays(Integer.toString(sessionDaysTakenPerTrack));
-        localReportsDetailHdr.setConFastCompletedPerSession(String.format(COMPLETED_PER_SESSION_FORMAT,
+        localReportsDetailHdr.setConFastCompletedPerSession(String.format(Locale.ROOT, COMPLETED_PER_SESSION_FORMAT,
                 completedPerSessionDayPerTrack));
     }
 
@@ -264,7 +265,7 @@ public class CasesCompletedReport {
 
         localReportsDetailHdr.setConStdCasesCompletedHearing(Integer.toString(completedAtHearingPerTrack));
         localReportsDetailHdr.setConStdSessionDays(Integer.toString(sessionDaysTakenPerTrack));
-        localReportsDetailHdr.setConStdCompletedPerSession(String.format(COMPLETED_PER_SESSION_FORMAT,
+        localReportsDetailHdr.setConStdCompletedPerSession(String.format(Locale.ROOT, COMPLETED_PER_SESSION_FORMAT,
                 completedPerSessionDayPerTrack));
     }
 
@@ -278,7 +279,7 @@ public class CasesCompletedReport {
 
         localReportsDetailHdr.setConOpenCasesCompletedHearing(Integer.toString(completedAtHearingPerTrack));
         localReportsDetailHdr.setConOpenSessionDays(Integer.toString(sessionDaysTakenPerTrack));
-        localReportsDetailHdr.setConOpenCompletedPerSession(String.format(COMPLETED_PER_SESSION_FORMAT,
+        localReportsDetailHdr.setConOpenCompletedPerSession(String.format(Locale.ROOT, COMPLETED_PER_SESSION_FORMAT,
                 completedPerSessionDayPerTrack));
     }
 
@@ -292,7 +293,7 @@ public class CasesCompletedReport {
 
         localReportsDetailHdr.setCasesCompletedHearingTotal(Integer.toString(completedAtHearingTotal));
         localReportsDetailHdr.setSessionDaysTotal(Integer.toString(sessionDaysTakenTotal));
-        localReportsDetailHdr.setCompletedPerSessionTotal(String.format(COMPLETED_PER_SESSION_FORMAT,
+        localReportsDetailHdr.setCompletedPerSessionTotal(String.format(Locale.ROOT, COMPLETED_PER_SESSION_FORMAT,
                 completedPerSessionDayTotal));
     }
 }
