@@ -241,7 +241,7 @@ public class DocumentHelper {
         List<RepresentedTypeRItem> representedTypeRList = caseData.getRepCollection();
         List<RespondentSumTypeItem> respondentSumTypeItemList = !CollectionUtils.isEmpty(caseData.getRespondentCollection())
                 && !CollectionUtils.isEmpty(caseData.getRepCollection()) ? caseData.getRespondentCollection().stream()
-                .filter(a-> a.getValue().getRespondentName()
+                .filter(a-> (Strings.isNullOrEmpty(a.getValue().getResponseContinue()) || YES.equals(a.getValue().getResponseContinue())) && a.getValue().getRespondentName()
                         .equals(caseData.getRepCollection().get(0).getValue().getRespRepName())).collect(Collectors.toList()): new ArrayList<>();
         boolean responseNotStruckOut = CollectionUtils.isEmpty(respondentSumTypeItemList)
                 || Strings.isNullOrEmpty(respondentSumTypeItemList.get(0).getValue().getResponseStruckOut())
