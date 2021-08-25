@@ -183,7 +183,7 @@ def versions = [
         springfoxSwagger: '2.9.2',
         logging         : '5.1.7',
         serenity        : '2.3.31',
-        pact_version    : '4.1.0'
+        pact_version    : '4.1.7'
 ]
 
 dependencies {
