@@ -90,11 +90,10 @@ public class AddSingleCaseToMultipleService {
 
     private void updateCaseDataForMultiple(CaseData caseData, String newMultipleReference, String leadClaimant,
                                            long multipleCaseId) {
-        caseData.setMultipleReference(newMultipleReference);
+        caseData.setMultipleReference(generateMarkUp(String.valueOf(multipleCaseId), newMultipleReference));
         caseData.setCaseType(MULTIPLE_CASE_TYPE);
         log.info("setLeadClaimant is set to " + leadClaimant);
         caseData.setLeadClaimant(leadClaimant);
-        caseData.setParentMultipleCaseId(String.valueOf(multipleCaseId));
     }
 
     private void addNewLeadToMultiple(String userToken, String multipleCaseTypeId, String jurisdiction,
@@ -122,5 +121,11 @@ public class AddSingleCaseToMultipleService {
             multipleHelperService.addLeadMarkUp(
                     userToken, multipleCaseTypeId, multipleData, newEthosCaseReferenceToAdd, caseId);
         }
+    }
+
+    public String generateMarkUp(String caseId, String ethosCaseRef) {
+        String url = ccdGatewayBaseUrl + "/cases/case-details/" + caseId;
+        return "<a target=\"_blank\" href=\"" + url + "\">" + ethosCaseRef + "</a>";
+
     }
 }
