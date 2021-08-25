@@ -70,6 +70,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.RULE_50_APPLIES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.STAFF_CASE_CAUSE_LIST_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
@@ -351,7 +352,7 @@ public class ListingHelper {
                 .stream()
                 .filter(listingTypeItem -> !isEmptyHearingDate(listingTypeItem.getValue()))
                 .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getCauseListDate(),
-                        () -> new TreeMap<>(getDateComparator()), Collectors.toList()));
+                () -> new TreeMap<>(getDateComparator()), Collectors.toList()));
     }
 
     private static Iterator<Map.Entry<String, List<ListingTypeItem>>> getEntriesByDate(StringBuilder sb,
@@ -423,19 +424,20 @@ public class ListingHelper {
         return true;
     }
 
-    private static TreeMap<String, List<ListingTypeItem>> getListHearingsByRoomWithNotAllocated
-            (List<ListingTypeItem> listingSubCollection) {
+    private static TreeMap<String, List<ListingTypeItem>> getListHearingsByRoomWithNotAllocated (
+            List<ListingTypeItem> listingSubCollection) {
+
         TreeMap<String, List<ListingTypeItem>> sortedMap = listingSubCollection
                 .stream()
                 .filter(listingTypeItem -> !isEmptyHearingRoom(listingTypeItem.getValue()))
-                .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getHearingRoom(),
-                        () -> new TreeMap<>(getVenueComparator()), Collectors.toList()));
+                .collect(Collectors.groupingBy(
+                        listingTypeItem -> listingTypeItem.getValue().getHearingRoom(), () -> new TreeMap<>(getVenueComparator()), Collectors.toList()));
         List<ListingTypeItem> notAllocated = listingSubCollection
                 .stream()
                 .filter(listingTypeItem -> isEmptyHearingRoom(listingTypeItem.getValue()))
                 .sorted(getVenueComparatorListingTypeItem())
                 .collect(toList());
-        if (!notAllocated.isEmpty()){
+        if (!notAllocated.isEmpty()) {
             sortedMap.computeIfAbsent(ROOM_NOT_ALLOCATED, k -> new ArrayList<>()).addAll(notAllocated);
         }
         return sortedMap;
@@ -454,13 +456,13 @@ public class ListingHelper {
                 .stream()
                 .filter(listingTypeItem -> !isEmptyHearingVenue(listingTypeItem.getValue()))
                 .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getCauseListVenue(),
-                        () -> new TreeMap<>(getVenueComparator()), Collectors.toList()));
+                () -> new TreeMap<>(getVenueComparator()), Collectors.toList()));
         List<ListingTypeItem> notAllocated = listingData.getListingCollection()
                 .stream()
                 .filter(listingTypeItem -> isEmptyHearingVenue(listingTypeItem.getValue()))
                 .sorted(getDateComparatorListingTypeItem().thenComparing(getTimeComparatorListingTypeItem()))
                 .collect(toList());
-        if (!notAllocated.isEmpty()){
+        if (!notAllocated.isEmpty()) {
             sortedMap.computeIfAbsent(NOT_ALLOCATED, k -> new ArrayList<>()).addAll(notAllocated);
         }
         return sortedMap;
@@ -544,7 +546,8 @@ public class ListingHelper {
         sb.append("\"Hearing_dayofdays\":\"").append(nullCheck(listingType.getHearingDay())).append(NEW_LINE);
         sb.append("\"Hearing_panel\":\"").append(nullCheck(listingType.getHearingPanel())).append(NEW_LINE);
         sb.append("\"Hearing_notes\":\"").append(nullCheck(extractHearingNotes(listingType))).append(NEW_LINE);
-        sb.append("\"respondent_representative\":\"").append(nullCheck(listingType.getRespondentRepresentative())).append("\"}");
+        sb.append("\"respondent_representative\":\"")
+                .append(nullCheck(listingType.getRespondentRepresentative())).append("\"}");
         return sb;
     }
 
@@ -639,6 +642,8 @@ public class ListingHelper {
                     return "EM-TRB-SCO-ENG-00221";
                 case CASES_AWAITING_JUDGMENT_REPORT:
                     return "EM-TRB-SCO-ENG-00749";
+                case TIME_TO_FIRST_HEARING_REPORT:
+                    return "EM-TRB-SCO-ENG-00751";
                 default:
                     return "No document found";
             }
