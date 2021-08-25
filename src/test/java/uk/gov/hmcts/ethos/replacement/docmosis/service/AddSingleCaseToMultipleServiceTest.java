@@ -115,7 +115,7 @@ public class AddSingleCaseToMultipleServiceTest {
                 new ArrayList<>());
 
         assertEquals(MULTIPLE_CASE_TYPE, caseDetails.getCaseData().getCaseType());
-        assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
+        assertEquals("<a target=\"_blank\" href=\"null/cases/case-details/12121212\">246000</a>", caseDetails.getCaseData().getMultipleReference());
         assertEquals(YES, caseDetails.getCaseData().getLeadClaimant());
     }
 
@@ -162,7 +162,7 @@ public class AddSingleCaseToMultipleServiceTest {
         verifyNoMoreInteractions(multipleHelperService);
 
         assertEquals(MULTIPLE_CASE_TYPE, caseDetails.getCaseData().getCaseType());
-        assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
+        assertEquals("<a target=\"_blank\" href=\"null/cases/case-details/12121212\">246000</a>", caseDetails.getCaseData().getMultipleReference());
         assertEquals(NO, caseDetails.getCaseData().getLeadClaimant());
     }
 
@@ -218,7 +218,7 @@ public class AddSingleCaseToMultipleServiceTest {
         verifyNoMoreInteractions(multipleHelperService);
 
         assertEquals(MULTIPLE_CASE_TYPE, caseDetails.getCaseData().getCaseType());
-        assertEquals("246000", caseDetails.getCaseData().getMultipleReference());
+        assertEquals("<a target=\"_blank\" href=\"null/cases/case-details/12121212\">246000</a>", caseDetails.getCaseData().getMultipleReference());
         assertEquals(YES, caseDetails.getCaseData().getLeadClaimant());
 
     }
