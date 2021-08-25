@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.common.Strings;
+import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
@@ -26,6 +27,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
 
+@Service
 @Slf4j
 public class TimeToFirstHearingReport {
 
