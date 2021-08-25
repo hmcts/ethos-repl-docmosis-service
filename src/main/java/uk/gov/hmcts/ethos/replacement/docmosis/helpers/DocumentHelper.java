@@ -246,7 +246,19 @@ public class DocumentHelper {
         boolean responseNotStruckOut = CollectionUtils.isEmpty(respondentSumTypeItemList)
                 || Strings.isNullOrEmpty(respondentSumTypeItemList.get(0).getValue().getResponseStruckOut())
                 || respondentSumTypeItemList.get(0).getValue().getResponseStruckOut().equals(NO);
-        if (!CollectionUtils.isEmpty(representedTypeRList) && responseNotStruckOut) {
+
+        respondentSumTypeItemList = !CollectionUtils.isEmpty(caseData.getRespondentCollection())
+                ? caseData.getRespondentCollection(): new ArrayList<>();
+
+        boolean responseContinue = CollectionUtils.isEmpty(respondentSumTypeItemList)
+                || Strings.isNullOrEmpty(respondentSumTypeItemList.get(0).getValue().getResponseContinue())
+                || YES.equals(respondentSumTypeItemList.get(0).getValue().getResponseContinue());
+
+        if (responseContinue) {
+            log.info("Response is continued for case: " + caseData.getEthosCaseReference());
+        }
+
+        if (!CollectionUtils.isEmpty(representedTypeRList) && responseNotStruckOut && responseContinue) {
             log.info("Respondent represented");
             var representedTypeR = representedTypeRList.get(0).getValue();
             sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(representedTypeR
@@ -263,7 +275,7 @@ public class DocumentHelper {
 
         } else {
             log.info("Respondent not represented");
-            if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+            if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty() && responseContinue) {
                 var respondentSumType = caseData.getRespondentCollection().get(0).getValue();
                 sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(respondentSumType
                         .getRespondentName())).append(NEW_LINE);
@@ -274,7 +286,7 @@ public class DocumentHelper {
                 sb.append(getRespondentOrRepAddressUK(new Address()));
             }
         }
-        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+        if (!CollectionUtils.isEmpty(caseData.getRespondentCollection()) && responseContinue) {
             log.info("Respondent collection");
             var respondentSumType = caseData.getRespondentCollection().get(0).getValue();
             sb.append("\"respondent_full_name\":\"").append(nullCheck(respondentSumType.getRespondentName()))
