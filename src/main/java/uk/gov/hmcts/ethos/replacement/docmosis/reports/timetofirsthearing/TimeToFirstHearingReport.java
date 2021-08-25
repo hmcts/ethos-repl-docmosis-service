@@ -166,20 +166,23 @@ public class TimeToFirstHearingReport {
         listingData.setLocalReportsDetailHdr(adhocReportType);
     }
 
+    static class ReportSummary {
+        int conNoneTotal;
+        int conStdTotal;
+        int conFastTotal;
+        int conOpenTotal;
+        int conNone26WkTotal;
+        int conStd26WkTotal;
+        int conFast26WkTotal;
+        int conOpen26WkTotal;
+        int xConNone26WkTotal;
+        int xConStd26WkTotal;
+        int xConFast26WkTotal;
+        int xConOpen26WkTotal;
+    }
     private void populateLocalReportSummary(ListingData listingData, List<SubmitEvent> submitEvents) {
 
-        var conNoneTotal = 0;
-        var conStdTotal = 0;
-        var conFastTotal = 0;
-        var conOpenTotal = 0;
-        var conNone26WkTotal = 0;
-        var conStd26WkTotal = 0;
-        var conFast26WkTotal = 0;
-        var conOpen26WkTotal = 0;
-        var xConNone26WkTotal = 0;
-        var xConStd26WkTotal = 0;
-        var xConFast26WkTotal = 0;
-        var xConOpen26WkTotal = 0;
+        var reportSummary = new ReportSummary();
         var adhocReportType = listingData.getLocalReportsDetailHdr();
         LocalDate firstHearingDate;
         for (var submitEvent : submitEvents) {
@@ -191,60 +194,82 @@ public class TimeToFirstHearingReport {
                     submitEvent.getCaseData(),
                     firstHearingDate);
 
-            if (getConciliationTrack(submitEvent.getCaseData()).equals(CONCILIATION_TRACK_NO_CONCILIATION)) {
-                conNoneTotal = conNoneTotal + 1;
-                if (isFirstHearingWithin26Weeks) {
-                    conNone26WkTotal = conNone26WkTotal + 1;
-                } else {
-                    xConNone26WkTotal = xConNone26WkTotal + 1;
-                }
-
-            }
-            if (getConciliationTrack(submitEvent.getCaseData()).equals(CONCILIATION_TRACK_STANDARD_TRACK)) {
-                conStdTotal = conStdTotal + 1;
-                if (isFirstHearingWithin26Weeks) {
-                    conStd26WkTotal = conStd26WkTotal + 1;
-                } else {
-                    xConStd26WkTotal = xConStd26WkTotal + 1;
-                }
-
-            }
-            if (getConciliationTrack(submitEvent.getCaseData()).equals(CONCILIATION_TRACK_FAST_TRACK)) {
-                conFastTotal = conFastTotal + 1;
-                if (isFirstHearingWithin26Weeks) {
-                    conFast26WkTotal = conFast26WkTotal + 1;
-                } else {
-                    xConFast26WkTotal = xConFast26WkTotal + 1;
-                }
-            }
-            if (getConciliationTrack(submitEvent.getCaseData()).equals(CONCILIATION_TRACK_OPEN_TRACK)) {
-                conOpenTotal = conOpenTotal + 1;
-                if (isFirstHearingWithin26Weeks) {
-                    conOpen26WkTotal = conOpen26WkTotal + 1;
-                } else {
-                    xConOpen26WkTotal = xConOpen26WkTotal + 1;
-                }
+            switch(getConciliationTrack(submitEvent.getCaseData())) {
+                case CONCILIATION_TRACK_NO_CONCILIATION:
+                   reportSummary = updateNoTrack(reportSummary, isFirstHearingWithin26Weeks);
+                    break;
+                case CONCILIATION_TRACK_STANDARD_TRACK:
+                   reportSummary = updateStandardTrack(reportSummary, isFirstHearingWithin26Weeks);
+                    break;
+                case CONCILIATION_TRACK_FAST_TRACK:
+                   reportSummary =  updateFastTrack(reportSummary, isFirstHearingWithin26Weeks);
+                    break;
+                case CONCILIATION_TRACK_OPEN_TRACK:
+                   reportSummary = updateOpenTrack(reportSummary, isFirstHearingWithin26Weeks);
+                    break;
+                default:
+                    break;
             }
         }
 
-        adhocReportType.setConNoneTotal(String.valueOf(conNoneTotal));
-        adhocReportType.setConStdTotal(String.valueOf(conStdTotal));
-        adhocReportType.setConFastTotal(String.valueOf(conFastTotal));
-        adhocReportType.setConOpenTotal(String.valueOf(conOpenTotal));
-        adhocReportType.setConNone26wkTotal(String.valueOf(conNone26WkTotal));
-        adhocReportType.setConStd26wkTotal(String.valueOf(conStd26WkTotal));
-        adhocReportType.setConFast26wkTotal(String.valueOf(conFast26WkTotal));
-        adhocReportType.setConOpen26wkTotal(String.valueOf(conOpen26WkTotal));
-        adhocReportType.setXConNone26wkTotal(String.valueOf(xConNone26WkTotal));
-        adhocReportType.setXConStd26wkTotal(String.valueOf(xConStd26WkTotal));
-        adhocReportType.setXConFast26wkTotal(String.valueOf(xConFast26WkTotal));
-        adhocReportType.setXConOpen26wkTotal(String.valueOf(xConOpen26WkTotal));
+        adhocReportType.setConNoneTotal(String.valueOf(reportSummary.conNoneTotal));
+        adhocReportType.setConStdTotal(String.valueOf(reportSummary.conStdTotal));
+        adhocReportType.setConFastTotal(String.valueOf(reportSummary.conFastTotal));
+        adhocReportType.setConOpenTotal(String.valueOf(reportSummary.conOpenTotal));
+        adhocReportType.setConNone26wkTotal(String.valueOf(reportSummary.conNone26WkTotal));
+        adhocReportType.setConStd26wkTotal(String.valueOf(reportSummary.conStd26WkTotal));
+        adhocReportType.setConFast26wkTotal(String.valueOf(reportSummary.conFast26WkTotal));
+        adhocReportType.setConOpen26wkTotal(String.valueOf(reportSummary.conOpen26WkTotal));
+        adhocReportType.setXConNone26wkTotal(String.valueOf(reportSummary.xConNone26WkTotal));
+        adhocReportType.setXConStd26wkTotal(String.valueOf(reportSummary.xConStd26WkTotal));
+        adhocReportType.setXConFast26wkTotal(String.valueOf(reportSummary.xConFast26WkTotal));
+        adhocReportType.setXConOpen26wkTotal(String.valueOf(reportSummary.xConOpen26WkTotal));
         setPercent(adhocReportType);
 
         var adhocReportTypeItem = new AdhocReportTypeItem();
         adhocReportTypeItem.setId(UUID.randomUUID().toString());
         adhocReportTypeItem.setValue(adhocReportType);
         listingData.setLocalReportsSummary(Collections.singletonList(adhocReportTypeItem));
+    }
+
+    private ReportSummary updateNoTrack(ReportSummary reportSummary, boolean isFirstHearingWithin26Weeks) {
+        reportSummary.conNoneTotal = reportSummary.conNoneTotal + 1;
+        if (isFirstHearingWithin26Weeks) {
+            reportSummary.conNone26WkTotal = reportSummary.conNone26WkTotal + 1;
+        } else {
+            reportSummary.xConNone26WkTotal = reportSummary.xConNone26WkTotal + 1;
+        }
+        return reportSummary;
+    }
+
+    private ReportSummary updateStandardTrack(ReportSummary reportSummary, boolean isFirstHearingWithin26Weeks) {
+        reportSummary.conStdTotal = reportSummary.conStdTotal + 1;
+        if (isFirstHearingWithin26Weeks) {
+            reportSummary.conStd26WkTotal = reportSummary.conStd26WkTotal + 1;
+        } else {
+            reportSummary.xConStd26WkTotal = reportSummary.xConStd26WkTotal + 1;
+        }
+        return reportSummary;
+    }
+
+    private ReportSummary updateFastTrack(ReportSummary reportSummary, boolean isFirstHearingWithin26Weeks) {
+        reportSummary.conFastTotal = reportSummary.conFastTotal + 1;
+        if (isFirstHearingWithin26Weeks) {
+            reportSummary.conFast26WkTotal = reportSummary.conFast26WkTotal + 1;
+        } else {
+            reportSummary.xConFast26WkTotal = reportSummary.xConFast26WkTotal + 1;
+        }
+        return reportSummary;
+    }
+
+    private ReportSummary updateOpenTrack(ReportSummary reportSummary, boolean isFirstHearingWithin26Weeks) {
+        reportSummary.conOpenTotal = reportSummary.conOpenTotal + 1;
+        if (isFirstHearingWithin26Weeks) {
+            reportSummary.conOpen26WkTotal = reportSummary.conOpen26WkTotal + 1;
+        } else {
+            reportSummary.xConOpen26WkTotal = reportSummary.xConOpen26WkTotal + 1;
+        }
+        return reportSummary;
     }
 
     private void setPercent(AdhocReportType adhocReportType) {

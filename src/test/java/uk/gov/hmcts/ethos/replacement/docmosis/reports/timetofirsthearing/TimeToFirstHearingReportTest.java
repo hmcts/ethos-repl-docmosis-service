@@ -30,6 +30,7 @@ public class TimeToFirstHearingReportTest {
         ListingData listingData = timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
         verifyReportHeaderIsZero(listingData);
     }
+
     private void verifyReportHeaderIsZero(ListingData listingData) {
         AdhocReportType adhocReportType = listingData.getLocalReportsDetailHdr();
         assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotal())?0:Integer.parseInt(adhocReportType.getTotal()));
@@ -128,20 +129,14 @@ public class TimeToFirstHearingReportTest {
         assertEquals(100, Float.parseFloat(adhocReportType.getTotalx26wkPerCent()), .00);
     }
 
-
-
     private SubmitEvent createSubmitEvent(List<HearingTypeItem> hearingCollection,
                                           String conciliationTrack, String receiptDate) {
         SubmitEvent submitEvent = new SubmitEvent();
-
-
         CaseData caseData = new CaseData();
         caseData.setConciliationTrack(conciliationTrack);
         caseData.setReceiptDate(receiptDate);
         caseData.setHearingCollection(hearingCollection);
-
         submitEvent.setCaseData(caseData);
-
         return submitEvent;
     }
 
