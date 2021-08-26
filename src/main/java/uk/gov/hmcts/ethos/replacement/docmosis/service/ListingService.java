@@ -102,7 +102,7 @@ public class ListingService {
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null
                             && !submitEvent.getCaseData().getHearingCollection().isEmpty()) {
-                       addListingTypeItems(submitEvent,listingTypeItems,listingDetails );
+                        addListingTypeItems(submitEvent,listingTypeItems,listingDetails );
                     }
                 }
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);

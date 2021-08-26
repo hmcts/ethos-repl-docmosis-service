@@ -141,9 +141,11 @@ public class TimeToFirstHearingReport {
     private void populateLocalReportSummaryHdr(ListingData listingData) {
         var adhocReportType = listingData.getLocalReportsSummary().get(0).getValue();
         int totalCases = Integer.parseInt(adhocReportType.getConOpenTotal())
-               + Integer.parseInt(adhocReportType.getConStdTotal())
-               + Integer.parseInt(adhocReportType.getConFastTotal())
-               + Integer.parseInt(adhocReportType.getConNoneTotal());
+
+                + Integer.parseInt(adhocReportType.getConStdTotal())
+                + Integer.parseInt(adhocReportType.getConFastTotal())
+                + Integer.parseInt(adhocReportType.getConNoneTotal());
+
 
         int totalCasesWithin26Weeks = Integer.parseInt(adhocReportType.getConOpen26wkTotal())
                 + Integer.parseInt(adhocReportType.getConStd26wkTotal())
@@ -198,16 +200,18 @@ public class TimeToFirstHearingReport {
 
             switch(getConciliationTrack(submitEvent.getCaseData())) {
                 case CONCILIATION_TRACK_NO_CONCILIATION:
-                   reportSummary = updateNoTrack(reportSummary, isFirstHearingWithin26Weeks);
+
+                    reportSummary = updateNoTrack(reportSummary, isFirstHearingWithin26Weeks);
                     break;
                 case CONCILIATION_TRACK_STANDARD_TRACK:
-                   reportSummary = updateStandardTrack(reportSummary, isFirstHearingWithin26Weeks);
+                    reportSummary = updateStandardTrack(reportSummary, isFirstHearingWithin26Weeks);
                     break;
                 case CONCILIATION_TRACK_FAST_TRACK:
-                   reportSummary =  updateFastTrack(reportSummary, isFirstHearingWithin26Weeks);
+                    reportSummary =  updateFastTrack(reportSummary, isFirstHearingWithin26Weeks);
                     break;
                 case CONCILIATION_TRACK_OPEN_TRACK:
-                   reportSummary = updateOpenTrack(reportSummary, isFirstHearingWithin26Weeks);
+                    reportSummary = updateOpenTrack(reportSummary, isFirstHearingWithin26Weeks);
+
                     break;
                 default:
                     break;

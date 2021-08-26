@@ -82,7 +82,7 @@ public class ListingHelper {
     private static final int NUMBER_CHAR_PARSING_DATE = 20;
 
     static final List<String> REPORTS = Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
-        LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT);
+            LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT);
 
     private ListingHelper() {
     }
@@ -834,4 +834,3 @@ public class ListingHelper {
         return REPORTS.contains(reportType);
     }
 }
-
