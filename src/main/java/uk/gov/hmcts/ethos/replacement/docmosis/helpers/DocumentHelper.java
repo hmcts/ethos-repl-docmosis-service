@@ -250,32 +250,17 @@ public class DocumentHelper {
         respondentSumTypeItemList = !CollectionUtils.isEmpty(caseData.getRespondentCollection())
                 ? caseData.getRespondentCollection(): new ArrayList<>();
 
-        var responseContinue = true;
+        boolean responseContinue = CollectionUtils.isEmpty(respondentSumTypeItemList)
+                || Strings.isNullOrEmpty(respondentSumTypeItemList.get(0).getValue().getResponseContinue())
+                || YES.equals(respondentSumTypeItemList.get(0).getValue().getResponseContinue());
 
-        RespondentSumType respondentToBeShown = !CollectionUtils.isEmpty(respondentSumTypeItemList)? respondentSumTypeItemList.get(0).getValue(): new RespondentSumType();
-
-        for (RespondentSumTypeItem respondentSumTypeItem: respondentSumTypeItemList) {
-            responseContinue = Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseContinue())
-                    || YES.equals(respondentSumTypeItem.getValue().getResponseContinue());
-
-            if (responseContinue) {
-                log.info("Response is continued for case: " + caseData.getEthosCaseReference());
-                respondentToBeShown = respondentSumTypeItem.getValue();
-                break;
-            }
+        if (responseContinue) {
+            log.info("Response is continued for case: " + caseData.getEthosCaseReference());
         }
-
-        RespondentSumType finalRespondentToBeShown = respondentToBeShown;
 
         if (!CollectionUtils.isEmpty(representedTypeRList) && responseNotStruckOut && responseContinue) {
             log.info("Respondent represented");
             var representedTypeR = representedTypeRList.get(0).getValue();
-            Optional<RepresentedTypeRItem> representedTypeRItem = caseData.getRepCollection().stream()
-                    .filter(a -> a.getValue().getRespRepName().equals(finalRespondentToBeShown.getRespondentName())).findFirst();
-            if (representedTypeRItem.isPresent()) {
-                representedTypeR = representedTypeRItem.get().getValue();
-            }
-
             sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(representedTypeR
                     .getNameOfRepresentative())).append(NEW_LINE);
             if (representedTypeR.getRepresentativeAddress() != null) {
@@ -290,10 +275,11 @@ public class DocumentHelper {
 
         } else {
             log.info("Respondent not represented");
-            if (!CollectionUtils.isEmpty(caseData.getRespondentCollection()) && responseContinue) {
-                sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(finalRespondentToBeShown
+            if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty() && responseContinue) {
+                var respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+                sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(respondentSumType
                         .getRespondentName())).append(NEW_LINE);
-                sb.append(getRespondentOrRepAddressUK(getRespondentAddressET3(finalRespondentToBeShown)));
+                sb.append(getRespondentOrRepAddressUK(getRespondentAddressET3(respondentSumType)));
             } else {
                 sb.append("\"respondent_or_rep_full_name\":\"").append(NEW_LINE);
                 sb.append("\"respondent_rep_organisation\":\"").append(NEW_LINE);
@@ -302,11 +288,12 @@ public class DocumentHelper {
         }
         if (!CollectionUtils.isEmpty(caseData.getRespondentCollection()) && responseContinue) {
             log.info("Respondent collection");
-            sb.append("\"respondent_full_name\":\"").append(nullCheck(finalRespondentToBeShown.getRespondentName()))
+            var respondentSumType = caseData.getRespondentCollection().get(0).getValue();
+            sb.append("\"respondent_full_name\":\"").append(nullCheck(respondentSumType.getRespondentName()))
                     .append(NEW_LINE);
-            sb.append(getRespondentAddressUK(getRespondentAddressET3(finalRespondentToBeShown)));
+            sb.append(getRespondentAddressUK(getRespondentAddressET3(respondentSumType)));
             sb.append("\"Respondent\":\"").append(caseData.getRespondentCollection().size() > 1 ? "1. " : "")
-                    .append(nullCheck(finalRespondentToBeShown.getRespondentName())).append(NEW_LINE);
+                    .append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE);
             sb.append(getRespOthersName(caseData));
             sb.append(getRespAddress(caseData));
         } else {
