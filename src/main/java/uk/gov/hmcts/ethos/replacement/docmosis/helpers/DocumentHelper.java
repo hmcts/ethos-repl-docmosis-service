@@ -250,17 +250,32 @@ public class DocumentHelper {
         respondentSumTypeItemList = !CollectionUtils.isEmpty(caseData.getRespondentCollection())
                 ? caseData.getRespondentCollection(): new ArrayList<>();
 
-        boolean responseContinue = CollectionUtils.isEmpty(respondentSumTypeItemList)
-                || Strings.isNullOrEmpty(respondentSumTypeItemList.get(0).getValue().getResponseContinue())
-                || YES.equals(respondentSumTypeItemList.get(0).getValue().getResponseContinue());
+        var responseContinue = true;
 
-        if (responseContinue) {
-            log.info("Response is continued for case: " + caseData.getEthosCaseReference());
+        RespondentSumType respondentToBeShown = !CollectionUtils.isEmpty(respondentSumTypeItemList)? respondentSumTypeItemList.get(0).getValue(): new RespondentSumType();
+
+        for (RespondentSumTypeItem respondentSumTypeItem: respondentSumTypeItemList) {
+            responseContinue = Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseContinue())
+                    || YES.equals(respondentSumTypeItem.getValue().getResponseContinue());
+
+            if (responseContinue) {
+                log.info("Response is continued for case: " + caseData.getEthosCaseReference());
+                respondentToBeShown = respondentSumTypeItem.getValue();
+                break;
+            }
         }
+
+        RespondentSumType finalRespondentToBeShown = respondentToBeShown;
 
         if (!CollectionUtils.isEmpty(representedTypeRList) && responseNotStruckOut && responseContinue) {
             log.info("Respondent represented");
             var representedTypeR = representedTypeRList.get(0).getValue();
+            Optional<RepresentedTypeRItem> representedTypeRItem = caseData.getRepCollection().stream()
+                    .filter(a -> a.getValue().getRespRepName().equals(finalRespondentToBeShown.getRespondentName())).findFirst();
+            if (representedTypeRItem.isPresent()) {
+                representedTypeR = representedTypeRItem.get().getValue();
+            }
+
             sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(representedTypeR
                     .getNameOfRepresentative())).append(NEW_LINE);
             if (representedTypeR.getRepresentativeAddress() != null) {
@@ -271,15 +286,14 @@ public class DocumentHelper {
             sb.append("\"respondent_reference\":\"").append(nullCheck(representedTypeR.getRepresentativeReference()))
                     .append(NEW_LINE);
             sb.append("\"respondent_rep_organisation\":\"").append(nullCheck(representedTypeR.getNameOfOrganisation()))
-                        .append(NEW_LINE);
+                    .append(NEW_LINE);
 
         } else {
             log.info("Respondent not represented");
-            if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty() && responseContinue) {
-                var respondentSumType = caseData.getRespondentCollection().get(0).getValue();
-                sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(respondentSumType
+            if (!CollectionUtils.isEmpty(caseData.getRespondentCollection()) && responseContinue) {
+                sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(finalRespondentToBeShown
                         .getRespondentName())).append(NEW_LINE);
-                sb.append(getRespondentOrRepAddressUK(getRespondentAddressET3(respondentSumType)));
+                sb.append(getRespondentOrRepAddressUK(getRespondentAddressET3(finalRespondentToBeShown)));
             } else {
                 sb.append("\"respondent_or_rep_full_name\":\"").append(NEW_LINE);
                 sb.append("\"respondent_rep_organisation\":\"").append(NEW_LINE);
@@ -399,7 +413,7 @@ public class DocumentHelper {
         for (HearingTypeItem hearingTypeItem : hearingCollection) {
             hearingType = hearingTypeItem.getValue();
             if (hearingType.getHearingNumber() != null && hearingType.getHearingNumber().equals(correspondenceHearingNumber)) {
-                    break;
+                break;
             }
         }
 
@@ -517,9 +531,9 @@ public class DocumentHelper {
             log.error(e.toString());
             numType = hearingType.getHearingEstLengthNumType();
         }
-            return String.join(" ",
-                    hearingType.getHearingEstLengthNum(), numType);
-        }
+        return String.join(" ",
+                hearingType.getHearingEstLengthNum(), numType);
+    }
 
     public static String getTemplateName(CorrespondenceType correspondenceType,
                                          CorrespondenceScotType correspondenceScotType) {
