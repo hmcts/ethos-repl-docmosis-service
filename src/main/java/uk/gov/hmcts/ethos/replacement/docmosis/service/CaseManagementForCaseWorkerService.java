@@ -85,6 +85,30 @@ public class CaseManagementForCaseWorkerService {
                 if (respondentSumTypeItem.getValue().getResponseReceived() == null) {
                     respondentSumTypeItem.getValue().setResponseReceived(NO);
                 }
+                if (respondentSumTypeItem.getValue().getResponseReceived().equals(NO)
+                        && respondentSumTypeItem.getValue().getResponseRespondentAddress() != null) {
+                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine1())) {
+                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine1("");
+                    }
+                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine2())) {
+                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine2("");
+                    }
+                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine3())) {
+                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine3("");
+                    }
+                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getCountry())) {
+                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setCountry("");
+                    }
+                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getCounty())) {
+                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setCounty("");
+                    }
+                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostCode())) {
+                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setPostCode("");
+                    }
+                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostTown())) {
+                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setPostTown("");
+                    }
+                }
                 if (Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseContinue())) {
                     respondentSumTypeItem.getValue().setResponseContinue(YES);
                 }
