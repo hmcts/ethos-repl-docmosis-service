@@ -347,8 +347,7 @@ public class DocumentHelper {
                 .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null
                         || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO)
                         && (respondentSumTypeItem.getValue().getResponseContinue() == null
-                        || YES.equals(respondentSumTypeItem.getValue().getResponseContinue()))
-                        && !respondentSumTypeItem.getValue().getRespondentName().equals(firstRespondentName))
+                        || YES.equals(respondentSumTypeItem.getValue().getResponseContinue())))
                 .map(respondentSumTypeItem -> (size > 1 ? atomicInteger.getAndIncrement() + ". " : "")
                         + getRespondentAddressET3(respondentSumTypeItem.getValue()))
                 .collect(Collectors.toList());
