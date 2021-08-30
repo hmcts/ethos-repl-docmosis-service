@@ -302,11 +302,21 @@ public class DocumentHelper {
         }
         if (!CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
             log.info("Respondent collection");
-            sb.append("\"respondent_full_name\":\"").append(nullCheck(finalRespondentToBeShown.getRespondentName()))
+            sb.append("\"respondent_full_name\":\"").append
+                    (nullCheck((Strings.isNullOrEmpty(finalRespondentToBeShown.getResponseContinue())
+                            ||YES.equals(finalRespondentToBeShown.getResponseContinue()))
+                            ? finalRespondentToBeShown.getRespondentName()
+                            : ""))
                     .append(NEW_LINE);
-            sb.append(getRespondentAddressUK(getRespondentAddressET3(finalRespondentToBeShown)));
+            sb.append((Strings.isNullOrEmpty(finalRespondentToBeShown.getResponseContinue())
+                    ||YES.equals(finalRespondentToBeShown.getResponseContinue()))
+                    ? getRespondentAddressUK(getRespondentAddressET3(finalRespondentToBeShown)) : "");
             sb.append("\"Respondent\":\"").append(caseData.getRespondentCollection().size() > 1 ? "1. " : "")
-                    .append(nullCheck(finalRespondentToBeShown.getRespondentName())).append(NEW_LINE);
+                    .append(nullCheck((Strings.isNullOrEmpty(finalRespondentToBeShown.getResponseContinue())
+                            ||YES.equals(finalRespondentToBeShown.getResponseContinue()))
+                            ? finalRespondentToBeShown.getRespondentName()
+                            : ""))
+                    .append(NEW_LINE);
             sb.append(getRespOthersName(caseData, finalRespondentToBeShown.getRespondentName()));
             sb.append(getRespAddress(caseData));
         } else {
