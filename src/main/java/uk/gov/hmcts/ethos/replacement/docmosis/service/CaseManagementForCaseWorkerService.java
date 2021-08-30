@@ -87,27 +87,7 @@ public class CaseManagementForCaseWorkerService {
                 }
                 if (respondentSumTypeItem.getValue().getResponseReceived().equals(NO)
                         && respondentSumTypeItem.getValue().getResponseRespondentAddress() != null) {
-                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine1())) {
-                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine1("");
-                    }
-                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine2())) {
-                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine2("");
-                    }
-                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine3())) {
-                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine3("");
-                    }
-                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getCountry())) {
-                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setCountry("");
-                    }
-                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getCounty())) {
-                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setCounty("");
-                    }
-                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostCode())) {
-                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setPostCode("");
-                    }
-                    if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostTown())) {
-                        respondentSumTypeItem.getValue().getResponseRespondentAddress().setPostTown("");
-                    }
+                    resetResponseRespondentAddress(respondentSumTypeItem);
                 }
                 if (Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseContinue())) {
                     respondentSumTypeItem.getValue().setResponseContinue(YES);
@@ -118,6 +98,29 @@ public class CaseManagementForCaseWorkerService {
         }
     }
 
+    private void resetResponseRespondentAddress(RespondentSumTypeItem respondentSumTypeItem) {
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine1())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine1("");
+        }
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine2())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine2("");
+        }
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine3())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine3("");
+        }
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getCountry())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setCountry("");
+        }
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getCounty())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setCounty("");
+        }
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostCode())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setPostCode("");
+        }
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostTown())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setPostTown("");
+        }
+    }
     private void struckOutDefaults(CaseData caseData) {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
