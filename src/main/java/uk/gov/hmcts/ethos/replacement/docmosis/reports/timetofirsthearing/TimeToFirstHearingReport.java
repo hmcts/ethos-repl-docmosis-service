@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.helper.Constants;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
@@ -20,12 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
 
 @Service
 @Slf4j
@@ -127,7 +122,7 @@ public class TimeToFirstHearingReport {
         adhocReportType.setConciliationTrack(getConciliationTrack(caseData));
         if (!Strings.isNullOrEmpty(caseData.getReceiptDate())) {
             var duration = Duration.between(firstHearingDate.atStartOfDay(),
-                    LocalDate.parse(caseData.getReceiptDate()).atStartOfDay());
+                    LocalDate.parse(caseData.getReceiptDate(), OLD_DATE_TIME_PATTERN).atStartOfDay());
             adhocReportType.setDelayedDaysForFirstHearing(String.valueOf(duration.toDays()));
             adhocReportType.setReceiptDate(caseData.getReceiptDate());
         }
@@ -344,7 +339,7 @@ public class TimeToFirstHearingReport {
                 || HEARING_TYPE_PERLIMINARY_HEARING.equals(hearingType.getHearingType())) {
             for (var dateListedItemType : hearingType.getHearingDateCollection()) {
                 if (Constants.HEARING_STATUS_HEARD.equals(dateListedItemType.getValue().getHearingStatus())) {
-                    var date = LocalDate.parse(dateListedItemType.getValue().getListedDate());
+                    var date = LocalDate.parse(dateListedItemType.getValue().getListedDate(),OLD_DATE_TIME_PATTERN);
                     datesList.add(date);
                 }
             }
@@ -353,7 +348,7 @@ public class TimeToFirstHearingReport {
     }
 
     private boolean isFirstHearingWithin26Weeks(CaseData caseData, LocalDate firstHearingDate) {
-        var receiptDate = LocalDate.parse(caseData.getReceiptDate());
+        var receiptDate = LocalDate.parse(caseData.getReceiptDate(), OLD_DATE_TIME_PATTERN);
         return receiptDate.plusWeeks(26).equals(firstHearingDate) || receiptDate.plusWeeks(26).isAfter(firstHearingDate);
     }
 }

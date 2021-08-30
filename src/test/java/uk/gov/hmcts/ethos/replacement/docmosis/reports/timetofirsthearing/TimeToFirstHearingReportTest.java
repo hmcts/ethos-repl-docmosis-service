@@ -86,11 +86,11 @@ public class TimeToFirstHearingReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        DateListedTypeItem dateListedTypeItem = createHearingDateListed("1970-06-01",
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed("1970-06-01T00:00:00.000",
                 HEARING_STATUS_HEARD);
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING,
                 dateListedTypeItem));
-        submitEvents.add(createSubmitEvent(hearings,CONCILIATION_TRACK_FAST_TRACK, "1970-04-01"));
+        submitEvents.add(createSubmitEvent(hearings,CONCILIATION_TRACK_FAST_TRACK, "1970-04-01T00:00:00.000"));
 
         TimeToFirstHearingReport timeToFirstHearingReport = new TimeToFirstHearingReport();
         ListingData reportListingData = timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
@@ -112,11 +112,11 @@ public class TimeToFirstHearingReportTest {
         listingDetails.setCaseData(listingData);
 
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        DateListedTypeItem dateListedTypeItem = createHearingDateListed("2021-01-01",
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed("2021-01-01T00:00:00.000",
                 HEARING_STATUS_HEARD);
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING,
                 dateListedTypeItem));
-        submitEvents.add(createSubmitEvent(hearings,CONCILIATION_TRACK_FAST_TRACK, "2020-04-01"));
+        submitEvents.add(createSubmitEvent(hearings,CONCILIATION_TRACK_FAST_TRACK, "2020-04-01T00:00:00.000"));
 
         TimeToFirstHearingReport timeToFirstHearingReport = new TimeToFirstHearingReport();
         ListingData reportListingData = timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
