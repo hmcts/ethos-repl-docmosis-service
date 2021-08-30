@@ -154,6 +154,32 @@ public class CaseManagementForCaseWorkerServiceTest {
             assertEquals(NO, respondentSumTypeItem.getValue().getResponseReceived());
         }
     }
+    @Test
+    public void caseDataDefaultsResetResponseRespondentAddress() {
+        CaseData caseData = scotlandCcdRequest1.getCaseDetails().getCaseData();
+        for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
+            respondentSumTypeItem.getValue().setResponseReceived(null);
+            respondentSumTypeItem.getValue().setResponseRespondentAddress(new Address());
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine1("Address1");
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine2("Address2");
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine3("Address3");
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setCounty("County");
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setPostTown("PostTown");
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setCountry("Country");
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setPostCode("PostCode");
+
+        }
+        caseManagementForCaseWorkerService.caseDataDefaults(caseData);
+        for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
+            assertEquals("", respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine1());
+            assertEquals("", respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine2());
+            assertEquals("", respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine3());
+            assertEquals("", respondentSumTypeItem.getValue().getResponseRespondentAddress().getCountry());
+            assertEquals("", respondentSumTypeItem.getValue().getResponseRespondentAddress().getCounty());
+            assertEquals("", respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostCode());
+            assertEquals("", respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostTown());
+        }
+    }
 
     @Test
     public void caseDataDefaultsResponseReceivedDoesNotChange() {
