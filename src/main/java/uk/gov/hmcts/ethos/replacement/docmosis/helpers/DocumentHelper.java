@@ -300,15 +300,14 @@ public class DocumentHelper {
                 sb.append(getRespondentOrRepAddressUK(new Address()));
             }
         }
-        if (!CollectionUtils.isEmpty(caseData.getRespondentCollection()) && responseContinue) {
+        if (!CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
             log.info("Respondent collection");
-            var respondentSumType = caseData.getRespondentCollection().get(0).getValue();
-            sb.append("\"respondent_full_name\":\"").append(nullCheck(respondentSumType.getRespondentName()))
+            sb.append("\"respondent_full_name\":\"").append(nullCheck(finalRespondentToBeShown.getRespondentName()))
                     .append(NEW_LINE);
-            sb.append(getRespondentAddressUK(getRespondentAddressET3(respondentSumType)));
+            sb.append(getRespondentAddressUK(getRespondentAddressET3(finalRespondentToBeShown)));
             sb.append("\"Respondent\":\"").append(caseData.getRespondentCollection().size() > 1 ? "1. " : "")
-                    .append(nullCheck(respondentSumType.getRespondentName())).append(NEW_LINE);
-            sb.append(getRespOthersName(caseData));
+                    .append(nullCheck(finalRespondentToBeShown.getRespondentName())).append(NEW_LINE);
+            sb.append(getRespOthersName(caseData, finalRespondentToBeShown.getRespondentName()));
             sb.append(getRespAddress(caseData));
         } else {
             sb.append("\"respondent_full_name\":\"").append(NEW_LINE);
@@ -320,15 +319,17 @@ public class DocumentHelper {
         return sb;
     }
 
-    private static StringBuilder getRespOthersName(CaseData caseData) {
+    private static StringBuilder getRespOthersName(CaseData caseData, String firstRespondentName) {
         log.info("Respondent Others Name");
         var sb = new StringBuilder();
         var atomicInteger = new AtomicInteger(2);
         List<String> respOthers = caseData.getRespondentCollection()
                 .stream()
-                .skip(1)
                 .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null
-                        || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
+                        || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO)
+                        && (respondentSumTypeItem.getValue().getResponseContinue() == null
+                        || respondentSumTypeItem.getValue().getResponseContinue().equals(YES))
+                        && !respondentSumTypeItem.getValue().getRespondentName().equals(firstRespondentName))
                 .map(respondentSumTypeItem -> atomicInteger.getAndIncrement() + ". "
                         + respondentSumTypeItem.getValue().getRespondentName())
                 .collect(Collectors.toList());
@@ -344,7 +345,9 @@ public class DocumentHelper {
         List<String> respAddressList = caseData.getRespondentCollection()
                 .stream()
                 .filter(respondentSumTypeItem -> respondentSumTypeItem.getValue().getResponseStruckOut() == null
-                        || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO))
+                        || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO)
+                        && (respondentSumTypeItem.getValue().getResponseContinue() == null
+                        || YES.equals(respondentSumTypeItem.getValue().getResponseContinue())))
                 .map(respondentSumTypeItem -> (size > 1 ? atomicInteger.getAndIncrement() + ". " : "")
                         + getRespondentAddressET3(respondentSumTypeItem.getValue()))
                 .collect(Collectors.toList());
