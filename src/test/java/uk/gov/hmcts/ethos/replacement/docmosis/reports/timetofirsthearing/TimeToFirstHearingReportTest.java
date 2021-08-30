@@ -116,7 +116,7 @@ public class TimeToFirstHearingReportTest {
                 HEARING_STATUS_HEARD);
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING,
                 dateListedTypeItem));
-        submitEvents.add(createSubmitEvent(hearings,CONCILIATION_TRACK_FAST_TRACK, "2020-04-01T00:00:00.000"));
+        submitEvents.add(createSubmitEvent(hearings,CONCILIATION_TRACK_FAST_TRACK, "2020-04-01"));
 
         TimeToFirstHearingReport timeToFirstHearingReport = new TimeToFirstHearingReport();
         ListingData reportListingData = timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
