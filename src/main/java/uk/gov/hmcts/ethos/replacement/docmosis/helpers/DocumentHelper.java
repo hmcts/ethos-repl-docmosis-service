@@ -308,7 +308,7 @@ public class DocumentHelper {
             sb.append("\"Respondent\":\"").append(caseData.getRespondentCollection().size() > 1 ? "1. " : "")
                     .append(nullCheck(finalRespondentToBeShown.getRespondentName())).append(NEW_LINE);
             sb.append(getRespOthersName(caseData, finalRespondentToBeShown.getRespondentName()));
-            sb.append(getRespAddress(caseData, finalRespondentToBeShown.getRespondentName()));
+            sb.append(getRespAddress(caseData));
         } else {
             sb.append("\"respondent_full_name\":\"").append(NEW_LINE);
             sb.append(getRespondentAddressUK(new Address()));
@@ -337,7 +337,7 @@ public class DocumentHelper {
         return sb;
     }
 
-    private static StringBuilder getRespAddress(CaseData caseData, String firstRespondentName) {
+    private static StringBuilder getRespAddress(CaseData caseData) {
         log.info("Get Resp address");
         var sb = new StringBuilder();
         var atomicInteger = new AtomicInteger(1);
