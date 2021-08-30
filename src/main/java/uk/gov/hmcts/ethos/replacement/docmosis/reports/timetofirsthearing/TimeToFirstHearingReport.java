@@ -122,7 +122,7 @@ public class TimeToFirstHearingReport {
         adhocReportType.setConciliationTrack(getConciliationTrack(caseData));
         if (!Strings.isNullOrEmpty(caseData.getReceiptDate())) {
             var duration = Duration.between(firstHearingDate.atStartOfDay(),
-                    LocalDate.parse(caseData.getReceiptDate(), OLD_DATE_TIME_PATTERN).atStartOfDay());
+                    LocalDate.parse(caseData.getReceiptDate()).atStartOfDay());
             adhocReportType.setDelayedDaysForFirstHearing(String.valueOf(duration.toDays()));
             adhocReportType.setReceiptDate(caseData.getReceiptDate());
         }
@@ -348,7 +348,7 @@ public class TimeToFirstHearingReport {
     }
 
     private boolean isFirstHearingWithin26Weeks(CaseData caseData, LocalDate firstHearingDate) {
-        var receiptDate = LocalDate.parse(caseData.getReceiptDate(), OLD_DATE_TIME_PATTERN);
+        var receiptDate = LocalDate.parse(caseData.getReceiptDate());
         return receiptDate.plusWeeks(26).equals(firstHearingDate) || receiptDate.plusWeeks(26).isAfter(firstHearingDate);
     }
 }
