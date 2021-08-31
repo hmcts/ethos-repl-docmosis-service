@@ -71,10 +71,12 @@ public class MultipleBatchUpdate3Service {
                 removeClaimantRep(caseSearched, multipleData);
             }
             if (YES.equals(multipleData.getBatchRemoveRespondentRep())) {
-                var representedTypeRToBeRemoved = UpdateDataModelBuilder.getRespondentRepType(multipleData, caseSearched.getCaseData());
+                var representedTypeRToBeRemoved = UpdateDataModelBuilder.getRespondentRepType(
+                        multipleData, caseSearched.getCaseData());
                 removeRespondentRep(caseSearched.getCaseData(), representedTypeRToBeRemoved);
             }
-            if (YES.equals(multipleData.getBatchRemoveClaimantRep()) || YES.equals(multipleData.getBatchRemoveRespondentRep())) {
+            if (YES.equals(multipleData.getBatchRemoveClaimantRep())
+                    || YES.equals(multipleData.getBatchRemoveRespondentRep())) {
                 submitEventForCase(userToken, multipleDetails.getCaseTypeId(),
                         caseSearched.getCaseId(), caseSearched.getCaseData(),multipleDetails.getJurisdiction());
             }
@@ -91,13 +93,14 @@ public class MultipleBatchUpdate3Service {
        try {
            CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, caseTypeId,
                    jurisdiction, String.valueOf(caseId));
-           ccdClient.submitEventForCase(userToken,caseData, caseTypeId,
-                   jurisdiction, returnedRequest,String.valueOf(caseId));
+           ccdClient.submitEventForCase(userToken, caseData, caseTypeId,
+                   jurisdiction, returnedRequest, String.valueOf(caseId));
        }
           catch (Exception e) {
             throw new CaseCreationException("Error while submitting event for case: " + caseId + e.toString());
         }
     }
+
     private void removeClaimantRep(SubmitEvent caseSearched, MultipleData multipleData) {
             log.info("Claimant Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
                     + " of multiple: " + multipleData.getMultipleReference());
@@ -117,13 +120,14 @@ public class MultipleBatchUpdate3Service {
                             .findAny();
 
             if (respondentSumTypeItemOptional.isPresent() && CollectionUtils.isNotEmpty(caseData.getRepCollection())) {
-                List<RepresentedTypeRItem> toBeRemoved = caseData.getRepCollection().stream().filter(a-> a.getValue().getRespRepName().equals(representedType.getRespRepName())).collect(Collectors.toList());
+                List<RepresentedTypeRItem> toBeRemoved = caseData.getRepCollection().stream().filter(
+                        a -> a.getValue().getRespRepName().equals(representedType.getRespRepName())).collect(Collectors.toList());
                 if (CollectionUtils.isNotEmpty(toBeRemoved)) {
                     log.info("Respondent representatives to be removed are: " + toBeRemoved.size());
                     for (RepresentedTypeRItem r: toBeRemoved) {
-                       caseData.getRepCollection().stream().filter(a-> a.getValue().equals(r.getValue()))
+                       caseData.getRepCollection().stream().filter(a -> a.getValue().equals(r.getValue()))
                                 .findFirst().ifPresent(representedTypeRItem -> representedTypeRItem.setId(null));
-                        caseData.getRepCollection().stream().filter(a-> a.getValue().equals(r.getValue()))
+                        caseData.getRepCollection().stream().filter(a -> a.getValue().equals(r.getValue()))
                                 .findFirst().ifPresent(representedTypeRItem -> representedTypeRItem.setValue(null));
                     }
                     log.info("Size of rep collection:" + caseData.getRepCollection().size());

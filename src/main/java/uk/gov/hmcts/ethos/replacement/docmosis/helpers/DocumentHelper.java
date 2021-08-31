@@ -1,5 +1,43 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
+import com.google.common.base.Strings;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_PAGE_SIZE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LABEL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LBL;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
+
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.Address;
@@ -18,45 +56,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.util.CollectionUtils;
-import com.google.common.base.Strings;
-
-import lombok.extern.slf4j.Slf4j;
-import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_PAGE_SIZE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LABEL;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LBL;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
 public class DocumentHelper {
@@ -266,47 +265,56 @@ public class DocumentHelper {
     private static StringBuilder getRespondentData(CaseData caseData) {
         log.info("Respondent Data");
         var sb = new StringBuilder();
-        List<RepresentedTypeRItem> representedTypeRList = caseData.getRepCollection();
         List<RespondentSumTypeItem> respondentSumTypeItemList = !CollectionUtils.isEmpty(caseData.getRespondentCollection())
-                && !CollectionUtils.isEmpty(caseData.getRepCollection()) ? caseData.getRespondentCollection().stream()
-                .filter(a -> a.getValue().getRespondentName()
-                        .equals(caseData.getRepCollection().get(0)
-                                .getValue().getRespRepName())).collect(Collectors.toList()) : new ArrayList<>();
-        boolean responseNotStruckOut = CollectionUtils.isEmpty(respondentSumTypeItemList)
-                || Strings.isNullOrEmpty(respondentSumTypeItemList.get(0).getValue().getResponseStruckOut())
-                || respondentSumTypeItemList.get(0).getValue().getResponseStruckOut().equals(NO);
+                ? caseData.getRespondentCollection(): new ArrayList<>();
 
-        respondentSumTypeItemList = !CollectionUtils.isEmpty(caseData.getRespondentCollection())
-                ? caseData.getRespondentCollection() : new ArrayList<>();
+        if (CollectionUtils.isEmpty(respondentSumTypeItemList)) {
+            log.error("No respondents present for case: " + caseData.getEthosCaseReference());
+        }
 
-        var responseContinue = true;
+        var responseContinue = false;
+        var responseNotStruckOut = false;
 
-        RespondentSumType respondentToBeShown = !CollectionUtils.isEmpty(respondentSumTypeItemList)
-                ? respondentSumTypeItemList.get(0).getValue() : new RespondentSumType();
+        var respondentToBeShown = new RespondentSumType();
 
         for (RespondentSumTypeItem respondentSumTypeItem: respondentSumTypeItemList) {
             responseContinue = Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseContinue())
                     || YES.equals(respondentSumTypeItem.getValue().getResponseContinue());
+            responseNotStruckOut = Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseStruckOut())
+                    || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO);
 
-            if (responseContinue) {
-                log.info("Response is continued for case: " + caseData.getEthosCaseReference());
+            if (responseContinue && responseNotStruckOut) {
+                log.info("Response is continuing and not struck out for case: " + caseData.getEthosCaseReference());
                 respondentToBeShown = respondentSumTypeItem.getValue();
                 break;
             }
         }
 
+        if (!responseContinue) {
+            log.error("Atleast one respondent should have response continuing for case: " + caseData.getEthosCaseReference());
+        }
+
+        if (!responseNotStruckOut) {
+            log.error("Atleast one respondent should have response not struck out for case: " + caseData.getEthosCaseReference());
+        }
+
+        if (respondentToBeShown.equals(new RespondentSumType())) {
+            log.error("No respondent found whose response is continuing and is not struck out for case: "
+                    + caseData.getEthosCaseReference());
+        }
+
+        List<RepresentedTypeRItem> representedTypeRList = caseData.getRepCollection();
         RespondentSumType finalRespondentToBeShown = respondentToBeShown;
+        Optional<RepresentedTypeRItem> representedTypeRItem = Optional.empty();
 
-        if (!CollectionUtils.isEmpty(representedTypeRList) && responseNotStruckOut && responseContinue) {
+        if (!CollectionUtils.isEmpty(representedTypeRList) && responseNotStruckOut && responseContinue && !finalRespondentToBeShown.equals(new RespondentSumType())) {
+            representedTypeRItem = representedTypeRList.stream()
+                    .filter(a -> a.getValue().getRespRepName().equals(finalRespondentToBeShown.getRespondentName())).findFirst();
+        }
+
+        if (representedTypeRItem.isPresent()) {
             log.info("Respondent represented");
-            var representedTypeR = representedTypeRList.get(0).getValue();
-            Optional<RepresentedTypeRItem> representedTypeRItem = caseData.getRepCollection().stream()
-                    .filter(a -> a.getValue().getRespRepName()
-                            .equals(finalRespondentToBeShown.getRespondentName())).findFirst();
-            if (representedTypeRItem.isPresent()) {
-                representedTypeR = representedTypeRItem.get().getValue();
-            }
-
+            var representedTypeR = representedTypeRItem.get().getValue();
             sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(representedTypeR
                     .getNameOfRepresentative())).append(NEW_LINE);
             if (representedTypeR.getRepresentativeAddress() != null) {
@@ -321,7 +329,9 @@ public class DocumentHelper {
 
         } else {
             log.info("Respondent not represented");
-            if (!CollectionUtils.isEmpty(caseData.getRespondentCollection()) && responseContinue) {
+            if (!CollectionUtils.isEmpty(caseData.getRespondentCollection())
+                    && responseNotStruckOut && responseContinue
+                    && !finalRespondentToBeShown.equals(new RespondentSumType())) {
                 sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(finalRespondentToBeShown
                         .getRespondentName())).append(NEW_LINE);
                 sb.append(getRespondentOrRepAddressUK(getRespondentAddressET3(finalRespondentToBeShown)));
@@ -333,7 +343,7 @@ public class DocumentHelper {
         }
         if (!CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
             log.info("Respondent collection");
-            sb.append("\"respondent_full_name\":\"").append(
+            sb.append("\"respondent_full_name\":\"").append (
                     nullCheck((Strings.isNullOrEmpty(finalRespondentToBeShown.getResponseContinue())
                             || YES.equals(finalRespondentToBeShown.getResponseContinue()))
                             ? finalRespondentToBeShown.getRespondentName()
@@ -341,15 +351,15 @@ public class DocumentHelper {
                     .append(NEW_LINE);
             sb.append((Strings.isNullOrEmpty(finalRespondentToBeShown.getResponseContinue())
                     || YES.equals(finalRespondentToBeShown.getResponseContinue()))
+                    && !finalRespondentToBeShown.equals(new RespondentSumType())
                     ? getRespondentAddressUK(getRespondentAddressET3(finalRespondentToBeShown)) : "");
 
             if (Strings.isNullOrEmpty(finalRespondentToBeShown.getResponseContinue())
-                    ||YES.equals(finalRespondentToBeShown.getResponseContinue())) {
+                    || YES.equals(finalRespondentToBeShown.getResponseContinue())) {
                 sb.append("\"Respondent\":\"").append(caseData.getRespondentCollection().size() > 1 ? "1. " : "")
                         .append(nullCheck((finalRespondentToBeShown.getRespondentName())))
                         .append(NEW_LINE);
             }
-
 
             sb.append(getRespOthersName(caseData, finalRespondentToBeShown.getRespondentName()));
             sb.append(getRespAddress(caseData));
