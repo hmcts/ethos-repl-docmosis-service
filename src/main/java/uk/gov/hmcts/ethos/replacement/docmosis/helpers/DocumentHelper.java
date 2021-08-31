@@ -250,42 +250,57 @@ public class DocumentHelper {
         var sb = new StringBuilder();
         List<RepresentedTypeRItem> representedTypeRList = caseData.getRepCollection();
         List<RespondentSumTypeItem> respondentSumTypeItemList = !CollectionUtils.isEmpty(caseData.getRespondentCollection())
-                && !CollectionUtils.isEmpty(caseData.getRepCollection()) ? caseData.getRespondentCollection().stream()
-                .filter(a-> a.getValue().getRespondentName()
-                        .equals(caseData.getRepCollection().get(0).getValue().getRespRepName())).collect(Collectors.toList()): new ArrayList<>();
-        boolean responseNotStruckOut = CollectionUtils.isEmpty(respondentSumTypeItemList)
-                || Strings.isNullOrEmpty(respondentSumTypeItemList.get(0).getValue().getResponseStruckOut())
-                || respondentSumTypeItemList.get(0).getValue().getResponseStruckOut().equals(NO);
-
-        respondentSumTypeItemList = !CollectionUtils.isEmpty(caseData.getRespondentCollection())
                 ? caseData.getRespondentCollection(): new ArrayList<>();
 
-        var responseContinue = true;
+        if (CollectionUtils.isEmpty(respondentSumTypeItemList)) {
+            log.error("No respondents present for case: " + caseData.getEthosCaseReference());
+            return new StringBuilder();
+        }
 
-        RespondentSumType respondentToBeShown = !CollectionUtils.isEmpty(respondentSumTypeItemList)? respondentSumTypeItemList.get(0).getValue(): new RespondentSumType();
+        var responseContinue = false;
+        var responseNotStruckOut = false;
+
+        var respondentToBeShown = new RespondentSumType();
 
         for (RespondentSumTypeItem respondentSumTypeItem: respondentSumTypeItemList) {
             responseContinue = Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseContinue())
                     || YES.equals(respondentSumTypeItem.getValue().getResponseContinue());
+            responseNotStruckOut = Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseStruckOut())
+                    || respondentSumTypeItem.getValue().getResponseStruckOut().equals(NO);
 
-            if (responseContinue) {
-                log.info("Response is continued for case: " + caseData.getEthosCaseReference());
+            if (responseContinue && responseNotStruckOut) {
+                log.info("Response is continuing and not struck out for case: " + caseData.getEthosCaseReference());
                 respondentToBeShown = respondentSumTypeItem.getValue();
                 break;
             }
         }
 
+        if (!responseContinue) {
+            log.error("Atleast one respondent should have response continuing for case: " + caseData.getEthosCaseReference());
+            return new StringBuilder();
+        }
+
+        if (!responseNotStruckOut) {
+            log.error("Atleast one respondent should have response not struck out for case: " + caseData.getEthosCaseReference());
+            return new StringBuilder();
+        }
+
+        if (respondentToBeShown.equals(new RespondentSumType())) {
+            log.error("No respondent found whose response is continuing and is not struck out for case: " + caseData.getEthosCaseReference());
+            return new StringBuilder();
+        }
+
         RespondentSumType finalRespondentToBeShown = respondentToBeShown;
+        Optional<RepresentedTypeRItem> representedTypeRItem = Optional.empty();
 
         if (!CollectionUtils.isEmpty(representedTypeRList) && responseNotStruckOut && responseContinue) {
-            log.info("Respondent represented");
-            var representedTypeR = representedTypeRList.get(0).getValue();
-            Optional<RepresentedTypeRItem> representedTypeRItem = caseData.getRepCollection().stream()
+            representedTypeRItem = representedTypeRList.stream()
                     .filter(a -> a.getValue().getRespRepName().equals(finalRespondentToBeShown.getRespondentName())).findFirst();
-            if (representedTypeRItem.isPresent()) {
-                representedTypeR = representedTypeRItem.get().getValue();
-            }
+        }
 
+        if (representedTypeRItem.isPresent()) {
+            log.info("Respondent represented");
+            var representedTypeR = representedTypeRItem.get().getValue();
             sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(representedTypeR
                     .getNameOfRepresentative())).append(NEW_LINE);
             if (representedTypeR.getRepresentativeAddress() != null) {
