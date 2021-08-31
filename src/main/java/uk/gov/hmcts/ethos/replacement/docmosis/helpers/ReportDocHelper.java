@@ -298,7 +298,7 @@ public class ReportDocHelper {
         sb.append("\"Receipt_Date\":\"").append(
                 nullCheck(adhocReportType.getReceiptDate())).append(NEW_LINE);
         sb.append("\"Hearing_Date\":\"").append(
-                UtilHelper.formatLocalDate(adhocReportType.getHearingDate())).append(NEW_LINE);
+                nullCheck(adhocReportType.getHearingDate())).append(NEW_LINE);
         sb.append("\"Days\":\"").append(
                 nullCheck(adhocReportType.getDelayedDaysForFirstHearing())).append("\"}");
         return sb;
