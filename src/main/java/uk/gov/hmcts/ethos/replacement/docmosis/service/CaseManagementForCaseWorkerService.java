@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,6 +84,9 @@ public class CaseManagementForCaseWorkerService {
             for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
                 if (respondentSumTypeItem.getValue().getResponseReceived() == null) {
                     respondentSumTypeItem.getValue().setResponseReceived(NO);
+                }
+                if (Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseContinue())) {
+                    respondentSumTypeItem.getValue().setResponseContinue(YES);
                 }
             }
         } else {
