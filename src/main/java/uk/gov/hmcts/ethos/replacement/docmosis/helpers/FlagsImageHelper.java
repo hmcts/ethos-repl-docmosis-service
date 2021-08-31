@@ -161,7 +161,9 @@ public class FlagsImageHelper {
     }
 
     private static boolean counterClaimMade(CaseData caseData) {
-        return !isNullOrEmpty(caseData.getCounterClaim()) || (caseData.getEccCases() !=null && !caseData.getEccCases().isEmpty());
+        return !isNullOrEmpty(caseData.getCounterClaim())
+                || (caseData.getEccCases() != null
+                && !caseData.getEccCases().isEmpty());
     }
 
     private static boolean liveAppeal(CaseData caseData) {

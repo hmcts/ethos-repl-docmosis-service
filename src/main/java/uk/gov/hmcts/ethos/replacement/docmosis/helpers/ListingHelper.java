@@ -313,7 +313,7 @@ public class ListingHelper {
                 .stream()
                 .filter(listingTypeItem -> !isEmptyHearingDate(listingTypeItem.getValue()))
                 .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getCauseListDate(),
-                        () -> new TreeMap<>(getDateComparator()), Collectors.toList()));
+                () -> new TreeMap<>(getDateComparator()), Collectors.toList()));
     }
 
     private static Iterator<Map.Entry<String, List<ListingTypeItem>>> getEntriesByDate(StringBuilder sb,
@@ -385,8 +385,8 @@ public class ListingHelper {
         return true;
     }
 
-    private static TreeMap<String, List<ListingTypeItem>> getListHearingsByRoomWithNotAllocated
-            (List<ListingTypeItem> listingSubCollection) {
+    private static TreeMap<String, List<ListingTypeItem>> getListHearingsByRoomWithNotAllocated (
+            List<ListingTypeItem> listingSubCollection) {
         TreeMap<String, List<ListingTypeItem>> sortedMap = listingSubCollection
                 .stream()
                 .filter(listingTypeItem -> !isEmptyHearingRoom(listingTypeItem.getValue()))
@@ -397,7 +397,7 @@ public class ListingHelper {
                 .filter(listingTypeItem -> isEmptyHearingRoom(listingTypeItem.getValue()))
                 .sorted(getVenueComparatorListingTypeItem())
                 .collect(toList());
-        if (!notAllocated.isEmpty()){
+        if (!notAllocated.isEmpty()) {
             sortedMap.computeIfAbsent(ROOM_NOT_ALLOCATED, k -> new ArrayList<>()).addAll(notAllocated);
         }
         return sortedMap;
@@ -416,13 +416,13 @@ public class ListingHelper {
                 .stream()
                 .filter(listingTypeItem -> !isEmptyHearingVenue(listingTypeItem.getValue()))
                 .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getCauseListVenue(),
-                        () -> new TreeMap<>(getVenueComparator()), Collectors.toList()));
+                 () -> new TreeMap<>(getVenueComparator()), Collectors.toList()));
         List<ListingTypeItem> notAllocated = listingData.getListingCollection()
                 .stream()
                 .filter(listingTypeItem -> isEmptyHearingVenue(listingTypeItem.getValue()))
                 .sorted(getDateComparatorListingTypeItem().thenComparing(getTimeComparatorListingTypeItem()))
                 .collect(toList());
-        if (!notAllocated.isEmpty()){
+        if (!notAllocated.isEmpty()) {
             sortedMap.computeIfAbsent(NOT_ALLOCATED, k -> new ArrayList<>()).addAll(notAllocated);
         }
         return sortedMap;
@@ -506,7 +506,8 @@ public class ListingHelper {
         sb.append("\"Hearing_dayofdays\":\"").append(nullCheck(listingType.getHearingDay())).append(NEW_LINE);
         sb.append("\"Hearing_panel\":\"").append(nullCheck(listingType.getHearingPanel())).append(NEW_LINE);
         sb.append("\"Hearing_notes\":\"").append(nullCheck(extractHearingNotes(listingType))).append(NEW_LINE);
-        sb.append("\"respondent_representative\":\"").append(nullCheck(listingType.getRespondentRepresentative())).append("\"}");
+        sb.append("\"respondent_representative\":\"")
+                .append(nullCheck(listingType.getRespondentRepresentative())).append("\"}");
         return sb;
     }
 
