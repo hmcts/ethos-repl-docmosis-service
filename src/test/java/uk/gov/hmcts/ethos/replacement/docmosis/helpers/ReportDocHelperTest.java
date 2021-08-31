@@ -215,14 +215,14 @@ public class ReportDocHelperTest {
                 "{\"Case_Reference\":\"2122324/2020\",\n" +
                 "\"Conciliation_Track\":\"\",\n" +
                 "\"Receipt_Date\":\"\",\n" +
-                "\"Hearing_Date\":\"20 October 2020\",\n" +
+                "\"Hearing_Date\":\"2020-10-20T10:00:00.000\",\n" +
                 "\"Days\":\"\"" +
                 "},\n" +
                 "{\"Office\":\"Manchester\",\n" +
                 "{\"Case_Reference\":\"2122323/2020\",\n" +
                 "\"Conciliation_Track\":\"\",\n" +
                 "\"Receipt_Date\":\"\",\n" +
-                "\"Hearing_Date\":\"20 October 2020\",\n" +
+                "\"Hearing_Date\":\"2020-10-20T10:00:00.000\",\n" +
                 "\"Days\":\"\"}],\n" +
                 "\"Report_Clerk\":\"Mike Jordan\",\n" +
                 "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
