@@ -133,6 +133,34 @@
       "hearingNumber": "1",
       "resp_others": "Mark Taylor2, Tony Jones, Steve Thomas"
     },
+    "localReportsSummary": [
+      {
+        "value": {
+          "ConNoneTotal": "",
+          "ConStdTotal": "",
+          "ConFastTotal": "",
+          "ConOpenTotal": "",
+          "ConNone26wkTotal": "",
+          "ConStd26wkTotal": "",
+          "ConFast26wkTotal": "",
+          "ConOpen26wkTotal": "",
+          "ConNone26wkTotalPerCent": "",
+          "ConStd26wkTotalPerCent": "",
+          "ConFast26wkTotalPerCent": "",
+          "ConOpen26wkTotalPerCent": "",
+          "xConNone26wkTotal": "",
+          "xConStd26wkTotal": "",
+          "xConFast26wkTotal": "",
+          "xConOpen26wkTotal": "",
+          "xConNone26wkTotalPerCent": "",
+          "xConStd26wkTotalPerCent": "",
+          "xConFast26wkTotalPerCent": "",
+          "xConOpen26wkTotalPerCent": "",
+          "delayedDaysForFirstHearing": ""
+        },
+        "id": "97087d19-795a-4886-8cdb-06489b8b2ef5"
+      }
+    ],
     "localReportsDetail": [
       {
         "value": {

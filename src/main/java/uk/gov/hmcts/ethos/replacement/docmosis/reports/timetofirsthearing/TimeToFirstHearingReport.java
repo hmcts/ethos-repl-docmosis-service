@@ -162,8 +162,8 @@ public class TimeToFirstHearingReport {
         adhocReportType.setTotalCases(String.valueOf(totalCases));
         adhocReportType.setTotal26wk(String.valueOf(totalCasesWithin26Weeks));
         adhocReportType.setTotalx26wk(String.valueOf(totalCasesNotWithin26Weeks));
-        adhocReportType.setTotal26wkPerCent(String.valueOf(totalCasesWithin26WeeksPercent));
-        adhocReportType.setTotalx26wkPerCent(String.valueOf(totalCasesNotWithin26WeeksPercent));
+        adhocReportType.setTotal26wkPerCent(String.format("%.2f",totalCasesWithin26WeeksPercent));
+        adhocReportType.setTotalx26wkPerCent(String.format("%.2f",totalCasesNotWithin26WeeksPercent));
         listingData.setLocalReportsDetailHdr(adhocReportType);
     }
 
@@ -300,14 +300,14 @@ public class TimeToFirstHearingReport {
                 ? ((float)Double.parseDouble(adhocReportType.getXConOpen26wkTotal())
                 / Integer.parseInt(adhocReportType.getConOpenTotal())) * 100 : 0;
 
-        adhocReportType.setConNone26wkTotalPerCent(String.valueOf(conNone26wkTotalPerCent));
-        adhocReportType.setConStd26wkTotalPerCent(String.valueOf(conStd26wkTotalPerCent));
-        adhocReportType.setConFast26wkTotalPerCent(String.valueOf(conFast26wkTotalPerCent));
-        adhocReportType.setConOpen26wkTotalPerCent(String.valueOf(conOpen26wkTotalPerCent));
-        adhocReportType.setXConNone26wkTotalPerCent(String.valueOf(xConNone26wkTotalPerCent));
-        adhocReportType.setXConStd26wkTotalPerCent(String.valueOf(xConStd26wkTotalPerCent));
-        adhocReportType.setXConFast26wkTotalPerCent(String.valueOf(xConFast26wkTotalPerCent));
-        adhocReportType.setXConOpen26wkTotalPerCent(String.valueOf(xConOpen26wkTotalPerCent));
+        adhocReportType.setConNone26wkTotalPerCent(String.format("%.2f", conNone26wkTotalPerCent));
+        adhocReportType.setConStd26wkTotalPerCent(String.format("%.2f", conStd26wkTotalPerCent));
+        adhocReportType.setConFast26wkTotalPerCent(String.format("%.2f", conFast26wkTotalPerCent));
+        adhocReportType.setConOpen26wkTotalPerCent(String.format("%.2f", conOpen26wkTotalPerCent));
+        adhocReportType.setXConNone26wkTotalPerCent(String.format("%.2f", xConNone26wkTotalPerCent));
+        adhocReportType.setXConStd26wkTotalPerCent(String.format("%.2f", xConStd26wkTotalPerCent));
+        adhocReportType.setXConFast26wkTotalPerCent(String.format("%.2f", xConFast26wkTotalPerCent));
+        adhocReportType.setXConOpen26wkTotalPerCent(String.format("%.2f", xConOpen26wkTotalPerCent));
     }
     private String getConciliationTrack(CaseData caseData) {
         return StringUtils.isNotBlank(caseData.getConciliationTrack())
