@@ -196,6 +196,47 @@ public class ReportDocHelper {
                     nullCheck(localReportDetailHdr.getTotalx26wk())).append(NEW_LINE);
             sb.append("\"Total_Percent_Not_Within_26Weeks\":\"").append(
                     nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConNone_Total\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConNone_Total_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConNone_Percent_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConNone_Total_Not_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConNone_Percent_Not_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConFast_Total\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConFast_Total_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConFast_Percent_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConFast_Total_Not_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConFast_Percent_Not_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConStd_Total\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConStd_Total_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConStd_Percent_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConStd_Total_Not_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConStd_Percent_Not_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConOpen_Total\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConOpen_Total_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConOpen_Percent_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConOpen_Total_Not_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConOpen_Percent_Not_26_Week\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+
         }
 
         if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())) {
