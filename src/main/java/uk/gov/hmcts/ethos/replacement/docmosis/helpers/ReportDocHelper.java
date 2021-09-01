@@ -187,7 +187,7 @@ public class ReportDocHelper {
         AdhocReportType localReportDetailHdr = listingData.getLocalReportsDetailHdr();
         if (localReportDetailHdr != null) {
             sb.append("\"Total_Cases\":\"").append(
-                    nullCheck(localReportDetailHdr.getTotal())).append(NEW_LINE);
+                    nullCheck(localReportDetailHdr.getTotalCases())).append(NEW_LINE);
             sb.append("\"Total_Within_26Weeks\":\"").append(
                     nullCheck(localReportDetailHdr.getTotal26wk())).append(NEW_LINE);
             sb.append("\"Total_Percent_Within_26Weeks\":\"").append(

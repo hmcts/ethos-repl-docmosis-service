@@ -602,6 +602,8 @@ public class ListingHelper {
                     return "EM-TRB-SCO-ENG-00221";
                 case CASES_AWAITING_JUDGMENT_REPORT:
                     return "EM-TRB-SCO-ENG-00749";
+                case TIME_TO_FIRST_HEARING_REPORT:
+                    return "EM-TRB-SCO-ENG-00751";
                 default:
                     return "No document found";
             }

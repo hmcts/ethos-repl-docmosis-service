@@ -205,7 +205,7 @@ public class ReportDocHelperTest {
                 "\"Listed_date_from\":\"1 December 2021\",\n" +
                 "\"Listed_date_to\":\"3 December 2021\",\n" +
                 "\"Report_Office\":\"Manchester\",\n" +
-                "\"Total_Cases\":\"0\",\n" +
+                "\"Total_Cases\":\"\",\n" +
                 "\"Total_Within_26Weeks\":\"\",\n" +
                 "\"Total_Percent_Within_26Weeks\":\"\",\n" +
                 "\"Total_Not_Within_26Weeks\":\"\",\n" +
