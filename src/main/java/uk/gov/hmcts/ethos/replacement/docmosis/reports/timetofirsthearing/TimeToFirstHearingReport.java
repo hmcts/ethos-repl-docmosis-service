@@ -122,7 +122,7 @@ public class TimeToFirstHearingReport {
         adhocReportType.setConciliationTrack(getConciliationTrack(caseData));
         if (!Strings.isNullOrEmpty(caseData.getReceiptDate())) {
             var duration = Duration.between(firstHearingDate.atStartOfDay(),
-                    LocalDate.parse(caseData.getReceiptDate()).atStartOfDay());
+                    LocalDate.parse(caseData.getReceiptDate()).atStartOfDay()).abs();
             adhocReportType.setDelayedDaysForFirstHearing(String.valueOf(duration.toDays()));
             adhocReportType.setReceiptDate(caseData.getReceiptDate());
         }
