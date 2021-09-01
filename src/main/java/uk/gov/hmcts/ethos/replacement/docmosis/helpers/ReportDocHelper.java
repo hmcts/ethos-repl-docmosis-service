@@ -336,7 +336,7 @@ public class ReportDocHelper {
         var sb = new StringBuilder();
         sb.append("{\"Office\":\"").append(
                 nullCheck(adhocReportType.getReportOffice())).append(NEW_LINE);
-        sb.append(CASE_REFERENCE).append(
+        sb.append("\"Case_Reference\":\"").append(
                 nullCheck(adhocReportType.getCaseReference())).append(NEW_LINE);
         sb.append("\"Conciliation_Track\":\"").append(
                 nullCheck(adhocReportType.getConciliationTrack())).append(NEW_LINE);
