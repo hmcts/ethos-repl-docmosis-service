@@ -19,10 +19,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportDocHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -178,8 +175,21 @@ public class TornadoService {
             if (responseCode == HTTP_OK) {
                 return createDocument(authToken, conn, documentName, os);
             } else {
+                logResponseErrorMessage(conn);
                 throw new IOException(String.format("Invalid response code %d received from Tornado: %s", responseCode,
                         conn.getResponseMessage()));
+            }
+        }
+    }
+
+    private void logResponseErrorMessage(HttpURLConnection conn) throws IOException {
+        log.error("Response message:" + conn.getResponseMessage());
+
+        try (var inputStreamReader = new InputStreamReader(conn.getErrorStream());
+             var errorReader = new BufferedReader(inputStreamReader)) {
+            String msg;
+            while ((msg = errorReader.readLine()) != null) {
+                log.error(msg);
             }
         }
     }
