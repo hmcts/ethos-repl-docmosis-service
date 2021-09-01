@@ -210,6 +210,26 @@ public class ReportDocHelperTest {
                 "\"Total_Percent_Within_26Weeks\":\"\",\n" +
                 "\"Total_Not_Within_26Weeks\":\"\",\n" +
                 "\"Total_Percent_Not_Within_26Weeks\":\"\",\n" +
+                "\"ConNone_Total\":\"\",\n" +
+                "\"ConNone_Total_26_Week\":\"\",\n" +
+                "\"ConNone_Percent_26_Week\":\"\",\n" +
+                "\"ConNone_Total_Not_26_Week\":\"\",\n" +
+                "\"ConNone_Percent_Not_26_Week\":\"\",\n" +
+                "\"ConFast_Total\":\"\",\n" +
+                "\"ConFast_Total_26_Week\":\"\",\n" +
+                "\"ConFast_Percent_26_Week\":\"\",\n" +
+                "\"ConFast_Total_Not_26_Week\":\"\",\n" +
+                "\"ConFast_Percent_Not_26_Week\":\"\",\n" +
+                "\"ConStd_Total\":\"\",\n" +
+                "\"ConStd_Total_26_Week\":\"\",\n" +
+                "\"ConStd_Percent_26_Week\":\"\",\n" +
+                "\"ConStd_Total_Not_26_Week\":\"\",\n" +
+                "\"ConStd_Percent_Not_26_Week\":\"\",\n" +
+                "\"ConOpen_Total\":\"\",\n" +
+                "\"ConOpen_Total_26_Week\":\"\",\n" +
+                "\"ConOpen_Percent_26_Week\":\"\",\n" +
+                "\"ConOpen_Total_Not_26_Week\":\"\",\n" +
+                "\"ConOpen_Percent_Not_26_Week\":\"\",\n" +
                 "\"Report_List\":[\n" +
                 "{\"Office\":\"Manchester\",\n" +
                 "{\"Case_Reference\":\"2122324/2020\",\n" +

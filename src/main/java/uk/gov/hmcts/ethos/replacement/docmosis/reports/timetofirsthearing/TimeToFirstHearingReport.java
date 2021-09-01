@@ -5,6 +5,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.common.Strings;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
@@ -92,7 +93,7 @@ public class TimeToFirstHearingReport {
         log.info(String.format("Time to first hearing report case type id %s search results: %d",
                 listingDetails.getCaseTypeId(), submitEvents.size()));
         populateLocalReportSummary(listingDetails.getCaseData(), submitEvents);
-        populateLocalReportSummaryHdr(listingDetails.getCaseData());
+        populateLocalReportSummaryHdr(listingDetails);
         populateLocalReportSummaryDetail(listingDetails, submitEvents);
 
     }
@@ -133,8 +134,11 @@ public class TimeToFirstHearingReport {
 
     }
 
-    private void populateLocalReportSummaryHdr(ListingData listingData) {
+    private void populateLocalReportSummaryHdr(ListingDetails listingDetails) {
+
+        ListingData listingData = listingDetails.getCaseData();
         var adhocReportType = listingData.getLocalReportsSummary().get(0).getValue();
+        adhocReportType.setReportOffice(UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
         int totalCases = Integer.parseInt(adhocReportType.getConOpenTotal())
                 + Integer.parseInt(adhocReportType.getConStdTotal())
                 + Integer.parseInt(adhocReportType.getConFastTotal())
