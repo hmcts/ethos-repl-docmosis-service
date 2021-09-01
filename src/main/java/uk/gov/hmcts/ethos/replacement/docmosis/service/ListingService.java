@@ -102,7 +102,7 @@ public class ListingService {
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null
                             && !submitEvent.getCaseData().getHearingCollection().isEmpty()) {
-                        addListingTypeItems(submitEvent,listingTypeItems,listingDetails );
+                        addListingTypeItems(submitEvent, listingTypeItems, listingDetails);
                     }
                 }
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
@@ -115,7 +115,9 @@ public class ListingService {
         }
     }
 
-    private void addListingTypeItems(SubmitEvent submitEvent, List<ListingTypeItem> listingTypeItems,ListingDetails listingDetails) {
+    private void addListingTypeItems(SubmitEvent submitEvent,
+                                     List<ListingTypeItem> listingTypeItems,
+                                     ListingDetails listingDetails) {
         for (HearingTypeItem hearingTypeItem : submitEvent.getCaseData().getHearingCollection()) {
             if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
                 listingTypeItems.addAll(getListingTypeItems(hearingTypeItem,
@@ -123,6 +125,7 @@ public class ListingService {
             }
         }
     }
+
     private List<SubmitEvent> getListingHearingsSearch(ListingDetails listingDetails, String authToken)
             throws IOException {
         var listingData = listingDetails.getCaseData();
@@ -193,7 +196,8 @@ public class ListingService {
         }
     }
 
-    private CasesAwaitingJudgmentReportData getCasesAwaitingJudgmentReport(ListingDetails listingDetails, String authToken) {
+    private CasesAwaitingJudgmentReportData getCasesAwaitingJudgmentReport(
+            ListingDetails listingDetails, String authToken) {
         log.info("Cases Awaiting Judgment for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new CcdReportDataSource(authToken, ccdClient);
 
