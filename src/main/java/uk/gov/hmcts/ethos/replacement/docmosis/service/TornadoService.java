@@ -128,7 +128,6 @@ public class TornadoService {
             sb = ListingHelper.buildListingDocumentContent(listingData, tornadoConnection.getAccessKey(),
                     documentName, userDetails, caseType);
         }
-        log.info(sb.toString());
         try (var outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
             writeOutputStream(outputStreamWriter, sb);
         }
@@ -175,21 +174,8 @@ public class TornadoService {
             if (responseCode == HTTP_OK) {
                 return createDocument(authToken, conn, documentName, os);
             } else {
-                logResponseErrorMessage(conn);
                 throw new IOException(String.format("Invalid response code %d received from Tornado: %s", responseCode,
                         conn.getResponseMessage()));
-            }
-        }
-    }
-
-    private void logResponseErrorMessage(HttpURLConnection conn) throws IOException {
-        log.error("Response message:" + conn.getResponseMessage());
-
-        try (var inputStreamReader = new InputStreamReader(conn.getErrorStream());
-             var errorReader = new BufferedReader(inputStreamReader)) {
-            String msg;
-            while ((msg = errorReader.readLine()) != null) {
-                log.error(msg);
             }
         }
     }

@@ -73,7 +73,6 @@ public class ReportDocHelper {
                 default:
                     throw new IllegalStateException("Report type - Unexpected value: " + listingData.getReportType());
             }
-            log.info(sb.toString());
         }
 
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
@@ -252,7 +251,6 @@ public class ReportDocHelper {
             }
             sb.append("],\n");
         }
-        log.info(sb.toString());
         return sb;
     }
     private static StringBuilder getCasesCompletedReport(ListingData listingData) {
