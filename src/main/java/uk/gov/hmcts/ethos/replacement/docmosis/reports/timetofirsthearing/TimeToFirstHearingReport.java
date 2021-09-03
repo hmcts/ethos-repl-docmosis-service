@@ -118,7 +118,7 @@ public class TimeToFirstHearingReport {
         }
         var adhocReportType = new AdhocReportType();
         adhocReportType.setHearingDate(firstHearingDate.toString());
-        adhocReportType.setReportOffice(listingDetails.getCaseTypeId());
+        adhocReportType.setReportOffice(UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
         adhocReportType.setCaseReference(caseData.getEthosCaseReference());
         adhocReportType.setConciliationTrack(getConciliationTrack(caseData));
         if (!Strings.isNullOrEmpty(caseData.getReceiptDate())) {
