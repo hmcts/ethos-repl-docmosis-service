@@ -171,7 +171,7 @@ public class CasesCompletedReport {
 
         var adhocReportType = new AdhocReportType();
         adhocReportType.setCaseReference(caseData.getEthosCaseReference());
-        adhocReportType.setPosition(caseData.getCurrentPosition());
+        adhocReportType.setPosition(caseData.getPositionType());
         adhocReportType.setConciliationTrack(getConciliationTrack(caseData));
         adhocReportType.setConciliationTrackNo(getConciliationTrackNumber(caseData.getConciliationTrack()));
         adhocReportType.setSessionDays(String.valueOf(hearingSession.getSessionDays()));
