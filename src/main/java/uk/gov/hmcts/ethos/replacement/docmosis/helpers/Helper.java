@@ -259,6 +259,7 @@ public class Helper {
     public static void updatePositionTypeToClosed(CaseData caseData) {
 
         caseData.setPositionType(CASE_CLOSED_POSITION);
+        caseData.setCurrentPosition(CASE_CLOSED_POSITION);
 
     }
 
