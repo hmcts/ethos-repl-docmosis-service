@@ -15,11 +15,14 @@ import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
 import uk.gov.hmcts.ecm.common.model.bulk.items.SearchTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.types.SearchType;
 import uk.gov.hmcts.ecm.common.model.ccd.*;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,8 +33,6 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_DEV_BULK_CASE_TYPE_ID;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -131,6 +132,40 @@ public class DocumentGenerationServiceTest {
         assertEquals("Company", caseData.getClaimantTypeOfClaimant());
         assertEquals("CLAIMANT : Orlando LTD", caseData.getAddressLabelCollection().get(0).getValue().getFullName());
         assertEquals(1, caseData.getAddressLabelCollection().size());
+    }
+
+    @Test
+    public void setBfActionsEnglandOrWales() {
+        documentInfo.setDescription("TemplateName_2.6");
+        assertNull(caseDetails13.getCaseData().getBfActions());
+        documentGenerationService.updateBfActions(documentInfo, caseDetails13.getCaseData());
+        assertEquals(1, caseDetails13.getCaseData().getBfActions().size());
+        assertEquals(YES, caseDetails13.getCaseData().getBfActions().get(0).getValue().getLetters());
+        assertEquals(LocalDate.now().toString(), caseDetails13.getCaseData().getBfActions().get(0).getValue().getDateEntered());
+        assertEquals(LocalDate.now().plusDays(28).toString(), caseDetails13.getCaseData().getBfActions().get(0).getValue().getBfDate());
+        assertEquals("Claim served", caseDetails13.getCaseData().getBfActions().get(0).getValue().getAllActions());
+
+    }
+
+    @Test
+    public void setBfActionsScotland() {
+        documentInfo.setDescription("TemplateName_72");
+        var c = new CorrespondenceScotType();
+        c.setClaimantOrRespondent(CLAIMANT);
+        c.setHearingNumber("1");
+        var backUp = caseDetails13.getCaseData().getCorrespondenceType();
+        caseDetails13.getCaseData().setCorrespondenceType(null);
+        caseDetails13.getCaseData().setCorrespondenceScotType(c);
+        caseDetails13.getCaseData().setCorrespondenceScotType(new CorrespondenceScotType());
+        assertNull(caseDetails13.getCaseData().getBfActions());
+        documentGenerationService.updateBfActions(documentInfo, caseDetails13.getCaseData());
+        assertEquals(1, caseDetails13.getCaseData().getBfActions().size());
+        assertEquals(YES, caseDetails13.getCaseData().getBfActions().get(0).getValue().getLetters());
+        assertEquals(LocalDate.now().toString(), caseDetails13.getCaseData().getBfActions().get(0).getValue().getDateEntered());
+        assertEquals(LocalDate.now().plusDays(28).toString(), caseDetails13.getCaseData().getBfActions().get(0).getValue().getBfDate());
+        assertEquals("Claim served", caseDetails13.getCaseData().getBfActions().get(0).getValue().getAllActions());
+        caseDetails13.getCaseData().setCorrespondenceScotType(null);
+        caseDetails13.getCaseData().setCorrespondenceType(backUp);
     }
 
     @Test
