@@ -3,4 +3,5 @@
   <logger name="c.m.a.servicebus.primitives" level="ERROR"/>
   <logger name="c.m.azure.servicebus.primitives" level="ERROR"/>
   <logger name="com.microsoft.azure.servicebus.primitives" level="ERROR"/>
+  <logger name="uk.gov.hmcts.fortifyclient" level="INFO" />
 </included>

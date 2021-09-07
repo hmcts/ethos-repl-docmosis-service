@@ -20,4 +20,10 @@ withNightlyPipeline(type, product, component) {
     env.TEST_URL = params.URL_TO_TEST
 
     env.Rules = params.SecurityRules
+
+    enableFortifyScan()
+
+    after('fortify-scan') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
+    }
 }
