@@ -144,6 +144,7 @@ public class DocumentGenerationServiceTest {
         assertEquals(LocalDate.now().toString(), caseDetails13.getCaseData().getBfActions().get(0).getValue().getDateEntered());
         assertEquals(LocalDate.now().plusDays(28).toString(), caseDetails13.getCaseData().getBfActions().get(0).getValue().getBfDate());
         assertEquals("Claim served", caseDetails13.getCaseData().getBfActions().get(0).getValue().getAllActions());
+        assertEquals("Other action", caseDetails13.getCaseData().getBfActions().get(0).getValue().getCwActions());
 
     }
 
@@ -163,6 +164,7 @@ public class DocumentGenerationServiceTest {
         assertEquals(YES, caseDetails13.getCaseData().getBfActions().get(0).getValue().getLetters());
         assertEquals(LocalDate.now().toString(), caseDetails13.getCaseData().getBfActions().get(0).getValue().getDateEntered());
         assertEquals(LocalDate.now().plusDays(28).toString(), caseDetails13.getCaseData().getBfActions().get(0).getValue().getBfDate());
+        assertEquals("Other action", caseDetails13.getCaseData().getBfActions().get(0).getValue().getCwActions());
         assertEquals("Claim served", caseDetails13.getCaseData().getBfActions().get(0).getValue().getAllActions());
         caseDetails13.getCaseData().setCorrespondenceScotType(null);
         caseDetails13.getCaseData().setCorrespondenceType(backUp);
