@@ -180,6 +180,7 @@ public class DocumentGenerationService {
         var bfActionType = new BFActionType();
         bfActionType.setLetters(YES);
         bfActionType.setDateEntered(LocalDate.now().toString());
+        bfActionType.setCwActions("Other action");
         bfActionType.setAllActions("Claim served");
         bfActionType.setBfDate(LocalDate.now().plusDays(28).toString());
         bfActionTypeItem.setId(UUID.randomUUID().toString());
