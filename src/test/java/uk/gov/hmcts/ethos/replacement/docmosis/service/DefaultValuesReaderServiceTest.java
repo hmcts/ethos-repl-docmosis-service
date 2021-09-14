@@ -173,6 +173,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceTelephone("0207 538 6161")
                 .tribunalCorrespondenceFax("08703 240 200")
                 .tribunalCorrespondenceEmail("eastlondon@justice.gov.uk")
+                .tribunalCorrespondenceDX("DX 374401 East India Dock 1")
                 .build();
         postDefaultValuesLondonSouth = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
