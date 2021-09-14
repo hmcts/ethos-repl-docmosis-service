@@ -1,6 +1,6 @@
 create table "Venues"
 (
-    id              integer not null
+    venue_id        integer not null
         constraint venues_pk
             primary key,
     tribunal_office varchar,
@@ -8,15 +8,17 @@ create table "Venues"
     label           varchar
 );
 
-
 create table "Rooms"
 (
-    id              integer not null
+    room_id         integer not null
         constraint rooms_pk
             primary key,
     tribunal_office varchar,
     code            varchar,
-    label           integer
+    label           integer,
+    venue_id        integer
+        constraint venue_id
+            references "Venues"
 );
 
 
@@ -30,5 +32,3 @@ create table "LookUps"
     code            varchar,
     label           varchar
 );
-
-
