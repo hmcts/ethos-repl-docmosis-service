@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.data;
 
-import java.time.Instant;
 import java.util.UUID;
 
 public class Venue {
