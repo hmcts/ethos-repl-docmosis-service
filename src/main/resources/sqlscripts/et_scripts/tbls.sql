@@ -1,6 +1,6 @@
-create table "Venues"
+create table venue
 (
-    venue_id        integer not null
+    id              uuid not null
         constraint venues_pk
             primary key,
     tribunal_office varchar,
@@ -8,23 +8,22 @@ create table "Venues"
     label           varchar
 );
 
-create table "Rooms"
+create table room
 (
-    room_id         integer not null
+    id       uuid not null
         constraint rooms_pk
             primary key,
-    tribunal_office varchar,
-    code            varchar,
-    label           integer,
-    venue_id        integer
-        constraint venue_id
-            references "Venues"
+    code     varchar,
+    label    varchar,
+    venue_id uuid
+        constraint room_venue_id_fk
+            references venue
 );
 
 
-create table "LookUps"
+create table court_worker
 (
-    id              integer not null
+    id              uuid not null
         constraint lookups_pk
             primary key,
     lookup_id       varchar,
@@ -32,3 +31,5 @@ create table "LookUps"
     code            varchar,
     label           varchar
 );
+
+
