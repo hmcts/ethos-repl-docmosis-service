@@ -129,7 +129,6 @@ public class CasesAwaitingJudgmentReport {
             return false;
         }
 
-
         var caseData = submitEvent.getCaseData();
         if (!isValidPositionType(caseData.getPositionType())) {
             return false;
@@ -207,7 +206,9 @@ public class CasesAwaitingJudgmentReport {
                     heardHearing.listedDate = dateListedType.getListedDate();
                     heardHearing.hearingNumber = hearingType.getHearingNumber();
                     heardHearing.hearingType = hearingType.getHearingType();
-                    heardHearing.judge = hearingType.getJudge();
+                    if (hearingType.hasHearingJudge()) {
+                        heardHearing.judge = hearingType.getJudge().getSelectedLabel();
+                    }
 
                     heardHearings.add(heardHearing);
                 }

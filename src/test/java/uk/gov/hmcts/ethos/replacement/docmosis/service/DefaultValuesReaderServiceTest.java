@@ -20,6 +20,7 @@ import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.CaseDefaultValuesConfiguration;
 import uk.gov.hmcts.ethos.replacement.docmosis.config.TribunalOfficesConfiguration;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.tribunaloffice.TribunalOffice;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -112,6 +113,7 @@ public class DefaultValuesReaderServiceTest {
         watfordCaseDetails = getCaseDetails(WATFORD_CASE_TYPE_ID);
 
         postDefaultValuesManchester = DefaultValues.builder()
+                .owningOffice(TribunalOffice.MANCHESTER.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Manchester Employment Tribunal")
@@ -125,6 +127,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("Manchesteret@justice.gov.uk")
                 .build();
         postDefaultValuesBristol = DefaultValues.builder()
+                .owningOffice(TribunalOffice.BRISTOL.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Bristol Civil and Family Justice Centre")
@@ -137,6 +140,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("bristolet@justice.gov.uk")
                 .build();
         postDefaultValuesLeeds = DefaultValues.builder()
+                .owningOffice(TribunalOffice.LEEDS.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("4th Floor")
@@ -150,6 +154,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("LeedsET@justice.gov.uk")
                 .build();
         postDefaultValuesLondonCentral = DefaultValues.builder()
+                .owningOffice(TribunalOffice.LONDON_CENTRAL.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Ground Floor")
@@ -163,6 +168,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("londoncentralet@justice.gov.uk")
                 .build();
         postDefaultValuesLondonEast = DefaultValues.builder()
+                .owningOffice(TribunalOffice.LONDON_EAST.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("2nd Floor")
@@ -175,6 +181,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("eastlondon@justice.gov.uk")
                 .build();
         postDefaultValuesLondonSouth = DefaultValues.builder()
+                .owningOffice(TribunalOffice.LONDON_SOUTH.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Montague Court")
@@ -188,6 +195,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("londonsouthet@Justice.gov.uk")
                 .build();
         postDefaultValuesMidlandsEast = DefaultValues.builder()
+                .owningOffice(TribunalOffice.MIDLANDS_EAST.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Nottingham Justice Centre")
@@ -199,6 +207,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("MidlandsEastET@justice.gov.uk")
                 .build();
         postDefaultValuesMidlandsWest = DefaultValues.builder()
+                .owningOffice(TribunalOffice.MIDLANDS_WEST.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("13th Floor")
@@ -212,6 +221,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("MidlandsWestET@justice.gov.uk")
                 .build();
         postDefaultValuesNewcastle = DefaultValues.builder()
+                .owningOffice(TribunalOffice.NEWCASTLE.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Employment Tribunal")
@@ -225,6 +235,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("newcastleet@justice.gov.uk")
                 .build();
         postDefaultValuesWales = DefaultValues.builder()
+                .owningOffice(TribunalOffice.WALES.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Wales Employment Tribunal")
@@ -238,6 +249,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("waleset@justice.gov.uk")
                 .build();
         postDefaultValuesWatford = DefaultValues.builder()
+                .owningOffice(TribunalOffice.WATFORD.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Watford Tribunal Hearing Centre")
@@ -251,6 +263,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("watfordet@justice.gov.uk")
                 .build();
         postDefaultValuesGlasgow = DefaultValues.builder()
+                .owningOffice(TribunalOffice.GLASGOW.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Glasgow Tribunals Centre")
@@ -264,6 +277,7 @@ public class DefaultValuesReaderServiceTest {
                 .managingOffice(GLASGOW_OFFICE)
                 .build();
         postDefaultValuesAberdeen = DefaultValues.builder()
+                .owningOffice(TribunalOffice.ABERDEEN.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Ground Floor")
@@ -276,6 +290,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("aberdeenet@justice.gov.uk")
                 .build();
         postDefaultValuesDundee = DefaultValues.builder()
+                .owningOffice(TribunalOffice.DUNDEE.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("Ground Floor")
@@ -289,6 +304,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceEmail("dundeeet@justice.gov.uk")
                 .build();
         postDefaultValuesEdinburgh = DefaultValues.builder()
+                .owningOffice(TribunalOffice.EDINBURGH.name())
                 .positionType(MANUALLY_CREATED_POSITION)
                 .caseType(SINGLE_CASE_TYPE)
                 .tribunalCorrespondenceAddressLine1("54-56 Melville Street")
@@ -413,7 +429,18 @@ public class DefaultValuesReaderServiceTest {
                 + "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, "
                 + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
                 + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
-                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null)";
+                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null, "
+                + "owningOffice=GLASGOW, allocateHearingHearing=null, allocateHearingVenue=null, "
+                + "allocateHearingRoom=null, allocateHearingClerk=null, allocateHearingSitAlone=null, "
+                + "allocateHearingJudge=null, allocateHearingEmployerMember=null, allocateHearingEmployeeMember=null, "
+                + "allocateHearingPostponedBy=null, allocateHearingStatus=null, hearingDetailsHearing=null, "
+                + "hearingDetailsStatus=null, hearingDetailsPostponedBy=null, hearingDetailsCaseDisposed=null, "
+                + "hearingDetailsPartHeard=null, hearingDetailsReservedJudgment=null, "
+                + "hearingDetailsAttendeeClaimant=null, hearingDetailsAttendeeNonAttendees=null, "
+                + "hearingDetailsAttendeeRespNoRep=null, hearingDetailsAttendeeRespAndRep=null, "
+                + "hearingDetailsAttendeeRepOnly=null, hearingDetailsTimingStart=null, hearingDetailsTimingBreak=null, "
+                + "hearingDetailsTimingResume=null, hearingDetailsTimingFinish=null, "
+                + "hearingDetailsTimingDuration=null, hearingDetailsHearingNotes2=null)";
         defaultValuesReaderService.getCaseData(caseData, postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }
@@ -493,7 +520,18 @@ public class DefaultValuesReaderServiceTest {
                 + "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, "
                 + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
                 + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, officeCT=null, "
-                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null)";
+                + "reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null, "
+                + "owningOffice=GLASGOW, allocateHearingHearing=null, allocateHearingVenue=null, "
+                + "allocateHearingRoom=null, allocateHearingClerk=null, allocateHearingSitAlone=null, "
+                + "allocateHearingJudge=null, allocateHearingEmployerMember=null, allocateHearingEmployeeMember=null, "
+                + "allocateHearingPostponedBy=null, allocateHearingStatus=null, hearingDetailsHearing=null, "
+                + "hearingDetailsStatus=null, hearingDetailsPostponedBy=null, hearingDetailsCaseDisposed=null, "
+                + "hearingDetailsPartHeard=null, hearingDetailsReservedJudgment=null, "
+                + "hearingDetailsAttendeeClaimant=null, hearingDetailsAttendeeNonAttendees=null, "
+                + "hearingDetailsAttendeeRespNoRep=null, hearingDetailsAttendeeRespAndRep=null, "
+                + "hearingDetailsAttendeeRepOnly=null, hearingDetailsTimingStart=null, hearingDetailsTimingBreak=null, "
+                + "hearingDetailsTimingResume=null, hearingDetailsTimingFinish=null, "
+                + "hearingDetailsTimingDuration=null, hearingDetailsHearingNotes2=null)";
         defaultValuesReaderService.getCaseData(getCaseDataWithClaimantWorkAddress(caseData), postDefaultValuesGlasgow);
         assertEquals(caseDataExpected, caseData.toString());
     }

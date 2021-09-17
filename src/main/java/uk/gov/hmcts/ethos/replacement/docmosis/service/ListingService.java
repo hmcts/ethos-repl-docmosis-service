@@ -253,8 +253,8 @@ public class ListingService {
             log.info("VENUE TO SEARCH: " + venueToSearch);
 
             if (ListingHelper.isAllScottishVenues(listingData)) {
-                venueSearched = dateListedTypeItem.getValue().getHearingVenueDay() != null
-                        ? dateListedTypeItem.getValue().getHearingVenueDay()
+                venueSearched = dateListedTypeItem.getValue().hasHearingVenue()
+                        ? dateListedTypeItem.getValue().getHearingVenueDay().getValue().getLabel()
                         : " ";
                 log.info("Checking venue for all scottish level (HearingVenueDay): " + venueSearched);
             } else {

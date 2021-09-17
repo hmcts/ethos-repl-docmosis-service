@@ -2041,7 +2041,7 @@ public class DocumentHelperTest {
                         correspondenceHearingNumber).getHearingType());
         assertEquals(expectedHearingVenue,
                 DocumentHelper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(),
-                        correspondenceHearingNumber).getHearingVenue());
+                        correspondenceHearingNumber).getHearingVenue().getSelectedLabel());
     }
 
 }

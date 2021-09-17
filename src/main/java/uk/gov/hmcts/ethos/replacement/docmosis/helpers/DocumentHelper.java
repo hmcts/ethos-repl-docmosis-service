@@ -553,7 +553,7 @@ public class DocumentHelper {
     }
 
     private static String getHearingVenue(HearingType hearingType, String caseTypeId) {
-        String hearingVenueToSearch = hearingType.getHearingVenue();
+        String hearingVenueToSearch = hearingType.getHearingVenue().getValue().getLabel();
         if (caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)) {
             switch (hearingVenueToSearch) {
                 case ABERDEEN_OFFICE:

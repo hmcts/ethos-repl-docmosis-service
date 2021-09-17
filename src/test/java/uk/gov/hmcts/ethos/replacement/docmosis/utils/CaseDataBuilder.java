@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.utils;
 
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
@@ -60,7 +61,7 @@ public class CaseDataBuilder {
         var type = new HearingType();
         type.setHearingNumber(hearingNumber);
         type.setHearingType(hearingType);
-        type.setJudge(judge);
+        type.setJudge(new DynamicFixedListType(judge));
 
         var hearingTypeItem = new HearingTypeItem();
         hearingTypeItem.setValue(type);

@@ -218,7 +218,7 @@ public class CaseManagementForCaseWorkerService {
                 }
             }
         }
-        if (dateListedType.getHearingVenueDay() == null) {
+        if (!dateListedType.hasHearingVenue()) {
             dateListedType.setHearingVenueDay(hearingType.getHearingVenue());
         }
     }

@@ -233,7 +233,11 @@ public class DocumentUtil {
                 sb.append("\"Hearing_date\":\"").append(NEW_LINE);
                 sb.append("\"Hearing_date_time\":\"").append(NEW_LINE);
             }
-            sb.append("\"Hearing_venue\":\"").append(nullCheck(hearingType.getHearingVenue())).append(NEW_LINE);
+            sb.append("\"Hearing_venue\":\"");
+            if (hearingType.getHearingVenue() != null) {
+                sb.append(hearingType.getHearingVenue().getValue().getLabel());
+            }
+            sb.append(NEW_LINE);
             sb.append("\"Hearing_duration\":\"").append(nullCheck(getHearingDuration(hearingType))).append(NEW_LINE);
         } else {
             sb.append("\"Hearing_date\":\"").append(NEW_LINE);

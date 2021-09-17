@@ -178,8 +178,12 @@ public class CasesCompletedReport {
         adhocReportType.setHearingNumber(hearingType.getHearingNumber());
         adhocReportType.setHearingDate(latestSession.getListedDate());
         adhocReportType.setHearingType(hearingType.getHearingType());
-        adhocReportType.setHearingJudge(hearingType.getJudge());
-        adhocReportType.setHearingClerk(latestSession.getHearingClerk());
+        if (hearingType.hasHearingJudge()) {
+            adhocReportType.setHearingJudge(hearingType.getJudge().getSelectedLabel());
+        }
+        if (latestSession.hasHearingClerk()) {
+            adhocReportType.setHearingClerk(latestSession.getHearingClerk().getSelectedLabel());
+        }
 
         return adhocReportType;
     }
