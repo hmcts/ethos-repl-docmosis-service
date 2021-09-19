@@ -7,8 +7,8 @@ import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.TYPE_AMENDMENT_ADDITION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.TYPE_AMENDMENT_LEAD;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADD_CASES_TO_MULTIPLE_AMENDMENT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEAD_CASE_AMENDMENT;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
@@ -47,26 +47,24 @@ public class MultipleAmendService {
 
         List<?> newMultipleObjects = new ArrayList<>();
 
-        if (Stream.of(TYPE_AMENDMENT_LEAD, TYPE_AMENDMENT_ADDITION)
+        if (Stream.of(LEAD_CASE_AMENDMENT, ADD_CASES_TO_MULTIPLE_AMENDMENT)
                 .anyMatch(multipleDetails.getCaseData().getTypeOfAmendmentMSL()::contains)) {
 
-            if (multipleDetails.getCaseData().getTypeOfAmendmentMSL().contains(TYPE_AMENDMENT_LEAD)) {
-
+            if (multipleDetails.getCaseData().getTypeOfAmendmentMSL().contains(LEAD_CASE_AMENDMENT)) {
                 log.info("Amend lead case logic");
-
                 newMultipleObjects = multipleAmendLeadCaseService.bulkAmendLeadCaseLogic(userToken,
                         multipleDetails, errors, multipleObjects);
-
             }
 
-            if (multipleDetails.getCaseData().getTypeOfAmendmentMSL().contains(TYPE_AMENDMENT_ADDITION)
+            if (multipleDetails.getCaseData().getTypeOfAmendmentMSL().contains(ADD_CASES_TO_MULTIPLE_AMENDMENT)
                     && errors.isEmpty()) {
 
-                log.info("Amend case ids logic");
+                log.info("Amend single cases for multiple ref logic");
 
+
+                log.info("Amend case ids logic");
                 newMultipleObjects = multipleAmendCaseIdsService.bulkAmendCaseIdsLogic(userToken,
                         multipleDetails, errors, multipleObjects);
-
             }
 
             if (errors.isEmpty()) {

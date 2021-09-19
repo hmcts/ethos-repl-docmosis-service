@@ -94,13 +94,17 @@ public class AddSingleCaseToMultipleService {
         caseData.setCaseType(MULTIPLE_CASE_TYPE);
         log.info("setLeadClaimant is set to " + leadClaimant);
         caseData.setLeadClaimant(leadClaimant);
-        caseData.setParentMultipleCaseId(String.valueOf(multipleCaseId));
+
+        var fullLinkMarkUp = multipleHelperService.buildMultipleRefLinkMarkup(
+                String.valueOf(multipleCaseId), newMultipleReference);
+
+        caseData.setMultipleReferenceLinkMarkUp(fullLinkMarkUp);
     }
 
     private void addNewLeadToMultiple(String userToken, String multipleCaseTypeId, String jurisdiction,
                                       MultipleData multipleData, String leadClaimant,
                                       String newEthosCaseReferenceToAdd, String caseId, List<String> errors,
-                                      String parentMultipleCaseId) {
+                                      String multipleReferenceLinkMarkUp) {
         if (leadClaimant.equals(YES)) {
 
             log.info("Checking if there was a lead");
@@ -113,7 +117,8 @@ public class AddSingleCaseToMultipleService {
 
                 multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken, multipleCaseTypeId,
                         jurisdiction, multipleData, errors,
-                        new ArrayList<>(Collections.singletonList(currentLeadCase)), "", parentMultipleCaseId);
+                        new ArrayList<>(Collections.singletonList(currentLeadCase)), "",
+                        multipleReferenceLinkMarkUp);
 
             }
 

@@ -210,23 +210,17 @@ public class MultipleHelperService {
                                                                 List<String> errors,
                                                                 List<String> multipleObjectsFiltered,
                                                                 String leadId,
-                                                                String parentMultipleCaseId) {
+                                                                String multipleReferenceLinkMarkUp) {
 
         String username = userService.getUserDetails(userToken).getEmail();
 
         PersistentQHelper.sendSingleUpdatesPersistentQ(caseTypeId,
-                jurisdiction,
-                username,
-                multipleObjectsFiltered,
-                PersistentQHelper.getCreationDataModel(leadId,
-                        updatedMultipleData.getMultipleReference(), parentMultipleCaseId),
-                errors,
-                updatedMultipleData.getMultipleReference(),
-                NO,
-                createUpdatesBusSender,
+                jurisdiction, username, multipleObjectsFiltered,
+                PersistentQHelper.getCreationDataModel(leadId, updatedMultipleData.getMultipleReference()),
+                errors, updatedMultipleData.getMultipleReference(), NO, createUpdatesBusSender,
                 String.valueOf(multipleObjectsFiltered.size()),
-                parentMultipleCaseId);
-
+                multipleReferenceLinkMarkUp
+                );
     }
 
     public void sendDetachUpdatesToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails,
@@ -269,7 +263,6 @@ public class MultipleHelperService {
                 createUpdatesBusSender,
                 String.valueOf(multipleObjectsFiltered.size()),
                 multipleDetails.getCaseId());
-
     }
 
     public void sendPreAcceptToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails,
@@ -413,15 +406,20 @@ public class MultipleHelperService {
 
         sendUpdatesToSinglesLogicCheckingLead(userToken, multipleDetails, errors, newLeadCase, multipleObjects);
 
-        sendCreationUpdatesToSinglesWithoutConfirmation(userToken,
-                multipleDetails.getCaseTypeId(),
-                multipleDetails.getJurisdiction(),
-                multipleDetails.getCaseData(),
-                errors,
-                newEthosCaseRefCollection,
-                newLeadCase,
-                multipleDetails.getCaseId());
+        var multipleData  = multipleDetails.getCaseData();
+        var fullLinkMarkUp = buildMultipleRefLinkMarkup(
+                String.valueOf(multipleDetails.getCaseId()), multipleData.getMultipleReference());
+
+        sendCreationUpdatesToSinglesWithoutConfirmation(userToken, multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(), multipleDetails.getCaseData(), errors,
+                newEthosCaseRefCollection, newLeadCase, fullLinkMarkUp);
 
     }
 
+    public String buildMultipleRefLinkMarkup(String multipleCaseId, String newMultipleReference){
+        String url = ccdGatewayBaseUrl + "/cases/case-details/" + multipleCaseId;
+        var fullLinkMarkUp = "<a target=\"_blank\" href=\"" + url + "\">" + newMultipleReference + "</a>";
+        log.info("MultipleReferenceLinkMarkUp is set to " + fullLinkMarkUp);
+        return fullLinkMarkUp;
+    }
 }
