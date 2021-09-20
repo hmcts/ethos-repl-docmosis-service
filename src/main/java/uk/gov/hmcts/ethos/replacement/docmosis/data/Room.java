@@ -1,23 +1,21 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.data;
 
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
+
 import java.util.UUID;
 
 public class Room {
 
     public final UUID id;
-    public final String code;
-    public final String label;
     public final String venueId;
+    public final DynamicValueType dynamicValueType;
 
     public Room(
-            UUID id,
-            String code,
-            String label,
+            DynamicValueType dynamicValueType,
             String venueId
     ) {
-        this.id = id;
-        this.code = code;
-        this.label = label;
+        this.id = UUID.randomUUID();
+        this.dynamicValueType = dynamicValueType;
         this.venueId = venueId;
     }
 }

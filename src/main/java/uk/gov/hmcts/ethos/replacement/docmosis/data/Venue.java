@@ -1,25 +1,23 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.data;
 
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
+
 import java.util.UUID;
 
 public class Venue {
 
     public final UUID id;
     public final String tribunalOffice;
-    public final String code;
-    public final String label;
+    public final DynamicValueType dynamicValueType;
 
 
     public Venue(
-            UUID id,
             String tribunalOffice,
-            String code,
-            String label
+            DynamicValueType dynamicValueType
     ) {
-        this.id = id;
+        this.id = UUID.randomUUID();
         this.tribunalOffice = tribunalOffice;
-        this.code = code;
-        this.label = label;
+        this.dynamicValueType = dynamicValueType;
     }
 
 }

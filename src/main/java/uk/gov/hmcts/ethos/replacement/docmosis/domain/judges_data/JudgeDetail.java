@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.domain.judges_data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
@@ -11,7 +12,7 @@ public class JudgeDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private UUID id;
 
     protected String code;
 
