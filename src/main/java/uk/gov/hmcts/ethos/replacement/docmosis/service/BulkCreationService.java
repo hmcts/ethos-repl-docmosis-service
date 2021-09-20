@@ -92,7 +92,8 @@ public class BulkCreationService {
                             bulkCasesPayload.getErrors(),
                             bulkDetails.getCaseData().getMultipleReference(),
                             createUpdatesBusSender,
-                            String.valueOf(ethosCaseRefCollection.size()));
+                            String.valueOf(ethosCaseRefCollection.size()),
+                            null);
 
                 } else {
                     log.info("EMPTY CASE REF COLLECTION");
@@ -226,7 +227,7 @@ public class BulkCreationService {
                     new ArrayList<>(),
                     bulkDetails.getCaseData().getMultipleReference(),
                     createUpdatesBusSender,
-                    updateSize);
+                    updateSize, null);
 
             PersistentQHelper.sendUpdatesPersistentQ(bulkDetails,
                     username,
@@ -236,7 +237,7 @@ public class BulkCreationService {
                     new ArrayList<>(),
                     bulkDetails.getCaseData().getMultipleReference(),
                     createUpdatesBusSender,
-                    updateSize);
+                    updateSize, null);
         }
 
         return multipleTypeItemList;

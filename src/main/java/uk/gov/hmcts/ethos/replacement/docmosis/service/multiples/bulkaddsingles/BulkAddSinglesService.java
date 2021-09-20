@@ -25,14 +25,14 @@ public class BulkAddSinglesService {
 
     public List<String> execute(MultipleDetails multipleDetails, String authToken) {
         try {
-            var ethosCaseReferences = singleCasesImporter.importCases(multipleDetails.getCaseData(), authToken);
+            var ethosCaseReferences = singleCasesImporter.importCases(multipleDetails.getCaseData(),
+                    authToken);
             return submitSingleCases(multipleDetails, ethosCaseReferences, authToken);
         } catch (ImportException e) {
             log.error("Unexpected error when importing single cases for "
                     + multipleDetails.getCaseData().getMultipleReference(), e);
             return List.of("Unexpected error when importing single cases");
         }
-
     }
 
     private List<String> submitSingleCases(MultipleDetails multipleDetails, List<String> ethosCaseReferences,

@@ -29,11 +29,13 @@ public class PersistentQHelper {
     //********************
 
     public static CreateUpdatesDto getCreateUpdatesDto(BulkDetails bulkDetails, List<String> ethosCaseRefCollection,
-                                                       String email, String multipleRef) {
+                                                       String email, String multipleRef,
+                                                       String multipleRefLinkMarkUp) {
         return CreateUpdatesDto.builder()
                 .caseTypeId(bulkDetails.getCaseTypeId())
                 .jurisdiction(bulkDetails.getJurisdiction())
                 .multipleRef(multipleRef)
+                .multipleReferenceLinkMarkUp(multipleRefLinkMarkUp)
                 .username(email)
                 .ethosCaseRefCollection(ethosCaseRefCollection)
                 .build();
@@ -43,11 +45,11 @@ public class PersistentQHelper {
                                               List<String> ethosCaseRefCollection,
                                               DataModelParent dataModelParent, List<String> errors,
                                               String multipleRef, CreateUpdatesBusSender createUpdatesBusSender,
-                                              String updateSize) {
+                                              String updateSize, String multipleRefLinkMarkUp) {
         log.info("Case Ref collection: " + ethosCaseRefCollection);
         if (!ethosCaseRefCollection.isEmpty()) {
             var createUpdatesDto = PersistentQHelper.getCreateUpdatesDto(bulkDetails,
-                    ethosCaseRefCollection, username, multipleRef);
+                    ethosCaseRefCollection, username, multipleRef, multipleRefLinkMarkUp);
 
             createUpdatesBusSender.sendUpdatesToQueue(
                     createUpdatesDto,

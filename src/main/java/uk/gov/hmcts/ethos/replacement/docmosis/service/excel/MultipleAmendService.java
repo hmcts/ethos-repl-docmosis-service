@@ -36,14 +36,9 @@ public class MultipleAmendService {
     public void bulkAmendMultipleLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
         log.info("Read excel to amend multiple");
-
-        SortedMap<String, Object> multipleObjects =
-                excelReadingService.readExcel(
-                        userToken,
-                        MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
-                        errors,
-                        multipleDetails.getCaseData(),
-                        FilterExcelType.ALL);
+        SortedMap<String, Object> multipleObjects = excelReadingService.readExcel(
+                        userToken, MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
+                        errors, multipleDetails.getCaseData(), FilterExcelType.ALL);
 
         List<?> newMultipleObjects = new ArrayList<>();
 
@@ -59,9 +54,6 @@ public class MultipleAmendService {
             if (multipleDetails.getCaseData().getTypeOfAmendmentMSL().contains(ADD_CASES_TO_MULTIPLE_AMENDMENT)
                     && errors.isEmpty()) {
 
-                log.info("Amend single cases for multiple ref logic");
-
-
                 log.info("Amend case ids logic");
                 newMultipleObjects = multipleAmendCaseIdsService.bulkAmendCaseIdsLogic(userToken,
                         multipleDetails, errors, multipleObjects);
@@ -70,7 +62,6 @@ public class MultipleAmendService {
             if (errors.isEmpty()) {
 
                 log.info("Create a new Excel");
-
                 excelDocManagementService.generateAndUploadExcel(newMultipleObjects, userToken,
                         multipleDetails.getCaseData());
 

@@ -213,13 +213,11 @@ public class MultipleHelperService {
                                                                 String multipleReferenceLinkMarkUp) {
 
         String username = userService.getUserDetails(userToken).getEmail();
-
         PersistentQHelper.sendSingleUpdatesPersistentQ(caseTypeId,
                 jurisdiction, username, multipleObjectsFiltered,
                 PersistentQHelper.getCreationDataModel(leadId, updatedMultipleData.getMultipleReference()),
                 errors, updatedMultipleData.getMultipleReference(), NO, createUpdatesBusSender,
-                String.valueOf(multipleObjectsFiltered.size()),
-                multipleReferenceLinkMarkUp
+                String.valueOf(multipleObjectsFiltered.size()), multipleReferenceLinkMarkUp
                 );
     }
 
@@ -395,7 +393,6 @@ public class MultipleHelperService {
 
             addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(),
                     multipleDetails.getCaseData(), newLeadCase, "");
-
         }
 
     }
@@ -407,19 +404,12 @@ public class MultipleHelperService {
         sendUpdatesToSinglesLogicCheckingLead(userToken, multipleDetails, errors, newLeadCase, multipleObjects);
 
         var multipleData  = multipleDetails.getCaseData();
-        var fullLinkMarkUp = buildMultipleRefLinkMarkup(
-                String.valueOf(multipleDetails.getCaseId()), multipleData.getMultipleReference());
+        var fullLinkMarkUp = MultiplesHelper.generateMarkUp(ccdGatewayBaseUrl, multipleDetails.getCaseId(),
+                multipleData.getMultipleReference());
 
         sendCreationUpdatesToSinglesWithoutConfirmation(userToken, multipleDetails.getCaseTypeId(),
                 multipleDetails.getJurisdiction(), multipleDetails.getCaseData(), errors,
                 newEthosCaseRefCollection, newLeadCase, fullLinkMarkUp);
-
     }
 
-    public String buildMultipleRefLinkMarkup(String multipleCaseId, String newMultipleReference){
-        String url = ccdGatewayBaseUrl + "/cases/case-details/" + multipleCaseId;
-        var fullLinkMarkUp = "<a target=\"_blank\" href=\"" + url + "\">" + newMultipleReference + "</a>";
-        log.info("MultipleReferenceLinkMarkUp is set to " + fullLinkMarkUp);
-        return fullLinkMarkUp;
-    }
 }
