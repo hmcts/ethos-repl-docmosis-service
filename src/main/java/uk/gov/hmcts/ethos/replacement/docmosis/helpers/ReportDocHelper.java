@@ -19,18 +19,13 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
 public class ReportDocHelper {
     private static final String REPORT_LIST = "\"Report_List\":[\n";
+    private static final String CASE_REFERENCE = "{\"Case_Reference\":\"";
 
     private ReportDocHelper() {
     }
@@ -71,6 +66,9 @@ public class ReportDocHelper {
                     break;
                 case CASES_COMPLETED_REPORT:
                     sb.append(getCasesCompletedReport(listingData));
+                    break;
+                case TIME_TO_FIRST_HEARING_REPORT:
+                    sb.append(getTimeToFirstHearingReport(listingData));
                     break;
                 default:
                     throw new IllegalStateException("Report type - Unexpected value: " + listingData.getReportType());
@@ -164,7 +162,7 @@ public class ReportDocHelper {
 
     private static StringBuilder getAdhocReportCommonTypeRow(AdhocReportType adhocReportType) {
         var sb = new StringBuilder();
-        sb.append("{\"Case_Reference\":\"").append(
+        sb.append(CASE_REFERENCE).append(
                 nullCheck(adhocReportType.getCaseReference())).append(NEW_LINE);
         sb.append("\"Date_Of_Acceptance\":\"").append(
                 nullCheck(adhocReportType.getDateOfAcceptance())).append(NEW_LINE);
@@ -183,6 +181,78 @@ public class ReportDocHelper {
         return sb;
     }
 
+    private static StringBuilder getTimeToFirstHearingReport(ListingData listingData) {
+        var sb = new StringBuilder();
+        AdhocReportType localReportDetailHdr = listingData.getLocalReportsDetailHdr();
+        AdhocReportType localReportSummary = listingData.getLocalReportsSummary().get(0).getValue();
+
+        if (localReportDetailHdr != null) {
+            sb.append("\"Total_Cases\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalCases())).append(NEW_LINE);
+            sb.append("\"Total_Within_26Weeks\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotal26wk())).append(NEW_LINE);
+            sb.append("\"Total_Percent_Within_26Weeks\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotal26wkPerCent())).append(NEW_LINE);
+            sb.append("\"Total_Not_Within_26Weeks\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wk())).append(NEW_LINE);
+            sb.append("\"Total_Percent_Not_Within_26Weeks\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConNone_Total\":\"").append(
+                    nullCheck(localReportSummary.getConNoneTotal())).append(NEW_LINE);
+            sb.append("\"ConNone_Total_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConNone26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConNone_Percent_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConNone26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConNone_Total_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConNone26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConNone_Percent_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConNone26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConFast_Total\":\"").append(
+                    nullCheck(localReportSummary.getConFastTotal())).append(NEW_LINE);
+            sb.append("\"ConFast_Total_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConFast26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConFast_Percent_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConFast26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConFast_Total_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConFast26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConFast_Percent_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConFast26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConStd_Total\":\"").append(
+                    nullCheck(localReportSummary.getConStdTotal())).append(NEW_LINE);
+            sb.append("\"ConStd_Total_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConStd26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConStd_Percent_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConStd26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConStd_Total_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConStd26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConStd_Percent_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConStd26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConOpen_Total\":\"").append(
+                    nullCheck(localReportSummary.getConOpenTotal())).append(NEW_LINE);
+            sb.append("\"ConOpen_Total_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConOpen26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConOpen_Percent_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConOpen26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConOpen_Total_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConOpen26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConOpen_Percent_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConOpen26wkTotalPerCent())).append(NEW_LINE);
+
+        }
+
+        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())) {
+            var adhocReportTypeItems = listingData.getLocalReportsDetail();
+            sb.append(REPORT_LIST);
+            for (var i = 0; i < adhocReportTypeItems.size(); i++) {
+                sb.append(getTimeToFirstHearingAdhocReportTypeRow(adhocReportTypeItems.get(i).getValue()));
+                if (i != adhocReportTypeItems.size() - 1) {
+                    sb.append(",\n");
+                }
+            }
+            sb.append("],\n");
+        }
+        return sb;
+    }
     private static StringBuilder getCasesCompletedReport(ListingData listingData) {
         var sb = new StringBuilder();
         AdhocReportType localReportDetailHdr = listingData.getLocalReportsDetailHdr();
@@ -239,7 +309,7 @@ public class ReportDocHelper {
 
     private static StringBuilder getAdhocReportCompletedTypeRow(AdhocReportType adhocReportType) {
         var sb = new StringBuilder();
-        sb.append("{\"Case_Reference\":\"").append(
+        sb.append(CASE_REFERENCE).append(
                 nullCheck(adhocReportType.getCaseReference())).append(NEW_LINE);
         sb.append("\"Position\":\"").append(
                 nullCheck(adhocReportType.getPosition())).append(NEW_LINE);
@@ -260,11 +330,28 @@ public class ReportDocHelper {
         return sb;
     }
 
+    private static StringBuilder getTimeToFirstHearingAdhocReportTypeRow(AdhocReportType adhocReportType) {
+        var sb = new StringBuilder();
+        sb.append("{\"Office\":\"").append(
+                nullCheck(adhocReportType.getReportOffice())).append(NEW_LINE);
+        sb.append("\"Case_Reference\":\"").append(
+                nullCheck(adhocReportType.getCaseReference())).append(NEW_LINE);
+        sb.append("\"Conciliation_Track\":\"").append(
+                nullCheck(adhocReportType.getConciliationTrack())).append(NEW_LINE);
+        sb.append("\"Receipt_Date\":\"").append(
+                nullCheck(adhocReportType.getReceiptDate())).append(NEW_LINE);
+        sb.append("\"Hearing_Date\":\"").append(
+                nullCheck(adhocReportType.getHearingDate())).append(NEW_LINE);
+        sb.append("\"Days\":\"").append(
+                nullCheck(adhocReportType.getDelayedDaysForFirstHearing())).append("\"}");
+        return sb;
+    }
+
     private static StringBuilder getLiveCaseLoadReportSummaryHdr(ListingData listingData) {
         var sb = new StringBuilder();
-        String singlesTotal = "0";
-        String multiplesTotal = "0";
-        String total = "0";
+        var singlesTotal = "0";
+        var multiplesTotal = "0";
+        var total = "0";
         var summaryHdr = listingData.getLocalReportsSummaryHdr();
 
         if (summaryHdr != null) {

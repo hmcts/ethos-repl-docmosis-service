@@ -71,14 +71,14 @@ public class BulkHelper {
         return bulkDetails;
     }
 
-    private static void setClaimantSurnameM(CaseData caseData,MultipleType multipleType ) {
+    private static void setClaimantSurnameM(CaseData caseData, MultipleType multipleType ) {
         if (caseData.getClaimantIndType() != null && caseData.getClaimantIndType().getClaimantLastName() != null) {
             multipleType.setClaimantSurnameM(caseData.getClaimantIndType().getClaimantLastName());
         } else {
             multipleType.setClaimantSurnameM(" ");
         }
     }
-    private static void setClaimantAddressLine1M(CaseData caseData,MultipleType multipleType) {
+    private static void setClaimantAddressLine1M(CaseData caseData, MultipleType multipleType) {
         if (caseData.getClaimantType() != null && caseData.getClaimantType().getClaimantAddressUK() != null
                 && caseData.getClaimantType().getClaimantAddressUK().getAddressLine1() != null) {
             multipleType.setClaimantAddressLine1M(caseData.getClaimantType().getClaimantAddressUK().getAddressLine1());
@@ -86,7 +86,7 @@ public class BulkHelper {
             multipleType.setClaimantAddressLine1M(" ");
         }
     }
-    private static void setRespondentSurnameM(CaseData caseData,MultipleType multipleType) {
+    private static void setRespondentSurnameM(CaseData caseData, MultipleType multipleType) {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             var respondentSumType = caseData.getRespondentCollection().get(0).getValue();
             multipleType.setRespondentSurnameM(respondentSumType.getRespondentName());
@@ -94,7 +94,7 @@ public class BulkHelper {
             multipleType.setRespondentSurnameM(" ");
         }
     }
-    private static void setClaimantPostCodeM(CaseData caseData,MultipleType multipleType) {
+    private static void setClaimantPostCodeM(CaseData caseData, MultipleType multipleType) {
         if (caseData.getClaimantType() != null && caseData.getClaimantType().getClaimantAddressUK() != null
                 && caseData.getClaimantType().getClaimantAddressUK().getPostCode() != null) {
             multipleType.setClaimantPostCodeM(caseData.getClaimantType().getClaimantAddressUK().getPostCode());
@@ -102,6 +102,7 @@ public class BulkHelper {
             multipleType.setClaimantPostCodeM(" ");
         }
     }
+
     private static MultipleType getMultipleTypeFromCaseData(CaseData caseData) {
         var multipleType = new MultipleType();
         multipleType.setEthosCaseReferenceM(Optional.ofNullable(caseData.getEthosCaseReference()).orElse(" "));

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,12 +85,42 @@ public class CaseManagementForCaseWorkerService {
                 if (respondentSumTypeItem.getValue().getResponseReceived() == null) {
                     respondentSumTypeItem.getValue().setResponseReceived(NO);
                 }
+                if (respondentSumTypeItem.getValue().getResponseReceived().equals(NO)
+                        && respondentSumTypeItem.getValue().getResponseRespondentAddress() != null) {
+                    resetResponseRespondentAddress(respondentSumTypeItem);
+                }
+                if (Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseContinue())) {
+                    respondentSumTypeItem.getValue().setResponseContinue(YES);
+                }
             }
         } else {
             caseData.setRespondent(MISSING_RESPONDENT);
         }
     }
 
+    private void resetResponseRespondentAddress(RespondentSumTypeItem respondentSumTypeItem) {
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine1())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine1("");
+        }
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine2())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine2("");
+        }
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getAddressLine3())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setAddressLine3("");
+        }
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getCountry())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setCountry("");
+        }
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getCounty())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setCounty("");
+        }
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostCode())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setPostCode("");
+        }
+        if (!Strings.isNullOrEmpty(respondentSumTypeItem.getValue().getResponseRespondentAddress().getPostTown())) {
+            respondentSumTypeItem.getValue().getResponseRespondentAddress().setPostTown("");
+        }
+    }
     private void struckOutDefaults(CaseData caseData) {
         if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
             for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {

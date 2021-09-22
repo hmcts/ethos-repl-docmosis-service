@@ -78,7 +78,7 @@
       {
         "id" : "123345",
         "value" : {
-          "resp_rep_name" : "RepresentativeNameRespondent",
+          "resp_rep_name" : "Antonio Vazquez",
           "name_of_organisation": "RepresentativeOrganisation",
           "name_of_representative": "RepresentativeNameRespondent",
           "representative_address": {

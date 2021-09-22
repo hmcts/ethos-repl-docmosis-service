@@ -1,9 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.bouncycastle.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
@@ -14,11 +13,17 @@ import uk.gov.hmcts.ecm.common.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.*;
 import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsAttributesType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.BFActionType;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper;
+
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("documentGenerationService")
@@ -135,12 +140,60 @@ public class DocumentGenerationService {
     public DocumentInfo processDocumentRequest(CCDRequest ccdRequest, String authToken) {
         var caseDetails = ccdRequest.getCaseDetails();
         try {
-            return tornadoService.documentGeneration(authToken, caseDetails.getCaseData(), caseDetails.getCaseTypeId(),
+            return tornadoService.documentGeneration(
+                    authToken, caseDetails.getCaseData(), caseDetails.getCaseTypeId(),
                     caseDetails.getCaseData().getCorrespondenceType(),
                     caseDetails.getCaseData().getCorrespondenceScotType(), null);
         } catch (Exception ex) {
             throw new DocumentManagementException(MESSAGE + caseDetails.getCaseId() + ex.getMessage());
         }
+    }
+
+    public CaseData updateBfActions(DocumentInfo documentInfo, CaseData caseData) {
+       var sectionName = Strings.split(documentInfo.getDescription(), '_')[1];
+       if (areBfActionsForEnglandOrWalesToBeUpdated(caseData, sectionName)
+           || areBfActionsForScotlandToBeUpdated(caseData, sectionName)) {
+          return setBfActions(caseData);
+       }
+       return caseData;
+    }
+
+    public boolean areBfActionsForEnglandOrWalesToBeUpdated(CaseData caseData, String sectionName) {
+        if (caseData.getCorrespondenceType() != null) {
+            var values = new String[]{"2.6", "2.7", "2.8"};
+            return Arrays.asList(values).contains(sectionName);
+        }
+        return false;
+    }
+
+    public boolean areBfActionsForScotlandToBeUpdated(CaseData caseData, String sectionName) {
+        if (caseData.getCorrespondenceScotType() != null) {
+            var values = new String[]{"3", "7", "72", "75", "76"};
+            return Arrays.asList(values).contains(sectionName);
+        }
+        return false;
+    }
+
+    public CaseData setBfActions(CaseData caseData) {
+
+        var bfActionTypeItem = new BFActionTypeItem();
+        var bfActionType = new BFActionType();
+        bfActionType.setLetters(YES);
+        bfActionType.setDateEntered(LocalDate.now().toString());
+        bfActionType.setCwActions("Other action");
+        bfActionType.setAllActions("Claim served");
+        bfActionType.setBfDate(LocalDate.now().plusDays(28).toString());
+        bfActionTypeItem.setId(UUID.randomUUID().toString());
+        bfActionTypeItem.setValue(bfActionType);
+
+        if (CollectionUtils.isEmpty(caseData.getBfActions())) {
+            caseData.setBfActions(new ArrayList<>(Collections.singletonList(bfActionTypeItem)));
+        } else {
+          List<BFActionTypeItem> tmp = caseData.getBfActions();
+          tmp.add(bfActionTypeItem);
+            caseData.setBfActions(tmp);
+        }
+        return caseData;
     }
 
     public BulkDocumentInfo processBulkDocumentRequest(BulkRequest bulkRequest, String authToken) {

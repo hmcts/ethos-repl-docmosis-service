@@ -14,6 +14,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
@@ -32,27 +33,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PRIVATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -62,6 +44,7 @@ public class ListingService {
     private final TornadoService tornadoService;
     private final CcdClient ccdClient;
     private final CasesCompletedReport casesCompletedReport;
+    private final TimeToFirstHearingReport timeToFirstHearingReport;
 
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
@@ -119,7 +102,7 @@ public class ListingService {
                 for (SubmitEvent submitEvent : submitEvents) {
                     if (submitEvent.getCaseData().getHearingCollection() != null
                             && !submitEvent.getCaseData().getHearingCollection().isEmpty()) {
-                       addListingTypeItems(submitEvent,listingTypeItems,listingDetails );
+                        addListingTypeItems(submitEvent, listingTypeItems, listingDetails);
                     }
                 }
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
@@ -132,7 +115,9 @@ public class ListingService {
         }
     }
 
-    private void addListingTypeItems(SubmitEvent submitEvent, List<ListingTypeItem> listingTypeItems,ListingDetails listingDetails) {
+    private void addListingTypeItems(SubmitEvent submitEvent,
+                                     List<ListingTypeItem> listingTypeItems,
+                                     ListingDetails listingDetails) {
         for (HearingTypeItem hearingTypeItem : submitEvent.getCaseData().getHearingCollection()) {
             if (hearingTypeItem.getValue().getHearingDateCollection() != null) {
                 listingTypeItems.addAll(getListingTypeItems(hearingTypeItem,
@@ -140,6 +125,7 @@ public class ListingService {
             }
         }
     }
+
     private List<SubmitEvent> getListingHearingsSearch(ListingDetails listingDetails, String authToken)
             throws IOException {
         var listingData = listingDetails.getCaseData();
@@ -210,7 +196,8 @@ public class ListingService {
         }
     }
 
-    private CasesAwaitingJudgmentReportData getCasesAwaitingJudgmentReport(ListingDetails listingDetails, String authToken) {
+    private CasesAwaitingJudgmentReportData getCasesAwaitingJudgmentReport(
+            ListingDetails listingDetails, String authToken) {
         log.info("Cases Awaiting Judgment for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new CcdReportDataSource(authToken, ccdClient);
 
@@ -233,6 +220,8 @@ public class ListingService {
                 return ReportHelper.processLiveCaseloadRequest(listingDetails, submitEvents);
             case CASES_COMPLETED_REPORT:
                 return casesCompletedReport.generateReportData(listingDetails, submitEvents);
+            case TIME_TO_FIRST_HEARING_REPORT:
+                return timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
             default:
                 return listingDetails.getCaseData();
         }

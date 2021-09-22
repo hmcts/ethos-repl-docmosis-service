@@ -26,6 +26,7 @@ public class ReportDocHelperTest {
     private ListingDetails reportDetails;
     private ListingDetails reportDetails2;
     private ListingDetails reportDetails3;
+    private ListingDetails reportDetails4;
     private UserDetails userDetails;
 
     @Before
@@ -33,6 +34,9 @@ public class ReportDocHelperTest {
         reportDetails = generateReportDetails("reportDetailsTest1.json");
         reportDetails2 = generateReportDetails("reportDetailsTest2.json");
         reportDetails3 = generateReportDetails("reportDetailsTest3.json");
+        reportDetails4 = generateReportDetails("reportDetailsTest4.json");
+
+
         userDetails = HelperTest.getUserDetails();
     }
 
@@ -189,6 +193,63 @@ public class ReportDocHelperTest {
         var reportData = getCasesAwaitingJudgementReportData();
         var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "", "EM-TRB-SCO-ENG-00749", userDetails).toString();
         assertEquals(expectedJson, actualJson);
+    }
+
+    @Test
+    public void buildTimeToFirstHearingReport() {
+        String expected = "{\n" +
+                "\"accessKey\":\"\",\n" +
+                "\"templateName\":\"EM-TRB-SCO-ENG-00751.docx\",\n" +
+                "\"outputName\":\"document.docx\",\n" +
+                "\"data\":{\n" +
+                "\"Listed_date_from\":\"1 December 2021\",\n" +
+                "\"Listed_date_to\":\"3 December 2021\",\n" +
+                "\"Report_Office\":\"Manchester\",\n" +
+                "\"Total_Cases\":\"\",\n" +
+                "\"Total_Within_26Weeks\":\"\",\n" +
+                "\"Total_Percent_Within_26Weeks\":\"\",\n" +
+                "\"Total_Not_Within_26Weeks\":\"\",\n" +
+                "\"Total_Percent_Not_Within_26Weeks\":\"\",\n" +
+                "\"ConNone_Total\":\"\",\n" +
+                "\"ConNone_Total_26_Week\":\"\",\n" +
+                "\"ConNone_Percent_26_Week\":\"\",\n" +
+                "\"ConNone_Total_Not_26_Week\":\"\",\n" +
+                "\"ConNone_Percent_Not_26_Week\":\"\",\n" +
+                "\"ConFast_Total\":\"\",\n" +
+                "\"ConFast_Total_26_Week\":\"\",\n" +
+                "\"ConFast_Percent_26_Week\":\"\",\n" +
+                "\"ConFast_Total_Not_26_Week\":\"\",\n" +
+                "\"ConFast_Percent_Not_26_Week\":\"\",\n" +
+                "\"ConStd_Total\":\"\",\n" +
+                "\"ConStd_Total_26_Week\":\"\",\n" +
+                "\"ConStd_Percent_26_Week\":\"\",\n" +
+                "\"ConStd_Total_Not_26_Week\":\"\",\n" +
+                "\"ConStd_Percent_Not_26_Week\":\"\",\n" +
+                "\"ConOpen_Total\":\"\",\n" +
+                "\"ConOpen_Total_26_Week\":\"\",\n" +
+                "\"ConOpen_Percent_26_Week\":\"\",\n" +
+                "\"ConOpen_Total_Not_26_Week\":\"\",\n" +
+                "\"ConOpen_Percent_Not_26_Week\":\"\",\n" +
+                "\"Report_List\":[\n" +
+                "{\"Office\":\"Manchester\",\n" +
+                "\"Case_Reference\":\"2122324/2020\",\n" +
+                "\"Conciliation_Track\":\"\",\n" +
+                "\"Receipt_Date\":\"\",\n" +
+                "\"Hearing_Date\":\"2020-10-20T10:00:00.000\",\n" +
+                "\"Days\":\"\"" +
+                "},\n" +
+                "{\"Office\":\"Manchester\",\n" +
+                "\"Case_Reference\":\"2122323/2020\",\n" +
+                "\"Conciliation_Track\":\"\",\n" +
+                "\"Receipt_Date\":\"\",\n" +
+                "\"Hearing_Date\":\"2020-10-20T10:00:00.000\",\n" +
+                "\"Days\":\"\"}],\n" +
+                "\"Report_Clerk\":\"Mike Jordan\",\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
+                "}\n" +
+                "}\n";
+        assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails4.getCaseData(), "",
+                "EM-TRB-SCO-ENG-00751", userDetails).toString());
     }
 
     private CasesAwaitingJudgmentReportData getCasesAwaitingJudgementReportData() {

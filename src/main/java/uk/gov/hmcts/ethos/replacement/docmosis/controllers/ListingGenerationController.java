@@ -223,22 +223,21 @@ public class ListingGenerationController {
 
         var listingData = listingService.generateReportData(listingRequest.getCaseDetails(), userToken);
 
-        return getResponseEntity(listingData,listingRequest.getCaseDetails().getCaseTypeId(), userToken);
+        return getResponseEntity(listingData, listingRequest.getCaseDetails().getCaseTypeId(), userToken);
 
     }
 
-    private ResponseEntity getResponseEntity(ListingData listingData, String caseTypeId, String userToken){
+    private ResponseEntity getResponseEntity(ListingData listingData, String caseTypeId, String userToken) {
         List<String> errorsList = new ArrayList<>();
 
-        if(hasNonEmptyListings(listingData)){
+        if (hasNonEmptyListings(listingData)) {
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
-
             updateListingDocMarkUp(listingData, documentInfo);
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .data(listingData)
                     .significant_item(Helper.generateSignificantItem(documentInfo, errorsList))
                     .build());
-        } else{
+        } else {
             errorsList.add("No hearings have been found for your search criteria");
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .errors(errorsList)
@@ -247,11 +246,11 @@ public class ListingGenerationController {
         }
     }
 
-    private void updateListingDocMarkUp(ListingData listingData, DocumentInfo documentInfo){
+    private void updateListingDocMarkUp(ListingData listingData, DocumentInfo documentInfo) {
         listingData.setDocMarkUp(documentInfo.getMarkUp());
     }
 
-    private DocumentInfo getDocumentInfo(ListingData listingData, String caseTypeId, String userToken){
+    private DocumentInfo getDocumentInfo(ListingData listingData, String caseTypeId, String userToken) {
         return listingService.processHearingDocument(listingData, caseTypeId, userToken);
     }
 

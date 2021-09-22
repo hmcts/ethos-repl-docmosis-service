@@ -151,6 +151,7 @@ public class DocumentGenerationController {
             var defaultValues = getPostDefaultValues(caseDetails);
             defaultValuesReaderService.getCaseData(caseDetails.getCaseData(), defaultValues);
             var documentInfo = documentGenerationService.processDocumentRequest(ccdRequest, userToken);
+            documentGenerationService.updateBfActions(documentInfo, caseDetails.getCaseData());
             caseDetails.getCaseData().setDocMarkUp(documentInfo.getMarkUp());
 
             documentGenerationService.clearUserChoices(caseDetails);

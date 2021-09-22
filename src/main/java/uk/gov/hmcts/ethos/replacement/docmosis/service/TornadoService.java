@@ -19,10 +19,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportDocHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -131,7 +128,6 @@ public class TornadoService {
             sb = ListingHelper.buildListingDocumentContent(listingData, tornadoConnection.getAccessKey(),
                     documentName, userDetails, caseType);
         }
-
         try (var outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
             writeOutputStream(outputStreamWriter, sb);
         }
