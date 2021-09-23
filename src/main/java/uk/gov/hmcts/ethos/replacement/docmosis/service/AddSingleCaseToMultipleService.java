@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
@@ -41,6 +42,12 @@ public class AddSingleCaseToMultipleService {
             String leadClaimant = caseData.getLeadClaimant();
             String updatedMultipleReference = caseData.getMultipleReference();
             String multipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseTypeId);
+            String subMultipleName;
+            if(isNullOrEmpty(caseData.getSubMultipleName())){
+                subMultipleName = "";
+            } else {
+                subMultipleName = caseData.getSubMultipleName();
+            }
 
             log.info("Pulling the multiple case: " + updatedMultipleReference);
             List<SubmitMultipleEvent> multipleEvents =
@@ -76,7 +83,7 @@ public class AddSingleCaseToMultipleService {
             updateCaseDataForMultiple(caseData, updatedMultipleReference, leadClaimant, multipleCaseId);
 
             log.info("Reset mid fields");
-            caseData.setSubMultipleName(null);
+            caseData.setSubMultipleName(subMultipleName);
 
             log.info("Update check multiple flag");
             caseData.setMultipleFlag(YES);
