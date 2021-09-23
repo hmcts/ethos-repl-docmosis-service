@@ -536,7 +536,8 @@ public class BulkUpdateService {
                         errors,
                         bulkDetails.getCaseData().getMultipleReference(),
                         createUpdatesBusSender,
-                        String.valueOf(ethosCaseRefCollection.size()));
+                        String.valueOf(ethosCaseRefCollection.size()),
+                        null);
             }
 
             bulkRequestPayload.setBulkDetails(bulkDetails);
