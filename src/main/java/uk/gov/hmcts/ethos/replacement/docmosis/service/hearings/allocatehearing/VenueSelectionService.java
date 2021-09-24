@@ -7,7 +7,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.VenueService;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.tribunaloffice.TribunalOffice;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.VenueService;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +22,7 @@ public class VenueSelectionService {
     }
 
     public void initHearingCollection(CaseData caseData) {
-        var venues = venueService.getVenues(caseData.getOwningOffice());
+        var venues = venueService.getVenues(TribunalOffice.valueOf(caseData.getOwningOffice()));
         if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
             var hearingTypeItem = new HearingTypeItem();
             hearingTypeItem.setId(UUID.randomUUID().toString());
@@ -47,7 +48,7 @@ public class VenueSelectionService {
 
     public DynamicFixedListType createVenueSelection(CaseData caseData, DateListedType selectedListing) {
         var dynamicFixedListType = new DynamicFixedListType();
-        dynamicFixedListType.setListItems(venueService.getVenues(caseData.getOwningOffice()));
+        dynamicFixedListType.setListItems(venueService.getVenues(TribunalOffice.valueOf(caseData.getOwningOffice())));
 
         if (selectedListing.hasHearingVenue()) {
             dynamicFixedListType.setValue(selectedListing.getHearingVenueDay().getValue());

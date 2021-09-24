@@ -5,9 +5,11 @@ import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.CourtWorkerType;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.tribunaloffice.TribunalOffice;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.ListValuesService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.hearings.HearingSelectionService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.CourtWorkerService;
 
 @Service
 public class AllocateHearingService {
@@ -16,18 +18,18 @@ public class AllocateHearingService {
     private final JudgeSelectionService judgeSelectionService;
     private final VenueSelectionService venueSelectionService;
     private final RoomSelectionService roomSelectionService;
-    private final ListValuesService listValuesService;
+    private final CourtWorkerService courtWorkerService;
 
     public AllocateHearingService(HearingSelectionService hearingSelectionService,
                                   JudgeSelectionService judgeSelectionService,
                                   VenueSelectionService venueSelectionService,
                                   RoomSelectionService roomSelectionService,
-                                  ListValuesService listValuesService) {
+                                  CourtWorkerService courtWorkerService) {
         this.hearingSelectionService = hearingSelectionService;
         this.judgeSelectionService = judgeSelectionService;
         this.venueSelectionService = venueSelectionService;
         this.roomSelectionService = roomSelectionService;
-        this.listValuesService = listValuesService;
+        this.courtWorkerService = courtWorkerService;
     }
 
     public void initialiseAllocateHearing(CaseData caseData) {
@@ -100,7 +102,8 @@ public class AllocateHearingService {
     }
 
     private void addEmployerMembers(CaseData caseData, HearingType selectedHearing) {
-        var dynamicFixedListType = createDynamicFixedListType(caseData.getOwningOffice(), "EMPLOYER_MEMBER");
+        var dynamicFixedListType = createCourtWorkerDynamicFixedListType(
+                TribunalOffice.valueOf(caseData.getOwningOffice()), CourtWorkerType.EMPLOYER_MEMBER);
 
         if (selectedHearing.hasHearingEmployerMember()) {
             dynamicFixedListType.setValue(selectedHearing.getHearingERMember().getValue());
@@ -109,7 +112,8 @@ public class AllocateHearingService {
     }
 
     private void addEmployeeMembers(CaseData caseData, HearingType selectedHearing) {
-        var dynamicFixedListType = createDynamicFixedListType(caseData.getOwningOffice(), "EMPLOYEE_MEMBER");
+        var dynamicFixedListType = createCourtWorkerDynamicFixedListType(
+                TribunalOffice.valueOf(caseData.getOwningOffice()), CourtWorkerType.EMPLOYEE_MEMBER);
 
         if (selectedHearing.hasHearingEmployeeMember()) {
             dynamicFixedListType.setValue(selectedHearing.getHearingEEMember().getValue());
@@ -118,7 +122,8 @@ public class AllocateHearingService {
     }
 
     private void addClerk(CaseData caseData, DateListedType selectedListing) {
-        var dynamicFixedListType = createDynamicFixedListType(caseData.getOwningOffice(), "CLERK");
+        var dynamicFixedListType = createCourtWorkerDynamicFixedListType(
+                TribunalOffice.valueOf(caseData.getOwningOffice()), CourtWorkerType.CLERK);
 
         if (selectedListing.hasHearingClerk()) {
             dynamicFixedListType.setValue(selectedListing.getHearingClerk().getValue());
@@ -126,9 +131,11 @@ public class AllocateHearingService {
         caseData.setAllocateHearingClerk(dynamicFixedListType);
     }
 
-    private DynamicFixedListType createDynamicFixedListType(String owningOffice, String listType) {
+    private DynamicFixedListType createCourtWorkerDynamicFixedListType(TribunalOffice tribunalOffice,
+                                                                       CourtWorkerType courtWorkerType) {
         var dynamicFixedListType = new DynamicFixedListType();
-        dynamicFixedListType.setListItems(listValuesService.getValues(owningOffice, listType));
+        dynamicFixedListType.setListItems(
+                courtWorkerService.getCourtWorkerByTribunalOffice(tribunalOffice, courtWorkerType));
         return dynamicFixedListType;
     }
 }

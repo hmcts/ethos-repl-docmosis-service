@@ -30,3 +30,12 @@ psql postgresql://localhost:5050/ethos -U ethos -f ./fn_ethosMultipleCaseRefGen.
 
 echo "Running fn_ethosSubMultipleCaseRefGen.sql"
 psql postgresql://localhost:5050/ethos -U ethos -f ./fn_ethosSubMultipleCaseRefGen.sql
+
+echo "Running et_scripts/judge.sql"
+psql postgresql://localhost:5050/ethos -U ethos -f ./et_scripts/judge.sql
+
+echo "Running et_scripts/create-tables.sql"
+psql postgresql://localhost:5050/ethos -U ethos -f ./et_scripts/create-tables.sql
+
+echo "Running ET dataload"
+psql postgresql://localhost:5050/ethos -U ethos -f ./et_scripts/data-load.sql

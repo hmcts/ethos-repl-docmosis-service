@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.RoomService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.RoomService;
 
 @Service
 public class RoomSelectionService {
