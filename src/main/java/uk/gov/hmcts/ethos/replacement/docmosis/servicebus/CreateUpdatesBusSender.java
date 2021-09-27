@@ -42,12 +42,10 @@ public class CreateUpdatesBusSender {
 
         createUpdatesMsgList
                 .forEach(msg -> {
-
                     try {
                         serviceBusSender.sendMessage(msg);
                         log.info("SENT -----> " + msg.toString());
                         successCount.incrementAndGet();
-
                     } catch (Exception e) {
                         log.error("Error sending messages to create-updates queue", e);
                         errors.add(ERROR_MESSAGE);
