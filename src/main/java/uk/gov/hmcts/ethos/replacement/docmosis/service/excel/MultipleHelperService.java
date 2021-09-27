@@ -215,7 +215,9 @@ public class MultipleHelperService {
         String username = userService.getUserDetails(userToken).getEmail();
         PersistentQHelper.sendSingleUpdatesPersistentQ(caseTypeId,
                 jurisdiction, username, multipleObjectsFiltered,
-                PersistentQHelper.getCreationDataModel(leadId, updatedMultipleData.getMultipleReference()),
+                PersistentQHelper.getCreationDataModel(leadId,
+                        updatedMultipleData.getMultipleReference(),
+                        multipleReferenceLinkMarkUp),
                 errors, updatedMultipleData.getMultipleReference(), NO, createUpdatesBusSender,
                 String.valueOf(multipleObjectsFiltered.size()),
                 multipleReferenceLinkMarkUp
@@ -385,7 +387,8 @@ public class MultipleHelperService {
                     errors,
                     new ArrayList<>(Collections.singletonList(oldLeadCase)),
                     newLeadCase,
-                    multipleDetails.getCaseId());
+                    getFullLinkMarkUp(multipleDetails.getCaseId(),
+                            multipleDetails.getCaseData().getMultipleReference()));
 
         }
 

@@ -103,10 +103,12 @@ public class PersistentQHelper {
                 .build();
     }
 
-    public static CreationDataModel getCreationDataModel(String lead, String multipleRef) {
+    public static CreationDataModel getCreationDataModel(String lead, String multipleRef,
+                                                         String multipleReferenceLinkMarkUp) {
         return CreationDataModel.builder()
                 .lead(lead)
                 .multipleRef(multipleRef)
+                .multipleReferenceLinkMarkUp(multipleReferenceLinkMarkUp)
                 .build();
     }
 
