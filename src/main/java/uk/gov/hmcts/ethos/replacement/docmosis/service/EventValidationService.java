@@ -187,7 +187,7 @@ public class EventValidationService {
         }
     }
 
-    public List<String> validateJurisdictionOutcome(CaseData caseData) {
+    public List<String> validateJurisdictionOutcome(CaseData caseData, boolean isRejected) {
         List<String> errors = new ArrayList<>();
         if (caseData.getJurCodesCollection() != null && !caseData.getJurCodesCollection().isEmpty()) {
             for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
@@ -197,7 +197,7 @@ public class EventValidationService {
                     break;
                 }
             }
-        } else {
+        } else if (!isRejected) {
             errors.add(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
         }
         return errors;
