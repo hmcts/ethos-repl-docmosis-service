@@ -843,9 +843,15 @@ public class CaseActionsForCaseWorkerController {
         }
 
         var caseData = ccdRequest.getCaseDetails().getCaseData();
-        Helper.updatePositionTypeToClosed(caseData);
+        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseData);
 
-        return getCallbackRespEntityNoErrors(caseData);
+        if (errors.isEmpty()) {
+            Helper.updatePositionTypeToClosed(caseData);
+            return getCallbackRespEntityNoErrors(caseData);
+        }
+
+        log.info(EVENT_FIELDS_VALIDATION + errors);
+        return getCallbackRespEntityErrors(errors, caseData);
     }
 
     private DefaultValues getPostDefaultValues(CaseDetails caseDetails) {
