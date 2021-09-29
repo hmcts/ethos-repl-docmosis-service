@@ -611,7 +611,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void aboutToStartDisposalJurisdictionErrors() throws Exception {
         List<String> errors = Arrays.asList("jurisdiction error");
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         when(eventValidationService.validateJurisdictionOutcome(isA(CaseData.class), eq(false))).thenReturn(errors);
         mvc.perform(post(ABOUT_TO_START_DISPOSAL_URL)
                 .content(requestContent2.toString())
