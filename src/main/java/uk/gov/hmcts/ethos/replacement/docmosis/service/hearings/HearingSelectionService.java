@@ -21,7 +21,7 @@ public class HearingSelectionService {
             for (var listing : hearing.getValue().getHearingDateCollection()) {
                 var code = listing.getId();
 
-                String  date = UtilHelper.formatLocalDateTime(listing.getValue().getListedDate());
+                var date = UtilHelper.formatLocalDateTime(listing.getValue().getListedDate());
                 var label = String.format("Hearing %s, %s", hearing.getValue().getHearingNumber(), date);
                 values.add(DynamicValueType.create(code, label));
             }

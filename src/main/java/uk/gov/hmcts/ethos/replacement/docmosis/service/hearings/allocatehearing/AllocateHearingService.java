@@ -68,15 +68,9 @@ public class AllocateHearingService {
         var selectedListing = getSelectedListing(caseData);
         selectedListing.setHearingStatus(caseData.getAllocateHearingStatus());
         selectedListing.setPostponedBy(caseData.getAllocateHearingPostponedBy());
-
-        var selectedVenue = getSelectedVenue(caseData);
-        selectedListing.setHearingVenueDay(selectedVenue);
-
-        var selectedRoom = getSelectedRoom(caseData);
-        selectedListing.setHearingRoom(selectedRoom);
-
-        var selectedClerk = getSelectedClerk(caseData);
-        selectedListing.setHearingClerk(selectedClerk);
+        selectedListing.setHearingVenueDay(caseData.getAllocateHearingVenue());
+        selectedListing.setHearingRoom(caseData.getAllocateHearingRoom());
+        selectedListing.setHearingClerk(caseData.getAllocateHearingClerk());
 
         Helper.updatePostponedDate(caseData);
     }
@@ -87,18 +81,6 @@ public class AllocateHearingService {
 
     private DateListedType getSelectedListing(CaseData caseData) {
         return hearingSelectionService.getSelectedListing(caseData, caseData.getAllocateHearingHearing());
-    }
-
-    private DynamicFixedListType getSelectedVenue(CaseData caseData) {
-        return caseData.getAllocateHearingVenue();
-    }
-
-    private DynamicFixedListType getSelectedRoom(CaseData caseData) {
-        return caseData.getAllocateHearingRoom();
-    }
-
-    private DynamicFixedListType getSelectedClerk(CaseData caseData) {
-        return caseData.getAllocateHearingClerk();
     }
 
     private void addEmployerMembers(CaseData caseData, HearingType selectedHearing) {
