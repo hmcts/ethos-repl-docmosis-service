@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ethos.replacement.docmosis.service.hearings.allocatehearing;
+package uk.gov.hmcts.ethos.replacement.docmosis.service.hearings;
 
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
@@ -10,17 +10,17 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-class SelectionServiceTestUtils {
+public class SelectionServiceTestUtils {
 
     final static int DEFAULT_LIST_SIZE = 3;
 
-    static CaseData createCaseData(String tribunalOffice) {
+    public static CaseData createCaseData(String tribunalOffice) {
         var caseData = new CaseData();
         caseData.setOwningOffice(tribunalOffice);
         return caseData;
     }
 
-    static List<DynamicValueType> createListItems(String codeBase, String labelBase) {
+    public static List<DynamicValueType> createListItems(String codeBase, String labelBase) {
         var listItems = new ArrayList<DynamicValueType>();
         for (var i = 1; i <= DEFAULT_LIST_SIZE; i++) {
             listItems.add(DynamicValueType.create(codeBase + i, labelBase + i));
@@ -29,7 +29,7 @@ class SelectionServiceTestUtils {
         return listItems;
     }
 
-    static void verifyDynamicFixedListNoneSelected(DynamicFixedListType dynamicFixedListType,
+    public static void verifyDynamicFixedListNoneSelected(DynamicFixedListType dynamicFixedListType,
                                                    String codeBase, String labelBase) {
         assertEquals(DEFAULT_LIST_SIZE, dynamicFixedListType.getListItems().size());
         for (var i = 1; i <= DEFAULT_LIST_SIZE; i++) {
@@ -42,7 +42,7 @@ class SelectionServiceTestUtils {
         assertNull(dynamicFixedListType.getSelectedLabel());
     }
 
-    static void verifyDynamicFixedListSelected(DynamicFixedListType dynamicFixedListType,
+    public static void verifyDynamicFixedListSelected(DynamicFixedListType dynamicFixedListType,
                                                    String codeBase, String labelBase, DynamicValueType selectedValue) {
         assertEquals(DEFAULT_LIST_SIZE, dynamicFixedListType.getListItems().size());
         verifyListItems(dynamicFixedListType.getListItems(), codeBase, labelBase);
@@ -52,7 +52,7 @@ class SelectionServiceTestUtils {
         assertEquals(selectedValue.getLabel(), dynamicFixedListType.getSelectedLabel());
     }
 
-    static void verifyListItems(List<DynamicValueType> listItems, String codeBase, String labelBase) {
+    public static void verifyListItems(List<DynamicValueType> listItems, String codeBase, String labelBase) {
         for (var i = 1; i <= DEFAULT_LIST_SIZE; i++) {
             var listItem = listItems.get(i-1);
             assertEquals(codeBase + i, listItem.getCode());
