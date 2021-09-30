@@ -325,7 +325,7 @@ public class EventValidationServiceTest {
         List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails3.getCaseData(), false);
 
         assertEquals(1, errors.size());
-        assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+        assertEquals(MISSING_JURISDICTION_MESSAGE, errors.get(0));
     }
 
     @Test
