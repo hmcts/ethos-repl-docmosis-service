@@ -26,6 +26,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -595,6 +597,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void aboutToStartDisposal() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(eventValidationService.validateJurisdictionOutcome(isA(CaseData.class), eq(false))).thenReturn(new ArrayList<>());
         mvc.perform(post(ABOUT_TO_START_DISPOSAL_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -602,6 +605,21 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void aboutToStartDisposalJurisdictionErrors() throws Exception {
+        List<String> errors = Arrays.asList("jurisdiction error");
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        when(eventValidationService.validateJurisdictionOutcome(isA(CaseData.class), eq(false))).thenReturn(errors);
+        mvc.perform(post(ABOUT_TO_START_DISPOSAL_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", notNullValue()))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
