@@ -198,7 +198,7 @@ public class EventValidationService {
                 }
             }
         } else if (!isRejected) {
-            errors.add(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
+            errors.add(MISSING_JURISDICTION_MESSAGE);
         }
         return errors;
     }
