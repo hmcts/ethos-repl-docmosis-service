@@ -33,7 +33,6 @@ public class MultipleAmendCaseIdsService {
         List<String> newEthosCaseRefCollection = MultiplesHelper.getCaseIds(multipleDetails.getCaseData());
 
         log.info("Calculate union new and old cases");
-
         List<String> unionLists = concatNewAndOldCases(multipleObjects, newEthosCaseRefCollection);
 
         String multipleLeadCase = getCurrentLead(multipleDetails.getCaseData(), unionLists.get(0));

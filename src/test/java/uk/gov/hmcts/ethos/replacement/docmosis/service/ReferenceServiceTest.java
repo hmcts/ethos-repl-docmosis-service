@@ -124,42 +124,55 @@ public class ReferenceServiceTest {
 
     @Test
     public void fetchHearingVenueRefDataWithThreeVenuesPresent() throws IOException {
-        String result = "CaseData(tribunalCorrespondenceAddress=null, " +
-                "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
-                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
-                "multipleReference=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
-                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
-                "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
-                "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
-                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
-                "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
-                "bfActions=null, clerkResponsible=null, userLocation=null, " +
-                "documentCollection=null, additionalCaseInfoType=null, " +
-                "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
-                "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
-                "caseSource=null, conciliationTrack=null, counterClaim=null, eccCases=null, restrictedReporting=null, printHearingDetails=null, " +
-                "printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
-                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
-                "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, " +
-                "hearingVenue=DynamicFixedListType(value=DynamicValueType(code=Venue1, label=Venue1), listItems=[DynamicValueType(code=Venue1, label=Venue1), " +
-                "DynamicValueType(code=Venue2, label=Venue2), DynamicValueType(code=Venue3, label=Venue3)]), hearingEstLengthNum=null, hearingEstLengthNumType=null, " +
-                "hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, " +
-                "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, " +
-                "Postponed_by=null, hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, hearingPartHeard=null, " +
-                "hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, " +
-                "attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, " +
-                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null, " +
-                "owningOffice=null, allocateHearingHearing=null, allocateHearingVenue=null, allocateHearingRoom=null, " +
-                "allocateHearingClerk=null, allocateHearingSitAlone=null, allocateHearingJudge=null, " +
-                "allocateHearingEmployerMember=null, allocateHearingEmployeeMember=null, " +
-                "allocateHearingPostponedBy=null, allocateHearingStatus=null, hearingDetailsHearing=null, " +
-                "hearingDetailsStatus=null, hearingDetailsPostponedBy=null, hearingDetailsCaseDisposed=null, " +
-                "hearingDetailsPartHeard=null, hearingDetailsReservedJudgment=null, " +
-                "hearingDetailsAttendeeClaimant=null, hearingDetailsAttendeeNonAttendees=null, " +
-                "hearingDetailsAttendeeRespNoRep=null, hearingDetailsAttendeeRespAndRep=null, " +
-                "hearingDetailsAttendeeRepOnly=null, hearingDetailsTimingStart=null, hearingDetailsTimingBreak=null, " +
-                "hearingDetailsTimingResume=null, hearingDetailsTimingFinish=null, " +
-                "hearingDetailsTimingDuration=null, hearingDetailsHearingNotes2=null)";
+        String result = "CaseData(tribunalCorrespondenceAddress=null, "
+                + "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, "
+                + "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, "
+                + "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, "
+                + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, "
+                + "feeGroupReference=null, claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
+                + "representativeClaimantType=null, respondentCollection=null, repCollection=null, positionType=null, "
+                + "dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, "
+                + "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, "
+                + "hearingCollection=null, depositCollection=null, judgementCollection=null, jurCodesCollection=null, "
+                + "bfActions=null, clerkResponsible=null, userLocation=null, documentCollection=null, "
+                + "additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, "
+                + "addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, "
+                + "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, "
+                + "allocatedOffice=null, caseSource=null, conciliationTrack=null, counterClaim=null, "
+                + "eccCases=null, restrictedReporting=null, printHearingDetails=null, "
+                + "printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, "
+                + "EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, "
+                + "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, "
+                + "flagsImageFileName=null, flagsImageAltText=null, hearingNumbers=null, hearingTypes=null, "
+                + "hearingPublicPrivate=null, "
+                + "hearingVenue=DynamicFixedListType(value=DynamicValueType(code=Venue1, label=Venue1), "
+                + "listItems=[DynamicValueType(code=Venue1, label=Venue1), "
+                + "DynamicValueType(code=Venue2, label=Venue2), DynamicValueType(code=Venue3, label=Venue3)]), "
+                + "hearingEstLengthNum=null, hearingEstLengthNumType=null, "
+                + "hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, "
+                + "hearingSelection=null, hearingActions=null, hearingERMember=null, hearingEEMember=null, "
+                + "hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, "
+                + "hearingStatus=null, Postponed_by=null, hearingRoom=null, hearingClerk=null, hearingJudge=null, "
+                + "hearingCaseDisposed=null, hearingPartHeard=null, "
+                + "hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, "
+                + "attendeeRespNoRep=null, attendeeRespAndRep=null, attendeeRepOnly=null, "
+                + "hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, "
+                + "hearingTimingFinish=null, hearingTimingDuration=null, companyPremises=null, "
+                + "officeCT=null, reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, "
+                + "linkedCaseCT=null, stateAPI=null, owningOffice=null, allocateHearingHearing=null, "
+                + "allocateHearingVenue=null, allocateHearingRoom=null, "
+                + "allocateHearingClerk=null, allocateHearingSitAlone=null, allocateHearingJudge=null, "
+                + "allocateHearingEmployerMember=null, allocateHearingEmployeeMember=null, "
+                + "allocateHearingPostponedBy=null, allocateHearingStatus=null, hearingDetailsHearing=null, "
+                + "hearingDetailsStatus=null, hearingDetailsPostponedBy=null, hearingDetailsCaseDisposed=null, "
+                + "hearingDetailsPartHeard=null, hearingDetailsReservedJudgment=null, "
+                + "hearingDetailsAttendeeClaimant=null, hearingDetailsAttendeeNonAttendees=null, "
+                + "hearingDetailsAttendeeRespNoRep=null, hearingDetailsAttendeeRespAndRep=null, "
+                + "hearingDetailsAttendeeRepOnly=null, hearingDetailsTimingStart=null, hearingDetailsTimingBreak=null, "
+                + "hearingDetailsTimingResume=null, hearingDetailsTimingFinish=null, "
+                + "hearingDetailsTimingDuration=null, hearingDetailsHearingNotes2=null)";
+
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenReturn(referenceSubmitEvents);
         CaseData caseDataResult = referenceService.fetchHearingVenueRefData(caseDetails, "authToken");
         assertEquals(result, caseDataResult.toString());
@@ -170,37 +183,48 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
-                "multipleReference=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
-                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
-                "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
-                "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
+                "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, "
+                + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, "
+                + "feeGroupReference=null, claimantWorkAddressQuestion=null, "
+                + "claimantWorkAddressQRespondent=null, representativeClaimantType=null, "
+                + "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, "
+                + "currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
-                "bfActions=null, clerkResponsible=null, userLocation=null, " +
-                "documentCollection=null, additionalCaseInfoType=null, " +
-                "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
-                "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
-                "caseSource=null, conciliationTrack=null, counterClaim=null, eccCases=null, restrictedReporting=null, printHearingDetails=null, " +
-                "printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
-                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
-                "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, hearingEstLengthNum=null, hearingEstLengthNumType=null, " +
-                "hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, " +
-                "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, " +
-                "Postponed_by=null, hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, hearingPartHeard=null, " +
-                "hearingReservedJudgement=null, attendeeClaimant=null, attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, " +
-                "attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, hearingTimingResume=null, hearingTimingFinish=null, " +
-                "hearingTimingDuration=null, companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null, positionTypeCT=null, linkedCaseCT=null, stateAPI=null, " +
-                "owningOffice=null, allocateHearingHearing=null, allocateHearingVenue=null, allocateHearingRoom=null, " +
-                "allocateHearingClerk=null, allocateHearingSitAlone=null, allocateHearingJudge=null, " +
-                "allocateHearingEmployerMember=null, allocateHearingEmployeeMember=null, " +
-                "allocateHearingPostponedBy=null, allocateHearingStatus=null, hearingDetailsHearing=null, " +
-                "hearingDetailsStatus=null, hearingDetailsPostponedBy=null, hearingDetailsCaseDisposed=null, " +
-                "hearingDetailsPartHeard=null, hearingDetailsReservedJudgment=null, " +
-                "hearingDetailsAttendeeClaimant=null, hearingDetailsAttendeeNonAttendees=null, " +
-                "hearingDetailsAttendeeRespNoRep=null, hearingDetailsAttendeeRespAndRep=null, " +
-                "hearingDetailsAttendeeRepOnly=null, hearingDetailsTimingStart=null, hearingDetailsTimingBreak=null, " +
-                "hearingDetailsTimingResume=null, hearingDetailsTimingFinish=null, " +
-                "hearingDetailsTimingDuration=null, hearingDetailsHearingNotes2=null)";
+                "bfActions=null, clerkResponsible=null, userLocation=null, documentCollection=null, " +
+                "additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, " +
+                "addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
+                "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, "
+                + "allocatedOffice=null, caseSource=null, conciliationTrack=null, counterClaim=null, eccCases=null, "
+                + "restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, "
+                + "targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, "
+                + "docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, multipleRefNumber=null, "
+                + "caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, "
+                + "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, hearingVenue=null, "
+                + "hearingEstLengthNum=null, hearingEstLengthNumType=null, hearingSitAlone=null, hearingStage=null, "
+                + "listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, "
+                + "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, "
+                + "hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, Postponed_by=null, "
+                + "hearingRoom=null, hearingClerk=null, hearingJudge=null, hearingCaseDisposed=null, "
+                + "hearingPartHeard=null, hearingReservedJudgement=null, attendeeClaimant=null, "
+                + "attendeeNonAttendees=null, attendeeRespNoRep=null, attendeeRespAndRep=null, "
+                + "attendeeRepOnly=null, hearingTimingStart=null, hearingTimingBreak=null, "
+                + "hearingTimingResume=null, hearingTimingFinish=null, hearingTimingDuration=null, "
+                + "companyPremises=null, officeCT=null, reasonForCT=null, relatedCaseCT=null, "
+                + "positionTypeCT=null, "
+                + "linkedCaseCT=null, stateAPI=null, owningOffice=null, allocateHearingHearing=null, "
+                + "allocateHearingVenue=null, allocateHearingRoom=null, "
+                + "allocateHearingClerk=null, allocateHearingSitAlone=null, allocateHearingJudge=null, "
+                + "allocateHearingEmployerMember=null, allocateHearingEmployeeMember=null, "
+                + "allocateHearingPostponedBy=null, allocateHearingStatus=null, hearingDetailsHearing=null, "
+                + "hearingDetailsStatus=null, hearingDetailsPostponedBy=null, hearingDetailsCaseDisposed=null, "
+                + "hearingDetailsPartHeard=null, hearingDetailsReservedJudgment=null, "
+                + "hearingDetailsAttendeeClaimant=null, hearingDetailsAttendeeNonAttendees=null, "
+                + "hearingDetailsAttendeeRespNoRep=null, hearingDetailsAttendeeRespAndRep=null, "
+                + "hearingDetailsAttendeeRepOnly=null, hearingDetailsTimingStart=null, hearingDetailsTimingBreak=null, "
+                + "hearingDetailsTimingResume=null, hearingDetailsTimingFinish=null, "
+                + "hearingDetailsTimingDuration=null, hearingDetailsHearingNotes2=null)";
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenReturn(referenceSubmitEventsNoVenues);
         CaseData caseDataResult = referenceService.fetchHearingVenueRefData(caseDetails, "authToken");
         assertEquals(result, caseDataResult.toString());
@@ -211,7 +235,8 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
-                "multipleReference=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
+                "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
@@ -259,7 +284,8 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
-                "multipleReference=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
+                "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
@@ -307,7 +333,8 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
-                "multipleReference=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
+                "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
@@ -342,6 +369,7 @@ public class ReferenceServiceTest {
                 "hearingDetailsAttendeeRepOnly=null, hearingDetailsTimingStart=null, hearingDetailsTimingBreak=null, " +
                 "hearingDetailsTimingResume=null, hearingDetailsTimingFinish=null, " +
                 "hearingDetailsTimingDuration=null, hearingDetailsHearingNotes2=null)";
+
         when(ccdClient.retrieveReferenceDataCases(anyString(), anyString(), anyString())).thenReturn(referenceSubmitEventsNoVenues);
         CaseData caseDataResult = referenceService.fetchDateListedRefData(caseDetails, "authToken");
         assertEquals(result, caseDataResult.toString());
@@ -350,26 +378,31 @@ public class ReferenceServiceTest {
     @Test
     public void fetchDateListedRefDataWithNoClerksRefData() throws IOException {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
-                "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
-                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
-                "multipleReference=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
-                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
-                "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
-                "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
-                "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
-                "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
-                "bfActions=null, clerkResponsible=null, userLocation=null, " +
-                "documentCollection=null, additionalCaseInfoType=null, " +
-                "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
-                "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
-                "caseSource=null, conciliationTrack=null, counterClaim=null, eccCases=null, restrictedReporting=null, printHearingDetails=null, " +
-                "printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
-                "startCaseRefNumber=null, multipleRefNumber=null, caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, " +
-                "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, " +
-                "hearingVenue=DynamicFixedListType(value=DynamicValueType(code=Venue1, label=Venue1), listItems=[DynamicValueType(code=Venue1, label=Venue1), " +
-                "DynamicValueType(code=Venue2, label=Venue2), DynamicValueType(code=Venue3, label=Venue3)]), hearingEstLengthNum=null, hearingEstLengthNumType=null, " +
-                "hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, " +
-                "hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, Postponed_by=null, " +
+                "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, "
+                + "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, "
+                + "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, "
+                + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, "
+                + "claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
+                + "representativeClaimantType=null, respondentCollection=null, repCollection=null, positionType=null, "
+                + "dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, "
+                + "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, "
+                + "hearingCollection=null, depositCollection=null, judgementCollection=null, jurCodesCollection=null, "
+                + "bfActions=null, clerkResponsible=null, userLocation=null, documentCollection=null, "
+                + "additionalCaseInfoType=null, correspondenceScotType=null, correspondenceType=null, "
+                + "addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, "
+                + "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, "
+                + "allocatedOffice=null, caseSource=null, conciliationTrack=null, counterClaim=null, eccCases=null, "
+                + "restrictedReporting=null, printHearingDetails=null, printHearingCollection=null, "
+                + "targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, "
+                + "docMarkUp=null, caseRefNumberCount=null, startCaseRefNumber=null, multipleRefNumber=null, "
+                + "caseRefECC=null, respondentECC=null, ccdID=null, flagsImageFileName=null, flagsImageAltText=null, "
+                + "hearingNumbers=null, hearingTypes=null, hearingPublicPrivate=null, "
+                + "hearingVenue=DynamicFixedListType(value=DynamicValueType(code=Venue1, label=Venue1), "
+                + "listItems=[DynamicValueType(code=Venue1, label=Venue1), DynamicValueType(code=Venue2, label=Venue2), "
+                + "DynamicValueType(code=Venue3, label=Venue3)]), hearingEstLengthNum=null, hearingEstLengthNumType=null, "
+                + "hearingSitAlone=null, hearingStage=null, listedDate=null, hearingNotes=null, hearingSelection=null, hearingActions=null, "
+                +"hearingERMember=null, hearingEEMember=null, hearingDatesRequireAmending=null, hearingDateSelection=null, hearingDateActions=null, hearingStatus=null, Postponed_by=null, " +
                 "hearingRoom=DynamicFixedListType(value=DynamicValueType(code=Venue1, label=Venue1), listItems=[DynamicValueType(code=Venue1, label=Venue1), " +
                 "DynamicValueType(code=Venue2, label=Venue2), DynamicValueType(code=Venue3, label=Venue3)]), hearingClerk=null, " +
                 "hearingJudge=DynamicFixedListType(value=DynamicValueType(code=Judge6, label=Judge6), listItems=[DynamicValueType(code=Judge6, label=Judge6)]), " +
@@ -398,15 +431,18 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
-                "multipleReference=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
+                "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
-                "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
+                "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, "
+                + "currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
                 "depositCollection=null, judgementCollection=null, jurCodesCollection=null, " +
                 "bfActions=null, clerkResponsible=null, userLocation=null, " +
                 "documentCollection=null, additionalCaseInfoType=null, " +
-                "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, addressLabelCollection=null, addressLabelsAttributesType=null, " +
+                "correspondenceScotType=null, correspondenceType=null, addressLabelsSelectionType=null, "
+                + "addressLabelCollection=null, addressLabelsAttributesType=null, " +
                 "caseNotes=null, claimantWorkAddress=null, claimantRepresentedQuestion=null, managingOffice=null, allocatedOffice=null, " +
                 "caseSource=null, conciliationTrack=null, counterClaim=null, eccCases=null, restrictedReporting=null, printHearingDetails=null, " +
                 "printHearingCollection=null, targetHearingDate=null, claimant=null, respondent=null, EQP=null, flag1=null, flag2=null, docMarkUp=null, caseRefNumberCount=null, " +
@@ -445,7 +481,8 @@ public class ReferenceServiceTest {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
-                "multipleReference=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
+                "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
+                + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
