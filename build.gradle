@@ -48,7 +48,8 @@ checkstyle {
 def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
                        '**/uk/gov/hmcts/ethos/replacement/docmosis/model/**',
                        '**/uk/gov/hmcts/reform/ethos/replacement/docmosis/CaseOrchestrationApplication',
-                       '**/uk/gov/hmcts/ethos/replacement/docmosis.config.DevQueueClient.java'
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis.config.DevQueueClient.java',
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis/controllers/TestDynamicListController'
 ]
 
 sonarqube {
@@ -193,7 +194,7 @@ def versions = [
 ]
 
 dependencies {
-    implementation 'com.github.hmcts:ecm-common:0.1.136'
+    implementation 'com.github.hmcts:ecm-common:eui4465-SNAPSHOT'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
