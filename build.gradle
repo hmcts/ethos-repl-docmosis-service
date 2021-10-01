@@ -49,7 +49,7 @@ def sonarExclusions = ['**/uk/gov/hmcts/ethos/replacement/docmosis/config/**',
                        '**/uk/gov/hmcts/ethos/replacement/docmosis/model/**',
                        '**/uk/gov/hmcts/reform/ethos/replacement/docmosis/CaseOrchestrationApplication',
                        '**/uk/gov/hmcts/ethos/replacement/docmosis.config.DevQueueClient.java',
-                       '**/uk/gov/hmcts/ethos/replacement/docmosis/controllers/TestDynamicListController'
+                       '**/uk/gov/hmcts/ethos/replacement/docmosis/controllers/TestDynamicListController.java'
 ]
 
 sonarqube {
