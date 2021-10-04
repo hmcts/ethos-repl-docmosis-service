@@ -29,11 +29,13 @@ public class PersistentQHelper {
     //********************
 
     public static CreateUpdatesDto getCreateUpdatesDto(BulkDetails bulkDetails, List<String> ethosCaseRefCollection,
-                                                       String email, String multipleRef) {
+                                                       String email, String multipleRef,
+                                                       String multipleRefLinkMarkUp) {
         return CreateUpdatesDto.builder()
                 .caseTypeId(bulkDetails.getCaseTypeId())
                 .jurisdiction(bulkDetails.getJurisdiction())
                 .multipleRef(multipleRef)
+                .multipleReferenceLinkMarkUp(multipleRefLinkMarkUp)
                 .username(email)
                 .ethosCaseRefCollection(ethosCaseRefCollection)
                 .build();
@@ -43,11 +45,11 @@ public class PersistentQHelper {
                                               List<String> ethosCaseRefCollection,
                                               DataModelParent dataModelParent, List<String> errors,
                                               String multipleRef, CreateUpdatesBusSender createUpdatesBusSender,
-                                              String updateSize) {
+                                              String updateSize, String multipleRefLinkMarkUp) {
         log.info("Case Ref collection: " + ethosCaseRefCollection);
         if (!ethosCaseRefCollection.isEmpty()) {
             var createUpdatesDto = PersistentQHelper.getCreateUpdatesDto(bulkDetails,
-                    ethosCaseRefCollection, username, multipleRef);
+                    ethosCaseRefCollection, username, multipleRef, multipleRefLinkMarkUp);
 
             createUpdatesBusSender.sendUpdatesToQueue(
                     createUpdatesDto,
@@ -68,11 +70,13 @@ public class PersistentQHelper {
                                                     DataModelParent dataModelParent,
                                                     List<String> errors, String multipleRef, String confirmation,
                                                     CreateUpdatesBusSender createUpdatesBusSender, String updateSize,
-                                                    String parentMultipleId) {
+                                                    String multipleReferenceLinkMarkUp
+                                                    ) {
         log.info("Case Ref collection: " + ethosCaseRefCollection);
         if (!ethosCaseRefCollection.isEmpty()) {
-            var createUpdatesDto = PersistentQHelper.getMultipleCreateUpdatesDto(caseTypeId, jurisdiction,
-                    ethosCaseRefCollection, username, multipleRef, confirmation, parentMultipleId);
+            var createUpdatesDto = PersistentQHelper.getMultipleCreateUpdatesDto(caseTypeId,
+                    jurisdiction, ethosCaseRefCollection, username, multipleRef, confirmation,
+                    multipleReferenceLinkMarkUp);
 
             createUpdatesBusSender.sendUpdatesToQueue(
                     createUpdatesDto,
@@ -87,23 +91,24 @@ public class PersistentQHelper {
     private static CreateUpdatesDto getMultipleCreateUpdatesDto(String caseTypeId, String jurisdiction,
                                                                 List<String> ethosCaseRefCollection, String email,
                                                                 String multipleRef, String confirmation,
-                                                                String parentMultipleId) {
+                                                                String multipleReferenceLinkMarkUp) {
         return CreateUpdatesDto.builder()
                 .caseTypeId(caseTypeId)
                 .jurisdiction(jurisdiction)
                 .multipleRef(multipleRef)
+                .multipleReferenceLinkMarkUp(multipleReferenceLinkMarkUp)
                 .username(email)
                 .confirmation(confirmation)
                 .ethosCaseRefCollection(ethosCaseRefCollection)
-                .parentMultipleCaseId(parentMultipleId)
                 .build();
     }
 
-    public static CreationDataModel getCreationDataModel(String lead, String multipleRef, String parentMultipleCaseId) {
+    public static CreationDataModel getCreationDataModel(String lead, String multipleRef,
+                                                         String multipleReferenceLinkMarkUp) {
         return CreationDataModel.builder()
                 .lead(lead)
                 .multipleRef(multipleRef)
-                .parentMultipleCaseId(parentMultipleCaseId)
+                .multipleReferenceLinkMarkUp(multipleReferenceLinkMarkUp)
                 .build();
     }
 

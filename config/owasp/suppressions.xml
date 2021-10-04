@@ -14,4 +14,14 @@
         <packageUrl regex="true">^pkg:maven/com\.nimbusds/lang-tag@.*$</packageUrl>
         <vulnerabilityName>CVE-2020-23171</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[file name: elasticsearch-7.13.4.jar]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/org.elasticsearch/elasticsearch@.*$</packageUrl>
+        <vulnerabilityName>CVE-2021-22147</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <vulnerabilityName>CVE-2021-40690</vulnerabilityName>
+    </suppress>
 </suppressions>

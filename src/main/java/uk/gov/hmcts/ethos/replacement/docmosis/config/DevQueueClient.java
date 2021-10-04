@@ -9,8 +9,6 @@ import com.microsoft.azure.servicebus.ReceiveMode;
 import com.microsoft.azure.servicebus.SessionHandlerOptions;
 import com.microsoft.azure.servicebus.TransactionContext;
 import com.microsoft.azure.servicebus.primitives.ServiceBusException;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -21,10 +19,13 @@ import java.util.concurrent.ExecutorService;
 
 /**
  * {@link IQueueClient} implementation for use during development only.
+ * To use you would need to add
+ * <pre>{@code
+ * @Component("create-updates-send-client")
+ * @Profile("dev")
+ * }</pre>
  */
 @SuppressWarnings("ALL")
-@Component("create-updates-send-client")
-@Profile("dev")
 public class DevQueueClient implements IQueueClient {
 
     @Override

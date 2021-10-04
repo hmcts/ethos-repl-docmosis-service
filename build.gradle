@@ -161,6 +161,11 @@ pact {
     }
 }
 
+task fortifyScan(type: JavaExec)  {
+    main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+    classpath += sourceSets.test.runtimeClasspath
+    jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
+}
 
 // https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
 dependencyCheck {
@@ -188,7 +193,7 @@ def versions = [
 ]
 
 dependencies {
-    implementation 'com.github.hmcts:ecm-common:0.1.132'
+    implementation 'com.github.hmcts:ecm-common:0.1.136'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
@@ -223,14 +228,12 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.0-alpha2'
     implementation group: 'io.netty', name: 'netty-codec-http2', version: '4.1.66.Final'
 
-
     //To Remove vulnerability CVE-2021-21295
     implementation group: 'io.netty', name: 'netty-all', version: '4.1.61.Final'
     implementation group: 'io.netty', name: 'netty-codec-http', version: '4.1.61.Final'
 
     //To Remove vulnerability CVE-2020-11988
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.6'
-
     implementation 'com.github.hmcts:ccd-case-document-am-client:1.7.2'
 
     implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: '11.6'
@@ -260,6 +263,8 @@ dependencies {
     }
     testImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+
+    testImplementation 'com.github.hmcts:fortify-client:1.2.1:all'
 
     // Contract Tests
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
@@ -291,3 +296,4 @@ bootJar {
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
+

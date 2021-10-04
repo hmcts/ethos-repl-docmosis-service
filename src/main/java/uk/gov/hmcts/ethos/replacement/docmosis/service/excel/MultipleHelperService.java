@@ -210,23 +210,18 @@ public class MultipleHelperService {
                                                                 List<String> errors,
                                                                 List<String> multipleObjectsFiltered,
                                                                 String leadId,
-                                                                String parentMultipleCaseId) {
+                                                                String multipleReferenceLinkMarkUp) {
 
         String username = userService.getUserDetails(userToken).getEmail();
-
         PersistentQHelper.sendSingleUpdatesPersistentQ(caseTypeId,
-                jurisdiction,
-                username,
-                multipleObjectsFiltered,
+                jurisdiction, username, multipleObjectsFiltered,
                 PersistentQHelper.getCreationDataModel(leadId,
-                        updatedMultipleData.getMultipleReference(), parentMultipleCaseId),
-                errors,
-                updatedMultipleData.getMultipleReference(),
-                NO,
-                createUpdatesBusSender,
+                        updatedMultipleData.getMultipleReference(),
+                        multipleReferenceLinkMarkUp),
+                errors, updatedMultipleData.getMultipleReference(), NO, createUpdatesBusSender,
                 String.valueOf(multipleObjectsFiltered.size()),
-                parentMultipleCaseId);
-
+                multipleReferenceLinkMarkUp
+                );
     }
 
     public void sendDetachUpdatesToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails,
@@ -246,7 +241,7 @@ public class MultipleHelperService {
                 NO,
                 createUpdatesBusSender,
                 String.valueOf(multipleObjectsFiltered.size()),
-                multipleDetails.getCaseId());
+                getFullLinkMarkUp(multipleDetails.getCaseId(), multipleData.getMultipleReference()));
 
     }
 
@@ -268,8 +263,7 @@ public class MultipleHelperService {
                 YES,
                 createUpdatesBusSender,
                 String.valueOf(multipleObjectsFiltered.size()),
-                multipleDetails.getCaseId());
-
+                getFullLinkMarkUp(multipleDetails.getCaseId(), multipleData.getMultipleReference()));
     }
 
     public void sendPreAcceptToSinglesWithConfirmation(String userToken, MultipleDetails multipleDetails,
@@ -329,7 +323,7 @@ public class MultipleHelperService {
                 confirmation,
                 createUpdatesBusSender,
                 String.valueOf(ethosCaseRefCollection.size()),
-                multipleDetails.getCaseId());
+                getFullLinkMarkUp(multipleDetails.getCaseId(), multipleData.getMultipleReference()));
 
     }
 
@@ -349,7 +343,8 @@ public class MultipleHelperService {
                 NO,
                 createUpdatesBusSender,
                 "1",
-                parentMultipleCaseId);
+                getFullLinkMarkUp(parentMultipleCaseId, multipleData.getMultipleReference())
+                );
 
     }
 
@@ -392,7 +387,8 @@ public class MultipleHelperService {
                     errors,
                     new ArrayList<>(Collections.singletonList(oldLeadCase)),
                     newLeadCase,
-                    multipleDetails.getCaseId());
+                    getFullLinkMarkUp(multipleDetails.getCaseId(),
+                            multipleDetails.getCaseData().getMultipleReference()));
 
         }
 
@@ -402,9 +398,12 @@ public class MultipleHelperService {
 
             addLeadMarkUp(userToken, multipleDetails.getCaseTypeId(),
                     multipleDetails.getCaseData(), newLeadCase, "");
-
         }
 
+    }
+
+    private String getFullLinkMarkUp(String caseId, String multipleReference){
+        return MultiplesHelper.generateMarkUp(ccdGatewayBaseUrl, caseId, multipleReference);
     }
 
     public void sendUpdatesToSinglesLogic(String userToken, MultipleDetails multipleDetails, List<String> errors,
@@ -413,15 +412,11 @@ public class MultipleHelperService {
 
         sendUpdatesToSinglesLogicCheckingLead(userToken, multipleDetails, errors, newLeadCase, multipleObjects);
 
-        sendCreationUpdatesToSinglesWithoutConfirmation(userToken,
-                multipleDetails.getCaseTypeId(),
-                multipleDetails.getJurisdiction(),
-                multipleDetails.getCaseData(),
-                errors,
-                newEthosCaseRefCollection,
-                newLeadCase,
-                multipleDetails.getCaseId());
-
+        var multipleData  = multipleDetails.getCaseData();
+        sendCreationUpdatesToSinglesWithoutConfirmation(userToken, multipleDetails.getCaseTypeId(),
+                multipleDetails.getJurisdiction(), multipleData, errors,
+                newEthosCaseRefCollection, newLeadCase,
+                getFullLinkMarkUp(multipleDetails.getCaseId(), multipleData.getMultipleReference()));
     }
 
 }

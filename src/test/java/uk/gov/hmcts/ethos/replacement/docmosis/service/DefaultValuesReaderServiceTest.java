@@ -173,6 +173,7 @@ public class DefaultValuesReaderServiceTest {
                 .tribunalCorrespondenceTelephone("0207 538 6161")
                 .tribunalCorrespondenceFax("08703 240 200")
                 .tribunalCorrespondenceEmail("eastlondon@justice.gov.uk")
+                .tribunalCorrespondenceDX("DX 374401 East India Dock 1")
                 .build();
         postDefaultValuesLondonSouth = DefaultValues.builder()
                 .positionType(MANUALLY_CREATED_POSITION)
@@ -385,7 +386,7 @@ public class DefaultValuesReaderServiceTest {
                 + "20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
                 + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
                 + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=Single, "
-                + "multipleReference=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, "
+                + "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, "
                 + "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, "
                 + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, "
                 + "claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
@@ -452,7 +453,7 @@ public class DefaultValuesReaderServiceTest {
                 + "20 York Street, Glasgow, G2 8GT, tribunalCorrespondenceTelephone=0141 204 0730, "
                 + "tribunalCorrespondenceFax=01264 785 177, tribunalCorrespondenceDX=DX 580003, "
                 + "tribunalCorrespondenceEmail=glasgowet@justice.gov.uk, ethosCaseReference=null, caseType=Single, "
-                + "multipleReference=null, parentMultipleCaseId=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, "
+                + "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, multipleFlag=null, "
                 + "claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, "
                 + "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, "
                 + "claimantWorkAddressQuestion=Yes, claimantWorkAddressQRespondent=null, "

@@ -88,11 +88,13 @@ public class BulkCreationService {
                             username,
                             ethosCaseRefCollection,
                             PersistentQHelper.getCreationDataModel(ethosCaseRefCollection.get(0),
-                                    bulkDetails.getCaseData().getMultipleReference(), bulkDetails.getCaseId()),
+                                    bulkDetails.getCaseData().getMultipleReference(),
+                                    bulkDetails.getCaseData().getMultipleReferenceLinkMarkUp()),
                             bulkCasesPayload.getErrors(),
                             bulkDetails.getCaseData().getMultipleReference(),
                             createUpdatesBusSender,
-                            String.valueOf(ethosCaseRefCollection.size()));
+                            String.valueOf(ethosCaseRefCollection.size()),
+                            bulkDetails.getCaseData().getMultipleReferenceLinkMarkUp());
 
                 } else {
                     log.info("EMPTY CASE REF COLLECTION");
@@ -226,17 +228,20 @@ public class BulkCreationService {
                     new ArrayList<>(),
                     bulkDetails.getCaseData().getMultipleReference(),
                     createUpdatesBusSender,
-                    updateSize);
+                    updateSize,
+                    bulkDetails.getCaseData().getMultipleReferenceLinkMarkUp());
 
             PersistentQHelper.sendUpdatesPersistentQ(bulkDetails,
                     username,
                     attachCasesList,
                     PersistentQHelper.getCreationDataModel(leadId,
-                            bulkDetails.getCaseData().getMultipleReference(), bulkDetails.getCaseId()),
+                            bulkDetails.getCaseData().getMultipleReference(),
+                            bulkDetails.getCaseData().getMultipleReferenceLinkMarkUp()),
                     new ArrayList<>(),
                     bulkDetails.getCaseData().getMultipleReference(),
                     createUpdatesBusSender,
-                    updateSize);
+                    updateSize,
+                    bulkDetails.getCaseData().getMultipleReferenceLinkMarkUp());
         }
 
         return multipleTypeItemList;

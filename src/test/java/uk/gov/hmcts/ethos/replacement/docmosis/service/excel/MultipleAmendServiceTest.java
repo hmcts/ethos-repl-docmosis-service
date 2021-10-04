@@ -14,8 +14,8 @@ import java.util.*;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.TYPE_AMENDMENT_ADDITION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.TYPE_AMENDMENT_LEAD;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADD_CASES_TO_MULTIPLE_AMENDMENT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEAD_CASE_AMENDMENT;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MultipleAmendServiceTest {
@@ -38,7 +38,7 @@ public class MultipleAmendServiceTest {
 
     @Before
     public void setUp() {
-        typeOfAmendmentMSL = new ArrayList<>(Arrays.asList(TYPE_AMENDMENT_LEAD, TYPE_AMENDMENT_ADDITION));
+        typeOfAmendmentMSL = new ArrayList<>(Arrays.asList(LEAD_CASE_AMENDMENT, ADD_CASES_TO_MULTIPLE_AMENDMENT));
         multipleObjects = MultipleUtil.getMultipleObjectsAll();
         multipleDetails = new MultipleDetails();
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
