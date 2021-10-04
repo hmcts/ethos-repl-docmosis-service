@@ -109,17 +109,18 @@ public class DocumentManagementServiceTest {
 
     @Test
     public void downloadFile() {
-        when(caseDocumentClientApi.getDocumentBinary(anyString(), anyString(), any()))
+        when(documentDownloadClientApi.downloadBinary(anyString(), anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(responseEntity);
+
         UploadedDocument uploadedDocument = documentManagementService.downloadFile("authString",
-                "http://dm-store:8080/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4");
+                "http://dm-store:8080/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary");
         assertEquals(uploadedDocument.getName(), "fileName");
         assertEquals(uploadedDocument.getContentType(), "xslx");
 
-//        uploadedDocument = documentManagementService.downloadFile("authString",
-//                "documents/5ce85c44-e409-4753-9ec6-b7c569d616f1/binary");
-//        assertEquals(uploadedDocument.getName(), "fileName");
-//        assertEquals(uploadedDocument.getContentType(), "xslx");
+        uploadedDocument = documentManagementService.downloadFile("authString",
+                "documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary");
+        assertEquals(uploadedDocument.getName(), "fileName");
+        assertEquals(uploadedDocument.getContentType(), "xslx");
     }
 
     @Ignore
