@@ -37,6 +37,9 @@ public class ExcelDocManagementService {
     @Value("${document_management.ccdCaseDocument.url}")
     private String ccdCaseDocumentUrl;
 
+    @Value("$case-document-am.url")
+    private String caseDocumentAmUrl;
+
     private final DocumentManagementService documentManagementService;
     private final ExcelCreationService excelCreationService;
     private final UserService userService;

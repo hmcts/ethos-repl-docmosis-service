@@ -45,6 +45,9 @@ public class TornadoService {
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
 
+    @Value("$case-document-am.url")
+    private String caseDocumentAmUrl;
+
     public DocumentInfo documentGeneration(String authToken, CaseData caseData, String caseTypeId,
                                            CorrespondenceType correspondenceType,
                                            CorrespondenceScotType correspondenceScotType,
