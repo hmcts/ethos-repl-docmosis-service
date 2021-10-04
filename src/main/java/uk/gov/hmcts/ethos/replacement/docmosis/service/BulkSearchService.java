@@ -233,20 +233,20 @@ public class BulkSearchService {
         List<SubmitEvent> submitEventFiltered = new ArrayList<>();
         for (SubmitEvent submitEvent : submitEvents) {
             var caseData = submitEvent.getCaseData();
-            if (caseIds.contains(caseData.getEthosCaseReference()) &&
-                    checkErrors && !Strings.isNullOrEmpty(caseData.getMultipleReference())) {
-                        if (creationFlag) {
-                            log.info("Creation");
-                            alreadyTakenIds.add(caseData.getEthosCaseReference());
-                        } else if (!caseData.getMultipleReference().equals(multipleReference != null
-                                ? multipleReference : "")) {
-                            log.info("Update");
-                            alreadyTakenIds.add(caseData.getEthosCaseReference());
-                        }
+            if (caseIds.contains(caseData.getEthosCaseReference()) && checkErrors
+                    && !Strings.isNullOrEmpty(caseData.getMultipleReference())) {
+                if (creationFlag) {
+                    log.info("Creation");
+                    alreadyTakenIds.add(caseData.getEthosCaseReference());
+                } else if (!caseData.getMultipleReference().equals(multipleReference != null
+                        ? multipleReference : "")) {
+                    log.info("Update");
+                    alreadyTakenIds.add(caseData.getEthosCaseReference());
+                }
 
-                    if (submitEvent.getState().equals(SUBMITTED_STATE)) {
-                        unprocessableState.add(submitEvent.getCaseData().getEthosCaseReference());
-                    }
+                if (submitEvent.getState().equals(SUBMITTED_STATE)) {
+                    unprocessableState.add(submitEvent.getCaseData().getEthosCaseReference());
+                }
 
                 submitEventFiltered.add(submitEvent);
             }
