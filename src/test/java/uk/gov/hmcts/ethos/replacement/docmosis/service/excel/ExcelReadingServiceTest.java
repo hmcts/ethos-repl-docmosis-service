@@ -36,7 +36,7 @@ public class ExcelReadingServiceTest {
     private List<String> errors;
     private MultipleData multipleData;
     private String userToken;
-    private MultipleDetails multipleDetails;
+    private MultipleDetails multipleDetails = new MultipleDetails();
 
     @Before
     public void setUp() {
@@ -49,7 +49,6 @@ public class ExcelReadingServiceTest {
 
     @Test
     public void readExcelAll() throws IOException {
-
         body = new ClassPathResource(TESTING_FILE_NAME);
         when(excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl))
                 .thenReturn(body.getInputStream());

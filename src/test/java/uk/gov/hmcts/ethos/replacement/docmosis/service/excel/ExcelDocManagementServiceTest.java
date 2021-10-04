@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.excel.ExcelDocManagementService.APPLICATION_EXCEL_VALUE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@Ignore
 public class ExcelDocManagementServiceTest {
 
     @Mock
