@@ -63,7 +63,7 @@ public class SubMultipleServiceTest {
 
     @Test
     public void createSubMultipleLogic() {
-        String result = "BulkData(bulkCaseTitle=null, multipleReference=null, feeGroupReference=null, claimantSurname=null, respondentSurname=null, " +
+        String result = "BulkData(bulkCaseTitle=null, multipleReference=null, multipleReferenceLinkMarkUp=null, feeGroupReference=null, claimantSurname=null, respondentSurname=null, " +
                 "claimantRep=null, respondentRep=null, ethosCaseReference=null, clerkResponsible=null, fileLocation=null, jurCodesCollection=null, " +
                 "fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, " +
                 "clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, fileLocationGlasgow=null, fileLocationAberdeen=null, " +
@@ -145,7 +145,7 @@ public class SubMultipleServiceTest {
 
     @Test
     public void deleteSubMultipleLogic() {
-        String result = "BulkData(bulkCaseTitle=null, multipleReference=null, feeGroupReference=null, claimantSurname=null, respondentSurname=null, " +
+        String result = "BulkData(bulkCaseTitle=null, multipleReference=null, multipleReferenceLinkMarkUp=null, feeGroupReference=null, claimantSurname=null, respondentSurname=null, " +
                 "claimantRep=null, respondentRep=null, ethosCaseReference=null, clerkResponsible=null, fileLocation=null, jurCodesCollection=null, " +
                 "fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, " +
                 "clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, fileLocationGlasgow=null, fileLocationAberdeen=null, " +
@@ -214,7 +214,7 @@ public class SubMultipleServiceTest {
 
     @Test
     public void updateSubMultipleLogic() {
-        String result = "BulkData(bulkCaseTitle=null, multipleReference=null, feeGroupReference=null, claimantSurname=null, respondentSurname=null, " +
+        String result = "BulkData(bulkCaseTitle=null, multipleReference=null, multipleReferenceLinkMarkUp=null, feeGroupReference=null, claimantSurname=null, respondentSurname=null, " +
                 "claimantRep=null, respondentRep=null, ethosCaseReference=null, clerkResponsible=null, fileLocation=null, jurCodesCollection=null, " +
                 "fileLocationV2=null, feeGroupReferenceV2=null, claimantSurnameV2=null, respondentSurnameV2=null, multipleReferenceV2=null, " +
                 "clerkResponsibleV2=null, positionTypeV2=null, claimantRepV2=null, respondentRepV2=null, fileLocationGlasgow=null, fileLocationAberdeen=null, " +
