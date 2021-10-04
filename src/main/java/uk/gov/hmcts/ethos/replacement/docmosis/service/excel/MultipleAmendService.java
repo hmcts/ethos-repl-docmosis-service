@@ -38,7 +38,7 @@ public class MultipleAmendService {
         log.info("Read excel to amend multiple");
         SortedMap<String, Object> multipleObjects = excelReadingService.readExcel(
                         userToken, MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
-                        errors, multipleDetails.getCaseData(), FilterExcelType.ALL);
+                        errors, multipleDetails, FilterExcelType.ALL);
 
         List<?> newMultipleObjects = new ArrayList<>();
 
@@ -63,7 +63,7 @@ public class MultipleAmendService {
 
                 log.info("Create a new Excel");
                 excelDocManagementService.generateAndUploadExcel(newMultipleObjects, userToken,
-                        multipleDetails.getCaseData());
+                        multipleDetails);
 
             }
 

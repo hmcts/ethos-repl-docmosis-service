@@ -46,7 +46,7 @@ public class MultipleLetterService {
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                         errors,
-                        multipleDetails.getCaseData(),
+                        multipleDetails,
                         FilterExcelType.FLAGS);
 
         var documentInfo = new DocumentInfo();

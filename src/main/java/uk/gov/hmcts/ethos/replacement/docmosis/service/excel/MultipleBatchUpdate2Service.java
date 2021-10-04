@@ -79,7 +79,7 @@ public class MultipleBatchUpdate2Service {
 
                     log.info("Reading excel and add sub multiple references");
 
-                    readExcelAndAddSubMultipleRef(userToken, multipleDetails.getCaseData(), errors,
+                    readExcelAndAddSubMultipleRef(userToken, multipleDetails, errors,
                             multipleObjectsFiltered, updatedSubMultipleRef);
 
                 }
@@ -138,7 +138,7 @@ public class MultipleBatchUpdate2Service {
 
         log.info("Read current excel and remove cases in multiple");
 
-        readCurrentExcelAndRemoveCasesInMultiple(userToken, multipleDetails.getCaseData(), errors,
+        readCurrentExcelAndRemoveCasesInMultiple(userToken, multipleDetails, errors,
                 multipleObjectsFiltered);
 
         log.info("Perform actions with the new lead if exists");
@@ -204,22 +204,22 @@ public class MultipleBatchUpdate2Service {
 
     }
 
-    private void readExcelAndAddSubMultipleRef(String userToken, MultipleData multipleData,
+    private void readExcelAndAddSubMultipleRef(String userToken, MultipleDetails multipleDetails,
                                                List<String> errors, List<String> multipleObjectsFiltered,
                                                String updatedSubMultipleRef) {
 
         SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
-                        MultiplesHelper.getExcelBinaryUrl(multipleData),
+                        MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                         errors,
-                        multipleData,
+                        multipleDetails,
                         FilterExcelType.ALL);
 
         List<MultipleObject> newMultipleObjectsUpdated = addSubMultipleRefToMultipleObjects(multipleObjectsFiltered,
                 multipleObjects, updatedSubMultipleRef);
 
-        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, multipleData);
+        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, multipleDetails);
 
     }
 
@@ -241,21 +241,21 @@ public class MultipleBatchUpdate2Service {
 
     }
 
-    private void readCurrentExcelAndRemoveCasesInMultiple(String userToken, MultipleData multipleData,
+    private void readCurrentExcelAndRemoveCasesInMultiple(String userToken, MultipleDetails multipleDetails,
                                                           List<String> errors, List<String> multipleObjectsFiltered) {
 
         SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
-                        MultiplesHelper.getExcelBinaryUrl(multipleData),
+                        MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                         errors,
-                        multipleData,
+                        multipleDetails,
                         FilterExcelType.ALL);
 
         List<MultipleObject> newMultipleObjectsUpdated = removeCasesInMultiple(multipleObjectsFiltered,
                 multipleObjects);
 
-        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, multipleData);
+        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, multipleDetails);
 
     }
 

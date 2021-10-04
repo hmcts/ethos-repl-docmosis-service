@@ -45,10 +45,11 @@ public class ExcelDocManagementService {
     private final UserService userService;
     private final ScheduleCreationService scheduleCreationService;
 
-    public void uploadExcelDocument(String userToken, MultipleData multipleData, byte[] excelBytes) {
+    public void uploadExcelDocument(String userToken, MultipleDetails multipleDetails, byte[] excelBytes) {
+        var multipleData = multipleDetails.getCaseData();
         log.info("Multiple Name is: " + multipleData.getMultipleName() + "for multiple reference: " + multipleData.getMultipleReference());
         URI documentSelfPath = documentManagementService.uploadDocument(userToken, excelBytes,
-                MultiplesHelper.generateExcelDocumentName(multipleData), APPLICATION_EXCEL_VALUE);
+                MultiplesHelper.generateExcelDocumentName(multipleData), APPLICATION_EXCEL_VALUE, multipleDetails.getCaseTypeId());
 
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
 
@@ -77,22 +78,22 @@ public class ExcelDocManagementService {
         multipleData.setCaseImporterFile(populateCaseImporterFile(userToken, uploadedDocumentType));
     }
 
-    public void generateAndUploadExcel(List<?> multipleCollection, String userToken, MultipleData multipleData) {
+    public void generateAndUploadExcel(List<?> multipleCollection, String userToken, MultipleDetails multipleDetails) {
 
-        List<String> subMultipleCollection = MultiplesHelper.generateSubMultipleStringCollection(multipleData);
+        List<String> subMultipleCollection = MultiplesHelper.generateSubMultipleStringCollection(multipleDetails.getCaseData());
 
-        writeAndUploadExcelDocument(multipleCollection, userToken, multipleData, subMultipleCollection);
+        writeAndUploadExcelDocument(multipleCollection, userToken, multipleDetails, subMultipleCollection);
 
     }
 
     public void writeAndUploadExcelDocument(List<?> multipleCollection, String userToken,
-                                            MultipleData multipleData, List<String> subMultipleCollection) {
-
+                                            MultipleDetails multipleDetails, List<String> subMultipleCollection) {
+        var multipleData = multipleDetails.getCaseData();
         log.info("MultipleName is: " + multipleData.getMultipleName() + "for multiple reference: " + multipleData.getMultipleReference());
         byte[] excelBytes = excelCreationService.writeExcel(multipleCollection, subMultipleCollection,
                 multipleData.getLeadCase());
 
-        uploadExcelDocument(userToken, multipleData, excelBytes);
+        uploadExcelDocument(userToken, multipleDetails, excelBytes);
 
         log.info("Add multiple case counter");
 
@@ -122,16 +123,16 @@ public class ExcelDocManagementService {
         byte[] excelBytes = scheduleCreationService.writeSchedule(multipleDetails.getCaseData(),
                 schedulePayloads, multipleObjectsFiltered);
 
-        return uploadScheduleDocument(userToken, multipleDetails.getCaseData(), excelBytes);
+        return uploadScheduleDocument(userToken, multipleDetails, excelBytes);
 
     }
 
-    private DocumentInfo uploadScheduleDocument(String userToken, MultipleData multipleData, byte[] excelBytes) {
+    private DocumentInfo uploadScheduleDocument(String userToken, MultipleDetails multipleDetails, byte[] excelBytes) {
 
-        String documentName = MultiplesScheduleHelper.generateScheduleDocumentName(multipleData);
+        String documentName = MultiplesScheduleHelper.generateScheduleDocumentName(multipleDetails.getCaseData());
 
         URI documentSelfPath = documentManagementService.uploadDocument(userToken, excelBytes,
-                documentName, APPLICATION_EXCEL_VALUE);
+                documentName, APPLICATION_EXCEL_VALUE, multipleDetails.getCaseTypeId());
 
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
 

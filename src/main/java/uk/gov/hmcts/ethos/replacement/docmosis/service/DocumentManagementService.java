@@ -90,7 +90,7 @@ public class DocumentManagementService {
                                     + OUTPUT_FILE_NAME));
 
             log.info("Uploaded document successful");
-            for(int i = 0; i<10; i++){
+            for (int i = 0; i < 10; i++) {
                 log.info("-------------------------");
             }
             return URI.create(document.links.self.href);
@@ -99,23 +99,25 @@ public class DocumentManagementService {
             throw new DocumentManagementException(String.format("Unable to upload document %s to document management",
                     outputFileName), ex);
         }
+    }
 
+    @Retryable(value = {DocumentManagementException.class}, backoff = @Backoff(delay = 200))
+    public URI uploadDocument(String authToken, byte[] byteArray, String outputFileName, String type, String caseTypeId){
 //        try {
 //            MultipartFile file = new InMemoryMultipartFile(FILES_NAME, outputFileName, type, byteArray);
 //            var response = caseDocumentClient.uploadDocuments(
 //                    authToken,
 //                    authTokenGenerator.generate(),
-//                    "Leeds_Multiple",
-//                    "Employment",
+//                    caseTypeId,
+//                    "EMPLOYMENT",
 //                    singletonList(file),
-//                    Classification.valueOf("PUBLIC")
+//                    uk.gov.hmcts.reform.ccd.document.am.model.Classification.valueOf("PUBLIC")
 //            );
 //            var document = response.getDocuments().stream()
 //                    .findFirst()
 //                    .orElseThrow(() ->
 //                            new DocumentManagementException("Document management failed uploading file"
 //                                    + OUTPUT_FILE_NAME));
-//
 //            log.info("Uploaded document successful");
 //            return URI.create(document.links.self.href);
 //        } catch (Exception ex) {
@@ -124,8 +126,39 @@ public class DocumentManagementService {
 //                    outputFileName), ex);
 //        }
 
+        try {
+            log.info(caseTypeId);
+            MultipartFile file = new InMemoryMultipartFile(FILES_NAME, outputFileName, type, byteArray);
+            var user = userService.getUserDetails(authToken);
+            UploadResponse response = documentUploadClient.upload(
+                    authToken,
+                    authTokenGenerator.generate(),
+                    user.getUid(),
+                    new ArrayList<>(singletonList("caseworker-employment")),
+                    Classification.PUBLIC,
+                    singletonList(file)
+            );
+            var document = response.getEmbedded().getDocuments().stream()
+                    .findFirst()
 
+                    .orElseThrow(() ->
+                            new DocumentManagementException("Document management failed uploading file"
+                                    + OUTPUT_FILE_NAME));
+
+            log.info("Uploaded document successful");
+            for (int i = 0; i < 10; i++) {
+                log.info("-------------------------");
+            }
+            return URI.create(document.links.self.href);
+        } catch (Exception ex) {
+            log.info("Exception: " + ex.getMessage());
+            throw new DocumentManagementException(String.format("Unable to upload document %s to document management",
+                    outputFileName), ex);
+        }
     }
+
+
+
 
 
     public UploadedDocument downloadFile(String authToken, String urlString) {

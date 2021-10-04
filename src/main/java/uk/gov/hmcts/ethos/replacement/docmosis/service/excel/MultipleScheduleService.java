@@ -35,16 +35,24 @@ public class MultipleScheduleService {
     public DocumentInfo bulkScheduleLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
 
         log.info("Read excel for schedule logic");
-
+        var multipleCasseTypeId = multipleDetails.getCaseTypeId();
         var filterExcelType =
                 MultiplesScheduleHelper.getFilterExcelTypeByScheduleDoc(multipleDetails.getCaseData());
+
+//        SortedMap<String, Object> multipleObjects =
+//                excelReadingService.readExcel(
+//                        userToken,
+//                        MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
+//                        errors,
+//                        multipleDetails.getCaseData(),
+//                        filterExcelType);
 
         SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                         errors,
-                        multipleDetails.getCaseData(),
+                        multipleDetails,
                         filterExcelType);
 
         var documentInfo = new DocumentInfo();

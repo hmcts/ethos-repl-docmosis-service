@@ -39,7 +39,7 @@ public class MultipleDynamicListFlagsService {
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleData),
                         errors,
-                        multipleData,
+                        multipleDetails,
                         FilterExcelType.DL_FLAGS);
 
         log.info("Populates the dynamic list with flags from Excel");

@@ -2,6 +2,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
@@ -172,6 +174,7 @@ public class ExcelCreationService {
         String leadCase = MultiplesHelper.getCurrentLead(leadCaseString);
         log.info("Creating lead case EXCEL STRING: " + leadCaseString);
         log.info("Creating lead case EXCEL: " + leadCase);
+
 
         if (!multipleCollection.isEmpty()) {
             if (multipleCollection.get(0) instanceof String) {

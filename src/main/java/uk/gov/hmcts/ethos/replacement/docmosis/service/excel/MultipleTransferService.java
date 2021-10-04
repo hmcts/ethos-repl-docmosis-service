@@ -39,7 +39,7 @@ public class MultipleTransferService {
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                         errors,
-                        multipleDetails.getCaseData(),
+                        multipleDetails,
                         FilterExcelType.ALL);
 
         if (multipleObjects.keySet().isEmpty()) {
@@ -124,13 +124,14 @@ public class MultipleTransferService {
     private List<CaseMultipleTypeItem> generateCaseMultipleItems(String userToken,
                                                                  SubmitMultipleEvent oldSubmitMultipleEvent,
                                                                  List<String> errors) {
-
+        var multipleDetails = new MultipleDetails();
+        multipleDetails.setCaseData(oldSubmitMultipleEvent.getCaseData());
         SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(oldSubmitMultipleEvent.getCaseData()),
                         errors,
-                        oldSubmitMultipleEvent.getCaseData(),
+                        multipleDetails,
                         FilterExcelType.ALL);
 
         List<CaseMultipleTypeItem> newMultipleObjectsUpdated = new ArrayList<>();

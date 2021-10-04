@@ -58,7 +58,7 @@ public class MultipleAmendServiceTest {
         verify(excelDocManagementService, times(1)).generateAndUploadExcel(
                 getMultipleObjectsList(),
                 userToken,
-                multipleDetails.getCaseData());
+                multipleDetails);
         verifyNoMoreInteractions(excelDocManagementService);
     }
 

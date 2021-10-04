@@ -29,7 +29,7 @@ public class MultipleUpdateService {
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                         errors,
-                        multipleDetails.getCaseData(),
+                        multipleDetails,
                         FilterExcelType.FLAGS);
 
         if (multipleObjects.keySet().isEmpty()) {

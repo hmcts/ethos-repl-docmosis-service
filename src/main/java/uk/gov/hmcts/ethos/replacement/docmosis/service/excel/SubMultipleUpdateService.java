@@ -34,7 +34,7 @@ public class SubMultipleUpdateService {
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                         errors,
-                        multipleDetails.getCaseData(),
+                        multipleDetails,
                         FilterExcelType.ALL);
 
         log.info("Logic depending on batch update type");
@@ -81,7 +81,8 @@ public class SubMultipleUpdateService {
         excelDocManagementService.generateAndUploadExcel(
                 multipleObjectsUpdated,
                 userToken,
-                multipleDetails.getCaseData());
+                multipleDetails
+        );
 
     }
 

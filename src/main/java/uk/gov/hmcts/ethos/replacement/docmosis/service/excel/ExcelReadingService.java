@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 
 import java.io.IOException;
@@ -52,31 +54,36 @@ public class ExcelReadingService {
         return new XSSFWorkbook(excelInputStream);
     }
 
+//    public SortedMap<String, Object> readExcel(String userToken, String documentBinaryUrl, List<String> errors,
+//                                               MultipleData multipleData, FilterExcelType filter) {
+//
+//        SortedMap<String, Object> multipleObjects = new TreeMap<>();
+//        try {
+//            XSSFSheet datatypeSheet = checkExcelErrors(userToken, documentBinaryUrl, errors);
+//            if (errors.isEmpty()) {
+//                populateMultipleObjects(multipleObjects, datatypeSheet, multipleData, filter);
+//            }
+//        } catch (IOException e) {
+//            log.error("Error reading the Excel");
+//            throw new RuntimeException("Error reading the excel", e);
+//        }
+//        return multipleObjects;
+//    }
+
     public SortedMap<String, Object> readExcel(String userToken, String documentBinaryUrl, List<String> errors,
-                                               MultipleData multipleData, FilterExcelType filter) {
+                                                MultipleDetails multipleDetails, FilterExcelType filter) {
 
         SortedMap<String, Object> multipleObjects = new TreeMap<>();
-
         try {
-
             XSSFSheet datatypeSheet = checkExcelErrors(userToken, documentBinaryUrl, errors);
-
             if (errors.isEmpty()) {
-
-                populateMultipleObjects(multipleObjects, datatypeSheet, multipleData, filter);
-
+                populateMultipleObjects(multipleObjects, datatypeSheet, multipleDetails.getCaseData(), filter);
             }
-
         } catch (IOException e) {
-
             log.error("Error reading the Excel");
-
             throw new RuntimeException("Error reading the excel", e);
-
         }
-
         return multipleObjects;
-
     }
 
     public XSSFSheet checkExcelErrors(String userToken, String documentBinaryUrl, List<String> errors)

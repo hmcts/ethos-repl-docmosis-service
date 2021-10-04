@@ -63,7 +63,7 @@ public class ExcelDocManagementServiceTest {
                 MultiplesHelper.generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE))
                 .thenReturn(uri);
         excelDocManagementService.uploadExcelDocument(userToken,
-                multipleDetails.getCaseData(),
+                multipleDetails,
                 bytes);
         verify(documentManagementService, times(1)).uploadDocument(userToken,
                 bytes,
@@ -94,7 +94,7 @@ public class ExcelDocManagementServiceTest {
                 multipleDetails.getCaseData().getLeadCase()))
                 .thenReturn(bytes);
         excelDocManagementService.generateAndUploadExcel(multipleCollection,
-                userToken, multipleDetails.getCaseData());
+                userToken, multipleDetails);
         verify(documentManagementService, times(1)).uploadDocument(userToken,
                 bytes,
                 MultiplesHelper.generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE);
@@ -120,7 +120,7 @@ public class ExcelDocManagementServiceTest {
                 multipleDetails.getCaseData().getLeadCase()))
                 .thenReturn(bytes);
         excelDocManagementService.generateAndUploadExcel(multipleCollection,
-                userToken, multipleDetails.getCaseData());
+                userToken, multipleDetails);
         verify(documentManagementService, times(1)).uploadDocument(userToken,
                 bytes,
                 MultiplesHelper.generateExcelDocumentName(multipleDetails.getCaseData()), APPLICATION_EXCEL_VALUE);

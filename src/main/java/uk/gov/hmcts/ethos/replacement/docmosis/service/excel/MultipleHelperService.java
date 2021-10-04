@@ -136,23 +136,45 @@ public class MultipleHelperService {
 
     }
 
+    private void readUpdatedExcelAndAddCasesInMultiple(String userToken, MultipleDetails multipleDetails,
+                                                       List<String> errors, List<String> multipleObjectsFiltered,
+                                                       String newSubMultipleName) {
+
+        SortedMap<String, Object> multipleObjects =
+                excelReadingService.readExcel(
+                        userToken,
+                        MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
+                        errors,
+                        multipleDetails,
+                        FilterExcelType.ALL);
+
+        List<MultipleObject> newMultipleObjectsUpdated = addCasesInMultiple(multipleObjectsFiltered,
+                multipleObjects, newSubMultipleName);
+
+        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, multipleDetails);
+
+    }
+
     public void moveCasesAndSendUpdateToMultiple(String userToken, String newSubMultipleName,
                                                  String jurisdiction, String caseTypeId,
                                                  String newMultipleCaseId, MultipleData newMultipleData,
                                                  List<String> casesFiltered, List<String> errors) {
+        MultipleDetails multipleDetails = new MultipleDetails();
+        multipleDetails.setCaseId(caseTypeId);
+        multipleDetails.setCaseData(newMultipleData);
 
         if (isNullOrEmpty(newSubMultipleName)) {
 
             log.info("Moving single cases without sub multiples");
 
-            readUpdatedExcelAndAddCasesInMultiple(userToken, newMultipleData, errors,
+            readUpdatedExcelAndAddCasesInMultiple(userToken, multipleDetails, errors,
                     casesFiltered, "");
 
         } else {
 
             log.info("Moving single cases with sub multiples");
 
-            readUpdatedExcelAndAddCasesInMultiple(userToken, newMultipleData, errors,
+            readUpdatedExcelAndAddCasesInMultiple(userToken, multipleDetails, errors,
                     casesFiltered, newSubMultipleName);
 
         }
@@ -161,25 +183,6 @@ public class MultipleHelperService {
 
         multipleCasesSendingService.sendUpdateToMultiple(userToken, caseTypeId, jurisdiction,
                 newMultipleData, newMultipleCaseId);
-
-    }
-
-    private void readUpdatedExcelAndAddCasesInMultiple(String userToken, MultipleData newMultipleData,
-                                                       List<String> errors, List<String> multipleObjectsFiltered,
-                                                       String newSubMultipleName) {
-
-        SortedMap<String, Object> multipleObjects =
-                excelReadingService.readExcel(
-                        userToken,
-                        MultiplesHelper.getExcelBinaryUrl(newMultipleData),
-                        errors,
-                        newMultipleData,
-                        FilterExcelType.ALL);
-
-        List<MultipleObject> newMultipleObjectsUpdated = addCasesInMultiple(multipleObjectsFiltered,
-                multipleObjects, newSubMultipleName);
-
-        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, newMultipleData);
 
     }
 
@@ -349,13 +352,15 @@ public class MultipleHelperService {
     }
 
     public List<String> getEthosCaseRefCollection(String userToken, MultipleData newMultipleData, List<String> errors) {
+        MultipleDetails multipleDetails = new MultipleDetails();
+        multipleDetails.setCaseData(newMultipleData);
 
         SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
                         MultiplesHelper.getExcelBinaryUrl(newMultipleData),
                         errors,
-                        newMultipleData,
+                        multipleDetails,
                         FilterExcelType.ALL);
 
         return new ArrayList<>(multipleObjects.keySet());
