@@ -1,20 +1,26 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
+import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.items.CaseMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.types.SubMultipleType;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -324,4 +330,51 @@ public class MultiplesHelper {
 
     }
 
+    public static SortedMap<String, SortedMap<String, Object>> createOrderedCaseList(List<?> caseList) {
+        SortedMap<String, SortedMap<String, Object>> orderedCaseList = new TreeMap<>();
+
+        caseList.forEach(item -> {
+            String ethosCaseRef;
+            if (item instanceof String) {
+                ethosCaseRef = (String) item;
+            } else if (item instanceof MultipleObject) {
+                ethosCaseRef = ((MultipleObject) item).getEthosCaseRef();
+            } else if (item instanceof SchedulePayload) {
+                ethosCaseRef = ((SchedulePayload) item).getEthosCaseRef();
+            } else {
+                return;
+            }
+
+            addItemToOrderedCaseCollection(orderedCaseList, item, ethosCaseRef);
+        });
+
+        return orderedCaseList;
+    }
+
+    public static void addItemToOrderedCaseCollection(SortedMap<String, SortedMap<String, Object>> collection,
+                                                      Object caseItem, String ethosCaseRef) {
+        var caseRefItems = ethosCaseRef.split("/");
+
+        if (collection.containsKey(caseRefItems[1])) {
+            collection.get(caseRefItems[1]).put(caseRefItems[0], caseItem);
+        } else {
+            var orderedList = new TreeMap<String, Object>();
+            orderedList.put(caseRefItems[0], caseItem);
+            collection.put(caseRefItems[1], orderedList);
+        }
+    }
+
+    public static byte[] writeExcelFileToByteArray(XSSFWorkbook workbook) {
+        var bos = new ByteArrayOutputStream();
+
+        try {
+            workbook.write(bos);
+            workbook.close();
+        } catch (IOException e) {
+            log.error("Error generating the excel");
+            throw new RuntimeException("Error generating the excel", e);
+        }
+
+        return bos.toByteArray();
+    }
 }
