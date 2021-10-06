@@ -13,12 +13,26 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesSchedulePrinter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIST_CASES_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_SCHEDULE_DETAILED_CONFIG;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_1;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_2;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_3;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_4;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_5;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_6;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.HEADER_SCHEDULE;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.NEW_LINE_CELL;
+import static uk.gov.hmcts.ecm.common.model.helper.ScheduleConstants.SCHEDULE_SHEET_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.SUB_ZERO;
 

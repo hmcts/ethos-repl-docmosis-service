@@ -1,7 +1,14 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataValidationConstraint;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Name;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -13,7 +20,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import java.util.List;
 import java.util.Map;
 
-import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.*;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.CONSTRAINT_KEY;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.HIDDEN_SHEET_NAME;
+import static uk.gov.hmcts.ecm.common.model.multiples.MultipleConstants.SHEET_NAME;
 
 @Slf4j
 @Service("excelCreationService")
@@ -170,12 +179,12 @@ public class ExcelCreationService {
                                        String leadCase, MultipleObject multipleObject, boolean hasSubMultiples) {
         CellStyle styleForUnLocking = getStyleForUnLocking(workbook);
         CellStyle styleForLocking = getStyleForLocking(workbook, false);
-        CellStyle styleForLockingLead = getStyleForLocking(workbook, true);
         XSSFRow row = sheet.createRow(rowIndex);
         int columnIndex = 1;
 
         if (ethosCaseRef.equals(leadCase)) {
             log.info("Lead: " + leadCase);
+            CellStyle styleForLockingLead = getStyleForLocking(workbook, true);
             createCell(row, columnIndex, ethosCaseRef, styleForLockingLead);
         } else {
             createCell(row, columnIndex, ethosCaseRef, styleForLocking);
