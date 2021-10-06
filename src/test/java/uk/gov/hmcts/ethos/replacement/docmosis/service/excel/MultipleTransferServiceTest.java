@@ -46,9 +46,6 @@ public class MultipleTransferServiceTest {
     private List<SubmitMultipleEvent> submitMultipleEvents;
     private String userToken;
 
-    @org.springframework.beans.factory.annotation.Value("${ccd_gateway_base_url}")
-    private String ccdGatewayBaseUrl;
-
     @Before
     public void setUp() {
         multipleObjects = MultipleUtil.getMultipleObjectsAll();
