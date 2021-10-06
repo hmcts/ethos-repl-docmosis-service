@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
@@ -17,24 +18,6 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_REMEDY;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_DISMISSED_AT_HEARING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_INPUT_IN_ERROR;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_OTHER_COUNTRY;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_SAME_COUNTRY;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.CasesCompletedReport.COMPLETED_PER_SESSION_FORMAT;
 
 public class CaseCompletedReportTest {
@@ -46,7 +29,7 @@ public class CaseCompletedReportTest {
         // then totals are all zero
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData caseData = new ListingData();
 
         listingDetails.setCaseData(caseData);
@@ -65,7 +48,7 @@ public class CaseCompletedReportTest {
         // then no data returned
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData caseData = new ListingData();
 
         listingDetails.setCaseData(caseData);
@@ -85,7 +68,7 @@ public class CaseCompletedReportTest {
         // when we generate report data
         // then no data returned
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
 
         listingDetails.setCaseData(listingData);
@@ -114,7 +97,7 @@ public class CaseCompletedReportTest {
         // when we generate report data
         // then no data returned
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
 
         listingDetails.setCaseData(listingData);
@@ -145,7 +128,7 @@ public class CaseCompletedReportTest {
         // then no data returned
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData caseData = new ListingData();
 
         listingDetails.setCaseData(caseData);
@@ -169,7 +152,7 @@ public class CaseCompletedReportTest {
         // then no data returned
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
 
@@ -200,7 +183,7 @@ public class CaseCompletedReportTest {
         String listingDate = "1970-01-02T00:00:00";
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingData.setListingDate(searchDate);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
@@ -232,7 +215,7 @@ public class CaseCompletedReportTest {
         String listingDate = "1970-01-01T00:00:00";
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingData.setListingDate(searchDate);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
@@ -266,7 +249,7 @@ public class CaseCompletedReportTest {
         String listingDate = "1970-01-01T00:00:00";
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingData.setListingDate(searchDate);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
@@ -307,7 +290,7 @@ public class CaseCompletedReportTest {
         String listingDate = "1970-01-01T00:00:00";
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingData.setListingDate(searchDate);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
@@ -349,7 +332,7 @@ public class CaseCompletedReportTest {
         String listingDate = "1970-01-01T00:00:00";
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingData.setListingDate(searchDate);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
@@ -391,7 +374,7 @@ public class CaseCompletedReportTest {
         String listingDate = "1970-01-01T00:00:00";
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingData.setListingDate(searchDate);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
@@ -433,7 +416,7 @@ public class CaseCompletedReportTest {
         String listingDate = "1970-01-01T00:00:00";
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingData.setListingDate(searchDate);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
@@ -469,7 +452,7 @@ public class CaseCompletedReportTest {
         String listingDate = "1970-01-01T00:00:00";
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingData.setListingDate(searchDate);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
@@ -512,7 +495,7 @@ public class CaseCompletedReportTest {
         String listingDate = "1970-01-01T00:00:00";
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingData.setListingDate(searchDate);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
@@ -554,7 +537,7 @@ public class CaseCompletedReportTest {
         String searchDate = "1970-01-04";
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingData.setListingDate(searchDate);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
@@ -595,7 +578,7 @@ public class CaseCompletedReportTest {
         String searchDate = "1970-01-04";
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingData.setListingDate(searchDate);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);
@@ -664,7 +647,7 @@ public class CaseCompletedReportTest {
         String searchDate = "1970-01-04";
 
         ListingDetails listingDetails = new ListingDetails();
-        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.setCaseTypeId(ENGLANDWALES_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingData.setListingDate(searchDate);
         listingData.setHearingDateType(SINGLE_HEARING_DATE_TYPE);

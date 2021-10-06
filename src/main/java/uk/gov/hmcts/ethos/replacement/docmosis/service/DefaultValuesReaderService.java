@@ -28,11 +28,11 @@ public class DefaultValuesReaderService {
         this.tribunalOfficesService = tribunalOfficesService;
     }
 
-    public DefaultValues getDefaultValues(String managingOffice, String caseTypeId) {
-        ContactDetails contactDetails = tribunalOfficesService.getTribunalContactDetails(caseTypeId, managingOffice);
+    public DefaultValues getDefaultValues(String owningOffice) {
+        ContactDetails contactDetails = tribunalOfficesService.getTribunalContactDetails(owningOffice);
         var defaultValues = createDefaultValues(contactDetails);
         if (defaultValues.getOwningOffice() == null) {
-            defaultValues.setOwningOffice(tribunalOfficesService.getTribunalOffice(caseTypeId, managingOffice).name());
+            defaultValues.setOwningOffice(tribunalOfficesService.getTribunalOffice(owningOffice).name());
         }
         return defaultValues;
     }

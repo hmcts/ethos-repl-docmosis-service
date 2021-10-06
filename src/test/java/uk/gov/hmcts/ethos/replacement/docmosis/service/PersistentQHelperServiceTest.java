@@ -11,6 +11,7 @@ import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
@@ -19,10 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static org.mockito.Mockito.*;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PersistentQHelperServiceTest {
@@ -46,11 +43,11 @@ public class PersistentQHelperServiceTest {
         caseData.setPositionTypeCT("PositionTypeCT");
         DynamicFixedListType officeCT = new DynamicFixedListType();
         DynamicValueType valueType = new DynamicValueType();
-        valueType.setCode(LEEDS_CASE_TYPE_ID);
+        valueType.setCode(ENGLANDWALES_CASE_TYPE_ID);
         officeCT.setValue(valueType);
         caseData.setOfficeCT(officeCT);
         caseDetails.setCaseData(caseData);
-        caseDetails.setCaseTypeId("Manchester");
+        caseDetails.setCaseTypeId("ENGLANDWALES");
         caseDetails.setJurisdiction("Employment");
         caseDetails.setState(ACCEPTED_STATE);
         ccdRequest.setCaseDetails(caseDetails);
@@ -63,7 +60,7 @@ public class PersistentQHelperServiceTest {
         when(userService.getUserDetails("authToken")).thenReturn(HelperTest.getUserDetails());
         persistentQHelperService.sendCreationEventToSingles(userToken,
                 ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getJurisdiction(),
-                new ArrayList<>(), new ArrayList<>(Collections.singletonList("ethosCaseReference")), LEEDS_CASE_TYPE_ID,
+                new ArrayList<>(), new ArrayList<>(Collections.singletonList("ethosCaseReference")), ENGLANDWALES_CASE_TYPE_ID,
                 "positionTypeCT", "ccdGatewayBaseUrl", "",
                 SINGLE_CASE_TYPE, NO, ccdRequest.getCaseDetails().getCaseId());
         verify(userService).getUserDetails(userToken);

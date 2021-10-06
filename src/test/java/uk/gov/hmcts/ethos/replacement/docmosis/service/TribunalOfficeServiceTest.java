@@ -34,39 +34,9 @@ public class TribunalOfficeServiceTest {
     TribunalOfficesService tribunalOfficesService;
 
     private final static Object[][] TEST_CASES = new Object[][] {
-            { MANCHESTER_DEV_CASE_TYPE_ID, null, "M3 2JA" },
-            { MANCHESTER_USERS_CASE_TYPE_ID, null, "M3 2JA" },
-            { MANCHESTER_CASE_TYPE_ID, null, "M3 2JA" },
-            { BRISTOL_DEV_CASE_TYPE_ID, null, "BS1 6GR" },
-            { BRISTOL_USERS_CASE_TYPE_ID, null, "BS1 6GR" },
-            { BRISTOL_CASE_TYPE_ID, null, "BS1 6GR" },
-            { LEEDS_DEV_CASE_TYPE_ID, null, "LS1 5ES" },
-            { LEEDS_USERS_CASE_TYPE_ID, null, "LS1 5ES" },
-            { LEEDS_CASE_TYPE_ID, null, "LS1 5ES" },
-            { LONDON_CENTRAL_DEV_CASE_TYPE_ID, null, "WC2B 6EX" },
-            { LONDON_CENTRAL_USERS_CASE_TYPE_ID, null, "WC2B 6EX" },
-            { LONDON_CENTRAL_CASE_TYPE_ID, null, "WC2B 6EX" },
-            { LONDON_EAST_DEV_CASE_TYPE_ID, null, "E14 2BE" },
-            { LONDON_EAST_USERS_CASE_TYPE_ID, null, "E14 2BE" },
-            { LONDON_EAST_CASE_TYPE_ID, null, "E14 2BE" },
-            { LONDON_SOUTH_DEV_CASE_TYPE_ID, null, "CR0 2RF" },
-            { LONDON_SOUTH_USERS_CASE_TYPE_ID, null, "CR0 2RF" },
-            { LONDON_SOUTH_CASE_TYPE_ID, null, "CR0 2RF" },
-            { MIDLANDS_EAST_DEV_CASE_TYPE_ID, null, "NG2 1EE" },
-            { MIDLANDS_EAST_USERS_CASE_TYPE_ID, null, "NG2 1EE" },
-            { MIDLANDS_EAST_CASE_TYPE_ID, null, "NG2 1EE" },
-            { MIDLANDS_WEST_DEV_CASE_TYPE_ID, null, "B5 4UU" },
-            { MIDLANDS_WEST_USERS_CASE_TYPE_ID, null, "B5 4UU" },
-            { MIDLANDS_WEST_CASE_TYPE_ID, null, "B5 4UU" },
-            { NEWCASTLE_DEV_CASE_TYPE_ID, null, "NE1 8QF" },
-            { NEWCASTLE_USERS_CASE_TYPE_ID, null, "NE1 8QF" },
-            { NEWCASTLE_CASE_TYPE_ID, null, "NE1 8QF" },
-            { WALES_DEV_CASE_TYPE_ID, null, "CF24 0RZ" },
-            { WALES_USERS_CASE_TYPE_ID, null, "CF24 0RZ" },
-            { WALES_CASE_TYPE_ID, null, "CF24 0RZ" },
-            { WATFORD_DEV_CASE_TYPE_ID, null, "WD17 1HP" },
-            { WATFORD_USERS_CASE_TYPE_ID, null, "WD17 1HP" },
-            { WATFORD_CASE_TYPE_ID, null, "WD17 1HP" },
+            { ENGLANDWALES_DEV_CASE_TYPE_ID, null, "M3 2JA" },
+            { ENGLANDWALES_USERS_CASE_TYPE_ID, null, "M3 2JA" },
+            { ENGLANDWALES_CASE_TYPE_ID, null, "M3 2JA" },
             { SCOTLAND_DEV_CASE_TYPE_ID, null, "G2 8GT" },
             { SCOTLAND_USERS_CASE_TYPE_ID, null, "G2 8GT" },
             { SCOTLAND_CASE_TYPE_ID, null, "G2 8GT" },
@@ -89,12 +59,10 @@ public class TribunalOfficeServiceTest {
     };
 
     private String caseTypeId;
-    private String managingOffice;
     private String expectedPostcode;
 
     public TribunalOfficeServiceTest(String caseTypeId, String managingOffice, String expectedPostcode) {
         this.caseTypeId = caseTypeId;
-        this.managingOffice = managingOffice;
         this.expectedPostcode = expectedPostcode;
     }
 
@@ -105,7 +73,7 @@ public class TribunalOfficeServiceTest {
 
     @Test
     public void testGetsCorrectTribunalContactDetails() {
-        ContactDetails contactDetails = tribunalOfficesService.getTribunalContactDetails(caseTypeId, managingOffice);
+        ContactDetails contactDetails = tribunalOfficesService.getTribunalContactDetails(caseTypeId);
         assertEquals(expectedPostcode, contactDetails.getPostcode());
     }
 }
