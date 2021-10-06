@@ -342,7 +342,7 @@ public class MultiplesHelper {
             } else if (item instanceof SchedulePayload) {
                 ethosCaseRef = ((SchedulePayload) item).getEthosCaseRef();
             } else {
-                log.info("unrecognised object type: {}", item.getClass());
+                log.info("unrecognised input object type: {}", item.getClass());
                 break;
             }
 
