@@ -46,6 +46,9 @@ public class MultipleTransferServiceTest {
     private List<SubmitMultipleEvent> submitMultipleEvents;
     private String userToken;
 
+    @org.springframework.beans.factory.annotation.Value("${ccd_gateway_base_url}")
+    private String ccdGatewayBaseUrl;
+
     @Before
     public void setUp() {
         multipleObjects = MultipleUtil.getMultipleObjectsAll();
@@ -76,7 +79,10 @@ public class MultipleTransferServiceTest {
                 multipleDetails.getCaseData().getReasonForCT(),
                 multipleDetails.getCaseData().getMultipleReference(),
                 YES,
-                multipleDetails.getCaseId());
+                uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.generateMarkUp(null,
+                        multipleDetails.getCaseId(),
+                        multipleDetails.getCaseData().getMultipleReference())
+                );
         verifyNoMoreInteractions(persistentQHelperService);
 
     }

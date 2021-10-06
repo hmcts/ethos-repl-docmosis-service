@@ -23,6 +23,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PersistentQHelperServiceTest {
@@ -63,9 +64,14 @@ public class PersistentQHelperServiceTest {
         when(userService.getUserDetails("authToken")).thenReturn(HelperTest.getUserDetails());
         persistentQHelperService.sendCreationEventToSingles(userToken,
                 ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getJurisdiction(),
-                new ArrayList<>(), new ArrayList<>(Collections.singletonList("ethosCaseReference")), LEEDS_CASE_TYPE_ID,
+                new ArrayList<>(), new ArrayList<>(Collections.singletonList("ethosCaseReference")),
+                LEEDS_CASE_TYPE_ID,
                 "positionTypeCT", "ccdGatewayBaseUrl", "",
-                SINGLE_CASE_TYPE, NO, ccdRequest.getCaseDetails().getCaseId());
+                SINGLE_CASE_TYPE, NO,
+                MultiplesHelper.generateMarkUp("ccdGatewayBaseUrl",
+                        ccdRequest.getCaseDetails().getCaseId(),
+                        ccdRequest.getCaseDetails().getCaseData().getMultipleRefNumber())
+                );
         verify(userService).getUserDetails(userToken);
         verifyNoMoreInteractions(userService);
 
