@@ -6,7 +6,6 @@ import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.bulk.types.CaseType;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -58,7 +57,7 @@ public class MultiplesHelperTest {
                 "2021", new TreeMap<>(Map.of("1800074", "1800074/2021", "1800075", "1800075/2021")))
         );
 
-        assertEquals(expectedResult, MultiplesHelper.createOrderedCaseList(refList));
+        assertEquals(expectedResult, MultiplesHelper.createCollectionOrderedByCaseRef(refList));
     }
 
     @Test
@@ -82,7 +81,7 @@ public class MultiplesHelperTest {
                 ))
         ));
 
-        assertEquals(expectedResult, MultiplesHelper.createOrderedCaseList(refList));
+        assertEquals(expectedResult, MultiplesHelper.createCollectionOrderedByCaseRef(refList));
     }
 
     @Test
@@ -106,14 +105,14 @@ public class MultiplesHelperTest {
                         "1800075", SchedulePayload.builder().ethosCaseRef("1800075/2021").build()
                 ))));
 
-        assertEquals(expectedResult, MultiplesHelper.createOrderedCaseList(refList));
+        assertEquals(expectedResult, MultiplesHelper.createCollectionOrderedByCaseRef(refList));
     }
 
     @Test
     public void orderMultiplesObjectTypNotRecognised() {
         List<Object> refList = Arrays.asList(5, 6, 4, 5);
         var expectedResult = new TreeMap<>();
-        assertEquals(MultiplesHelper.createOrderedCaseList(refList), expectedResult);
+        assertEquals(MultiplesHelper.createCollectionOrderedByCaseRef(refList), expectedResult);
     }
 
     private CaseIdTypeItem createCaseIdTypeItem(String id, String value) {

@@ -148,7 +148,10 @@ public class ExcelCreationService {
         var isStringRefsList = multipleCollection.get(0) instanceof String;
         log.info(isStringRefsList ? "Initializing multipleRefs" : "Initializing data");
 
-        var orderedAllCasesList = MultiplesHelper.createOrderedCaseList(multipleCollection);
+        var orderedAllCasesList = MultiplesHelper.createCollectionOrderedByCaseRef(multipleCollection);
+        if (orderedAllCasesList.isEmpty()) {
+            return;
+        }
 
         final int[] rowIndex = {1};
         orderedAllCasesList.forEach((String caseYear, Map<String, Object> caseYearList) ->

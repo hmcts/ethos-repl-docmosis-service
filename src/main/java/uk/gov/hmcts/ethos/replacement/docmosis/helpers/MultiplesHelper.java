@@ -330,10 +330,10 @@ public class MultiplesHelper {
 
     }
 
-    public static SortedMap<String, SortedMap<String, Object>> createOrderedCaseList(List<?> caseList) {
-        SortedMap<String, SortedMap<String, Object>> orderedCaseList = new TreeMap<>();
+    public static SortedMap<String, SortedMap<String, Object>> createCollectionOrderedByCaseRef(List<?> list) {
+        SortedMap<String, SortedMap<String, Object>> orderedCollection = new TreeMap<>();
 
-        caseList.forEach(item -> {
+        for (Object item : list) {
             String ethosCaseRef;
             if (item instanceof String) {
                 ethosCaseRef = (String) item;
@@ -342,23 +342,24 @@ public class MultiplesHelper {
             } else if (item instanceof SchedulePayload) {
                 ethosCaseRef = ((SchedulePayload) item).getEthosCaseRef();
             } else {
-                return;
+                log.info("unrecognised object type: {}", item.getClass());
+                break;
             }
 
-            addItemToOrderedCollection(orderedCaseList, item, ethosCaseRef);
-        });
+            addObjectToCollectionOrderedByCaseRef(orderedCollection, item, ethosCaseRef);
+        }
 
-        return orderedCaseList;
+        return orderedCollection;
     }
 
-    public static void addItemToOrderedCollection(SortedMap<String, SortedMap<String, Object>> collection,
-                                                  Object caseItem, String ethosCaseRef) {
-        var caseRefItems = ethosCaseRef.split("/");
+    public static void addObjectToCollectionOrderedByCaseRef(SortedMap<String, SortedMap<String, Object>> collection,
+                                                             Object item, String ethosCaseRef) {
+        var caseRefParts = ethosCaseRef.split("/");
 
-        if (collection.containsKey(caseRefItems[1])) {
-            collection.get(caseRefItems[1]).put(caseRefItems[0], caseItem);
+        if (collection.containsKey(caseRefParts[1])) {
+            collection.get(caseRefParts[1]).put(caseRefParts[0], item);
         } else {
-            collection.put(caseRefItems[1], new TreeMap<>(Map.of(caseRefItems[0], caseItem)));
+            collection.put(caseRefParts[1], new TreeMap<>(Map.of(caseRefParts[0], item)));
         }
     }
 

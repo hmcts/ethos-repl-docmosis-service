@@ -87,7 +87,7 @@ public class ScheduleCreationService {
             return;
         }
 
-        var orderedScheduleCollection = MultiplesHelper.createOrderedCaseList(schedulePayloads);
+        var orderedScheduleCollection = MultiplesHelper.createCollectionOrderedByCaseRef(schedulePayloads);
 
         if (scheduleTemplate.equals(MULTIPLE_SCHEDULE_CONFIG)) {
             log.info("Multiple schedule");
@@ -98,9 +98,9 @@ public class ScheduleCreationService {
 
             final int[] rowIndex = {1};
             orderedScheduleCollection.forEach((String caseYear, Map<String, Object> scheduleYearList) ->
-                scheduleYearList.forEach((String caseNum, Object caseItem) -> {
+                scheduleYearList.forEach((String caseNum, Object item) -> {
                     var columnIndex = 1;
-                    var schedulePayload = (SchedulePayload) caseItem;
+                    var schedulePayload = (SchedulePayload) item;
                     XSSFRow row = sheet.createRow(rowIndex[0] + startingRow);
                     createCell(row, columnIndex, schedulePayload.getEthosCaseRef(), cellStyle);
                     columnIndex++;
@@ -118,9 +118,9 @@ public class ScheduleCreationService {
 
             final int[] rowIndex = {1};
             orderedScheduleCollection.forEach((String caseYear, Map<String, Object> scheduleYearList) ->
-                scheduleYearList.forEach((String caseNum, Object caseItem) -> {
+                scheduleYearList.forEach((String caseNum, Object item) -> {
                     var columnIndex = 1;
-                    var schedulePayload = (SchedulePayload) caseItem;
+                    var schedulePayload = (SchedulePayload) item;
                     XSSFRow row = sheet.createRow(rowIndex[0] + startingRow);
                     row.setHeightInPoints(((float) 4.5 * sheet.getDefaultRowHeightInPoints()));
                     createCell(row, columnIndex, schedulePayload.getEthosCaseRef(), cellStyle);
