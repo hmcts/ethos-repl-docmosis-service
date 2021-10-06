@@ -36,7 +36,6 @@ public class FlagsImageHelper {
     private static final String COLOR_DEEP_PINK = "DeepPink";
     private static final String COLOR_SLATE_GRAY = "SlateGray";
 
-
     private FlagsImageHelper() {
     }
 
@@ -200,11 +199,7 @@ public class FlagsImageHelper {
 
     private static boolean digitalFile(CaseData caseData) {
         if (caseData.getAdditionalCaseInfoType() != null) {
-            if (!isNullOrEmpty(caseData.getAdditionalCaseInfoType().getDigitalFile())) {
-                return caseData.getAdditionalCaseInfoType().getDigitalFile().equals(YES);
-            } else {
-                return false;
-            }
+            return YES.equals(caseData.getAdditionalCaseInfoType().getDigitalFile());
         } else {
             return false;
         }
