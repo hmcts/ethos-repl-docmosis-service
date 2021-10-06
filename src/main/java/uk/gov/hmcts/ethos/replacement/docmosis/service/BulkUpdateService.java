@@ -47,8 +47,6 @@ public class BulkUpdateService {
     private final CcdClient ccdClient;
     private final UserService userService;
     private final CreateUpdatesBusSender createUpdatesBusSender;
-    @org.springframework.beans.factory.annotation.Value("${ccd_gateway_base_url}")
-    private String ccdGatewayBaseUrl;
 
     @Autowired
     public BulkUpdateService(CcdClient ccdClient, UserService userService,
@@ -540,7 +538,7 @@ public class BulkUpdateService {
                         bulkDetails.getCaseData().getMultipleReference(),
                         createUpdatesBusSender,
                         String.valueOf(ethosCaseRefCollection.size()),
-                        MultiplesHelper.generateMarkUp(ccdGatewayBaseUrl,
+                        MultiplesHelper.generateMarkUp("ccdGatewayBaseUrl",
                                 bulkDetails.getCaseId(),
                                 bulkDetails.getCaseData().getMultipleReference()));
             }
