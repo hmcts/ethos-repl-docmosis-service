@@ -11,6 +11,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.items.CaseMultipleTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.PersistentQHelperService;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,7 @@ public class MultipleTransferServiceTest {
     public void setUp() {
         multipleObjects = MultipleUtil.getMultipleObjectsAll();
         multipleDetails = new MultipleDetails();
+        multipleDetails.setCaseId("1559817606275162");
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
         submitMultipleEvents = MultipleUtil.getSubmitMultipleEvents();
         userToken = "authString";
@@ -76,7 +78,7 @@ public class MultipleTransferServiceTest {
                 multipleDetails.getCaseData().getReasonForCT(),
                 multipleDetails.getCaseData().getMultipleReference(),
                 YES,
-                uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper.generateMarkUp(null,
+                MultiplesHelper.generateMarkUp(null,
                         multipleDetails.getCaseId(),
                         multipleDetails.getCaseData().getMultipleReference())
                 );
