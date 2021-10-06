@@ -169,14 +169,12 @@ public class ExcelCreationService {
         CellStyle styleForLocking = getStyleForLocking(workbook, false);
         CellStyle styleForLockingLead = getStyleForLocking(workbook, true);
         XSSFRow row = sheet.createRow(rowIndex);
-        int columnIndex = 0;
+        int columnIndex = 1;
 
         if (ethosCaseRef.equals(leadCase)) {
             log.info("Lead: " + leadCase);
-            columnIndex++;
             createCell(row, columnIndex, ethosCaseRef, styleForLockingLead);
         } else {
-            columnIndex++;
             createCell(row, columnIndex, ethosCaseRef, styleForLocking);
         }
 

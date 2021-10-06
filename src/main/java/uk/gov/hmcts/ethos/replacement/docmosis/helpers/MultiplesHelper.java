@@ -345,22 +345,20 @@ public class MultiplesHelper {
                 return;
             }
 
-            addItemToOrderedCaseCollection(orderedCaseList, item, ethosCaseRef);
+            addItemToOrderedCollection(orderedCaseList, item, ethosCaseRef);
         });
 
         return orderedCaseList;
     }
 
-    public static void addItemToOrderedCaseCollection(SortedMap<String, SortedMap<String, Object>> collection,
-                                                      Object caseItem, String ethosCaseRef) {
+    public static void addItemToOrderedCollection(SortedMap<String, SortedMap<String, Object>> collection,
+                                                  Object caseItem, String ethosCaseRef) {
         var caseRefItems = ethosCaseRef.split("/");
 
         if (collection.containsKey(caseRefItems[1])) {
             collection.get(caseRefItems[1]).put(caseRefItems[0], caseItem);
         } else {
-            var orderedList = new TreeMap<String, Object>();
-            orderedList.put(caseRefItems[0], caseItem);
-            collection.put(caseRefItems[1], orderedList);
+            collection.put(caseRefItems[1], new TreeMap<>(Map.of(caseRefItems[0], caseItem)));
         }
     }
 
