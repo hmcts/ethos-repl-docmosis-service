@@ -62,6 +62,7 @@ public class PersistentQHelperServiceTest {
     public void sendCreationEventToSinglesWithoutConfirmation() {
 
         when(userService.getUserDetails("authToken")).thenReturn(HelperTest.getUserDetails());
+
         persistentQHelperService.sendCreationEventToSingles(userToken,
                 ccdRequest.getCaseDetails().getCaseTypeId(), ccdRequest.getCaseDetails().getJurisdiction(),
                 new ArrayList<>(), new ArrayList<>(Collections.singletonList("ethosCaseReference")),
@@ -72,6 +73,7 @@ public class PersistentQHelperServiceTest {
                         ccdRequest.getCaseDetails().getCaseId(),
                         ccdRequest.getCaseDetails().getCaseData().getMultipleRefNumber())
                 );
+
         verify(userService).getUserDetails(userToken);
         verifyNoMoreInteractions(userService);
 
