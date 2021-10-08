@@ -82,7 +82,10 @@ public class MultipleTransferService {
                 multipleData.getReasonForCT(),
                 multipleData.getMultipleReference(),
                 YES,
-                multipleDetails.getCaseId());
+                MultiplesHelper.generateMarkUp(ccdGatewayBaseUrl,
+                        multipleDetails.getCaseId(),
+                        multipleData.getMultipleReference())
+                );
 
     }
 
