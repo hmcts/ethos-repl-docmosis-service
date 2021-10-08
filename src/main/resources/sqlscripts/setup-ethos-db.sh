@@ -9,6 +9,7 @@ psql postgresql://localhost:5050 -v ON_ERROR_STOP=1 -U postgres <<-EOSQL
     WITH OWNER = ethos
     ENCODING = 'UTF-8'
     CONNECTION LIMIT = -1;
+
 EOSQL
 
 set -e
