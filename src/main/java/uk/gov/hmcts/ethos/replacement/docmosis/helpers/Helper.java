@@ -352,20 +352,28 @@ public class Helper {
     public static CaseData populateDynamicRespondentRepresentativeNames(CaseData caseData) {
         List<DynamicValueType> listItems = createDynamicRespondentName(caseData.getRespondentCollection());
         if (!listItems.isEmpty()) {
+            var dynamicFixedListType = new DynamicFixedListType();
+            dynamicFixedListType.setListItems(listItems);
             if (caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty()) {
                 ListIterator<RepresentedTypeRItem> repItr = caseData.getRepCollection().listIterator();
                 int index;
                 while (repItr.hasNext()) {
                     index = repItr.nextIndex() + 1;
-                    var dynamicValueType = caseData.getRepCollection().get(index - 1).getValue().getDynamicRespRepName().getValue();
-                    var dynamicFixedListType = new DynamicFixedListType();
-                    dynamicFixedListType.setListItems(listItems);
-                    repItr.next().getValue().setDynamicRespRepName(dynamicFixedListType);
-                    caseData.getRepCollection().get(index - 1).getValue().getDynamicRespRepName().setValue(dynamicValueType);
+                    var respRepCollection = caseData.getRepCollection().get(index - 1);
+                    if (respRepCollection.getValue().getDynamicRespRepName() == null) {
+                        repItr.next().getValue().setDynamicRespRepName(dynamicFixedListType);
+                        var respRepName = respRepCollection.getValue().getRespRepName();
+                        var dynamicValueType = new DynamicValueType();
+                        dynamicValueType.setLabel(respRepName);
+                        dynamicValueType.setCode(respRepName);
+                        respRepCollection.getValue().getDynamicRespRepName().setValue(dynamicValueType);
+                    } else {
+                        var dynamicValueType = respRepCollection.getValue().getDynamicRespRepName().getValue();
+                        repItr.next().getValue().setDynamicRespRepName(dynamicFixedListType);
+                        respRepCollection.getValue().getDynamicRespRepName().setValue(dynamicValueType);
+                    }
                 }
             } else{
-                var dynamicFixedListType = new DynamicFixedListType();
-                dynamicFixedListType.setListItems(listItems);
                 var representedTypeR = new RepresentedTypeR();
                 representedTypeR.setDynamicRespRepName(dynamicFixedListType);
                 var representedTypeRItem = new RepresentedTypeRItem();
@@ -373,7 +381,6 @@ public class Helper {
                 var collection = List.of(representedTypeRItem);
                 caseData.setRepCollection(collection);
             }
-
         }
         return caseData;
     }
