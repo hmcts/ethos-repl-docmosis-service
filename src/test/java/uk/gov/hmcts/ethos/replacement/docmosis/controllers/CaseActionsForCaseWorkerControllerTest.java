@@ -626,7 +626,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void dynamicRespondentRepresentativeNamesErrors() throws Exception {
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(DYNAMIC_RESPONDENT_REPRESENTATIVE_NAMES_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -1333,7 +1333,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void dynamicRespondentRepresentativeNamesUrlForbidden() throws Exception {
-        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(DYNAMIC_RESPONDENT_REPRESENTATIVE_NAMES_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
