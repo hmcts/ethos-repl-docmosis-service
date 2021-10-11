@@ -40,7 +40,7 @@ jacocoTestCoverageVerification {
 }
 
 checkstyle {
-    maxWarnings = 511
+    maxWarnings = 501
     sourceSets = [project.sourceSets.main]
     toolVersion = '8.29'
 }
