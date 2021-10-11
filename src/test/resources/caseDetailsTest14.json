@@ -40,7 +40,8 @@
     "additionalCaseInfo": {
       "additional_sensitive": "No",
       "additional_live_appeal": "No",
-      "doNotPostpone": "No"
+      "doNotPostpone": "No",
+      "digitalFile": "No"
     },
     "counterClaim": "",
     "restrictedReporting": {

@@ -1,9 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
-import java.net.URI;
-import java.util.ArrayList;
-import static java.util.Collections.singletonList;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,13 +14,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
 import uk.gov.hmcts.reform.document.domain.Classification;
 import uk.gov.hmcts.reform.document.domain.UploadResponse;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Objects;
+
+import static java.util.Collections.singletonList;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 
 @Service
 @Slf4j
@@ -41,7 +43,7 @@ public class DocumentManagementService {
 
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
-    @Value("${document_management.url}")
+    @Value("${document_management.ccdCaseDocument.url}")
     private String ccdDMStoreBaseUrl;
 
     @Autowired
