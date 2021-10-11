@@ -237,7 +237,7 @@ public class ScheduleCreationService {
                 int entryStartingRow = startingRow;
                 schedulePayloads.forEach((String caseYear, Map<String, Object> scheduleYearList) ->
                         scheduleYearList.forEach((String caseNum, Object caseItem) -> {
-                            var columnIndex = 1;
+                            var columnIndex = 0;
                             var schedulePayload = (SchedulePayload) caseItem;
                             XSSFRow row = sheet.createRow(entryStartingRow + 2 + rowIndex[0]);
                             createCell(row, columnIndex, schedulePayload.getEthosCaseRef(), cellStyle);
