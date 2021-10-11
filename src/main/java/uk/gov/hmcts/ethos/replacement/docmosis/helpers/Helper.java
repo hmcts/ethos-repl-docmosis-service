@@ -360,18 +360,17 @@ public class Helper {
                 while (repItr.hasNext()) {
                     index = repItr.nextIndex() + 1;
                     var respRepCollection = caseData.getRepCollection().get(index - 1);
+                    var dynamicValueType = new DynamicValueType();
                     if (respRepCollection.getValue().getDynamicRespRepName() == null) {
                         repItr.next().getValue().setDynamicRespRepName(dynamicFixedListType);
                         var respRepName = respRepCollection.getValue().getRespRepName();
-                        var dynamicValueType = new DynamicValueType();
                         dynamicValueType.setLabel(respRepName);
                         dynamicValueType.setCode(respRepName);
-                        respRepCollection.getValue().getDynamicRespRepName().setValue(dynamicValueType);
                     } else {
-                        var dynamicValueType = respRepCollection.getValue().getDynamicRespRepName().getValue();
+                        dynamicValueType = respRepCollection.getValue().getDynamicRespRepName().getValue();
                         repItr.next().getValue().setDynamicRespRepName(dynamicFixedListType);
-                        respRepCollection.getValue().getDynamicRespRepName().setValue(dynamicValueType);
                     }
+                    respRepCollection.getValue().getDynamicRespRepName().setValue(dynamicValueType);
                 }
             } else{
                 var representedTypeR = new RepresentedTypeR();
