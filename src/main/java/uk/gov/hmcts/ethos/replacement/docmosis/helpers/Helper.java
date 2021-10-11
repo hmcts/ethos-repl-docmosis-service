@@ -11,15 +11,17 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadES;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -347,4 +349,46 @@ public class Helper {
                 : new ArrayList<>();
     }
 
+    public static CaseData populateDynamicRespondentRepresentativeNames(CaseData caseData) {
+        List<DynamicValueType> listItems = createDynamicRespondentName(caseData.getRespondentCollection());
+        if (!listItems.isEmpty()) {
+            if (caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty()) {
+                ListIterator<RepresentedTypeRItem> repItr = caseData.getRepCollection().listIterator();
+                int index;
+                while (repItr.hasNext()) {
+                    index = repItr.nextIndex() + 1;
+                    var dynamicValueType = caseData.getRepCollection().get(index - 1).getValue().getDynamicRespRepName().getValue();
+                    var dynamicFixedListType = new DynamicFixedListType();
+                    dynamicFixedListType.setListItems(listItems);
+                    repItr.next().getValue().setDynamicRespRepName(dynamicFixedListType);
+                    caseData.getRepCollection().get(index - 1).getValue().getDynamicRespRepName().setValue(dynamicValueType);
+                }
+            } else{
+                var dynamicFixedListType = new DynamicFixedListType();
+                dynamicFixedListType.setListItems(listItems);
+                var representedTypeR = new RepresentedTypeR();
+                representedTypeR.setDynamicRespRepName(dynamicFixedListType);
+                var representedTypeRItem = new RepresentedTypeRItem();
+                representedTypeRItem.setValue(representedTypeR);
+                var collection = List.of(representedTypeRItem);
+                caseData.setRepCollection(collection);
+            }
+
+        }
+        return caseData;
+    }
+
+    private static List<DynamicValueType> createDynamicRespondentName(List<RespondentSumTypeItem> respondentCollection) {
+        List<DynamicValueType> listItems = new ArrayList<>();
+        if (respondentCollection != null) {
+            for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
+                var dynamicValueType = new DynamicValueType();
+                var respondentSumType = respondentSumTypeItem.getValue();
+                dynamicValueType.setCode(respondentSumType.getRespondentName());
+                dynamicValueType.setLabel(respondentSumType.getRespondentName());
+                listItems.add(dynamicValueType);
+            }
+        }
+        return listItems;
+    }
 }

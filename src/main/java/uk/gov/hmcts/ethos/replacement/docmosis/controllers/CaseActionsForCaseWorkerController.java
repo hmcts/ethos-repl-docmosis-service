@@ -359,6 +359,29 @@ public class CaseActionsForCaseWorkerController {
         return getCallbackRespEntityErrors(errors, caseData);
     }
 
+    @PostMapping(value = "/dynamicRespondentRepresentativeNames", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the respondents names into a dynamic list")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> dynamicRespondentRepresentativeNames(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DYNAMIC RESPONDENT REPRESENTATIVE NAMES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        var caseData = Helper.populateDynamicRespondentRepresentativeNames(ccdRequest.getCaseDetails().getCaseData());
+
+        return getCallbackRespEntityNoErrors(caseData);
+    }
+
     @PostMapping(value = "/updateHearing", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "update hearing details for a single case.")
     @ApiResponses(value = {

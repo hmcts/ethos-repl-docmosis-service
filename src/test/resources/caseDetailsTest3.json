@@ -56,6 +56,18 @@
       {
         "id" : "123345",
         "value" : {
+          "dynamic_resp_rep_name": {
+            "value": {
+              "code": "Antonio Vazquez",
+              "label": "Antonio Vazquez"
+            },
+            "list_items": [
+              {
+                "code": "Antonio Vazquez",
+                "label": "Antonio Vazquez"
+              }
+            ]
+          },
           "resp_rep_name" : "Antonio Vazquez",
           "name_of_organisation": "RepresentativeOrganisation",
           "name_of_representative": "RepresentativeNameRespondent",
