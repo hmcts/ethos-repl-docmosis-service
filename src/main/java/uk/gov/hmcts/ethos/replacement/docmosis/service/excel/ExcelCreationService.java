@@ -180,7 +180,7 @@ public class ExcelCreationService {
         CellStyle styleForUnLocking = getStyleForUnLocking(workbook);
         CellStyle styleForLocking = getStyleForLocking(workbook, false);
         XSSFRow row = sheet.createRow(rowIndex);
-        int columnIndex = 1;
+        int columnIndex = 0;
 
         if (ethosCaseRef.equals(leadCase)) {
             log.info("Lead: " + leadCase);

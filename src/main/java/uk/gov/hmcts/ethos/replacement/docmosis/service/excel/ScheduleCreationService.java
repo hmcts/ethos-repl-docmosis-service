@@ -110,10 +110,10 @@ public class ScheduleCreationService {
                         MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
             }
 
-            final int[] rowIndex = {1};
+            final int[] rowIndex = {0};
             orderedScheduleCollection.forEach((String caseYear, Map<String, Object> scheduleYearList) ->
                 scheduleYearList.forEach((String caseNum, Object item) -> {
-                    var columnIndex = 1;
+                    var columnIndex = 0;
                     var schedulePayload = (SchedulePayload) item;
                     XSSFRow row = sheet.createRow(rowIndex[0] + startingRow);
                     createCell(row, columnIndex, schedulePayload.getEthosCaseRef(), cellStyle);
@@ -130,10 +130,10 @@ public class ScheduleCreationService {
                         MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
             }
 
-            final int[] rowIndex = {1};
+            final int[] rowIndex = {0};
             orderedScheduleCollection.forEach((String caseYear, Map<String, Object> scheduleYearList) ->
                 scheduleYearList.forEach((String caseNum, Object item) -> {
-                    var columnIndex = 1;
+                    var columnIndex = 0;
                     var schedulePayload = (SchedulePayload) item;
                     XSSFRow row = sheet.createRow(rowIndex[0] + startingRow);
                     row.setHeightInPoints(((float) 4.5 * sheet.getDefaultRowHeightInPoints()));
@@ -233,7 +233,7 @@ public class ScheduleCreationService {
                             MultiplesSchedulePrinter.getHeader3CellStyle(workbook));
                 }
                 //DATA ROWS
-                final int[] rowIndex = {1};
+                final int[] rowIndex = {0};
                 int entryStartingRow = startingRow;
                 schedulePayloads.forEach((String caseYear, Map<String, Object> scheduleYearList) ->
                     scheduleYearList.forEach((String caseNum, Object caseItem) -> {
