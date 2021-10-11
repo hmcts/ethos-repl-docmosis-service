@@ -376,4 +376,5 @@ public class MultiplesHelper {
 
         return bos.toByteArray();
     }
+
 }

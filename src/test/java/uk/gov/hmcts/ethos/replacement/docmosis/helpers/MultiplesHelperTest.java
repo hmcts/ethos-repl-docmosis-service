@@ -125,5 +125,4 @@ public class MultiplesHelperTest {
         return caseIdTypeItem;
 
     }
-
 }

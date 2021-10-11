@@ -112,15 +112,15 @@ public class ScheduleCreationService {
 
             final int[] rowIndex = {0};
             orderedScheduleCollection.forEach((String caseYear, Map<String, Object> scheduleYearList) ->
-                scheduleYearList.forEach((String caseNum, Object item) -> {
-                    var columnIndex = 0;
-                    var schedulePayload = (SchedulePayload) item;
-                    XSSFRow row = sheet.createRow(rowIndex[0] + startingRow);
-                    createCell(row, columnIndex, schedulePayload.getEthosCaseRef(), cellStyle);
-                    columnIndex++;
-                    createCell(row, columnIndex, getClaimantVsRespondent(schedulePayload), cellStyle);
-                    rowIndex[0]++;
-                })
+                    scheduleYearList.forEach((String caseNum, Object item) -> {
+                        var columnIndex = 0;
+                        var schedulePayload = (SchedulePayload) item;
+                        XSSFRow row = sheet.createRow(rowIndex[0] + startingRow);
+                        createCell(row, columnIndex, schedulePayload.getEthosCaseRef(), cellStyle);
+                        columnIndex++;
+                        createCell(row, columnIndex, getClaimantVsRespondent(schedulePayload), cellStyle);
+                        rowIndex[0]++;
+                    })
             );
         } else if (scheduleTemplate.equals(MULTIPLE_SCHEDULE_DETAILED_CONFIG)) {
 
@@ -132,18 +132,18 @@ public class ScheduleCreationService {
 
             final int[] rowIndex = {0};
             orderedScheduleCollection.forEach((String caseYear, Map<String, Object> scheduleYearList) ->
-                scheduleYearList.forEach((String caseNum, Object item) -> {
-                    var columnIndex = 0;
-                    var schedulePayload = (SchedulePayload) item;
-                    XSSFRow row = sheet.createRow(rowIndex[0] + startingRow);
-                    row.setHeightInPoints(((float) 4.5 * sheet.getDefaultRowHeightInPoints()));
-                    createCell(row, columnIndex, schedulePayload.getEthosCaseRef(), cellStyle);
-                    columnIndex++;
-                    createCell(row, columnIndex, getClaimantAddress(schedulePayload), cellStyle);
-                    columnIndex++;
-                    createCell(row, columnIndex, getRespondentAddress(schedulePayload), cellStyle);
-                    rowIndex[0]++;
-                })
+                    scheduleYearList.forEach((String caseNum, Object item) -> {
+                        var columnIndex = 0;
+                        var schedulePayload = (SchedulePayload) item;
+                        XSSFRow row = sheet.createRow(rowIndex[0] + startingRow);
+                        row.setHeightInPoints(((float) 4.5 * sheet.getDefaultRowHeightInPoints()));
+                        createCell(row, columnIndex, schedulePayload.getEthosCaseRef(), cellStyle);
+                        columnIndex++;
+                        createCell(row, columnIndex, getClaimantAddress(schedulePayload), cellStyle);
+                        columnIndex++;
+                        createCell(row, columnIndex, getRespondentAddress(schedulePayload), cellStyle);
+                        rowIndex[0]++;
+                    })
             );
         }
     }
@@ -236,17 +236,17 @@ public class ScheduleCreationService {
                 final int[] rowIndex = {0};
                 int entryStartingRow = startingRow;
                 schedulePayloads.forEach((String caseYear, Map<String, Object> scheduleYearList) ->
-                    scheduleYearList.forEach((String caseNum, Object caseItem) -> {
-                        var columnIndex = 1;
-                        var schedulePayload = (SchedulePayload) caseItem;
-                        XSSFRow row = sheet.createRow(entryStartingRow + 2 + rowIndex[0]);
-                        createCell(row, columnIndex, schedulePayload.getEthosCaseRef(), cellStyle);
-                        columnIndex++;
-                        createCell(row, columnIndex, schedulePayload.getClaimantName(), cellStyle);
-                        columnIndex++;
-                        createCell(row, columnIndex, schedulePayload.getPositionType(), cellStyle);
-                        rowIndex[0]++;
-                    })
+                        scheduleYearList.forEach((String caseNum, Object caseItem) -> {
+                            var columnIndex = 1;
+                            var schedulePayload = (SchedulePayload) caseItem;
+                            XSSFRow row = sheet.createRow(entryStartingRow + 2 + rowIndex[0]);
+                            createCell(row, columnIndex, schedulePayload.getEthosCaseRef(), cellStyle);
+                            columnIndex++;
+                            createCell(row, columnIndex, schedulePayload.getClaimantName(), cellStyle);
+                            columnIndex++;
+                            createCell(row, columnIndex, schedulePayload.getPositionType(), cellStyle);
+                            rowIndex[0]++;
+                        })
                 );
 
                 startingRow += 2 + rowIndex[0];
