@@ -78,6 +78,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String DYNAMIC_LIST_OFFICES_URL = "/dynamicListOffices";
     private static final String CREATE_CASE_TRANSFER_URL = "/createCaseTransfer";
     private static final String ABOUT_TO_START_DISPOSAL_URL = "/aboutToStartDisposal";
+    private static final String DYNAMIC_RESPONDENT_REPRESENTATIVE_NAMES_URL = "/dynamicRespondentRepresentativeNames";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -624,6 +625,19 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void dynamicRespondentRepresentativeNamesErrors() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        mvc.perform(post(DYNAMIC_RESPONDENT_REPRESENTATIVE_NAMES_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void createCaseError400() throws Exception {
         mvc.perform(post(CREATION_CASE_URL)
                 .content("error")
@@ -878,6 +892,15 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void aboutToStartDisposalError400() throws Exception {
         mvc.perform(post(ABOUT_TO_START_DISPOSAL_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void dynamicRespondentRepresentativeNamesUrlError400() throws Exception {
+        mvc.perform(post(DYNAMIC_RESPONDENT_REPRESENTATIVE_NAMES_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -1302,6 +1325,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void aboutToStartDisposalForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(ABOUT_TO_START_DISPOSAL_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void dynamicRespondentRepresentativeNamesUrlForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(DYNAMIC_RESPONDENT_REPRESENTATIVE_NAMES_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

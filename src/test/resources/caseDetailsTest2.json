@@ -94,6 +94,18 @@
       {
         "id" : "123345",
         "value" : {
+          "dynamic_resp_rep_name": {
+            "value": {
+              "code": "RepresentativeNameRespondent",
+              "label": "RepresentativeNameRespondent"
+            },
+            "list_items": [
+              {
+                "code": "RepresentativeNameRespondent",
+                "label": "RepresentativeNameRespondent"
+              }
+            ]
+          },
           "resp_rep_name" : "RepresentativeNameRespondent",
           "name_of_organisation": "RepresentativeOrganisation",
           "name_of_representative": "RepresentativeNameRespondent",

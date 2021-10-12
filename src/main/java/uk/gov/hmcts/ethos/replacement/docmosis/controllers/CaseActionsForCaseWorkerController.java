@@ -29,6 +29,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelper;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntity;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrors;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
+
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 
@@ -357,6 +359,29 @@ public class CaseActionsForCaseWorkerController {
         log.info(EVENT_FIELDS_VALIDATION + errors);
 
         return getCallbackRespEntityErrors(errors, caseData);
+    }
+
+    @PostMapping(value = "/dynamicRespondentRepresentativeNames", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the respondents names into a dynamic list")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> dynamicRespondentRepresentativeNames(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DYNAMIC RESPONDENT REPRESENTATIVE NAMES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
+        DynamicListHelper.dynamicRespondentRepresentativeNames(caseData);
+
+        return getCallbackRespEntityNoErrors(caseData);
     }
 
     @PostMapping(value = "/updateHearing", consumes = APPLICATION_JSON_VALUE)

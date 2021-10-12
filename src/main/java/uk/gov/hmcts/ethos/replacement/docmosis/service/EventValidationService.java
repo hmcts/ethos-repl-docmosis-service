@@ -99,7 +99,7 @@ public class EventValidationService {
             int index;
             while (repItr.hasNext()) {
                 index = repItr.nextIndex() + 1;
-                String respRepName = repItr.next().getValue().getRespRepName();
+                String respRepName = repItr.next().getValue().getDynamicRespRepName().getValue().getCode();
                 if (!isNullOrEmpty(respRepName)
                         && !CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
                     ListIterator<RespondentSumTypeItem> respItr = caseData.getRespondentCollection().listIterator();
@@ -110,6 +110,7 @@ public class EventValidationService {
                                 || (respondentSumType.getResponseRespondentName() != null
                                 && respRepName.equals(respondentSumType.getResponseRespondentName()))) {
                             validLink = true;
+                            caseData.getRepCollection().get(index-1).getValue().setRespRepName(respRepName);
                             break;
                         }
                     }
