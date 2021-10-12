@@ -29,6 +29,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelper;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntity;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrors;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
+
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 
@@ -376,8 +378,8 @@ public class CaseActionsForCaseWorkerController {
             log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
-
-        var caseData = Helper.populateDynamicRespondentRepresentativeNames(ccdRequest.getCaseDetails().getCaseData());
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
+        DynamicListHelper.dynamicRespondentRepresentativeNames(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
     }

@@ -158,8 +158,8 @@ public class HelperTest {
     }
 
     @Test
-    public void dynamicRespondentRepEmptyList() {
-        Helper.populateDynamicRespondentRepresentativeNames(caseDetails1.getCaseData());
+    public void createDynamicListForRespondentRepresentative() {
+        DynamicListHelper.dynamicRespondentRepresentativeNames(caseDetails1.getCaseData());
         assertNotNull(caseDetails1.getCaseData().getRepCollection());
         var dynamicValueType = new DynamicValueType();
         dynamicValueType.setCode("Antonio Vazquez");
@@ -170,7 +170,7 @@ public class HelperTest {
 
     @Test
     public void populateDynamicRespondentRepList() {
-        Helper.populateDynamicRespondentRepresentativeNames(caseDetails6.getCaseData());
+        DynamicListHelper.dynamicRespondentRepresentativeNames(caseDetails6.getCaseData());
         assertNotNull(caseDetails6.getCaseData().getRepCollection().get(0).getValue().getDynamicRespRepName());
         var dynamicValueType = new DynamicValueType();
         dynamicValueType.setCode("Antonio Vazquez");
