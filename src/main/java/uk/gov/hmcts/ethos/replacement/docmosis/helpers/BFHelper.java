@@ -29,15 +29,12 @@ public class BFHelper {
         if (bfActions != null && !bfActions.isEmpty()) {
 
             for (BFActionTypeItem bfActionTypeItem : bfActions) {
-
                 var bfActionType = bfActionTypeItem.getValue();
 
                 if (isNullOrEmpty(bfActionType.getDateEntered())) {
-
                     bfActionType.setDateEntered(UtilHelper.formatCurrentDate2(LocalDate.now()));
-
+                    caseData.setClaimServedDate(bfActions.get(0).getValue().getDateEntered());
                 }
-
             }
 
         }
@@ -77,6 +74,7 @@ public class BFHelper {
 
             var bfActionTypeItem = new BFActionTypeItem();
             var bfActionType = new BFActionType();
+
             bfActionType.setAction(dynamicFixedListType);
             bfActionTypeItem.setId(UUID.randomUUID().toString());
             bfActionTypeItem.setValue(bfActionType);
