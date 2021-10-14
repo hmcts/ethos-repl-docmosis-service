@@ -194,7 +194,7 @@ public class EventValidationService {
                 var jurCodesType = jurCodesTypeItem.getValue();
                 if (jurCodesType.getJudgmentOutcome() == null) {
                     if (partOfMultiple) {
-                        errors.add("Case Reference: " + caseData.getEthosCaseReference() + " Error: " + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
+                        errors.add(caseData.getEthosCaseReference() + " - " + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
                     } else {
                         errors.add(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
                     }
@@ -203,7 +203,7 @@ public class EventValidationService {
             }
         } else if (!isRejected) {
             if (partOfMultiple) {
-                errors.add("Case Reference: " + caseData.getEthosCaseReference() + " Error: " + MISSING_JURISDICTION_MESSAGE);
+                errors.add(caseData.getEthosCaseReference() + " - " + MISSING_JURISDICTION_MESSAGE);
             } else {
                 errors.add(MISSING_JURISDICTION_MESSAGE);
             }

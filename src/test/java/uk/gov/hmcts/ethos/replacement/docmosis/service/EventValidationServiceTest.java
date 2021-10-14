@@ -8,8 +8,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
-import uk.gov.hmcts.ecm.common.model.listing.ListingData;
-import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
@@ -20,7 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @RunWith(SpringRunner.class)
@@ -108,10 +107,10 @@ public class EventValidationServiceTest {
         caseDetails1.getCaseData().setCaseType(MULTIPLE_CASE_TYPE);
 
         boolean validated = eventValidationService.validateCaseState(caseDetails1);
-        assertEquals(false, validated);
+        assertFalse(validated);
         caseDetails1.setState(ACCEPTED_STATE);
         validated = eventValidationService.validateCaseState(caseDetails1);
-        assertEquals(true, validated);
+        assertTrue(validated);
     }
 
     @Test
@@ -306,7 +305,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateJurisdictionOutcomePresentAndMissingNotRejected() {
+    public void shouldValidateJurisdictionOutcomePresentAndMissingNotRejected_SingleCase() {
         List<String> errors = new ArrayList<>();
         eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(), false, errors, false);
 
@@ -315,7 +314,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateJurisdictionOutcomePresentNotRejected() {
+    public void shouldValidateJurisdictionOutcomePresentNotRejected_SingleCase() {
         List<String> errors = new ArrayList<>();
         eventValidationService.validateJurisdictionOutcome(caseDetails2.getCaseData(), false, errors, false);
 
@@ -323,7 +322,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateJurisdictionOutcomeMissingNotRejected() {
+    public void shouldValidateJurisdictionOutcomeMissingNotRejected_SingleCase() {
         List<String> errors = new ArrayList<>();
         eventValidationService.validateJurisdictionOutcome(caseDetails3.getCaseData(), false, errors, false);
 
@@ -332,7 +331,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateJurisdictionOutcomePresentAndMissingRejected() {
+    public void shouldValidateJurisdictionOutcomePresentAndMissingRejected_SingleCase() {
         List<String> errors = new ArrayList<>();
         eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(), true, errors, false);
 
@@ -341,7 +340,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateJurisdictionOutcomePresentRejected() {
+    public void shouldValidateJurisdictionOutcomePresentRejected_SingleCase() {
         List<String> errors = new ArrayList<>();
         eventValidationService.validateJurisdictionOutcome(caseDetails2.getCaseData(), true, errors, false);
 
@@ -349,9 +348,63 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateJurisdictionOutcomeMissingRejected() {
+    public void shouldValidateJurisdictionOutcomeMissingRejected_SingleCase() {
         List<String> errors = new ArrayList<>();
         eventValidationService.validateJurisdictionOutcome(caseDetails3.getCaseData(), true, errors, false);
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateJurisdictionOutcomePresentAndMissingNotRejected_CaseIsPartOfMultiple() {
+        var expectedError = caseDetails1.getCaseData().getEthosCaseReference() + " - " + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(), false, errors, true);
+
+        assertEquals(1, errors.size());
+        assertEquals(expectedError, errors.get(0));
+    }
+
+    @Test
+    public void shouldValidateJurisdictionOutcomePresentNotRejected_CaseIsPartOfMultiple() {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails2.getCaseData(), false, errors, true);
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateJurisdictionOutcomeMissingNotRejected_CaseIsPartOfMultiple() {
+        var expectedError = caseDetails1.getCaseData().getEthosCaseReference() + " - " + MISSING_JURISDICTION_MESSAGE;
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails3.getCaseData(), false, errors, true);
+
+        assertEquals(1, errors.size());
+        assertEquals(expectedError, errors.get(0));
+    }
+
+    @Test
+    public void shouldValidateJurisdictionOutcomePresentAndMissingRejected_CaseIsPartOfMultiple() {
+        var expectedError = caseDetails1.getCaseData().getEthosCaseReference() + " - " + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(), true, errors, true);
+
+        assertEquals(1, errors.size());
+        assertEquals(expectedError, errors.get(0));
+    }
+
+    @Test
+    public void shouldValidateJurisdictionOutcomePresentRejected_CaseIsPartOfMultiple() {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails2.getCaseData(), true, errors, true);
+
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void shouldValidateJurisdictionOutcomeMissingRejected_CaseIsPartOfMultiple() {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails3.getCaseData(), true, errors, true);
 
         assertEquals(0, errors.size());
     }
