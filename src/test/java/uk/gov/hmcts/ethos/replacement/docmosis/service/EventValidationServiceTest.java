@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @RunWith(SpringRunner.class)
@@ -107,10 +106,10 @@ public class EventValidationServiceTest {
         caseDetails1.getCaseData().setCaseType(MULTIPLE_CASE_TYPE);
 
         boolean validated = eventValidationService.validateCaseState(caseDetails1);
-        assertFalse(validated);
+        assertEquals(false, validated);
         caseDetails1.setState(ACCEPTED_STATE);
         validated = eventValidationService.validateCaseState(caseDetails1);
-        assertTrue(validated);
+        assertEquals(true, validated);
     }
 
     @Test
