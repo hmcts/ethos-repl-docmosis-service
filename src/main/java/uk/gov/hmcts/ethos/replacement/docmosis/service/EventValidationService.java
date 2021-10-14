@@ -1,29 +1,56 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import static java.util.stream.Collectors.joining;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.items.*;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DepositTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-
-import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.util.stream.Collectors.joining;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EMPTY_HEARING_COLLECTION_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EMPTY_RESPONDENT_COLLECTION_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RECEIPT_DATE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_NUMBER_MISMATCH_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_DELETED_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_EXISTENCE_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESP_REP_NAME_MISMATCH_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRespondents;
 
 @Slf4j
@@ -50,10 +77,10 @@ public class EventValidationService {
 
     public boolean validateCaseState(CaseDetails caseDetails) {
         var validated = true;
-        log.info("Checking whether the case " + caseDetails.getCaseData().getEthosCaseReference() +
-                " is in accepted state");
-        if (caseDetails.getState().equals(SUBMITTED_STATE) &&
-                caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+        log.info("Checking whether the case " + caseDetails.getCaseData().getEthosCaseReference()
+                + " is in accepted state");
+        if (caseDetails.getState().equals(SUBMITTED_STATE)
+                && caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
             validated = false;
         }
         return validated;
@@ -188,26 +215,36 @@ public class EventValidationService {
         }
     }
 
-    public void validateJurisdictionOutcome(CaseData caseData, boolean isRejected, List<String> errors, boolean partOfMultiple) {
+    public void validateJurisdictionOutcome(CaseData caseData, boolean isRejected, List<String> errors,
+                                            boolean partOfMultiple) {
         if (caseData.getJurCodesCollection() != null && !caseData.getJurCodesCollection().isEmpty()) {
             for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
                 var jurCodesType = jurCodesTypeItem.getValue();
                 if (jurCodesType.getJudgmentOutcome() == null) {
-                    if (partOfMultiple) {
-                        errors.add(caseData.getEthosCaseReference() + " - " + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
-                    } else {
-                        errors.add(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
-                    }
+                    errors.add(getJurisdictionOutcomeErrorText(partOfMultiple, true,
+                            caseData.getEthosCaseReference()));
                     break;
                 }
             }
         } else if (!isRejected) {
-            if (partOfMultiple) {
-                errors.add(caseData.getEthosCaseReference() + " - " + MISSING_JURISDICTION_MESSAGE);
-            } else {
-                errors.add(MISSING_JURISDICTION_MESSAGE);
-            }
+            errors.add(getJurisdictionOutcomeErrorText(partOfMultiple, false,
+                    caseData.getEthosCaseReference()));
         }
+    }
+
+    private String getJurisdictionOutcomeErrorText(boolean partOfMultiple, boolean hasJurisdictions,
+                                                   String ethosReference) {
+        if (partOfMultiple) {
+            if (hasJurisdictions) {
+                return ethosReference + " - " + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
+            }
+            return ethosReference + " - " + MISSING_JURISDICTION_MESSAGE;
+        }
+
+        if (hasJurisdictions) {
+            return MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
+        }
+        return MISSING_JURISDICTION_MESSAGE;
     }
 
     private void validateResponseReturnedFromJudgeDate(RespondentSumType respondentSumType, List<String> errors,
