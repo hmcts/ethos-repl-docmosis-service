@@ -307,7 +307,8 @@ public class EventValidationServiceTest {
 
     @Test
     public void shouldValidateJurisdictionOutcomePresentAndMissingNotRejected() {
-        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(), false);
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(), false, errors, false);
 
         assertEquals(1, errors.size());
         assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
@@ -315,14 +316,16 @@ public class EventValidationServiceTest {
 
     @Test
     public void shouldValidateJurisdictionOutcomePresentNotRejected() {
-        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails2.getCaseData(), false);
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails2.getCaseData(), false, errors, false);
 
         assertEquals(0, errors.size());
     }
 
     @Test
     public void shouldValidateJurisdictionOutcomeMissingNotRejected() {
-        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails3.getCaseData(), false);
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails3.getCaseData(), false, errors, false);
 
         assertEquals(1, errors.size());
         assertEquals(MISSING_JURISDICTION_MESSAGE, errors.get(0));
@@ -330,7 +333,8 @@ public class EventValidationServiceTest {
 
     @Test
     public void shouldValidateJurisdictionOutcomePresentAndMissingRejected() {
-        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(), true);
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(), true, errors, false);
 
         assertEquals(1, errors.size());
         assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
@@ -338,14 +342,16 @@ public class EventValidationServiceTest {
 
     @Test
     public void shouldValidateJurisdictionOutcomePresentRejected() {
-        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails2.getCaseData(), true);
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails2.getCaseData(), true, errors, false);
 
         assertEquals(0, errors.size());
     }
 
     @Test
     public void shouldValidateJurisdictionOutcomeMissingRejected() {
-        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails3.getCaseData(), true);
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails3.getCaseData(), true, errors, false);
 
         assertEquals(0, errors.size());
     }

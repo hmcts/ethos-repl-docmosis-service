@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.model.bulk.items.CaseIdTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.listing.ListingCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleCallbackResponse;
@@ -19,25 +21,14 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleAmendService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleCreationMidEventValidationService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleCreationService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleDynamicListFlagsService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleHelperService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleMidEventValidationService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultiplePreAcceptService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleSingleMidEventValidationService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleTransferService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleUpdateService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleUploadService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.SubMultipleMidEventValidationService;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.SubMultipleUpdateService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getListingCallbackRespEntity;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getMultipleCallbackRespEntity;
@@ -58,6 +49,7 @@ public class ExcelActionsController {
     private final MultipleUploadService multipleUploadService;
     private final MultipleDynamicListFlagsService multipleDynamicListFlagsService;
     private final MultipleMidEventValidationService multipleMidEventValidationService;
+    private final MultipleCloseEventValidationService multipleCloseEventValidationService;
     private final SubMultipleUpdateService subMultipleUpdateService;
     private final SubMultipleMidEventValidationService subMultipleMidEventValidationService;
     private final MultipleCreationMidEventValidationService multipleCreationMidEventValidationService;
@@ -482,8 +474,13 @@ public class ExcelActionsController {
         List<String> errors = new ArrayList<>();
         var multipleDetails = multipleRequest.getCaseDetails();
 
-        multipleHelperService.sendCloseToSinglesWithoutConfirmation(userToken, multipleDetails, errors);
+        multipleCloseEventValidationService.validateJurisdictionCollections(userToken, multipleDetails, errors);
 
+        if (!errors.isEmpty()) {
+            return getMultipleCallbackRespEntity(errors, multipleDetails);
+        }
+
+        multipleHelperService.sendCloseToSinglesWithoutConfirmation(userToken, multipleDetails, errors);
         MultiplesHelper.resetMidFields(multipleDetails.getCaseData());
 
         return getMultipleCallbackRespEntity(errors, multipleDetails);

@@ -502,7 +502,7 @@ public class CaseActionsForCaseWorkerController {
         var caseData = ccdRequest.getCaseDetails().getCaseData();
 
         if (ccdRequest.getCaseDetails().getState().equals(CLOSED_STATE)) {
-            errors = eventValidationService.validateJurisdictionOutcome(caseData, ccdRequest.getCaseDetails().getState().equals(REJECTED_STATE));
+            eventValidationService.validateJurisdictionOutcome(caseData, ccdRequest.getCaseDetails().getState().equals(REJECTED_STATE), errors, false);
             log.info(EVENT_FIELDS_VALIDATION + errors);
         }
 
@@ -869,8 +869,9 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
+        List<String> errors = new ArrayList<>();
         var caseData = ccdRequest.getCaseDetails().getCaseData();
-        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseData, ccdRequest.getCaseDetails().getState().equals(REJECTED_STATE));
+        eventValidationService.validateJurisdictionOutcome(caseData, ccdRequest.getCaseDetails().getState().equals(REJECTED_STATE), errors, false);
 
         if (errors.isEmpty()) {
             Helper.updatePositionTypeToClosed(caseData);

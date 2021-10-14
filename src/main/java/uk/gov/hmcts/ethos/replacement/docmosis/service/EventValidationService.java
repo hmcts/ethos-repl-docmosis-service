@@ -188,20 +188,26 @@ public class EventValidationService {
         }
     }
 
-    public List<String> validateJurisdictionOutcome(CaseData caseData, boolean isRejected) {
-        List<String> errors = new ArrayList<>();
+    public void validateJurisdictionOutcome(CaseData caseData, boolean isRejected, List<String> errors, boolean partOfMultiple) {
         if (caseData.getJurCodesCollection() != null && !caseData.getJurCodesCollection().isEmpty()) {
             for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
                 var jurCodesType = jurCodesTypeItem.getValue();
                 if (jurCodesType.getJudgmentOutcome() == null) {
-                    errors.add(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
+                    if (partOfMultiple) {
+                        errors.add("Case Reference: " + caseData.getEthosCaseReference() + " Error: " + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
+                    } else {
+                        errors.add(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
+                    }
                     break;
                 }
             }
         } else if (!isRejected) {
-            errors.add(MISSING_JURISDICTION_MESSAGE);
+            if (partOfMultiple) {
+                errors.add("Case Reference: " + caseData.getEthosCaseReference() + " Error: " + MISSING_JURISDICTION_MESSAGE);
+            } else {
+                errors.add(MISSING_JURISDICTION_MESSAGE);
+            }
         }
-        return errors;
     }
 
     private void validateResponseReturnedFromJudgeDate(RespondentSumType respondentSumType, List<String> errors,
