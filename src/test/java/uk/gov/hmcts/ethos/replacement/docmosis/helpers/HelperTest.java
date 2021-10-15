@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
-import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 
@@ -155,28 +154,6 @@ public class HelperTest {
 
         assertNull(caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().getPostponedDate());
-    }
-
-    @Test
-    public void createDynamicListForRespondentRepresentative() {
-        DynamicListHelper.dynamicRespondentRepresentativeNames(caseDetails1.getCaseData());
-        assertNotNull(caseDetails1.getCaseData().getRepCollection());
-        var dynamicValueType = new DynamicValueType();
-        dynamicValueType.setCode("Antonio Vazquez");
-        dynamicValueType.setLabel("Antonio Vazquez");
-        assertEquals(dynamicValueType, caseDetails1.getCaseData().getRepCollection().get(0)
-                .getValue().getDynamicRespRepName().getListItems().get(0));
-    }
-
-    @Test
-    public void populateDynamicRespondentRepList() {
-        DynamicListHelper.dynamicRespondentRepresentativeNames(caseDetails6.getCaseData());
-        assertNotNull(caseDetails6.getCaseData().getRepCollection().get(0).getValue().getDynamicRespRepName());
-        var dynamicValueType = new DynamicValueType();
-        dynamicValueType.setCode("Antonio Vazquez");
-        dynamicValueType.setLabel("Antonio Vazquez");
-        assertEquals(dynamicValueType, caseDetails6.getCaseData().getRepCollection().get(0)
-                .getValue().getDynamicRespRepName().getListItems().get(0));
     }
 
 }

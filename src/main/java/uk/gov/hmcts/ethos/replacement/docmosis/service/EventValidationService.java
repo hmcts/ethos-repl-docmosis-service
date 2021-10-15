@@ -2,7 +2,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
@@ -20,7 +19,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
-import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
@@ -99,7 +97,7 @@ public class EventValidationService {
             int index;
             while (repItr.hasNext()) {
                 index = repItr.nextIndex() + 1;
-                String respRepName = repItr.next().getValue().getDynamicRespRepName().getValue().getCode();
+                String respRepName = repItr.next().getValue().getDynamicRespRepName().getValue().getLabel();
                 if (!isNullOrEmpty(respRepName)
                         && !CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
                     ListIterator<RespondentSumTypeItem> respItr = caseData.getRespondentCollection().listIterator();
@@ -121,6 +119,19 @@ public class EventValidationService {
             }
         }
         return errors;
+    }
+
+    public void validateRestrictedReportNames(CaseData caseData) {
+        if (caseData.getRestrictedReporting() != null) {
+            var dynamicListCode = caseData.getRestrictedReporting().getDynamicRequestedBy().getValue().getCode();
+            if (dynamicListCode.startsWith("R: ")) {
+                caseData.getRestrictedReporting().setRequestedBy(RESPONDENT_TITLE);
+            } else if (dynamicListCode.startsWith("C: ")) {
+                caseData.getRestrictedReporting().setRequestedBy(CLAIMANT_TITLE);
+            } else {
+                caseData.getRestrictedReporting().setRequestedBy(dynamicListCode);
+            }
+        }
     }
 
     public List<String> validateHearingNumber(CaseData caseData, CorrespondenceType correspondenceType,
@@ -302,6 +313,36 @@ public class EventValidationService {
                         > Integer.parseInt(depositTypeItem.getValue().getDepositAmount()))) {
                     errors.add(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR);
                 }
+
+                var dynamicOrderAgainst = depositTypeItem.getValue().getDynamicDepositOrderAgainst().getValue().getCode();
+                if (dynamicOrderAgainst.startsWith("R: ")) {
+                    depositTypeItem.getValue().setDepositOrderAgainst(RESPONDENT_TITLE);
+                } else if (dynamicOrderAgainst.startsWith("C: ")) {
+                    depositTypeItem.getValue().setDepositOrderAgainst(CLAIMANT_TITLE);
+                } else {
+                    errors.add(UNABLE_TO_FIND_PARTY);
+                }
+
+                var dynamicRequestedBy = depositTypeItem.getValue().getDynamicDepositRequestedBy().getValue().getCode();
+                if (dynamicRequestedBy.startsWith("R: ")) {
+                    depositTypeItem.getValue().setDepositRequestedBy(RESPONDENT_TITLE);
+                } else if (dynamicRequestedBy.startsWith("C: ")) {
+                    depositTypeItem.getValue().setDepositRequestedBy(CLAIMANT_TITLE);
+                } else if (dynamicRequestedBy.equals("Tribunal")) {
+                    depositTypeItem.getValue().setDepositRequestedBy("Tribunal");
+                } else {
+                    errors.add(UNABLE_TO_FIND_PARTY);
+                }
+
+                var dynamicRefundedTo = depositTypeItem.getValue().getDynamicDepositRefundedTo().getValue().getCode();
+                if (dynamicRefundedTo.startsWith("R: ")) {
+                    depositTypeItem.getValue().setDepositRefundedTo(RESPONDENT_TITLE);
+                } else if (dynamicRefundedTo.startsWith("C: ")) {
+                    depositTypeItem.getValue().setDepositRefundedTo(CLAIMANT_TITLE);
+                } else {
+                    errors.add(UNABLE_TO_FIND_PARTY);
+                }
+
             }
         }
         return errors;

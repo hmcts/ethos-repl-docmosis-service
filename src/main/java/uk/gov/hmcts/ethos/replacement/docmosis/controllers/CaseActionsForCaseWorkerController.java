@@ -30,7 +30,6 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrors;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityNoErrors;
 
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 
@@ -40,6 +39,10 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclist.DepositOrderDynamicList;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclist.RespondentRepresentativeDynamicList;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclist.RestrictedReportingDynamicList;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.AddSingleCaseToMultipleService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCreationForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseManagementForCaseWorkerService;
@@ -379,7 +382,7 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
         var caseData = ccdRequest.getCaseDetails().getCaseData();
-        DynamicListHelper.dynamicRespondentRepresentativeNames(caseData);
+        RespondentRepresentativeDynamicList.dynamicRespondentRepresentativeNames(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
     }
@@ -452,6 +455,31 @@ public class CaseActionsForCaseWorkerController {
 
         var caseData = ccdRequest.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
+        eventValidationService.validateRestrictedReportNames(caseData);
+
+        return getCallbackRespEntityNoErrors(caseData);
+    }
+
+    @PostMapping(value = "/dynamicRestrictedReporting", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates a dynamic list for restricted reporting")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> dynamicRestrictedReporting(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DYNAMIC RESTRICTED NAMES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
+        RestrictedReportingDynamicList.dynamicRestrictedReporting(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
     }
@@ -801,6 +829,30 @@ public class CaseActionsForCaseWorkerController {
         List<String> errors = eventValidationService.validateDepositRefunded(caseData);
 
         return getCallbackRespEntityErrors(errors, caseData);
+    }
+
+    @PostMapping(value = "/dynamicDepositOrders", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the dynamic names in the deposit orders")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully",
+                    response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> dynamicDepositOrders(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DYNAMIC DEPOSIT NAMES ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
+        DepositOrderDynamicList.dynamicDepositOrder(caseData);
+
+        return getCallbackRespEntityNoErrors(caseData);
     }
 
     @PostMapping(value = "/dynamicListOffices", consumes = APPLICATION_JSON_VALUE)

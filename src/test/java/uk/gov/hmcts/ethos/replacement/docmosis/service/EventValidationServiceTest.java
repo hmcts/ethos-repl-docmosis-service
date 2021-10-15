@@ -449,4 +449,10 @@ public class EventValidationServiceTest {
         assertEquals(1, errors.size());
         assertEquals(INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE, errors.get(0));
     }
+
+    @Test
+    public void validateRestrictedBy() {
+        eventValidationService.validateRestrictedReportNames(caseDetails2.getCaseData());
+        assertEquals("Claimant",caseDetails2.getCaseData().getRestrictedReporting().getRequestedBy());
+    }
 }

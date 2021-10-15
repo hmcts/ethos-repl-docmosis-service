@@ -190,43 +190,23 @@ public class Helper {
         }
     }
 
-    public static DynamicValueType getDynamicValue(String value) {
-
-        var dynamicValueType = new DynamicValueType();
-        dynamicValueType.setCode(value);
-        dynamicValueType.setLabel(value);
-
-        return dynamicValueType;
-
-    }
-
-    public static DynamicValueType getDynamicCodeLabel(String code, String label) {
-
-        var dynamicValueType = new DynamicValueType();
-        dynamicValueType.setCode(code);
-        dynamicValueType.setLabel(label);
-
-        return dynamicValueType;
-
-    }
-
     public static List<DynamicValueType> getDefaultBfListItems() {
         return new ArrayList<>(Arrays.asList(
-                getDynamicValue(BF_ACTION_ACAS),
-                getDynamicValue(BF_ACTION_CASE_LISTED),
-                getDynamicValue(BF_ACTION_CASE_PAPERS),
-                getDynamicValue(BF_ACTION_CASE_TRANSFERRED),
-                getDynamicValue(BF_ACTION_DRAFT),
-                getDynamicValue(BF_ACTION_ENQUIRY_ISSUED),
-                getDynamicValue(BF_ACTION_ENQUIRY_RECEIVED),
-                getDynamicValue(BF_ACTION_EXHIBITS),
-                getDynamicValue(BF_ACTION_INTERLOCUTORY),
-                getDynamicValue(BF_ACTION_IT3_RECEIVED),
-                getDynamicValue(BF_ACTION_OTHER_ACTION),
-                getDynamicValue(BF_ACTION_POSTPONEMENT_REQUESTED),
-                getDynamicValue(BF_ACTION_REFER_CHAIRMAN),
-                getDynamicValue(BF_ACTION_REPLY_TO_ENQUIRY),
-                getDynamicValue(BF_ACTION_STRIKING_OUT_WARNING)));
+                DynamicListHelper.getDynamicValue(BF_ACTION_ACAS),
+                DynamicListHelper.getDynamicValue(BF_ACTION_CASE_LISTED),
+                DynamicListHelper.getDynamicValue(BF_ACTION_CASE_PAPERS),
+                DynamicListHelper.getDynamicValue(BF_ACTION_CASE_TRANSFERRED),
+                DynamicListHelper.getDynamicValue(BF_ACTION_DRAFT),
+                DynamicListHelper.getDynamicValue(BF_ACTION_ENQUIRY_ISSUED),
+                DynamicListHelper.getDynamicValue(BF_ACTION_ENQUIRY_RECEIVED),
+                DynamicListHelper.getDynamicValue(BF_ACTION_EXHIBITS),
+                DynamicListHelper.getDynamicValue(BF_ACTION_INTERLOCUTORY),
+                DynamicListHelper.getDynamicValue(BF_ACTION_IT3_RECEIVED),
+                DynamicListHelper.getDynamicValue(BF_ACTION_OTHER_ACTION),
+                DynamicListHelper.getDynamicValue(BF_ACTION_POSTPONEMENT_REQUESTED),
+                DynamicListHelper.getDynamicValue(BF_ACTION_REFER_CHAIRMAN),
+                DynamicListHelper.getDynamicValue(BF_ACTION_REPLY_TO_ENQUIRY),
+                DynamicListHelper.getDynamicValue(BF_ACTION_STRIKING_OUT_WARNING)));
     }
 
     public static List<String> hearingMidEventValidation(CaseData caseData) {
@@ -319,7 +299,7 @@ public class Helper {
 
             if (!currentOffice.equals(office)) {
 
-                offices.add(getDynamicValue(office));
+                offices.add(DynamicListHelper.getDynamicValue(office));
             }
         }
 
