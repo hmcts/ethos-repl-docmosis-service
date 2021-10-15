@@ -481,10 +481,10 @@ public class ExcelActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        List<String> errors = new ArrayList<>();
         var multipleDetails = multipleRequest.getCaseDetails();
 
-        errors.addAll(multipleCloseEventValidationService.validateJurisdictionCollections(userToken, multipleDetails));
+        List<String> errors = new ArrayList<>(multipleCloseEventValidationService.validateJurisdictionCollections(
+                userToken, multipleDetails));
 
         if (!errors.isEmpty()) {
             return getMultipleCallbackRespEntity(errors, multipleDetails);
