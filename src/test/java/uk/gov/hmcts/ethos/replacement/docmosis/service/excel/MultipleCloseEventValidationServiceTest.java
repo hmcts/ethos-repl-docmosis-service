@@ -60,10 +60,9 @@ public class MultipleCloseEventValidationServiceTest {
                 errors)
         ).thenReturn(new ArrayList<>());
 
-        multipleCloseEventValidationService.validateJurisdictionCollections(
-                userToken,
-                multipleDetails,
-                errors);
+        List<String> errors = multipleCloseEventValidationService.validateJurisdictionCollections(
+                                userToken,
+                                multipleDetails);
 
         assertEquals(0, errors.size());
     }
@@ -98,10 +97,9 @@ public class MultipleCloseEventValidationServiceTest {
         doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
                 eq(false), eq(true), eq(new ArrayList<>()));
 
-        multipleCloseEventValidationService.validateJurisdictionCollections(
+        List<String> errors = multipleCloseEventValidationService.validateJurisdictionCollections(
                 userToken,
-                multipleDetails,
-                errors);
+                multipleDetails);
 
         assertEquals(1, errors.size());
         assertEquals("245004/2020 - " + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
@@ -138,10 +136,9 @@ public class MultipleCloseEventValidationServiceTest {
         doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
                 eq(false), eq(true), eq(new ArrayList<>()));
 
-        multipleCloseEventValidationService.validateJurisdictionCollections(
+        List<String> errors = multipleCloseEventValidationService.validateJurisdictionCollections(
                 userToken,
-                multipleDetails,
-                errors);
+                multipleDetails);
 
         assertEquals(0, errors.size());
     }

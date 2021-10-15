@@ -7,12 +7,13 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 
 @Slf4j
-@Service("multipleSingleDisposeEventValidationService")
+@Service("multipleCloseEventValidationService")
 public class MultipleCloseEventValidationService {
 
     private final SingleCasesReadingService singleCasesReadingService;
@@ -28,15 +29,15 @@ public class MultipleCloseEventValidationService {
         this.eventValidationService = eventValidationService;
     }
 
-    public void validateJurisdictionCollections(String userToken, MultipleDetails multipleDetails,
-                                                List<String> errors) {
+    public List<String> validateJurisdictionCollections(String userToken, MultipleDetails multipleDetails) {
+        List<String> errors = new ArrayList<>();
         var multipleData = multipleDetails.getCaseData();
 
         List<String> ethosCaseRefCollection = multipleHelperService.getEthosCaseRefCollection(userToken, multipleData,
                 errors);
 
         if (ethosCaseRefCollection.isEmpty()) {
-            return;
+            return errors;
         }
 
         List<SubmitEvent> submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
@@ -47,5 +48,7 @@ public class MultipleCloseEventValidationService {
             eventValidationService.validateJurisdictionOutcome(caseData, event.getState().equals(REJECTED_STATE),
                     true, errors);
         }
+
+        return errors;
     }
 }

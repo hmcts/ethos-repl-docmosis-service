@@ -484,7 +484,7 @@ public class ExcelActionsController {
         List<String> errors = new ArrayList<>();
         var multipleDetails = multipleRequest.getCaseDetails();
 
-        multipleCloseEventValidationService.validateJurisdictionCollections(userToken, multipleDetails, errors);
+        errors.addAll(multipleCloseEventValidationService.validateJurisdictionCollections(userToken, multipleDetails));
 
         if (!errors.isEmpty()) {
             return getMultipleCallbackRespEntity(errors, multipleDetails);

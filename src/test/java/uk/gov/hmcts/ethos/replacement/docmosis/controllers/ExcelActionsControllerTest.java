@@ -25,6 +25,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -33,8 +35,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -326,6 +327,8 @@ public class ExcelActionsControllerTest {
     @Test
     public void closeMultiple() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        when(multipleCloseEventValidationService.validateJurisdictionCollections(eq(AUTH_TOKEN),
+                isA(MultipleDetails.class))).thenReturn(new ArrayList<>());
         mvc.perform(post(CLOSE_MULTIPLE_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -333,6 +336,21 @@ public class ExcelActionsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void closeMultipleValidationErrors() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        when(multipleCloseEventValidationService.validateJurisdictionCollections(eq(AUTH_TOKEN),
+                isA(MultipleDetails.class))).thenReturn(List.of("some error"));
+        mvc.perform(post(CLOSE_MULTIPLE_URL)
+                        .content(requestContent.toString())
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.warnings", nullValue()));
     }
 
