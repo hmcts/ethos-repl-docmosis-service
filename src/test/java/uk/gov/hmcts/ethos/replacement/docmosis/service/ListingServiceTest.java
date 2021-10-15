@@ -747,8 +747,21 @@ public class ListingServiceTest {
                 "singlesTotal=1, multiplesTotal=0, dateOfAcceptance=null, respondentET3=null, respondentET4=null, listingHistory=null, ConNoneTotal=null, ConStdTotal=null, " +
                 "ConFastTotal=null, ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null, " +
                 "ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, xConOpen26wkTotal=null, " +
-                "xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null), " +
-                "localReportsDetail=[AdhocReportTypeItem(id=null, value=AdhocReportType(reportDate=null, reportOffice=null, receiptDate=null, " +
+                "xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
+                + "acceptedClaimServedDay1Total=null, acceptedClaimServedDay1Percent=null, "
+                + "rejectedClaimServedDay1Total=null, rejectedClaimServedDay1Percent=null, "
+                + "acceptedClaimServedDay2Total=null, acceptedClaimServedDay2Percent=null, "
+                + "rejectedClaimServedDay2Total=null, rejectedClaimServedDay2Percent=null, "
+                + "acceptedClaimServedDay3Total=null, acceptedClaimServedDay3Percent=null, "
+                + "rejectedClaimServedDay3Total=null, rejectedClaimServedDay3Percent=null, "
+                + "acceptedClaimServedDay4Total=null, acceptedClaimServedDay4Percent=null, "
+                + "rejectedClaimServedDay4Total=null, rejectedClaimServedDay4Percent=null, "
+                + "acceptedClaimServedDay5Total=null, acceptedClaimServedDay5Percent=null, "
+                + "rejectedClaimServedDay5Total=null, rejectedClaimServedDay5Percent=null, "
+                + "acceptedClaimServed6PlusDaysTotal=null, acceptedClaimServed6PlusDaysPercent=null, "
+                + "rejectedClaimServed6PlusDaysTotal=null, rejectedClaimServed6PlusDaysPercent=null, "
+                + "acceptedClaimServedTotal=null, rejectedClaimServedTotal=null, claimServedItems=null), "
+                + "localReportsDetail=[AdhocReportTypeItem(id=null, value=AdhocReportType(reportDate=null, reportOffice=null, receiptDate=null, " +
                 "hearingDate=null, date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=4210000/2019, " +
                 "multipleRef=null, multSub=null, hearingNumber=null, hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, " +
                 "clerk=Steve Jones, hearingSitAlone=null, hearingJudge=null, judgeType=null, judgementDateSent=null, position=null, dateToPosition=null, " +
@@ -767,7 +780,22 @@ public class ListingServiceTest {
                 "dateOfAcceptance=2019-12-12, respondentET3=null, respondentET4=null, listingHistory=null, ConNoneTotal=null, ConStdTotal=null, ConFastTotal=null, " +
                 "ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null, " +
                 "ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, " +
-                "xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null))])";
+                "xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, "
+                + "xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
+                +  "acceptedClaimServedDay1Total=null, acceptedClaimServedDay1Percent=null, "
+                +  "rejectedClaimServedDay1Total=null, rejectedClaimServedDay1Percent=null, "
+                +  "acceptedClaimServedDay2Total=null, acceptedClaimServedDay2Percent=null, "
+                +  "rejectedClaimServedDay2Total=null, rejectedClaimServedDay2Percent=null, "
+                +  "acceptedClaimServedDay3Total=null, acceptedClaimServedDay3Percent=null, "
+                +  "rejectedClaimServedDay3Total=null, rejectedClaimServedDay3Percent=null, "
+                +  "acceptedClaimServedDay4Total=null, acceptedClaimServedDay4Percent=null, "
+                +  "rejectedClaimServedDay4Total=null, rejectedClaimServedDay4Percent=null, "
+                +  "acceptedClaimServedDay5Total=null, acceptedClaimServedDay5Percent=null, "
+                +  "rejectedClaimServedDay5Total=null, rejectedClaimServedDay5Percent=null, "
+                +  "acceptedClaimServed6PlusDaysTotal=null, acceptedClaimServed6PlusDaysPercent=null, "
+                +  "rejectedClaimServed6PlusDaysTotal=null, rejectedClaimServed6PlusDaysPercent=null, "
+                +  "acceptedClaimServedTotal=null, rejectedClaimServedTotal=null, claimServedItems=null"
+                +"))])";
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
         when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
@@ -777,7 +805,7 @@ public class ListingServiceTest {
 
     @Test
     public void generateClaimsAcceptedReportDataForGlasgow() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
+         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
                 "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
                 "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
                 "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
@@ -802,7 +830,21 @@ public class ListingServiceTest {
                 "respondentET4=null, listingHistory=null, ConNoneTotal=null, ConStdTotal=null, ConFastTotal=null, ConOpenTotal=null, ConNone26wkTotal=null, " +
                 "ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null, ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, " +
                 "ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, " +
-                "xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null), " +
+                "xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
+                +  "acceptedClaimServedDay1Total=null, acceptedClaimServedDay1Percent=null, "
+                +  "rejectedClaimServedDay1Total=null, rejectedClaimServedDay1Percent=null, "
+                +  "acceptedClaimServedDay2Total=null, acceptedClaimServedDay2Percent=null, "
+                +  "rejectedClaimServedDay2Total=null, rejectedClaimServedDay2Percent=null, "
+                +  "acceptedClaimServedDay3Total=null, acceptedClaimServedDay3Percent=null, "
+                +  "rejectedClaimServedDay3Total=null, rejectedClaimServedDay3Percent=null, "
+                +  "acceptedClaimServedDay4Total=null, acceptedClaimServedDay4Percent=null, "
+                +  "rejectedClaimServedDay4Total=null, rejectedClaimServedDay4Percent=null, "
+                +  "acceptedClaimServedDay5Total=null, acceptedClaimServedDay5Percent=null, "
+                +  "rejectedClaimServedDay5Total=null, rejectedClaimServedDay5Percent=null, "
+                +  "acceptedClaimServed6PlusDaysTotal=null, acceptedClaimServed6PlusDaysPercent=null, "
+                +  "rejectedClaimServed6PlusDaysTotal=null, rejectedClaimServed6PlusDaysPercent=null, "
+                +  "acceptedClaimServedTotal=null, rejectedClaimServedTotal=null, claimServedItems=null"
+                + "), " +
                 "localReportsDetail=[AdhocReportTypeItem(id=null, value=AdhocReportType(reportDate=null, reportOffice=null, receiptDate=null, " +
                 "hearingDate=null, date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=4210000/2019, " +
                 "multipleRef=null, multSub=null, hearingNumber=null, hearingType=null, hearingTelConf=null, hearingDuration=null, hearingClerk=null, " +
@@ -822,7 +864,21 @@ public class ListingServiceTest {
                 "dateOfAcceptance=2019-12-12, respondentET3=null, respondentET4=null, listingHistory=null, ConNoneTotal=null, ConStdTotal=null, " +
                 "ConFastTotal=null, ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, " +
                 "ConNone26wkTotalPerCent=null, ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, " +
-                "xConFast26wkTotal=null, xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null))])";
+                "xConFast26wkTotal=null, xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
+                +  "acceptedClaimServedDay1Total=null, acceptedClaimServedDay1Percent=null, "
+                 +  "rejectedClaimServedDay1Total=null, rejectedClaimServedDay1Percent=null, "
+                 +  "acceptedClaimServedDay2Total=null, acceptedClaimServedDay2Percent=null, "
+                 +  "rejectedClaimServedDay2Total=null, rejectedClaimServedDay2Percent=null, "
+                 +  "acceptedClaimServedDay3Total=null, acceptedClaimServedDay3Percent=null, "
+                 +  "rejectedClaimServedDay3Total=null, rejectedClaimServedDay3Percent=null, "
+                 +  "acceptedClaimServedDay4Total=null, acceptedClaimServedDay4Percent=null, "
+                 +  "rejectedClaimServedDay4Total=null, rejectedClaimServedDay4Percent=null, "
+                 +  "acceptedClaimServedDay5Total=null, acceptedClaimServedDay5Percent=null, "
+                 +  "rejectedClaimServedDay5Total=null, rejectedClaimServedDay5Percent=null, "
+                 +  "acceptedClaimServed6PlusDaysTotal=null, acceptedClaimServed6PlusDaysPercent=null, "
+                 +  "rejectedClaimServed6PlusDaysTotal=null, rejectedClaimServed6PlusDaysPercent=null, "
+                 +  "acceptedClaimServedTotal=null, rejectedClaimServedTotal=null, claimServedItems=null"
+                +  "))])";
         listingDetails.setCaseTypeId(SCOTLAND_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
         when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
@@ -867,7 +923,22 @@ public class ListingServiceTest {
                 "ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null, " +
                 "ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null," +
                 " xConFast26wkTotal=null, xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, " +
-                "xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null), localReportsSummary=null, localReportsSummaryHdr2=null, "
+                "xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
+                +  "acceptedClaimServedDay1Total=null, acceptedClaimServedDay1Percent=null, "
+                +  "rejectedClaimServedDay1Total=null, rejectedClaimServedDay1Percent=null, "
+                +  "acceptedClaimServedDay2Total=null, acceptedClaimServedDay2Percent=null, "
+                +  "rejectedClaimServedDay2Total=null, rejectedClaimServedDay2Percent=null, "
+                +  "acceptedClaimServedDay3Total=null, acceptedClaimServedDay3Percent=null, "
+                +  "rejectedClaimServedDay3Total=null, rejectedClaimServedDay3Percent=null, "
+                +  "acceptedClaimServedDay4Total=null, acceptedClaimServedDay4Percent=null, "
+                +  "rejectedClaimServedDay4Total=null, rejectedClaimServedDay4Percent=null, "
+                +  "acceptedClaimServedDay5Total=null, acceptedClaimServedDay5Percent=null, "
+                +  "rejectedClaimServedDay5Total=null, rejectedClaimServedDay5Percent=null, "
+                +  "acceptedClaimServed6PlusDaysTotal=null, acceptedClaimServed6PlusDaysPercent=null, "
+                +  "rejectedClaimServed6PlusDaysTotal=null, rejectedClaimServed6PlusDaysPercent=null, "
+                +  "acceptedClaimServedTotal=null, rejectedClaimServedTotal=null, claimServedItems=null"
+                + "), "
+                + "localReportsSummary=null, localReportsSummaryHdr2=null, "
                 + "localReportsSummary2=null, localReportsDetailHdr=AdhocReportType(reportDate=null, "
                 + "reportOffice=Manchester, receiptDate=null, hearingDate=null, date=null, full=null, half=null, "
                 + "mins=null, total=null, eeMember=null, erMember=null, caseReference=null, multipleRef=null, "
@@ -895,7 +966,22 @@ public class ListingServiceTest {
                 "ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null, ConOpen26wkTotal=null, " +
                 "ConNone26wkTotalPerCent=null, ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null," +
                 " xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, " +
-                "xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null), localReportsDetail=[AdhocReportTypeItem(id=null, "
+                "xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
+                +  "acceptedClaimServedDay1Total=null, acceptedClaimServedDay1Percent=null, "
+                +  "rejectedClaimServedDay1Total=null, rejectedClaimServedDay1Percent=null, "
+                +  "acceptedClaimServedDay2Total=null, acceptedClaimServedDay2Percent=null, "
+                +  "rejectedClaimServedDay2Total=null, rejectedClaimServedDay2Percent=null, "
+                +  "acceptedClaimServedDay3Total=null, acceptedClaimServedDay3Percent=null, "
+                +  "rejectedClaimServedDay3Total=null, rejectedClaimServedDay3Percent=null, "
+                +  "acceptedClaimServedDay4Total=null, acceptedClaimServedDay4Percent=null, "
+                +  "rejectedClaimServedDay4Total=null, rejectedClaimServedDay4Percent=null, "
+                +  "acceptedClaimServedDay5Total=null, acceptedClaimServedDay5Percent=null, "
+                +  "rejectedClaimServedDay5Total=null, rejectedClaimServedDay5Percent=null, "
+                +  "acceptedClaimServed6PlusDaysTotal=null, acceptedClaimServed6PlusDaysPercent=null, "
+                +  "rejectedClaimServed6PlusDaysTotal=null, rejectedClaimServed6PlusDaysPercent=null, "
+                +  "acceptedClaimServedTotal=null, rejectedClaimServedTotal=null, claimServedItems=null"
+                + "), "
+                + "localReportsDetail=[AdhocReportTypeItem(id=null, "
                 + "value=AdhocReportType(reportDate=null, reportOffice=Manchester, receiptDate=null, hearingDate=null, "
                 + "date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, "
                 + "caseReference=4210000/2019, multipleRef=null, multSub=null, hearingNumber=null, hearingType=null, "
@@ -922,7 +1008,21 @@ public class ListingServiceTest {
                 "ConStdTotal=null, ConFastTotal=null, ConOpenTotal=null, ConNone26wkTotal=null, ConStd26wkTotal=null, ConFast26wkTotal=null," +
                 " ConOpen26wkTotal=null, ConNone26wkTotalPerCent=null, ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, " +
                 "ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, xConOpen26wkTotal=null, " +
-                "xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null))])";
+                "xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
+                +  "acceptedClaimServedDay1Total=null, acceptedClaimServedDay1Percent=null, "
+                +  "rejectedClaimServedDay1Total=null, rejectedClaimServedDay1Percent=null, "
+                +  "acceptedClaimServedDay2Total=null, acceptedClaimServedDay2Percent=null, "
+                +  "rejectedClaimServedDay2Total=null, rejectedClaimServedDay2Percent=null, "
+                +  "acceptedClaimServedDay3Total=null, acceptedClaimServedDay3Percent=null, "
+                +  "rejectedClaimServedDay3Total=null, rejectedClaimServedDay3Percent=null, "
+                +  "acceptedClaimServedDay4Total=null, acceptedClaimServedDay4Percent=null, "
+                +  "rejectedClaimServedDay4Total=null, rejectedClaimServedDay4Percent=null, "
+                +  "acceptedClaimServedDay5Total=null, acceptedClaimServedDay5Percent=null, "
+                +  "rejectedClaimServedDay5Total=null, rejectedClaimServedDay5Percent=null, "
+                +  "acceptedClaimServed6PlusDaysTotal=null, acceptedClaimServed6PlusDaysPercent=null, "
+                +  "rejectedClaimServed6PlusDaysTotal=null, rejectedClaimServed6PlusDaysPercent=null, "
+                +  "acceptedClaimServedTotal=null, rejectedClaimServedTotal=null, claimServedItems=null"
+                +"))])";
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(LIVE_CASELOAD_REPORT);
         when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
@@ -967,7 +1067,21 @@ public class ListingServiceTest {
                 + "ConNone26wkTotalPerCent=null, ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, "
                 + "ConOpen26wkTotalPerCent=null, xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, "
                 + "xConOpen26wkTotal=null, xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, "
-                + "xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null), localReportsSummary=null, "
+                + "xConFast26wkTotalPerCent=null, xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
+                +  "acceptedClaimServedDay1Total=null, acceptedClaimServedDay1Percent=null, "
+                +  "rejectedClaimServedDay1Total=null, rejectedClaimServedDay1Percent=null, "
+                +  "acceptedClaimServedDay2Total=null, acceptedClaimServedDay2Percent=null, "
+                +  "rejectedClaimServedDay2Total=null, rejectedClaimServedDay2Percent=null, "
+                +  "acceptedClaimServedDay3Total=null, acceptedClaimServedDay3Percent=null, "
+                +  "rejectedClaimServedDay3Total=null, rejectedClaimServedDay3Percent=null, "
+                +  "acceptedClaimServedDay4Total=null, acceptedClaimServedDay4Percent=null, "
+                +  "rejectedClaimServedDay4Total=null, rejectedClaimServedDay4Percent=null, "
+                +  "acceptedClaimServedDay5Total=null, acceptedClaimServedDay5Percent=null, "
+                +  "rejectedClaimServedDay5Total=null, rejectedClaimServedDay5Percent=null, "
+                +  "acceptedClaimServed6PlusDaysTotal=null, acceptedClaimServed6PlusDaysPercent=null, "
+                +  "rejectedClaimServed6PlusDaysTotal=null, rejectedClaimServed6PlusDaysPercent=null, "
+                +  "acceptedClaimServedTotal=null, rejectedClaimServedTotal=null, claimServedItems=null"
+                + "), localReportsSummary=null, "
                 + "localReportsSummaryHdr2=null, "
                 + "localReportsSummary2=null, localReportsDetailHdr=AdhocReportType(reportDate=null, "
                 + "reportOffice=Scotland, receiptDate=null, "
@@ -998,7 +1112,20 @@ public class ListingServiceTest {
                 "ConStd26wkTotalPerCent=null, ConFast26wkTotalPerCent=null, ConOpen26wkTotalPerCent=null, " +
                 "xConNone26wkTotal=null, xConStd26wkTotal=null, xConFast26wkTotal=null, xConOpen26wkTotal=null, " +
                 "xConNone26wkTotalPerCent=null, xConStd26wkTotalPerCent=null, xConFast26wkTotalPerCent=null, " +
-                "xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null), "
+                "xConOpen26wkTotalPerCent=null, delayedDaysForFirstHearing=null, "
+                +  "acceptedClaimServedDay1Total=null, acceptedClaimServedDay1Percent=null, "
+                +  "rejectedClaimServedDay1Total=null, rejectedClaimServedDay1Percent=null, "
+                +  "acceptedClaimServedDay2Total=null, acceptedClaimServedDay2Percent=null, "
+                +  "rejectedClaimServedDay2Total=null, rejectedClaimServedDay2Percent=null, "
+                +  "acceptedClaimServedDay3Total=null, acceptedClaimServedDay3Percent=null, "
+                +  "rejectedClaimServedDay3Total=null, rejectedClaimServedDay3Percent=null, "
+                +  "acceptedClaimServedDay4Total=null, acceptedClaimServedDay4Percent=null, "
+                +  "rejectedClaimServedDay4Total=null, rejectedClaimServedDay4Percent=null, "
+                +  "acceptedClaimServedDay5Total=null, acceptedClaimServedDay5Percent=null, "
+                +  "rejectedClaimServedDay5Total=null, rejectedClaimServedDay5Percent=null, "
+                +  "acceptedClaimServed6PlusDaysTotal=null, acceptedClaimServed6PlusDaysPercent=null, "
+                +  "rejectedClaimServed6PlusDaysTotal=null, rejectedClaimServed6PlusDaysPercent=null, "
+                +  "acceptedClaimServedTotal=null, rejectedClaimServedTotal=null, claimServedItems=null), "
                 + "localReportsDetail=[])";
         listingDetails.setCaseTypeId(SCOTLAND_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(LIVE_CASELOAD_REPORT);

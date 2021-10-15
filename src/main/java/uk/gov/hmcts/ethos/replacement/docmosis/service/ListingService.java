@@ -24,6 +24,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.CasesCompl
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CcdReportDataSource;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims.ServingClaimsReport;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -45,6 +46,7 @@ public class ListingService {
     private final CcdClient ccdClient;
     private final CasesCompletedReport casesCompletedReport;
     private final TimeToFirstHearingReport timeToFirstHearingReport;
+    private final ServingClaimsReport servingClaimsReport;
 
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
@@ -222,6 +224,8 @@ public class ListingService {
                 return casesCompletedReport.generateReportData(listingDetails, submitEvents);
             case TIME_TO_FIRST_HEARING_REPORT:
                 return timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
+            case SERVING_CLAIMS_REPORT:
+                return servingClaimsReport.generateReportData(listingDetails, submitEvents);
             default:
                 return listingDetails.getCaseData();
         }
@@ -238,7 +242,8 @@ public class ListingService {
         } else {
             var dateToSearchFrom = LocalDate.parse(listingData.getListingDateFrom(),
                     OLD_DATE_TIME_PATTERN2).toString();
-            var dateToSearchTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2).toString();
+            var dateToSearchTo = LocalDate.parse(listingData.getListingDateTo(),
+                    OLD_DATE_TIME_PATTERN2).toString();
             return ccdClient.retrieveCasesGenericReportElasticSearch(authToken, UtilHelper.getListingCaseTypeId(
                     listingDetails.getCaseTypeId()), dateToSearchFrom, dateToSearchTo, listingData.getReportType());
         }
