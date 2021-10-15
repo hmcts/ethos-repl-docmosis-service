@@ -215,8 +215,8 @@ public class EventValidationService {
         }
     }
 
-    public void validateJurisdictionOutcome(CaseData caseData, boolean isRejected, List<String> errors,
-                                            boolean partOfMultiple) {
+    public void validateJurisdictionOutcome(CaseData caseData, boolean isRejected, boolean partOfMultiple,
+                                            List<String> errors) {
         if (caseData.getJurCodesCollection() != null && !caseData.getJurCodesCollection().isEmpty()) {
             for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
                 var jurCodesType = jurCodesTypeItem.getValue();

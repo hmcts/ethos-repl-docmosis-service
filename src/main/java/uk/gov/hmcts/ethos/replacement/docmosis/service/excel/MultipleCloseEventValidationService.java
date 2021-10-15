@@ -28,10 +28,12 @@ public class MultipleCloseEventValidationService {
         this.eventValidationService = eventValidationService;
     }
 
-    public void validateJurisdictionCollections(String userToken, MultipleDetails multipleDetails, List<String> errors) {
+    public void validateJurisdictionCollections(String userToken, MultipleDetails multipleDetails,
+                                                List<String> errors) {
         var multipleData = multipleDetails.getCaseData();
 
-        List<String> ethosCaseRefCollection = multipleHelperService.getEthosCaseRefCollection(userToken, multipleData, errors);
+        List<String> ethosCaseRefCollection = multipleHelperService.getEthosCaseRefCollection(userToken, multipleData,
+                errors);
 
         if (ethosCaseRefCollection.isEmpty()) {
             return;
@@ -42,7 +44,8 @@ public class MultipleCloseEventValidationService {
 
         for (SubmitEvent event : submitEvents) {
             var caseData = event.getCaseData();
-            eventValidationService.validateJurisdictionOutcome(caseData, event.getState().equals(REJECTED_STATE), errors, true);
+            eventValidationService.validateJurisdictionOutcome(caseData, event.getState().equals(REJECTED_STATE),
+                    true, errors);
         }
     }
 }

@@ -96,7 +96,7 @@ public class MultipleCloseEventValidationServiceTest {
         ).thenReturn(new ArrayList<>(Collections.singletonList(submitEvent)));
 
         doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
-                eq(false), eq(new ArrayList<>()), eq(true));
+                eq(false), eq(true), eq(new ArrayList<>()));
 
         multipleCloseEventValidationService.validateJurisdictionCollections(
                 userToken,
@@ -136,7 +136,7 @@ public class MultipleCloseEventValidationServiceTest {
         ).thenReturn(new ArrayList<>(Collections.singletonList(submitEvent)));
 
         doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
-                eq(false), eq(new ArrayList<>()), eq(true));
+                eq(false), eq(true), eq(new ArrayList<>()));
 
         multipleCloseEventValidationService.validateJurisdictionCollections(
                 userToken,

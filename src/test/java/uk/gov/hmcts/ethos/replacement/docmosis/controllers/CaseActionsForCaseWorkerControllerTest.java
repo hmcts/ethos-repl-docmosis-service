@@ -605,7 +605,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void aboutToStartDisposal() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
-                eq(false), eq(new ArrayList<>()), eq(false));
+                eq(false), eq(false), eq(new ArrayList<>()));
         mvc.perform(post(ABOUT_TO_START_DISPOSAL_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -620,7 +620,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void aboutToStartDisposalJurisdictionErrors() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
-                eq(false), eq(new ArrayList<>()), eq(false));
+                eq(false), eq(false), eq(new ArrayList<>()));
         mvc.perform(post(ABOUT_TO_START_DISPOSAL_URL)
                 .content(requestContent3.toString())
                 .header("Authorization", AUTH_TOKEN)
