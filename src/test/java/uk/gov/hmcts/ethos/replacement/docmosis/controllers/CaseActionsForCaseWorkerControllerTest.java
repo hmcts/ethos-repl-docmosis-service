@@ -604,6 +604,8 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void aboutToStartDisposal() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
+                eq(false), eq(new ArrayList<>()), eq(false));
         mvc.perform(post(ABOUT_TO_START_DISPOSAL_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
