@@ -20,6 +20,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleAmendService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleCloseEventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleCreationMidEventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleCreationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.excel.MultipleDynamicListFlagsService;
@@ -58,6 +59,7 @@ public class ExcelActionsController {
     private final MultipleUploadService multipleUploadService;
     private final MultipleDynamicListFlagsService multipleDynamicListFlagsService;
     private final MultipleMidEventValidationService multipleMidEventValidationService;
+    private final MultipleCloseEventValidationService multipleCloseEventValidationService;
     private final SubMultipleUpdateService subMultipleUpdateService;
     private final SubMultipleMidEventValidationService subMultipleMidEventValidationService;
     private final MultipleCreationMidEventValidationService multipleCreationMidEventValidationService;
@@ -479,11 +481,16 @@ public class ExcelActionsController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        List<String> errors = new ArrayList<>();
         var multipleDetails = multipleRequest.getCaseDetails();
 
-        multipleHelperService.sendCloseToSinglesWithoutConfirmation(userToken, multipleDetails, errors);
+        List<String> errors = new ArrayList<>(multipleCloseEventValidationService.validateJurisdictionCollections(
+                userToken, multipleDetails));
 
+        if (!errors.isEmpty()) {
+            return getMultipleCallbackRespEntity(errors, multipleDetails);
+        }
+
+        multipleHelperService.sendCloseToSinglesWithoutConfirmation(userToken, multipleDetails, errors);
         MultiplesHelper.resetMidFields(multipleDetails.getCaseData());
 
         return getMultipleCallbackRespEntity(errors, multipleDetails);

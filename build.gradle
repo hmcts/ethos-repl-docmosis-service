@@ -93,6 +93,7 @@ configurations {
 
 test {
     exclude '**/*ComponentTest*'
+    useJUnitPlatform()
 }
 
 task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verification') {

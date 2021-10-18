@@ -66,6 +66,14 @@
         "judgementFinal": "FinalJ",
         "judgementTextArea": "FinalJ"
       },
+      "jurCodesCollection": [
+        {
+          "id": "12121",
+          "value": {
+            "judgmentOutcome" : "something"
+          }
+        }
+      ],
       "locationType": "Manchester",
       "receiptDate": "2019-03-12",
       "representedType": {
@@ -183,7 +191,7 @@
     "id": "232323232",
     "jurisdiction": "Nothing",
     "case_type_id" : "Manchester_Dev",
-    "state": "UK"
+    "state": "Accepted"
   },
   "event_id": "1212121",
   "token": "string"
