@@ -242,6 +242,12 @@
           }
         }
       ],
+      "jurCodesCollection": [
+        {
+          "id": "12121",
+          "value": {}
+        }
+      ],
       "scheduleType": {
         "scheduleAttendance": [
           {
@@ -265,7 +271,7 @@
     "id": "232323232",
     "jurisdiction": "Nothing",
     "case_type_id" : "Manchester_Dev",
-    "state": "UK"
+    "state": "Closed"
   },
   "event_id": "1212121",
   "token": "string"

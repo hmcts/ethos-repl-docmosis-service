@@ -15,7 +15,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadES;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;

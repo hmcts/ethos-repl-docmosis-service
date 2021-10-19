@@ -122,6 +122,22 @@
       {
         "id" : "1233245",
         "value" : {
+          "dynamic_resp_rep_name": {
+            "value": {
+              "code": "Antonio Vazquez",
+              "label": "Antonio Vazquez"
+            },
+            "list_items": [
+              {
+                "code": "Antonio Vazquez",
+                "label": "Antonio Vazquez"
+              },
+              {
+                "code": "RepresentativeNameRespondent2",
+                "label": "RepresentativeNameRespondent2"
+              }
+            ]
+          },
           "resp_rep_name" : "Antonio Vazquez",
           "name_of_organisation": "RepresentativeOrganisation",
           "name_of_representative": "RepresentativeNameRespondent1",
@@ -144,6 +160,22 @@
       {
         "id" : "123345",
         "value" : {
+          "dynamic_resp_rep_name": {
+            "value": {
+              "code": "Antonio Vazquez",
+              "label": "Antonio Vazquez"
+            },
+            "list_items": [
+              {
+                "code": "Antonio Vazquez",
+                "label": "Antonio Vazquez"
+              },
+              {
+                "code": "RepresentativeNameRespondent2",
+                "label": "RepresentativeNameRespondent2"
+              }
+            ]
+          },
           "resp_rep_name" : "RepresentativeNameRespondent2",
           "name_of_organisation": "RepresentativeOrganisation",
           "name_of_representative": "RepresentativeNameRespondent2",

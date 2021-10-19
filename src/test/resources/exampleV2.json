@@ -66,6 +66,14 @@
         "judgementFinal": "FinalJ",
         "judgementTextArea": "FinalJ"
       },
+      "jurCodesCollection": [
+        {
+          "id": "12121",
+          "value": {
+            "judgmentOutcome" : "something"
+          }
+        }
+      ],
       "locationType": "Manchester",
       "receiptDate": "2019-03-12",
       "representedType": {
@@ -88,6 +96,42 @@
         "representative_preference": "Email",
         "representative_reference": "Ref"
       },
+      "repCollection": [
+        {
+          "id" : "123345",
+          "value" : {
+            "dynamic_resp_rep_name": {
+              "value": {
+                "code": "Robin",
+                "label": "Robin"
+              },
+              "list_items": [
+                {
+                  "code": "Robin",
+                  "label": "Robin"
+                }
+              ]
+            },
+            "resp_rep_name" : "Robin",
+            "name_of_organisation": "RepresentativeOrganisation",
+            "name_of_representative": "RepresentativeNameRespondent",
+            "representative_address": {
+              "AddressLine1": "56 Block C",
+              "AddressLine2": "Ellesmere Street",
+              "Country": "UK",
+              "County": "Lancashire",
+              "PostCode": "M3 KJR",
+              "PostTown": "Manchester"
+            },
+            "representative_dx": "222222222",
+            "representative_email_address": "example@gmail.com",
+            "representative_mobile_number": "07577136570",
+            "representative_phone_number": "07577136570",
+            "representative_preference": "Post",
+            "representative_reference": "1111111"
+          }
+        }
+      ],
       "respondentCollection": [
         {
           "id": "32342342",
@@ -147,7 +191,7 @@
     "id": "232323232",
     "jurisdiction": "Nothing",
     "case_type_id" : "Manchester_Dev",
-    "state": "UK"
+    "state": "Accepted"
   },
   "event_id": "1212121",
   "token": "string"

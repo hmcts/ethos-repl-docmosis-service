@@ -1,5 +1,18 @@
 {
   "case_details": {
+    "case_data":{
+      "caseType": "Single",
+      "jurCodesCollection": [
+        {
+          "id": "12121",
+          "value": {}
+        }
+      ]
+    },
+    "id": "232323232",
+    "state": "Accepted",
+    "jurisdiction": "Nothing",
+    "case_type_id" : "Manchester_Dev"
   },
   "event_id": "1212121",
   "token": "string"

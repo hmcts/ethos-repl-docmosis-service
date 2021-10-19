@@ -6,6 +6,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DIGITAL_FILE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_DO_NOT_POSTPONE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_LIVE_APPEAL;
@@ -33,6 +34,7 @@ public class FlagsImageHelper {
     private static final String COLOR_DARK_RED = "DarkRed";
     private static final String COLOR_WHITE = "White";
     private static final String COLOR_DEEP_PINK = "DeepPink";
+    private static final String COLOR_SLATE_GRAY = "SlateGray";
 
     private FlagsImageHelper() {
     }
@@ -50,6 +52,7 @@ public class FlagsImageHelper {
         setFlagImageFor(FLAG_SENSITIVE, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_RESERVED, flagsImageFileName, flagsImageAltText, caseData);
         setFlagImageFor(FLAG_ECC, flagsImageFileName, flagsImageAltText, caseData);
+        setFlagImageFor(FLAG_DIGITAL_FILE, flagsImageFileName, flagsImageAltText, caseData);
         flagsImageFileName.append(IMAGE_FILE_EXTENSION);
 
         caseData.setFlagsImageAltText(flagsImageAltText.toString());
@@ -93,6 +96,10 @@ public class FlagsImageHelper {
             case FLAG_ECC:
                 flagRequired = counterClaimMade(caseData);
                 flagColor = COLOR_OLIVE;
+                break;
+            case FLAG_DIGITAL_FILE:
+                flagRequired = digitalFile(caseData);
+                flagColor = COLOR_SLATE_GRAY;
                 break;
             default:
                 flagRequired = false;
@@ -185,6 +192,14 @@ public class FlagsImageHelper {
             } else {
                 return false;
             }
+        } else {
+            return false;
+        }
+    }
+
+    private static boolean digitalFile(CaseData caseData) {
+        if (caseData.getAdditionalCaseInfoType() != null) {
+            return YES.equals(caseData.getAdditionalCaseInfoType().getDigitalFile());
         } else {
             return false;
         }

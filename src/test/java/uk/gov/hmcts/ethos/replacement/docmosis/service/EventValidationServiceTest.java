@@ -1,15 +1,15 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
-import uk.gov.hmcts.ecm.common.model.listing.ListingData;
-import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
@@ -20,11 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
-@RunWith(SpringRunner.class)
-public class EventValidationServiceTest {
+@ExtendWith(SpringExtension.class)
+class EventValidationServiceTest {
 
     private static final LocalDate PAST_RECEIPT_DATE = LocalDate.now().minusDays(1);
     private static final LocalDate CURRENT_RECEIPT_DATE = LocalDate.now();
@@ -53,7 +55,7 @@ public class EventValidationServiceTest {
     private CaseData caseData;
     private MultipleData multipleData;
 
-    @Before
+    @BeforeEach
     public void setup() throws Exception {
         eventValidationService = new EventValidationService();
 
@@ -73,7 +75,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidatePastReceiptDate() {
+    void shouldValidatePastReceiptDate() {
         caseData.setReceiptDate(PAST_RECEIPT_DATE.toString());
 
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
@@ -83,7 +85,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateCurrentReceiptDate() {
+    void shouldValidateCurrentReceiptDate() {
         caseData.setReceiptDate(CURRENT_RECEIPT_DATE.toString());
 
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
@@ -93,7 +95,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateFutureReceiptDate() {
+    void shouldValidateFutureReceiptDate() {
         caseData.setReceiptDate(FUTURE_RECEIPT_DATE.toString());
 
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
@@ -102,20 +104,28 @@ public class EventValidationServiceTest {
         assertEquals(FUTURE_RECEIPT_DATE_ERROR_MESSAGE, errors.get(0));
     }
 
-    @Test
-    public void shouldValidateCaseState() {
-        caseDetails1.setState(SUBMITTED_STATE);
-        caseDetails1.getCaseData().setCaseType(MULTIPLE_CASE_TYPE);
+    @ParameterizedTest
+    @CsvSource({
+            MULTIPLE_CASE_TYPE + "," + SUBMITTED_STATE,
+            MULTIPLE_CASE_TYPE + "," + ACCEPTED_STATE,
+            SINGLE_CASE_TYPE + "," + SUBMITTED_STATE,
+            SINGLE_CASE_TYPE + "," + ACCEPTED_STATE
+    })
+    void shouldValidateCaseState(String caseType, String caseState) {
+        caseDetails1.getCaseData().setCaseType(caseType);
+        caseDetails1.setState(caseState);
 
         boolean validated = eventValidationService.validateCaseState(caseDetails1);
-        assertEquals(false, validated);
-        caseDetails1.setState(ACCEPTED_STATE);
-        validated = eventValidationService.validateCaseState(caseDetails1);
-        assertEquals(true, validated);
+
+        if (Objects.equals(caseType, MULTIPLE_CASE_TYPE) && Objects.equals(caseState, SUBMITTED_STATE)) {
+            assertFalse(validated);
+        } else {
+            assertTrue(validated);
+        }
     }
 
     @Test
-    public void shouldValidateReceiptDateLaterThanAcceptedDate() {
+    void shouldValidateReceiptDateLaterThanAcceptedDate() {
         caseData.setReceiptDate(CURRENT_RECEIPT_DATE.toString());
         CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
         casePreAcceptType.setDateAccepted(PAST_ACCEPTED_DATE.toString());
@@ -128,7 +138,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidatePastReceiptDateMultiple() {
+    void shouldValidatePastReceiptDateMultiple() {
         multipleData.setReceiptDate(PAST_RECEIPT_DATE.toString());
 
         List<String> errors = eventValidationService.validateReceiptDateMultiple(multipleData);
@@ -137,7 +147,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateFutureReceiptDateMultiple() {
+    void shouldValidateFutureReceiptDateMultiple() {
         multipleData.setReceiptDate(FUTURE_RECEIPT_DATE.toString());
 
         List<String> errors = eventValidationService.validateReceiptDateMultiple(multipleData);
@@ -147,14 +157,14 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateActiveRespondentsAllFound() {
+    void shouldValidateActiveRespondentsAllFound() {
         List<String> errors = eventValidationService.validateActiveRespondents(caseDetails1.getCaseData());
 
         assertEquals(0, errors.size());
     }
 
     @Test
-    public void shouldValidateActiveRespondentsNoneFound() {
+    void shouldValidateActiveRespondentsNoneFound() {
         List<String> errors = eventValidationService.validateActiveRespondents(caseDetails2.getCaseData());
 
         assertEquals(1, errors.size());
@@ -162,7 +172,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateReturnedFromJudgeDateBeforeReferredToJudgeDate() {
+    void shouldValidateReturnedFromJudgeDateBeforeReferredToJudgeDate() {
         List<String> errors = eventValidationService.validateET3ResponseFields(caseDetails1.getCaseData());
 
         assertEquals(1, errors.size());
@@ -170,14 +180,14 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateReturnedFromJudgeDateAndReferredToJudgeDateAreMissingDate() {
+    void shouldValidateReturnedFromJudgeDateAndReferredToJudgeDateAreMissingDate() {
         List<String> errors = eventValidationService.validateET3ResponseFields(caseDetails3.getCaseData());
 
         assertEquals(0, errors.size());
     }
 
     @Test
-    public void shouldValidateResponseReceivedDateIsFutureDate() {
+    void shouldValidateResponseReceivedDateIsFutureDate() {
         CaseData caseData = caseDetails1.getCaseData();
 
         caseData.getRespondentCollection().get(0).getValue().setResponseReceivedDate(PAST_RESPONSE_RECEIVED_DATE.toString());
@@ -191,7 +201,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateResponseReceivedDateForMissingDate() {
+    void shouldValidateResponseReceivedDateForMissingDate() {
         CaseData caseData = caseDetails3.getCaseData();
 
         List<String> errors = eventValidationService.validateET3ResponseFields(caseData);
@@ -200,7 +210,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateRespRepNamesWithEmptyRepCollection() {
+    void shouldValidateRespRepNamesWithEmptyRepCollection() {
         CaseData caseData = caseDetails1.getCaseData();
 
         List<String> errors = eventValidationService.validateRespRepNames(caseData);
@@ -209,7 +219,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateRespRepNamesWithMismatch() {
+    void shouldValidateRespRepNamesWithMismatch() {
         CaseData caseData = caseDetails2.getCaseData();
 
         List<String> errors = eventValidationService.validateRespRepNames(caseData);
@@ -218,7 +228,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateRespRepNamesWithMatch() {
+    void shouldValidateRespRepNamesWithMatch() {
         CaseData caseData = caseDetails3.getCaseData();
 
         List<String> errors = eventValidationService.validateRespRepNames(caseData);
@@ -227,7 +237,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateRespRepNamesWithNullRepCollection() {
+    void shouldValidateRespRepNamesWithNullRepCollection() {
         CaseData caseData = caseDetails4.getCaseData();
 
         List<String> errors = eventValidationService.validateRespRepNames(caseData);
@@ -236,7 +246,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateRespRepNamesWithMatchResponseName() {
+    void shouldValidateRespRepNamesWithMatchResponseName() {
         CaseData caseData = caseDetails5.getCaseData();
 
         List<String> errors = eventValidationService.validateRespRepNames(caseData);
@@ -245,7 +255,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateHearingNumberMatching() {
+    void shouldValidateHearingNumberMatching() {
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails1.getCaseData(),
                 caseDetails1.getCaseData().getCorrespondenceType(), caseDetails1.getCaseData().getCorrespondenceScotType());
 
@@ -253,7 +263,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateHearingNumberMismatch() {
+    void shouldValidateHearingNumberMismatch() {
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails2.getCaseData(),
                 caseDetails2.getCaseData().getCorrespondenceType(), caseDetails2.getCaseData().getCorrespondenceScotType());
 
@@ -262,7 +272,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateHearingNumberMissing() {
+    void shouldValidateHearingNumberMissing() {
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails3.getCaseData(),
                 caseDetails3.getCaseData().getCorrespondenceType(), caseDetails3.getCaseData().getCorrespondenceScotType());
 
@@ -270,7 +280,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateHearingNumberForEmptyHearings() {
+    void shouldValidateHearingNumberForEmptyHearings() {
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails4.getCaseData(),
                 caseDetails4.getCaseData().getCorrespondenceType(), caseDetails4.getCaseData().getCorrespondenceScotType());
 
@@ -279,7 +289,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateJurisdictionCodesWithDuplicatesCodesAndExistenceJudgement() {
+    void shouldValidateJurisdictionCodesWithDuplicatesCodesAndExistenceJudgement() {
         List<String> errors = new ArrayList<>();
         eventValidationService.validateJurisdictionCodes(caseDetails1.getCaseData(), errors);
 
@@ -289,7 +299,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateJurisdictionCodesWithUniqueCodes() {
+    void shouldValidateJurisdictionCodesWithUniqueCodes() {
         List<String> errors = new ArrayList<>();
         eventValidationService.validateJurisdictionCodes(caseDetails2.getCaseData(), errors);
 
@@ -297,7 +307,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateJurisdictionCodesWithEmptyCodes() {
+    void shouldValidateJurisdictionCodesWithEmptyCodes() {
         List<String> errors = new ArrayList<>();
         caseDetails3.getCaseData().setJudgementCollection(new ArrayList<>());
         eventValidationService.validateJurisdictionCodes(caseDetails3.getCaseData(), errors);
@@ -305,53 +315,54 @@ public class EventValidationServiceTest {
         assertEquals(0, errors.size());
     }
 
-    @Test
-    public void shouldValidateJurisdictionOutcomePresentAndMissingNotRejected() {
-        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(), false);
+     @ParameterizedTest
+     @CsvSource({"false,false", "true,false", "false,true", "true,true"})
+     void shouldValidateJurisdictionOutcomePresentAndMissing(boolean isRejected, boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(),
+                isRejected, partOfMultiple, errors);
 
         assertEquals(1, errors.size());
-        assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+        if (partOfMultiple) {
+            assertEquals(caseDetails1.getCaseData().getEthosCaseReference() + " - "
+                    + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+        } else {
+            assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+        }
     }
 
-    @Test
-    public void shouldValidateJurisdictionOutcomePresentNotRejected() {
-        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails2.getCaseData(), false);
+    @ParameterizedTest
+    @CsvSource({"false,false", "true,false", "false,true", "true,true"})
+    void shouldValidateJurisdictionOutcomePresent(boolean isRejected, boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails2.getCaseData(),
+                isRejected, partOfMultiple, errors);
 
         assertEquals(0, errors.size());
     }
 
-    @Test
-    public void shouldValidateJurisdictionOutcomeMissingNotRejected() {
-        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails3.getCaseData(), false);
+    @ParameterizedTest
+    @CsvSource({"false,false", "true,false", "false,true", "true,true"})
+    void shouldValidateJurisdictionOutcomeMissing(boolean isRejected, boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(caseDetails3.getCaseData(),
+                isRejected, partOfMultiple, errors);
 
-        assertEquals(1, errors.size());
-        assertEquals(MISSING_JURISDICTION_MESSAGE, errors.get(0));
+        if (isRejected) {
+            assertEquals(0, errors.size());
+        } else {
+            assertEquals(1, errors.size());
+            if (partOfMultiple) {
+                assertEquals(caseDetails1.getCaseData().getEthosCaseReference() + " - "
+                        + MISSING_JURISDICTION_MESSAGE, errors.get(0));
+            } else {
+                assertEquals(MISSING_JURISDICTION_MESSAGE, errors.get(0));
+            }
+        }
     }
 
     @Test
-    public void shouldValidateJurisdictionOutcomePresentAndMissingRejected() {
-        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(), true);
-
-        assertEquals(1, errors.size());
-        assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
-    }
-
-    @Test
-    public void shouldValidateJurisdictionOutcomePresentRejected() {
-        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails2.getCaseData(), true);
-
-        assertEquals(0, errors.size());
-    }
-
-    @Test
-    public void shouldValidateJurisdictionOutcomeMissingRejected() {
-        List<String> errors = eventValidationService.validateJurisdictionOutcome(caseDetails3.getCaseData(), true);
-
-        assertEquals(0, errors.size());
-    }
-
-    @Test
-    public void shouldValidateJurisdictionCodesWithinJudgement() {
+    void shouldValidateJurisdictionCodesWithinJudgement() {
         List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(caseDetails1.getCaseData());
 
         assertEquals(2, errors.size());
@@ -360,7 +371,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateJurisdictionCodesWithinJudgementEmptyJurCodesCollection() {
+    void shouldValidateJurisdictionCodesWithinJudgementEmptyJurCodesCollection() {
         List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(caseDetails3.getCaseData());
 
         assertEquals(1, errors.size());
@@ -368,7 +379,7 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateDepositRefunded() {
+    void shouldValidateDepositRefunded() {
         List<String> errors = eventValidationService.validateDepositRefunded(caseDetails3.getCaseData());
 
         assertEquals(1, errors.size());
@@ -376,18 +387,64 @@ public class EventValidationServiceTest {
     }
 
     @Test
-    public void shouldValidateNullDepositRefunded() {
+    void shouldValidateNullDepositRefunded() {
         List<String> errors = eventValidationService.validateDepositRefunded(caseDetails2.getCaseData());
 
         assertEquals(0, errors.size());
     }
 
     @Test
-    public void shouldValidateDepositRefundedWithNullAmount() {
+    void shouldValidateDepositRefundedWithNullAmount() {
         List<String> errors = eventValidationService.validateDepositRefunded(caseDetails1.getCaseData());
 
         assertEquals(1, errors.size());
         assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.get(0));
+    }
+
+    @Test
+    void shouldValidateReportDateRangeValidDates() {
+
+        var listingsCase = listingRequestValidDateRange.getCaseDetails().getCaseData();
+        var errors = eventValidationService.validateListingDateRange(
+                listingsCase.getListingDateFrom(),
+                listingsCase.getListingDateTo()
+        );
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    void shouldValidateReportDateRangeValidDates_30Days() {
+
+        var listingsCase = listingRequest30DaysValidRange.getCaseDetails().getCaseData();
+        var errors = eventValidationService.validateListingDateRange(
+                listingsCase.getListingDateFrom(),
+                listingsCase.getListingDateTo()
+        );
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    void shouldValidateReportDateRangeInvalidDates() {
+
+        var listingsCase = listingRequestInvalidDateRange.getCaseDetails().getCaseData();
+        var errors = eventValidationService.validateListingDateRange(
+                listingsCase.getListingDateFrom(),
+                listingsCase.getListingDateTo()
+        );
+        assertEquals(1, errors.size());
+        assertEquals(INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE, errors.get(0));
+    }
+
+    @Test
+    void shouldValidateReportDateRangeInvalidDates_31Days() {
+
+        var listingsCase = listingRequest31DaysInvalidRange.getCaseDetails().getCaseData();
+        var errors = eventValidationService.validateListingDateRange(
+                listingsCase.getListingDateFrom(),
+                listingsCase.getListingDateTo()
+        );
+        assertEquals(1, errors.size());
+        assertEquals(INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE, errors.get(0));
     }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
@@ -402,51 +459,5 @@ public class EventValidationServiceTest {
                 .getResource(jsonFileName)).toURI())));
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, ListingRequest.class);
-    }
-
-    @Test
-    public void shouldValidateReportDateRangeValidDates() {
-
-        var listingsCase = listingRequestValidDateRange.getCaseDetails().getCaseData();
-        var errors = eventValidationService.validateListingDateRange(
-                listingsCase.getListingDateFrom(),
-                listingsCase.getListingDateTo()
-        );
-        assertEquals(0, errors.size());
-    }
-
-    @Test
-    public void shouldValidateReportDateRangeValidDates_30Days() {
-
-        var listingsCase = listingRequest30DaysValidRange.getCaseDetails().getCaseData();
-        var errors = eventValidationService.validateListingDateRange(
-                listingsCase.getListingDateFrom(),
-                listingsCase.getListingDateTo()
-        );
-        assertEquals(0, errors.size());
-    }
-
-    @Test
-    public void shouldValidateReportDateRangeInvalidDates() {
-
-        var listingsCase = listingRequestInvalidDateRange.getCaseDetails().getCaseData();
-        var errors = eventValidationService.validateListingDateRange(
-                listingsCase.getListingDateFrom(),
-                listingsCase.getListingDateTo()
-        );
-        assertEquals(1, errors.size());
-        assertEquals(INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE, errors.get(0));
-    }
-
-    @Test
-    public void shouldValidateReportDateRangeInvalidDates_31Days() {
-
-        var listingsCase = listingRequest31DaysInvalidRange.getCaseDetails().getCaseData();
-        var errors = eventValidationService.validateListingDateRange(
-                listingsCase.getListingDateFrom(),
-                listingsCase.getListingDateTo()
-        );
-        assertEquals(1, errors.size());
-        assertEquals(INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE, errors.get(0));
     }
 }
