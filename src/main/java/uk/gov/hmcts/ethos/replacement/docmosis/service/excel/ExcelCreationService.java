@@ -164,15 +164,18 @@ public class ExcelCreationService {
 
         final int[] rowIndex = {1};
         orderedAllCasesList.forEach((String caseYear, Map<String, Object> caseYearList) ->
-                caseYearList.forEach((String caseNum, Object caseItem) -> {
-                            var multipleObject = isStringRefsList ? null : (MultipleObject) caseItem;
-                            var ethosCaseRef = isStringRefsList ? (String) caseItem : multipleObject.getEthosCaseRef();
-
-                            constructCaseExcelRow(workbook, sheet, rowIndex[0], ethosCaseRef, leadCase, multipleObject,
-                                    !subMultipleCollection.isEmpty());
-                            rowIndex[0]++;
-                        }
-                ));
+            caseYearList.forEach((String caseNum, Object caseItem) -> {
+                if (isStringRefsList) {
+                    constructCaseExcelRow(workbook, sheet, rowIndex[0], (String) caseItem, leadCase, null,
+                            !subMultipleCollection.isEmpty());
+                } else {
+                    var multipleObject = (MultipleObject) caseItem;
+                    constructCaseExcelRow(workbook, sheet, rowIndex[0], multipleObject.getEthosCaseRef(), leadCase,
+                            multipleObject, !subMultipleCollection.isEmpty());
+                }
+                rowIndex[0]++;
+            })
+        );
     }
 
     private void constructCaseExcelRow(XSSFWorkbook workbook, XSSFSheet sheet, int rowIndex, String ethosCaseRef,
