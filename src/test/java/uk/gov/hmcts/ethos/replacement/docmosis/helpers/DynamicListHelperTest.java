@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclist.DepositOrderDynamicList;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclist.RespondentRepresentativeDynamicList;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclist.RestrictedReportingDynamicList;
 
@@ -78,5 +79,16 @@ public class DynamicListHelperTest {
         dynamicValueType.setLabel("Judge");
         assertEquals(dynamicValueType, caseDetails4.getCaseData().getRestrictedReporting()
                 .getDynamicRequestedBy().getValue());
+    }
+
+    @Test
+    public void createDynamicDepositOrderList() {
+        DepositOrderDynamicList.dynamicDepositOrder(caseDetails1.getCaseData());
+        assertNotNull(caseDetails1.getCaseData().getDepositCollection());
+        var dynamicValueType = new DynamicValueType();
+        dynamicValueType.setCode("R: Antonio Vazquez");
+        dynamicValueType.setLabel("Antonio Vazquez");
+        assertEquals(dynamicValueType, caseDetails1.getCaseData().getDepositCollection().get(0)
+            .getValue().getDynamicDepositOrderAgainst().getValue());
     }
 }

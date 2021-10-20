@@ -123,13 +123,15 @@ public class EventValidationService {
 
     public void validateRestrictedReportNames(CaseData caseData) {
         if (caseData.getRestrictedReporting() != null) {
-            var dynamicListCode = caseData.getRestrictedReporting().getDynamicRequestedBy().getValue().getCode();
-            if (dynamicListCode.startsWith("R: ")) {
-                caseData.getRestrictedReporting().setRequestedBy(RESPONDENT_TITLE);
-            } else if (dynamicListCode.startsWith("C: ")) {
-                caseData.getRestrictedReporting().setRequestedBy(CLAIMANT_TITLE);
-            } else {
-                caseData.getRestrictedReporting().setRequestedBy(dynamicListCode);
+            if (caseData.getRestrictedReporting().getRequestedBy() != null) {
+                var dynamicListCode = caseData.getRestrictedReporting().getDynamicRequestedBy().getValue().getCode();
+                if (dynamicListCode.startsWith("R: ")) {
+                    caseData.getRestrictedReporting().setRequestedBy(RESPONDENT_TITLE);
+                } else if (dynamicListCode.startsWith("C: ")) {
+                    caseData.getRestrictedReporting().setRequestedBy(CLAIMANT_TITLE);
+                } else {
+                    caseData.getRestrictedReporting().setRequestedBy(dynamicListCode);
+                }
             }
         }
     }
@@ -314,33 +316,39 @@ public class EventValidationService {
                     errors.add(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR);
                 }
 
-                var dynamicOrderAgainst = depositTypeItem.getValue().getDynamicDepositOrderAgainst().getValue().getCode();
-                if (dynamicOrderAgainst.startsWith("R: ")) {
-                    depositTypeItem.getValue().setDepositOrderAgainst(RESPONDENT_TITLE);
-                } else if (dynamicOrderAgainst.startsWith("C: ")) {
-                    depositTypeItem.getValue().setDepositOrderAgainst(CLAIMANT_TITLE);
-                } else {
-                    errors.add(UNABLE_TO_FIND_PARTY);
+                if (depositTypeItem.getValue().getDynamicDepositOrderAgainst() != null){
+                    var dynamicOrderAgainst = depositTypeItem.getValue().getDynamicDepositOrderAgainst().getValue().getCode();
+                    if (dynamicOrderAgainst.startsWith("R:")) {
+                        depositTypeItem.getValue().setDepositOrderAgainst(RESPONDENT_TITLE);
+                    } else if (dynamicOrderAgainst.startsWith("C:")) {
+                        depositTypeItem.getValue().setDepositOrderAgainst(CLAIMANT_TITLE);
+                    } else {
+                        errors.add(UNABLE_TO_FIND_PARTY);
+                    }
                 }
 
-                var dynamicRequestedBy = depositTypeItem.getValue().getDynamicDepositRequestedBy().getValue().getCode();
-                if (dynamicRequestedBy.startsWith("R: ")) {
-                    depositTypeItem.getValue().setDepositRequestedBy(RESPONDENT_TITLE);
-                } else if (dynamicRequestedBy.startsWith("C: ")) {
-                    depositTypeItem.getValue().setDepositRequestedBy(CLAIMANT_TITLE);
-                } else if (dynamicRequestedBy.equals("Tribunal")) {
-                    depositTypeItem.getValue().setDepositRequestedBy("Tribunal");
-                } else {
-                    errors.add(UNABLE_TO_FIND_PARTY);
+                if (depositTypeItem.getValue().getDynamicDepositRequestedBy() != null) {
+                    var dynamicRequestedBy = depositTypeItem.getValue().getDynamicDepositRequestedBy().getValue().getCode();
+                    if (dynamicRequestedBy.startsWith("R:")) {
+                        depositTypeItem.getValue().setDepositRequestedBy(RESPONDENT_TITLE);
+                    } else if (dynamicRequestedBy.startsWith("C:")) {
+                        depositTypeItem.getValue().setDepositRequestedBy(CLAIMANT_TITLE);
+                    } else if (dynamicRequestedBy.equals("Tribunal")) {
+                        depositTypeItem.getValue().setDepositRequestedBy("Tribunal");
+                    } else {
+                        errors.add(UNABLE_TO_FIND_PARTY);
+                    }
                 }
 
-                var dynamicRefundedTo = depositTypeItem.getValue().getDynamicDepositRefundedTo().getValue().getCode();
-                if (dynamicRefundedTo.startsWith("R: ")) {
-                    depositTypeItem.getValue().setDepositRefundedTo(RESPONDENT_TITLE);
-                } else if (dynamicRefundedTo.startsWith("C: ")) {
-                    depositTypeItem.getValue().setDepositRefundedTo(CLAIMANT_TITLE);
-                } else {
-                    errors.add(UNABLE_TO_FIND_PARTY);
+                if (depositTypeItem.getValue().getDynamicDepositRefundedTo() != null){
+                    var dynamicRefundedTo = depositTypeItem.getValue().getDynamicDepositRefundedTo().getValue().getCode();
+                    if (dynamicRefundedTo.startsWith("R: ")) {
+                        depositTypeItem.getValue().setDepositRefundedTo(RESPONDENT_TITLE);
+                    } else if (dynamicRefundedTo.startsWith("C: ")) {
+                        depositTypeItem.getValue().setDepositRefundedTo(CLAIMANT_TITLE);
+                    } else {
+                        errors.add(UNABLE_TO_FIND_PARTY);
+                    }
                 }
 
             }
