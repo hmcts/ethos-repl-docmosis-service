@@ -9,17 +9,25 @@ import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import org.elasticsearch.common.Strings;
 import java.time.LocalDate;
-import java.time.Duration;
 import java.util.stream.Collectors;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+
+import java.time.Period;
 
 @Service
 @Slf4j
 public class ServingClaimsReport {
-private static final String SERVED_REJECTED_CLAIM = "Served Rejected Claim";
-    private static final String SERVED_ACCEPTED_CLAIM = "Served Accepted Claim";
+private static final String REJECTED_CLAIM = "Rejected Claim";
+    private static final String ACCEPTED_CLAIM = "Accepted Claim";
 
     public ListingData generateReportData(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
 
@@ -37,7 +45,9 @@ private static final String SERVED_REJECTED_CLAIM = "Served Rejected Claim";
         var listingData = listingDetails.getCaseData();
         var adhocReportType = new AdhocReportType();
         adhocReportType.setReportOffice(listingData.getListingVenue());
+        adhocReportType.setClaimServedItems(new ArrayList<>());
         listingData.setLocalReportsDetailHdr(adhocReportType);
+        listingData.setLocalReportsDetail(new ArrayList<>());
     }
 
     private void executeReport(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
@@ -51,40 +61,40 @@ private static final String SERVED_REJECTED_CLAIM = "Served Rejected Claim";
     private void populateLocalReportSummary(ListingData caseData, List<SubmitEvent> submitEvents){
 
         var adhocReportTypeItemsList = caseData.getLocalReportsDetail();
+
         if (adhocReportTypeItemsList != null && !adhocReportTypeItemsList.isEmpty()) {
             var adhocReportType = adhocReportTypeItemsList.get(0).getValue();
 
-            var totalServedAcceptedClaims = getTotalServedAcceptedClaims(adhocReportType);
+            setServedClaimsDetailsByDay(adhocReportType, 1);
 
-            //set day one details
-            setDay1ServedClaimsDetails(adhocReportType, totalServedAcceptedClaims);
+            setServedClaimsDetailsByDay(adhocReportType, 2);
 
-            //set day two details
+            setServedClaimsDetailsByDay(adhocReportType, 3);
 
-            //set day three details
+            setServedClaimsDetailsByDay(adhocReportType, 4);
 
-            //set day four details
+            setServedClaimsDetailsByDay(adhocReportType, 5);
 
-            //set day five details
-
-            //set day six plus details
+            setServedClaimsDetailsByDay(adhocReportType, 6);
         }
-        var haha = ";";
     }
 
     private void populateLocalReportDetail(ListingDetails listingDetails,
                                            List<SubmitEvent> submitEvents) {
         var listingData = listingDetails.getCaseData();
         var reportsDetails = listingData.getLocalReportsDetail();
+
+        var adhocReportTypeItem = new AdhocReportTypeItem();
         var adhocReportType = new AdhocReportType();
+            adhocReportType.setClaimServedItems(new ArrayList<>());
 
         for (var submitEvent : submitEvents) {
             setLocalReportsDetail(adhocReportType, submitEvent.getCaseData());
         }
 
-        var adhocReportTypeItem = new AdhocReportTypeItem();
         adhocReportTypeItem.setId(java.util.UUID.randomUUID().toString());
         adhocReportTypeItem.setValue(adhocReportType);
+
         reportsDetails.add(adhocReportTypeItem);
 
         listingDetails.getCaseData().setLocalReportsDetail(reportsDetails);
@@ -93,21 +103,54 @@ private static final String SERVED_REJECTED_CLAIM = "Served Rejected Claim";
     private void setLocalReportsDetail(AdhocReportType adhocReportType, CaseData caseData) {
 
         //set days to claims served
-        if (!Strings.isNullOrEmpty(caseData.getReceiptDate())) {
-            var caseReceiptDate = LocalDate.parse(caseData.getReceiptDate()).atStartOfDay();
-            var caseClaimServedDate = LocalDate.parse(caseData.getClaimServedDate()).atStartOfDay();
-            var duration = Duration.between(caseReceiptDate, caseClaimServedDate).abs();
+        if (!Strings.isNullOrEmpty(caseData.getReceiptDate()) &&
+            !Strings.isNullOrEmpty(caseData.getClaimServedDate())) {
 
-            // set the ClaimServedTypeItem object
+            LocalDate caseReceiptDate = LocalDate.parse(caseData.getReceiptDate(), OLD_DATE_TIME_PATTERN2);
+            LocalDate caseClaimServedDate = LocalDate.parse(caseData.getClaimServedDate(), OLD_DATE_TIME_PATTERN2);
+            Period period = Period.between(caseReceiptDate, caseClaimServedDate);
+
             var claimServedTypeItem = new ClaimServedTypeItem();
-            claimServedTypeItem.setNumberOfDaysToServingClaim(String.valueOf(duration.toDays()));
+            var numberOfDaysToServingClaim = getNumberOfDays(caseReceiptDate, caseClaimServedDate);
+            claimServedTypeItem.setNumberOfDaysToServingClaim(String.valueOf(numberOfDaysToServingClaim));
             claimServedTypeItem.setCaseReceiptDate(caseReceiptDate.toString());
             claimServedTypeItem.setClaimServedDate(caseClaimServedDate.toString());
             claimServedTypeItem.setClaimServedCaseNumber(caseData.getEthosCaseReference());
+            claimServedTypeItem.setClaimServedType(getServedClaimStatus(caseData));
 
             adhocReportType.getClaimServedItems().add(claimServedTypeItem);
         }
 
+    }
+
+    private String getServedClaimStatus(CaseData caseData) {
+        String servedClaimStatus = null;
+        var casePreAcceptType = caseData.getPreAcceptCase();
+
+        if(casePreAcceptType != null) {
+            var status = casePreAcceptType.getCaseAccepted();
+            if(YES.equals(status) && casePreAcceptType.getDateAccepted() != null) {
+                servedClaimStatus = ACCEPTED_CLAIM;
+            }
+            if(NO.equals(status) && casePreAcceptType.getDateRejected() != null) {
+                servedClaimStatus = REJECTED_CLAIM;
+            }
+        }
+
+        return servedClaimStatus;
+    }
+
+    private int getNumberOfDays(LocalDate caseReceiptDate, LocalDate caseClaimServedDate) {
+        Period period = Period.between(caseReceiptDate, caseClaimServedDate);
+        int totalNumberOfDays;
+
+        if (period.getMonths() > 0 || period.getDays() >= 6) {
+            totalNumberOfDays = 6;
+        } else {
+            totalNumberOfDays = period.getDays();
+        }
+
+        return totalNumberOfDays;
     }
 
     private String getTotalServedAcceptedClaims(AdhocReportType adhocReportType) {
@@ -117,7 +160,7 @@ private static final String SERVED_REJECTED_CLAIM = "Served Rejected Claim";
                 !adhocReportType.getClaimServedItems().isEmpty()) {
 
             var count = adhocReportType.getClaimServedItems().stream()
-                    .filter(item -> SERVED_ACCEPTED_CLAIM.equalsIgnoreCase(item.getClaimServedType()))
+                    .filter(item -> ACCEPTED_CLAIM.equalsIgnoreCase(item.getClaimServedType()))
                     .collect(Collectors.toList()).size();
             totalCount = String.valueOf(count);
         }
@@ -125,41 +168,124 @@ private static final String SERVED_REJECTED_CLAIM = "Served Rejected Claim";
         return totalCount;
     }
 
-    private void setDay1ServedClaimsDetails(AdhocReportType adhocReportType,
-                                            String totalServedAcceptedClaims) {
-        // Set accepted claims details
-        setDay1ServedAcceptedClaimsDetails(adhocReportType, totalServedAcceptedClaims);
+    private String getTotalRejectedClaims(AdhocReportType adhocReportType) {
+        String totalCount = "0";
 
+        if(adhocReportType.getClaimServedItems() != null &&
+                !adhocReportType.getClaimServedItems().isEmpty()) {
+
+            var count = adhocReportType.getClaimServedItems().stream()
+                    .filter(item -> REJECTED_CLAIM.equalsIgnoreCase(item.getClaimServedType()))
+                    .collect(Collectors.toList()).size();
+
+            totalCount = String.valueOf(count);
+        }
+
+        return totalCount;
+    }
+
+    private void setServedClaimsDetailsByDay(AdhocReportType adhocReportType, int dayNumber) {
+        var totalAcceptedClaims = getTotalServedAcceptedClaims(adhocReportType);
+        var totalRejectedClaims = getTotalRejectedClaims(adhocReportType);
+
+        setAcceptedClaimsSummary(adhocReportType, totalAcceptedClaims, dayNumber);
+
+        setRejectedClaimsSummary(adhocReportType, totalRejectedClaims, dayNumber);
+    }
+
+    private void setAcceptedClaimsSummary(AdhocReportType adhocReportType,
+                                          String totalAcceptedClaims,
+                                          int dayNumber) {
+        List<ClaimServedTypeItem> acceptedClaimItems = new ArrayList<>();
+        if(dayNumber >= 6) {
+            acceptedClaimItems = adhocReportType.getClaimServedItems().stream()
+                    .filter(item -> Integer.parseInt(item.getNumberOfDaysToServingClaim()) >= dayNumber &&
+                            ACCEPTED_CLAIM.equalsIgnoreCase(item.getClaimServedType()))
+                    .collect(Collectors.toList());
+        }
+        else {
+            acceptedClaimItems = adhocReportType.getClaimServedItems().stream()
+                    .filter(item -> Integer.parseInt(item.getNumberOfDaysToServingClaim()) == dayNumber &&
+                            ACCEPTED_CLAIM.equalsIgnoreCase(item.getClaimServedType()))
+                    .collect(Collectors.toList());
+        }
+
+        var acceptedClaimItemsCount = String.valueOf(acceptedClaimItems.size());
+
+        var percentage = "0";
+        if (Integer.parseInt(totalAcceptedClaims) > 0) {
+            percentage = String.valueOf((acceptedClaimItems.size()/Integer.parseInt(totalAcceptedClaims)) * 100);
+        }
+
+        switch (dayNumber) {
+            case 1:
+                adhocReportType.setAcceptedClaimServedDay1Total(acceptedClaimItemsCount);
+                adhocReportType.setAcceptedClaimServedDay1Percent(percentage);
+                break;
+            case 2:
+                adhocReportType.setAcceptedClaimServedDay2Total(acceptedClaimItemsCount);
+                adhocReportType.setAcceptedClaimServedDay2Percent(percentage);
+                break;
+            case 3:
+                adhocReportType.setAcceptedClaimServedDay3Total(acceptedClaimItemsCount);
+                adhocReportType.setAcceptedClaimServedDay3Percent(percentage);
+                break;
+            case 4:
+                adhocReportType.setAcceptedClaimServedDay4Total(acceptedClaimItemsCount);
+                adhocReportType.setAcceptedClaimServedDay4Percent(percentage);
+                break;
+            case 5:
+                adhocReportType.setAcceptedClaimServedDay5Total(acceptedClaimItemsCount);
+                adhocReportType.setAcceptedClaimServedDay5Percent(percentage);
+                break;
+            default:
+                adhocReportType.setAcceptedClaimServed6PlusDaysTotal(acceptedClaimItemsCount);
+                adhocReportType.setAcceptedClaimServed6PlusDaysPercent(percentage);
+                break;
+        }
+    }
+
+    private void setRejectedClaimsSummary(AdhocReportType adhocReportType,
+                                          String totalRejectedClaims,
+                                          int dayNumber) {
+        var percentage = "0";
         // Set rejected claims details
-        setDay1ServedRejectedClaimsDetails(adhocReportType, totalServedAcceptedClaims);
-
-    }
-
-    private void setDay1ServedAcceptedClaimsDetails(AdhocReportType adhocReportType,
-                                                    String totalServedAcceptedClaims) {
-        // Set total of Accepted Claim Served on Day 1
-        var servedAcceptedClaimItems = adhocReportType.getClaimServedItems().stream()
-                .filter(item -> Integer.parseInt(item.getNumberOfDaysToServingClaim()) == 1 &&
-                        SERVED_ACCEPTED_CLAIM.equalsIgnoreCase(item.getClaimServedType()))
+        var rejectedClaimItems = adhocReportType.getClaimServedItems().stream()
+                .filter(item -> Integer.parseInt(item.getNumberOfDaysToServingClaim()) == dayNumber &&
+                        REJECTED_CLAIM.equalsIgnoreCase(item.getClaimServedType()))
                 .collect(Collectors.toList());
-        adhocReportType.setAcceptedClaimServedDay1Total(String.valueOf(servedAcceptedClaimItems.size()));
 
-        // Set percentage of Accepted Claim Served on Day 1
-        var percentage = (servedAcceptedClaimItems.size()/Integer.parseInt(totalServedAcceptedClaims)) * 100;
-        adhocReportType.setAcceptedClaimServedDay1Percent(String.valueOf(percentage));
-    }
-    private void setDay1ServedRejectedClaimsDetails(AdhocReportType adhocReportType,
-                                                    String totalServedAcceptedClaims) {
-        // Set total of Rejected Claim Served on Day 1
-        var servedRejectedClaimItems = adhocReportType.getClaimServedItems().stream()
-                .filter(item -> Integer.parseInt(item.getNumberOfDaysToServingClaim()) == 1 &&
-                        SERVED_REJECTED_CLAIM.equalsIgnoreCase(item.getClaimServedType()))
-                .collect(Collectors.toList());
-        adhocReportType.setRejectedClaimServedDay1Total(String.valueOf(servedRejectedClaimItems.size()));
+        var rejectedClaimItemsCount = String.valueOf(rejectedClaimItems.size());
+        if (Integer.parseInt(totalRejectedClaims) > 0) {
+            percentage = String.valueOf((rejectedClaimItems.size()/Integer.parseInt(totalRejectedClaims)) * 100);
+        }
 
-        // Set percentage of Rejected Claim Served on Day 1
-        var percentage = (servedRejectedClaimItems.size()/Integer.parseInt(totalServedAcceptedClaims)) * 100;
-        adhocReportType.setAcceptedClaimServedDay1Percent(String.valueOf(percentage));
+        switch (dayNumber){
+            case 1:
+                adhocReportType.setRejectedClaimServedDay1Total(rejectedClaimItemsCount);
+                adhocReportType.setRejectedClaimServedDay1Percent(percentage);
+                break;
+            case 2:
+                adhocReportType.setAcceptedClaimServedDay2Total(rejectedClaimItemsCount);
+                adhocReportType.setRejectedClaimServedDay2Percent(percentage);
+                break;
+            case 3:
+                adhocReportType.setAcceptedClaimServedDay3Total(rejectedClaimItemsCount);
+                adhocReportType.setRejectedClaimServedDay3Percent(percentage);
+                break;
+            case 4:
+                adhocReportType.setAcceptedClaimServedDay4Total(rejectedClaimItemsCount);
+                adhocReportType.setRejectedClaimServedDay4Percent(percentage);
+                break;
+            case 5:
+                adhocReportType.setAcceptedClaimServedDay5Total(rejectedClaimItemsCount);
+                adhocReportType.setRejectedClaimServedDay5Percent(percentage);
+                break;
+            default:
+                adhocReportType.setAcceptedClaimServed6PlusDaysTotal(rejectedClaimItemsCount);
+                adhocReportType.setRejectedClaimServed6PlusDaysPercent(percentage);
+                break;
+        }
     }
 
 }
