@@ -27,4 +27,10 @@
     <suppress>
         <vulnerabilityName>CVE-2021-42340</vulnerabilityName>
     </suppress>
+    <suppress>
+        <vulnerabilityName>CVE-2021-37136</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <vulnerabilityName>CVE-2021-37137</vulnerabilityName>
+    </suppress>
 </suppressions>
