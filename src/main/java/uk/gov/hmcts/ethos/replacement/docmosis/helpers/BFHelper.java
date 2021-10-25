@@ -8,6 +8,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.BFActionType;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,15 +30,14 @@ public class BFHelper {
         if (bfActions != null && !bfActions.isEmpty()) {
 
             for (BFActionTypeItem bfActionTypeItem : bfActions) {
-
                 var bfActionType = bfActionTypeItem.getValue();
 
                 if (isNullOrEmpty(bfActionType.getDateEntered())) {
-
                     bfActionType.setDateEntered(UtilHelper.formatCurrentDate2(LocalDate.now()));
-
                 }
-
+                var dateEntered = bfActions.get(0).getValue().getDateEntered().substring(0, 10);
+                LocalDate date = LocalDate.parse(dateEntered);
+                caseData.setClaimServedDate(String.valueOf(date));
             }
 
         }
@@ -77,6 +77,7 @@ public class BFHelper {
 
             var bfActionTypeItem = new BFActionTypeItem();
             var bfActionType = new BFActionType();
+
             bfActionType.setAction(dynamicFixedListType);
             bfActionTypeItem.setId(UUID.randomUUID().toString());
             bfActionTypeItem.setValue(bfActionType);

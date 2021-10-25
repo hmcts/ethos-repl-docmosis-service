@@ -129,7 +129,7 @@ public class ReferenceServiceTest {
                 + "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, "
                 + "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, "
-                + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, "
+                + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, "
                 + "feeGroupReference=null, claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
                 + "representativeClaimantType=null, respondentCollection=null, repCollection=null, positionType=null, "
                 + "dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, "
@@ -174,7 +174,7 @@ public class ReferenceServiceTest {
                 "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, "
                 + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, "
-                + "feeGroupReference=null, claimantWorkAddressQuestion=null, "
+                + "claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, "
                 + "claimantWorkAddressQRespondent=null, representativeClaimantType=null, "
                 + "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, "
                 + "currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
@@ -213,7 +213,7 @@ public class ReferenceServiceTest {
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
                 "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
-                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
+                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
@@ -251,7 +251,7 @@ public class ReferenceServiceTest {
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
                 "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
-                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
+                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
@@ -289,7 +289,7 @@ public class ReferenceServiceTest {
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
                 "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
-                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
+                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +
@@ -324,7 +324,7 @@ public class ReferenceServiceTest {
                 + "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, "
                 + "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, "
-                + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, "
+                + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, "
                 + "claimantWorkAddressQuestion=null, claimantWorkAddressQRespondent=null, "
                 + "representativeClaimantType=null, respondentCollection=null, repCollection=null, positionType=null, "
                 + "dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, "
@@ -364,7 +364,7 @@ public class ReferenceServiceTest {
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
                 "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
-                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
+                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, "
                 + "currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
@@ -403,7 +403,7 @@ public class ReferenceServiceTest {
                 "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
                 "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
-                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
+                "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
                 "claimantWorkAddressQRespondent=null, representativeClaimantType=null, " +
                 "respondentCollection=null, repCollection=null, positionType=null, dateToPosition=null, currentPosition=null, fileLocation=null, fileLocationGlasgow=null, " +
                 "fileLocationAberdeen=null, fileLocationDundee=null, fileLocationEdinburgh=null, hearingCollection=null, " +

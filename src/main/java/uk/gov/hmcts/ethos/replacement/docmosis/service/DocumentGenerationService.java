@@ -188,10 +188,12 @@ public class DocumentGenerationService {
 
         if (CollectionUtils.isEmpty(caseData.getBfActions())) {
             caseData.setBfActions(new ArrayList<>(Collections.singletonList(bfActionTypeItem)));
+            caseData.setClaimServedDate(bfActionType.getDateEntered());
         } else {
           List<BFActionTypeItem> tmp = caseData.getBfActions();
           tmp.add(bfActionTypeItem);
-            caseData.setBfActions(tmp);
+          caseData.setBfActions(tmp);
+          caseData.setClaimServedDate(tmp.get(0).getValue().getDateEntered());
         }
         return caseData;
     }
