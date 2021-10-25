@@ -1,0 +1,72 @@
+{
+  "positionType":"Manually Created",
+  "claimantRepresentedQuestion":"No",
+  "respondentCollection":[
+    {
+      "id":"4b818aa8-985b-4d06-b65a-d1aee141aac6",
+      "value":{
+        "respondent_ACAS":"45647457547",
+        "respondent_name":"Respondent1",
+        "responseStruckOut":"No",
+        "respondent_address":{
+          "PostCode":"PL7 1RF",
+          "PostTown":"Plymouth",
+          "AddressLine1":"1 Valley Road",
+          "AddressLine2":"1 Valley Road"
+        },
+        "respondent_ACAS_question":"Yes",
+        "responseRespondentAddress":{
+
+        }
+      }
+    }
+  ],
+  "respondent":"Respondent1",
+  "claimantOtherType":{
+
+  },
+  "tribunalCorrespondenceFax":"01264 785136",
+  "caseType":"Single",
+  "feeGroupReference":"098987898980",
+  "ethosCaseReference":"1800007/2021",
+  "claimantIndType":{
+    "claimant_title1":"Mr",
+    "claimant_last_name":"claimant_last_name",
+    "claimant_first_names":"claimant_first_names"
+  },
+  "claimant_TypeOfClaimant":"Individual",
+  "tribunalCorrespondenceEmail":"LeedsET@justice.gov.uk",
+  "tribunalCorrespondenceAddress":{
+    "PostCode":"LS1 5ES",
+    "PostTown":"Leeds",
+    "AddressLine1":"4th Floor",
+    "AddressLine2":"City Exchange",
+    "AddressLine3":"11 Albion Street"
+  },
+  "claimant":"claimant_first_names claimant_last_name",
+  "dateToPosition":"2021-03-01",
+  "claimantWorkAddress":{
+    "claimant_work_address":{
+      "PostCode":"PL7 1RF",
+      "PostTown":"Plymouth",
+      "AddressLine1":"1 Valley Road",
+      "AddressLine2":"1 Valley Road"
+    }
+  },
+  "multipleFlag":"No",
+  "currentPosition":"Manually Created",
+  "receiptDate":"2021-02-10",
+  "caseSource":"Manually Created",
+  "tribunalCorrespondenceTelephone":"0113 245 9741",
+  "claimantWorkAddressQuestion":"No",
+  "claimantType":{
+    "claimant_addressUK":{
+      "PostCode":"PL7 1RF",
+      "PostTown":"Plymouth",
+      "AddressLine1":"1 Valley Road",
+      "AddressLine2":"1 Valley Road"
+    }
+  },
+  "flagsImageFileName":"EMP-TRIB-0000000.jpg",
+  "targetHearingDate":"2021-08-09"
+}
