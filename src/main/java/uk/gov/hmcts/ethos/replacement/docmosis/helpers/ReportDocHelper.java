@@ -18,13 +18,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
-
+import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
 @Slf4j
 public class ReportDocHelper {
     private static final String REPORT_LIST = "\"Report_List\":[\n";
+    private static final String DAY_1_LIST = "\"Day_1_List\":[\n";
+    private static final String DAY_2_LIST = "\"Day_2_List\":[\n";
+    private static final String DAY_3_LIST = "\"Day_3_List\":[\n";
+    private static final String DAY_4_LIST = "\"Day_4_List\":[\n";
+    private static final String DAY_5_LIST = "\"Day_5_List\":[\n";
+    private static final String DAY_6_LIST = "\"Day_6_List\":[\n";
+
     private static final String CASE_REFERENCE = "{\"Case_Reference\":\"";
 
     private ReportDocHelper() {
@@ -69,6 +77,9 @@ public class ReportDocHelper {
                     break;
                 case TIME_TO_FIRST_HEARING_REPORT:
                     sb.append(getTimeToFirstHearingReport(listingData));
+                    break;
+                case SERVING_CLAIMS_REPORT:
+                    sb.append(getServedClaimsReport(listingData));
                     break;
                 default:
                     throw new IllegalStateException("Report type - Unexpected value: " + listingData.getReportType());
@@ -127,6 +138,7 @@ public class ReportDocHelper {
         if (listingData.getLocalReportsDetail() != null && !listingData.getLocalReportsDetail().isEmpty()) {
             sb.append(getClaimsAcceptedByCaseType(listingData));
         }
+
         return sb;
     }
 
@@ -382,6 +394,125 @@ public class ReportDocHelper {
             sb.append("],\n");
         }
         return sb;
+    }
+
+    // get served Claims report
+    private static StringBuilder getServedClaimsReport(ListingData listingData) {
+        var reportContent = getServedClaimsReportSummary(listingData);
+        int claimsServedDayListUpperBoundary = 5;
+
+        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())) {
+            var listBlockOpeners = List.of(DAY_1_LIST, DAY_2_LIST,
+                                                       DAY_3_LIST, DAY_4_LIST,
+                                                       DAY_5_LIST, DAY_6_LIST);
+            for(int dayIndex = 0; dayIndex <= claimsServedDayListUpperBoundary; dayIndex++) {
+                addEntriesByServingDay(dayIndex, listBlockOpeners.get(dayIndex),
+                        reportContent, listingData);
+            }
+        }
+
+        return reportContent;
+    }
+
+    private static StringBuilder addEntriesByServingDay(int dayNumber, String listBlockOpener,
+                                                        StringBuilder reportContent, ListingData listingData) {
+
+        var itemsList = listingData.getLocalReportsDetail().get(0);
+
+        var claimServedTypeItems = itemsList.getValue().getClaimServedItems()
+                .stream()
+                .filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) == dayNumber)
+                .collect(Collectors.toList());
+        int claimServedTypeItemsCount = claimServedTypeItems.size();
+        String claimServedTypeItemsListSize = String.valueOf(claimServedTypeItems.size());
+
+        reportContent.append(listBlockOpener);
+
+        if (claimServedTypeItemsCount == 0) {
+            reportContent.append(CASE_REFERENCE).append(claimServedTypeItemsListSize).append(NEW_LINE);
+            reportContent.append("\"Date_Of_Receipt\":\"").append(claimServedTypeItemsListSize).append(NEW_LINE);
+            reportContent.append("\"Date_Of_Service\":\"").append(claimServedTypeItemsListSize);
+            reportContent.append("\"}");
+            reportContent.append(",\n");
+        } else {
+            for (var i = 0; i < claimServedTypeItemsCount; i++) {
+                reportContent.append(getServedClaimsReportRow(claimServedTypeItems.get(i).getValue(), dayNumber));
+                if (i != claimServedTypeItemsCount - 1) {
+                    reportContent.append(",\n");
+                }
+            }
+        }
+
+        reportContent.append("],\n");
+        var currentDayTotal = "\"day_"+ (dayNumber + 1 )+ "_total_count\":\"";
+        reportContent.append(currentDayTotal)
+                .append(claimServedTypeItemsListSize).append(NEW_LINE);
+        return reportContent;
+    }
+
+    private static StringBuilder getServedClaimsReportRow(ClaimServedType claimServedTypeItem, int dayNumber) {
+        var reportRowContent = new StringBuilder();
+        int claimsServedDayListUpperBoundary = 5;
+
+        reportRowContent.append(CASE_REFERENCE).append(
+                nullCheck(claimServedTypeItem.getClaimServedCaseNumber())).append(NEW_LINE);
+
+        if(dayNumber >= claimsServedDayListUpperBoundary) {
+            reportRowContent.append("\"Actual_Number_Of_Days\":\"").append(
+                    nullCheck(claimServedTypeItem.getActualNumberOfDays())).append(NEW_LINE);
+        }
+
+        reportRowContent.append("\"Date_Of_Receipt\":\"").append(
+                nullCheck(claimServedTypeItem.getCaseReceiptDate())).append(NEW_LINE);
+        reportRowContent.append("\"Date_Of_Service\":\"").append(
+                nullCheck(claimServedTypeItem.getClaimServedDate()));
+        reportRowContent.append("\"}");
+
+        return reportRowContent;
+    }
+    // get served Claims report summary
+    private static StringBuilder getServedClaimsReportSummary(ListingData listingData) {
+        var reportSummaryContent = new StringBuilder();
+
+        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())){
+            var adhocReportTypeItem = listingData.getLocalReportsDetail().get(0);
+            var adhocReportType = adhocReportTypeItem.getValue();
+
+            reportSummaryContent.append("\"Day_1_Tot\":\"")
+                    .append(adhocReportType.getClaimServedDay1Total()).append(NEW_LINE);
+            reportSummaryContent.append("\"Day_1_Pct\":\"")
+                    .append(adhocReportType.getClaimServedDay1Percent()).append(NEW_LINE);
+
+            reportSummaryContent.append("\"Day_2_Tot\":\"")
+                    .append(adhocReportType.getClaimServedDay2Total()).append(NEW_LINE);
+            reportSummaryContent.append("\"Day_2_Pct\":\"")
+                    .append(adhocReportType.getClaimServedDay2Percent()).append(NEW_LINE);
+
+            reportSummaryContent.append("\"Day_3_Tot\":\"")
+                    .append(adhocReportType.getClaimServedDay3Total()).append(NEW_LINE);
+            reportSummaryContent.append("\"Day_3_Pct\":\"")
+                    .append(adhocReportType.getClaimServedDay3Percent()).append(NEW_LINE);
+
+            reportSummaryContent.append("\"Day_4_Tot\":\"")
+                    .append(adhocReportType.getClaimServedDay4Total()).append(NEW_LINE);
+            reportSummaryContent.append("\"Day_4_Pct\":\"")
+                    .append(adhocReportType.getClaimServedDay4Percent()).append(NEW_LINE);
+
+            reportSummaryContent.append("\"Day_5_Tot\":\"")
+                    .append(adhocReportType.getClaimServedDay5Total()).append(NEW_LINE);
+            reportSummaryContent.append("\"Day_5_Pct\":\"")
+                    .append(adhocReportType.getClaimServedDay5Percent()).append(NEW_LINE);
+
+            reportSummaryContent.append("\"Day_6_Plus_Tot\":\"")
+                    .append(adhocReportType.getClaimServed6PlusDaysTotal()).append(NEW_LINE);
+            reportSummaryContent.append("\"Day_6_Plus_Pct\":\"")
+                    .append(adhocReportType.getClaimServed6PlusDaysPercent()).append(NEW_LINE);
+
+            reportSummaryContent.append("\"Total_Claims\":\"")
+                    .append(adhocReportType.getClaimServedTotal()).append(NEW_LINE);
+        }
+
+        return reportSummaryContent;
     }
 
 }

@@ -43,7 +43,8 @@ public class ListingHelper {
     private static final int NUMBER_CHAR_PARSING_DATE = 20;
 
     static final List<String> REPORTS = Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
-        LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT, TIME_TO_FIRST_HEARING_REPORT);
+        LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT, TIME_TO_FIRST_HEARING_REPORT,
+        SERVING_CLAIMS_REPORT);
 
     private ListingHelper() {
     }
@@ -366,6 +367,11 @@ public class ListingHelper {
     public static StringBuilder getListingDate(ListingData listingData) {
         var sb = new StringBuilder();
         if (listingData.getHearingDateType() != null
+                && listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)
+                && SERVING_CLAIMS_REPORT.equals(listingData.getReportType())) {
+            return getServedClaimsReportPeriod(listingData);
+
+         } else if (listingData.getHearingDateType() != null
                 && listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
             sb.append("\"Listed_date_from\":\"")
                     .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
@@ -377,6 +383,23 @@ public class ListingHelper {
         }
         return sb;
     }
+
+    private static StringBuilder getServedClaimsReportPeriod(ListingData listingData) {
+        String listedDate = "";
+        var sb = new StringBuilder();
+        if(listingData.getListingDateFrom() != null && listingData.getListingDateTo() != null) {
+            listedDate = " Between " +
+                    UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom()) +
+                    " and " + UtilHelper.listingFormatLocalDate(listingData.getListingDateTo());
+            sb.append("\"Listed_date\":\"").append(listedDate).append(NEW_LINE);
+        } else {
+            listedDate = " On " + UtilHelper.listingFormatLocalDate(listingData.getListingDate());
+            sb.append("\"Listed_date\":\"").append(listedDate).append(NEW_LINE);
+        }
+
+        return sb;
+    }
+
 
     private static boolean isEmptyHearingRoom(ListingType listingType) {
         if (listingType.getHearingRoom() != null) {
@@ -604,6 +627,8 @@ public class ListingHelper {
                     return "EM-TRB-SCO-ENG-00749";
                 case TIME_TO_FIRST_HEARING_REPORT:
                     return "EM-TRB-SCO-ENG-00751";
+                case SERVING_CLAIMS_REPORT:
+                    return "EM-TRB-SCO-ENG-ecm-60";
                 default:
                     return "No document found";
             }

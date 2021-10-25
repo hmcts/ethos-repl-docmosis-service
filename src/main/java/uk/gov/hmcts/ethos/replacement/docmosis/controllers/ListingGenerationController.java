@@ -29,6 +29,7 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getCallbackRespEntityErrors;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.CallbackRespHelper.getListingCallbackRespEntityErrors;
 
@@ -223,13 +224,37 @@ public class ListingGenerationController {
 
         var listingData = listingService.generateReportData(listingRequest.getCaseDetails(), userToken);
 
+        if (SERVING_CLAIMS_REPORT.equals(listingData.getReportType())) {
+            return getServedClaimsResponseEntity(listingData, listingRequest.getCaseDetails().getCaseTypeId(), userToken);
+        }
+
         return getResponseEntity(listingData, listingRequest.getCaseDetails().getCaseTypeId(), userToken);
 
     }
 
+    private ResponseEntity getServedClaimsResponseEntity(ListingData listingData,
+                                                         String caseTypeId,
+                                                         String userToken) {
+        var hasServedClaimEntries = CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail());
+        List<String> errorsList = new ArrayList<>();
+        if(hasServedClaimEntries) {
+            var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
+            updateListingDocMarkUp(listingData, documentInfo);
+            return ResponseEntity.ok(ListingCallbackResponse.builder()
+                    .data(listingData)
+                    .significant_item(Helper.generateSignificantItem(documentInfo, errorsList))
+                    .build());
+        } else {
+            errorsList.add("No Served Claims have been found for your search criteria");
+            return ResponseEntity.ok(ListingCallbackResponse.builder()
+                    .errors(errorsList)
+                    .data(listingData)
+                    .build());
+        }
+    }
+
     private ResponseEntity getResponseEntity(ListingData listingData, String caseTypeId, String userToken) {
         List<String> errorsList = new ArrayList<>();
-
         if (hasNonEmptyListings(listingData)) {
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
             updateListingDocMarkUp(listingData, documentInfo);
@@ -258,7 +283,6 @@ public class ListingGenerationController {
 
         var isListingsCollNotEmpty = CollectionUtils.isNotEmpty(listingData.getListingCollection());
         var isAllowedReportType = ListingHelper.isReportType(listingData.getReportType());
-
         return (isListingsCollNotEmpty || isAllowedReportType);
     }
 
