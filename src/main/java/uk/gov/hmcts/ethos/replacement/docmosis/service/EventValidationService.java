@@ -19,6 +19,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
+import uk.gov.hmcts.ecm.common.model.ccd.types.RestrictedReportingType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
@@ -122,16 +123,15 @@ public class EventValidationService {
     }
 
     public void validateRestrictedReportNames(CaseData caseData) {
-        if (caseData.getRestrictedReporting() != null) {
-            if (caseData.getRestrictedReporting().getRequestedBy() != null) {
-                var dynamicListCode = caseData.getRestrictedReporting().getDynamicRequestedBy().getValue().getCode();
-                if (dynamicListCode.startsWith("R: ")) {
-                    caseData.getRestrictedReporting().setRequestedBy(RESPONDENT_TITLE);
-                } else if (dynamicListCode.startsWith("C: ")) {
-                    caseData.getRestrictedReporting().setRequestedBy(CLAIMANT_TITLE);
-                } else {
-                    caseData.getRestrictedReporting().setRequestedBy(dynamicListCode);
-                }
+        var restrictedReporting = caseData.getRestrictedReporting();
+        if (restrictedReporting != null) {
+            var dynamicListCode = restrictedReporting.getDynamicRequestedBy().getValue().getCode();
+            if (dynamicListCode.startsWith("R: ")) {
+                restrictedReporting.setRequestedBy(RESPONDENT_TITLE);
+            } else if (dynamicListCode.startsWith("C: ")) {
+                restrictedReporting.setRequestedBy(CLAIMANT_TITLE);
+            } else {
+                restrictedReporting.setRequestedBy(dynamicListCode);
             }
         }
     }

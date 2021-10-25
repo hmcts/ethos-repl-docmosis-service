@@ -29,7 +29,11 @@ public class RestrictedReportingDynamicList {
                 var dynamicValueType = new DynamicValueType();
                 if (restrictedReporting.getDynamicRequestedBy() == null) {
                     restrictedReporting.setDynamicRequestedBy(dynamicFixedListType);
-                    dynamicValueType = DynamicListHelper.getDynamicValueType(caseData, listItems, restrictedReporting.getRequestedBy());
+                    if (restrictedReporting.getRequestedBy() != null && !restrictedReporting.getRequestedBy().isEmpty()) {
+                        dynamicValueType = DynamicListHelper.getDynamicValueType(caseData, listItems, restrictedReporting.getRequestedBy());
+                    } else {
+                        dynamicValueType = listItems.get(listItems.size()-1);
+                    }
                 } else {
                     dynamicValueType = restrictedReporting.getDynamicRequestedBy().getValue();
                     restrictedReporting.getDynamicRequestedBy().setListItems(listItems);

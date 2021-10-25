@@ -41,6 +41,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclist.DepositOrderDynamicList;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclist.JudgementDynamicList;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclist.RespondentRepresentativeDynamicList;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclist.RestrictedReportingDynamicList;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.AddSingleCaseToMultipleService;
@@ -779,6 +780,30 @@ public class CaseActionsForCaseWorkerController {
 
         var caseData = ccdRequest.getCaseDetails().getCaseData();
         BFHelper.updateBfActionItems(caseData);
+
+        return getCallbackRespEntityNoErrors(caseData);
+    }
+
+    @PostMapping(value = "/dynamicJudgementHearing", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates all offices except the current one in dynamic lists.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> dynamicJudgementHearing(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DYNAMIC JUDGEMENT HEARING ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
+        JudgementDynamicList.createDynamicJudgementList(caseData);
+
 
         return getCallbackRespEntityNoErrors(caseData);
     }

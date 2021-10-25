@@ -40,7 +40,9 @@ public class DepositOrderDynamicList {
                     var dynamicValueType = new DynamicValueType();
                     if (depositOrderItem.getValue().getDynamicDepositOrderAgainst() == null) {
                         depItr.next().getValue().setDynamicDepositOrderAgainst(listClaimantRespondent);
-                        dynamicValueType = DynamicListHelper.getDynamicValueType(caseData, listItems, depositOrderItem.getValue().getDepositOrderAgainst());
+                        if (depositOrderItem.getValue().getDepositOrderAgainst() != null && !depositOrderItem.getValue().getDepositOrderAgainst().isEmpty()) {
+                            dynamicValueType = DynamicListHelper.getDynamicValueType(caseData, listItems, depositOrderItem.getValue().getDepositOrderAgainst());
+                        }
                     } else {
                         dynamicValueType = depositOrderItem.getValue().getDynamicDepositOrderAgainst().getValue();
                         depItr.next().getValue().setDynamicDepositOrderAgainst(listClaimantRespondent);
@@ -49,7 +51,9 @@ public class DepositOrderDynamicList {
 
                     if (depositOrderItem.getValue().getDynamicDepositRequestedBy() == null) {
                         depItr.previous().getValue().setDynamicDepositRequestedBy(listAll);
-                        dynamicValueType = DynamicListHelper.getDynamicValueType(caseData, listItems, depositOrderItem.getValue().getDepositRequestedBy());
+                        if (depositOrderItem.getValue().getDepositRequestedBy() != null && !depositOrderItem.getValue().getDepositRequestedBy().isEmpty()) {
+                            dynamicValueType = DynamicListHelper.getDynamicValueType(caseData, listItems, depositOrderItem.getValue().getDepositRequestedBy());
+                        }
                     } else {
                         dynamicValueType = depositOrderItem.getValue().getDynamicDepositRequestedBy().getValue();
                         depItr.previous().getValue().setDynamicDepositRequestedBy(listAll);
@@ -58,7 +62,9 @@ public class DepositOrderDynamicList {
 
                     if (depositOrderItem.getValue().getDynamicDepositRefundedTo() == null) {
                         depItr.next().getValue().setDynamicDepositRefundedTo(listClaimantRespondent);
-                        dynamicValueType = DynamicListHelper.getDynamicValueType(caseData, listItems, depositOrderItem.getValue().getDepositRefundedTo());
+                        if (depositOrderItem.getValue().getDepositRefundedTo() != null && !depositOrderItem.getValue().getDepositRefundedTo().isEmpty()) {
+                            dynamicValueType = DynamicListHelper.getDynamicValueType(caseData, listItems, depositOrderItem.getValue().getDepositRefundedTo());
+                        }
                     } else {
                         dynamicValueType = depositOrderItem.getValue().getDynamicDepositRefundedTo().getValue();
                         depItr.next().getValue().setDynamicDepositRefundedTo(listClaimantRespondent);
