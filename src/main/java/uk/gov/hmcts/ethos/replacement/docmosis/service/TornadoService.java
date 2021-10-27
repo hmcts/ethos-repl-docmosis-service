@@ -121,10 +121,8 @@ public class TornadoService {
                                          String documentName, String authToken, String caseType) throws IOException {
         var userDetails = userService.getUserDetails(authToken);
         StringBuilder sb;
-        var currentReportType = listingData.getReportType();
-        var isReportType = ListingHelper.isReportType(currentReportType);
 
-        if(isReportType) {
+        if (ListingHelper.isReportType(listingData.getReportType())) {
             sb = ReportDocHelper.buildReportDocumentContent(listingData, tornadoConnection.getAccessKey(),
                     documentName, userDetails);
         } else {
