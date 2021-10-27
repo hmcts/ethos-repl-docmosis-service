@@ -403,7 +403,7 @@
           "depositNotes": null,
           "deposit_due": null,
           "deposit_order_sent": null,
-          "deposit_refund": null,
+          "deposit_refund": null
         }
       }
     ],

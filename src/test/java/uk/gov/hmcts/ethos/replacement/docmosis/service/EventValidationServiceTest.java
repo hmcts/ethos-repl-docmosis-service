@@ -450,9 +450,10 @@ class EventValidationServiceTest {
     @Test
     public void validateRestrictedBy() {
         eventValidationService.validateRestrictedReportNames(caseDetails2.getCaseData());
-        assertEquals("Claimant",caseDetails2.getCaseData().getRestrictedReporting().getRequestedBy());
+        assertEquals("Claimant", caseDetails2.getCaseData().getRestrictedReporting().getRequestedBy());
+    }
 
-  private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
+    private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {
         String json = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
                 .getResource(jsonFileName)).toURI())));
         ObjectMapper mapper = new ObjectMapper();
