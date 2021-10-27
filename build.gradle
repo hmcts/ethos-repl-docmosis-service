@@ -228,25 +228,8 @@ dependencies {
 
     implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.0-alpha2'
     implementation group: 'io.netty', name: 'netty-codec-http2', version: versions.io_netty
-
-    //To Remove vulnerability CVE-2021-21295
-    implementation group: 'io.netty', name: 'netty-all', version: versions.io_netty
-    implementation group: 'io.netty', name: 'netty-codec-http', version: versions.io_netty
-
-    // CVE-2021-37136/7
-    implementation group: 'io.netty', name: 'netty-buffer', version: versions.io_netty
-    implementation group: 'io.netty', name: 'netty-codec', version: versions.io_netty
-    implementation group: 'io.netty', name: 'netty-codec-socks', version: versions.io_netty
-    implementation group: 'io.netty', name: 'netty-common', version: versions.io_netty
-    implementation group: 'io.netty', name: 'netty-handler', version: versions.io_netty
-    implementation group: 'io.netty', name: 'netty-handler-proxy', version: versions.io_netty
-    implementation group: 'io.netty', name: 'netty-resolver', version: versions.io_netty
-    implementation group: 'io.netty', name: 'netty-transport', version: versions.io_netty
-    implementation group: 'io.netty', name: 'netty-transport-native-epoll', version: versions.io_netty
     implementation group: 'io.netty', name: 'netty-transport-native-kqueue', version: versions.io_netty
-    implementation group: 'io.netty', name: 'netty-transport-native-unix-common', version: versions.io_netty
     implementation group: 'io.netty', name: 'netty-resolver-dns-native-macos', version: versions.io_netty
-
 
     //To Remove vulnerability CVE-2020-11988
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.6'
