@@ -178,17 +178,17 @@ public class ServingClaimsReportTest {
                 .getValue();
         var claimServedItems = adhocReportType.getClaimServedItems();
         var expectedDay1Count = claimServedItems.stream()
-                .filter(x->Integer.parseInt(x.getValue().getReportedNumberOfDays()) == 0).count();
+                .filter(x -> Integer.parseInt(x.getValue().getReportedNumberOfDays()) == 0).count();
         var expectedDay2Count = claimServedItems.stream()
-                .filter(x->Integer.parseInt(x.getValue().getReportedNumberOfDays()) == 1).count();
+                .filter(x -> Integer.parseInt(x.getValue().getReportedNumberOfDays()) == 1).count();
         var expectedDay3Count = claimServedItems.stream()
-                .filter(x->Integer.parseInt(x.getValue().getReportedNumberOfDays()) == 2).count();
+                .filter(x -> Integer.parseInt(x.getValue().getReportedNumberOfDays()) == 2).count();
         var expectedDay4Count = claimServedItems.stream()
-                .filter(x->Integer.parseInt(x.getValue().getReportedNumberOfDays()) == 3).count();
+                .filter(x -> Integer.parseInt(x.getValue().getReportedNumberOfDays()) == 3).count();
         var expectedDay5Count = claimServedItems.stream()
-                .filter(x->Integer.parseInt(x.getValue().getReportedNumberOfDays()) == 4).count();
+                .filter(x -> Integer.parseInt(x.getValue().getReportedNumberOfDays()) == 4).count();
         var expectedDay6PlusCount = claimServedItems.stream()
-                .filter(x->Integer.parseInt(x.getValue().getReportedNumberOfDays()) >= 5).count();
+                .filter(x -> Integer.parseInt(x.getValue().getReportedNumberOfDays()) >= 5).count();
 
         assertEquals(2, expectedDay1Count);
         assertEquals(0, expectedDay2Count);
