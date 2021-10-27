@@ -224,10 +224,6 @@ public class ListingGenerationController {
 
         var listingData = listingService.generateReportData(listingRequest.getCaseDetails(), userToken);
 
-        if (SERVING_CLAIMS_REPORT.equals(listingData.getReportType())) {
-            return getServedClaimsResponseEntity(listingData, listingRequest.getCaseDetails().getCaseTypeId(), userToken);
-        }
-
         return getResponseEntity(listingData, listingRequest.getCaseDetails().getCaseTypeId(), userToken);
 
     }
@@ -255,6 +251,11 @@ public class ListingGenerationController {
 
     private ResponseEntity getResponseEntity(ListingData listingData, String caseTypeId, String userToken) {
         List<String> errorsList = new ArrayList<>();
+
+        if (SERVING_CLAIMS_REPORT.equals(listingData.getReportType())) {
+            return getServedClaimsResponseEntity(listingData, caseTypeId, userToken);
+        }
+
         if (hasNonEmptyListings(listingData)) {
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
             updateListingDocMarkUp(listingData, documentInfo);

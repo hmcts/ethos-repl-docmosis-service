@@ -367,12 +367,12 @@ public class ListingHelper {
     public static StringBuilder getListingDate(ListingData listingData) {
         var sb = new StringBuilder();
         if (listingData.getHearingDateType() != null
-                && listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)
+                && RANGE_HEARING_DATE_TYPE.equals(listingData.getHearingDateType())
                 && SERVING_CLAIMS_REPORT.equals(listingData.getReportType())) {
             return getServedClaimsReportPeriod(listingData);
 
          } else if (listingData.getHearingDateType() != null
-                && listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
+                && RANGE_HEARING_DATE_TYPE.equals(listingData.getHearingDateType())) {
             sb.append("\"Listed_date_from\":\"")
                     .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
             sb.append("\"Listed_date_to\":\"")
@@ -391,11 +391,11 @@ public class ListingHelper {
             listedDate = " Between " +
                     UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom()) +
                     " and " + UtilHelper.listingFormatLocalDate(listingData.getListingDateTo());
-            sb.append("\"Listed_date\":\"").append(listedDate).append(NEW_LINE);
         } else {
             listedDate = " On " + UtilHelper.listingFormatLocalDate(listingData.getListingDate());
-            sb.append("\"Listed_date\":\"").append(listedDate).append(NEW_LINE);
         }
+
+        sb.append("\"Listed_date\":\"").append(listedDate).append(NEW_LINE);
 
         return sb;
     }

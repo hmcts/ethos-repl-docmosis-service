@@ -88,9 +88,7 @@ public class ReportDocHelper {
 
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
         sb.append("\"Report_Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
-
         sb.append("\"Today_date\":\"").append(UtilHelper.formatCurrentDate(LocalDate.now())).append("\"\n");
-
         sb.append("}\n");
         sb.append("}\n");
         return sb;
@@ -396,7 +394,6 @@ public class ReportDocHelper {
         return sb;
     }
 
-    // get served Claims report
     private static StringBuilder getServedClaimsReport(ListingData listingData) {
         var reportContent = getServedClaimsReportSummary(listingData);
         int claimsServedDayListUpperBoundary = 5;
@@ -454,23 +451,23 @@ public class ReportDocHelper {
         var reportRowContent = new StringBuilder();
         int claimsServedDayListUpperBoundary = 5;
 
-        reportRowContent.append(CASE_REFERENCE).append(
-                nullCheck(claimServedTypeItem.getClaimServedCaseNumber())).append(NEW_LINE);
+        reportRowContent.append(CASE_REFERENCE)
+                .append(nullCheck(claimServedTypeItem.getClaimServedCaseNumber())).append(NEW_LINE);
 
         if(dayNumber >= claimsServedDayListUpperBoundary) {
-            reportRowContent.append("\"Actual_Number_Of_Days\":\"").append(
-                    nullCheck(claimServedTypeItem.getActualNumberOfDays())).append(NEW_LINE);
+            reportRowContent.append("\"Actual_Number_Of_Days\":\"")
+                    .append(nullCheck(claimServedTypeItem.getActualNumberOfDays())).append(NEW_LINE);
         }
 
-        reportRowContent.append("\"Date_Of_Receipt\":\"").append(
-                nullCheck(claimServedTypeItem.getCaseReceiptDate())).append(NEW_LINE);
-        reportRowContent.append("\"Date_Of_Service\":\"").append(
-                nullCheck(claimServedTypeItem.getClaimServedDate()));
+        reportRowContent.append("\"Date_Of_Receipt\":\"")
+                .append(nullCheck(claimServedTypeItem.getCaseReceiptDate())).append(NEW_LINE);
+        reportRowContent.append("\"Date_Of_Service\":\"")
+                .append(nullCheck(claimServedTypeItem.getClaimServedDate()));
         reportRowContent.append("\"}");
 
         return reportRowContent;
     }
-    // get served Claims report summary
+
     private static StringBuilder getServedClaimsReportSummary(ListingData listingData) {
         var reportSummaryContent = new StringBuilder();
 

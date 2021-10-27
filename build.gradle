@@ -40,7 +40,7 @@ jacocoTestCoverageVerification {
 }
 
 checkstyle {
-    maxWarnings = 511
+    maxWarnings = 501
     sourceSets = [project.sourceSets.main]
     toolVersion = '8.29'
 }
@@ -93,6 +93,7 @@ configurations {
 
 test {
     exclude '**/*ComponentTest*'
+    useJUnitPlatform()
 }
 
 task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verification') {
