@@ -24,32 +24,20 @@ import org.assertj.core.util.Strings;
 public class ServingClaimsReportTest {
 
     private List<SubmitEvent> submitEvents;
-    private ListingDetails listingDetailsSingle;
-    private ListingDetails listingDetailsRange;
+    private ListingDetails listingDetails;
 
     @Before
     public void setUp() {
 
-        listingDetailsRange = new ListingDetails();
+        listingDetails = new ListingDetails();
         var listingDataRange = new ListingData();
         listingDataRange.setListingDateFrom("2020-08-02");
         listingDataRange.setListingDateTo("2020-08-24");
         listingDataRange.setListingVenue("Leeds");
         listingDataRange.setReportType("Claims Served");
-        listingDetailsRange.setCaseData(listingDataRange);
-        listingDetailsRange.setCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID);
-        listingDetailsRange.setJurisdiction("EMPLOYMENT");
-
-        listingDetailsSingle = new ListingDetails();
-        var listingDataSingle = new ListingData();
-        //listingDataSingle.setListingDateFrom("2020-08-02");
-        //listingDataSingle.setListingDateTo("2020-08-02");
-        listingDataSingle.setListingDate("2020-08-18");
-        listingDataSingle.setListingVenue("Leeds");
-        listingDataSingle.setReportType("Claims Served");
-        listingDetailsSingle.setCaseData(listingDataSingle);
-        listingDetailsSingle.setCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID);
-        listingDetailsSingle.setJurisdiction("EMPLOYMENT");
+        listingDetails.setCaseData(listingDataRange);
+        listingDetails.setCaseTypeId(LEEDS_LISTING_CASE_TYPE_ID);
+        listingDetails.setJurisdiction("EMPLOYMENT");
 
         var submitEvent1 = new SubmitEvent();
         submitEvent1.setCaseId(1);
@@ -173,7 +161,7 @@ public class ServingClaimsReportTest {
     @Test
     public void shouldIncludeCasesWithClaimsServedDate() {
         var servingClaimsReport = new ServingClaimsReport();
-        var resultListingData = servingClaimsReport.generateReportData(listingDetailsRange, submitEvents);
+        var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
         var caseTotalCount =  resultListingData.getLocalReportsDetail().get(0)
                 .getValue().getClaimServedTotal();
         var actualCount = Strings.isNullOrEmpty(caseTotalCount)  ? 0 : Integer.parseInt(caseTotalCount);
@@ -183,7 +171,7 @@ public class ServingClaimsReportTest {
     @Test
     public void shouldReturnCorrectCasesCountByServingDay() {
         var servingClaimsReport = new ServingClaimsReport();
-        var resultListingData = servingClaimsReport.generateReportData(listingDetailsRange, submitEvents);
+        var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
         var actualCaseCount =  resultListingData.getLocalReportsDetail().get(0)
                 .getValue().getClaimServedTotal();
         var adhocReportType =  resultListingData.getLocalReportsDetail().get(0)
