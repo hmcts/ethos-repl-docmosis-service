@@ -226,11 +226,11 @@ dependencies {
     implementation group: 'org.apache.xmlgraphics', name: 'batik-svgbrowser', version: '1.14'
 
     implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.0-alpha2'
-    implementation group: 'io.netty', name: 'netty-codec-http2', version: '4.1.66.Final'
+    implementation group: 'io.netty', name: 'netty-codec-http2', version: '4.1.68.Final'
 
     //To Remove vulnerability CVE-2021-21295
-    implementation group: 'io.netty', name: 'netty-all', version: '4.1.61.Final'
-    implementation group: 'io.netty', name: 'netty-codec-http', version: '4.1.61.Final'
+    implementation group: 'io.netty', name: 'netty-all', version: '4.1.68.Final'
+    implementation group: 'io.netty', name: 'netty-codec-http', version: '4.1.68.Final'
 
     //To Remove vulnerability CVE-2020-11988
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.6'
