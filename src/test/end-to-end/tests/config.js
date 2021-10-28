@@ -36,7 +36,7 @@ module.exports = {
         caseType: 'Leeds'
     },
     s2s: {
-        microservice: process.env.S2S_MICROSERVICE_KEY_CMC,
+        microservice: process.env.S2S_MICROSERVICE_KEY_ECM,
         secret: process.env.S2S_MICROSERVICE_KEY_PWD,
     },
     env: process.env.TEST_ENV || 'local',
