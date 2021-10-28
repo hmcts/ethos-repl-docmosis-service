@@ -497,7 +497,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         var casedata = caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
                 new ArrayList<>(), ABOUT_TO_SUBMIT_EVENT_CALLBACK);
         assertEquals("11111", casedata.getCaseRefECC());
-        assertEquals("ECC", casedata.getCaseSource());
+        assertEquals(FLAG_ECC, casedata.getCaseSource());
     }
 
     @Test
