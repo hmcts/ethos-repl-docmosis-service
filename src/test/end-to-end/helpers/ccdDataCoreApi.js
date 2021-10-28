@@ -45,7 +45,7 @@ async function createCaseAndFetchResponse(dataLocation = 'data/ccd-case-basic-da
     var saveBody = {
         data: JSON.parse(data),
         event: {
-            id: 'hwfCreate',
+            id: 'initiateCase',
             summary: 'Creating Case',
             description: 'For CCD E2E Test'
         },
