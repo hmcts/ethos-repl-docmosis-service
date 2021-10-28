@@ -8,10 +8,10 @@ async function getUserToken() {
     logger.info('Getting User Token');
     const username = testConfig.TestEnvCWUser;
     const password = testConfig.TestEnvCWPassword;
-    const redirectUri = `https://rd-professional-api-aat.service.core-compute-aat.internal/`;
+    const redirectUri = `https://manage-case.aat.platform.hmcts.net/oauth2/callback`;
     const idamClientSecret = testConfig.TestIdamClientSecret;
     const idamBaseUrl = 'https://idam-api.aat.platform.hmcts.net';
-    const idamCodePath = `/oauth2/authorize?response_type=code&client_id=employment&redirect_uri=${redirectUri}`;
+    const idamCodePath = `/oauth2/authorize?response_type=code&client_id=xuiwebapp&redirect_uri=${redirectUri}`;
 
     const codeResponse = await request.post({
         uri: idamBaseUrl + idamCodePath,
@@ -24,7 +24,7 @@ async function getUserToken() {
     });
 
     const code = JSON.parse(codeResponse).code;
-    const idamAuthPath = `/oauth2/token?grant_type=authorization_code&client_id=employment&client_secret=${idamClientSecret}&redirect_uri=${redirectUri}&code=${code}`;
+    const idamAuthPath = `/oauth2/token?grant_type=authorization_code&client_id=xuiwebapp&client_secret=${idamClientSecret}&redirect_uri=${redirectUri}&code=${code}`;
 
     const authTokenResponse = await request.post({
         uri: idamBaseUrl + idamAuthPath,
