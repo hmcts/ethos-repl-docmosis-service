@@ -323,6 +323,27 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    public void continuingRespondentFirstToLast() {
+        CaseData caseData = caseManagementForCaseWorkerService.continuingRespondent(scotlandCcdRequest1);
+
+        assertEquals(3, caseData.getRespondentCollection().size());
+
+        assertEquals("Antonio Vazquez", caseData.getRespondentCollection().get(0).getValue().getRespondentName());
+        assertEquals(YES, caseData.getRespondentCollection().get(0).getValue().getResponseContinue());
+        assertEquals("Juan Garcia", caseData.getRespondentCollection().get(1).getValue().getRespondentName());
+        assertEquals(YES, caseData.getRespondentCollection().get(1).getValue().getResponseContinue());
+        assertEquals("Roberto Dondini", caseData.getRespondentCollection().get(2).getValue().getRespondentName());
+        assertEquals(NO, caseData.getRespondentCollection().get(2).getValue().getResponseContinue());
+    }
+
+    @Test
+    public void continuingRespondentNull() {
+        CaseData caseData = caseManagementForCaseWorkerService.continuingRespondent(scotlandCcdRequest3);
+        assertEquals(1, caseData.getRespondentCollection().size());
+        assertEquals(YES, caseData.getRespondentCollection().get(0).getValue().getResponseContinue());
+    }
+
+    @Test
     public void buildFlagsImageFileNameForNullFlagsTypes() {
         CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);

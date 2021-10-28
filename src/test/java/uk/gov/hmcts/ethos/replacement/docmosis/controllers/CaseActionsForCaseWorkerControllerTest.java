@@ -322,6 +322,20 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void amendRespondentDetailsContinuingClaim() throws Exception {
+        when(caseManagementForCaseWorkerService.continuingRespondent(isA(CCDRequest.class))).thenReturn(submitEvent.getCaseData());
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        mvc.perform(post(AMEND_RESPONDENT_DETAILS_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", notNullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void amendRespondentRepresentative() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(AMEND_RESPONDENT_REPRESENTATIVE_URL)
@@ -1011,6 +1025,17 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void amendRespondentDetailsError500() throws Exception {
         when(caseManagementForCaseWorkerService.struckOutRespondents(isA(CCDRequest.class))).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        mvc.perform(post(AMEND_RESPONDENT_DETAILS_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void amendRespondentDetailsClaimContinuingError500() throws Exception {
+        when(caseManagementForCaseWorkerService.continuingRespondent(isA(CCDRequest.class))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(AMEND_RESPONDENT_DETAILS_URL)
                 .content(requestContent.toString())
