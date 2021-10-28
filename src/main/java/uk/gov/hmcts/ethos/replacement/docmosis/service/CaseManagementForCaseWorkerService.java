@@ -169,6 +169,31 @@ public class CaseManagementForCaseWorkerService {
         return caseData;
     }
 
+    public CaseData continuingRespondent(CCDRequest ccdRequest) {
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
+        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+            List<RespondentSumTypeItem> continuingRespondent = new ArrayList<>();
+            List<RespondentSumTypeItem> notContinuingRespondent = new ArrayList<>();
+            for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
+                var respondentSumType = respondentSumTypeItem.getValue();
+                if (respondentSumType.getResponseContinue() != null) {
+                    if (respondentSumType.getResponseContinue().equals(YES)) {
+                        continuingRespondent.add(respondentSumTypeItem);
+                    } else {
+                        notContinuingRespondent.add(respondentSumTypeItem);
+                    }
+                } else {
+                    respondentSumType.setResponseContinue(YES);
+                    continuingRespondent.add(respondentSumTypeItem);
+                }
+            }
+            caseData.setRespondentCollection(Stream.concat(continuingRespondent.stream(),
+                    notContinuingRespondent.stream()).collect(Collectors.toList()));
+            respondentDefaults(caseData);
+        }
+        return caseData;
+    }
+
     private boolean positionChanged(CaseData caseData) {
         return (isNullOrEmpty(caseData.getCurrentPosition())
                 || !caseData.getPositionType().equals(caseData.getCurrentPosition()));
