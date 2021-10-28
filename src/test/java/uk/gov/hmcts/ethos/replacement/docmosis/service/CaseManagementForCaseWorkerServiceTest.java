@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.auth.AUTH;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -493,8 +494,10 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void createECC() {
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
-        assertEquals("11111", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
-                new ArrayList<>(), ABOUT_TO_SUBMIT_EVENT_CALLBACK).getCaseRefECC());
+        var casedata = caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), ABOUT_TO_SUBMIT_EVENT_CALLBACK);
+        assertEquals("11111", casedata.getCaseRefECC());
+        assertEquals("ECC", casedata.getCaseSource());
     }
 
     @Test

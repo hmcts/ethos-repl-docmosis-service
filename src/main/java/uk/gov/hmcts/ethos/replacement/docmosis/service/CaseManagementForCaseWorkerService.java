@@ -260,6 +260,7 @@ public class CaseManagementForCaseWorkerService {
                     case ABOUT_TO_SUBMIT_EVENT_CALLBACK:
                         ECCHelper.createECCLogic(currentCaseData, submitEvent.getCaseData());
                         currentCaseData.setRespondentECC(null);
+                        currentCaseData.setCaseSource("ECC");
                         break;
                     default:
                         sendUpdateSingleCaseECC(authToken, caseDetails, submitEvent.getCaseData(),
