@@ -21,10 +21,10 @@ async function createCaseAndFetchResponse(dataLocation = 'data/ccd-case-basic-da
     const authToken = await idamApi.getUserToken();
     const userId = await idamApi.getUserId(authToken);
     const serviceToken = await s2sService.getServiceToken();
-    logger.info('Creating Case');
+    logger.info('Creating Case ....');
 
     const ccdApiUrl = `http://ccd-data-store-api-${env}.service.core-compute-${env}.internal`;
-    const ccdStartCasePath = `/caseworkers/${userId}/jurisdictions/EMPLOYMENT/case-types/Leeds/event-triggers/hwfCreate/token`;
+    const ccdStartCasePath = `/caseworkers/${userId}/jurisdictions/EMPLOYMENT/case-types/Leeds/event-triggers/initiateCase/token`;
     const ccdSaveCasePath = `/caseworkers/${userId}/jurisdictions/EMPLOYMENT/case-types/Leeds/cases`;
 
     const startCaseOptions = {
