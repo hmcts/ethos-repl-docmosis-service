@@ -14,11 +14,11 @@ async function getUserToken() {
 
     const username = testConfig.TestEnvCWUser;
     const password = testConfig.TestEnvCWPassword;
-    const redirectUri = `https://div-pfe-${env}.service.core-compute-${env}.internal/authenticated`;
-    // const redirectUri1= `edirect_uri=https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect&scope=openid%20profile%20roles%20openid%20roles%20profile%20create-user%20manage-user`
+    // const redirectUri = `https://div-pfe-${env}.service.core-compute-${env}.internal/authenticated`;
+    const redirectUri= `https://rd-professional-api-aat.service.core-compute-aat.internal/`;
     const idamClientSecret = testConfig.TestIdamClientSecret;
     const idamBaseUrl = 'https://idam-api.aat.platform.hmcts.net';
-    const idamCodePath = `/oauth2/authorize?response_type=code&client_id=divorce&redirect_uri=${redirectUri}`;
+    const idamCodePath = `/oauth2/authorize?response_type=code&client_id=employment&redirect_uri=${redirectUri}`;
 
     const codeResponse = await request.post({
         uri: idamBaseUrl + idamCodePath,
@@ -32,7 +32,7 @@ async function getUserToken() {
 
     const code = JSON.parse(codeResponse).code;
 
-    const idamAuthPath = `/oauth2/token?grant_type=authorization_code&client_id=divorce&client_secret=${idamClientSecret}&redirect_uri=${redirectUri}&code=${code}`;
+    const idamAuthPath = `/oauth2/token?grant_type=authorization_code&client_id=employment&client_secret=${idamClientSecret}&redirect_uri=${redirectUri}&code=${code}`;
     const authTokenResponse = await request.post({
         uri: idamBaseUrl + idamAuthPath,
         headers: {
