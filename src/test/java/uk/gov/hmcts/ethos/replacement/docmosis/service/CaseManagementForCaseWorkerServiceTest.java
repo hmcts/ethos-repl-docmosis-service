@@ -337,6 +337,13 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    public void continuingRespondentNull() {
+        CaseData caseData = caseManagementForCaseWorkerService.continuingRespondent(scotlandCcdRequest3);
+        assertEquals(1, caseData.getRespondentCollection().size());
+        assertEquals(YES, caseData.getRespondentCollection().get(0).getValue().getResponseContinue());
+    }
+
+    @Test
     public void buildFlagsImageFileNameForNullFlagsTypes() {
         CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
