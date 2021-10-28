@@ -197,4 +197,49 @@ public class ServingClaimsReportTest {
         assertEquals(0, expectedDay5Count);
         assertEquals(1, expectedDay6PlusCount);
     }
+
+    @Test
+    public void shouldSetCorrectCountForDay1Serving() {
+        var servingClaimsReport = new ServingClaimsReport();
+        var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
+        var actualCaseCount =  resultListingData.getLocalReportsDetail().get(0)
+                .getValue().getClaimServedTotal();
+        var adhocReportType =  resultListingData.getLocalReportsDetail().get(0)
+                .getValue();
+
+        var expectedDay1Count = adhocReportType.getClaimServedDay1Total();
+        var expectedDay1Percent = adhocReportType.getClaimServedDay1Percent();
+        assertEquals("2", expectedDay1Count);
+        assertEquals("40", expectedDay1Percent);
+    }
+
+    @Test
+    public void shouldSetCorrectCountForDay2Serving() {
+        var servingClaimsReport = new ServingClaimsReport();
+        var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
+        var actualCaseCount =  resultListingData.getLocalReportsDetail().get(0)
+                .getValue().getClaimServedTotal();
+        var adhocReportType =  resultListingData.getLocalReportsDetail().get(0)
+                .getValue();
+
+        var expectedDay2Count = adhocReportType.getClaimServedDay2Total();
+        var expectedDay2Percent = adhocReportType.getClaimServedDay2Percent();
+        assertEquals("0", expectedDay2Count);
+        assertEquals("0", expectedDay2Percent);
+    }
+
+    @Test
+    public void shouldSetCorrectCountForDay3Serving() {
+        var servingClaimsReport = new ServingClaimsReport();
+        var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
+        var actualCaseCount =  resultListingData.getLocalReportsDetail().get(0)
+                .getValue().getClaimServedTotal();
+        var adhocReportType =  resultListingData.getLocalReportsDetail().get(0)
+                .getValue();
+
+        var expectedDay3Count = adhocReportType.getClaimServedDay3Total();
+        var expectedDay3Percent = adhocReportType.getClaimServedDay3Percent();
+        assertEquals("1", expectedDay3Count);
+        assertEquals("20", expectedDay3Percent);
+    }
 }
