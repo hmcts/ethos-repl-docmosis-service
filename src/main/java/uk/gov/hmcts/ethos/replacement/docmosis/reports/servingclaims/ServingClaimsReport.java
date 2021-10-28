@@ -7,21 +7,22 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
+import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedTypeItem;
-import uk.gov.hmcts.ecm.common.model.listing.ListingData;
-import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 
 import java.text.DecimalFormat;
-import java.time.Period;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 
 @Service
 @Slf4j
@@ -70,7 +71,6 @@ public class ServingClaimsReport {
 
     private void populateLocalReportDetail(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
         var listingData = listingDetails.getCaseData();
-        var reportsDetails = listingData.getLocalReportsDetail();
 
         var adhocReportTypeItem = new AdhocReportTypeItem();
         var adhocReportType = new AdhocReportType();
@@ -86,8 +86,8 @@ public class ServingClaimsReport {
         var servedClaimItemsCount = adhocReportType.getClaimServedItems().size();
         adhocReportType.setClaimServedTotal(String.valueOf(servedClaimItemsCount));
 
+        var reportsDetails = listingData.getLocalReportsDetail();
         reportsDetails.add(adhocReportTypeItem);
-
         listingDetails.getCaseData().setLocalReportsDetail(reportsDetails);
     }
 
