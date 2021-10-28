@@ -1,22 +1,27 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims;
 
-import lombok.extern.slf4j.*;
-import org.apache.commons.collections4.*;
-import org.elasticsearch.common.*;
-import org.springframework.stereotype.*;
-import uk.gov.hmcts.ecm.common.helpers.*;
-import uk.gov.hmcts.ecm.common.model.ccd.*;
-import uk.gov.hmcts.ecm.common.model.listing.*;
-import uk.gov.hmcts.ecm.common.model.listing.items.*;
-import uk.gov.hmcts.ecm.common.model.listing.types.*;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.elasticsearch.common.Strings;
+import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
+import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
+import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 
-import java.text.*;
-import java.time.*;
-import java.time.temporal.*;
-import java.util.*;
-import java.util.stream.*;
-
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import java.text.DecimalFormat;
+import java.time.Period;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -88,8 +93,8 @@ public class ServingClaimsReport {
 
     private void setLocalReportsDetail(AdhocReportType adhocReportType, CaseData caseData) {
 
-        if (!Strings.isNullOrEmpty(caseData.getReceiptDate()) &&
-                !Strings.isNullOrEmpty(caseData.getClaimServedDate())) {
+        if (!Strings.isNullOrEmpty(caseData.getReceiptDate())
+                && !Strings.isNullOrEmpty(caseData.getClaimServedDate())) {
 
             LocalDate caseReceiptDate = LocalDate.parse(caseData.getReceiptDate(), OLD_DATE_TIME_PATTERN2);
             LocalDate caseClaimServedDate = LocalDate.parse(caseData.getClaimServedDate(), OLD_DATE_TIME_PATTERN2);
@@ -138,8 +143,8 @@ public class ServingClaimsReport {
     private String getTotalServedClaims(AdhocReportType adhocReportType) {
         String totalCount = "0";
 
-        if (adhocReportType.getClaimServedItems() != null &&
-                !adhocReportType.getClaimServedItems().isEmpty()) {
+        if (adhocReportType.getClaimServedItems() != null
+                && !adhocReportType.getClaimServedItems().isEmpty()) {
             totalCount = String.valueOf(adhocReportType.getClaimServedItems().size());
         }
 

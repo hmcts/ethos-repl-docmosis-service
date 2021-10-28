@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.ArrayList;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
+
 @Slf4j
 public class ReportDocHelper {
     private static final String REPORT_LIST = "\"Report_List\":[\n";
@@ -32,7 +32,6 @@ public class ReportDocHelper {
     private static final String DAY_4_LIST = "\"Day_4_List\":[\n";
     private static final String DAY_5_LIST = "\"Day_5_List\":[\n";
     private static final String DAY_6_LIST = "\"Day_6_List\":[\n";
-
     private static final String CASE_REFERENCE = "{\"Case_Reference\":\"";
 
     private ReportDocHelper() {
@@ -48,7 +47,6 @@ public class ReportDocHelper {
         sb.append("\"accessKey\":\"").append(accessKey).append(NEW_LINE);
         sb.append("\"templateName\":\"").append(templateName).append(FILE_EXTENSION).append(NEW_LINE);
         sb.append("\"outputName\":\"").append(OUTPUT_FILE_NAME).append(NEW_LINE);
-
         sb.append("\"data\":{\n");
 
         if (CASES_AWAITING_JUDGMENT_REPORT.equals(listingData.getReportType())) {
