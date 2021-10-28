@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
@@ -171,17 +172,15 @@ public class CaseManagementForCaseWorkerService {
 
     public CaseData continuingRespondent(CCDRequest ccdRequest) {
         var caseData = ccdRequest.getCaseDetails().getCaseData();
-        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+        if (CollectionUtils.isEmpty(caseData.getRepCollection())) {
             List<RespondentSumTypeItem> continuingRespondent = new ArrayList<>();
             List<RespondentSumTypeItem> notContinuingRespondent = new ArrayList<>();
             for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
                 var respondentSumType = respondentSumTypeItem.getValue();
-                if (respondentSumType.getResponseContinue() != null) {
-                    if (respondentSumType.getResponseContinue().equals(YES)) {
-                        continuingRespondent.add(respondentSumTypeItem);
-                    } else {
-                        notContinuingRespondent.add(respondentSumTypeItem);
-                    }
+                if (YES.equals(respondentSumType.getResponseContinue())) {
+                    continuingRespondent.add(respondentSumTypeItem);
+                } else if (NO.equals(respondentSumType.getResponseContinue())){
+                    notContinuingRespondent.add(respondentSumTypeItem);
                 } else {
                     respondentSumType.setResponseContinue(YES);
                     continuingRespondent.add(respondentSumTypeItem);
