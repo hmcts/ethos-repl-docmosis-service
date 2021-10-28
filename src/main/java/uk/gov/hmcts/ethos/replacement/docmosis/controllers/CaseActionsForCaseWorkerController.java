@@ -315,8 +315,8 @@ public class CaseActionsForCaseWorkerController {
         if (errors.isEmpty()) {
             errors = eventValidationService.validateET3ResponseFields(caseData);
             if (errors.isEmpty()) {
-                caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
                 caseManagementForCaseWorkerService.continuingRespondent(ccdRequest);
+                caseManagementForCaseWorkerService.struckOutRespondents(ccdRequest);
             }
         }
 
