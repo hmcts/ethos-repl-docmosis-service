@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
+import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 
@@ -21,7 +22,6 @@ import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
-import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
 
 @Slf4j
 public class ReportDocHelper {
@@ -92,7 +92,8 @@ public class ReportDocHelper {
         return sb;
     }
 
-    private static StringBuilder getCasesAwaitingJudgmentReport(ListingData listingData) throws JsonProcessingException {
+    private static StringBuilder getCasesAwaitingJudgmentReport(ListingData listingData)
+            throws JsonProcessingException {
         if (!(listingData instanceof CasesAwaitingJudgmentReportData)) {
             throw new IllegalStateException(("ListingData is not instanceof CasesAwaitingJudgmentReportData"));
         }
@@ -261,6 +262,7 @@ public class ReportDocHelper {
         }
         return sb;
     }
+
     private static StringBuilder getCasesCompletedReport(ListingData listingData) {
         var sb = new StringBuilder();
         AdhocReportType localReportDetailHdr = listingData.getLocalReportsDetailHdr();
@@ -400,7 +402,7 @@ public class ReportDocHelper {
             var listBlockOpeners = List.of(DAY_1_LIST, DAY_2_LIST,
                                                        DAY_3_LIST, DAY_4_LIST,
                                                        DAY_5_LIST, DAY_6_LIST);
-            for(int dayIndex = 0; dayIndex <= claimsServedDayListUpperBoundary; dayIndex++) {
+            for (int dayIndex = 0; dayIndex <= claimsServedDayListUpperBoundary; dayIndex++) {
                 addEntriesByServingDay(dayIndex, listBlockOpeners.get(dayIndex),
                         reportContent, listingData);
             }
@@ -439,7 +441,7 @@ public class ReportDocHelper {
         }
 
         reportContent.append("],\n");
-        var currentDayTotal = "\"day_"+ (dayNumber + 1 )+ "_total_count\":\"";
+        var currentDayTotal = "\"day_" + (dayNumber + 1) + "_total_count\":\"";
         reportContent.append(currentDayTotal)
                 .append(claimServedTypeItemsListSize).append(NEW_LINE);
         return reportContent;
@@ -452,7 +454,7 @@ public class ReportDocHelper {
         reportRowContent.append(CASE_REFERENCE)
                 .append(nullCheck(claimServedTypeItem.getClaimServedCaseNumber())).append(NEW_LINE);
 
-        if(dayNumber >= claimsServedDayListUpperBoundary) {
+        if (dayNumber >= claimsServedDayListUpperBoundary) {
             reportRowContent.append("\"Actual_Number_Of_Days\":\"")
                     .append(nullCheck(claimServedTypeItem.getActualNumberOfDays())).append(NEW_LINE);
         }
@@ -469,7 +471,7 @@ public class ReportDocHelper {
     private static StringBuilder getServedClaimsReportSummary(ListingData listingData) {
         var reportSummaryContent = new StringBuilder();
 
-        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())){
+        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())) {
             var adhocReportTypeItem = listingData.getLocalReportsDetail().get(0);
             var adhocReportType = adhocReportTypeItem.getValue();
 

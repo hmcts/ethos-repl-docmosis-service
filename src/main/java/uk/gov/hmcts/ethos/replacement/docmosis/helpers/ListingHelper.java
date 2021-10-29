@@ -32,16 +32,16 @@ import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_DUNDEE_VENUE_FIEL
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_EDINBURGH_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_GLASGOW_VENUE_FIELD_NAME;
 import static uk.gov.hmcts.ecm.common.helpers.ESHelper.LISTING_VENUE_FIELD_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 
 @Slf4j
 public class ListingHelper {
 
     private static final String ROOM_NOT_ALLOCATED = "* Not Allocated";
     private static final int NUMBER_CHAR_PARSING_DATE = 20;
-
+    private static final String LISTING_NEWLINE = "\"listing\":[\n";
     static final List<String> REPORTS = Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
         LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT, TIME_TO_FIRST_HEARING_REPORT,
         SERVING_CLAIMS_REPORT);
@@ -314,7 +314,7 @@ public class ListingHelper {
                 .stream()
                 .filter(listingTypeItem -> !isEmptyHearingDate(listingTypeItem.getValue()))
                 .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getCauseListDate(),
-                () -> new TreeMap<>(getDateComparator()), Collectors.toList()));
+                    () -> new TreeMap<>(getDateComparator()), Collectors.toList()));
     }
 
     private static Iterator<Map.Entry<String, List<ListingTypeItem>>> getEntriesByDate(StringBuilder sb,
@@ -331,7 +331,7 @@ public class ListingHelper {
             Map.Entry<String, List<ListingTypeItem>> listingEntry = entries.next();
             sb.append("{\"date\":\"").append(listingEntry.getKey()).append(NEW_LINE);
             sb.append("\"case_total\":\"").append(listingEntry.getValue().size()).append(NEW_LINE);
-            sb.append("\"listing\":[\n");
+            sb.append(LISTING_NEWLINE);
             for (var i = 0; i < listingEntry.getValue().size(); i++) {
                 sb.append(getListingTypeRow(listingEntry.getValue().get(i).getValue(), caseType, listingData));
                 if (i != listingEntry.getValue().size() - 1) {
@@ -371,7 +371,7 @@ public class ListingHelper {
                 && SERVING_CLAIMS_REPORT.equals(listingData.getReportType())) {
             return getServedClaimsReportPeriod(listingData);
 
-         } else if (listingData.getHearingDateType() != null
+        } else if (listingData.getHearingDateType() != null
                 && RANGE_HEARING_DATE_TYPE.equals(listingData.getHearingDateType())) {
             sb.append("\"Listed_date_from\":\"")
                     .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
@@ -387,10 +387,10 @@ public class ListingHelper {
     private static StringBuilder getServedClaimsReportPeriod(ListingData listingData) {
         String listedDate = "";
         var sb = new StringBuilder();
-        if(listingData.getListingDateFrom() != null && listingData.getListingDateTo() != null) {
-            listedDate = " Between " +
-                    UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom()) +
-                    " and " + UtilHelper.listingFormatLocalDate(listingData.getListingDateTo());
+
+        if (listingData.getListingDateFrom() != null && listingData.getListingDateTo() != null) {
+            listedDate = " Between " + UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())
+                    + " and " + UtilHelper.listingFormatLocalDate(listingData.getListingDateTo());
         } else {
             listedDate = " On " + UtilHelper.listingFormatLocalDate(listingData.getListingDate());
         }
@@ -400,7 +400,6 @@ public class ListingHelper {
         return sb;
     }
 
-
     private static boolean isEmptyHearingRoom(ListingType listingType) {
         if (listingType.getHearingRoom() != null) {
             return listingType.getHearingRoom().trim().isEmpty();
@@ -408,7 +407,7 @@ public class ListingHelper {
         return true;
     }
 
-    private static TreeMap<String, List<ListingTypeItem>> getListHearingsByRoomWithNotAllocated (
+    private static TreeMap<String, List<ListingTypeItem>> getListHearingsByRoomWithNotAllocated(
             List<ListingTypeItem> listingSubCollection) {
         TreeMap<String, List<ListingTypeItem>> sortedMap = listingSubCollection
                 .stream()
@@ -439,7 +438,7 @@ public class ListingHelper {
                 .stream()
                 .filter(listingTypeItem -> !isEmptyHearingVenue(listingTypeItem.getValue()))
                 .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getCauseListVenue(),
-                 () -> new TreeMap<>(getVenueComparator()), Collectors.toList()));
+                    () -> new TreeMap<>(getVenueComparator()), Collectors.toList()));
         List<ListingTypeItem> notAllocated = listingData.getListingCollection()
                 .stream()
                 .filter(listingTypeItem -> isEmptyHearingVenue(listingTypeItem.getValue()))
@@ -463,7 +462,7 @@ public class ListingHelper {
             Map.Entry<String, List<ListingTypeItem>> listingEntry = entries.next();
             String hearingRoomOrVenue = byRoom ? "Hearing_room" : "Hearing_venue";
             sb.append("{\"").append(hearingRoomOrVenue).append("\":\"").append(listingEntry.getKey()).append(NEW_LINE);
-            sb.append("\"listing\":[\n");
+            sb.append(LISTING_NEWLINE);
             for (var i = 0; i < listingEntry.getValue().size(); i++) {
                 sb.append(getListingTypeRow(listingEntry.getValue().get(i).getValue(), caseType, listingData));
                 if (i != listingEntry.getValue().size() - 1) {
@@ -483,7 +482,7 @@ public class ListingHelper {
     private static StringBuilder getCaseCauseList(ListingData listingData, String caseType) {
         List<ListingTypeItem> listingTypeItems = listingData.getListingCollection();
         var sb = new StringBuilder();
-        sb.append("\"listing\":[\n");
+        sb.append(LISTING_NEWLINE);
         for (var i = 0; i < listingTypeItems.size(); i++) {
             sb.append(getListingTypeRow(listingTypeItems.get(i).getValue(), caseType, listingData));
             if (i != listingTypeItems.size() - 1) {

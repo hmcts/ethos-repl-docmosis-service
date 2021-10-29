@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.Test;
 import java.util.List;
+
 import org.assertj.core.util.Strings;
 
 public class ServingClaimsReportTest {
@@ -111,7 +112,7 @@ public class ServingClaimsReportTest {
 
         var caseData4 = new CaseData();
         caseData4.setEthosCaseReference("1800525/2020");
-        caseData4.setReceiptDate("2020-08-10");
+        caseData4.setReceiptDate("2020-04-10");
         var casePreAcceptType4 = new CasePreAcceptType();
         casePreAcceptType4.setDateAccepted("2020-08-07");
         caseData4.setPreAcceptCase(casePreAcceptType4);
@@ -127,7 +128,6 @@ public class ServingClaimsReportTest {
         caseData4.setClaimServedDate("2020-08-15");
         submitEvent4.setCaseData(caseData4);
 
-        // Case without BF Action & Claim Served Date
         var submitEvent5 = new SubmitEvent();
         submitEvent5.setCaseId(5);
         submitEvent5.setState(ACCEPTED_STATE);
@@ -172,8 +172,6 @@ public class ServingClaimsReportTest {
     public void shouldReturnCorrectCasesCountByServingDay() {
         var servingClaimsReport = new ServingClaimsReport();
         var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
-        var actualCaseCount =  resultListingData.getLocalReportsDetail().get(0)
-                .getValue().getClaimServedTotal();
         var adhocReportType =  resultListingData.getLocalReportsDetail().get(0)
                 .getValue();
         var claimServedItems = adhocReportType.getClaimServedItems();
@@ -202,11 +200,8 @@ public class ServingClaimsReportTest {
     public void shouldSetCorrectCountForDay1Serving() {
         var servingClaimsReport = new ServingClaimsReport();
         var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
-        var actualCaseCount =  resultListingData.getLocalReportsDetail().get(0)
-                .getValue().getClaimServedTotal();
         var adhocReportType =  resultListingData.getLocalReportsDetail().get(0)
                 .getValue();
-
         var expectedDay1Count = adhocReportType.getClaimServedDay1Total();
         var expectedDay1Percent = adhocReportType.getClaimServedDay1Percent();
         assertEquals("2", expectedDay1Count);
@@ -217,11 +212,8 @@ public class ServingClaimsReportTest {
     public void shouldSetCorrectCountForDay2Serving() {
         var servingClaimsReport = new ServingClaimsReport();
         var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
-        var actualCaseCount =  resultListingData.getLocalReportsDetail().get(0)
-                .getValue().getClaimServedTotal();
         var adhocReportType =  resultListingData.getLocalReportsDetail().get(0)
                 .getValue();
-
         var expectedDay2Count = adhocReportType.getClaimServedDay2Total();
         var expectedDay2Percent = adhocReportType.getClaimServedDay2Percent();
         assertEquals("0", expectedDay2Count);
@@ -232,14 +224,40 @@ public class ServingClaimsReportTest {
     public void shouldSetCorrectCountForDay3Serving() {
         var servingClaimsReport = new ServingClaimsReport();
         var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
-        var actualCaseCount =  resultListingData.getLocalReportsDetail().get(0)
-                .getValue().getClaimServedTotal();
         var adhocReportType =  resultListingData.getLocalReportsDetail().get(0)
                 .getValue();
-
         var expectedDay3Count = adhocReportType.getClaimServedDay3Total();
         var expectedDay3Percent = adhocReportType.getClaimServedDay3Percent();
         assertEquals("1", expectedDay3Count);
         assertEquals("20", expectedDay3Percent);
     }
+
+    @Test
+    public void shouldSetCorrectCountFor6PlusDaysServing() {
+        var servingClaimsReport = new ServingClaimsReport();
+        var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
+        var adhocReportType =  resultListingData.getLocalReportsDetail().get(0)
+                .getValue();
+        var expectedDay6PlusDaysCount = adhocReportType.getClaimServed6PlusDaysTotal();
+        var expectedDay6PlusDaysPercent = adhocReportType.getClaimServed6PlusDaysPercent();
+        assertEquals("1", expectedDay6PlusDaysCount);
+        assertEquals("20", expectedDay6PlusDaysPercent);
+    }
+
+    @Test
+    public void shouldSetCorrectActualAndReportedDayCountFor6PlusDaysServing() {
+        var servingClaimsReport = new ServingClaimsReport();
+        var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
+        var claimServedItems = resultListingData.getLocalReportsDetail()
+                .get(0).getValue().getClaimServedItems();
+                var expectedDay6PlusItems = claimServedItems.stream()
+                .filter(x -> Integer.parseInt(x.getValue().getReportedNumberOfDays()) >= 5)
+                        .collect(java.util.stream.Collectors.toList());
+                var firstClaimServedItem = expectedDay6PlusItems.get(0);
+        var reportedNumberOfDays = firstClaimServedItem.getValue().getReportedNumberOfDays();
+        var actualNumberOfDays = firstClaimServedItem.getValue().getActualNumberOfDays();
+        assertEquals("5", reportedNumberOfDays);
+        assertEquals("127", actualNumberOfDays);
+    }
+
 }

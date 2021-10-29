@@ -5,12 +5,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.common.Strings;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
-import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedTypeItem;
 
@@ -21,6 +21,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.UUID;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 
@@ -70,8 +71,6 @@ public class ServingClaimsReport {
     }
 
     private void populateLocalReportDetail(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
-        var listingData = listingDetails.getCaseData();
-
         var adhocReportTypeItem = new AdhocReportTypeItem();
         var adhocReportType = new AdhocReportType();
         adhocReportType.setClaimServedItems(new ArrayList<>());
@@ -80,12 +79,12 @@ public class ServingClaimsReport {
             setLocalReportsDetail(adhocReportType, submitEvent.getCaseData());
         }
 
-        adhocReportTypeItem.setId(java.util.UUID.randomUUID().toString());
         adhocReportTypeItem.setValue(adhocReportType);
 
         var servedClaimItemsCount = adhocReportType.getClaimServedItems().size();
         adhocReportType.setClaimServedTotal(String.valueOf(servedClaimItemsCount));
 
+        var listingData = listingDetails.getCaseData();
         var reportsDetails = listingData.getLocalReportsDetail();
         reportsDetails.add(adhocReportTypeItem);
         listingDetails.getCaseData().setLocalReportsDetail(reportsDetails);
@@ -110,6 +109,7 @@ public class ServingClaimsReport {
             claimServedType.setClaimServedType(getServedClaimStatus(caseData));
 
             var claimServedTypeItem = new ClaimServedTypeItem();
+            claimServedTypeItem.setId(String.valueOf(UUID.randomUUID()));
             claimServedTypeItem.setValue(claimServedType);
 
             adhocReportType.getClaimServedItems().add(claimServedTypeItem);
