@@ -29,7 +29,6 @@ public class ServingClaimsReportTest {
 
     @Before
     public void setUp() {
-
         listingDetails = new ListingDetails();
         var listingDataRange = new ListingData();
         listingDataRange.setListingDateFrom("2020-08-02");
@@ -254,10 +253,20 @@ public class ServingClaimsReportTest {
                 .filter(x -> Integer.parseInt(x.getValue().getReportedNumberOfDays()) >= 5)
                         .collect(java.util.stream.Collectors.toList());
                 var firstClaimServedItem = expectedDay6PlusItems.get(0);
+
         var reportedNumberOfDays = firstClaimServedItem.getValue().getReportedNumberOfDays();
         var actualNumberOfDays = firstClaimServedItem.getValue().getActualNumberOfDays();
         assertEquals("5", reportedNumberOfDays);
         assertEquals("127", actualNumberOfDays);
+    }
+
+    @Test
+    public void shoudlCorrectlyHandleWhenNoClaimsServed() {
+        var servingClaimsReport = new ServingClaimsReport();
+        submitEvents = null;
+        var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
+        var claimServedItemsCount = resultListingData.getLocalReportsDetail().size();
+        assertEquals("0", String.valueOf(claimServedItemsCount));
     }
 
 }

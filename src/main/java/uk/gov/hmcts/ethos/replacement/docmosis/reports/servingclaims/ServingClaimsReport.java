@@ -41,33 +41,16 @@ public class ServingClaimsReport {
     }
 
     private void initReport(ListingDetails listingDetails) {
-
         var listingData = listingDetails.getCaseData();
         var adhocReportType = new AdhocReportType();
         adhocReportType.setReportOffice(UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
-        adhocReportType.setClaimServedItems(new ArrayList<>());
         listingData.setLocalReportsDetailHdr(adhocReportType);
         listingData.setLocalReportsDetail(new ArrayList<>());
     }
 
     private void executeReport(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
-
         populateLocalReportDetail(listingDetails, submitEvents);
-
         populateLocalReportSummary(listingDetails.getCaseData());
-    }
-
-    private void populateLocalReportSummary(ListingData caseData) {
-
-        var adhocReportTypeItemsList = caseData.getLocalReportsDetail();
-
-        if (adhocReportTypeItemsList != null && !adhocReportTypeItemsList.isEmpty()) {
-            var adhocReportType = adhocReportTypeItemsList.get(0).getValue();
-
-            for (int dayNumber = 0; dayNumber < 6; dayNumber++) {
-                setServedClaimsDetailsByDay(adhocReportType, dayNumber);
-            }
-        }
     }
 
     private void populateLocalReportDetail(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
@@ -94,7 +77,6 @@ public class ServingClaimsReport {
 
         if (!Strings.isNullOrEmpty(caseData.getReceiptDate())
                 && !Strings.isNullOrEmpty(caseData.getClaimServedDate())) {
-
             LocalDate caseReceiptDate = LocalDate.parse(caseData.getReceiptDate(), OLD_DATE_TIME_PATTERN2);
             LocalDate caseClaimServedDate = LocalDate.parse(caseData.getClaimServedDate(), OLD_DATE_TIME_PATTERN2);
             long actualNumberOfDaysToServingClaim = ChronoUnit.DAYS.between(caseReceiptDate, caseClaimServedDate);
@@ -106,7 +88,6 @@ public class ServingClaimsReport {
             claimServedType.setCaseReceiptDate(caseReceiptDate.toString());
             claimServedType.setClaimServedDate(caseClaimServedDate.toString());
             claimServedType.setClaimServedCaseNumber(caseData.getEthosCaseReference());
-            claimServedType.setClaimServedType(getServedClaimStatus(caseData));
 
             var claimServedTypeItem = new ClaimServedTypeItem();
             claimServedTypeItem.setId(String.valueOf(UUID.randomUUID()));
@@ -114,17 +95,7 @@ public class ServingClaimsReport {
 
             adhocReportType.getClaimServedItems().add(claimServedTypeItem);
         }
-    }
 
-    private String getServedClaimStatus(CaseData caseData) {
-        String servedClaimStatus = null;
-        var casePreAcceptType = caseData.getPreAcceptCase();
-
-        if (casePreAcceptType != null) {
-            servedClaimStatus = casePreAcceptType.getCaseAccepted();
-        }
-
-        return servedClaimStatus;
     }
 
     private int getReportedNumberOfDays(LocalDate caseReceiptDate, LocalDate caseClaimServedDate) {
@@ -143,12 +114,24 @@ public class ServingClaimsReport {
     private String getTotalServedClaims(AdhocReportType adhocReportType) {
         String totalCount = "0";
 
-        if (adhocReportType.getClaimServedItems() != null
-                && !adhocReportType.getClaimServedItems().isEmpty()) {
+        if (CollectionUtils.isNotEmpty(adhocReportType.getClaimServedItems())) {
             totalCount = String.valueOf(adhocReportType.getClaimServedItems().size());
         }
 
         return totalCount;
+    }
+
+    private void populateLocalReportSummary(ListingData caseData) {
+        var adhocReportTypeItemsList = caseData.getLocalReportsDetail();
+
+        if (CollectionUtils.isNotEmpty(adhocReportTypeItemsList)) {
+            var adhocReportType = adhocReportTypeItemsList.get(0).getValue();
+
+            for (int dayNumber = 0; dayNumber < 6; dayNumber++) {
+                setServedClaimsDetailsByDay(adhocReportType, dayNumber);
+            }
+        }
+
     }
 
     private void setServedClaimsDetailsByDay(AdhocReportType adhocReportType, int dayNumber) {
@@ -173,8 +156,7 @@ public class ServingClaimsReport {
         return acceptedClaimItems;
     }
 
-    private void setServedClaimsSummary(AdhocReportType adhocReportType,
-                                        String totalServedClaims,
+    private void setServedClaimsSummary(AdhocReportType adhocReportType, String totalServedClaims,
                                         int dayNumber) {
         var acceptedClaimItems = getServedClaimItemsByDayNumber(adhocReportType, dayNumber);
         var acceptedClaimItemsCount = String.valueOf(acceptedClaimItems.size());

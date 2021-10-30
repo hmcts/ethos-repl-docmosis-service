@@ -227,7 +227,7 @@ public class ListingGenerationController {
                                                                       String userToken) {
         List<String> errorsList = new ArrayList<>();
 
-        if (hasListings(listingData) || isAllowedReportType(listingData)) {
+        if (hasListings(listingData) || (isAllowedReportType(listingData) && hasServedClaims(listingData))) {
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
             updateListingDocMarkUp(listingData, documentInfo);
             return ResponseEntity.ok(ListingCallbackResponse.builder()
@@ -235,7 +235,7 @@ public class ListingGenerationController {
                     .significant_item(Helper.generateSignificantItem(documentInfo, errorsList))
                     .build());
         } else {
-            errorsList.add("No hearings have been found for your search criteria");
+            errorsList.add("No cases (with hearings / claims served) have been found for your search criteria");
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .errors(errorsList)
                     .data(listingData)
@@ -243,12 +243,8 @@ public class ListingGenerationController {
         }
     }
 
-    private void updateListingDocMarkUp(ListingData listingData, DocumentInfo documentInfo) {
-        listingData.setDocMarkUp(documentInfo.getMarkUp());
-    }
-
-    private DocumentInfo getDocumentInfo(ListingData listingData, String caseTypeId, String userToken) {
-        return listingService.processHearingDocument(listingData, caseTypeId, userToken);
+    private boolean hasServedClaims(ListingData listingData) {
+       return CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail());
     }
 
     private boolean isAllowedReportType(ListingData listingData) {
@@ -257,6 +253,14 @@ public class ListingGenerationController {
 
     private boolean hasListings(ListingData listingData) {
         return CollectionUtils.isNotEmpty(listingData.getListingCollection());
+    }
+
+    private void updateListingDocMarkUp(ListingData listingData, DocumentInfo documentInfo) {
+        listingData.setDocMarkUp(documentInfo.getMarkUp());
+    }
+
+    private DocumentInfo getDocumentInfo(ListingData listingData, String caseTypeId, String userToken) {
+        return listingService.processHearingDocument(listingData, caseTypeId, userToken);
     }
 
     @PostMapping(value = "/generateHearingDocument", consumes = APPLICATION_JSON_VALUE)
