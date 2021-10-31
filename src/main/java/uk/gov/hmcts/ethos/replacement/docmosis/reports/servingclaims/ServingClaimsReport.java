@@ -30,13 +30,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTE
 public class ServingClaimsReport {
 
     public ListingData generateReportData(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
-
         initReport(listingDetails);
-
-        if (CollectionUtils.isNotEmpty(submitEvents)) {
-            executeReport(listingDetails, submitEvents);
-        }
-
+        executeReport(listingDetails, submitEvents);
         return listingDetails.getCaseData();
     }
 
@@ -58,8 +53,10 @@ public class ServingClaimsReport {
         var adhocReportType = new AdhocReportType();
         adhocReportType.setClaimServedItems(new ArrayList<>());
 
-        for (var submitEvent : submitEvents) {
-            setLocalReportsDetail(adhocReportType, submitEvent.getCaseData());
+        if (CollectionUtils.isNotEmpty(submitEvents)) {
+            for (var submitEvent : submitEvents) {
+                setLocalReportsDetail(adhocReportType, submitEvent.getCaseData());
+            }
         }
 
         adhocReportTypeItem.setValue(adhocReportType);

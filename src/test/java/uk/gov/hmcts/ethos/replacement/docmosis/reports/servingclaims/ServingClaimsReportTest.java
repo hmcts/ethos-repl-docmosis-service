@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 
-import static org.junit.Assert.assertEquals;
+
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_LISTING_CASE_TYPE_ID;
@@ -13,12 +13,13 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.BFActionType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
-
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.Test;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.assertj.core.util.Strings;
 
@@ -251,7 +252,7 @@ public class ServingClaimsReportTest {
                 .get(0).getValue().getClaimServedItems();
                 var expectedDay6PlusItems = claimServedItems.stream()
                 .filter(x -> Integer.parseInt(x.getValue().getReportedNumberOfDays()) >= 5)
-                        .collect(java.util.stream.Collectors.toList());
+                        .collect(Collectors.toList());
                 var firstClaimServedItem = expectedDay6PlusItems.get(0);
 
         var reportedNumberOfDays = firstClaimServedItem.getValue().getReportedNumberOfDays();
@@ -261,12 +262,40 @@ public class ServingClaimsReportTest {
     }
 
     @Test
-    public void shoudlCorrectlyHandleWhenNoClaimsServed() {
+    public void shouldSetCorrectDayForLessThan6DaysServingClaim() {
+        var servingClaimsReport = new ServingClaimsReport();
+        var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
+        var claimServedItems = resultListingData.getLocalReportsDetail()
+                .get(0).getValue().getClaimServedItems();
+        var secondClaimServedItem = claimServedItems.get(1);
+        var numberOfDays = secondClaimServedItem.getValue().getActualNumberOfDays();
+        assertEquals("3", numberOfDays);
+    }
+
+    @Test
+    public void shouldNotAddServedClaimItemWhenNoClaimsServedFound() {
         var servingClaimsReport = new ServingClaimsReport();
         submitEvents = null;
         var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
-        var claimServedItemsCount = resultListingData.getLocalReportsDetail().size();
+        var claimServedItemsCount = resultListingData.getLocalReportsDetail().get(0).getValue()
+                .getClaimServedItems().size();
         assertEquals("0", String.valueOf(claimServedItemsCount));
+    }
+
+    @Test
+    public void shouldNotIncludeCasesWithNoReceiptDateProvided() {
+        var servingClaimsReport = new ServingClaimsReport();
+        var caseOne = submitEvents.get(0);
+        caseOne.getCaseData().setReceiptDate(null);
+        caseOne.getCaseData().setClaimServedDate(null);
+        var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
+        var claimServedItems = resultListingData.getLocalReportsDetail()
+                .get(0).getValue().getClaimServedItems();
+        var hasNoCaseOneEntry = claimServedItems.stream()
+                .filter(x -> x.getValue().getClaimServedCaseNumber() == caseOne.getCaseData().getEthosCaseReference())
+                .collect(Collectors.toList()).isEmpty();
+        assertEquals(4, claimServedItems.size());
+        assertEquals(true, hasNoCaseOneEntry);
     }
 
 }
