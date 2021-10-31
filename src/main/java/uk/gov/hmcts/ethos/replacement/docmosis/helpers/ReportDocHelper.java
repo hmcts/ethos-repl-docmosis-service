@@ -415,7 +415,6 @@ public class ReportDocHelper {
                                                         StringBuilder reportContent, ListingData listingData) {
 
         var itemsList = listingData.getLocalReportsDetail().get(0);
-
         var claimServedTypeItems = itemsList.getValue().getClaimServedItems()
                 .stream()
                 .filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) == dayNumber)
@@ -427,6 +426,11 @@ public class ReportDocHelper {
 
         if (claimServedTypeItemsCount == 0) {
             reportContent.append(CASE_REFERENCE).append(claimServedTypeItemsListSize).append(NEW_LINE);
+
+            if (dayNumber >= 5) {
+                reportContent.append("\"Actual_Number_Of_Days\":\"")
+                        .append(claimServedTypeItemsListSize).append(NEW_LINE);
+            }
             reportContent.append("\"Date_Of_Receipt\":\"").append(claimServedTypeItemsListSize).append(NEW_LINE);
             reportContent.append("\"Date_Of_Service\":\"").append(claimServedTypeItemsListSize);
             reportContent.append("\"}");
