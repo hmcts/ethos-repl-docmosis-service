@@ -48,10 +48,9 @@ public class ListingGenerationController {
     @PostMapping(value = "/listingCaseCreation", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "handles logic related to the creation of listing cases.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<ListingCallbackResponse> listingCaseCreation(
             @RequestBody ListingRequest listingRequest,
@@ -73,10 +72,9 @@ public class ListingGenerationController {
     @PostMapping(value = "/listingSingleCases", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "search hearings by venue and date in a specific case.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> listingSingleCases(
             @RequestBody CCDRequest ccdRequest,
@@ -104,10 +102,10 @@ public class ListingGenerationController {
     @PostMapping(value = "/listingHearings", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "search hearings by venue and date.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully",
+                response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<ListingCallbackResponse> listingHearings(
             @RequestBody ListingRequest listingRequest,
@@ -143,10 +141,9 @@ public class ListingGenerationController {
     @PostMapping(value = "/generateListingsDocSingleCases", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "generate a listing document.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> generateListingsDocSingleCases(
             @RequestBody CCDRequest ccdRequest,
@@ -181,10 +178,9 @@ public class ListingGenerationController {
     @PostMapping(value = "/generateListingsDocSingleCasesConfirmation", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "generate a listing document confirmation.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> generateListingsDocSingleCasesConfirmation(
             @RequestBody CCDRequest ccdRequest,
@@ -206,10 +202,9 @@ public class ListingGenerationController {
     @PostMapping(value = "/generateReport", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "generate data for selected report.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<ListingCallbackResponse> generateReport(
             @RequestBody ListingRequest listingRequest,
@@ -227,10 +222,12 @@ public class ListingGenerationController {
 
     }
 
-    private ResponseEntity getResponseEntity(ListingData listingData, String caseTypeId, String userToken) {
+    private ResponseEntity<ListingCallbackResponse> getResponseEntity(ListingData listingData,
+                                                                      String caseTypeId,
+                                                                      String userToken) {
         List<String> errorsList = new ArrayList<>();
 
-        if (hasNonEmptyListings(listingData)) {
+        if (hasListings(listingData) || (isAllowedReportType(listingData) && hasServedClaims(listingData))) {
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
             updateListingDocMarkUp(listingData, documentInfo);
             return ResponseEntity.ok(ListingCallbackResponse.builder()
@@ -238,12 +235,24 @@ public class ListingGenerationController {
                     .significant_item(Helper.generateSignificantItem(documentInfo, errorsList))
                     .build());
         } else {
-            errorsList.add("No hearings have been found for your search criteria");
+            errorsList.add("No cases (with hearings / claims served) have been found for your search criteria");
             return ResponseEntity.ok(ListingCallbackResponse.builder()
                     .errors(errorsList)
                     .data(listingData)
                     .build());
         }
+    }
+
+    private boolean hasServedClaims(ListingData listingData) {
+       return CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail());
+    }
+
+    private boolean isAllowedReportType(ListingData listingData) {
+        return ListingHelper.isReportType(listingData.getReportType());
+    }
+
+    private boolean hasListings(ListingData listingData) {
+        return CollectionUtils.isNotEmpty(listingData.getListingCollection());
     }
 
     private void updateListingDocMarkUp(ListingData listingData, DocumentInfo documentInfo) {
@@ -254,21 +263,12 @@ public class ListingGenerationController {
         return listingService.processHearingDocument(listingData, caseTypeId, userToken);
     }
 
-    private boolean hasNonEmptyListings(ListingData listingData) {
-
-        var isListingsCollNotEmpty = CollectionUtils.isNotEmpty(listingData.getListingCollection());
-        var isAllowedReportType = ListingHelper.isReportType(listingData.getReportType());
-
-        return (isListingsCollNotEmpty || isAllowedReportType);
-    }
-
     @PostMapping(value = "/generateHearingDocument", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "generate a listing document.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<ListingCallbackResponse> generateHearingDocument(
             @RequestBody ListingRequest listingRequest,
@@ -283,17 +283,15 @@ public class ListingGenerationController {
         var listingData = listingRequest.getCaseDetails().getCaseData();
         var caseTypeId = listingRequest.getCaseDetails().getCaseTypeId();
 
-        return getResponseEntity(listingData,caseTypeId, userToken);
-
+        return getResponseEntity(listingData, caseTypeId, userToken);
     }
 
     @PostMapping(value = "/generateHearingDocumentConfirmation", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "generate a listing document confirmation.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<ListingCallbackResponse> generateHearingDocumentConfirmation(
             @RequestBody ListingRequest listingRequest,

@@ -195,7 +195,7 @@ def versions = [
 
 dependencies {
 
-    implementation 'com.github.hmcts:ecm-common:0.1.141'
+    implementation 'com.github.hmcts:ecm-common:0.1.142'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
@@ -210,6 +210,7 @@ dependencies {
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.21'
+
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.48'
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.48'
 
