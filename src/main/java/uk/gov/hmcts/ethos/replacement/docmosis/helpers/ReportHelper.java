@@ -16,7 +16,9 @@ import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.collections4.CollectionUtils;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
@@ -30,8 +32,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_REJEC
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
 
 @Slf4j
 public class ReportHelper {
@@ -59,7 +59,7 @@ public class ReportHelper {
             log.info(CASES_SEARCHED + submitEvents.size());
             List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
             for (SubmitEvent submitEvent : submitEvents) {
-               addBfDateTypeItems(submitEvent, listingDetails, bfDateTypeItems);
+                addBfDateTypeItems(submitEvent, listingDetails, bfDateTypeItems);
             }
             listingDetails.getCaseData().setBfDateCollection(bfDateTypeItems);
         }
@@ -67,6 +67,7 @@ public class ReportHelper {
         listingDetails.getCaseData().clearReportFields();
         return listingDetails.getCaseData();
     }
+
     private static void addBfDateTypeItems(
             SubmitEvent submitEvent,
             ListingDetails listingDetails,
@@ -152,7 +153,7 @@ public class ReportHelper {
 
     private static long getSinglesTotal(List<AdhocReportTypeItem> localReportsDetailList) {
         long singlesTotal = 0;
-        if(!localReportsDetailList.isEmpty() && localReportsDetailList.size() > 0) {
+        if (CollectionUtils.isNotEmpty(localReportsDetailList)) {
             singlesTotal = localReportsDetailList.stream().distinct()
                     .filter(reportItem -> SINGLE_CASE_TYPE.equals(reportItem.getValue().getCaseType())).count();
         }
@@ -161,7 +162,7 @@ public class ReportHelper {
 
     private static long getMultiplesTotal(List<AdhocReportTypeItem> localReportsDetailList) {
         long multiplesTotal = 0;
-        if(!localReportsDetailList.isEmpty() && localReportsDetailList.size() > 0) {
+        if (CollectionUtils.isNotEmpty(localReportsDetailList)) {
             multiplesTotal = localReportsDetailList.stream().distinct()
                     .filter(reportItem -> MULTIPLE_CASE_TYPE.equals(reportItem.getValue().getCaseType())).count();
         }
@@ -178,10 +179,9 @@ public class ReportHelper {
             if (matchingDateIsValid && clerkResponsibleIsValid) {
                 var bfDateType = new BFDateType();
                 bfDateType.setCaseReference(caseData.getEthosCaseReference());
-                if (!Strings.isNullOrEmpty(bfActionType.getAllActions())){
+                if (!Strings.isNullOrEmpty(bfActionType.getAllActions())) {
                     bfDateType.setBroughtForwardAction(bfActionType.getAllActions());
-                }
-                else if (!Strings.isNullOrEmpty(bfActionType.getCwActions())){
+                } else if (!Strings.isNullOrEmpty(bfActionType.getCwActions())) {
                     bfDateType.setBroughtForwardAction(bfActionType.getCwActions());
                 }
                 bfDateType.setBroughtForwardDate(bfActionType.getBfDate());

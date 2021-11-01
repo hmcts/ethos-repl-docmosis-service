@@ -1,0 +1,99 @@
+{
+  "case_data": {
+    "tribunalCorrespondenceAddress": {
+      "AddressLine1": "Leeds Employment Tribunal",
+      "AddressLine2": "Alexandra House",
+      "AddressLine3": "14-22 The Parsonage",
+      "PostCode": "M3 2JA",
+      "PostTown": "Leeds"
+    },
+    "tribunalCorrespondenceTelephone" : "03577131270",
+    "tribunalCorrespondenceFax" : "07577126570",
+    "tribunalCorrespondenceDX" : "123456",
+    "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
+    "listingDate": "2021-10-22",
+    "receiptDate": "2021-10-20",
+    "claimServedDate": "2021-10-21",
+    "hearingDocType": "Claims Accepted",
+    "listingCollection": [
+      {
+        "value": {
+          "causeListDate": "12 October 2020",
+          "causeListTime": "00:00",
+          "causeListVenue": "Leeds",
+          "elmoCaseReference": "1112",
+          "jurisdictionCodesList": "ADG, COM",
+          "hearingType": "Hearing",
+          "positionType": "Manually Created",
+          "hearingJudgeName": "itcoRef123_Ms AM Aspden",
+          "hearingEEMember": " ",
+          "hearingERMember": " ",
+          "hearingClerk": "Anne Fox",
+          "Hearing_room": "Tribunal 2",
+          "hearingDay": "1 of 3",
+          "claimantName": "Mr s sdfs",
+          "claimantTown": "claimantTown",
+          "claimantRepresentative": "Rep",
+          "respondent": "sdf",
+          "respondentTown": "respondentTown",
+          "respondentRepresentative": "Org",
+          "Hearing_panel": "Panel",
+          "Hearing_notes": "Notes1",
+          "estHearingLength": "12 Days",
+          "resp_others": "Mark Taylor, Tony Jones, Steve Thomas"
+        },
+        "id": "97087d19-795a-4886-8cdb-06489b8b2ef5"
+      }
+    ],
+    "localReportsDetail": [
+      {
+        "value": {
+          "hearingDate": "2020-10-20T10:00:00.000",
+          "reportOffice": "Leeds",
+          "elmoCaseReference": "1112",
+          "multipleRef": "212323",
+          "caseReference": "2122324/2020",
+          "leadCase": "Yes",
+          "position": "Position2",
+          "clerk": "Anne Fox",
+          "hearingNumber": "3",
+          "resp_others": "Mark Taylor, Tony Jones, Steve Thomas",
+
+          "claimServedDay1Total": "0",
+          "claimServedDay1Percent": "0",
+          "claimServedDay2Total": "1",
+          "claimServedDay2Percent": "100",
+          "claimServedDay3Total": "0",
+          "claimServedDay3Percent": "0",
+          "claimServedDay4Total": "0",
+          "claimServedDay4Percent": "0",
+          "claimServedDay5Total": "0",
+          "claimServedDay5Percent": "0",
+          "claimServed6PlusDaysTotal": "0",
+          "claimServed6PlusDaysPercent": "0",
+          "claimServedTotal": "1",
+          "claimServedItems": [
+              {
+                  "value":
+                  {
+                      "reportedNumberOfDays": "1",
+                      "actualNumberOfDays": "1",
+                      "claimServedType": "",
+                      "claimServedCaseNumber": "1800001/2021",
+                      "caseReceiptDate": "2021-10-20",
+                      "claimServedDate": "2021-10-21"
+                  },
+                  "id": "97087d19-795a-4886-8cdb-06489b8b2ef5"
+              }
+          ]
+        },
+        "id": "97087d19-795a-4886-8cdb-06489b8b2ef5"
+      }
+    ],
+    "listingDateFrom": "2021-10-02",
+    "listingDateTo": "2021-10-28",
+    "hearingDateType": "Range",
+    "reportType": "Serving Claims",
+    "listingVenue": "Leeds"
+  }
+}
