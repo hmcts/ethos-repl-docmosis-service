@@ -27,6 +27,7 @@ public class ReportDocHelperTest {
     private ListingDetails reportDetails2;
     private ListingDetails reportDetails3;
     private ListingDetails reportDetails4;
+    private ListingDetails reportDetailsClaimsServed;
     private UserDetails userDetails;
 
     @Before
@@ -35,8 +36,7 @@ public class ReportDocHelperTest {
         reportDetails2 = generateReportDetails("reportDetailsTest2.json");
         reportDetails3 = generateReportDetails("reportDetailsTest3.json");
         reportDetails4 = generateReportDetails("reportDetailsTest4.json");
-
-
+        reportDetailsClaimsServed = generateReportDetails("reportDetailsTestClaimsServed.json");
         userDetails = HelperTest.getUserDetails();
     }
 
@@ -95,90 +95,90 @@ public class ReportDocHelperTest {
 
     @Test
     public void buildLiveCaseLoadReport() {
-        String expected = "{\n" +
-                "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-SCO-ENG-00220.docx\",\n" +
-                "\"outputName\":\"document.docx\",\n" +
-                "\"data\":{\n" +
-                "\"Listed_date_from\":\"1 December 2021\",\n" +
-                "\"Listed_date_to\":\"3 December 2021\",\n" +
-                "\"Report_Office\":\"Manchester\",\n" +
-                "\"Multiples_Total\":\"0\",\n" +
-                "\"Singles_Total\":\"2\",\n" +
-                "\"Total\":\"2\",\n" +
-                "\"Report_List\":[\n" +
-                "{\"Case_Reference\":\"2122324/2020\",\n" +
-                "\"Date_Of_Acceptance\":\"\",\n" +
-                "\"Multiple_Ref\":\"212323\",\n" +
-                "\"Lead_Case\":\"Yes\",\n" +
-                "\"Position\":\"Position2\",\n" +
-                "\"Date_To_Position\":\"\",\n" +
-                "\"File_Location\":\"\",\n" +
-                "\"Clerk\":\"Anne Fox\"},\n" +
-                "{\"Case_Reference\":\"2122323/2020\",\n" +
-                "\"Date_Of_Acceptance\":\"\",\n" +
-                "\"Multiple_Ref\":\"\",\n" +
-                "\"Lead_Case\":\"\",\n" +
-                "\"Position\":\"Position5\",\n" +
-                "\"Date_To_Position\":\"\",\n" +
-                "\"File_Location\":\"\",\n" +
-                "\"Clerk\":\"Anne Fox2\"}],\n" +
-                "\"Report_Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
-                "}\n" +
-                "}\n";
+        String expected = "{\n"
+                + "\"accessKey\":\"\",\n"
+                + "\"templateName\":\"EM-TRB-SCO-ENG-00220.docx\",\n"
+                + "\"outputName\":\"document.docx\",\n"
+                + "\"data\":{\n"
+                + "\"Listed_date_from\":\"1 December 2021\",\n"
+                + "\"Listed_date_to\":\"3 December 2021\",\n"
+                + "\"Report_Office\":\"Manchester\",\n"
+                + "\"Multiples_Total\":\"0\",\n"
+                + "\"Singles_Total\":\"2\",\n"
+                + "\"Total\":\"2\",\n"
+                + "\"Report_List\":[\n"
+                + "{\"Case_Reference\":\"2122324/2020\",\n"
+                + "\"Date_Of_Acceptance\":\"\",\n"
+                + "\"Multiple_Ref\":\"212323\",\n"
+                + "\"Lead_Case\":\"Yes\",\n"
+                + "\"Position\":\"Position2\",\n"
+                + "\"Date_To_Position\":\"\",\n"
+                + "\"File_Location\":\"\",\n"
+                + "\"Clerk\":\"Anne Fox\"},\n"
+                + "{\"Case_Reference\":\"2122323/2020\",\n"
+                + "\"Date_Of_Acceptance\":\"\",\n"
+                + "\"Multiple_Ref\":\"\",\n"
+                + "\"Lead_Case\":\"\",\n"
+                + "\"Position\":\"Position5\",\n"
+                + "\"Date_To_Position\":\"\",\n"
+                + "\"File_Location\":\"\",\n"
+                + "\"Clerk\":\"Anne Fox2\"}],\n"
+                + "\"Report_Clerk\":\"Mike Jordan\",\n"
+                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n"
+                + "}\n"
+                + "}\n";
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails2.getCaseData(), "",
                 "EM-TRB-SCO-ENG-00220", userDetails).toString());
     }
 
     @Test
     public void buildCasesCompletedReport() {
-        var expected = "{\n" +
-                "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-SCO-ENG-00221.docx\",\n" +
-                "\"outputName\":\"document.docx\",\n" +
-                "\"data\":{\n" +
-                "\"Listed_date_from\":\"1 December 2021\",\n" +
-                "\"Listed_date_to\":\"3 December 2021\",\n" +
-                "\"Report_Office\":\"Manchester\",\n" +
-                "\"Cases_Completed_Hearing\":\"2\",\n" +
-                "\"Session_Days_Taken\":\"6\",\n" +
-                "\"Completed_Per_Session_Day\":\"1\",\n" +
-                "\"No_Conciliation_1\":\"2\",\n" +
-                "\"No_Conciliation_2\":\"6\",\n" +
-                "\"No_Conciliation_3\":\"1\",\n" +
-                "\"Fast_Track_1\":\"8\",\n" +
-                "\"Fast_Track_2\":\"3\",\n" +
-                "\"Fast_Track_3\":\"\",\n" +
-                "\"Standard_Track_1\":\"2\",\n" +
-                "\"Standard_Track_2\":\"\",\n" +
-                "\"Standard_Track_3\":\"\",\n" +
-                "\"Open_Track_1\":\"\",\n" +
-                "\"Open_Track_2\":\"\",\n" +
-                "\"Open_Track_3\":\"\",\n" +
-                "\"Report_List\":[\n" +
-                "{\"Case_Reference\":\"2122324/2020\",\n" +
-                "\"Position\":\"Position2\",\n" +
-                "\"Conciliation_Track\":\"No Conciliation\",\n" +
-                "\"Session_Days\":\"\",\n" +
-                "\"Hearing_Number\":\"3\",\n" +
-                "\"Hearing_Date\":\"12 October 2020\",\n" +
-                "\"Hearing_Type\":\"Hearing Type\",\n" +
-                "\"Hearing_Judge\":\"Judge Name2\",\n" +
-                "\"Hearing_Clerk\":\"Hearing Clerk\"},\n" +
-                "{\"Case_Reference\":\"2122323/2020\",\n" +
-                "\"Position\":\"Position5\",\n" +
-                "\"Conciliation_Track\":\"No Conciliation\",\n" +
-                "\"Session_Days\":\"\",\n" +
-                "\"Hearing_Number\":\"5\",\n" +
-                "\"Hearing_Date\":\"15 October 2020\",\n" +
-                "\"Hearing_Type\":\"Hearing Type2\",\n" +
-                "\"Hearing_Judge\":\"Judge Name\",\n" +
-                "\"Hearing_Clerk\":\"Hearing Clerk\"}],\n" +
-                "\"Report_Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
-                "}\n" +
-                "}\n";
+        var expected = "{\n"
+                + "\"accessKey\":\"\",\n"
+                + "\"templateName\":\"EM-TRB-SCO-ENG-00221.docx\",\n"
+                + "\"outputName\":\"document.docx\",\n"
+                + "\"data\":{\n"
+                + "\"Listed_date_from\":\"1 December 2021\",\n"
+                + "\"Listed_date_to\":\"3 December 2021\",\n"
+                + "\"Report_Office\":\"Manchester\",\n"
+                + "\"Cases_Completed_Hearing\":\"2\",\n"
+                + "\"Session_Days_Taken\":\"6\",\n"
+                + "\"Completed_Per_Session_Day\":\"1\",\n"
+                + "\"No_Conciliation_1\":\"2\",\n"
+                + "\"No_Conciliation_2\":\"6\",\n"
+                + "\"No_Conciliation_3\":\"1\",\n"
+                + "\"Fast_Track_1\":\"8\",\n"
+                + "\"Fast_Track_2\":\"3\",\n"
+                + "\"Fast_Track_3\":\"\",\n"
+                + "\"Standard_Track_1\":\"2\",\n"
+                + "\"Standard_Track_2\":\"\",\n"
+                + "\"Standard_Track_3\":\"\",\n"
+                + "\"Open_Track_1\":\"\",\n"
+                + "\"Open_Track_2\":\"\",\n"
+                + "\"Open_Track_3\":\"\",\n"
+                + "\"Report_List\":[\n"
+                + "{\"Case_Reference\":\"2122324/2020\",\n"
+                + "\"Position\":\"Position2\",\n"
+                + "\"Conciliation_Track\":\"No Conciliation\",\n"
+                + "\"Session_Days\":\"\",\n"
+                + "\"Hearing_Number\":\"3\",\n"
+                + "\"Hearing_Date\":\"12 October 2020\",\n"
+                + "\"Hearing_Type\":\"Hearing Type\",\n"
+                + "\"Hearing_Judge\":\"Judge Name2\",\n"
+                + "\"Hearing_Clerk\":\"Hearing Clerk\"},\n"
+                + "{\"Case_Reference\":\"2122323/2020\",\n"
+                + "\"Position\":\"Position5\",\n"
+                + "\"Conciliation_Track\":\"No Conciliation\",\n"
+                + "\"Session_Days\":\"\",\n"
+                + "\"Hearing_Number\":\"5\",\n"
+                + "\"Hearing_Date\":\"15 October 2020\",\n"
+                + "\"Hearing_Type\":\"Hearing Type2\",\n"
+                + "\"Hearing_Judge\":\"Judge Name\",\n"
+                + "\"Hearing_Clerk\":\"Hearing Clerk\"}],\n"
+                + "\"Report_Clerk\":\"Mike Jordan\",\n"
+                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n"
+                + "}\n"
+                + "}\n";
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails3.getCaseData(), "",
                 "EM-TRB-SCO-ENG-00221", userDetails).toString());
     }
@@ -189,74 +189,144 @@ public class ReportDocHelperTest {
                 .getResource("casesAwaitingJudgmentExpected.json")).toURI())));
         var today = UtilHelper.formatCurrentDate(LocalDate.now());
         expectedJson = expectedJson.replace("replace-with-current-date", today);
-
         var reportData = getCasesAwaitingJudgementReportData();
-        var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "", "EM-TRB-SCO-ENG-00749", userDetails).toString();
+        var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "",
+                "EM-TRB-SCO-ENG-00749", userDetails).toString();
         assertEquals(expectedJson, actualJson);
     }
 
     @Test
     public void buildTimeToFirstHearingReport() {
-        String expected = "{\n" +
-                "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-SCO-ENG-00751.docx\",\n" +
-                "\"outputName\":\"document.docx\",\n" +
-                "\"data\":{\n" +
-                "\"Listed_date_from\":\"1 December 2021\",\n" +
-                "\"Listed_date_to\":\"3 December 2021\",\n" +
-                "\"Report_Office\":\"Manchester\",\n" +
-                "\"Total_Cases\":\"\",\n" +
-                "\"Total_Within_26Weeks\":\"\",\n" +
-                "\"Total_Percent_Within_26Weeks\":\"\",\n" +
-                "\"Total_Not_Within_26Weeks\":\"\",\n" +
-                "\"Total_Percent_Not_Within_26Weeks\":\"\",\n" +
-                "\"ConNone_Total\":\"\",\n" +
-                "\"ConNone_Total_26_Week\":\"\",\n" +
-                "\"ConNone_Percent_26_Week\":\"\",\n" +
-                "\"ConNone_Total_Not_26_Week\":\"\",\n" +
-                "\"ConNone_Percent_Not_26_Week\":\"\",\n" +
-                "\"ConFast_Total\":\"\",\n" +
-                "\"ConFast_Total_26_Week\":\"\",\n" +
-                "\"ConFast_Percent_26_Week\":\"\",\n" +
-                "\"ConFast_Total_Not_26_Week\":\"\",\n" +
-                "\"ConFast_Percent_Not_26_Week\":\"\",\n" +
-                "\"ConStd_Total\":\"\",\n" +
-                "\"ConStd_Total_26_Week\":\"\",\n" +
-                "\"ConStd_Percent_26_Week\":\"\",\n" +
-                "\"ConStd_Total_Not_26_Week\":\"\",\n" +
-                "\"ConStd_Percent_Not_26_Week\":\"\",\n" +
-                "\"ConOpen_Total\":\"\",\n" +
-                "\"ConOpen_Total_26_Week\":\"\",\n" +
-                "\"ConOpen_Percent_26_Week\":\"\",\n" +
-                "\"ConOpen_Total_Not_26_Week\":\"\",\n" +
-                "\"ConOpen_Percent_Not_26_Week\":\"\",\n" +
-                "\"Report_List\":[\n" +
-                "{\"Office\":\"Manchester\",\n" +
-                "\"Case_Reference\":\"2122324/2020\",\n" +
-                "\"Conciliation_Track\":\"\",\n" +
-                "\"Receipt_Date\":\"\",\n" +
-                "\"Hearing_Date\":\"2020-10-20T10:00:00.000\",\n" +
-                "\"Days\":\"\"" +
-                "},\n" +
-                "{\"Office\":\"Manchester\",\n" +
-                "\"Case_Reference\":\"2122323/2020\",\n" +
-                "\"Conciliation_Track\":\"\",\n" +
-                "\"Receipt_Date\":\"\",\n" +
-                "\"Hearing_Date\":\"2020-10-20T10:00:00.000\",\n" +
-                "\"Days\":\"\"}],\n" +
-                "\"Report_Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
-                "}\n" +
-                "}\n";
+        String expected = "{\n"
+                + "\"accessKey\":\"\",\n"
+                + "\"templateName\":\"EM-TRB-SCO-ENG-00751.docx\",\n"
+                + "\"outputName\":\"document.docx\",\n"
+                + "\"data\":{\n"
+                + "\"Listed_date_from\":\"1 December 2021\",\n"
+                + "\"Listed_date_to\":\"3 December 2021\",\n"
+                + "\"Report_Office\":\"Manchester\",\n"
+                + "\"Total_Cases\":\"\",\n"
+                + "\"Total_Within_26Weeks\":\"\",\n"
+                + "\"Total_Percent_Within_26Weeks\":\"\",\n"
+                + "\"Total_Not_Within_26Weeks\":\"\",\n"
+                + "\"Total_Percent_Not_Within_26Weeks\":\"\",\n"
+                + "\"ConNone_Total\":\"\",\n"
+                + "\"ConNone_Total_26_Week\":\"\",\n"
+                + "\"ConNone_Percent_26_Week\":\"\",\n"
+                + "\"ConNone_Total_Not_26_Week\":\"\",\n"
+                + "\"ConNone_Percent_Not_26_Week\":\"\",\n"
+                + "\"ConFast_Total\":\"\",\n"
+                + "\"ConFast_Total_26_Week\":\"\",\n"
+                + "\"ConFast_Percent_26_Week\":\"\",\n"
+                + "\"ConFast_Total_Not_26_Week\":\"\",\n"
+                + "\"ConFast_Percent_Not_26_Week\":\"\",\n"
+                + "\"ConStd_Total\":\"\",\n"
+                + "\"ConStd_Total_26_Week\":\"\",\n"
+                + "\"ConStd_Percent_26_Week\":\"\",\n"
+                + "\"ConStd_Total_Not_26_Week\":\"\",\n"
+                + "\"ConStd_Percent_Not_26_Week\":\"\",\n"
+                + "\"ConOpen_Total\":\"\",\n"
+                + "\"ConOpen_Total_26_Week\":\"\",\n"
+                + "\"ConOpen_Percent_26_Week\":\"\",\n"
+                + "\"ConOpen_Total_Not_26_Week\":\"\",\n"
+                + "\"ConOpen_Percent_Not_26_Week\":\"\",\n"
+                + "\"Report_List\":[\n"
+                + "{\"Office\":\"Manchester\",\n"
+                + "\"Case_Reference\":\"2122324/2020\",\n"
+                + "\"Conciliation_Track\":\"\",\n"
+                + "\"Receipt_Date\":\"\",\n"
+                + "\"Hearing_Date\":\"2020-10-20T10:00:00.000\",\n"
+                + "\"Days\":\"\""
+                + "},\n"
+                + "{\"Office\":\"Manchester\",\n"
+                + "\"Case_Reference\":\"2122323/2020\",\n"
+                + "\"Conciliation_Track\":\"\",\n"
+                + "\"Receipt_Date\":\"\",\n"
+                + "\"Hearing_Date\":\"2020-10-20T10:00:00.000\",\n"
+                + "\"Days\":\"\"}],\n"
+                + "\"Report_Clerk\":\"Mike Jordan\",\n"
+                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n"
+                + "}\n"
+                + "}\n";
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails4.getCaseData(), "",
                 "EM-TRB-SCO-ENG-00751", userDetails).toString());
     }
 
+    @Test
+    public void buildServingClaimsReport() {
+        String expected = "{\n"
+                + "\"accessKey\":\"\",\n"
+                + "\"templateName\":\"EM-TRB-SCO-ENG-00780.docx\",\n"
+                + "\"outputName\":\"document.docx\",\n"
+                + "\"data\":{\n"
+                + "\"Listed_date\":\" Between 2 October 2021 and 28 October 2021\",\n"
+                + "\"Day_1_Tot\":\"0\",\n"
+                + "\"Day_1_Pct\":\"0\",\n"
+                + "\"Day_2_Tot\":\"1\",\n"
+                + "\"Day_2_Pct\":\"100\",\n"
+                + "\"Day_3_Tot\":\"0\",\n"
+                + "\"Day_3_Pct\":\"0\",\n"
+                + "\"Day_4_Tot\":\"0\",\n"
+                + "\"Day_4_Pct\":\"0\",\n"
+                + "\"Day_5_Tot\":\"0\",\n"
+                + "\"Day_5_Pct\":\"0\",\n"
+                + "\"Day_6_Plus_Tot\":\"0\",\n"
+                + "\"Day_6_Plus_Pct\":\"0\",\n"
+                + "\"Total_Claims\":\"1\",\n"
+                + "\"Day_1_List\":[\n"
+                + "{\"Case_Reference\":\"0\",\n"
+                + "\"Date_Of_Receipt\":\"0\",\n"
+                + "\"Date_Of_Service\":\"0\"},\n"
+                + "],\n"
+                + "\"day_1_total_count\":\"0\",\n"
+                + "\"Day_2_List\":[\n"
+                + "{\"Case_Reference\":\"1800001/2021\",\n"
+                + "\"Date_Of_Receipt\":\"2021-10-20\",\n"
+                + "\"Date_Of_Service\":\"2021-10-21\"}],\n"
+                + "\"day_2_total_count\":\"1\",\n"
+                + "\"Day_3_List\":[\n"
+                + "{\"Case_Reference\":\"0\",\n"
+                + "\"Date_Of_Receipt\":\"0\",\n"
+                + "\"Date_Of_Service\":\"0\"},\n"
+                + "],\n"
+                + "\"day_3_total_count\":\"0\",\n"
+                + "\"Day_4_List\":[\n"
+                + "{\"Case_Reference\":\"0\",\n"
+                + "\"Date_Of_Receipt\":\"0\",\n"
+                + "\"Date_Of_Service\":\"0\"},\n"
+                + "],\n"
+                + "\"day_4_total_count\":\"0\",\n"
+                + "\"Day_5_List\":[\n"
+                + "{\"Case_Reference\":\"0\",\n"
+                + "\"Date_Of_Receipt\":\"0\",\n"
+                + "\"Date_Of_Service\":\"0\"},\n"
+                + "],\n"
+                + "\"day_5_total_count\":\"0\",\n"
+                + "\"Day_6_List\":[\n"
+                + "{\"Case_Reference\":\"0\",\n"
+                + "\"Actual_Number_Of_Days\":\"0\",\n"
+                + "\"Date_Of_Receipt\":\"0\",\n"
+                + "\"Date_Of_Service\":\"0\"},\n"
+                + "],\n"
+                + "\"day_6_total_count\":\"0\",\n"
+                + "\"Report_Clerk\":\"Mike Jordan\",\n"
+                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n"
+                + "}\n"
+                + "}\n";
+
+        assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetailsClaimsServed.getCaseData(),
+                "", "EM-TRB-SCO-ENG-00780", userDetails).toString());
+    }
+
     private CasesAwaitingJudgmentReportData getCasesAwaitingJudgementReportData() {
         var reportSummary = new ReportSummary("Newcastle");
-        reportSummary.getPositionTypes().add(new PositionTypeSummary("Signed fair copy received", 1));
-        reportSummary.getPositionTypes().add(new PositionTypeSummary("Heard awaiting judgment being sent to the parties", 5));
-        reportSummary.getPositionTypes().add(new PositionTypeSummary("Draft with members", 10));
+        reportSummary.getPositionTypes()
+                .add(new PositionTypeSummary("Signed fair copy received", 1));
+        reportSummary.getPositionTypes()
+                .add(new PositionTypeSummary("Heard awaiting judgment being sent to the parties",
+                        5));
+        reportSummary.getPositionTypes()
+                .add(new PositionTypeSummary("Draft with members", 10));
 
         var reportData = new CasesAwaitingJudgmentReportData(reportSummary);
         reportData.setReportType(Constants.CASES_AWAITING_JUDGMENT_REPORT);
