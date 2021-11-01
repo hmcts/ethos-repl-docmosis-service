@@ -765,17 +765,17 @@ public class CaseActionsForCaseWorkerController {
         return getCallbackRespEntityNoErrors(caseData);
     }
 
-    @PostMapping(value = "/dynamicJudgementHearing", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "populates all offices except the current one in dynamic lists.")
+    @PostMapping(value = "/dynamicJudgementList", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the dynamic lists for judgements")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<CCDCallbackResponse> dynamicJudgementHearing(
+    public ResponseEntity<CCDCallbackResponse> dynamicJudgementList(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
-        log.info("DYNAMIC JUDGEMENT HEARING ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+        log.info("DYNAMIC JUDGEMENT LIST ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
 
         if (!verifyTokenService.verifyTokenSignature(userToken)) {
             log.error(INVALID_TOKEN, userToken);

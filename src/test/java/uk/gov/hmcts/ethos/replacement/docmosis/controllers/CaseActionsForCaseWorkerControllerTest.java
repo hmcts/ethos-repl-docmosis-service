@@ -87,6 +87,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String DYNAMIC_RESPONDENT_REPRESENTATIVE_NAMES_URL = "/dynamicRespondentRepresentativeNames";
     private static final String DYNAMIC_RESTRICTED_REPORTING = "/dynamicRestrictedReporting";
     private static final String DYNAMIC_DEPOSIT_ORDER = "/dynamicDepositOrders";
+    private static final String DYNAMIC_JUDGEMENT_LIST = "/dynamicJudgementList";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -976,6 +977,15 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void dynamicJudgementListError400() throws Exception {
+        mvc.perform(post(DYNAMIC_JUDGEMENT_LIST)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void createCaseError500() throws Exception {
         when(caseCreationForCaseWorkerService.caseCreationRequest(isA(CCDRequest.class), eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
@@ -1423,6 +1433,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void dynamicDepositOrderForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(DYNAMIC_DEPOSIT_ORDER)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void dynamicJudgementListForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(DYNAMIC_JUDGEMENT_LIST)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

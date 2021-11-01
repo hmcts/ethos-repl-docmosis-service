@@ -4,13 +4,14 @@ import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_TITLE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_TITLE;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_TITLE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_TITLE;
 
 public class DynamicListHelper {
 
@@ -22,13 +23,15 @@ public class DynamicListHelper {
         if (respondentCollection != null) {
             for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
                 var respondentSumType = respondentSumTypeItem.getValue();
-                listItems.add(getDynamicCodeLabel("R: " + respondentSumType.getRespondentName(), respondentSumType.getRespondentName()));
+                listItems.add(getDynamicCodeLabel("R: " + respondentSumType.getRespondentName(),
+                        respondentSumType.getRespondentName()));
             }
         }
         return listItems;
     }
 
-    public static DynamicValueType getDynamicValueType(CaseData caseData, List<DynamicValueType> listItems, String party) {
+    public static DynamicValueType getDynamicValueType(CaseData caseData, List<DynamicValueType> listItems,
+                                                       String party) {
         DynamicValueType dynamicValueType;
         if (party.equals(CLAIMANT_TITLE)) {
             dynamicValueType = getDynamicCodeLabel("C: " + caseData.getClaimant(), caseData.getClaimant());
@@ -48,10 +51,10 @@ public class DynamicListHelper {
                 var dateListedType = hearingTypeItem.getValue().getHearingDateCollection().get(0).getValue();
                 var listedDate = dateListedType.getListedDate().substring(0, 10);
                 LocalDate date = LocalDate.parse(listedDate);
-                String format = hearingNumber + " : " +
-                        hearingTypeItem.getValue().getHearingType() + " - " +
-                        hearingTypeItem.getValue().getHearingVenue() + " - " +
-                        date.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
+                String format = hearingNumber + " : "
+                        + hearingTypeItem.getValue().getHearingType() + " - "
+                        + hearingTypeItem.getValue().getHearingVenue() + " - "
+                        + date.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
                 listItems.add(getDynamicCodeLabel(hearingNumber, format));
             }
         }

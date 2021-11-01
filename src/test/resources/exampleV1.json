@@ -238,7 +238,23 @@
         {
           "id": "12121",
           "value": {
-            "non_hearing_judgment": "No Hearing Judgment"
+            "non_hearing_judgment": "No",
+            "judgement_type": "Case Management",
+            "judgment_notes": null,
+            "judgmentHearingDate": "2021-10-29",
+            "Judgement_costs": {
+              "costs_question": null
+            },
+            "reconsiderations": {
+              "reconsideration": null
+            },
+            "judgement_details": {
+              "awardMade": null,
+              "folio_number": null,
+              "reasons_given": null,
+              "non-financial_award": null,
+              "certificateOfCorrection": null
+            }
           }
         }
       ],

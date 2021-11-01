@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclist;
 
+import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -28,7 +29,7 @@ public class JudgementDynamicList {
                     var judgementCollection = caseData.getJudgementCollection().get(judgementItr.nextIndex());
                     var dynamicValueType = new DynamicValueType();
                     if (judgementCollection.getValue().getDynamicJudgementHearing() == null) {
-                        if (judgementCollection.getValue().getJudgmentHearingDate() != null && !judgementCollection.getValue().getJudgmentHearingDate().isEmpty()) {
+                        if (!StringUtils.isEmpty(judgementCollection.getValue().getJudgmentHearingDate())) {
                             var hearingDate = judgementCollection.getValue().getJudgmentHearingDate();
                             judgementItr.next().getValue().setDynamicJudgementHearing(dynamicFixedListType);
                             var hearingNumber = findDateOfHearing(caseData, hearingDate);
@@ -38,8 +39,7 @@ public class JudgementDynamicList {
                             judgementItr.next().getValue().setDynamicJudgementHearing(dynamicFixedListType);
                             dynamicValueType = listItems.get(0);
                         }
-                    }
-                    else {
+                    } else {
                         dynamicValueType = judgementCollection.getValue().getDynamicJudgementHearing().getValue();
                         judgementItr.next().getValue().setDynamicJudgementHearing(dynamicFixedListType);
                     }
