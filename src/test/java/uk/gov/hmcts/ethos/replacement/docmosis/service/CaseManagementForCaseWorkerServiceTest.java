@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.auth.AUTH;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -323,6 +324,27 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    public void continuingRespondentFirstToLast() {
+        CaseData caseData = caseManagementForCaseWorkerService.continuingRespondent(scotlandCcdRequest1);
+
+        assertEquals(3, caseData.getRespondentCollection().size());
+
+        assertEquals("Antonio Vazquez", caseData.getRespondentCollection().get(0).getValue().getRespondentName());
+        assertEquals(YES, caseData.getRespondentCollection().get(0).getValue().getResponseContinue());
+        assertEquals("Juan Garcia", caseData.getRespondentCollection().get(1).getValue().getRespondentName());
+        assertEquals(YES, caseData.getRespondentCollection().get(1).getValue().getResponseContinue());
+        assertEquals("Roberto Dondini", caseData.getRespondentCollection().get(2).getValue().getRespondentName());
+        assertEquals(NO, caseData.getRespondentCollection().get(2).getValue().getResponseContinue());
+    }
+
+    @Test
+    public void continuingRespondentNull() {
+        CaseData caseData = caseManagementForCaseWorkerService.continuingRespondent(scotlandCcdRequest3);
+        assertEquals(1, caseData.getRespondentCollection().size());
+        assertEquals(YES, caseData.getRespondentCollection().get(0).getValue().getResponseContinue());
+    }
+
+    @Test
     public void buildFlagsImageFileNameForNullFlagsTypes() {
         CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
         FlagsImageHelper.buildFlagsImageFileName(caseData);
@@ -472,8 +494,10 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void createECC() {
         when(caseRetrievalForCaseWorkerService.casesRetrievalESRequest(isA(String.class), eq(AUTH_TOKEN), isA(String.class), isA(List.class)))
                 .thenReturn(new ArrayList(Collections.singleton(submitEvent)));
-        assertEquals("11111", caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
-                new ArrayList<>(), ABOUT_TO_SUBMIT_EVENT_CALLBACK).getCaseRefECC());
+        var casedata = caseManagementForCaseWorkerService.createECC(manchesterCcdRequest.getCaseDetails(), AUTH_TOKEN,
+                new ArrayList<>(), ABOUT_TO_SUBMIT_EVENT_CALLBACK);
+        assertEquals("11111", casedata.getCaseRefECC());
+        assertEquals(FLAG_ECC, casedata.getCaseSource());
     }
 
     @Test
