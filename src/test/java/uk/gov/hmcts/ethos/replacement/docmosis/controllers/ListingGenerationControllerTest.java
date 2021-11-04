@@ -358,7 +358,6 @@ public class ListingGenerationControllerTest {
         when(listingService.processHearingDocument(isA(ListingData.class),
                 isA(String.class), eq(AUTH_TOKEN)))
                 .thenReturn(documentInfo);
-
         mvc.perform(post(GENERATE_REPORT_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)

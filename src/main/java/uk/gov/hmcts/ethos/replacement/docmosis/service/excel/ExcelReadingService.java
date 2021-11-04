@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -47,6 +48,7 @@ public class ExcelReadingService {
     }
 
     public XSSFWorkbook readWorkbook(String userToken, String documentBinaryUrl) throws IOException {
+        ZipSecureFile.setMinInflateRatio(0);
         var excelInputStream =
                 excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl);
         return new XSSFWorkbook(excelInputStream);

@@ -14,7 +14,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.HEARING_CREATION_DAY_ERROR;
@@ -56,7 +58,7 @@ public class HelperTest {
 
     @Test
     public void nullCheck() {
-        assertEquals("Value ' example ' ", Helper.nullCheck( "Value \" example \" "));
+        assertEquals("Value ' example ' ", Helper.nullCheck("Value \" example \" "));
         assertEquals("", Helper.nullCheck(null));
         assertEquals("Value example", Helper.nullCheck("Value example"));
         assertEquals("Value ' example '", Helper.nullCheck("Value ' example '"));
@@ -103,13 +105,15 @@ public class HelperTest {
 
         assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
 
-        assertEquals(HEARING_CREATION_NUMBER_ERROR, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
+        assertEquals(HEARING_CREATION_NUMBER_ERROR,
+                Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
 
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue().setHearingNumber("");
 
         assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
 
-        assertEquals(HEARING_CREATION_NUMBER_ERROR, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
+        assertEquals(HEARING_CREATION_NUMBER_ERROR,
+                Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
 
     }
 
