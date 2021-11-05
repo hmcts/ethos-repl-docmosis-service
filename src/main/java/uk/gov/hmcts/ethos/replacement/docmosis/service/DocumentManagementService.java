@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
+import uk.gov.hmcts.reform.ccd.document.am.feign.CaseDocumentClient;
 import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
 import uk.gov.hmcts.reform.document.domain.Classification;
@@ -31,6 +33,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 @Service
 @Slf4j
 @ConditionalOnProperty(prefix = "document_management", name = "url")
+@ComponentScan("uk.gov.hmcts.reform.ccd.document.am.feign")
 public class DocumentManagementService {
 
     private static final String FILES_NAME = "files";
@@ -40,24 +43,30 @@ public class DocumentManagementService {
     private final AuthTokenGenerator authTokenGenerator;
     private final DocumentDownloadClientApi documentDownloadClientApi;
     private final UserService userService;
+    private final CaseDocumentClient caseDocumentClient;
 
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
     @Value("${document_management.ccdCaseDocument.url}")
     private String ccdDMStoreBaseUrl;
+    @Value("$case-document-am-url")
+    private String caseDocumentAmUrl;
 
     @Autowired
     public DocumentManagementService(DocumentUploadClientApi documentUploadClient,
                                      AuthTokenGenerator authTokenGenerator, UserService userService,
-                                     DocumentDownloadClientApi documentDownloadClientApi) {
+                                     DocumentDownloadClientApi documentDownloadClientApi,
+                                     CaseDocumentClient caseDocumentClient) {
         this.documentUploadClient = documentUploadClient;
         this.authTokenGenerator = authTokenGenerator;
         this.userService = userService;
         this.documentDownloadClientApi = documentDownloadClientApi;
+        this.caseDocumentClient = caseDocumentClient;
     }
 
     @Retryable(value = {DocumentManagementException.class}, backoff = @Backoff(delay = 200))
-    public URI uploadDocument(String authToken, byte[] byteArray, String outputFileName, String type) {
+    public URI uploadDocument(String authToken, byte[] byteArray, String outputFileName, String type,
+                              String caseTypeID) {
         try {
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, outputFileName, type, byteArray);
             var user = userService.getUserDetails(authToken);
@@ -69,13 +78,22 @@ public class DocumentManagementService {
                     Classification.PUBLIC,
                     singletonList(file)
             );
+//            uk.gov.hmcts.reform.ccd.document.am.model.UploadResponse response2 = caseDocumentClient.uploadDocuments(
+//                    authToken,
+//                    authTokenGenerator.generate(),
+//                    caseTypeID,
+//                    "EMPLOYMENT",
+//                    singletonList(file),
+//                    uk.gov.hmcts.reform.ccd.document.am.model.Classification.valueOf("PUBLIC")
+//            );
+//            var document = response2.getDocuments().stream()
             var document = response.getEmbedded().getDocuments().stream()
                     .findFirst()
                     .orElseThrow(() ->
                             new DocumentManagementException("Document management failed uploading file"
                                     + OUTPUT_FILE_NAME));
-
             log.info("Uploaded document successful");
+            log.info(caseTypeID);
             return URI.create(document.links.self.href);
         } catch (Exception ex) {
             log.info("Exception: " + ex.getMessage());

@@ -75,7 +75,7 @@ public class DocumentManagementServiceTest {
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList(), any(), anyList()))
                 .thenReturn(successfulDocumentManagementUploadResponse());
         URI documentSelfPath = documentManagementService.uploadDocument("authString", Files.readAllBytes(file.toPath()),
-                OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE);
+                OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE, anyString());
         String documentDownloadableURL = documentManagementService.generateDownloadableURL(documentSelfPath);
         assertEquals(documentManagementService.generateMarkupDocument(documentDownloadableURL), markup);
         assertNotNull(documentSelfPath);
@@ -89,7 +89,7 @@ public class DocumentManagementServiceTest {
         when(documentUploadClient.upload(anyString(), anyString(), anyString(), anyList()))
                 .thenReturn(unsuccessfulDocumentManagementUploadResponse());
         documentManagementService.uploadDocument("authString", Files.readAllBytes(file.toPath()),
-                OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE);
+                OUTPUT_FILE_NAME, APPLICATION_DOCX_VALUE, anyString());
     }
 
     private File createTestFile() {
