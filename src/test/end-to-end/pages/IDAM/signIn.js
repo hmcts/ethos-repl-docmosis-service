@@ -8,8 +8,9 @@ module.exports = function () {
 
     I.amOnPage('/');
     I.see('Sign in');
-    I.waitForText('Sign in',testConfig.TestWaitForTextToAppear);
-    I.fillField('username', testConfig.TestEnvUser);
-    I.fillField('password', testConfig.TestEnvPassword);
-    I.waitForNavigationToComplete('input[value="Sign in"]');
+    I.waitForText('Sign in', testConfig.TestWaitForTextToAppear);
+    I.fillField('username', testConfig.TestEnvCWUser);
+    I.fillField('password', testConfig.TestEnvCWPassword);
+    I.click('input[value="Sign in"]');
+    I.waitForText('Case list');
 };
