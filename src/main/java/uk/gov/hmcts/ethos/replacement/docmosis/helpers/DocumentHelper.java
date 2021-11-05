@@ -1,6 +1,32 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.google.common.base.Strings;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.util.CollectionUtils;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.Address;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
+import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,32 +56,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.VENUE_ADDRESS_VALUES_FILE_PATH;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
-
-import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.util.CollectionUtils;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
-import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.Address;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantIndType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.ClaimantType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
-import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
 @Slf4j
 public class DocumentHelper {
@@ -265,8 +265,9 @@ public class DocumentHelper {
     private static StringBuilder getRespondentData(CaseData caseData) {
         log.info("Respondent Data");
         var sb = new StringBuilder();
-        List<RespondentSumTypeItem> respondentSumTypeItemList = !CollectionUtils.isEmpty(caseData.getRespondentCollection())
-                ? caseData.getRespondentCollection(): new ArrayList<>();
+        List<RespondentSumTypeItem> respondentSumTypeItemList = !CollectionUtils.isEmpty(
+                caseData.getRespondentCollection())
+                ? caseData.getRespondentCollection() : new ArrayList<>();
 
         if (CollectionUtils.isEmpty(respondentSumTypeItemList)) {
             log.error("No respondents present for case: " + caseData.getEthosCaseReference());
@@ -291,11 +292,13 @@ public class DocumentHelper {
         }
 
         if (!responseContinue) {
-            log.error("Atleast one respondent should have response continuing for case: " + caseData.getEthosCaseReference());
+            log.error("Atleast one respondent should have response continuing for case: "
+                    + caseData.getEthosCaseReference());
         }
 
         if (!responseNotStruckOut) {
-            log.error("Atleast one respondent should have response not struck out for case: " + caseData.getEthosCaseReference());
+            log.error("Atleast one respondent should have response not struck out for case: "
+                    + caseData.getEthosCaseReference());
         }
 
         if (respondentToBeShown.equals(new RespondentSumType())) {
@@ -307,9 +310,11 @@ public class DocumentHelper {
         RespondentSumType finalRespondentToBeShown = respondentToBeShown;
         Optional<RepresentedTypeRItem> representedTypeRItem = Optional.empty();
 
-        if (!CollectionUtils.isEmpty(representedTypeRList) && responseNotStruckOut && responseContinue && !finalRespondentToBeShown.equals(new RespondentSumType())) {
+        if (!CollectionUtils.isEmpty(representedTypeRList) && responseNotStruckOut && responseContinue
+                && !finalRespondentToBeShown.equals(new RespondentSumType())) {
             representedTypeRItem = representedTypeRList.stream()
-                    .filter(a -> a.getValue().getRespRepName().equals(finalRespondentToBeShown.getRespondentName())).findFirst();
+                    .filter(a -> a.getValue().getRespRepName().equals(finalRespondentToBeShown.getRespondentName()))
+                    .findFirst();
         }
 
         if (representedTypeRItem.isPresent()) {
@@ -343,7 +348,7 @@ public class DocumentHelper {
         }
         if (!CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
             log.info("Respondent collection");
-            sb.append("\"respondent_full_name\":\"").append (
+            sb.append("\"respondent_full_name\":\"").append(
                     nullCheck((Strings.isNullOrEmpty(finalRespondentToBeShown.getResponseContinue())
                             || YES.equals(finalRespondentToBeShown.getResponseContinue()))
                             ? finalRespondentToBeShown.getRespondentName()

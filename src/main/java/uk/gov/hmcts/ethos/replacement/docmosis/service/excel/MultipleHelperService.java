@@ -231,8 +231,9 @@ public class MultipleHelperService {
         );
     }
 
-    public void sendDetachUpdatesToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails,
-                                                              List<String> errors, SortedMap<String, Object> multipleObjects) {
+    public void sendDetachUpdatesToSinglesWithoutConfirmation(String userToken,
+                                                              MultipleDetails multipleDetails, List<String> errors,
+                                                              SortedMap<String, Object> multipleObjects) {
 
         List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
         var multipleData = multipleDetails.getCaseData();
@@ -334,8 +335,9 @@ public class MultipleHelperService {
 
     }
 
-    public void sendResetMultipleStateWithoutConfirmation(String userToken, String caseTypeId, String jurisdiction,
-                                                          MultipleData multipleData, List<String> errors, String parentMultipleCaseId) {
+    public void sendResetMultipleStateWithoutConfirmation(String userToken, String caseTypeId,
+                                                          String jurisdiction, MultipleData multipleData,
+                                                          List<String> errors, String parentMultipleCaseId) {
 
         String caseToSend = MultiplesHelper.getCurrentLead(multipleData.getLeadCase());
         String username = userService.getUserDetails(userToken).getEmail();

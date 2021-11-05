@@ -6,8 +6,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients(basePackages =
-        {"uk.gov.hmcts.ethos.replacement"
-        })
+    {"uk.gov.hmcts.ethos.replacement"
+    })
 public class DocmosisApplication {
 
     public static void main(String[] args) {

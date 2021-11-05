@@ -24,8 +24,8 @@ import java.net.URL;
 @WithTag("ComponentTest")
 public class DocMosisComponentTest {
 
+    private static final String BANDERAS = "Mr A Banderas";
     private TestUtil testUtil;
-    private final static String BANDERAS = "Mr A Banderas";
 
     @Before
     public void setUp() {

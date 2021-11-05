@@ -27,8 +27,8 @@ import java.util.List;
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
 @WithTags({
-        @WithTag("ComponentTest"),
-        @WithTag("FunctionalTest")
+    @WithTag("ComponentTest"),
+    @WithTag("FunctionalTest")
 })
 @Ignore
 public class UpdateCaseBulkComponentTest {

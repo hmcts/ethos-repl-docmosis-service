@@ -10,7 +10,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.helper.Constants;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
@@ -22,6 +21,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 
 @Service
 @Slf4j
@@ -154,16 +160,16 @@ public class TimeToFirstHearingReport {
                 + Integer.parseInt(adhocReportType.getXConFast26wkTotal())
                 + Integer.parseInt(adhocReportType.getXConNone26wkTotal());
 
-        float totalCasesWithin26WeeksPercent = (totalCases != 0) ?
-                ((float)totalCasesWithin26Weeks / totalCases) * 100 : 0;
-        float totalCasesNotWithin26WeeksPercent = (totalCases != 0) ?
-                ((float)totalCasesNotWithin26Weeks / totalCases) * 100 : 0;
+        float totalCasesWithin26WeeksPercent = (totalCases != 0)
+                ? ((float)totalCasesWithin26Weeks / totalCases) * 100 : 0;
+        float totalCasesNotWithin26WeeksPercent = (totalCases != 0)
+                ? ((float)totalCasesNotWithin26Weeks / totalCases) * 100 : 0;
 
         adhocReportType.setTotalCases(String.valueOf(totalCases));
         adhocReportType.setTotal26wk(String.valueOf(totalCasesWithin26Weeks));
         adhocReportType.setTotalx26wk(String.valueOf(totalCasesNotWithin26Weeks));
-        adhocReportType.setTotal26wkPerCent(String.format("%.2f",totalCasesWithin26WeeksPercent));
-        adhocReportType.setTotalx26wkPerCent(String.format("%.2f",totalCasesNotWithin26WeeksPercent));
+        adhocReportType.setTotal26wkPerCent(String.format("%.2f", totalCasesWithin26WeeksPercent));
+        adhocReportType.setTotalx26wkPerCent(String.format("%.2f", totalCasesNotWithin26WeeksPercent));
         listingData.setLocalReportsDetailHdr(adhocReportType);
     }
 
@@ -181,6 +187,7 @@ public class TimeToFirstHearingReport {
         int xConFast26WkTotal;
         int xConOpen26WkTotal;
     }
+
     private void populateLocalReportSummary(ListingData listingData, List<SubmitEvent> submitEvents) {
 
         var reportSummary = new ReportSummary();
@@ -195,7 +202,7 @@ public class TimeToFirstHearingReport {
                     submitEvent.getCaseData(),
                     firstHearingDate);
 
-            switch(getConciliationTrack(submitEvent.getCaseData())) {
+            switch (getConciliationTrack(submitEvent.getCaseData())) {
                 case CONCILIATION_TRACK_NO_CONCILIATION:
                     reportSummary = updateNoTrack(reportSummary, isFirstHearingWithin26Weeks);
                     break;
@@ -309,6 +316,7 @@ public class TimeToFirstHearingReport {
         adhocReportType.setXConFast26wkTotalPerCent(String.format("%.2f", xConFast26wkTotalPerCent));
         adhocReportType.setXConOpen26wkTotalPerCent(String.format("%.2f", xConOpen26wkTotalPerCent));
     }
+
     private String getConciliationTrack(CaseData caseData) {
         return StringUtils.isNotBlank(caseData.getConciliationTrack())
                 ? caseData.getConciliationTrack() : CONCILIATION_TRACK_NO_CONCILIATION;
@@ -343,7 +351,7 @@ public class TimeToFirstHearingReport {
                 || HEARING_TYPE_PERLIMINARY_HEARING.equals(hearingType.getHearingType())) {
             for (var dateListedItemType : hearingType.getHearingDateCollection()) {
                 if (Constants.HEARING_STATUS_HEARD.equals(dateListedItemType.getValue().getHearingStatus())) {
-                    var date = LocalDate.parse(dateListedItemType.getValue().getListedDate(),OLD_DATE_TIME_PATTERN);
+                    var date = LocalDate.parse(dateListedItemType.getValue().getListedDate(), OLD_DATE_TIME_PATTERN);
                     datesList.add(date);
                 }
             }
@@ -353,6 +361,7 @@ public class TimeToFirstHearingReport {
 
     private boolean isFirstHearingWithin26Weeks(CaseData caseData, LocalDate firstHearingDate) {
         var receiptDate = LocalDate.parse(caseData.getReceiptDate());
-        return receiptDate.plusWeeks(26).equals(firstHearingDate) || receiptDate.plusWeeks(26).isAfter(firstHearingDate);
+        return receiptDate.plusWeeks(26).equals(firstHearingDate) || receiptDate.plusWeeks(26)
+                .isAfter(firstHearingDate);
     }
 }

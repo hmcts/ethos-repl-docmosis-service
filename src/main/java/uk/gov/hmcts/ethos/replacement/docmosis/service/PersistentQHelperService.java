@@ -35,7 +35,7 @@ public class PersistentQHelperService {
                 createUpdatesBusSender,
                 String.valueOf(ethosCaseRefCollection.size()),
                 multipleReferenceLinkMarkUp
-                );
+        );
 
     }
 

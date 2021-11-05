@@ -1,9 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.SortedMap;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +13,19 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeC;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.UpdateDataModelBuilder;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.SortedMap;
+import java.util.stream.Collectors;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("multipleBatchUpdate3Service")
@@ -78,10 +83,9 @@ public class MultipleBatchUpdate3Service {
             if (YES.equals(multipleData.getBatchRemoveClaimantRep())
                     || YES.equals(multipleData.getBatchRemoveRespondentRep())) {
                 submitEventForCase(userToken, multipleDetails.getCaseTypeId(),
-                        caseSearched.getCaseId(), caseSearched.getCaseData(),multipleDetails.getJurisdiction());
+                        caseSearched.getCaseId(), caseSearched.getCaseData(), multipleDetails.getJurisdiction());
             }
-        }
-        else {
+        } else {
 
             log.info("No changes then move to open state");
 
@@ -89,24 +93,25 @@ public class MultipleBatchUpdate3Service {
         }
 
     }
-    private void submitEventForCase(String userToken, String caseTypeId, long caseId, CaseData caseData, String jurisdiction) {
-       try {
-           CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, caseTypeId,
+
+    private void submitEventForCase(String userToken, String caseTypeId, long caseId, CaseData caseData,
+                                    String jurisdiction) {
+        try {
+            CCDRequest returnedRequest = ccdClient.startEventForCase(userToken, caseTypeId,
                    jurisdiction, String.valueOf(caseId));
-           ccdClient.submitEventForCase(userToken, caseData, caseTypeId,
+            ccdClient.submitEventForCase(userToken, caseData, caseTypeId,
                    jurisdiction, returnedRequest, String.valueOf(caseId));
-       }
-          catch (Exception e) {
+        } catch (Exception e) {
             throw new CaseCreationException("Error while submitting event for case: " + caseId + e.toString());
         }
     }
 
     private void removeClaimantRep(SubmitEvent caseSearched, MultipleData multipleData) {
-            log.info("Claimant Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
-                    + " of multiple: " + multipleData.getMultipleReference());
-            var representedTypeC = new RepresentedTypeC();
-            caseSearched.getCaseData().setRepresentativeClaimantType(representedTypeC);
-            caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
+        log.info("Claimant Rep is to be removed for case: " + caseSearched.getCaseData().getEthosCaseReference()
+                + " of multiple: " + multipleData.getMultipleReference());
+        var representedTypeC = new RepresentedTypeC();
+        caseSearched.getCaseData().setRepresentativeClaimantType(representedTypeC);
+        caseSearched.getCaseData().setClaimantRepresentedQuestion(NO);
     }
 
     private void removeRespondentRep(CaseData caseData, RepresentedTypeR representedType) {
@@ -121,11 +126,12 @@ public class MultipleBatchUpdate3Service {
 
             if (respondentSumTypeItemOptional.isPresent() && CollectionUtils.isNotEmpty(caseData.getRepCollection())) {
                 List<RepresentedTypeRItem> toBeRemoved = caseData.getRepCollection().stream().filter(
-                        a -> a.getValue().getRespRepName().equals(representedType.getRespRepName())).collect(Collectors.toList());
+                        a -> a.getValue().getRespRepName().equals(representedType.getRespRepName()))
+                        .collect(Collectors.toList());
                 if (CollectionUtils.isNotEmpty(toBeRemoved)) {
                     log.info("Respondent representatives to be removed are: " + toBeRemoved.size());
                     for (RepresentedTypeRItem r: toBeRemoved) {
-                       caseData.getRepCollection().stream().filter(a -> a.getValue().equals(r.getValue()))
+                        caseData.getRepCollection().stream().filter(a -> a.getValue().equals(r.getValue()))
                                 .findFirst().ifPresent(representedTypeRItem -> representedTypeRItem.setId(null));
                         caseData.getRepCollection().stream().filter(a -> a.getValue().equals(r.getValue()))
                                 .findFirst().ifPresent(representedTypeRItem -> representedTypeRItem.setValue(null));
@@ -137,22 +143,17 @@ public class MultipleBatchUpdate3Service {
         }
     }
 
-
     private boolean checkAnyChange(MultipleData multipleData) {
-
-        return (
-                (multipleData.getBatchUpdateClaimantRep() != null
-                        && !multipleData.getBatchUpdateClaimantRep().getValue().getCode().equals(SELECT_NONE_VALUE))
-                        || (multipleData.getBatchUpdateJurisdiction() != null
-                        && !multipleData.getBatchUpdateJurisdiction().getValue().getCode().equals(SELECT_NONE_VALUE))
-                        || (multipleData.getBatchUpdateRespondent() != null
-                        && !multipleData.getBatchUpdateRespondent().getValue().getCode().equals(SELECT_NONE_VALUE))
-                        || (multipleData.getBatchUpdateJudgment() != null
-                        && !multipleData.getBatchUpdateJudgment().getValue().getCode().equals(SELECT_NONE_VALUE))
-                        || (multipleData.getBatchUpdateRespondentRep() != null
-                        && !multipleData.getBatchUpdateRespondentRep().getValue().getCode().equals(SELECT_NONE_VALUE)
-                )
-        );
+        return ((multipleData.getBatchUpdateClaimantRep() != null
+            && !multipleData.getBatchUpdateClaimantRep().getValue().getCode().equals(SELECT_NONE_VALUE))
+            || (multipleData.getBatchUpdateJurisdiction() != null
+            && !multipleData.getBatchUpdateJurisdiction().getValue().getCode().equals(SELECT_NONE_VALUE))
+            || (multipleData.getBatchUpdateRespondent() != null
+            && !multipleData.getBatchUpdateRespondent().getValue().getCode().equals(SELECT_NONE_VALUE))
+            || (multipleData.getBatchUpdateJudgment() != null
+            && !multipleData.getBatchUpdateJudgment().getValue().getCode().equals(SELECT_NONE_VALUE))
+            || (multipleData.getBatchUpdateRespondentRep() != null
+            && !multipleData.getBatchUpdateRespondentRep().getValue().getCode().equals(SELECT_NONE_VALUE)));
     }
 
 }
