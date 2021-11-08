@@ -1,14 +1,15 @@
 module.exports = {
-    TestFrontendUrl: process.env.TEST_E2E_URL || 'https://manage-case.demo.platform.hmcts.net',
+    TestUrl: process.env.TEST_E2E_URL || 'http://manage-case.aat.platform.hmcts.net/',
     TestEnv: process.env.RUNNING_ENV || 'aat',
     TestShowBrowserWindow: process.env.SHOW_BROWSER_WINDOW || false,
     TestRetryFeatures: process.env.RETRY_FEATURES || 0,
     TestRetryScenarios: process.env.RETRY_SCENARIOS || 2,
     TestPathToRun: process.env.E2E_TEST_PATH || './paths/**/*.js',
     TestOutputDir: process.env.E2E_OUTPUT_DIR || './functional-output',
-    TestEnvCWUser: process.env.CCD_CASEWORKER_E2E_EMAIL || 'eric.ccdcooper@gmail.com',
-    TestEnvCWPassword: process.env.CCD_CASEWORKER_E2E_PASSWORD || 'Nagoya0102',
-    TestEnvProfUser: process.env.PROF_USER_EMAIL || 'Nagoya0102',
+    TestTimeToWaitForText: parseInt(process.env.E2E_TEST_TIME_TO_WAIT_FOR_TEXT || 120),
+    TestEnvCWUser: process.env.CCD_CASEWORKER_E2E_EMAIL || '',
+    TestEnvCWPassword: process.env.CCD_CASEWORKER_E2E_PASSWORD || '',
+    TestEnvProfUser: process.env.PROF_USER_EMAIL || '',
     TestEnvProfPassword: process.env.PROF_USER_PASSWORD || '',
     TestForXUI: process.env.TESTS_FOR_XUI_SERVICE === 'true',
     TestForAccessibility: process.env.TESTS_FOR_ACCESSIBILITY === 'true',
@@ -17,8 +18,6 @@ module.exports = {
     TestS2SAuthSecret: process.env.SERVICE_SECRET || '',
     TestSystemUser: process.env.IDAM_SYSTEMUPDATE_USERNAME || '',
     TestSystemUserPassword: process.env.IDAM_SYSTEMUPDATE_PASSWORD || '',
-    TestTimeToWaitForText: 20,
-    TestWaitForTextToAppear: 20,
 
     CaseWorkerUser: {
         password: process.env.CW_USER_PASSWORD,
@@ -31,6 +30,7 @@ module.exports = {
     url: {
         authProviderApi: process.env.SERVICE_AUTH_PROVIDER_API_BASE_URL || 'http://rpe-service-auth-provider-aat.service.core-compute-aat.internal',
         ccdDataStore: process.env.CCD_DATA_STORE_URL || 'http://ccd-data-store-api-aat.service.core-compute-aat.internal',
+        dmStore: process.env.DM_STORE_URL || 'http://dm-store-aat.service.core-compute-aat.internal',
         idamApi: process.env.IDAM_API_URL || 'https://idam-api.aat.platform.hmcts.net',
     },
     definition: {
@@ -44,4 +44,3 @@ module.exports = {
     env: process.env.TEST_ENV || 'local',
     proxy: ''
 };
-
