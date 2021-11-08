@@ -1,21 +1,22 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
-
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SELECT_NONE_VALUE;
 
 @Slf4j
 @Service("multipleSingleMidEventValidationService")
@@ -180,7 +181,7 @@ public class MultipleSingleMidEventValidationService {
                                     representedTypeRItem.getValue().getNameOfRepresentative()
                                             + " ("
                                             + representedTypeRItem.getValue().getRespRepName()
-                                            + ")" ))
+                                            + ")"))
                     .collect(Collectors.toList());
 
         }

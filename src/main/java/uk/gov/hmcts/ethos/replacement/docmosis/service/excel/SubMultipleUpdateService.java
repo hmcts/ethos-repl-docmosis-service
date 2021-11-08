@@ -1,20 +1,22 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.AMEND_ACTION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CREATE_ACTION;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.items.SubMultipleTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SubMultipleReferenceService;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.stream.Collectors;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.AMEND_ACTION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CREATE_ACTION;
 
 @Slf4j
 @RequiredArgsConstructor

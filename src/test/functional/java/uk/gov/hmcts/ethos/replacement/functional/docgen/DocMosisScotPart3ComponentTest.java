@@ -17,8 +17,8 @@ import java.io.IOException;
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
 @WithTags({
-        @WithTag("ComponentTest"),
-        @WithTag("FunctionalTest")
+    @WithTag("ComponentTest"),
+    @WithTag("FunctionalTest")
 })
 public class DocMosisScotPart3ComponentTest {
 

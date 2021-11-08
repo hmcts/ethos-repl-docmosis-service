@@ -33,10 +33,10 @@ public class ReferenceDataController {
     @PostMapping(value = "/hearingVenueReferenceData", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "populates the hearing venue dynamic list with reference data.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully",
+                response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> hearingVenueReferenceData(
             @RequestBody CCDRequest ccdRequest,
@@ -56,10 +56,10 @@ public class ReferenceDataController {
     @PostMapping(value = "/dateListedReferenceData", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "populates the date listed dynamic lists with reference data.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully",
+                response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> dateListedReferenceData(
             @RequestBody CCDRequest ccdRequest,

@@ -1,18 +1,11 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.SortedMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.types.UploadedDocumentType;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.DATE_TIME_USER_FRIENDLY_PATTERN;
 import uk.gov.hmcts.ecm.common.model.helper.SchedulePayload;
 import uk.gov.hmcts.ecm.common.model.multiples.CaseImporterFile;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
@@ -22,6 +15,15 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.SignificantItemType;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.SortedMap;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DATE_TIME_USER_FRIENDLY_PATTERN;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -43,7 +45,8 @@ public class ExcelDocManagementService {
     private final ScheduleCreationService scheduleCreationService;
 
     public void uploadExcelDocument(String userToken, MultipleData multipleData, byte[] excelBytes) {
-        log.info("Multiple Name is: " + multipleData.getMultipleName() + "for multiple reference: " + multipleData.getMultipleReference());
+        log.info("Multiple Name is: " + multipleData.getMultipleName() + "for multiple reference: "
+                + multipleData.getMultipleReference());
         URI documentSelfPath = documentManagementService.uploadDocument(userToken, excelBytes,
                 MultiplesHelper.generateExcelDocumentName(multipleData), APPLICATION_EXCEL_VALUE);
 
@@ -85,7 +88,8 @@ public class ExcelDocManagementService {
     public void writeAndUploadExcelDocument(List<?> multipleCollection, String userToken,
                                             MultipleData multipleData, List<String> subMultipleCollection) {
 
-        log.info("MultipleName is: " + multipleData.getMultipleName() + "for multiple reference: " + multipleData.getMultipleReference());
+        log.info("MultipleName is: " + multipleData.getMultipleName() + "for multiple reference: "
+                + multipleData.getMultipleReference());
         byte[] excelBytes = excelCreationService.writeExcel(multipleCollection, subMultipleCollection,
                 multipleData.getLeadCase());
 

@@ -212,7 +212,8 @@ public class ScheduleCreationService {
     }
 
     private void initializeSubMultipleData(XSSFWorkbook workbook, XSSFSheet sheet, MultipleData multipleData,
-                                           SortedMap<String, SortedMap<String, SortedMap<String, Object>>> schedulePayloadTreeMap) {
+                                           SortedMap<String, SortedMap<String, SortedMap<String,
+                                           Object>>> schedulePayloadTreeMap) {
 
         var cellStyle = MultiplesSchedulePrinter.getRowCellStyle(workbook);
         var startingRow = 2;
@@ -220,7 +221,8 @@ public class ScheduleCreationService {
         if (!schedulePayloadTreeMap.isEmpty()) {
             log.info("Sub Multiple schedule");
 
-            for (Map.Entry<String, SortedMap<String, SortedMap<String, Object>>> entry : schedulePayloadTreeMap.entrySet()) {
+            for (Map.Entry<String, SortedMap<String, SortedMap<String, Object>>> entry :
+                    schedulePayloadTreeMap.entrySet()) {
                 SortedMap<String, SortedMap<String, Object>> schedulePayloads = entry.getValue();
                 //TITLE ROW
                 XSSFRow subMultipleRow = sheet.createRow(startingRow);
