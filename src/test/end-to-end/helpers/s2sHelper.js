@@ -18,7 +18,7 @@ async function getServiceToken() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({microservice: 'nfdiv_case_api', oneTimePassword})
+        body: JSON.stringify({microservice: 'ethos_repl_service', oneTimePassword})
     });
 
     logger.debug(serviceToken);
