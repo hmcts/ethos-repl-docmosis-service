@@ -129,7 +129,6 @@ public class CasesAwaitingJudgmentReport {
             return false;
         }
 
-
         var caseData = submitEvent.getCaseData();
         if (!isValidPositionType(caseData.getPositionType())) {
             return false;

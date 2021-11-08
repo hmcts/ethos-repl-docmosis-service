@@ -20,7 +20,6 @@ public class CaseCreationForCaseWorkerService {
     private final SingleReferenceService singleReferenceService;
     private final MultipleReferenceService multipleReferenceService;
 
-
     public SubmitEvent caseCreationRequest(CCDRequest ccdRequest, String userToken) {
         var caseDetails = ccdRequest.getCaseDetails();
         log.info("EventId: " + ccdRequest.getEventId());

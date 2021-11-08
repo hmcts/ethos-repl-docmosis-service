@@ -11,19 +11,44 @@ import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkDocumentInfo;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkRequest;
-import uk.gov.hmcts.ecm.common.model.ccd.*;
+import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsAttributesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.BFActionType;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BulkHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_AVAILABLE_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_ADDRESS;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_AND_CLAIMANT_REP_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_AND_RESPONDENTS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_AND_RESPONDENTS_REPS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_REP_ADDRESS;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_REP_AND_RESPONDENTS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_REP_AND_RESPONDENTS_REPS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CUSTOMISE_SELECTED_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_AND_RESPONDENTS_REPS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENTS_REPS_ADDRESSES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_BULK_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("documentGenerationService")
@@ -150,12 +175,12 @@ public class DocumentGenerationService {
     }
 
     public CaseData updateBfActions(DocumentInfo documentInfo, CaseData caseData) {
-       var sectionName = Strings.split(documentInfo.getDescription(), '_')[1];
-       if (areBfActionsForEnglandOrWalesToBeUpdated(caseData, sectionName)
-           || areBfActionsForScotlandToBeUpdated(caseData, sectionName)) {
-          return setBfActions(caseData);
-       }
-       return caseData;
+        var sectionName = Strings.split(documentInfo.getDescription(), '_')[1];
+        if (areBfActionsForEnglandOrWalesToBeUpdated(caseData, sectionName)
+            || areBfActionsForScotlandToBeUpdated(caseData, sectionName)) {
+            return setBfActions(caseData);
+        }
+        return caseData;
     }
 
     public boolean areBfActionsForEnglandOrWalesToBeUpdated(CaseData caseData, String sectionName) {
@@ -176,12 +201,12 @@ public class DocumentGenerationService {
 
     public CaseData setBfActions(CaseData caseData) {
 
-        var bfActionTypeItem = new BFActionTypeItem();
         var bfActionType = new BFActionType();
         bfActionType.setLetters(YES);
         bfActionType.setDateEntered(LocalDate.now().toString());
         bfActionType.setCwActions("Other action");
         bfActionType.setAllActions("Claim served");
+        var bfActionTypeItem = new BFActionTypeItem();
         bfActionType.setBfDate(LocalDate.now().plusDays(28).toString());
         bfActionTypeItem.setId(UUID.randomUUID().toString());
         bfActionTypeItem.setValue(bfActionType);

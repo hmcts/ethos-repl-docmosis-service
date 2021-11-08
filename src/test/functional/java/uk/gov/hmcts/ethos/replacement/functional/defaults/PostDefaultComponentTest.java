@@ -25,8 +25,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_PO
 @Category(ComponentTest.class)
 @RunWith(SerenityRunner.class)
 @WithTags({
-        @WithTag("ComponentTest"),
-        @WithTag("FunctionalTest")
+    @WithTag("ComponentTest"),
+    @WithTag("FunctionalTest")
 })
 public class PostDefaultComponentTest {
     private TestUtil testUtil;
