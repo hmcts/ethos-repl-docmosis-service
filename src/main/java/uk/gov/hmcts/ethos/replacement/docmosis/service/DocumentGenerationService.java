@@ -206,9 +206,7 @@ public class DocumentGenerationService {
         bfActionType.setDateEntered(LocalDate.now().toString());
         bfActionType.setCwActions("Other action");
         bfActionType.setAllActions("Claim served");
-        var bfActionTypeItem = new BFActionTypeItem();
         bfActionType.setBfDate(LocalDate.now().plusDays(28).toString());
-
         var bfActionTypeItem = new BFActionTypeItem();
         bfActionTypeItem.setId(UUID.randomUUID().toString());
         bfActionTypeItem.setValue(bfActionType);
