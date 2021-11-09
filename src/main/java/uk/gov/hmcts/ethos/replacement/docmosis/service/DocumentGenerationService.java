@@ -177,7 +177,7 @@ public class DocumentGenerationService {
     public CaseData updateBfActions(DocumentInfo documentInfo, CaseData caseData) {
         var sectionName = Strings.split(documentInfo.getDescription(), '_')[1];
         if (areBfActionsForEnglandOrWalesToBeUpdated(caseData, sectionName)
-                || areBfActionsForScotlandToBeUpdated(caseData, sectionName)) {
+            || areBfActionsForScotlandToBeUpdated(caseData, sectionName)) {
             return setBfActions(caseData);
         }
         return caseData;
@@ -200,11 +200,13 @@ public class DocumentGenerationService {
     }
 
     public CaseData setBfActions(CaseData caseData) {
+
         var bfActionType = new BFActionType();
         bfActionType.setLetters(YES);
         bfActionType.setDateEntered(LocalDate.now().toString());
         bfActionType.setCwActions("Other action");
         bfActionType.setAllActions("Claim served");
+        var bfActionTypeItem = new BFActionTypeItem();
         bfActionType.setBfDate(LocalDate.now().plusDays(28).toString());
 
         var bfActionTypeItem = new BFActionTypeItem();

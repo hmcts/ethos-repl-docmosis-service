@@ -34,3 +34,7 @@ example.docx
 document.docx
 target
 
+functional-output/
+package-lock.json
+
+

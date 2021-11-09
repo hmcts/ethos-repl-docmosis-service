@@ -43,10 +43,10 @@ public class PersistentQueueActionsController {
     @PostMapping(value = "/afterSubmittedBulkPQ", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "display the bulk info.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully",
+                response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> afterSubmittedBulkPQ(
             @RequestBody BulkRequest bulkRequest,
@@ -78,10 +78,10 @@ public class PersistentQueueActionsController {
     @PostMapping(value = "/preAcceptBulkPQ", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "accept a bulk of cases.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully",
+                response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> preAcceptBulkPQ(
             @RequestBody BulkRequest bulkRequest,
@@ -108,10 +108,10 @@ public class PersistentQueueActionsController {
     @PostMapping(value = "/updateBulkCasePQ", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "update a bulk case. Update the multiple collection.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully",
+                response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<BulkCallbackResponse> updateBulkCasePQ(
             @RequestBody BulkRequest bulkRequest,

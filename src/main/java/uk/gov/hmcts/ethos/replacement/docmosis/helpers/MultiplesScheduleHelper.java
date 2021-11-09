@@ -142,7 +142,8 @@ public class MultiplesScheduleHelper {
             SortedMap<String, SortedMap<String, Object>> scheduleEvents = new TreeMap<>();
 
             for (String caseId : caseIds) {
-                MultiplesHelper.addObjectToCollectionOrderedByCaseRef(scheduleEvents, scheduleEventMap.get(caseId), caseId);
+                MultiplesHelper.addObjectToCollectionOrderedByCaseRef(scheduleEvents, scheduleEventMap.get(caseId),
+                        caseId);
             }
 
             subMultipleTreeMap.put(entry.getKey(), scheduleEvents);

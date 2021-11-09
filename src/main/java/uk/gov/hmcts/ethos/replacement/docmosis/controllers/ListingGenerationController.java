@@ -244,7 +244,7 @@ public class ListingGenerationController {
     }
 
     private boolean hasServedClaims(ListingData listingData) {
-       return CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail());
+        return CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail());
     }
 
     private boolean isAllowedReportType(ListingData listingData) {

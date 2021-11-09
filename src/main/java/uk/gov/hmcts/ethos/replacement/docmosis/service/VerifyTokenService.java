@@ -8,13 +8,14 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.SecretJWK;
 import com.nimbusds.jose.proc.JWSVerifierFactory;
 import com.nimbusds.jwt.SignedJWT;
-import java.net.URL;
-import java.security.Key;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import springfox.documentation.annotations.Cacheable;
+
+import java.net.URL;
+import java.security.Key;
 
 @Slf4j
 @Service("verifyTokenService")
