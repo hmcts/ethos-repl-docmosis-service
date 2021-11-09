@@ -32,7 +32,9 @@ import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 import static uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentManagementService.APPLICATION_DOCX_VALUE;
@@ -68,6 +70,7 @@ public class DocumentManagementServiceTest {
         UserDetails userDetails = HelperTest.getUserDetails();
         when(userService.getUserDetails(anyString())).thenReturn(userDetails);
         ReflectionTestUtils.setField(documentManagementService, "ccdDMStoreBaseUrl", "http://dm-store:8080");
+        ReflectionTestUtils.setField(documentManagementService, "secureDocStoreEnabled", false);
     }
 
     @Test
@@ -125,4 +128,11 @@ public class DocumentManagementServiceTest {
         documentManagementService.downloadFile("authString",
                 "documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary");
     }
+
+    @Test
+    public void getDocumentUUID() {
+        var urlString = "http://dm-store:8080/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary";
+        assertEquals("85d97996-22a5-40d7-882e-3a382c8ae1b4", documentManagementService.getDocumentUUID(urlString));
+    }
+
 }

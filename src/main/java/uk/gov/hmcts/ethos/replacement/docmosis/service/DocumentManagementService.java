@@ -155,7 +155,7 @@ public class DocumentManagementService {
         return "/" + path;
     }
 
-    private String getDocumentUUID(String urlString) {
+    public String getDocumentUUID(String urlString) {
         var documentUUID = urlString.replace(ccdDMStoreBaseUrl + "/documents/", "");
         documentUUID = documentUUID.replace("/binary", "");
         return documentUUID;
