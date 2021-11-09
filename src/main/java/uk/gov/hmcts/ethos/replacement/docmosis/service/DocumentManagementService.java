@@ -16,6 +16,7 @@ import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.ccd.document.am.feign.CaseDocumentClient;
+import uk.gov.hmcts.reform.ccd.document.am.model.Classification;
 import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
@@ -72,7 +73,7 @@ public class DocumentManagementService {
                         caseTypeID,
                         "EMPLOYMENT",
                         singletonList(file),
-                        uk.gov.hmcts.reform.ccd.document.am.model.Classification.valueOf("PUBLIC")
+                        Classification.PUBLIC
                 );
 
                 var document = response.getDocuments().stream()
