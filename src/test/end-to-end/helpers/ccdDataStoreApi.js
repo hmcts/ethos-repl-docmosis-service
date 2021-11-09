@@ -9,7 +9,7 @@ const logger = Logger.getLogger('helpers/ccdDataStoreApi.js');
 const env = testConfig.TestEnv;
 
 async function createCaseInCcd(dataLocation = 'data/ccd-case-basic-data.json') {
-    const saveCaseResponse = await createCaseAndFetchResponse(dataLocation).catch(error => {
+    const saveCaseResponse = await createECMCase(dataLocation).catch(error => {
         console.log(error);
     });
     const caseId = JSON.parse(saveCaseResponse).id;
@@ -17,7 +17,7 @@ async function createCaseInCcd(dataLocation = 'data/ccd-case-basic-data.json') {
     return caseId;
 }
 
-async function createCaseAndFetchResponse(dataLocation = 'data/ccd-case-basic-data.json') {
+async function createECMCase(dataLocation = 'data/ccd-case-basic-data.json') {
     const authToken = await idamApi.getUserToken();
     const userId = await idamApi.getUserId(authToken);
     const serviceToken = await s2sService.getServiceToken();
@@ -41,8 +41,8 @@ async function createCaseAndFetchResponse(dataLocation = 'data/ccd-case-basic-da
     console.log(startCaseResponse);
     const eventToken = JSON.parse(startCaseResponse).token;
 
-    var data = fs.readFileSync(dataLocation);
-    var saveBody = {
+    const data = fs.readFileSync(dataLocation);
+    const saveBody = {
         data: JSON.parse(data),
         event: {
             id: 'initiateCase',
@@ -74,8 +74,8 @@ async function updateCaseInCcd(caseId, eventId, dataLocation = 'data/ccd-update-
     logger.info('Updating case with id %s and event %s', caseId, eventId);
 
     const ccdApiUrl = `http://ccd-data-store-api-${env}.service.core-compute-${env}.internal`;
-    const ccdStartEventPath = `/caseworkers/${userId}/jurisdictions/DIVORCE/case-types/DIVORCE/cases/${caseId}/event-triggers/${eventId}/token`;
-    const ccdSaveEventPath = `/caseworkers/${userId}/jurisdictions/DIVORCE/case-types/DIVORCE/cases/${caseId}/events`;
+    const ccdStartEventPath = `/caseworkers/${userId}/jurisdictions/EMPLOYMENT/case-types/Leeds/cases/${caseId}/event-triggers/${eventId}/token`;
+    const ccdSaveEventPath = `/caseworkers/${userId}/jurisdictions/EMPLOYMENT/case-types/Leeds/cases/${caseId}/events`;
 
     const startEventOptions = {
         method: 'GET',
@@ -118,13 +118,8 @@ async function updateCaseInCcd(caseId, eventId, dataLocation = 'data/ccd-update-
     return saveEventResponse;
 }
 
-const getBaseUrl = () => {
-    return 'manage-case.aat.platform.hmcts.net';
-};
-
 module.exports = {
     createCaseInCcd,
-    createCaseAndFetchResponse,
+    createECMCase,
     updateCaseInCcd,
-    getBaseUrl
 };
