@@ -12,6 +12,7 @@ import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
 
 import java.time.LocalDate;
 import java.util.Iterator;
@@ -24,6 +25,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDG
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_TO_JUDGEMENTS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
@@ -41,6 +43,7 @@ public class ReportDocHelper {
     private static final String DAY_5_LIST = "\"Day_5_List\":[\n";
     private static final String DAY_6_LIST = "\"Day_6_List\":[\n";
     private static final String CASE_REFERENCE = "{\"Case_Reference\":\"";
+    private static final String REPORT_OFFICE = "\"Report_Office\":\"";
 
     private ReportDocHelper() {
     }
@@ -63,11 +66,18 @@ public class ReportDocHelper {
             } catch (JsonProcessingException e) {
                 throw new ReportException("Unable to create report data", e);
             }
+        } else if (HEARINGS_TO_JUDGEMENTS_REPORT.equals(listingData.getReportType())) {
+            try {
+                sb.append(ListingHelper.getListingDate(listingData));
+                sb.append(getHearingsToJudgmentsReport(listingData));
+            } catch (JsonProcessingException e) {
+                throw new ReportException("Unable to create report data", e);
+            }
         } else {
             sb.append(ListingHelper.getListingDate(listingData));
 
             if (listingData.getLocalReportsDetailHdr() != null) {
-                sb.append("\"Report_Office\":\"").append(
+                sb.append(REPORT_OFFICE).append(
                         nullCheck(listingData.getLocalReportsDetailHdr().getReportOffice())).append(NEW_LINE);
             }
 
@@ -108,7 +118,7 @@ public class ReportDocHelper {
         var reportData = (CasesAwaitingJudgmentReportData) listingData;
 
         var sb = new StringBuilder();
-        sb.append("\"Report_Office\":\"").append(reportData.getReportSummary().getOffice()).append(NEW_LINE);
+        sb.append(REPORT_OFFICE).append(reportData.getReportSummary().getOffice()).append(NEW_LINE);
         addJsonCollection("positionTypes", reportData.getReportSummary().getPositionTypes().iterator(), sb);
         addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
         return sb;
@@ -157,7 +167,7 @@ public class ReportDocHelper {
                 new TreeMap<>(unsortedMap).entrySet().iterator();
         while (entries.hasNext()) {
             Map.Entry<Boolean, List<AdhocReportTypeItem>> localReportEntry = entries.next();
-            String singleOrMultiple = localReportEntry.getKey() ? "Multiples" : "Singles";
+            String singleOrMultiple = Boolean.TRUE.equals(localReportEntry.getKey()) ? "Multiples" : "Singles";
             sb.append("{\"Case_Type\":\"").append(singleOrMultiple).append(NEW_LINE);
             sb.append("\"Claims_Number\":\"").append(localReportEntry.getValue().size()).append(NEW_LINE);
             sb.append(REPORT_LIST);
@@ -419,8 +429,8 @@ public class ReportDocHelper {
         return reportContent;
     }
 
-    private static StringBuilder addEntriesByServingDay(int dayNumber, String listBlockOpener,
-                                                        StringBuilder reportContent, ListingData listingData) {
+    private static void addEntriesByServingDay(int dayNumber, String listBlockOpener,
+                                               StringBuilder reportContent, ListingData listingData) {
 
         var itemsList = listingData.getLocalReportsDetail().get(0);
         var claimServedTypeItems = itemsList.getValue().getClaimServedItems()
@@ -456,7 +466,6 @@ public class ReportDocHelper {
         var currentDayTotal = "\"day_" + (dayNumber + 1) + "_total_count\":\"";
         reportContent.append(currentDayTotal)
                 .append(claimServedTypeItemsListSize).append(NEW_LINE);
-        return reportContent;
     }
 
     private static StringBuilder getServedClaimsReportRow(ClaimServedType claimServedTypeItem, int dayNumber) {
@@ -522,6 +531,29 @@ public class ReportDocHelper {
         }
 
         return reportSummaryContent;
+    }
+
+    private static StringBuilder getHearingsToJudgmentsReport(ListingData listingData)
+            throws JsonProcessingException {
+        if (!(listingData instanceof HearingsToJudgmentsReportData)) {
+            throw new IllegalStateException(("ListingData is not instanceof HearingsToJudgmentsReportData"));
+        }
+        var reportData = (HearingsToJudgmentsReportData) listingData;
+
+        var sb = new StringBuilder();
+        sb.append(REPORT_OFFICE).append(reportData.getReportSummary().getOffice()).append(NEW_LINE);
+        sb.append("\"Total_Cases\":\"").append(
+                nullCheck(reportData.getReportSummary().getTotalCases())).append(NEW_LINE);
+        sb.append("\"Total_Within_4Weeks\":\"").append(
+                nullCheck(reportData.getReportSummary().getTotal4wk())).append(NEW_LINE);
+        sb.append("\"Total_Percent_Within_4Weeks\":\"").append(
+                nullCheck(reportData.getReportSummary().getTotal4wkPerCent())).append(NEW_LINE);
+        sb.append("\"Total_Not_Within_4Weeks\":\"").append(
+                nullCheck(reportData.getReportSummary().getTotalx4wk())).append(NEW_LINE);
+        sb.append("\"Total_Percent_Not_Within_4Weeks\":\"").append(
+                nullCheck(reportData.getReportSummary().getTotalx4wkPerCent())).append(NEW_LINE);
+        addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
+        return sb;
     }
 
 }
