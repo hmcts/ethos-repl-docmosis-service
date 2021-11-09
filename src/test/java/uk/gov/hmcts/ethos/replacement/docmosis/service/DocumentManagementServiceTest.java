@@ -18,6 +18,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
+import uk.gov.hmcts.reform.ccd.document.am.feign.CaseDocumentClient;
 import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
 
@@ -52,6 +53,8 @@ public class DocumentManagementServiceTest {
     private UserService userService;
     @Mock
     private DocumentDownloadClientApi documentDownloadClientApi;
+    @Mock
+    private CaseDocumentClient caseDocumentClient;
     @InjectMocks
     private DocumentManagementService documentManagementService;
     @Rule
@@ -133,6 +136,22 @@ public class DocumentManagementServiceTest {
     public void getDocumentUUID() {
         var urlString = "http://dm-store:8080/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary";
         assertEquals("85d97996-22a5-40d7-882e-3a382c8ae1b4", documentManagementService.getDocumentUUID(urlString));
+    }
+
+    @Test
+    public void downloadFileSecureDocStoreTrue() {
+        ReflectionTestUtils.setField(documentManagementService, "secureDocStoreEnabled", true);
+        when(caseDocumentClient.getDocumentBinary(anyString(), anyString(), anyString()))
+                .thenReturn(responseEntity);
+        UploadedDocument uploadedDocument = documentManagementService.downloadFile("authString",
+                "http://dm-store:8080/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary");
+        assertEquals(uploadedDocument.getName(), "fileName");
+        assertEquals(uploadedDocument.getContentType(), "xslx");
+
+        uploadedDocument = documentManagementService.downloadFile("authString",
+                "documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary");
+        assertEquals(uploadedDocument.getName(), "fileName");
+        assertEquals(uploadedDocument.getContentType(), "xslx");
     }
 
 }
