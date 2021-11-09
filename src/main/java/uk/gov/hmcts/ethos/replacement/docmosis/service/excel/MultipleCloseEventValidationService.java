@@ -29,7 +29,7 @@ public class MultipleCloseEventValidationService {
         this.eventValidationService = eventValidationService;
     }
 
-    public List<String> validateJurisdictionCollections(String userToken, MultipleDetails multipleDetails) {
+    public List<String> validateCasesBeforeCloseEvent(String userToken, MultipleDetails multipleDetails) {
         List<String> errors = new ArrayList<>();
         var multipleData = multipleDetails.getCaseData();
 
@@ -45,7 +45,7 @@ public class MultipleCloseEventValidationService {
 
         for (SubmitEvent event : submitEvents) {
             var caseData = event.getCaseData();
-            eventValidationService.validateJurisdictionOutcome(caseData, event.getState().equals(REJECTED_STATE),
+            eventValidationService.validateCaseBeforeCloseEvent(caseData, event.getState().equals(REJECTED_STATE),
                     true, errors);
         }
 

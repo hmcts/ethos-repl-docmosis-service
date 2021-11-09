@@ -483,7 +483,7 @@ public class ExcelActionsController {
 
         var multipleDetails = multipleRequest.getCaseDetails();
 
-        List<String> errors = new ArrayList<>(multipleCloseEventValidationService.validateJurisdictionCollections(
+        List<String> errors = new ArrayList<>(multipleCloseEventValidationService.validateCasesBeforeCloseEvent(
                 userToken, multipleDetails));
 
         if (!errors.isEmpty()) {
