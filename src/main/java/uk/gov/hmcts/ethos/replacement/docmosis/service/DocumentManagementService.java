@@ -3,7 +3,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -19,12 +18,9 @@ import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.ccd.document.am.feign.CaseDocumentClient;
 import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
-import uk.gov.hmcts.reform.document.domain.Classification;
-import uk.gov.hmcts.reform.document.domain.UploadResponse;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Objects;
 
 import static java.util.Collections.singletonList;
@@ -32,7 +28,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 
 @Service
 @Slf4j
-@ConditionalOnProperty(prefix = "document_management", name = "url")
 @ComponentScan("uk.gov.hmcts.reform.ccd.document.am.feign")
 public class DocumentManagementService {
 
@@ -49,8 +44,6 @@ public class DocumentManagementService {
     private String ccdGatewayBaseUrl;
     @Value("${document_management.ccdCaseDocument.url}")
     private String ccdDMStoreBaseUrl;
-    @Value("$case-document-am-url")
-    private String caseDocumentAmUrl;
 
     @Autowired
     public DocumentManagementService(DocumentUploadClientApi documentUploadClient,
@@ -69,25 +62,15 @@ public class DocumentManagementService {
                               String caseTypeID) {
         try {
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, outputFileName, type, byteArray);
-            var user = userService.getUserDetails(authToken);
-            UploadResponse response = documentUploadClient.upload(
+            uk.gov.hmcts.reform.ccd.document.am.model.UploadResponse response2 = caseDocumentClient.uploadDocuments(
                     authToken,
                     authTokenGenerator.generate(),
-                    user.getUid(),
-                    new ArrayList<>(singletonList("caseworker-employment")),
-                    Classification.PUBLIC,
-                    singletonList(file)
+                    caseTypeID,
+                    "EMPLOYMENT",
+                    singletonList(file),
+                    uk.gov.hmcts.reform.ccd.document.am.model.Classification.valueOf("PUBLIC")
             );
-//            uk.gov.hmcts.reform.ccd.document.am.model.UploadResponse response2 = caseDocumentClient.uploadDocuments(
-//                    authToken,
-//                    authTokenGenerator.generate(),
-//                    caseTypeID,
-//                    "EMPLOYMENT",
-//                    singletonList(file),
-//                    uk.gov.hmcts.reform.ccd.document.am.model.Classification.valueOf("PUBLIC")
-//            );
-//            var document = response2.getDocuments().stream()
-            var document = response.getEmbedded().getDocuments().stream()
+            var document = response2.getDocuments().stream()
                     .findFirst()
                     .orElseThrow(() ->
                             new DocumentManagementException("Document management failed uploading file"
