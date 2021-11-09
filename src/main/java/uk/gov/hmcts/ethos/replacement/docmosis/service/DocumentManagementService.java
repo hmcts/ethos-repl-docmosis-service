@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import static java.util.Collections.singletonList;
@@ -44,6 +45,8 @@ public class DocumentManagementService {
     private String ccdGatewayBaseUrl;
     @Value("${document_management.ccdCaseDocument.url}")
     private String ccdDMStoreBaseUrl;
+    @Value("${feature.secure-doc-store.enabled}")
+    private boolean secureDocStoreEnabled;
 
     @Autowired
     public DocumentManagementService(DocumentUploadClientApi documentUploadClient,
@@ -62,22 +65,41 @@ public class DocumentManagementService {
                               String caseTypeID) {
         try {
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, outputFileName, type, byteArray);
-            uk.gov.hmcts.reform.ccd.document.am.model.UploadResponse response2 = caseDocumentClient.uploadDocuments(
-                    authToken,
-                    authTokenGenerator.generate(),
-                    caseTypeID,
-                    "EMPLOYMENT",
-                    singletonList(file),
-                    uk.gov.hmcts.reform.ccd.document.am.model.Classification.valueOf("PUBLIC")
-            );
-            var document = response2.getDocuments().stream()
+            if (secureDocStoreEnabled) {
+                var response = caseDocumentClient.uploadDocuments(
+                        authToken,
+                        authTokenGenerator.generate(),
+                        caseTypeID,
+                        "EMPLOYMENT",
+                        singletonList(file),
+                        uk.gov.hmcts.reform.ccd.document.am.model.Classification.valueOf("PUBLIC")
+                );
+
+                var document = response.getDocuments().stream()
+                        .findFirst()
+                        .orElseThrow(() ->
+                                new DocumentManagementException("Document management failed uploading file"
+                                        + OUTPUT_FILE_NAME));
+                log.info("Uploaded document successful");
+                return URI.create(document.links.self.href);
+            } else {
+                var user = userService.getUserDetails(authToken);
+                var response = documentUploadClient.upload(
+                       authToken,
+                       authTokenGenerator.generate(),
+                        user.getUid(),
+                        new ArrayList<>(singletonList("caseworker-employment")),
+                        uk.gov.hmcts.reform.document.domain.Classification.PUBLIC,
+                        singletonList(file)
+                );
+                var document = response.getEmbedded().getDocuments().stream()
                     .findFirst()
                     .orElseThrow(() ->
                             new DocumentManagementException("Document management failed uploading file"
                                     + OUTPUT_FILE_NAME));
-            log.info("Uploaded document successful");
-            log.info(caseTypeID);
-            return URI.create(document.links.self.href);
+                log.info("Uploaded document successful");
+                return URI.create(document.links.self.href);
+            }
         } catch (Exception ex) {
             log.info("Exception: " + ex.getMessage());
             throw new DocumentManagementException(String.format("Unable to upload document %s to document management",
@@ -95,13 +117,23 @@ public class DocumentManagementService {
 
     public UploadedDocument downloadFile(String authToken, String urlString) {
         var user = userService.getUserDetails(authToken);
-        ResponseEntity<Resource> response = documentDownloadClientApi.downloadBinary(
-                authToken,
-                authTokenGenerator.generate(),
-                String.join(",", user.getRoles()),
-                user.getUid(),
-                getDownloadUrl(urlString)
-        );
+        ResponseEntity<Resource> response;
+        if (secureDocStoreEnabled) {
+            response = caseDocumentClient.getDocumentBinary(
+                    authToken,
+                    authTokenGenerator.generate(),
+                    getDocumentUUID(urlString)
+            );
+
+        } else {
+            response = documentDownloadClientApi.downloadBinary(
+                    authToken,
+                    authTokenGenerator.generate(),
+                    String.join(",", user.getRoles()),
+                    user.getUid(),
+                    getDownloadUrl(urlString)
+            );
+        }
         if (HttpStatus.OK.equals(response.getStatusCode())) {
             return UploadedDocument.builder()
                     .content(response.getBody())
@@ -121,5 +153,11 @@ public class DocumentManagementService {
         }
 
         return "/" + path;
+    }
+
+    private String getDocumentUUID(String urlString) {
+        var documentUUID = urlString.replace(ccdDMStoreBaseUrl + "/documents/", "");
+        documentUUID = documentUUID.replace("/binary", "");
+        return documentUUID;
     }
 }
