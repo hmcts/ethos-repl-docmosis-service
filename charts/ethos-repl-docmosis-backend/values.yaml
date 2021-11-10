@@ -34,6 +34,7 @@ java:
     MICRO_SERVICE: "ethos_repl_service"
     ETHOS_REPL_DB_CONN_OPTIONS: ?sslmode=require
     ETHOS_REPL_DB_HOST: ethos-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
+    ETHOS_REPL_DB_HOST_V11: ethos-postgres-db-v11-{{ .Values.global.environment }}.postgres.database.azure.com
     ETHOS_REPL_DB_NAME: ethos
     ETHOS_REPL_DB_PORT: '5432'
     ETHOS_REPL_DB_USER_NAME: ethos@ethos-postgres-db-{{ .Values.global.environment }}
