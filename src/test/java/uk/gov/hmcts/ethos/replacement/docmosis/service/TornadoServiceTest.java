@@ -83,7 +83,7 @@ public class TornadoServiceTest {
     public void scheduleGenerationNoTornadoConnectionShouldThrowException() throws IOException {
         when(tornadoConnection.createConnection()).thenThrow(IOException.class);
 
-        tornadoService.scheduleGeneration(authToken, createBulkData());
+        tornadoService.scheduleGeneration(authToken, createBulkData(), MANCHESTER_LISTING_CASE_TYPE_ID);
     }
 
     @Test(expected = IOException.class)
@@ -159,7 +159,7 @@ public class TornadoServiceTest {
         bulkData.setScheduleDocName(LIST_CASES_CONFIG);
         bulkData.setSearchCollection(new ArrayList<>());
 
-        var documentInfo = tornadoService.scheduleGeneration(authToken, bulkData);
+        var documentInfo = tornadoService.scheduleGeneration(authToken, bulkData, MANCHESTER_LISTING_CASE_TYPE_ID);
 
         verifyDocumentInfo(documentInfo);
     }
@@ -192,7 +192,7 @@ public class TornadoServiceTest {
         documentManagementService = mock(DocumentManagementService.class);
         var documentUrl = "http://testdocumentserver/testdocument";
         var uri = URI.create(documentUrl);
-        when(documentManagementService.uploadDocument(anyString(), any(byte[].class), anyString(), anyString())).thenReturn(uri);
+        when(documentManagementService.uploadDocument(anyString(), any(byte[].class), anyString(), anyString(), anyString())).thenReturn(uri);
         when(documentManagementService.generateDownloadableURL(uri)).thenReturn(documentUrl);
         when(documentManagementService.generateMarkupDocument(anyString())).thenReturn(documentInfoMarkup);
     }

@@ -245,6 +245,8 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging
     implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.1.0'
 
+    implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
