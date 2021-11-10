@@ -335,13 +335,13 @@ public class EventValidationService {
     }
 
     public void validateJudgementsHasJurisdiction(CaseData caseData, boolean partOfMMultiple, List<String> errors) {
-        if (caseData.getJudgementCollection() == null || caseData.getJudgementCollection().isEmpty()) {
+        if (CollectionUtils.isEmpty(caseData.getJudgementCollection())) {
             return;
         }
 
         for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
             var judgementType = judgementTypeItem.getValue();
-            if (judgementType.getJurisdictionCodes() == null || judgementType.getJurisdictionCodes().isEmpty()) {
+            if ( CollectionUtils.isEmpty(judgementType.getJurisdictionCodes())) {
                 if (partOfMMultiple) {
                     errors.add(caseData.getEthosCaseReference() + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
                 } else {

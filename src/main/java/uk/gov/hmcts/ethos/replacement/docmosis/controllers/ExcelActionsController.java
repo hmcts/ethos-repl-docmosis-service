@@ -483,8 +483,8 @@ public class ExcelActionsController {
 
         var multipleDetails = multipleRequest.getCaseDetails();
 
-        List<String> errors = new ArrayList<>(multipleCloseEventValidationService.validateCasesBeforeCloseEvent(
-                userToken, multipleDetails));
+        List<String> errors = multipleCloseEventValidationService.validateCasesBeforeCloseEvent(userToken,
+                multipleDetails);
 
         if (!errors.isEmpty()) {
             return getMultipleCallbackRespEntity(errors, multipleDetails);

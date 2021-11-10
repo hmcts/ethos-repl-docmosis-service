@@ -84,8 +84,8 @@ public class MultipleCloseEventValidationServiceTest {
 
         CaseData caseData = new CaseData();
         caseData.setEthosCaseReference("245004/2020");
-        caseData.setJurCodesCollection(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
-        caseData.setJudgementCollection(new ArrayList<>(Collections.singletonList(judgmentTypeItem)));
+        caseData.setJurCodesCollection(List.of(jurCodesTypeItem));
+        caseData.setJudgementCollection(List.of(judgmentTypeItem));
 
         var submitEvent = getSubmitEventForCase(caseData);
 
@@ -131,15 +131,15 @@ public class MultipleCloseEventValidationServiceTest {
         jurCodesTypeItem.setValue(jurCodeType);
 
         var judgmentType = new JudgementType();
-        judgmentType.setJurisdictionCodes(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
+        judgmentType.setJurisdictionCodes(List.of(jurCodesTypeItem));
         var judgmentTypeItem = new JudgementTypeItem();
         judgmentTypeItem.setId("TEST");
         judgmentTypeItem.setValue(judgmentType);
 
         CaseData caseData = new CaseData();
         caseData.setEthosCaseReference("245004/2020");
-        caseData.setJurCodesCollection(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
-        caseData.setJudgementCollection(new ArrayList<>(Collections.singletonList(judgmentTypeItem)));
+        caseData.setJurCodesCollection(List.of(jurCodesTypeItem));
+        caseData.setJudgementCollection(List.of(judgmentTypeItem));
 
         var submitEvent = getSubmitEventForCase(caseData);
 
