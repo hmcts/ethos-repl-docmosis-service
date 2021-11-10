@@ -27,6 +27,12 @@ locals {
 
 }
 
+data "azurerm_subnet" "postgres" {
+  name                 = "core-infra-subnet-0-${var.env}"
+  resource_group_name  = "core-infra-${var.env}"
+  virtual_network_name = "core-infra-vnet-${var.env}"
+}
+
 module "repl-docmosis-backend" {
   source                          = "git@github.com:hmcts/cnp-module-webapp?ref=master"
   product                         = "${var.product}-${local.app}"
@@ -86,6 +92,35 @@ resource "azurerm_application_insights" "appinsights" {
   }
 }
 
+resource "azurerm_key_vault_secret" "POSTGRES-USER-V11" {
+  name         = "${var.component}-POSTGRES-USER"
+  value        = module.db-v11.user_name
+  key_vault_id = module.key-vault.key_vault_id
+}
+resource "azurerm_key_vault_secret" "POSTGRES-PASS-V11" {
+  name         = "${var.component}-POSTGRES-PASS"
+  value        = module.db-v11.postgresql_password
+  key_vault_id = module.key-vault.key_vault_id
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_HOST_V11" {
+  name         = "${var.component}-POSTGRES-HOST_V11"
+  value        = module.db-v11.host_name
+  key_vault_id = module.key-vault.key_vault_id
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_PORT_V11" {
+  name         = "${var.component}-POSTGRES-PORT"
+  value        = module.db-v11.postgresql_listen_port
+  key_vault_id = module.key-vault.key_vault_id
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_DATABASE_V11" {
+  name         = "${var.component}-POSTGRES-DATABASE_V11"
+  value        = module.db-v11.postgresql_database
+  key_vault_id = module.key-vault.key_vault_id
+}
+
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
   name         = "${var.component}-POSTGRES-USER"
   value        = module.db.user_name
@@ -100,12 +135,6 @@ resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
 
 resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
   name         = "${var.component}-POSTGRES-HOST"
-  value        = module.db.host_name
-  key_vault_id = module.key-vault.key_vault_id
-}
-
-resource "azurerm_key_vault_secret" "POSTGRES_HOST_V11" {
-  name         = "${var.component}-POSTGRES-HOST_V11"
   value        = module.db.host_name
   key_vault_id = module.key-vault.key_vault_id
 }
