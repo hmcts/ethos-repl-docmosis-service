@@ -206,8 +206,8 @@ public class DocumentGenerationService {
         bfActionType.setDateEntered(LocalDate.now().toString());
         bfActionType.setCwActions("Other action");
         bfActionType.setAllActions("Claim served");
-        var bfActionTypeItem = new BFActionTypeItem();
         bfActionType.setBfDate(LocalDate.now().plusDays(28).toString());
+        var bfActionTypeItem = new BFActionTypeItem();
         bfActionTypeItem.setId(UUID.randomUUID().toString());
         bfActionTypeItem.setValue(bfActionType);
 
@@ -266,11 +266,12 @@ public class DocumentGenerationService {
     public BulkDocumentInfo processBulkScheduleRequest(BulkRequest bulkRequest, String authToken) {
         var bulkDocumentInfo = new BulkDocumentInfo();
         var bulkData = bulkRequest.getCaseDetails().getCaseData();
+        var caseTypeId = bulkRequest.getCaseDetails().getCaseTypeId();
         List<String> errors = new ArrayList<>();
         var documentInfo = new DocumentInfo();
         try {
             if (bulkData.getSearchCollection() != null && !bulkData.getSearchCollection().isEmpty()) {
-                documentInfo = tornadoService.scheduleGeneration(authToken, bulkData);
+                documentInfo = tornadoService.scheduleGeneration(authToken, bulkData, caseTypeId);
             } else {
                 errors.add("There are not cases searched to generate schedules");
             }

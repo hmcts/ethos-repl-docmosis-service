@@ -83,7 +83,7 @@ public class SubMultipleUpdateService {
         excelDocManagementService.generateAndUploadExcel(
                 multipleObjectsUpdated,
                 userToken,
-                multipleDetails.getCaseData());
+                multipleDetails);
 
     }
 

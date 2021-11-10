@@ -150,14 +150,14 @@ public class MultipleHelperService {
             log.info("Moving single cases without sub multiples");
 
             readUpdatedExcelAndAddCasesInMultiple(userToken, newMultipleData, errors,
-                    casesFiltered, "");
+                    casesFiltered, "", caseTypeId);
 
         } else {
 
             log.info("Moving single cases with sub multiples");
 
             readUpdatedExcelAndAddCasesInMultiple(userToken, newMultipleData, errors,
-                    casesFiltered, newSubMultipleName);
+                    casesFiltered, newSubMultipleName, caseTypeId);
 
         }
 
@@ -170,7 +170,7 @@ public class MultipleHelperService {
 
     private void readUpdatedExcelAndAddCasesInMultiple(String userToken, MultipleData newMultipleData,
                                                        List<String> errors, List<String> multipleObjectsFiltered,
-                                                       String newSubMultipleName) {
+                                                       String newSubMultipleName, String caseTypeId) {
 
         SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
@@ -183,7 +183,10 @@ public class MultipleHelperService {
         List<MultipleObject> newMultipleObjectsUpdated = addCasesInMultiple(multipleObjectsFiltered,
                 multipleObjects, newSubMultipleName);
 
-        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, newMultipleData);
+        var multipleDetails = new MultipleDetails();
+        multipleDetails.setCaseData(newMultipleData);
+        multipleDetails.setCaseId(caseTypeId);
+        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, multipleDetails);
 
     }
 
@@ -231,7 +234,6 @@ public class MultipleHelperService {
     public void sendDetachUpdatesToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails,
                                                          List<String> errors,
                                                           SortedMap<String, Object> multipleObjects) {
-
         List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
         var multipleData = multipleDetails.getCaseData();
         String username = userService.getUserDetails(userToken).getEmail();

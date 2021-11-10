@@ -328,7 +328,7 @@ public class ExcelActionsControllerTest {
     @Test
     public void closeMultiple() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
-        when(multipleCloseEventValidationService.validateJurisdictionCollections(eq(AUTH_TOKEN),
+        when(multipleCloseEventValidationService.validateCasesBeforeCloseEvent(eq(AUTH_TOKEN),
                 isA(MultipleDetails.class))).thenReturn(new ArrayList<>());
         mvc.perform(post(CLOSE_MULTIPLE_URL)
                 .content(requestContent.toString())
@@ -343,7 +343,7 @@ public class ExcelActionsControllerTest {
     @Test
     public void closeMultipleValidationErrors() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
-        when(multipleCloseEventValidationService.validateJurisdictionCollections(eq(AUTH_TOKEN),
+        when(multipleCloseEventValidationService.validateCasesBeforeCloseEvent(eq(AUTH_TOKEN),
                 isA(MultipleDetails.class))).thenReturn(List.of("some error"));
         mvc.perform(post(CLOSE_MULTIPLE_URL)
                         .content(requestContent.toString())
