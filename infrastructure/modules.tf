@@ -30,3 +30,18 @@ module "db" {
   common_tags        = var.common_tags
   subscription       = var.subscription
 }
+
+module "db-v11" {
+  source             = "git@github.com:hmcts/cnp-module-postgres?ref=master"
+  product            = "${var.product}-postgres-db-v11"
+  name               = "ethos-db-v11"
+  location           = var.location_api
+  env                = var.env
+  database_name      = "ethos"
+  postgresql_user    = "ethos"
+  postgresql_version = "11"
+  sku_name           = "GP_Gen5_2"
+  sku_tier           = "GeneralPurpose"
+  common_tags        = var.common_tags
+  subscription       = var.subscription
+}
