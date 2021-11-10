@@ -23,7 +23,7 @@ public class MultipleCloseEventValidationService {
     private static final String JURISDICTION = "Jurisdiction";
     private static final String HEARING_STATUS = "HearingStatus";
     private static final String JUDGE_ALLOCATION = "JudgeAllocation";
-    private final static List<String> validationConditions = Arrays.asList("Jurisdiction", "HearingStatus",
+    private static final List<String> validationConditions = Arrays.asList("Jurisdiction", "HearingStatus",
             "JudgeAllocation");
 
     @Autowired
@@ -35,42 +35,46 @@ public class MultipleCloseEventValidationService {
         this.eventValidationService = eventValidationService;
     }
 
-    public List<String> validateCaseClosingConditions(String userToken, MultipleDetails multipleDetails) {
+    public List<String> validateCasesBeforeCloseEvent(String userToken, MultipleDetails multipleDetails) {
         List<String> errors = new ArrayList<>();
+        var ethosCaseRefCollection = multipleHelperService.getEthosCaseRefCollection(userToken,
+                multipleDetails.getCaseData(), errors);
 
-        for (var condition : validationConditions) {
-            validateCondition(userToken, multipleDetails, errors, condition);
+        if (ethosCaseRefCollection.isEmpty()) {
+            return errors;
+        } else {
+            var submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
+                    multipleDetails.getCaseTypeId(), ethosCaseRefCollection,
+                    multipleDetails.getCaseData().getMultipleSource());
+
+            for (var submitEvent : submitEvents) {
+
+                validateCase(submitEvent, errors);
+
+                if (!errors.isEmpty()) {
+                    break;
+                }
+            }
         }
 
         return errors;
     }
 
-    private void validateCondition(String userToken, MultipleDetails multipleDetails,
-                                   List<String> errors, String conditionToValidate) {
+    private void validateCase(SubmitEvent submitEvent, List<String> errors) {
+        for (var conditionToValidate : validationConditions) {
 
-        var multipleData = multipleDetails.getCaseData();
-        var ethosCaseRefCollection = multipleHelperService.getEthosCaseRefCollection(userToken,
-                multipleData, errors);
+            if (JURISDICTION.equals(conditionToValidate)) {
+                eventValidationService.validateJurisdictionOutcome(submitEvent.getCaseData(),
+                        submitEvent.getState().equals(REJECTED_STATE), true, errors);
+            } else if (HEARING_STATUS.equals(conditionToValidate)) {
+                eventValidationService.validateHearingStatusForCaseCloseEvent(submitEvent.getCaseData(), errors);
+            } else if (JUDGE_ALLOCATION.equals(conditionToValidate)) {
+                eventValidationService.validateHearingJudgeAllocationForCaseCloseEvent(submitEvent.getCaseData(),
+                        errors);
+            }
 
-        if (!ethosCaseRefCollection.isEmpty()) {
-            var submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
-                    multipleDetails.getCaseTypeId(), ethosCaseRefCollection, multipleData.getMultipleSource());
-
-            for (SubmitEvent event : submitEvents) {
-
-                if(JURISDICTION.equals(conditionToValidate)) {
-                    eventValidationService.validateJurisdictionOutcome(event.getCaseData(),
-                            event.getState().equals(REJECTED_STATE), true, errors);
-                } else if(HEARING_STATUS.equals(conditionToValidate)) {
-                    eventValidationService.validateHearingStatusForCaseCloseEvent(event.getCaseData(), errors);
-                } else if(JUDGE_ALLOCATION.equals(conditionToValidate)) {
-                    eventValidationService.validateHearingJudgeAllocationForCaseCloseEvent(event.getCaseData(),
-                            errors);
-                }
-
-                if(!errors.isEmpty()) {
-                    break;
-                }
+            if (!errors.isEmpty()) {
+                break;
             }
         }
     }

@@ -60,7 +60,7 @@ public class MultipleCloseEventValidationServiceTest {
                 errors)
         ).thenReturn(new ArrayList<>());
 
-        List<String> errors = multipleCloseEventValidationService.validateCaseClosingConditions(
+        List<String> errors = multipleCloseEventValidationService.validateCasesBeforeCloseEvent(
                                 userToken,
                                 multipleDetails);
 
@@ -97,7 +97,7 @@ public class MultipleCloseEventValidationServiceTest {
         doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
                 eq(false), eq(true), eq(new ArrayList<>()));
 
-        List<String> errors = multipleCloseEventValidationService.validateCaseClosingConditions(
+        List<String> errors = multipleCloseEventValidationService.validateCasesBeforeCloseEvent(
                 userToken,
                 multipleDetails);
 
@@ -136,12 +136,16 @@ public class MultipleCloseEventValidationServiceTest {
         doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
                 eq(false), eq(true), eq(new ArrayList<>()));
 
-        List<String> errors = multipleCloseEventValidationService.validateCaseClosingConditions(
+        List<String> errors = multipleCloseEventValidationService.validateCasesBeforeCloseEvent(
                 userToken,
                 multipleDetails);
 
         assertEquals(0, errors.size());
     }
+
+    //listed hearing status error
+    //heard case + no judge
+    //heard case + with judge
 
     private SubmitEvent getSubmitEventForCase(CaseData caseData) {
         SubmitEvent submitEvent = new SubmitEvent();

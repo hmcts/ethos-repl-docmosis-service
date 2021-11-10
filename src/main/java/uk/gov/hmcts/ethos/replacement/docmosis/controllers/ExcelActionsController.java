@@ -482,7 +482,7 @@ public class ExcelActionsController {
         }
 
         var multipleDetails = multipleRequest.getCaseDetails();
-        List<String> errors = multipleCloseEventValidationService.validateCaseClosingConditions(userToken,
+        List<String> errors = multipleCloseEventValidationService.validateCasesBeforeCloseEvent(userToken,
                 multipleDetails);
 
         if (!errors.isEmpty()) {
