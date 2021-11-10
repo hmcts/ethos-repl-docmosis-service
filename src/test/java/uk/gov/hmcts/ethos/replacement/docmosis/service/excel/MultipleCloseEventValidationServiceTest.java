@@ -8,7 +8,9 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
@@ -19,11 +21,14 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JUDGEMENT_JURISDICTION_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -60,7 +65,7 @@ public class MultipleCloseEventValidationServiceTest {
                 errors)
         ).thenReturn(new ArrayList<>());
 
-        List<String> errors = multipleCloseEventValidationService.validateJurisdictionCollections(
+        List<String> errors = multipleCloseEventValidationService.validateCasesBeforeCloseEvent(
                                 userToken,
                                 multipleDetails);
 
@@ -68,14 +73,19 @@ public class MultipleCloseEventValidationServiceTest {
     }
 
     @Test
-    public void multipleCloseEventValidationJurisdictionsCollectionReturnsErrors() {
+    public void multipleCloseEventValidationReturnsErrors() {
         var jurCodesTypeItem = new JurCodesTypeItem();
         jurCodesTypeItem.setId("TEST");
         jurCodesTypeItem.setValue(new JurCodesType());
 
+        var judgmentTypeItem = new JudgementTypeItem();
+        judgmentTypeItem.setId("TEST");
+        judgmentTypeItem.setValue(new JudgementType());
+
         CaseData caseData = new CaseData();
         caseData.setEthosCaseReference("245004/2020");
-        caseData.setJurCodesCollection(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
+        caseData.setJurCodesCollection(List.of(jurCodesTypeItem));
+        caseData.setJudgementCollection(List.of(judgmentTypeItem));
 
         var submitEvent = getSubmitEventForCase(caseData);
 
@@ -94,27 +104,42 @@ public class MultipleCloseEventValidationServiceTest {
                 multipleDetails.getCaseData().getMultipleSource())
         ).thenReturn(new ArrayList<>(Collections.singletonList(submitEvent)));
 
-        doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
-                eq(false), eq(true), eq(new ArrayList<>()));
+        doCallRealMethod().when(eventValidationService).validateCaseBeforeCloseEvent(isA(CaseData.class),
+                eq(false), eq(true), anyList());
 
-        List<String> errors = multipleCloseEventValidationService.validateJurisdictionCollections(
+        doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
+                eq(false), eq(true), anyList());
+
+        doCallRealMethod().when(eventValidationService).validateJudgementsHasJurisdiction(isA(CaseData.class),
+                eq(true), anyList());
+
+        List<String> errors = multipleCloseEventValidationService.validateCasesBeforeCloseEvent(
                 userToken,
                 multipleDetails);
 
-        assertEquals(1, errors.size());
+        assertEquals(2, errors.size());
         assertEquals("245004/2020 - " + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+        assertEquals("245004/2020 - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(1));
     }
 
-    public void multipleCloseEventValidationJurisdictionsCollectionNoError() {
+    @Test
+    public void multipleCloseEventValidationNoError() {
         var jurCodeType = new JurCodesType();
         jurCodeType.setJudgmentOutcome("some outcome");
         var jurCodesTypeItem = new JurCodesTypeItem();
         jurCodesTypeItem.setId("TEST");
         jurCodesTypeItem.setValue(jurCodeType);
 
+        var judgmentType = new JudgementType();
+        judgmentType.setJurisdictionCodes(List.of(jurCodesTypeItem));
+        var judgmentTypeItem = new JudgementTypeItem();
+        judgmentTypeItem.setId("TEST");
+        judgmentTypeItem.setValue(judgmentType);
+
         CaseData caseData = new CaseData();
         caseData.setEthosCaseReference("245004/2020");
-        caseData.setJurCodesCollection(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
+        caseData.setJurCodesCollection(List.of(jurCodesTypeItem));
+        caseData.setJudgementCollection(List.of(judgmentTypeItem));
 
         var submitEvent = getSubmitEventForCase(caseData);
 
@@ -133,10 +158,16 @@ public class MultipleCloseEventValidationServiceTest {
                 multipleDetails.getCaseData().getMultipleSource())
         ).thenReturn(new ArrayList<>(Collections.singletonList(submitEvent)));
 
-        doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
-                eq(false), eq(true), eq(new ArrayList<>()));
+        doCallRealMethod().when(eventValidationService).validateCaseBeforeCloseEvent(isA(CaseData.class),
+                eq(false), eq(true), anyList());
 
-        List<String> errors = multipleCloseEventValidationService.validateJurisdictionCollections(
+        doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
+                eq(false), eq(true), anyList());
+
+        doCallRealMethod().when(eventValidationService).validateJudgementsHasJurisdiction(isA(CaseData.class),
+                eq(true), anyList());
+
+        List<String> errors = multipleCloseEventValidationService.validateCasesBeforeCloseEvent(
                 userToken,
                 multipleDetails);
 
