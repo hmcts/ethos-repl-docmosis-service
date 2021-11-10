@@ -93,12 +93,12 @@ resource "azurerm_application_insights" "appinsights" {
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER-V11" {
-  name         = "${var.component}-POSTGRES-USER"
+  name         = "${var.component}-POSTGRES-USER-V11"
   value        = module.db-v11.user_name
   key_vault_id = module.key-vault.key_vault_id
 }
 resource "azurerm_key_vault_secret" "POSTGRES-PASS-V11" {
-  name         = "${var.component}-POSTGRES-PASS"
+  name         = "${var.component}-POSTGRES-PASS-V11"
   value        = module.db-v11.postgresql_password
   key_vault_id = module.key-vault.key_vault_id
 }
@@ -110,7 +110,7 @@ resource "azurerm_key_vault_secret" "POSTGRES_HOST_V11" {
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES_PORT_V11" {
-  name         = "${var.component}-POSTGRES-PORT"
+  name         = "${var.component}-POSTGRES-PORT-V11"
   value        = module.db-v11.postgresql_listen_port
   key_vault_id = module.key-vault.key_vault_id
 }
