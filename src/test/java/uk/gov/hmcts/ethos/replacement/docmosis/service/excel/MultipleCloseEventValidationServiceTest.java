@@ -60,7 +60,7 @@ public class MultipleCloseEventValidationServiceTest {
                 errors)
         ).thenReturn(new ArrayList<>());
 
-        List<String> errors = multipleCloseEventValidationService.validateJurisdictionCollections(
+        List<String> errors = multipleCloseEventValidationService.validateCaseClosingConditions(
                                 userToken,
                                 multipleDetails);
 
@@ -97,7 +97,7 @@ public class MultipleCloseEventValidationServiceTest {
         doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
                 eq(false), eq(true), eq(new ArrayList<>()));
 
-        List<String> errors = multipleCloseEventValidationService.validateJurisdictionCollections(
+        List<String> errors = multipleCloseEventValidationService.validateCaseClosingConditions(
                 userToken,
                 multipleDetails);
 
@@ -136,7 +136,7 @@ public class MultipleCloseEventValidationServiceTest {
         doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
                 eq(false), eq(true), eq(new ArrayList<>()));
 
-        List<String> errors = multipleCloseEventValidationService.validateJurisdictionCollections(
+        List<String> errors = multipleCloseEventValidationService.validateCaseClosingConditions(
                 userToken,
                 multipleDetails);
 

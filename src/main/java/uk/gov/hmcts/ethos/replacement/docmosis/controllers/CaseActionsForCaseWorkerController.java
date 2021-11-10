@@ -844,6 +844,8 @@ public class CaseActionsForCaseWorkerController {
         eventValidationService.validateJurisdictionOutcome(caseData,
                 ccdRequest.getCaseDetails().getState().equals(REJECTED_STATE), false, errors);
 
+        eventValidationService.validateHearingStatusForCaseCloseEvent(caseData, errors);
+
         if (errors.isEmpty()) {
             Helper.updatePositionTypeToClosed(caseData);
             return getCallbackRespEntityNoErrors(caseData);

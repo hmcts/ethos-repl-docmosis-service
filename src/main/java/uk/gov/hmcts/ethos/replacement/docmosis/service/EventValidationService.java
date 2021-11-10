@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.stream.Collectors.joining;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_LISTED_CASE_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE;
@@ -41,6 +43,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.EMPTY_RESPONDENT_CO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RECEIPT_DATE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_NUMBER_MISMATCH_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_DELETED_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_EXISTENCE_ERROR;
@@ -350,7 +353,6 @@ public class EventValidationService {
     }
 
     public List<String> validateListingDateRange(String listingFrom, String listingTo) {
-
         List<String> errors = new ArrayList<>();
         if (listingFrom != null && listingTo != null) {
             var startDate = LocalDate.parse(listingFrom);
@@ -361,6 +363,26 @@ public class EventValidationService {
             }
         }
         return errors;
+    }
+
+    public void validateHearingStatusForCaseCloseEvent(CaseData caseData, List<String> errors) {
+        for (var currentHearingTypeItem : caseData.getHearingCollection()) {
+            for (var currentDateListedTypeItem : currentHearingTypeItem.getValue().getHearingDateCollection()) {
+                if (HEARING_STATUS_LISTED.equals(currentDateListedTypeItem.getValue().getHearingStatus())) {
+                    errors.add(CLOSING_LISTED_CASE_ERROR);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void validateHearingJudgeAllocationForCaseCloseEvent(CaseData caseData, List<String> errors) {
+        for (var currentHearingTypeItem : caseData.getHearingCollection()) {
+            if (currentHearingTypeItem.getValue().getJudge() == null) {
+                errors.add(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
+                break;
+            }
+        }
     }
 
 }

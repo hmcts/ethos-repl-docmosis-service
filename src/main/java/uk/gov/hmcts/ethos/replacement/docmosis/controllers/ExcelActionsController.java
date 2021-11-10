@@ -482,9 +482,8 @@ public class ExcelActionsController {
         }
 
         var multipleDetails = multipleRequest.getCaseDetails();
-
-        List<String> errors = new ArrayList<>(multipleCloseEventValidationService.validateJurisdictionCollections(
-                userToken, multipleDetails));
+        List<String> errors = multipleCloseEventValidationService.validateCaseClosingConditions(userToken,
+                multipleDetails);
 
         if (!errors.isEmpty()) {
             return getMultipleCallbackRespEntity(errors, multipleDetails);
@@ -515,7 +514,6 @@ public class ExcelActionsController {
         }
 
         var multipleDetails = multipleRequest.getCaseDetails();
-
         MultiplesHelper.updatePayloadMultiple(multipleDetails.getCaseData());
 
         return ResponseEntity.ok(MultipleCallbackResponse.builder()
