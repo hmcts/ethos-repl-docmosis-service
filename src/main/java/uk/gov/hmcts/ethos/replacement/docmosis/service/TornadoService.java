@@ -59,7 +59,7 @@ public class TornadoService {
             buildInstruction(conn, caseData, authToken, caseTypeId,
                     correspondenceType, correspondenceScotType, multipleData);
             var documentName = Helper.getDocumentName(correspondenceType, correspondenceScotType);
-            return checkResponseStatus(authToken, conn, documentName);
+            return checkResponseStatus(authToken, conn, documentName, caseTypeId);
         } catch (IOException e) {
             log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS, e);
             throw e;
@@ -111,7 +111,7 @@ public class TornadoService {
 
             var documentName = ListingHelper.getListingDocName(listingData);
             buildListingInstruction(conn, listingData, documentName, authToken, caseType);
-            return checkResponseStatus(authToken, conn, documentName);
+            return checkResponseStatus(authToken, conn, documentName, caseType);
         } catch (IOException e) {
             log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS, e);
             throw e;
@@ -137,14 +137,14 @@ public class TornadoService {
         }
     }
 
-    DocumentInfo scheduleGeneration(String authToken, BulkData bulkData) throws IOException {
+    DocumentInfo scheduleGeneration(String authToken, BulkData bulkData, String caseTypeId) throws IOException {
         HttpURLConnection conn = null;
         try {
             conn = createConnection();
 
             var documentName = BulkHelper.getScheduleDocName(bulkData.getScheduleDocName());
             buildScheduleInstruction(conn, bulkData);
-            return checkResponseStatus(authToken, conn, documentName);
+            return checkResponseStatus(authToken, conn, documentName, caseTypeId);
         } catch (IOException e) {
             log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS, e);
             throw e;
@@ -171,12 +171,13 @@ public class TornadoService {
         }
     }
 
-    private DocumentInfo checkResponseStatus(String authToken, HttpURLConnection conn, String documentName)
+    private DocumentInfo checkResponseStatus(String authToken, HttpURLConnection conn, String documentName,
+                                             String caseTypeId)
             throws IOException {
         try (var os = new ByteArrayOutputStream()) {
             var responseCode = conn.getResponseCode();
             if (responseCode == HTTP_OK) {
-                return createDocument(authToken, conn, documentName, os);
+                return createDocument(authToken, conn, documentName, os, caseTypeId);
             } else {
                 throw new IOException(String.format("Invalid response code %d received from Tornado: %s", responseCode,
                         conn.getResponseMessage()));
@@ -185,7 +186,7 @@ public class TornadoService {
     }
 
     private DocumentInfo createDocument(String authToken, HttpURLConnection conn, String documentName,
-                                        ByteArrayOutputStream os) throws IOException {
+                                        ByteArrayOutputStream os, String caseTypeId) throws IOException {
 
         byte[] bytes;
         try (var is = conn.getInputStream()) {
@@ -193,7 +194,7 @@ public class TornadoService {
         }
 
         var documentSelfPath = documentManagementService.uploadDocument(authToken, bytes, OUTPUT_FILE_NAME,
-                APPLICATION_DOCX_VALUE);
+                APPLICATION_DOCX_VALUE, caseTypeId);
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
         var downloadUrl = documentManagementService.generateDownloadableURL(documentSelfPath);
         var markup = documentManagementService.generateMarkupDocument(downloadUrl);

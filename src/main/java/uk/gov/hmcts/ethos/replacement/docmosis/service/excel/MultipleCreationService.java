@@ -94,7 +94,7 @@ public class MultipleCreationService {
 
         List<String> ethosCaseRefCollection = MultiplesHelper.getCaseIds(multipleData);
 
-        excelDocManagementService.generateAndUploadExcel(ethosCaseRefCollection, userToken, multipleData);
+        excelDocManagementService.generateAndUploadExcel(ethosCaseRefCollection, userToken, multipleDetails);
 
         log.info("Send updates to single cases");
 
@@ -121,7 +121,7 @@ public class MultipleCreationService {
             excelDocManagementService.writeAndUploadExcelDocument(
                     multipleObjectList,
                     userToken,
-                    multipleDetails.getCaseData(),
+                    multipleDetails,
                     new ArrayList<>(subMultipleNames));
 
         } else {
@@ -133,7 +133,7 @@ public class MultipleCreationService {
             excelDocManagementService.writeAndUploadExcelDocument(
                     MultiplesHelper.getCaseIds(multipleDetails.getCaseData()),
                     userToken,
-                    multipleDetails.getCaseData(),
+                    multipleDetails,
                     new ArrayList<>());
 
         }

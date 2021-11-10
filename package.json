@@ -1,6 +1,6 @@
 {
-  "name": "EthosProject",
-  "description": "End to End test for Probate Back Office",
+  "name": "ecm-e2e-tests",
+  "description": "End to End CCD tests for ECM",
   "version": "1.0.0",
   "private": true,
   "engines": {

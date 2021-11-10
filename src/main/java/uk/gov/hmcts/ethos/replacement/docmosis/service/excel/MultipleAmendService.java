@@ -65,7 +65,7 @@ public class MultipleAmendService {
 
                 log.info("Create a new Excel");
                 excelDocManagementService.generateAndUploadExcel(newMultipleObjects, userToken,
-                        multipleDetails.getCaseData());
+                        multipleDetails);
 
             }
 
