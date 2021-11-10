@@ -62,11 +62,6 @@ module "repl-docmosis-backend" {
   }
 }
 
-resource "azurerm_key_vault_secret" "ethos-db-v11-password" {
-  key_vault_id = ""
-  name         = "ethos-db-v11-password"
-  value        = "${data.azurerm_key_vault.ethos_key_vault.id}"
-}
 
 resource "azurerm_key_vault_secret" "AZURE_APPINSGHTS_KEY" {
   name         = "AppInsightsInstrumentationKey"
@@ -105,6 +100,12 @@ resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
 
 resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
   name         = "${var.component}-POSTGRES-HOST"
+  value        = module.db.host_name
+  key_vault_id = module.key-vault.key_vault_id
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_HOST_V11" {
+  name         = "${var.component}-POSTGRES-HOST_V11"
   value        = module.db.host_name
   key_vault_id = module.key-vault.key_vault_id
 }
