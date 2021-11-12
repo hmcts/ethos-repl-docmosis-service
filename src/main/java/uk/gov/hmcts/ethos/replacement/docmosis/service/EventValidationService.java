@@ -127,7 +127,7 @@ public class EventValidationService {
             int index;
             while (repItr.hasNext()) {
                 index = repItr.nextIndex() + 1;
-                String respRepName = repItr.next().getValue().getRespRepName();
+                String respRepName = repItr.next().getValue().getDynamicRespRepName().getValue().getCode();
                 if (!isNullOrEmpty(respRepName)
                         && !CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
                     ListIterator<RespondentSumTypeItem> respItr = caseData.getRespondentCollection().listIterator();
@@ -138,6 +138,7 @@ public class EventValidationService {
                                 || (respondentSumType.getResponseRespondentName() != null
                                 && respRepName.equals(respondentSumType.getResponseRespondentName()))) {
                             validLink = true;
+                            caseData.getRepCollection().get(index - 1).getValue().setRespRepName(respRepName);
                             break;
                         }
                     }
@@ -341,7 +342,7 @@ public class EventValidationService {
 
         for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
             var judgementType = judgementTypeItem.getValue();
-            if ( CollectionUtils.isEmpty(judgementType.getJurisdictionCodes())) {
+            if (CollectionUtils.isEmpty(judgementType.getJurisdictionCodes())) {
                 if (partOfMMultiple) {
                     errors.add(caseData.getEthosCaseReference() + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
                 } else {

@@ -7,6 +7,7 @@ import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamicLists.DynamicRespondentRepresentative;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -163,7 +164,7 @@ public class HelperTest {
 
     @Test
     public void createDynamicListForRespondentRepresentative() {
-        DynamicListHelper.dynamicRespondentRepresentativeNames(caseDetails1.getCaseData());
+        DynamicRespondentRepresentative.dynamicRespondentRepresentativeNames(caseDetails1.getCaseData());
         assertNotNull(caseDetails1.getCaseData().getRepCollection());
         var dynamicValueType = new DynamicValueType();
         dynamicValueType.setCode("Antonio Vazquez");
@@ -174,7 +175,7 @@ public class HelperTest {
 
     @Test
     public void populateDynamicRespondentRepList() {
-        DynamicListHelper.dynamicRespondentRepresentativeNames(caseDetails6.getCaseData());
+        DynamicRespondentRepresentative.dynamicRespondentRepresentativeNames(caseDetails6.getCaseData());
         assertNotNull(caseDetails6.getCaseData().getRepCollection().get(0).getValue().getDynamicRespRepName());
         var dynamicValueType = new DynamicValueType();
         dynamicValueType.setCode("Antonio Vazquez");

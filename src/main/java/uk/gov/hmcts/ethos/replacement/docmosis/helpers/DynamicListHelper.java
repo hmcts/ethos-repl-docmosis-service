@@ -16,40 +16,7 @@ public class DynamicListHelper {
     private DynamicListHelper() {
     }
 
-    public static void dynamicRespondentRepresentativeNames(CaseData caseData) {
-        List<DynamicValueType> listItems = createDynamicRespondentName(caseData.getRespondentCollection());
-        if (!listItems.isEmpty()) {
-            var dynamicFixedListType = new DynamicFixedListType();
-            dynamicFixedListType.setListItems(listItems);
-            if (caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty()) {
-                ListIterator<RepresentedTypeRItem> repItr = caseData.getRepCollection().listIterator();
-                while (repItr.hasNext()) {
-                    var respRepCollection = caseData.getRepCollection().get(repItr.nextIndex());
-                    var dynamicValueType = new DynamicValueType();
-                    if (respRepCollection.getValue().getDynamicRespRepName() == null) {
-                        repItr.next().getValue().setDynamicRespRepName(dynamicFixedListType);
-                        var respRepName = respRepCollection.getValue().getRespRepName();
-                        dynamicValueType.setLabel(respRepName);
-                        dynamicValueType.setCode(respRepName);
-                    } else {
-                        dynamicValueType = respRepCollection.getValue().getDynamicRespRepName().getValue();
-                        repItr.next().getValue().setDynamicRespRepName(dynamicFixedListType);
-                    }
-                    respRepCollection.getValue().getDynamicRespRepName().setValue(dynamicValueType);
-                }
-            } else {
-                var representedTypeR = new RepresentedTypeR();
-                representedTypeR.setDynamicRespRepName(dynamicFixedListType);
-                var representedTypeRItem = new RepresentedTypeRItem();
-                representedTypeRItem.setValue(representedTypeR);
-                var collection = List.of(representedTypeRItem);
-                caseData.setRepCollection(collection);
-            }
-        }
-    }
-
-    private static List<DynamicValueType> createDynamicRespondentName(
-            List<RespondentSumTypeItem> respondentCollection) {
+    public static List<DynamicValueType> createDynamicRespondentName(List<RespondentSumTypeItem> respondentCollection) {
         List<DynamicValueType> listItems = new ArrayList<>();
         if (respondentCollection != null) {
             for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
@@ -61,5 +28,19 @@ public class DynamicListHelper {
             }
         }
         return listItems;
+    }
+
+    public static DynamicValueType getDynamicValue(String value) {
+        var dynamicValueType = new DynamicValueType();
+        dynamicValueType.setCode(value);
+        dynamicValueType.setLabel(value);
+        return dynamicValueType;
+    }
+
+    public static DynamicValueType getDynamicCodeLabel(String code, String label) {
+        var dynamicValueType = new DynamicValueType();
+        dynamicValueType.setCode(code);
+        dynamicValueType.setLabel(label);
+        return dynamicValueType;
     }
 }
