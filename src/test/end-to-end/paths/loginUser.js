@@ -1,4 +1,4 @@
-const testConfig = require('src/test/config');
+const testConfig = require('../../config');
 const createCaseConfig = require('src/test/end-to-end/pages/createCase/createCaseConfig');
 Feature('`Verify login smoke scenario');
 

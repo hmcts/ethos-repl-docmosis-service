@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * Factory to enable YAML files to be used with {@link PropertySource}
+ * Factory to enable YAML files to be used with {@link PropertySource}.
  *
  */
 public class YamlPropertySourceFactory implements PropertySourceFactory {

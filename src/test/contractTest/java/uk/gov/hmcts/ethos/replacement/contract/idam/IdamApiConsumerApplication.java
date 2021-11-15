@@ -6,7 +6,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.idam.IdamApi;
 
 @SpringBootApplication
 @EnableFeignClients(clients = {
-        IdamApi.class
+    IdamApi.class
 })
 public class IdamApiConsumerApplication {
 }

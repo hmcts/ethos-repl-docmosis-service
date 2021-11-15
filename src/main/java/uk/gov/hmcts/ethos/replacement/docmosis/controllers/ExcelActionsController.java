@@ -514,6 +514,7 @@ public class ExcelActionsController {
         }
 
         var multipleDetails = multipleRequest.getCaseDetails();
+
         MultiplesHelper.updatePayloadMultiple(multipleDetails.getCaseData());
 
         return ResponseEntity.ok(MultipleCallbackResponse.builder()

@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doCallRealMethod;
@@ -75,47 +76,12 @@ public class MultipleCloseEventValidationServiceTest {
     }
 
     @Test
-    public void multipleCloseEventValidationAllConditionsMetNoError() {
-        var caseData = getCaseData();
-        var submitEvent = getSubmitEventForCase(caseData);
-
-        multipleDetails.getCaseData().setLeadCase(null);
-
-        when(multipleHelperService.getEthosCaseRefCollection(
-                userToken,
-                multipleDetails.getCaseData(),
-                errors)
-        ).thenReturn(caseIdCollection);
-
-        when(singleCasesReadingService.retrieveSingleCases(
-                userToken,
-                multipleDetails.getCaseTypeId(),
-                caseIdCollection,
-                multipleDetails.getCaseData().getMultipleSource())
-        ).thenReturn(new ArrayList<>(Collections.singletonList(submitEvent)));
-
-        doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
-                eq(false), eq(true), eq(new ArrayList<>()));
-
-        List<String> errors = multipleCloseEventValidationService.validateCasesBeforeCloseEvent(
-                userToken,
-                multipleDetails);
-
-        assertEquals(0, errors.size());
-    }
-
-    @Test
     public void multipleCloseEventValidationJurisdictionsCollectionReturnsErrors() {
-        var caseData = getCaseData();
-        caseData.getJurCodesCollection().clear();
-
         var jurCodesTypeItem = new JurCodesTypeItem();
-        var jurCodeType = new JurCodesType();
-        jurCodeType.setJudgmentOutcome(null);
-
         jurCodesTypeItem.setId("TEST");
         jurCodesTypeItem.setValue(new JurCodesType());
 
+        CaseData caseData = new CaseData();
         caseData.setEthosCaseReference("245004/2020");
         caseData.setJurCodesCollection(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
 
@@ -162,9 +128,11 @@ public class MultipleCloseEventValidationServiceTest {
         caseData.setEthosCaseReference("245004/2020");
         caseData.setJurCodesCollection(new ArrayList<>(Collections.singletonList(jurCodesTypeItem)));
 
+        caseData.getJurCodesCollection().get(0).getValue().setJudgmentOutcome("Not allocated");
+
         var submitEvent = getSubmitEventForCase(caseData);
 
-        multipleDetails.getCaseData().setLeadCase(null);
+       // multipleDetails.getCaseData().setLeadCase(null);
 
         when(multipleHelperService.getEthosCaseRefCollection(
                 userToken,
@@ -177,10 +145,11 @@ public class MultipleCloseEventValidationServiceTest {
                 multipleDetails.getCaseTypeId(),
                 caseIdCollection,
                 multipleDetails.getCaseData().getMultipleSource())
+
         ).thenReturn(new ArrayList<>(Collections.singletonList(submitEvent)));
 
         doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
-                eq(false), eq(true), eq(new ArrayList<>()));
+                eq(false), eq(true), anyList());
 
         List<String> errors = multipleCloseEventValidationService.validateCasesBeforeCloseEvent(
                 userToken,

@@ -401,7 +401,7 @@ public class DocumentGenerationServiceTest {
 
     @Test
     public void processBulkScheduleRequest() throws IOException {
-        when(tornadoService.scheduleGeneration(anyString(), any())).thenReturn(documentInfo);
+        when(tornadoService.scheduleGeneration(anyString(), any(), anyString())).thenReturn(documentInfo);
         BulkDocumentInfo bulkDocumentInfo1 = documentGenerationService.processBulkScheduleRequest(bulkRequest, "authToken");
         assertEquals("BulkDocumentInfo(markUps=Markup, errors=[], documentInfo=DocumentInfo(type=Document, " +
                 "description=resources/exampleV1.json, url=http://google.com, markUp=Markup))", bulkDocumentInfo1.toString());
@@ -410,7 +410,7 @@ public class DocumentGenerationServiceTest {
     @Test
     public void processBulkScheduleRequestWithErrors() throws IOException {
         bulkRequest.getCaseDetails().getCaseData().setSearchCollection(null);
-        when(tornadoService.scheduleGeneration(anyString(), any())).thenReturn(documentInfo);
+        when(tornadoService.scheduleGeneration(anyString(), any(), anyString())).thenReturn(documentInfo);
         BulkDocumentInfo bulkDocumentInfo1 = documentGenerationService.processBulkScheduleRequest(bulkRequest, "authToken");
         assertEquals("BulkDocumentInfo(markUps= , errors=[There are not cases searched to generate schedules], " +
                 "documentInfo=DocumentInfo(type=null, description=null, url=null, markUp=null))", bulkDocumentInfo1.toString());
@@ -418,7 +418,7 @@ public class DocumentGenerationServiceTest {
 
     @Test(expected = Exception.class)
     public void processBulkScheduleRequestException() throws IOException {
-        when(tornadoService.scheduleGeneration(anyString(), any())).thenThrow(new InternalException(ERROR_MESSAGE));
+        when(tornadoService.scheduleGeneration(anyString(), any(), anyString())).thenThrow(new InternalException(ERROR_MESSAGE));
         documentGenerationService.processBulkScheduleRequest(bulkRequest, "authToken");
     }
 

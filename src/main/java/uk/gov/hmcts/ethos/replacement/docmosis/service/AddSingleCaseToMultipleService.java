@@ -17,7 +17,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,15 +37,15 @@ public class AddSingleCaseToMultipleService {
 
         log.info("Adding single case to multiple logic");
 
-        if (caseData.getMultipleFlag().equals(NO) &&
-            caseData.getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+        if (caseData.getMultipleFlag().equals(NO)
+                && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
             log.info("Case was single and now will be multiple");
             String leadClaimant = caseData.getLeadClaimant();
             String updatedMultipleReference = caseData.getMultipleReference();
             String multipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseTypeId);
             String subMultipleName;
-            if(isNullOrEmpty(caseData.getSubMultipleName())){
+            if (isNullOrEmpty(caseData.getSubMultipleName())) {
                 subMultipleName = "";
             } else {
                 subMultipleName = caseData.getSubMultipleName();

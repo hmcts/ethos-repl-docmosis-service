@@ -35,5 +35,4 @@ public class CasesAwaitingJudgmentReportData extends ListingData {
         return reportDetails;
     }
 
-
 }

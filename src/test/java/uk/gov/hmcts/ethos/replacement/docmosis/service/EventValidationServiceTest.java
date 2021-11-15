@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
@@ -39,6 +40,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.INVALID_LISTING_DAT
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_DELETED_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_EXISTENCE_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JUDGEMENT_JURISDICTION_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
@@ -56,8 +58,7 @@ class EventValidationServiceTest {
     private static final LocalDate PAST_ACCEPTED_DATE = LocalDate.now().minusDays(1);
 
     private static final LocalDate PAST_TARGET_HEARING_DATE = PAST_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
-    private static final LocalDate CURRENT_TARGET_HEARING_DATE =
-            CURRENT_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
+    private static final LocalDate CURRENT_TARGET_HEARING_DATE = CURRENT_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
 
     private static final LocalDate PAST_RESPONSE_RECEIVED_DATE = LocalDate.now().minusDays(1);
     private static final LocalDate CURRENT_RESPONSE_RECEIVED_DATE = LocalDate.now();
@@ -75,6 +76,9 @@ class EventValidationServiceTest {
     private CaseDetails validJudgeAllocationCaseDetails;
     private CaseDetails invalidJudgeAllocationCaseDetails;
     private CaseDetails outcomeNotAllocatedCaseDetails;
+    private CaseDetails caseDetails16;
+    private CaseDetails caseDetails17;
+    private CaseDetails caseDetails18;
     private ListingRequest listingRequestValidDateRange;
     private ListingRequest listingRequestInvalidDateRange;
     private ListingRequest listingRequest31DaysInvalidRange;
@@ -102,6 +106,11 @@ class EventValidationServiceTest {
                 "CaseCloseEvent_InValidJudgeAllocationStatusCaseDetails.json");
         outcomeNotAllocatedCaseDetails = generateCaseDetails(
                 "CaseCloseEvent_JurisdictionOutcomeNotAllocated.json");
+        caseDetails16 = generateCaseDetails("caseDetailsTest16.json");
+        caseDetails17 = generateCaseDetails("caseDetailsTest17.json");
+        caseDetails18 = generateCaseDetails("caseDetailsTest18.json");
+
+
         listingRequestValidDateRange = generateListingDetails("exampleListingV1.json");
         listingRequestInvalidDateRange = generateListingDetails("exampleListingV3.json");
         listingRequest31DaysInvalidRange = generateListingDetails("exampleListingV5.json");
@@ -143,10 +152,10 @@ class EventValidationServiceTest {
 
     @ParameterizedTest
     @CsvSource({
-        MULTIPLE_CASE_TYPE + "," + SUBMITTED_STATE,
-        MULTIPLE_CASE_TYPE + "," + ACCEPTED_STATE,
-        SINGLE_CASE_TYPE + "," + SUBMITTED_STATE,
-        SINGLE_CASE_TYPE + "," + ACCEPTED_STATE
+            MULTIPLE_CASE_TYPE + "," + SUBMITTED_STATE,
+            MULTIPLE_CASE_TYPE + "," + ACCEPTED_STATE,
+            SINGLE_CASE_TYPE + "," + SUBMITTED_STATE,
+            SINGLE_CASE_TYPE + "," + ACCEPTED_STATE
     })
     void shouldValidateCaseState(String caseType, String caseState) {
         caseDetails1.getCaseData().setCaseType(caseType);
@@ -213,8 +222,7 @@ class EventValidationServiceTest {
         List<String> errors = eventValidationService.validateET3ResponseFields(caseDetails1.getCaseData());
 
         assertEquals(1, errors.size());
-        assertEquals(EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE
-                + " for respondent 1 (Antonio Vazquez)", errors.get(0));
+        assertEquals(EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE + " for respondent 1 (Antonio Vazquez)", errors.get(0));
     }
 
     @Test
@@ -228,12 +236,9 @@ class EventValidationServiceTest {
     void shouldValidateResponseReceivedDateIsFutureDate() {
         CaseData caseData = caseDetails1.getCaseData();
 
-        caseData.getRespondentCollection().get(0).getValue()
-                .setResponseReceivedDate(PAST_RESPONSE_RECEIVED_DATE.toString());
-        caseData.getRespondentCollection().get(1).getValue()
-                .setResponseReceivedDate(CURRENT_RESPONSE_RECEIVED_DATE.toString());
-        caseData.getRespondentCollection().get(2).getValue()
-                .setResponseReceivedDate(FUTURE_RESPONSE_RECEIVED_DATE.toString());
+        caseData.getRespondentCollection().get(0).getValue().setResponseReceivedDate(PAST_RESPONSE_RECEIVED_DATE.toString());
+        caseData.getRespondentCollection().get(1).getValue().setResponseReceivedDate(CURRENT_RESPONSE_RECEIVED_DATE.toString());
+        caseData.getRespondentCollection().get(2).getValue().setResponseReceivedDate(FUTURE_RESPONSE_RECEIVED_DATE.toString());
 
         List<String> errors = eventValidationService.validateET3ResponseFields(caseData);
 
@@ -422,6 +427,75 @@ class EventValidationServiceTest {
                 assertEquals(MISSING_JURISDICTION_MESSAGE, errors.get(0));
             }
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void shouldValidateJurisdictionCodeForJudgementPresentAndMissing(boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJudgementsHasJurisdiction(caseDetails18.getCaseData(), partOfMultiple, errors);
+
+        assertEquals(1, errors.size());
+        if (partOfMultiple) {
+            assertEquals(caseDetails18.getCaseData().getEthosCaseReference() + " - "
+                    + MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(0));
+        } else {
+            assertEquals(MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(0));
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void shouldValidateJurisdictionCodeForJudgementPresent(boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJudgementsHasJurisdiction(caseDetails17.getCaseData(), partOfMultiple, errors);
+
+        assertEquals(0, errors.size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void shouldValidateJurisdictionCodeForJudgementMissing(boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJudgementsHasJurisdiction(caseDetails16.getCaseData(), partOfMultiple, errors);
+
+        assertEquals(1, errors.size());
+        if (partOfMultiple) {
+            assertEquals(caseDetails16.getCaseData().getEthosCaseReference() + " - "
+                    + MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(0));
+        } else {
+            assertEquals(MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(0));
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({"false,false", "true,false", "false,true", "true,true"})
+    void shouldValidateCaseBeforeCloseEventWithErrors(boolean isRejected, boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateCaseBeforeCloseEvent(caseDetails18.getCaseData(),
+                isRejected, partOfMultiple, errors);
+
+        assertEquals(2, errors.size());
+        if (partOfMultiple) {
+            assertEquals(caseDetails18.getCaseData().getEthosCaseReference() + " - "
+                    + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+
+            assertEquals(caseDetails18.getCaseData().getEthosCaseReference() + " - "
+                    + MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(1));
+        } else {
+            assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+            assertEquals(MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(1));
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({"false,false", "true,false", "false,true", "true,true"})
+    void shouldValidateCaseBeforeCloseEventNoErrors(boolean isRejected, boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateCaseBeforeCloseEvent(caseDetails17.getCaseData(),
+                isRejected, partOfMultiple, errors);
+
+        assertEquals(0, errors.size());
     }
 
     @Test

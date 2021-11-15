@@ -238,7 +238,13 @@
         {
           "id": "12121",
           "value": {
-            "non_hearing_judgment": "No Hearing Judgment"
+            "non_hearing_judgment": "No Hearing Judgment",
+            "jurisdictionCodes": [
+              {
+                "id": "12121",
+                "value": {}
+              }
+            ]
           }
         }
       ],

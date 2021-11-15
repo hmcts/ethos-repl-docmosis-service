@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import java.util.SortedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

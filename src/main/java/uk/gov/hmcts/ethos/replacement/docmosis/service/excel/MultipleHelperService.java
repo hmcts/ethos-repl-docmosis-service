@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +16,11 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.PersistentQHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.UserService;
 import uk.gov.hmcts.ethos.replacement.docmosis.servicebus.CreateUpdatesBusSender;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.SortedMap;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
@@ -146,14 +150,14 @@ public class MultipleHelperService {
             log.info("Moving single cases without sub multiples");
 
             readUpdatedExcelAndAddCasesInMultiple(userToken, newMultipleData, errors,
-                    casesFiltered, "");
+                    casesFiltered, "", caseTypeId);
 
         } else {
 
             log.info("Moving single cases with sub multiples");
 
             readUpdatedExcelAndAddCasesInMultiple(userToken, newMultipleData, errors,
-                    casesFiltered, newSubMultipleName);
+                    casesFiltered, newSubMultipleName, caseTypeId);
 
         }
 
@@ -166,7 +170,7 @@ public class MultipleHelperService {
 
     private void readUpdatedExcelAndAddCasesInMultiple(String userToken, MultipleData newMultipleData,
                                                        List<String> errors, List<String> multipleObjectsFiltered,
-                                                       String newSubMultipleName) {
+                                                       String newSubMultipleName, String caseTypeId) {
 
         SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
@@ -179,7 +183,10 @@ public class MultipleHelperService {
         List<MultipleObject> newMultipleObjectsUpdated = addCasesInMultiple(multipleObjectsFiltered,
                 multipleObjects, newSubMultipleName);
 
-        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, newMultipleData);
+        var multipleDetails = new MultipleDetails();
+        multipleDetails.setCaseData(newMultipleData);
+        multipleDetails.setCaseId(caseTypeId);
+        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, multipleDetails);
 
     }
 
@@ -221,12 +228,12 @@ public class MultipleHelperService {
                 errors, updatedMultipleData.getMultipleReference(), NO, createUpdatesBusSender,
                 String.valueOf(multipleObjectsFiltered.size()),
                 multipleReferenceLinkMarkUp
-                );
+        );
     }
 
     public void sendDetachUpdatesToSinglesWithoutConfirmation(String userToken, MultipleDetails multipleDetails,
-                                                         List<String> errors, SortedMap<String, Object> multipleObjects) {
-
+                                                         List<String> errors,
+                                                          SortedMap<String, Object> multipleObjects) {
         List<String> multipleObjectsFiltered = new ArrayList<>(multipleObjects.keySet());
         var multipleData = multipleDetails.getCaseData();
         String username = userService.getUserDetails(userToken).getEmail();
@@ -328,7 +335,8 @@ public class MultipleHelperService {
     }
 
     public void sendResetMultipleStateWithoutConfirmation(String userToken, String caseTypeId, String jurisdiction,
-                                                          MultipleData multipleData, List<String> errors, String parentMultipleCaseId) {
+                                                          MultipleData multipleData, List<String> errors,
+                                                          String parentMultipleCaseId) {
 
         String caseToSend = MultiplesHelper.getCurrentLead(multipleData.getLeadCase());
         String username = userService.getUserDetails(userToken).getEmail();
@@ -344,7 +352,7 @@ public class MultipleHelperService {
                 createUpdatesBusSender,
                 "1",
                 getFullLinkMarkUp(parentMultipleCaseId, multipleData.getMultipleReference())
-                );
+        );
 
     }
 
@@ -402,7 +410,7 @@ public class MultipleHelperService {
 
     }
 
-    private String getFullLinkMarkUp(String caseId, String multipleReference){
+    private String getFullLinkMarkUp(String caseId, String multipleReference) {
         return MultiplesHelper.generateMarkUp(ccdGatewayBaseUrl, caseId, multipleReference);
     }
 
