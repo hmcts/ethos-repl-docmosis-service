@@ -362,30 +362,37 @@ public class EventValidationService {
     }
 
     public void validateHearingStatusForCaseCloseEvent(CaseData caseData, List<String> errors) {
-        if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
-            for (var currentHearingTypeItem : caseData.getHearingCollection()) {
-                for (var currentDateListedTypeItem : currentHearingTypeItem.getValue().getHearingDateCollection()) {
-                    if (HEARING_STATUS_LISTED.equals(currentDateListedTypeItem.getValue().getHearingStatus())) {
-                        errors.add(CLOSING_LISTED_CASE_ERROR);
-                        break;
-                    }
+        if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+            return;
+        }
+
+        for (var currentHearingTypeItem : caseData.getHearingCollection()) {
+            for (var currentDateListedTypeItem : currentHearingTypeItem.getValue().getHearingDateCollection()) {
+                if (HEARING_STATUS_LISTED.equals(currentDateListedTypeItem.getValue().getHearingStatus())) {
+                    errors.add(CLOSING_LISTED_CASE_ERROR);
+                    break;
                 }
             }
         }
+
     }
 
     public void validateHearingJudgeAllocationForCaseCloseEvent(CaseData caseData, List<String> errors) {
-        if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
-            for (var currentHearingTypeItem : caseData.getHearingCollection()) {
-                for (var currentDateListedTypeItem : currentHearingTypeItem.getValue().getHearingDateCollection()) {
-                    if (HEARING_STATUS_HEARD.equals(currentDateListedTypeItem.getValue().getHearingStatus())
-                            && currentHearingTypeItem.getValue().getJudge() == null) {
-                        errors.add(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
-                        break;
-                    }
+
+        if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+            return;
+        }
+
+        for (var currentHearingTypeItem : caseData.getHearingCollection()) {
+            for (var currentDateListedTypeItem : currentHearingTypeItem.getValue().getHearingDateCollection()) {
+                if (HEARING_STATUS_HEARD.equals(currentDateListedTypeItem.getValue().getHearingStatus())
+                        && currentHearingTypeItem.getValue().getJudge() == null) {
+                    errors.add(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
+                    break;
                 }
             }
         }
+
     }
 
     public void validateCaseBeforeCloseEvent(CaseData caseData, boolean isRejected, boolean partOfMultiple,

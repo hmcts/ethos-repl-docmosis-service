@@ -606,6 +606,15 @@ class EventValidationServiceTest {
     }
 
     @Test
+    void shouldReturnsNoErrorsForHearingHearingStatusValidationWithNoHearings() {
+        List<String> errors = new ArrayList<>();
+        var caseWithNoHearings = validHearingStatusCaseCloseEventCaseDetails.getCaseData();
+        caseWithNoHearings.getHearingCollection().clear();
+        eventValidationService.validateHearingStatusForCaseCloseEvent(caseWithNoHearings, errors);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
     void shouldPassCaseCloseEventValidationCaseWithNoListedHearingStatus() {
         List<String> errors = new ArrayList<>();
         var validCase = validHearingStatusCaseCloseEventCaseDetails.getCaseData();
@@ -637,6 +646,15 @@ class EventValidationServiceTest {
         eventValidationService.validateHearingJudgeAllocationForCaseCloseEvent(invalidCase, errors);
         assertEquals(1, errors.size());
         assertEquals(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR, errors.get(0));
+    }
+
+    @Test
+    void shouldReturnsNoErrorsForHearingJudgeAllocationValidationWithNoHearings() {
+        List<String> errors = new ArrayList<>();
+        var caseWithNoHearings = invalidJudgeAllocationCaseDetails.getCaseData();
+        caseWithNoHearings.getHearingCollection().clear();
+        eventValidationService.validateHearingJudgeAllocationForCaseCloseEvent(caseWithNoHearings, errors);
+        assertEquals(0, errors.size());
     }
 
 }
