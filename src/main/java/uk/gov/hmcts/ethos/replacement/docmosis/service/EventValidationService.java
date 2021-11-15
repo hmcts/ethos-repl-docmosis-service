@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.stream.Collectors.joining;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_LISTED_CASE_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE;
@@ -41,13 +43,16 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.EMPTY_RESPONDENT_CO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RECEIPT_DATE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_NUMBER_MISMATCH_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_DELETED_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_EXISTENCE_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JUDGEMENT_JURISDICTION_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NOT_ALLOCATED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESP_REP_NAME_MISMATCH_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
@@ -224,12 +229,23 @@ public class EventValidationService {
                     errors.add(getJurisdictionOutcomeErrorText(partOfMultiple, true,
                             caseData.getEthosCaseReference()));
                     break;
+                } else if (NOT_ALLOCATED.equals(jurCodesType.getJudgmentOutcome())) {
+                    errors.add(getJurisdictionOutcomeNotAllocatedErrorText(partOfMultiple, true,
+                            caseData.getEthosCaseReference()));
                 }
             }
         } else if (!isRejected) {
             errors.add(getJurisdictionOutcomeErrorText(partOfMultiple, false,
                     caseData.getEthosCaseReference()));
         }
+    }
+
+    private String getJurisdictionOutcomeNotAllocatedErrorText(boolean partOfMultiple, boolean hasJurisdictions,
+                                                                String ethosReference) {
+        if (partOfMultiple) {
+            return ethosReference + " - " + JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE;
+        }
+        return JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE;
     }
 
     private String getJurisdictionOutcomeErrorText(boolean partOfMultiple, boolean hasJurisdictions,
@@ -334,24 +350,6 @@ public class EventValidationService {
         return errors;
     }
 
-    public void validateJudgementsHasJurisdiction(CaseData caseData, boolean partOfMMultiple, List<String> errors) {
-        if (CollectionUtils.isEmpty(caseData.getJudgementCollection())) {
-            return;
-        }
-
-        for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
-            var judgementType = judgementTypeItem.getValue();
-            if ( CollectionUtils.isEmpty(judgementType.getJurisdictionCodes())) {
-                if (partOfMMultiple) {
-                    errors.add(caseData.getEthosCaseReference() + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
-                } else {
-                    errors.add(MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
-                }
-                break;
-            }
-        }
-    }
-
     public List<String> validateDepositRefunded(CaseData caseData) {
         List<String> errors = new ArrayList<>();
         if (caseData.getDepositCollection() != null && !caseData.getDepositCollection().isEmpty()) {
@@ -382,9 +380,48 @@ public class EventValidationService {
         return errors;
     }
 
+    public void validateHearingStatusForCaseCloseEvent(CaseData caseData, List<String> errors) {
+        for (var currentHearingTypeItem : caseData.getHearingCollection()) {
+            for (var currentDateListedTypeItem : currentHearingTypeItem.getValue().getHearingDateCollection()) {
+                if (HEARING_STATUS_LISTED.equals(currentDateListedTypeItem.getValue().getHearingStatus())) {
+                    errors.add(CLOSING_LISTED_CASE_ERROR);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void validateHearingJudgeAllocationForCaseCloseEvent(CaseData caseData, List<String> errors) {
+        for (var currentHearingTypeItem : caseData.getHearingCollection()) {
+            if (currentHearingTypeItem.getValue().getJudge() == null) {
+                errors.add(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
+                break;
+            }
+        }
+    }
+
     public void validateCaseBeforeCloseEvent(CaseData caseData, boolean isRejected, boolean partOfMultiple,
                                              List<String> errors) {
         validateJurisdictionOutcome(caseData, isRejected, partOfMultiple, errors);
         validateJudgementsHasJurisdiction(caseData, partOfMultiple, errors);
     }
+
+    public void validateJudgementsHasJurisdiction(CaseData caseData, boolean partOfMMultiple, List<String> errors) {
+        if (CollectionUtils.isEmpty(caseData.getJudgementCollection())) {
+            return;
+        }
+
+        for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
+            var judgementType = judgementTypeItem.getValue();
+            if (CollectionUtils.isEmpty(judgementType.getJurisdictionCodes())) {
+                if (partOfMMultiple) {
+                    errors.add(caseData.getEthosCaseReference() + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
+                } else {
+                    errors.add(MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
+                }
+                break;
+            }
+        }
+    }
+
 }
