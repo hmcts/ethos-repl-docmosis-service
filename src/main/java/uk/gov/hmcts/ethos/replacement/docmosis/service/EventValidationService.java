@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.stream.Collectors.joining;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_TITLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE;
@@ -49,6 +50,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTIO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_TITLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESP_REP_NAME_MISMATCH_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
@@ -127,7 +129,7 @@ public class EventValidationService {
             int index;
             while (repItr.hasNext()) {
                 index = repItr.nextIndex() + 1;
-                String respRepName = repItr.next().getValue().getDynamicRespRepName().getValue().getCode();
+                String respRepName = repItr.next().getValue().getDynamicRespRepName().getValue().getLabel();
                 if (!isNullOrEmpty(respRepName)
                         && !CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
                     ListIterator<RespondentSumTypeItem> respItr = caseData.getRespondentCollection().listIterator();
@@ -387,5 +389,20 @@ public class EventValidationService {
                                              List<String> errors) {
         validateJurisdictionOutcome(caseData, isRejected, partOfMultiple, errors);
         validateJudgementsHasJurisdiction(caseData, partOfMultiple, errors);
+    }
+
+    public void validateRestrictedReportingNames(CaseData caseData) {
+        if (caseData.getRestrictedReporting() != null) {
+            var restrictedReportingType = caseData.getRestrictedReporting();
+            var dynamicListCode = restrictedReportingType.getDynamicRequestedBy().getValue().getCode();
+            if (dynamicListCode.startsWith("R: ")) {
+                restrictedReportingType.setRequestedBy(RESPONDENT_TITLE);
+            } else if (dynamicListCode.startsWith("C: ")) {
+                restrictedReportingType.setRequestedBy(CLAIMANT_TITLE);
+            } else {
+                restrictedReportingType.setRequestedBy(dynamicListCode);
+            }
+
+        }
     }
 }

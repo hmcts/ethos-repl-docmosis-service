@@ -1,15 +1,14 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
-import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_TITLE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_TITLE;
 
 public class DynamicListHelper {
 
@@ -22,7 +21,7 @@ public class DynamicListHelper {
             for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
                 var dynamicValueType = new DynamicValueType();
                 var respondentSumType = respondentSumTypeItem.getValue();
-                dynamicValueType.setCode(respondentSumType.getRespondentName());
+                dynamicValueType.setCode("R: " + respondentSumType.getRespondentName());
                 dynamicValueType.setLabel(respondentSumType.getRespondentName());
                 listItems.add(dynamicValueType);
             }
@@ -41,6 +40,19 @@ public class DynamicListHelper {
         var dynamicValueType = new DynamicValueType();
         dynamicValueType.setCode(code);
         dynamicValueType.setLabel(label);
+        return dynamicValueType;
+    }
+
+    public static DynamicValueType getDynamicValueType(CaseData caseData, List<DynamicValueType> listItems,
+                                                       String party) {
+        DynamicValueType dynamicValueType;
+        if (party.equals(CLAIMANT_TITLE)) {
+            dynamicValueType = getDynamicCodeLabel("C: " + caseData.getClaimant(), caseData.getClaimant());
+        } else if (party.equals(RESPONDENT_TITLE)) {
+            dynamicValueType = listItems.get(0);
+        } else {
+            dynamicValueType = getDynamicValue(party);
+        }
         return dynamicValueType;
     }
 }

@@ -1,5 +1,6 @@
-package uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamicLists;
+package uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists;
 
+import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -12,12 +13,16 @@ import java.util.ListIterator;
 
 public class DynamicRespondentRepresentative {
 
+    private DynamicRespondentRepresentative() {
+    }
+
     public static void dynamicRespondentRepresentativeNames(CaseData caseData) {
-        List<DynamicValueType> listItems = DynamicListHelper.createDynamicRespondentName(caseData.getRespondentCollection());
+        List<DynamicValueType> listItems = DynamicListHelper.createDynamicRespondentName(
+                caseData.getRespondentCollection());
         if (!listItems.isEmpty()) {
             var dynamicFixedListType = new DynamicFixedListType();
             dynamicFixedListType.setListItems(listItems);
-            if (caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty()) {
+            if (!CollectionUtils.isEmpty(caseData.getRepCollection())) {
                 ListIterator<RepresentedTypeRItem> repItr = caseData.getRepCollection().listIterator();
                 while (repItr.hasNext()) {
                     var respRepCollection = caseData.getRepCollection().get(repItr.nextIndex());
