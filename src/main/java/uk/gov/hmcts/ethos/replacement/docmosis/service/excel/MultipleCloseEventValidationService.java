@@ -53,7 +53,6 @@ public class MultipleCloseEventValidationService {
                     break;
                 }
             }
-        }
 
         return errors;
     }

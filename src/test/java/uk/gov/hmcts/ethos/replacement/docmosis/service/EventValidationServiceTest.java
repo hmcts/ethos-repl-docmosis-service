@@ -71,11 +71,13 @@ class EventValidationServiceTest {
     private CaseDetails caseDetails3;
     private CaseDetails caseDetails4;
     private CaseDetails caseDetails5;
+
     private CaseDetails validHearingStatusCaseCloseEventCaseDetails;
     private CaseDetails invalidHearingStatusCaseCloseEventCaseDetails;
     private CaseDetails validJudgeAllocationCaseDetails;
     private CaseDetails invalidJudgeAllocationCaseDetails;
     private CaseDetails outcomeNotAllocatedCaseDetails;
+
     private CaseDetails caseDetails16;
     private CaseDetails caseDetails17;
     private CaseDetails caseDetails18;
@@ -96,6 +98,7 @@ class EventValidationServiceTest {
         caseDetails3 = generateCaseDetails("caseDetailsTest3.json");
         caseDetails4 = generateCaseDetails("caseDetailsTest4.json");
         caseDetails5 = generateCaseDetails("caseDetailsTest5.json");
+
         validHearingStatusCaseCloseEventCaseDetails = generateCaseDetails(
                 "CaseCloseEvent_ValidHearingStatusCaseDetails.json");
         invalidHearingStatusCaseCloseEventCaseDetails = generateCaseDetails(
@@ -106,6 +109,7 @@ class EventValidationServiceTest {
                 "CaseCloseEvent_InValidJudgeAllocationStatusCaseDetails.json");
         outcomeNotAllocatedCaseDetails = generateCaseDetails(
                 "CaseCloseEvent_JurisdictionOutcomeNotAllocated.json");
+
         caseDetails16 = generateCaseDetails("caseDetailsTest16.json");
         caseDetails17 = generateCaseDetails("caseDetailsTest17.json");
         caseDetails18 = generateCaseDetails("caseDetailsTest18.json");
