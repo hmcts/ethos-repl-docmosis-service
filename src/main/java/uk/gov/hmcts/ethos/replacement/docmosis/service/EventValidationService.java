@@ -43,6 +43,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.EMPTY_RESPONDENT_CO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RECEIPT_DATE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_NUMBER_MISMATCH_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_DELETED_ERROR;
@@ -220,26 +221,6 @@ public class EventValidationService {
         }
     }
 
-    public void validateJurisdictionOutcome(CaseData caseData, boolean isRejected, boolean partOfMultiple,
-                                            List<String> errors) {
-        if (caseData.getJurCodesCollection() != null && !caseData.getJurCodesCollection().isEmpty()) {
-            for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
-                var jurCodesType = jurCodesTypeItem.getValue();
-                if (jurCodesType.getJudgmentOutcome() == null) {
-                    errors.add(getJurisdictionOutcomeErrorText(partOfMultiple, true,
-                            caseData.getEthosCaseReference()));
-                    break;
-                } else if (NOT_ALLOCATED.equals(jurCodesType.getJudgmentOutcome())) {
-                    errors.add(getJurisdictionOutcomeNotAllocatedErrorText(partOfMultiple, true,
-                            caseData.getEthosCaseReference()));
-                }
-            }
-        } else if (!isRejected) {
-            errors.add(getJurisdictionOutcomeErrorText(partOfMultiple, false,
-                    caseData.getEthosCaseReference()));
-        }
-    }
-
     private String getJurisdictionOutcomeNotAllocatedErrorText(boolean partOfMultiple, boolean hasJurisdictions,
                                                                 String ethosReference) {
         if (partOfMultiple) {
@@ -381,21 +362,28 @@ public class EventValidationService {
     }
 
     public void validateHearingStatusForCaseCloseEvent(CaseData caseData, List<String> errors) {
-        for (var currentHearingTypeItem : caseData.getHearingCollection()) {
-            for (var currentDateListedTypeItem : currentHearingTypeItem.getValue().getHearingDateCollection()) {
-                if (HEARING_STATUS_LISTED.equals(currentDateListedTypeItem.getValue().getHearingStatus())) {
-                    errors.add(CLOSING_LISTED_CASE_ERROR);
-                    break;
+        if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+            for (var currentHearingTypeItem : caseData.getHearingCollection()) {
+                for (var currentDateListedTypeItem : currentHearingTypeItem.getValue().getHearingDateCollection()) {
+                    if (HEARING_STATUS_LISTED.equals(currentDateListedTypeItem.getValue().getHearingStatus())) {
+                        errors.add(CLOSING_LISTED_CASE_ERROR);
+                        break;
+                    }
                 }
             }
         }
     }
 
     public void validateHearingJudgeAllocationForCaseCloseEvent(CaseData caseData, List<String> errors) {
-        for (var currentHearingTypeItem : caseData.getHearingCollection()) {
-            if (currentHearingTypeItem.getValue().getJudge() == null) {
-                errors.add(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
-                break;
+        if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+            for (var currentHearingTypeItem : caseData.getHearingCollection()) {
+                for (var currentDateListedTypeItem : currentHearingTypeItem.getValue().getHearingDateCollection()) {
+                    if (HEARING_STATUS_HEARD.equals(currentDateListedTypeItem.getValue().getHearingStatus())
+                            && currentHearingTypeItem.getValue().getJudge() == null) {
+                        errors.add(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
+                        break;
+                    }
+                }
             }
         }
     }
@@ -404,6 +392,26 @@ public class EventValidationService {
                                              List<String> errors) {
         validateJurisdictionOutcome(caseData, isRejected, partOfMultiple, errors);
         validateJudgementsHasJurisdiction(caseData, partOfMultiple, errors);
+    }
+
+    public void validateJurisdictionOutcome(CaseData caseData, boolean isRejected, boolean partOfMultiple,
+                                            List<String> errors) {
+        if (caseData.getJurCodesCollection() != null && !caseData.getJurCodesCollection().isEmpty()) {
+            for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
+                var jurCodesType = jurCodesTypeItem.getValue();
+                if (jurCodesType.getJudgmentOutcome() == null) {
+                    errors.add(getJurisdictionOutcomeErrorText(partOfMultiple, true,
+                            caseData.getEthosCaseReference()));
+                    break;
+                } else if (NOT_ALLOCATED.equals(jurCodesType.getJudgmentOutcome())) {
+                    errors.add(getJurisdictionOutcomeNotAllocatedErrorText(partOfMultiple, true,
+                            caseData.getEthosCaseReference()));
+                }
+            }
+        } else if (!isRejected) {
+            errors.add(getJurisdictionOutcomeErrorText(partOfMultiple, false,
+                    caseData.getEthosCaseReference()));
+        }
     }
 
     public void validateJudgementsHasJurisdiction(CaseData caseData, boolean partOfMMultiple, List<String> errors) {
