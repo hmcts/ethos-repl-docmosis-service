@@ -173,17 +173,6 @@
             }
           ]
         }
-      },
-      {
-        "id" : "123346",
-        "value" : {
-          "hearingEstLengthNum": "2",
-          "hearingEstLengthNumType": "days",
-          "Hearing_type": "Single",
-          "hearingNumber": "2",
-          "Hearing_venue": "Manchester",
-          "hearingDateCollection": []
-        }
       }
     ],
     "jurCodesCollection": [

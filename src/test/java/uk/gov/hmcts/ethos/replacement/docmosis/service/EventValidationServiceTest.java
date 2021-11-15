@@ -38,6 +38,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_NUMBER_MISM
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_DELETED_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_EXISTENCE_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
@@ -73,6 +74,7 @@ class EventValidationServiceTest {
     private CaseDetails invalidHearingStatusCaseCloseEventCaseDetails;
     private CaseDetails validJudgeAllocationCaseDetails;
     private CaseDetails invalidJudgeAllocationCaseDetails;
+    private CaseDetails outcomeNotAllocatedCaseDetails;
     private ListingRequest listingRequestValidDateRange;
     private ListingRequest listingRequestInvalidDateRange;
     private ListingRequest listingRequest31DaysInvalidRange;
@@ -98,6 +100,8 @@ class EventValidationServiceTest {
                 "CaseCloseEvent_ValidJudgeAllocationStatusCaseDetails.json");
         invalidJudgeAllocationCaseDetails = generateCaseDetails(
                 "CaseCloseEvent_InValidJudgeAllocationStatusCaseDetails.json");
+        outcomeNotAllocatedCaseDetails = generateCaseDetails(
+                "CaseCloseEvent_JurisdictionOutcomeNotAllocated.json");
         listingRequestValidDateRange = generateListingDetails("exampleListingV1.json");
         listingRequestInvalidDateRange = generateListingDetails("exampleListingV3.json");
         listingRequest31DaysInvalidRange = generateListingDetails("exampleListingV5.json");
@@ -362,8 +366,8 @@ class EventValidationServiceTest {
     @CsvSource({"false,false", "true,false", "false,true", "true,true"})
     void shouldValidateJurisdictionOutcomePresentAndMissing(boolean isRejected, boolean partOfMultiple) {
         List<String> errors = new ArrayList<>();
-        eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(),
-                isRejected, partOfMultiple, errors);
+        eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(), isRejected,
+                partOfMultiple, errors);
 
         assertEquals(1, errors.size());
         if (partOfMultiple) {
@@ -371,6 +375,22 @@ class EventValidationServiceTest {
                     + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
         } else {
             assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({"false,false", "true,false", "false,true", "true,true"})
+    void shouldValidateWhenJurisdictionOutcomeSetToNotAllocated(boolean isRejected, boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(outcomeNotAllocatedCaseDetails.getCaseData(),
+                isRejected, partOfMultiple, errors);
+
+        assertEquals(1, errors.size());
+        if (partOfMultiple) {
+            assertEquals(outcomeNotAllocatedCaseDetails.getCaseData().getEthosCaseReference() + " - "
+                    + JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE, errors.get(0));
+        } else {
+            assertEquals(JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE, errors.get(0));
         }
     }
 

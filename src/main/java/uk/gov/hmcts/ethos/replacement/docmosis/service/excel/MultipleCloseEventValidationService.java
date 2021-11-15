@@ -23,8 +23,8 @@ public class MultipleCloseEventValidationService {
     private static final String JURISDICTION = "Jurisdiction";
     private static final String HEARING_STATUS = "HearingStatus";
     private static final String JUDGE_ALLOCATION = "JudgeAllocation";
-    private static final List<String> validationConditions = Arrays.asList("Jurisdiction", "HearingStatus",
-            "JudgeAllocation");
+    private static final List<String> validationConditions = Arrays.asList(JURISDICTION, HEARING_STATUS,
+            JUDGE_ALLOCATION);
 
     @Autowired
     public MultipleCloseEventValidationService(SingleCasesReadingService singleCasesReadingService,
@@ -48,9 +48,7 @@ public class MultipleCloseEventValidationService {
                     multipleDetails.getCaseData().getMultipleSource());
 
             for (var submitEvent : submitEvents) {
-
                 validateCase(submitEvent, errors);
-
                 if (!errors.isEmpty()) {
                     break;
                 }

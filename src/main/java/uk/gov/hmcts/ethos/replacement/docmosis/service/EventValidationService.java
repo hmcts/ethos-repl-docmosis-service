@@ -47,9 +47,11 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LIST
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_DELETED_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_EXISTENCE_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NOT_ALLOCATED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESP_REP_NAME_MISMATCH_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
@@ -226,12 +228,25 @@ public class EventValidationService {
                     errors.add(getJurisdictionOutcomeErrorText(partOfMultiple, true,
                             caseData.getEthosCaseReference()));
                     break;
+                } else if (NOT_ALLOCATED.equals(jurCodesType.getJudgmentOutcome())) {
+                    errors.add(getJurisdictionOutcomeNotAllocatedErrorMessage(partOfMultiple,
+                            caseData.getEthosCaseReference()));
                 }
             }
         } else if (!isRejected) {
             errors.add(getJurisdictionOutcomeErrorText(partOfMultiple, false,
                     caseData.getEthosCaseReference()));
         }
+    }
+
+    private String getJurisdictionOutcomeNotAllocatedErrorMessage(boolean partOfMultiple,
+                                                                  String ethosReference) {
+        var messagePrefix = "";
+
+        if (partOfMultiple) {
+            messagePrefix = messagePrefix + ethosReference + " - ";
+        }
+        return messagePrefix + JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE;
     }
 
     private String getJurisdictionOutcomeErrorText(boolean partOfMultiple, boolean hasJurisdictions,
