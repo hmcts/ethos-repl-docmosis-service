@@ -10,6 +10,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRestr
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
@@ -78,6 +79,17 @@ public class DynamicListHelperTest {
         dynamicValueType.setLabel("Judge");
         assertEquals(dynamicValueType, caseDetails4.getCaseData().getRestrictedReporting()
                 .getDynamicRequestedBy().getValue());
+    }
+
+    @Test
+    public void dynamicValueTypeRespondent() {
+        var dynamicValueRespondent = new DynamicValueType();
+        dynamicValueRespondent.setCode("R: Antonio Vazquez");
+        dynamicValueRespondent.setLabel("Antonio Vazquez");
+        List<DynamicValueType> listItems = DynamicListHelper.createDynamicRespondentName(caseDetails1.getCaseData().getRespondentCollection());
+        listItems.add(DynamicListHelper.getDynamicCodeLabel("C: " + caseDetails1.getCaseData().getClaimant(), caseDetails1.getCaseData().getClaimant()));
+        var dynamicValue = DynamicListHelper.getDynamicValueType(caseDetails1.getCaseData(), listItems, "Respondent");
+        assertEquals(dynamicValue, dynamicValueRespondent);
     }
 
 }

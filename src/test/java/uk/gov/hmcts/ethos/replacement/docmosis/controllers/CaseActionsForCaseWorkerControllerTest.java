@@ -1433,4 +1433,14 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .andExpect(status().isForbidden());
     }
 
+    @Test
+    public void dynamicRestrictedReportingUrlForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(DYNAMIC_RESTRICTED_REPORTING_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
 }
