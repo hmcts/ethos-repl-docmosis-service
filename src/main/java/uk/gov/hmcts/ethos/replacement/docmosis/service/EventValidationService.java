@@ -341,7 +341,7 @@ public class EventValidationService {
 
         for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
             var judgementType = judgementTypeItem.getValue();
-            if ( CollectionUtils.isEmpty(judgementType.getJurisdictionCodes())) {
+            if (CollectionUtils.isEmpty(judgementType.getJurisdictionCodes())) {
                 if (partOfMMultiple) {
                     errors.add(caseData.getEthosCaseReference() + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
                 } else {
