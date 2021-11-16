@@ -182,7 +182,7 @@
     "listingDateFrom": "2021-12-01",
     "listingDateTo": "2021-12-03",
     "hearingDateType": "Range",
-    "reportType": "Local Reporting - Case Source",
+    "reportType": "Case Source",
     "listingVenue": "Manchester"
   }
 }
