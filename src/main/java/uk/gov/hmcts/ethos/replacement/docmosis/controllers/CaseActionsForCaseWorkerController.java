@@ -842,7 +842,8 @@ public class CaseActionsForCaseWorkerController {
         List<String> errors = new ArrayList<>();
         var caseData = ccdRequest.getCaseDetails().getCaseData();
 
-        validateCaseForCaseCloseEvent(ccdRequest, errors);
+        errors = eventValidationService.validateCaseBeforeCloseEvent(caseData,
+                ccdRequest.getCaseDetails().getState().equals(REJECTED_STATE), false, errors);
 
         if (errors.isEmpty()) {
             Helper.updatePositionTypeToClosed(caseData);
@@ -851,21 +852,6 @@ public class CaseActionsForCaseWorkerController {
 
         log.info(EVENT_FIELDS_VALIDATION + errors);
         return getCallbackRespEntityErrors(errors, caseData);
-    }
-
-    private void validateCaseForCaseCloseEvent(CCDRequest ccdRequest, List<String> errors) {
-        var caseData = ccdRequest.getCaseDetails().getCaseData();
-
-        eventValidationService.validateJurisdictionOutcome(caseData,
-                ccdRequest.getCaseDetails().getState().equals(REJECTED_STATE), false, errors);
-
-        if (errors.isEmpty()) {
-            eventValidationService.validateHearingStatusForCaseCloseEvent(caseData, errors);
-        }
-
-        if (errors.isEmpty()) {
-            eventValidationService.validateHearingJudgeAllocationForCaseCloseEvent(caseData, errors);
-        }
     }
 
     private DefaultValues getPostDefaultValues(CaseDetails caseDetails) {

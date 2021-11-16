@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -424,6 +425,7 @@ class EventValidationServiceTest {
             assertEquals(0, errors.size());
         } else {
             assertEquals(1, errors.size());
+
             if (partOfMultiple) {
                 assertEquals(caseDetails1.getCaseData().getEthosCaseReference() + " - "
                         + MISSING_JURISDICTION_MESSAGE, errors.get(0));
@@ -479,16 +481,16 @@ class EventValidationServiceTest {
         eventValidationService.validateCaseBeforeCloseEvent(caseDetails18.getCaseData(),
                 isRejected, partOfMultiple, errors);
 
-        assertEquals(2, errors.size());
+        assertEquals(3, errors.size());
         if (partOfMultiple) {
-            assertEquals(caseDetails18.getCaseData().getEthosCaseReference() + " - "
-                    + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
-
-            assertEquals(caseDetails18.getCaseData().getEthosCaseReference() + " - "
-                    + MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(1));
+            assertThat(errors).asList().contains(caseDetails18.getCaseData().getEthosCaseReference()
+                    + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
+            assertThat(errors).asList().doesNotContain(caseDetails18.getCaseData().getEthosCaseReference()
+                    + " - " + CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
         } else {
-            assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
-            assertEquals(MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(1));
+            assertThat(errors).asList().contains(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
+            assertThat(errors).asList().doesNotContain(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
+            assertThat(errors).asList().contains(CLOSING_LISTED_CASE_ERROR);
         }
     }
 

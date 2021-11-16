@@ -137,6 +137,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private JsonNode requestContent;
     private JsonNode requestContent2;
     private JsonNode requestContent3;
+    private JsonNode validHearingStatusCaseDetails;
     private SubmitEvent submitEvent;
     private DefaultValues defaultValues;
 
@@ -148,6 +149,9 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .getResource("/exampleV2.json")).toURI()));
         requestContent3 = objectMapper.readTree(new File(Objects.requireNonNull(getClass()
                 .getResource("/exampleV3.json")).toURI()));
+
+        validHearingStatusCaseDetails = objectMapper.readTree(new File(Objects.requireNonNull(getClass()
+                .getResource("/CaseCloseEvent_ValidHearingStatusCaseDetails.json")).toURI()));
     }
 
     @Before
@@ -661,12 +665,9 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void aboutToStartDisposal() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
-        doCallRealMethod().when(eventValidationService).validateCaseBeforeCloseEvent(isA(CaseData.class),
-                eq(false), eq(false), anyList());
-        doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
-                eq(false), eq(false), anyList());
-        doCallRealMethod().when(eventValidationService).validateJudgementsHasJurisdiction(isA(CaseData.class),
-                eq(false), anyList());
+        when(eventValidationService.validateCaseBeforeCloseEvent(isA(CaseData.class),
+                        eq(false), eq(false), anyList())).thenReturn(anyList());
+
         mvc.perform(post(ABOUT_TO_START_DISPOSAL_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
@@ -678,10 +679,11 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
-    public void aboutToStartDisposalJurisdictionErrors() throws Exception {
+    public void aboutToStartDisposalCaseCloseEventValidationErrors() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
-        doCallRealMethod().when(eventValidationService).validateJurisdictionOutcome(isA(CaseData.class),
-                eq(false), eq(false), eq(new ArrayList<>()));
+        when(eventValidationService.validateCaseBeforeCloseEvent(isA(CaseData.class),
+                eq(false), eq(false), anyList())).thenReturn(List.of("test error"));
+
         mvc.perform(post(ABOUT_TO_START_DISPOSAL_URL)
                         .content(requestContent3.toString())
                         .header("Authorization", AUTH_TOKEN)

@@ -221,7 +221,7 @@ public class EventValidationService {
         }
     }
 
-    private String getJurisdictionOutcomeNotAllocatedErrorText(boolean partOfMultiple, boolean hasJurisdictions,
+    private String getJurisdictionOutcomeNotAllocatedErrorText(boolean partOfMultiple,
                                                                 String ethosReference) {
         if (partOfMultiple) {
             return ethosReference + " - " + JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE;
@@ -370,7 +370,7 @@ public class EventValidationService {
             for (var currentDateListedTypeItem : currentHearingTypeItem.getValue().getHearingDateCollection()) {
                 if (HEARING_STATUS_LISTED.equals(currentDateListedTypeItem.getValue().getHearingStatus())) {
                     errors.add(CLOSING_LISTED_CASE_ERROR);
-                    break;
+                    return;
                 }
             }
         }
@@ -388,17 +388,20 @@ public class EventValidationService {
                 if (HEARING_STATUS_HEARD.equals(currentDateListedTypeItem.getValue().getHearingStatus())
                         && currentHearingTypeItem.getValue().getJudge() == null) {
                     errors.add(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
-                    break;
+                    return;
                 }
             }
         }
 
     }
 
-    public void validateCaseBeforeCloseEvent(CaseData caseData, boolean isRejected, boolean partOfMultiple,
-                                             List<String> errors) {
+    public List<String> validateCaseBeforeCloseEvent(CaseData caseData, boolean isRejected, boolean partOfMultiple,
+                                                     List<String> errors) {
         validateJurisdictionOutcome(caseData, isRejected, partOfMultiple, errors);
         validateJudgementsHasJurisdiction(caseData, partOfMultiple, errors);
+        validateHearingStatusForCaseCloseEvent(caseData, errors);
+        validateHearingJudgeAllocationForCaseCloseEvent(caseData, errors);
+        return errors;
     }
 
     public void validateJurisdictionOutcome(CaseData caseData, boolean isRejected, boolean partOfMultiple,
@@ -409,9 +412,9 @@ public class EventValidationService {
                 if (jurCodesType.getJudgmentOutcome() == null) {
                     errors.add(getJurisdictionOutcomeErrorText(partOfMultiple, true,
                             caseData.getEthosCaseReference()));
-                    break;
+                    return;
                 } else if (NOT_ALLOCATED.equals(jurCodesType.getJudgmentOutcome())) {
-                    errors.add(getJurisdictionOutcomeNotAllocatedErrorText(partOfMultiple, true,
+                    errors.add(getJurisdictionOutcomeNotAllocatedErrorText(partOfMultiple,
                             caseData.getEthosCaseReference()));
                 }
             }
@@ -434,7 +437,7 @@ public class EventValidationService {
                 } else {
                     errors.add(MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
                 }
-                break;
+                return;
             }
         }
     }

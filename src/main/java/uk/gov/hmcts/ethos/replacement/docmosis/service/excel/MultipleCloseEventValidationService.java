@@ -8,7 +8,6 @@ import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
@@ -20,11 +19,12 @@ public class MultipleCloseEventValidationService {
     private final SingleCasesReadingService singleCasesReadingService;
     private final MultipleHelperService multipleHelperService;
     private final EventValidationService eventValidationService;
-    private static final String JURISDICTION = "Jurisdiction";
+    private static final String JURISDICTION_OUTCOME = "Jurisdiction Outcome";
     private static final String HEARING_STATUS = "HearingStatus";
     private static final String JUDGE_ALLOCATION = "JudgeAllocation";
-    private static final List<String> validationConditions = Arrays.asList(JURISDICTION, HEARING_STATUS,
-            JUDGE_ALLOCATION);
+    private static final String JUDGMENT_JURISDICTION = "Judgment Jurisdiction";
+    private static final List<String> validationConditions = List.of(JUDGMENT_JURISDICTION, JURISDICTION_OUTCOME,
+            HEARING_STATUS, JUDGE_ALLOCATION);
 
     @Autowired
     public MultipleCloseEventValidationService(SingleCasesReadingService singleCasesReadingService,
@@ -60,10 +60,12 @@ public class MultipleCloseEventValidationService {
 
     private void validateCase(SubmitEvent submitEvent, List<String> errors) {
         for (var conditionToValidate : validationConditions) {
-
-            if (JURISDICTION.equals(conditionToValidate)) {
+            if (JURISDICTION_OUTCOME.equals(conditionToValidate)) {
                 eventValidationService.validateJurisdictionOutcome(submitEvent.getCaseData(),
                         submitEvent.getState().equals(REJECTED_STATE), true, errors);
+            } else if (JUDGMENT_JURISDICTION.equals(conditionToValidate)) {
+                eventValidationService.validateJudgementsHasJurisdiction(submitEvent.getCaseData(),
+                        submitEvent.getState().equals(REJECTED_STATE), errors);
             } else if (HEARING_STATUS.equals(conditionToValidate)) {
                 eventValidationService.validateHearingStatusForCaseCloseEvent(submitEvent.getCaseData(), errors);
             } else if (JUDGE_ALLOCATION.equals(conditionToValidate)) {
@@ -72,8 +74,9 @@ public class MultipleCloseEventValidationService {
             }
 
             if (!errors.isEmpty()) {
-                break;
+                return;
             }
         }
     }
+
 }
