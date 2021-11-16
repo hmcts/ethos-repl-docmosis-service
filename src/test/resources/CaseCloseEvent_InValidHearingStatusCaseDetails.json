@@ -1,0 +1,431 @@
+{
+  "case_data": {
+    "tribunalCorrespondenceAddress": {
+      "AddressLine1": "Manchester Employment Tribunal,",
+      "AddressLine2": "Alexandra House,",
+      "AddressLine3": "14-22 The Parsonage,",
+      "PostCode": "M3 2JA",
+      "PostTown": "Manchester,"
+    },
+    "tribunalCorrespondenceTelephone" : "03577131270",
+    "tribunalCorrespondenceFax" : "07577126570",
+    "tribunalCorrespondenceDX" : "123456",
+    "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
+    "ethosCaseReference" : "123456",
+    "leadClaimant" : "Yes",
+    "claimantRepresentedQuestion" : "Yes",
+    "claimant_TypeOfClaimant" : "Individual",
+    "preAcceptCase": {
+      "caseAccepted": "Yes",
+      "dateAccepted": "25/02/2020",
+      "rejectReason": [],
+      "caseEJReferredDate": "",
+      "caseJudge": "Judge",
+      "caseReferredDate": "None"
+    },
+    "depositType": [
+      {
+        "id" : "1234565",
+        "value" : {
+          "Deposit_amount": "£25",
+          "deposit_covers": "No",
+          "deposit_due": "£25",
+          "deposit_time_ext": "No",
+          "deposit_refund": "",
+          "deposit_refund_date": "25/02/2020",
+          "depositNotes": "None"
+        }
+      }
+    ],
+    "additionalCaseInfo": {
+      "additional_sensitive": "Yes",
+      "additional_live_appeal": "Yes",
+      "doNotPostpone": "Yes",
+      "digitalFile": "Yes"
+    },
+    "counterClaim": "ecc",
+    "restrictedReporting": {
+      "requestedBy": "Requester",
+      "imposed": "Yes",
+      "rule503b": "Yes"
+
+    },
+    "representativeClaimantType": {
+      "resp_rep_name" : "RepresentativeNameClaimant",
+      "name_of_organisation": "RepresentativeOrganisation",
+      "name_of_representative": "RepresentativeNameClaimant",
+      "representative_address": {
+        "AddressLine1": "",
+        "AddressLine2": "",
+        "Country": "",
+        "County": "",
+        "PostCode": "",
+        "PostTown": ""
+      },
+      "representative_dx": "222222222",
+      "representative_email_address": "example@gmail.com",
+      "representative_mobile_number": "",
+      "representative_phone_number": "",
+      "representative_preference": "Post",
+      "representative_reference": ""
+    },
+    "repCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "resp_rep_name" : "RepresentativeNameRespondent",
+          "name_of_organisation": "RepresentativeOrganisation",
+          "name_of_representative": "RepresentativeNameRespondent",
+          "representative_address": {
+            "AddressLine1": "56 Block C",
+            "AddressLine2": "Ellesmere Street",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M3 KJR",
+            "PostTown": "Manchester"
+          },
+          "representative_dx": "222222222",
+          "representative_email_address": "example@gmail.com",
+          "representative_mobile_number": "07577136570",
+          "representative_phone_number": "07577136570",
+          "representative_preference": "Post",
+          "representative_reference": "1111111"
+        }
+      }
+    ],
+    "caseNotes": "Example of Case Note",
+    "caseType": "Single",
+    "claimantType": {
+      "claimant_addressUK": {
+        "AddressLine1": "34",
+        "AddressLine2": "Low Street",
+        "Country": "UK",
+        "County": "Lancashire",
+        "PostCode": "M3 6gw",
+        "PostTown": "Manchester"
+      },
+      "claimant_contact_preference": "Post",
+      "claimant_email_address": "anton@gmail.com",
+      "claimant_mobile_number": "07577136570",
+      "claimant_phone_number": "07577136570"
+    },
+    "claimantIndType": {
+      "claimant_date_of_birth": "1990-02-25",
+      "claimant_first_names": "Anton Juliet",
+      "claimant_gender": "Male",
+      "claimant_last_name": "Rodriguez",
+      "claimant_title1": "Mr"
+    },
+    "claimantWorkAddress": {
+      "claimant_work_address": {
+        "AddressLine1": "34",
+        "AddressLine2": "Low Street",
+        "Country": "UK",
+        "County": "Lancashire",
+        "PostCode": "M3 6gw",
+        "PostTown": "Manchester"
+      },
+      "claimant_work_phone_number": "07577136570"
+    },
+    "correspondenceType": {
+      "topLevel_Documents": "EM-TRB-LET-ENG-00544",
+      "part_0_Documents": "0.2",
+      "hearingNumber": "2"
+    },
+    "addressLabelsAttributesType": {
+      "numberOfSelectedLabels": "6",
+      "numberOfCopies": "3",
+      "startingLabel": "13",
+      "showTelFax": "Yes"
+    },
+    "clerkResponsible": "Juan Diego",
+    "feeGroupReference": "12212121",
+    "hearingCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "hearingEstLengthNum": "1",
+          "hearingEstLengthNumType": "days",
+          "Hearing_type": "Single",
+          "hearingNumber": "1",
+          "Hearing_venue": "Manchester",
+          "hearingDateCollection":[
+            {
+              "id" : "12334522",
+              "value" : {
+                "listedDate": "25/05/2020",
+                "Hearing_status": "Settled"
+              }
+            },
+            {
+              "id" : "12334599",
+              "value" : {
+                "listedDate": "28/05/2020",
+                "Hearing_status": "Listed"
+              }
+            },
+            {
+              "id" : "122223399",
+              "value" : {
+                "listedDate": "13/07/2020",
+                "Hearing_status": "Withdrawn"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "jurCodesCollection": [
+      {
+        "id" : "1234561",
+        "value" : {
+          "juridictionCodesList": "COM",
+          "judgmentOutcome": "Successful at hearing"
+        }
+      },
+      {
+        "id" : "1234562",
+        "value" : {
+          "juridictionCodesList": "DOD"
+        }
+      },
+      {
+        "id" : "1234563",
+        "value" : {
+          "juridictionCodesList": "COM",
+          "judgmentOutcome": "Dismissed on withdrawal"
+        }
+      },
+      {
+        "id" : "1234564",
+        "value" : {
+          "juridictionCodesList": "DDA",
+          "judgmentOutcome": "Successful at hearing"
+        }
+      },
+      {
+        "id" : "1234565",
+        "value" : {
+          "juridictionCodesList": "DOD",
+          "judgmentOutcome": "Input in error"
+        }
+      }
+    ],
+    "respondentCollection": [
+      {
+        "id" : "123345",
+        "value" : {
+          "respondent_address": {
+            "AddressLine1": "11 Small Street",
+            "AddressLine2": "22 House",
+            "Country": "UK",
+            "County": "North West",
+            "PostCode": "M12 42R",
+            "PostTown": "Manchester"
+          },
+          "respondent_name": "Antonio Vazquez",
+          "respondent_contact_preference": "Post",
+          "respondent_email": "Antonio@gmail.com",
+          "respondent_phone1": "07577136570",
+          "respondent_phone2": "07577136570",
+          "response_referred_to_judge": "2019-12-22",
+          "response_returned_from_judge": "2019-12-21",
+          "responseStruckOut": "No"
+        }
+      },
+      {
+        "id" : "123345678",
+        "value" : {
+          "respondent_address": {
+            "AddressLine1": "12 Small Street",
+            "AddressLine2": "24 House",
+            "Country": "UK",
+            "County": "North West",
+            "PostCode": "M12 4ED",
+            "PostTown": "Manchester"
+          },
+          "respondent_name": "Juan Garcia",
+          "respondent_contact_preference": "Post",
+          "respondent_email": "JuanGarcia@gmail.com",
+          "respondent_phone1": "07577136570",
+          "respondent_phone2": "07577136570",
+          "response_referred_to_judge": "2019-12-22",
+          "response_returned_from_judge": "2019-12-22",
+          "responseStruckOut": "No"
+        }
+      },
+      {
+        "id" : "12332245",
+        "value" : {
+          "respondent_address": {
+            "AddressLine1": "11 Small Street",
+            "AddressLine2": "22 House",
+            "Country": "UK",
+            "County": "North West",
+            "PostCode": "M12 42R",
+            "PostTown": "Manchester"
+          },
+          "respondent_name": "Mike Jordan",
+          "respondent_contact_preference": "Post",
+          "respondent_email": "Antonio@gmail.com",
+          "respondent_phone1": "07577136570",
+          "respondent_phone2": "07577136570",
+          "response_referred_to_judge": "2019-12-22",
+          "response_returned_from_judge": "2019-12-23",
+          "responseStruckOut": "No"
+        }
+      }
+    ],
+    "addressLabelCollection": [
+      {
+        "id" : "123451",
+        "value" : {
+          "printLabel" : "Yes",
+          "fullName": "Full Name 01",
+          "fullAddress": "Full Address 01",
+          "labelEntityName01": "Claimant Name",
+          "labelEntityName02": "",
+          "labelEntityAddress": {
+            "AddressLine1": "11 Block A",
+            "AddressLine2": "Ellesmere Street",
+            "AddressLine3": "Address Line 3",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M1 KJR",
+            "PostTown": "Manchester"
+          },
+          "labelEntityTelephone": "07577 136511",
+          "labelEntityFax": "07577 136712",
+          "labelEntityReference": "",
+          "labelCaseReference": "1850011/2020"
+        }
+      },
+      {
+        "id" : "123452",
+        "value" : {
+          "printLabel" : "Yes",
+          "fullName": "Full Name 02",
+          "fullAddress": "Full Address 02",
+          "labelEntityName01": "Claimant Rep",
+          "labelEntityName02": "Claimant Org",
+          "labelEntityAddress": {
+            "AddressLine1": "22 Block B",
+            "AddressLine2": "Ellesmere Street",
+            "AddressLine3": "Address Line 3",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M2 KJR",
+            "PostTown": "Manchester"
+          },
+          "labelEntityTelephone": "07577 136521",
+          "labelEntityFax": "07577 136722",
+          "labelEntityReference": "OSCA/222/ABC",
+          "labelCaseReference": "1850022/2020"
+        }
+      },
+      {
+        "id" : "123453",
+        "value" : {
+          "printLabel" : "Yes",
+          "fullName": "Full Name 03",
+          "fullAddress": "Full Address 03",
+          "labelEntityName01": "Respondent One",
+          "labelEntityName02": "",
+          "labelEntityAddress": {
+            "AddressLine1": "33 Block C",
+            "AddressLine2": "Ellesmere Street",
+            "AddressLine3": "Address Line 3",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M3 KJR",
+            "PostTown": "Manchester"
+          },
+          "labelEntityTelephone": "07577 136531",
+          "labelEntityFax": "07577 136732",
+          "labelEntityReference": "",
+          "labelCaseReference": "1850033/2020"
+        }
+      },
+      {
+        "id" : "123454",
+        "value" : {
+          "printLabel" : "Yes",
+          "fullName": "Full Name 04",
+          "fullAddress": "Full Address 04",
+          "labelEntityName01": "Respondent Two",
+          "labelEntityName02": "",
+          "labelEntityAddress": {
+            "AddressLine1": "44 Block D",
+            "AddressLine2": "Ellesmere Street",
+            "AddressLine3": "Address Line 3",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M4 KJR",
+            "PostTown": "Manchester"
+          },
+          "labelEntityTelephone": "07577 136541",
+          "labelEntityFax": "07577 136742",
+          "labelEntityReference": "",
+          "labelCaseReference": "1850044/2020"
+        }
+      },
+      {
+        "id" : "123455",
+        "value" : {
+          "printLabel" : "Yes",
+          "fullName": "Full Name 05",
+          "fullAddress": "Full Address 05",
+          "labelEntityName01": "Respondent three",
+          "labelEntityName02": "",
+          "labelEntityAddress": {
+            "AddressLine1": "55 Block E",
+            "AddressLine2": "Ellesmere Street",
+            "AddressLine3": "Address Line 3",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M5 KJR",
+            "PostTown": "Manchester"
+          },
+          "labelEntityTelephone": "07577 136551",
+          "labelEntityFax": "07577 136752",
+          "labelEntityReference": "",
+          "labelCaseReference": "1850055/2020"
+        }
+      },
+      {
+        "id" : "123456",
+        "value" : {
+          "printLabel" : "Yes",
+          "fullName": "Full Name 06",
+          "fullAddress": "Full Address 06",
+          "labelEntityName01": "Respondent Rep",
+          "labelEntityName02": "",
+          "labelEntityAddress": {
+            "AddressLine1": "66 Block F",
+            "AddressLine2": "Ellesmere Street",
+            "AddressLine3": "Address Line 3",
+            "Country": "UK",
+            "County": "Lancashire",
+            "PostCode": "M6 KJR",
+            "PostTown": "Manchester"
+          },
+          "labelEntityTelephone": "07577 136561",
+          "labelEntityFax": "07577 136762",
+          "labelEntityReference": "OSCA/666/ABC",
+          "labelCaseReference": "1850066/2020"
+        }
+      }
+    ],
+    "locationType": "Manchester",
+    "multipleReference": "No",
+    "multipleType": "No",
+    "positionType": "First",
+    "receiptDate": "2019-03-12",
+    "responseReceived": "none",
+    "userLocation": "Liverpool",
+    "flagsImageFileName": "1000001.png"
+  },
+  "id": "123456789",
+  "jurisdiction": "English",
+  "state": "UK"
+}

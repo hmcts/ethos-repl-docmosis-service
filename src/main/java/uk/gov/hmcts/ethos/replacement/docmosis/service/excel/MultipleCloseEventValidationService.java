@@ -19,6 +19,12 @@ public class MultipleCloseEventValidationService {
     private final SingleCasesReadingService singleCasesReadingService;
     private final MultipleHelperService multipleHelperService;
     private final EventValidationService eventValidationService;
+    private static final String JURISDICTION_OUTCOME = "Jurisdiction Outcome";
+    private static final String HEARING_STATUS = "HearingStatus";
+    private static final String JUDGE_ALLOCATION = "JudgeAllocation";
+    private static final String JUDGMENT_JURISDICTION = "Judgment Jurisdiction";
+    private static final List<String> validationConditions = List.of(JUDGMENT_JURISDICTION, JURISDICTION_OUTCOME,
+            HEARING_STATUS, JUDGE_ALLOCATION);
 
     @Autowired
     public MultipleCloseEventValidationService(SingleCasesReadingService singleCasesReadingService,
@@ -31,24 +37,46 @@ public class MultipleCloseEventValidationService {
 
     public List<String> validateCasesBeforeCloseEvent(String userToken, MultipleDetails multipleDetails) {
         List<String> errors = new ArrayList<>();
-        var multipleData = multipleDetails.getCaseData();
-
-        List<String> ethosCaseRefCollection = multipleHelperService.getEthosCaseRefCollection(userToken, multipleData,
-                errors);
+        var ethosCaseRefCollection = multipleHelperService.getEthosCaseRefCollection(userToken,
+                multipleDetails.getCaseData(), errors);
 
         if (ethosCaseRefCollection.isEmpty()) {
             return errors;
-        }
+        } else {
+            var submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
+                    multipleDetails.getCaseTypeId(), ethosCaseRefCollection,
+                    multipleDetails.getCaseData().getMultipleSource());
 
-        List<SubmitEvent> submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
-                multipleDetails.getCaseTypeId(), ethosCaseRefCollection, multipleData.getMultipleSource());
-
-        for (SubmitEvent event : submitEvents) {
-            var caseData = event.getCaseData();
-            eventValidationService.validateCaseBeforeCloseEvent(caseData, event.getState().equals(REJECTED_STATE),
-                    true, errors);
+            for (var submitEvent : submitEvents) {
+                validateCase(submitEvent, errors);
+                if (!errors.isEmpty()) {
+                    break;
+                }
+            }
         }
 
         return errors;
     }
+
+    private void validateCase(SubmitEvent submitEvent, List<String> errors) {
+        for (var conditionToValidate : validationConditions) {
+            if (JURISDICTION_OUTCOME.equals(conditionToValidate)) {
+                eventValidationService.validateJurisdictionOutcome(submitEvent.getCaseData(),
+                        submitEvent.getState().equals(REJECTED_STATE), true, errors);
+            } else if (JUDGMENT_JURISDICTION.equals(conditionToValidate)) {
+                eventValidationService.validateJudgementsHasJurisdiction(submitEvent.getCaseData(),
+                        submitEvent.getState().equals(REJECTED_STATE), errors);
+            } else if (HEARING_STATUS.equals(conditionToValidate)) {
+                eventValidationService.validateHearingStatusForCaseCloseEvent(submitEvent.getCaseData(), errors);
+            } else if (JUDGE_ALLOCATION.equals(conditionToValidate)) {
+                eventValidationService.validateHearingJudgeAllocationForCaseCloseEvent(submitEvent.getCaseData(),
+                        errors);
+            }
+
+            if (!errors.isEmpty()) {
+                return;
+            }
+        }
+    }
+
 }
