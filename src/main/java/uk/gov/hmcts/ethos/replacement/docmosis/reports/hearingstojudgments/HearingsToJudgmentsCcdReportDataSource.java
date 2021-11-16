@@ -19,7 +19,7 @@ public class HearingsToJudgmentsCcdReportDataSource implements ReportDataSource 
     public List<HearingsToJudgmentsSubmitEvent> getData(String caseTypeId, String listingDateFrom, String listingDateTo) {
         try {
             var query = ElasticSearchQuery.create(listingDateFrom, listingDateTo);
-            return ccdClient.hearingToJudgementsSearch(authToken, caseTypeId, query);
+            return ccdClient.hearingsToJudgementsSearch(authToken, caseTypeId, query);
         } catch (Exception e) {
             throw new ReportException(String.format(
                     "Failed to get Hearings To Judgments search results for case type id %s", caseTypeId), e);

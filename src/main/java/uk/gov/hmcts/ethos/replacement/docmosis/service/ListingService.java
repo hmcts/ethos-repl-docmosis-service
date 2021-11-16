@@ -246,9 +246,9 @@ public class ListingService {
     private HearingsToJudgmentsReportData getHearingsToJudgmentsReport(ListingDetails listingDetails,
                                                                        String authToken) {
         log.info("Hearings To Judgments for {}", listingDetails.getCaseTypeId());
+        setListingDateRangeForSearch(listingDetails);
         var reportDataSource = new HearingsToJudgmentsCcdReportDataSource(authToken, ccdClient);
         var hearingsToJudgmentsReport = new HearingsToJudgmentsReport(reportDataSource, listingDateFrom, listingDateTo);
-        setListingDateRangeForSearch(listingDetails);
         var reportData = hearingsToJudgmentsReport.runReport(
                 listingDetails.getCaseTypeId());
         reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());

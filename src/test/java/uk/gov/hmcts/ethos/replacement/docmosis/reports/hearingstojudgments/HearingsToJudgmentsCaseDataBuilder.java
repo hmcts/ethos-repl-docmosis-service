@@ -6,30 +6,38 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
-import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.CaseData;
+import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
 
 import java.util.ArrayList;
 
-public class CaseDataBuilder {
+public class HearingsToJudgmentsCaseDataBuilder {
 
-    private final CaseData caseData = new CaseData();
+    private final HearingsToJudgmentsCaseData caseData = new HearingsToJudgmentsCaseData();
 
-    public CaseDataBuilder withEthosCaseReference(String ethosCaseReference) {
+    public HearingsToJudgmentsCaseDataBuilder withEthosCaseReference(String ethosCaseReference) {
         caseData.setEthosCaseReference(ethosCaseReference);
         return this;
     }
 
-    public CaseDataBuilder withHearing(String listedDate, String hearingStatus, String hearingType) {
-        return withHearing(listedDate, hearingStatus, null, hearingType, null, null);
+    public HearingsToJudgmentsCaseDataBuilder withManagingOffice(String managingOffice) {
+        caseData.setManagingOffice(managingOffice);
+        return this;
     }
 
-    public CaseDataBuilder withHearing(String listedDate, String hearingStatus, String hearingNumber, String hearingType,
-                                       String judge, String hearingReserved) {
+    public HearingsToJudgmentsCaseDataBuilder withHearing(String listedDate, String hearingStatus, String hearingType,
+                                                          String disposed) {
+        return withHearing(listedDate, hearingStatus, hearingType, disposed, null, null, null);
+    }
+
+    public HearingsToJudgmentsCaseDataBuilder withHearing(String listedDate, String hearingStatus, String hearingType,
+                                                          String disposed, String hearingNumber, String judge,
+                                                          String hearingReserved) {
         var dateListedType = new DateListedType();
         dateListedType.setListedDate(listedDate);
         dateListedType.setHearingStatus(hearingStatus);
         dateListedType.setHearingReservedJudgement(hearingReserved);
+        dateListedType.setHearingCaseDisposed(disposed);
         var dateListedTypeItem = new DateListedTypeItem();
         dateListedTypeItem.setValue(dateListedType);
 
@@ -53,7 +61,8 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder withJudgment(String judgmentHearingDate, String dateJudgmentMade, String dateJudgmentSent ) {
+    public HearingsToJudgmentsCaseDataBuilder withJudgment(String judgmentHearingDate, String dateJudgmentMade,
+                                                           String dateJudgmentSent) {
         var judgementType = new JudgementType();
         judgementType.setJudgmentHearingDate(judgmentHearingDate);
         judgementType.setDateJudgmentSent(dateJudgmentSent);
@@ -69,7 +78,7 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseData build() {
+    public HearingsToJudgmentsCaseData build() {
         return caseData;
     }
 

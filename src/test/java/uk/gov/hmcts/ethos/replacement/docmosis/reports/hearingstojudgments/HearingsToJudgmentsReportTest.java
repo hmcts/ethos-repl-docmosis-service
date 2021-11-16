@@ -1,72 +1,75 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_COSTS_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANUALLY_CREATED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_LISTING_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
-public class HearingsToJudgmentsReportTest {
+class HearingsToJudgmentsReportTest {
 
     ReportDataSource reportDataSource;
     HearingsToJudgmentsReport hearingsToJudgmentsReport;
-    CaseDataBuilder caseDataBuilder;
+    HearingsToJudgmentsCaseDataBuilder caseDataBuilder;
     List<HearingsToJudgmentsSubmitEvent> submitEvents = new ArrayList<>();
 
-    static final String LISTING_DATE = LocalDate.parse("2021-07-31T10:00:00.Z")
-            .plusDays(1).format(OLD_DATE_TIME_PATTERN);
-    static final String DATE_WITHIN_4WKS = LocalDate.parse("2021-07-31T10:00:00.Z")
-            .plusWeeks(1).format(OLD_DATE_TIME_PATTERN);
-    static final String DATE_NOT_WITHIN_4WKS = LocalDate.parse("2021-07-31T10:00:00.Z")
-            .plusWeeks(5).format(OLD_DATE_TIME_PATTERN);
+    static final LocalDateTime BASE_DATE = LocalDateTime.of(2021, 7, 1, 0, 0,0);
+    static final String HEARING_LISTING_DATE = BASE_DATE.format(OLD_DATE_TIME_PATTERN);
+    static final String DATE_WITHIN_4WKS = BASE_DATE.plusWeeks(1).format(OLD_DATE_TIME_PATTERN2);
+    static final String DATE_NOT_WITHIN_4WKS = BASE_DATE.plusWeeks(5).format(OLD_DATE_TIME_PATTERN2);
+    static final String JUDGMENT_HEARING_DATE = BASE_DATE.format(OLD_DATE_TIME_PATTERN2);
+    static final String DATE_FROM = BASE_DATE.minusDays(1).format(OLD_DATE_TIME_PATTERN);
+    static final String DATE_TO = BASE_DATE.plusDays(29).format(OLD_DATE_TIME_PATTERN);
 
     public HearingsToJudgmentsReportTest() {
-        caseDataBuilder = new CaseDataBuilder();
+        caseDataBuilder = new HearingsToJudgmentsCaseDataBuilder();
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         submitEvents.clear();
 
-        var now = "2021-07-31T10:00:00.Z";
-        var dateFrom = LocalDate.parse(now).format(OLD_DATE_TIME_PATTERN);
-        var dateTo = LocalDate.parse(now).plusDays(2).format(OLD_DATE_TIME_PATTERN);
-
         reportDataSource = mock(ReportDataSource.class);
-        when(reportDataSource.getData(NEWCASTLE_CASE_TYPE_ID, dateFrom, dateTo)).thenReturn(submitEvents);
+        when(reportDataSource.getData(NEWCASTLE_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
 
-        hearingsToJudgmentsReport = new HearingsToJudgmentsReport(reportDataSource, dateFrom, dateTo);
+        hearingsToJudgmentsReport = new HearingsToJudgmentsReport(reportDataSource, DATE_FROM, DATE_TO);
     }
 
     @Test
-    public void shouldNotShowClosedCase() {
-        // Given a case is closed
+    void shouldNotShowSubmittedCase() {
+        // Given a case is submitted
         // When I request report data
         // Then the case should not be in the report data
 
-        submitEvents.add(caseDataBuilder.buildAsSubmitEvent(CLOSED_STATE));
+        submitEvents.add(caseDataBuilder.buildAsSubmitEvent(SUBMITTED_STATE));
 
         var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
@@ -74,32 +77,8 @@ public class HearingsToJudgmentsReportTest {
     }
 
     @Test
-    public void shouldNotShowCaseWithInvalidPositionType() {
-        // Given a case is not closed
-        // And a case has an invalid position type
-        // Examples
-        // | An invalid position type |
-        // | null |
-        // When I request report data
-        // Then the case should not be in the report data
-
-        var invalidPositionTypes = new String[] { "An invalid position type", null};
-        for (var invalidPositionType : invalidPositionTypes) {
-            submitEvents.clear();
-            caseDataBuilder = new CaseDataBuilder();
-            submitEvents.add(caseDataBuilder
-                    .buildAsSubmitEvent(ACCEPTED_STATE));
-
-            var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
-            assertCommonValues(reportData);
-            assertTrue(reportData.getReportDetails().isEmpty());
-        }
-    }
-
-    @Test
-    public void shouldNotShowCaseIfNoHearingsExist() {
-        // Given a case is not closed
-        // And has a valid position type
+    void shouldNotShowCaseIfNoHearingsExist() {
+        // Given a case is not submitted
         // And has no hearings
         // When I request report data
         // Then the case should not be in the report data
@@ -113,15 +92,14 @@ public class HearingsToJudgmentsReportTest {
     }
 
     @Test
-    public void shouldNotShowCaseIfNoHearingHasBeenHeard() {
-        // Given a case is not closed
-        // And has a valid position type
+    void shouldNotShowCaseIfNoHearingHasNotBeenHeard() {
+        // Given a case is not submitted
         // And has no hearing that has been heard
         // When I request report data
         // Then the case should not be in the report data
 
         submitEvents.add(caseDataBuilder
-                .withHearing(LISTING_DATE, HEARING_STATUS_LISTED, )
+                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_LISTED, HEARING_TYPE_JUDICIAL_HEARING, YES)
                 .buildAsSubmitEvent(ACCEPTED_STATE));
 
         var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
@@ -130,17 +108,15 @@ public class HearingsToJudgmentsReportTest {
     }
 
     @Test
-    public void shouldNotShowCaseIfHeardButJudgmentMade() {
-        // Given a case is not closed
-        // And has a valid position type
+    void shouldNotShowCaseIfHeardButNoJudgmentsMade() {
+        // Given a case is not submitted
         // And has been heard
-        // And has a judgment
+        // And has no judgments
         // When I request report data
         // Then the case should not be in the report data
 
         submitEvents.add(caseDataBuilder
-                .withHearing(LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING)
-                .withJudgment(LISTING_DATE, )
+                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING, YES)
                 .buildAsSubmitEvent(ACCEPTED_STATE));
 
         var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
@@ -149,15 +125,16 @@ public class HearingsToJudgmentsReportTest {
     }
 
     @Test
-    public void shouldShowValidCase() {
-        // Given a case is not closed
+    void shouldShowValidCase() {
+        // Given a case is not submitted
         // And has been heard
-        // And is awaiting judgment
+        // And has a judgment made
         // When I request report data
         // Then the case is in the report data
 
         submitEvents.add(caseDataBuilder
-                .withHearing(LISTING_DATE, HEARING_STATUS_HEARD)
+                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING, YES)
+                .withJudgment(JUDGMENT_HEARING_DATE, DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
                 .buildAsSubmitEvent(ACCEPTED_STATE));
 
         var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
@@ -166,206 +143,147 @@ public class HearingsToJudgmentsReportTest {
     }
 
     @Test
-    public void shouldShowTotalPositionValuesInSummary() {
-        // Given I have 3 valid cases with position type Draft with Members
+    void shouldShowCorrectScotlandOfficeValidCase() {
+        // Given a case with a scottish office is not submitted
+        // And has been heard
+        // And has a judgment made
         // When I request report data
-        // Then the report summary shows 3 Draft with Members
-        var positionType = "Draft with members";
-        submitEvents.add(createValidSubmitEvent());
-        submitEvents.add(createValidSubmitEvent());
-        submitEvents.add(createValidSubmitEvent());
+        // Then the case is in the report data
+        when(reportDataSource.getData(SCOTLAND_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
+        var managingOffice = "Test Office";
+
+        submitEvents.add(caseDataBuilder
+                .withManagingOffice(managingOffice)
+                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING, YES)
+                .withJudgment(JUDGMENT_HEARING_DATE, DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
+                .buildAsSubmitEvent(ACCEPTED_STATE));
+
+        var reportData = hearingsToJudgmentsReport.runReport(SCOTLAND_LISTING_CASE_TYPE_ID);
+        assertNotNull(reportData);
+        assertEquals(SCOTLAND_CASE_TYPE_ID, reportData.getReportSummary().getOffice());
+        assertEquals(1, reportData.getReportDetails().size());
+
+        var reportDetail = reportData.getReportDetails().get(0);
+        assertEquals(managingOffice, reportDetail.getReportOffice());
+    }
+
+    @Test
+    void shouldShowTotalHearingsInSummary() {
+        // Given I have 2 valid cases with hearings with judgements within 4 weeks
+        // And 1 valid case with hearings with judgement not within 4 weeks
+        // When I request report data
+        // Then the report summary shows 3 total hearings
+        // And 2 total hearings with judgements within 4 weeks
+        // And 1 total hearings with judgement not within 4 weeks
+
+        submitEvents.add(createValidSubmitEventNotWithin4Wks());
+        submitEvents.add(createValidSubmitEventWithin4Wks());
+        submitEvents.add(createValidSubmitEventWithin4Wks());
+        submitEvents.add(createValidSubmitEventWithin4Wks());
 
         var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
-        assertEquals(3, reportData.getReportDetails().size());
-        assertEquals(1, reportData.getReportSummary().getPositionTypes().size());
-        assertEquals(positionType, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeName());
-        assertEquals(3, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeCount());
+        assertEquals("4", reportData.getReportSummary().getTotalCases());
+        assertEquals(1, reportData.getReportDetails().size());
+        assertEquals("3", reportData.getReportSummary().getTotal4wk());
+        assertEquals("75.00", reportData.getReportSummary().getTotal4wkPerCent());
+        assertEquals("1", reportData.getReportSummary().getTotalx4wk());
+        assertEquals("25.00", reportData.getReportSummary().getTotalx4wkPerCent());
     }
 
-    @Test
-    public void shouldShowMultiplePositionValuesInSummaryInOrder() {
-        // Given I have 3 valid cases with position type Draft with Members
-        // And I have 2 valid cases with position type Awaiting written reasons
-        // And I have 1 valid case with position type Fair copy, to chairman for signature
-        // When I request report data
-        // Then the report summary shows 3 rows in total count order:
-        //    | Fair copy, to chairman for signature | 1 |
-        //    | Awaiting written reasons             | 2 |
-        //    | Draft with members                   | 3 |
-
-        var positionType1 = "Draft with members";
-        var positionType2 = "Awaiting written reasons";
-        var positionType3 = "Fair copy, to chairman for signature";
-        submitEvents.add(createValidSubmitEvent(positionType2));
-        submitEvents.add(createValidSubmitEvent(positionType1));
-        submitEvents.add(createValidSubmitEvent(positionType1));
-        submitEvents.add(createValidSubmitEvent(positionType1));
-        submitEvents.add(createValidSubmitEvent(positionType3));
-        submitEvents.add(createValidSubmitEvent(positionType2));
-
-        var reportData = casesAwaitingJudgmentReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
-        assertCommonValues(reportData);
-        assertEquals(6, reportData.getReportDetails().size());
-        assertEquals(3, reportData.getReportSummary().getPositionTypes().size());
-
-        assertEquals(positionType3, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeName());
-        assertEquals(1, reportData.getReportSummary().getPositionTypes().get(0).getPositionTypeCount());
-        assertEquals(positionType2, reportData.getReportSummary().getPositionTypes().get(1).getPositionTypeName());
-        assertEquals(2, reportData.getReportSummary().getPositionTypes().get(1).getPositionTypeCount());
-        assertEquals(positionType1, reportData.getReportSummary().getPositionTypes().get(2).getPositionTypeName());
-        assertEquals(3, reportData.getReportSummary().getPositionTypes().get(2).getPositionTypeCount());
-    }
-
-
-    @Test
-    public void shouldContainCorrectDetailValuesForCaseWithOneHearing() {
+    @ParameterizedTest
+    @CsvSource({
+            "2021-07-16T10:00:00.000,2021-07-16,2021-08-26,2021-07-29,41,2500121/2021,1,One Test,"
+                    + HEARING_TYPE_JUDICIAL_HEARING + "," + YES + "," + ACCEPTED_STATE,
+            "2021-07-17T10:00:00.000,2021-07-17,2021-08-26,2021-07-28,40,2500122/2021,2,Two Test,"
+                    + HEARING_TYPE_PERLIMINARY_HEARING + "," + NO + "," + ACCEPTED_STATE,
+            "2021-07-18T10:00:00.000,2021-07-18,2021-08-26,2021-07-27,39,2500123/2021,3,Three Test,"
+                    + HEARING_TYPE_PERLIMINARY_HEARING_CM + ",," + CLOSED_STATE,
+            "2021-07-19T10:00:00.000,2021-07-19,2021-08-26,2021-07-26,38,2500124/2021,4,Four Test,"
+                    + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + YES + "," + CLOSED_STATE})
+    void shouldContainCorrectDetailValuesForHearingsWithValidJudgment(String hearingListedDate, String judgmentHearingDate,
+                                                                      String dateJudgmentMade, String dateJudgmentSent,
+                                                                      String expectedTotalDays, String caseReference,
+                                                                      String hearingNumber, String hearingJudge,
+                                                                      String hearingType, String hearingReserved,
+                                                                      String caseState) {
         // Given I have a valid case
+        // And the case has a valid hearing and judgment
         // When I request report data
         // Then I have correct report detail values for the case
-        var listedDate = "2021-07-16T10:00:00.000";
-        var expectedWeeksSinceHearing = 2;
-        var expectedDaysSinceHearing = 15;
-        var caseReference = "2500123/2021";
-        var currentPosition = MANUALLY_CREATED_POSITION;
-        var dateToPosition = "2021-07-10";
-        var expectedDateToPosition = "10/07/2021";
-        var expectedLastHeardHearingDate = "16/07/2021";
-        var conciliationTrack = CONCILIATION_TRACK_FAST_TRACK;
-        var hearingNumber = "1";
-        var hearingType = HEARING_TYPE_JUDICIAL_COSTS_HEARING;
-        var judge = "Hugh Parkfield";
 
         submitEvents.add(caseDataBuilder
                 .withEthosCaseReference(caseReference)
-                .withSingleCaseType()
-                .withCurrentPosition(currentPosition)
-                .withDateToPosition(dateToPosition)
-                .withConciliationTrack(conciliationTrack)
-                .withHearing(listedDate, HEARING_STATUS_HEARD, hearingNumber, hearingType, judge)
-                .buildAsSubmitEvent(ACCEPTED_STATE));
+                .withHearing(hearingListedDate, HEARING_STATUS_HEARD, hearingType, YES,
+                        hearingNumber, hearingJudge, hearingReserved)
+                .withJudgment(judgmentHearingDate, dateJudgmentMade, dateJudgmentSent)
+                .buildAsSubmitEvent(caseState));
 
-        var reportData = casesAwaitingJudgmentReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
         assertEquals(1, reportData.getReportDetails().size());
 
         var reportDetail = reportData.getReportDetails().get(0);
-
-        assertEquals(expectedWeeksSinceHearing, reportDetail.getWeeksSinceHearing());
-        assertEquals(expectedDaysSinceHearing, reportDetail.getDaysSinceHearing());
-        assertEquals(caseReference, reportDetail.getCaseNumber());
-        assertEquals(expectedLastHeardHearingDate, reportDetail.getLastHeardHearingDate());
-        assertEquals(hearingNumber, reportDetail.getHearingNumber());
-        assertEquals(hearingType, reportDetail.getHearingType());
-        assertEquals(judge, reportDetail.getJudge());
-        assertEquals(currentPosition, reportDetail.getCurrentPosition());
-        assertEquals(expectedDateToPosition, reportDetail.getDateToPosition());
-        assertEquals(conciliationTrack, reportDetail.getConciliationTrack());
+        assertEquals(hearingJudge, reportDetail.getHearingJudge());
+        assertEquals(NEWCASTLE_CASE_TYPE_ID, reportDetail.getReportOffice());
+        assertEquals(caseReference, reportDetail.getCaseReference());
+        assertEquals(hearingReserved, reportDetail.getReservedHearing());
+        assertEquals(expectedTotalDays, reportDetail.getTotalDays());
+        assertEquals(judgmentHearingDate, reportDetail.getHearingDate());
+        assertEquals(dateJudgmentSent, reportDetail.getJudgementDateSent());
     }
 
-
     @Test
-    public void shouldContainCorrectDetailValuesForCaseWithMultipleHearings() {
+    void shouldContainCorrectDetailValuesForMultipleHearingsWithJudgments() {
         // Given I have a valid case
         // And the case has the following hearings:
-        // | Listed Date | Hearing Number | Status |
-        // | 2021-07-01 | 1 | Heard |
-        // | 2021-07-02 | 2 | Postponed |
-        // | 2021-07-05 | 3 | Heard |
-        // | 2021-07-06 | 4 | Withdrawn |
+        // | Listed Date | Hearing Number | Date Judgment Made |
+        // | 2021-07-06 | 1 | 2021-08-03
+        // | 2021-07-05 | 2 | 2021-08-03
         // When I request report data
-        // Then I have correct hearing values for hearing #3
-        var expectedWeeksSinceHearing = 3;
-        var expectedDaysSinceHearing = 26;
-        var expectedLastHeardHearingDate = "05/07/2021";
+        // Then I have correct hearing values for hearing #2
+        var expectedTotalDays = "29";
         var caseReference = "2500123/2021";
         var judge = "Hugh Parkfield";
+        var judgmentHearingDate = "2021-07-05";
+        var dateJudgmentSent = "2021-08-05";
 
         submitEvents.add(caseDataBuilder
                 .withEthosCaseReference(caseReference)
-                .withPositionType(validPositionType)
-                .withSingleCaseType()
-                .withHearing("2021-07-01T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
-                .withHearing("2021-07-02T10:00:00.000", HEARING_STATUS_POSTPONED, "2", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
-                .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, "3", HEARING_TYPE_JUDICIAL_MEDIATION, judge)
-                .withHearing("2021-07-06T10:00:00.000", HEARING_STATUS_WITHDRAWN, "4", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
+                .withManagingOffice(NEWCASTLE_CASE_TYPE_ID)
+                .withHearing("2021-07-06T10:00:00.000", HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING,
+                        YES, "1", "A.N. Other", YES)
+                .withJudgment("2021-07-06", "2021-08-03", "2021-08-04")
+                .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING,
+                        YES, "2", judge, NO)
+                .withJudgment(judgmentHearingDate, "2021-08-03", dateJudgmentSent)
                 .buildAsSubmitEvent(ACCEPTED_STATE));
 
-        var reportData = casesAwaitingJudgmentReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
         assertEquals(1, reportData.getReportDetails().size());
 
         var reportDetail = reportData.getReportDetails().get(0);
-        assertEquals(validPositionType, reportDetail.getPositionType());
-
-        assertEquals(expectedWeeksSinceHearing, reportDetail.getWeeksSinceHearing());
-        assertEquals(expectedDaysSinceHearing, reportDetail.getDaysSinceHearing());
-        assertEquals(caseReference, reportDetail.getCaseNumber());
-        assertEquals(expectedLastHeardHearingDate, reportDetail.getLastHeardHearingDate());
-        assertEquals("3", reportDetail.getHearingNumber());
-        assertEquals(HEARING_TYPE_JUDICIAL_MEDIATION, reportDetail.getHearingType());
-        assertEquals(judge, reportDetail.getJudge());
+        assertEquals(judge, reportDetail.getHearingJudge());
+        assertEquals(NEWCASTLE_CASE_TYPE_ID, reportDetail.getReportOffice());
+        assertEquals(caseReference, reportDetail.getCaseReference());
+        assertEquals(NO, reportDetail.getReservedHearing());
+        assertEquals(expectedTotalDays, reportDetail.getTotalDays());
+        assertEquals(judgmentHearingDate, reportDetail.getHearingDate());
+        assertEquals(dateJudgmentSent, reportDetail.getJudgementDateSent());
     }
 
-    @Test
-    public void shouldOrderReportDetailsInDaysSinceHeardDescOrder() {
-        // Given I have valid cases
-        // And the cases have the following listed dates
-        // | Case Number | Listed Date |
-        // | Case 1 | 2021-07-10 |
-        // | Case 2 | 2021-07-02 |
-        // | Case 3 | 2021-07-05 |
-        // | Case 4 | 2021-07-01 |
-        // When I request report data
-        // Then I have report details in the following order:
-        // | Case Number |
-        // | Case 4 |
-        // | Case 2 |
-        // | Case 3 |
-        // | Case 1 |
-
-        submitEvents.add(caseDataBuilder
-                .withPositionType(validPositionType)
-                .withEthosCaseReference("Case 1")
-                .withSingleCaseType()
-                .withHearing("2021-07-10T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
-                .buildAsSubmitEvent(ACCEPTED_STATE));
-        caseDataBuilder = new uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CaseDataBuilder();
-        submitEvents.add(caseDataBuilder
-                .withPositionType(validPositionType)
-                .withEthosCaseReference("Case 2")
-                .withSingleCaseType()
-                .withHearing("2021-07-02T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
-                .buildAsSubmitEvent(ACCEPTED_STATE));
-        caseDataBuilder = new uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CaseDataBuilder();
-        submitEvents.add(caseDataBuilder
-                .withPositionType(validPositionType)
-                .withEthosCaseReference("Case 3")
-                .withSingleCaseType()
-                .withHearing("2021-07-05T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
-                .buildAsSubmitEvent(ACCEPTED_STATE));
-        caseDataBuilder = new uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CaseDataBuilder();
-        submitEvents.add(caseDataBuilder
-                .withPositionType(validPositionType)
-                .withEthosCaseReference("Case 4")
-                .withSingleCaseType()
-                .withHearing("2021-07-01T10:00:00.000", HEARING_STATUS_HEARD, "1", HEARING_TYPE_JUDICIAL_COSTS_HEARING, "A.N. Other")
-                .buildAsSubmitEvent(ACCEPTED_STATE));
-        caseDataBuilder = new uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CaseDataBuilder();
-
-        var reportData = casesAwaitingJudgmentReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
-        assertCommonValues(reportData);
-        assertEquals(4, reportData.getReportDetails().size());
-
-        assertEquals("Case 4", reportData.getReportDetails().get(0).getCaseNumber());
-        assertEquals("Case 2", reportData.getReportDetails().get(1).getCaseNumber());
-        assertEquals("Case 3", reportData.getReportDetails().get(2).getCaseNumber());
-        assertEquals("Case 1", reportData.getReportDetails().get(3).getCaseNumber());
+    private HearingsToJudgmentsSubmitEvent createValidSubmitEventWithin4Wks() {
+        caseDataBuilder = new HearingsToJudgmentsCaseDataBuilder();
+        return caseDataBuilder.withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING, YES)
+                .withJudgment(JUDGMENT_HEARING_DATE, DATE_WITHIN_4WKS, DATE_WITHIN_4WKS)
+                .buildAsSubmitEvent(ACCEPTED_STATE);
     }
 
-    private HearingsToJudgmentsSubmitEvent createValidSubmitEvent() {
-        caseDataBuilder = new CaseDataBuilder();
-        return caseDataBuilder.withHearing(LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING)
+    private HearingsToJudgmentsSubmitEvent createValidSubmitEventNotWithin4Wks() {
+        caseDataBuilder = new HearingsToJudgmentsCaseDataBuilder();
+        return caseDataBuilder.withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING, YES)
+                .withJudgment(JUDGMENT_HEARING_DATE, DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
                 .buildAsSubmitEvent(ACCEPTED_STATE);
     }
 

@@ -20,6 +20,8 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.ListingService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
@@ -227,7 +229,9 @@ public class ListingGenerationController {
                                                                       String userToken) {
         List<String> errorsList = new ArrayList<>();
 
-        if (hasListings(listingData) || (isAllowedReportType(listingData) && hasServedClaims(listingData))) {
+        if (hasListings(listingData)
+                || (isAllowedReportType(listingData)
+                && (hasServedClaims(listingData) || hasSummaryAndDetails(listingData)))) {
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
             updateListingDocMarkUp(listingData, documentInfo);
             return ResponseEntity.ok(ListingCallbackResponse.builder()
@@ -253,6 +257,11 @@ public class ListingGenerationController {
 
     private boolean hasListings(ListingData listingData) {
         return CollectionUtils.isNotEmpty(listingData.getListingCollection());
+    }
+
+    private boolean hasSummaryAndDetails(ListingData listingData) {
+        return listingData.getClass() == HearingsToJudgmentsReportData.class
+                || listingData.getClass() == CasesAwaitingJudgmentReportData.class;
     }
 
     private void updateListingDocMarkUp(ListingData listingData, DocumentInfo documentInfo) {

@@ -6,7 +6,7 @@ import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
-import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.CaseData;
+import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 
@@ -24,6 +24,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIM
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
@@ -99,7 +100,6 @@ public class HearingsToJudgmentsReport {
                         getHearingsAndJudgmentsCollection(hearingItem, judgmentsCollection);
                 allHearingsWithJudgments.addAll(hearingsWithJudgments);
 
-                var reportDetails = reportData.getReportDetails();
                 for (var hearingWithJudgment : hearingsWithJudgments) {
                     if (Boolean.TRUE.equals(hearingWithJudgment.judgmentWithin4Weeks)) {
                         continue;
@@ -115,7 +115,7 @@ public class HearingsToJudgmentsReport {
                     reportDetail.setReservedHearing(hearingWithJudgment.reservedHearing);
                     reportDetail.setHearingJudge(hearingWithJudgment.judge);
 
-                    reportDetails.add(reportDetail);
+                    reportData.addReportDetail(reportDetail);
                 }
             }
         }
@@ -154,7 +154,7 @@ public class HearingsToJudgmentsReport {
             var judgements = judgmentsCollection.stream()
                                                     .filter(j -> hearingListedDate.isEqual(
                                                                 LocalDate.parse(j.getValue().getJudgmentHearingDate(),
-                                                                                OLD_DATE_TIME_PATTERN)))
+                                                                        OLD_DATE_TIME_PATTERN2)))
                                                     .collect(Collectors.toList());
 
             if (!isWithinDateRange(hearingListedDate)
@@ -165,13 +165,13 @@ public class HearingsToJudgmentsReport {
 
             for (var judgmentItem : judgements) {
                 var judgment = judgmentItem.getValue();
-                var judgmentHearingDate = LocalDate.parse(judgment.getJudgmentHearingDate(), OLD_DATE_TIME_PATTERN);
-                var dateJudgmentMade = LocalDate.parse(judgment.getDateJudgmentMade(), OLD_DATE_TIME_PATTERN);
-                var hearingDatePlus4Wks = judgmentHearingDate.plusWeeks(4L);
+                var judgmentHearingDate = LocalDate.parse(judgment.getJudgmentHearingDate(), OLD_DATE_TIME_PATTERN2);
+                var dateJudgmentMade = LocalDate.parse(judgment.getDateJudgmentMade(), OLD_DATE_TIME_PATTERN2);
+                var hearingDatePlus4Wks = judgmentHearingDate.plusWeeks(4).plusDays(1);
 
                 var hearingJudgmentItem = new HearingWithJudgment();
                 hearingJudgmentItem.judgmentWithin4Weeks = dateJudgmentMade.isBefore(hearingDatePlus4Wks);
-                hearingJudgmentItem.hearingDate = dateListedType.getListedDate();
+                hearingJudgmentItem.hearingDate = judgment.getJudgmentHearingDate();
                 hearingJudgmentItem.judgmentDateSent = judgment.getDateJudgmentSent();
                 hearingJudgmentItem.total = judgmentHearingDate.datesUntil(dateJudgmentMade).count();
                 hearingJudgmentItem.reservedHearing = dateListedType.getHearingReservedJudgement();
@@ -193,7 +193,7 @@ public class HearingsToJudgmentsReport {
         return caseHasJudgments(caseData) && isCaseWithValidHearing(caseData);
     }
 
-    private boolean isCaseWithValidHearing(CaseData caseData) {
+    private boolean isCaseWithValidHearing(HearingsToJudgmentsCaseData caseData) {
         if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
             return false;
         }
@@ -236,7 +236,7 @@ public class HearingsToJudgmentsReport {
         return (!hearingListedDate.isBefore(from)) && (!hearingListedDate.isAfter(to));
     }
 
-    private boolean caseHasJudgments(CaseData caseData) {
-        return CollectionUtils.isEmpty(caseData.getJudgementCollection());
+    private boolean caseHasJudgments(HearingsToJudgmentsCaseData caseData) {
+        return !CollectionUtils.isEmpty(caseData.getJudgementCollection());
     }
 }
