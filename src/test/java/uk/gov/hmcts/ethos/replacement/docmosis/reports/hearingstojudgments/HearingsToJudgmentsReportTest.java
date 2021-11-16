@@ -93,7 +93,7 @@ class HearingsToJudgmentsReportTest {
 
     @Test
     void shouldNotShowCaseIfNoHearingHasNotBeenHeard() {
-        // Given a case is not submitted
+        // Given a case is accepted
         // And has no hearing that has been heard
         // When I request report data
         // Then the case should not be in the report data
@@ -109,7 +109,7 @@ class HearingsToJudgmentsReportTest {
 
     @Test
     void shouldNotShowCaseIfHeardButNoJudgmentsMade() {
-        // Given a case is not submitted
+        // Given a case is accepted
         // And has been heard
         // And has no judgments
         // When I request report data
@@ -126,7 +126,7 @@ class HearingsToJudgmentsReportTest {
 
     @Test
     void shouldShowValidCase() {
-        // Given a case is not submitted
+        // Given a case is accepted
         // And has been heard
         // And has a judgment made
         // When I request report data
@@ -144,7 +144,7 @@ class HearingsToJudgmentsReportTest {
 
     @Test
     void shouldShowCorrectScotlandOfficeValidCase() {
-        // Given a case with a scottish office is not submitted
+        // Given a case with a scottish office is accepted
         // And has been heard
         // And has a judgment made
         // When I request report data
@@ -207,7 +207,7 @@ class HearingsToJudgmentsReportTest {
                                                                       String hearingNumber, String hearingJudge,
                                                                       String hearingType, String hearingReserved,
                                                                       String caseState) {
-        // Given I have a valid case
+        // Given I have a case in a valid state
         // And the case has a valid hearing and judgment
         // When I request report data
         // Then I have correct report detail values for the case
@@ -237,9 +237,9 @@ class HearingsToJudgmentsReportTest {
     void shouldContainCorrectDetailValuesForMultipleHearingsWithJudgments() {
         // Given I have a valid case
         // And the case has the following hearings:
-        // | Listed Date | Hearing Number | Date Judgment Made |
-        // | 2021-07-06 | 1 | 2021-08-03
-        // | 2021-07-05 | 2 | 2021-08-03
+        // | Listed Date | Hearing Number | Date Judgment Made | Date Judgment Sent |
+        // | 2021-07-06 | 1 | 2021-08-03 | 2021-08-04
+        // | 2021-07-05 | 2 | 2021-08-03 | 2021-08-04
         // When I request report data
         // Then I have correct hearing values for hearing #2
         var expectedTotalDays = "30";
