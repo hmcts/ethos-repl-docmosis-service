@@ -665,7 +665,7 @@ public class ListingHelper {
                 case TIME_TO_FIRST_HEARING_REPORT:
                     return "EM-TRB-SCO-ENG-00751";
                 case SERVING_CLAIMS_REPORT:
-                    return "EM-TRB-SCO-ENG-00780";
+                    return "EM-TRB-SCO-ENG-00781";
                 default:
                     return "No document found";
             }
