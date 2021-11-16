@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
@@ -20,15 +21,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -86,6 +78,9 @@ public class ReportDocHelper {
                     break;
                 case SERVING_CLAIMS_REPORT:
                     sb.append(getServedClaimsReport(listingData));
+                    break;
+                case HEARINGS_BY_HEARING_TYPE_REPORT:
+                    sb.append(getHearingsByHearingTypeReport(listingData));
                     break;
                 default:
                     throw new IllegalStateException("Report type - Unexpected value: " + listingData.getReportType());
@@ -417,6 +412,79 @@ public class ReportDocHelper {
         }
 
         return reportContent;
+    }
+
+    private static StringBuilder getHearingsByHearingTypeReport(ListingData listingData) {
+        var sb = new StringBuilder();
+        AdhocReportType localReportDetailHdr = listingData.getLocalReportsDetailHdr();
+        AdhocReportType localReportSummary = listingData.getLocalReportsSummary().get(0).getValue();
+
+        if (localReportDetailHdr != null) {
+            sb.append("\"Total_Cases\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalCases())).append(NEW_LINE);
+            sb.append("\"Total_Within_26Weeks\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotal26wk())).append(NEW_LINE);
+            sb.append("\"Total_Percent_Within_26Weeks\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotal26wkPerCent())).append(NEW_LINE);
+            sb.append("\"Total_Not_Within_26Weeks\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wk())).append(NEW_LINE);
+            sb.append("\"Total_Percent_Not_Within_26Weeks\":\"").append(
+                    nullCheck(localReportDetailHdr.getTotalx26wkPerCent())).append(NEW_LINE);
+            sb.append("\"ConNone_Total\":\"").append(
+                    nullCheck(localReportSummary.getConNoneTotal())).append(NEW_LINE);
+            sb.append("\"ConNone_Total_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConNone26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConNone_Percent_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConNone26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConNone_Total_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConNone26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConNone_Percent_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConNone26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConFast_Total\":\"").append(
+                    nullCheck(localReportSummary.getConFastTotal())).append(NEW_LINE);
+            sb.append("\"ConFast_Total_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConFast26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConFast_Percent_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConFast26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConFast_Total_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConFast26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConFast_Percent_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConFast26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConStd_Total\":\"").append(
+                    nullCheck(localReportSummary.getConStdTotal())).append(NEW_LINE);
+            sb.append("\"ConStd_Total_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConStd26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConStd_Percent_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConStd26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConStd_Total_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConStd26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConStd_Percent_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConStd26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConOpen_Total\":\"").append(
+                    nullCheck(localReportSummary.getConOpenTotal())).append(NEW_LINE);
+            sb.append("\"ConOpen_Total_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConOpen26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConOpen_Percent_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getConOpen26wkTotalPerCent())).append(NEW_LINE);
+            sb.append("\"ConOpen_Total_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConOpen26wkTotal())).append(NEW_LINE);
+            sb.append("\"ConOpen_Percent_Not_26_Week\":\"").append(
+                    nullCheck(localReportSummary.getXConOpen26wkTotalPerCent())).append(NEW_LINE);
+
+        }
+
+        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())) {
+            var adhocReportTypeItems = listingData.getLocalReportsDetail();
+            sb.append(REPORT_LIST);
+            for (var i = 0; i < adhocReportTypeItems.size(); i++) {
+                sb.append(getHearingsByHearingTypeAdhocReportTypeRow(adhocReportTypeItems.get(i).getValue()));
+                if (i != adhocReportTypeItems.size() - 1) {
+                    sb.append(",\n");
+                }
+            }
+            sb.append("],\n");
+        }
+        return sb;
     }
 
     private static StringBuilder addEntriesByServingDay(int dayNumber, String listBlockOpener,
