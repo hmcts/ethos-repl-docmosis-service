@@ -36,7 +36,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 class HearingsToJudgmentsReportTest {
 
-    ReportDataSource reportDataSource;
+    HearingsToJudgmentsReportDataSource hearingsToJudgmentsReportDataSource;
     HearingsToJudgmentsReport hearingsToJudgmentsReport;
     HearingsToJudgmentsCaseDataBuilder caseDataBuilder;
     List<HearingsToJudgmentsSubmitEvent> submitEvents = new ArrayList<>();
@@ -57,10 +57,10 @@ class HearingsToJudgmentsReportTest {
     public void setup() {
         submitEvents.clear();
 
-        reportDataSource = mock(ReportDataSource.class);
-        when(reportDataSource.getData(NEWCASTLE_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
+        hearingsToJudgmentsReportDataSource = mock(HearingsToJudgmentsReportDataSource.class);
+        when(hearingsToJudgmentsReportDataSource.getData(NEWCASTLE_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
 
-        hearingsToJudgmentsReport = new HearingsToJudgmentsReport(reportDataSource, DATE_FROM, DATE_TO);
+        hearingsToJudgmentsReport = new HearingsToJudgmentsReport(hearingsToJudgmentsReportDataSource, DATE_FROM, DATE_TO);
     }
 
     @Test
@@ -149,7 +149,7 @@ class HearingsToJudgmentsReportTest {
         // And has a judgment made
         // When I request report data
         // Then the case is in the report data
-        when(reportDataSource.getData(SCOTLAND_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
+        when(hearingsToJudgmentsReportDataSource.getData(SCOTLAND_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
         var managingOffice = "Test Office";
 
         submitEvents.add(caseDataBuilder
@@ -160,7 +160,7 @@ class HearingsToJudgmentsReportTest {
 
         var reportData = hearingsToJudgmentsReport.runReport(SCOTLAND_LISTING_CASE_TYPE_ID);
         assertNotNull(reportData);
-        assertEquals(SCOTLAND_CASE_TYPE_ID, reportData.getReportSummary().getOffice());
+        assertEquals(SCOTLAND_CASE_TYPE_ID, reportData.getHearingsToJudgmentsReportSummary().getOffice());
         assertEquals(1, reportData.getReportDetails().size());
 
         var reportDetail = reportData.getReportDetails().get(0);
@@ -183,23 +183,23 @@ class HearingsToJudgmentsReportTest {
 
         var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
-        assertEquals("4", reportData.getReportSummary().getTotalCases());
+        assertEquals("4", reportData.getHearingsToJudgmentsReportSummary().getTotalCases());
         assertEquals(1, reportData.getReportDetails().size());
-        assertEquals("3", reportData.getReportSummary().getTotal4wk());
-        assertEquals("75.00", reportData.getReportSummary().getTotal4wkPerCent());
-        assertEquals("1", reportData.getReportSummary().getTotalx4wk());
-        assertEquals("25.00", reportData.getReportSummary().getTotalx4wkPerCent());
+        assertEquals("3", reportData.getHearingsToJudgmentsReportSummary().getTotal4Wk());
+        assertEquals("75.00", reportData.getHearingsToJudgmentsReportSummary().getTotal4WkPercent());
+        assertEquals("1", reportData.getHearingsToJudgmentsReportSummary().getTotalX4Wk());
+        assertEquals("25.00", reportData.getHearingsToJudgmentsReportSummary().getTotalX4WkPercent());
     }
 
     @ParameterizedTest
     @CsvSource({
-            "2021-07-16T10:00:00.000,2021-07-16,2021-08-26,2021-07-29,41,2500121/2021,1,One Test,"
+            "2021-07-16T10:00:00.000,2021-07-16,2021-08-26,2021-08-26,41,2500121/2021,1,One Test,"
                     + HEARING_TYPE_JUDICIAL_HEARING + "," + YES + "," + ACCEPTED_STATE,
-            "2021-07-17T10:00:00.000,2021-07-17,2021-08-26,2021-07-28,40,2500122/2021,2,Two Test,"
+            "2021-07-17T10:00:00.000,2021-07-17,2021-08-26,2021-08-26,40,2500122/2021,2,Two Test,"
                     + HEARING_TYPE_PERLIMINARY_HEARING + "," + NO + "," + ACCEPTED_STATE,
-            "2021-07-18T10:00:00.000,2021-07-18,2021-08-26,2021-07-27,39,2500123/2021,3,Three Test,"
+            "2021-07-18T10:00:00.000,2021-07-18,2021-08-26,2021-08-26,39,2500123/2021,3,Three Test,"
                     + HEARING_TYPE_PERLIMINARY_HEARING_CM + ",," + CLOSED_STATE,
-            "2021-07-19T10:00:00.000,2021-07-19,2021-08-26,2021-07-26,38,2500124/2021,4,Four Test,"
+            "2021-07-19T10:00:00.000,2021-07-19,2021-08-26,2021-08-26,38,2500124/2021,4,Four Test,"
                     + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + YES + "," + CLOSED_STATE})
     void shouldContainCorrectDetailValuesForHearingsWithValidJudgment(String hearingListedDate, String judgmentHearingDate,
                                                                       String dateJudgmentMade, String dateJudgmentSent,
@@ -242,11 +242,11 @@ class HearingsToJudgmentsReportTest {
         // | 2021-07-05 | 2 | 2021-08-03
         // When I request report data
         // Then I have correct hearing values for hearing #2
-        var expectedTotalDays = "29";
+        var expectedTotalDays = "30";
         var caseReference = "2500123/2021";
         var judge = "Hugh Parkfield";
         var judgmentHearingDate = "2021-07-05";
-        var dateJudgmentSent = "2021-08-05";
+        var dateJudgmentSent = "2021-08-04";
 
         submitEvents.add(caseDataBuilder
                 .withEthosCaseReference(caseReference)
@@ -289,6 +289,6 @@ class HearingsToJudgmentsReportTest {
 
     private void assertCommonValues(HearingsToJudgmentsReportData reportData) {
         assertNotNull(reportData);
-        assertEquals("Newcastle", reportData.getReportSummary().getOffice());
+        assertEquals("Newcastle", reportData.getHearingsToJudgmentsReportSummary().getOffice());
     }
 }

@@ -7,11 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class ReportSummary {
+public class HearingsToJudgmentsReportSummary {
     private final String office;
     private String totalCases;
-    private String total4wk;
-    private String total4wkPerCent;
-    private String totalx4wk;
-    private String totalx4wkPerCent;
+    private String total4Wk;
+    private String total4WkPercent;
+    private String totalX4Wk;
+    private String totalX4WkPercent;
 }

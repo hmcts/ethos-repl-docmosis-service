@@ -10,7 +10,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
-public class HearingsToJudgmentsCcdReportDataSource implements ReportDataSource {
+public class HearingsToJudgmentsCcdReportDataSource implements HearingsToJudgmentsReportDataSource {
 
     private final String authToken;
     private final CcdClient ccdClient;
@@ -18,7 +18,7 @@ public class HearingsToJudgmentsCcdReportDataSource implements ReportDataSource 
     @Override
     public List<HearingsToJudgmentsSubmitEvent> getData(String caseTypeId, String listingDateFrom, String listingDateTo) {
         try {
-            var query = ElasticSearchQuery.create(listingDateFrom, listingDateTo);
+            var query = HearingsToJudgmentsElasticSearchQuery.create(listingDateFrom, listingDateTo);
             return ccdClient.hearingsToJudgementsSearch(authToken, caseTypeId, query);
         } catch (Exception e) {
             throw new ReportException(String.format(

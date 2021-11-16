@@ -50,12 +50,13 @@ public class HearingsToJudgmentsReport {
         String judge;
     }
 
-    private final ReportDataSource reportDataSource;
+    private final HearingsToJudgmentsReportDataSource hearingsToJudgmentsReportDataSource;
     private final String listingDateFrom;
     private final String listingDateTo;
 
-    public HearingsToJudgmentsReport(ReportDataSource reportDataSource, String listingDateFrom, String listingDateTo) {
-        this.reportDataSource = reportDataSource;
+    public HearingsToJudgmentsReport(HearingsToJudgmentsReportDataSource hearingsToJudgmentsReportDataSource,
+                                     String listingDateFrom, String listingDateTo) {
+        this.hearingsToJudgmentsReportDataSource = hearingsToJudgmentsReportDataSource;
         this.listingDateFrom = listingDateFrom;
         this.listingDateTo = listingDateTo;
     }
@@ -72,13 +73,14 @@ public class HearingsToJudgmentsReport {
     }
 
     private HearingsToJudgmentsReportData initReport(String caseTypeId) {
-        var reportSummary = new ReportSummary(UtilHelper.getListingCaseTypeId(caseTypeId));
+        var reportSummary = new HearingsToJudgmentsReportSummary(UtilHelper.getListingCaseTypeId(caseTypeId));
         return new HearingsToJudgmentsReportData(reportSummary);
     }
 
     private List<HearingsToJudgmentsSubmitEvent> getCases(String caseTypeId, String listingDateFrom,
                                                           String listingDateTo) {
-        return reportDataSource.getData(UtilHelper.getListingCaseTypeId(caseTypeId), listingDateFrom, listingDateTo);
+        return hearingsToJudgmentsReportDataSource.getData(UtilHelper.getListingCaseTypeId(caseTypeId),
+                listingDateFrom, listingDateTo);
     }
 
     private void populateData(HearingsToJudgmentsReportData reportData,
@@ -105,7 +107,7 @@ public class HearingsToJudgmentsReport {
                         continue;
                     }
 
-                    var reportDetail = new ReportDetail();
+                    var reportDetail = new HearingsToJudgmentsReportDetail();
                     reportDetail.setReportOffice(ReportHelper.getTribunalOffice(listingCaseTypeId,
                             caseData.getManagingOffice()));
                     reportDetail.setCaseReference(caseData.getEthosCaseReference());
@@ -120,10 +122,11 @@ public class HearingsToJudgmentsReport {
             }
         }
 
-        addReportSummary(reportData.getReportSummary(), allHearingsWithJudgments);
+        addReportSummary(reportData.getHearingsToJudgmentsReportSummary(), allHearingsWithJudgments);
     }
 
-    private void addReportSummary(ReportSummary reportSummary, List<HearingWithJudgment> hearings) {
+    private void addReportSummary(HearingsToJudgmentsReportSummary hearingsToJudgmentsReportSummary,
+                                  List<HearingWithJudgment> hearings) {
         int totalCases = hearings.size();
         long totalCasesWithin4Weeks = hearings.stream().filter(h -> h.judgmentWithin4Weeks).count();
         long totalCasesNotWithin4Weeks = hearings.stream().filter(h -> !h.judgmentWithin4Weeks).count();
@@ -133,11 +136,13 @@ public class HearingsToJudgmentsReport {
         float totalCasesNotWithin4WeeksPercent = (totalCases != 0)
                 ? ((float) totalCasesNotWithin4Weeks / totalCases) * 100 : 0;
 
-        reportSummary.setTotalCases(String.valueOf(totalCases));
-        reportSummary.setTotal4wk(String.valueOf(totalCasesWithin4Weeks));
-        reportSummary.setTotalx4wk(String.valueOf(totalCasesNotWithin4Weeks));
-        reportSummary.setTotal4wkPerCent(String.format(PERCENTAGE_FORMAT, totalCasesWithin4WeeksPercent));
-        reportSummary.setTotalx4wkPerCent(String.format(PERCENTAGE_FORMAT, totalCasesNotWithin4WeeksPercent));
+        hearingsToJudgmentsReportSummary.setTotalCases(String.valueOf(totalCases));
+        hearingsToJudgmentsReportSummary.setTotal4Wk(String.valueOf(totalCasesWithin4Weeks));
+        hearingsToJudgmentsReportSummary.setTotalX4Wk(String.valueOf(totalCasesNotWithin4Weeks));
+        hearingsToJudgmentsReportSummary.setTotal4WkPercent(String.format(PERCENTAGE_FORMAT,
+                totalCasesWithin4WeeksPercent));
+        hearingsToJudgmentsReportSummary.setTotalX4WkPercent(String.format(PERCENTAGE_FORMAT,
+                totalCasesNotWithin4WeeksPercent));
     }
 
     private List<HearingWithJudgment> getHearingsAndJudgmentsCollection(HearingTypeItem hearingTypeItem,
@@ -165,15 +170,15 @@ public class HearingsToJudgmentsReport {
 
             for (var judgmentItem : judgements) {
                 var judgment = judgmentItem.getValue();
-                var judgmentHearingDate = LocalDate.parse(judgment.getJudgmentHearingDate(), OLD_DATE_TIME_PATTERN2);
                 var dateJudgmentMade = LocalDate.parse(judgment.getDateJudgmentMade(), OLD_DATE_TIME_PATTERN2);
-                var hearingDatePlus4Wks = judgmentHearingDate.plusWeeks(4).plusDays(1);
+                var dateJudgmentSent = LocalDate.parse(judgment.getDateJudgmentSent(), OLD_DATE_TIME_PATTERN2);
+                var hearingDatePlus4Wks = hearingListedDate.plusWeeks(4).plusDays(1);
 
                 var hearingJudgmentItem = new HearingWithJudgment();
                 hearingJudgmentItem.judgmentWithin4Weeks = dateJudgmentMade.isBefore(hearingDatePlus4Wks);
-                hearingJudgmentItem.hearingDate = judgment.getJudgmentHearingDate();
-                hearingJudgmentItem.judgmentDateSent = judgment.getDateJudgmentSent();
-                hearingJudgmentItem.total = judgmentHearingDate.datesUntil(dateJudgmentMade).count();
+                hearingJudgmentItem.hearingDate = hearingListedDate.format(OLD_DATE_TIME_PATTERN2);
+                hearingJudgmentItem.judgmentDateSent = dateJudgmentSent.format(OLD_DATE_TIME_PATTERN2);
+                hearingJudgmentItem.total = hearingListedDate.datesUntil(dateJudgmentSent).count();
                 hearingJudgmentItem.reservedHearing = dateListedType.getHearingReservedJudgement();
                 hearingJudgmentItem.judge = hearingType.getJudge();
 
