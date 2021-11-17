@@ -247,8 +247,7 @@ public class ListingGenerationController {
     private boolean hasServedClaims(ListingData listingData) {
         if (SERVING_CLAIMS_REPORT.equals(listingData.getReportType())) {
             return CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail());
-        }
-        else {
+        } else {
             return true;
         }
     }
