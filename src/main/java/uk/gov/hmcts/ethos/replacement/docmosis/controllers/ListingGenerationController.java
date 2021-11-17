@@ -231,7 +231,7 @@ public class ListingGenerationController {
 
         if (hasListings(listingData)
                 || (isAllowedReportType(listingData)
-                && (hasServedClaims(listingData) || hasSummaryAndDetails(listingData)))) {
+                    && (hasServedClaims(listingData) || hasSummaryAndDetails(listingData)))) {
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
             updateListingDocMarkUp(listingData, documentInfo);
             return ResponseEntity.ok(ListingCallbackResponse.builder()

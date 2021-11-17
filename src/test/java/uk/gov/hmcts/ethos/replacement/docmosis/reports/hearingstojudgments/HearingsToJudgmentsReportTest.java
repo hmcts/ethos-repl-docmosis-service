@@ -19,8 +19,15 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITHDRAWN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_COSTS_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_RECONSIDERATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_REMEDY;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
@@ -48,6 +55,8 @@ class HearingsToJudgmentsReportTest {
     static final String JUDGMENT_HEARING_DATE = BASE_DATE.format(OLD_DATE_TIME_PATTERN2);
     static final String DATE_FROM = BASE_DATE.minusDays(1).format(OLD_DATE_TIME_PATTERN);
     static final String DATE_TO = BASE_DATE.plusDays(29).format(OLD_DATE_TIME_PATTERN);
+    static final String INVALID_JUDGMENT_HEARING_DATE = BASE_DATE.plusDays(1).format(OLD_DATE_TIME_PATTERN2);
+    static final String INVALID_HEARING_LISTING_DATE = BASE_DATE.minusDays(2).format(OLD_DATE_TIME_PATTERN);
 
     public HearingsToJudgmentsReportTest() {
         caseDataBuilder = new HearingsToJudgmentsCaseDataBuilder();
@@ -122,6 +131,150 @@ class HearingsToJudgmentsReportTest {
         var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
         assertTrue(reportData.getReportDetails().isEmpty());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_JUDICIAL_COSTS_HEARING + "," + YES,
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_JUDICIAL_COSTS_HEARING + "," + NO,
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_JUDICIAL_HEARING + "," + NO,
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_JUDICIAL_MEDIATION + "," + YES,
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_JUDICIAL_MEDIATION + "," + NO,
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_JUDICIAL_MEDIATION_TCC + "," + YES,
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_JUDICIAL_MEDIATION_TCC + "," + NO,
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_PERLIMINARY_HEARING + "," + NO,
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM + "," + NO,
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + NO,
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_JUDICIAL_RECONSIDERATION + "," + YES,
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_JUDICIAL_RECONSIDERATION + "," + NO,
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_JUDICIAL_REMEDY + "," + YES,
+            HEARING_STATUS_HEARD + "," + HEARING_TYPE_JUDICIAL_REMEDY + "," + NO,
+
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_JUDICIAL_COSTS_HEARING + "," + YES,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_JUDICIAL_COSTS_HEARING + "," + NO,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_JUDICIAL_HEARING + "," + YES,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_JUDICIAL_HEARING + "," + NO,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_JUDICIAL_MEDIATION + "," + YES,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_JUDICIAL_MEDIATION + "," + NO,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_JUDICIAL_MEDIATION_TCC + "," + YES,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_JUDICIAL_MEDIATION_TCC + "," + NO,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_PERLIMINARY_HEARING + "," + YES,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_PERLIMINARY_HEARING + "," + NO,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM + "," + YES,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM + "," + NO,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + YES,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + NO,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_JUDICIAL_RECONSIDERATION + "," + YES,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_JUDICIAL_RECONSIDERATION + "," + NO,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_JUDICIAL_REMEDY + "," + YES,
+            HEARING_STATUS_LISTED + "," + HEARING_TYPE_JUDICIAL_REMEDY + "," + NO,
+
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_JUDICIAL_COSTS_HEARING + "," + YES,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_JUDICIAL_COSTS_HEARING + "," + NO,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_JUDICIAL_HEARING + "," + YES,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_JUDICIAL_HEARING + "," + NO,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_JUDICIAL_MEDIATION + "," + YES,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_JUDICIAL_MEDIATION + "," + NO,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_JUDICIAL_MEDIATION_TCC + "," + YES,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_JUDICIAL_MEDIATION_TCC + "," + NO,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_PERLIMINARY_HEARING + "," + YES,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_PERLIMINARY_HEARING + "," + NO,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM + "," + YES,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM + "," + NO,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + YES,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + NO,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_JUDICIAL_RECONSIDERATION + "," + YES,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_JUDICIAL_RECONSIDERATION + "," + NO,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_JUDICIAL_REMEDY + "," + YES,
+            HEARING_STATUS_SETTLED + "," + HEARING_TYPE_JUDICIAL_REMEDY + "," + NO,
+
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_JUDICIAL_COSTS_HEARING + "," + YES,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_JUDICIAL_COSTS_HEARING + "," + NO,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_JUDICIAL_HEARING + "," + YES,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_JUDICIAL_HEARING + "," + NO,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_JUDICIAL_MEDIATION + "," + YES,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_JUDICIAL_MEDIATION + "," + NO,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_JUDICIAL_MEDIATION_TCC + "," + YES,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_JUDICIAL_MEDIATION_TCC + "," + NO,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_PERLIMINARY_HEARING + "," + YES,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_PERLIMINARY_HEARING + "," + NO,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM + "," + YES,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM + "," + NO,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + YES,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + NO,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_JUDICIAL_RECONSIDERATION + "," + YES,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_JUDICIAL_RECONSIDERATION + "," + NO,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_JUDICIAL_REMEDY + "," + YES,
+            HEARING_STATUS_WITHDRAWN + "," + HEARING_TYPE_JUDICIAL_REMEDY + "," + NO,
+
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_COSTS_HEARING + "," + YES,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_COSTS_HEARING + "," + NO,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_HEARING + "," + YES,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_HEARING + "," + NO,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_MEDIATION + "," + YES,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_MEDIATION + "," + NO,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_MEDIATION_TCC + "," + YES,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_MEDIATION_TCC + "," + NO,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_PERLIMINARY_HEARING + "," + YES,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_PERLIMINARY_HEARING + "," + NO,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM + "," + YES,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM + "," + NO,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + YES,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + NO,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_RECONSIDERATION + "," + YES,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_RECONSIDERATION + "," + NO,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_REMEDY + "," + YES,
+            HEARING_STATUS_POSTPONED + "," + HEARING_TYPE_JUDICIAL_REMEDY + "," + NO,
+    })
+    void shouldNotShowInvalidHearings(String hearingStatus, String HearingType, String disposed) {
+        // Given a case is accepted
+        // And has been heard
+        // And has a judgment made
+        // When I request report data
+        // Then the case is not in the report data
+
+        submitEvents.add(caseDataBuilder
+                .withHearing(HEARING_LISTING_DATE, hearingStatus, HearingType, disposed)
+                .buildAsSubmitEvent(ACCEPTED_STATE));
+
+        var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        assertCommonValues(reportData);
+        assertEquals(0, reportData.getReportDetails().size());
+    }
+
+    @Test
+    void shouldNotShowHearingsWithInvalidHearingListDate() {
+        // Given a case is accepted
+        // And has a hearing with listed date outside the date range
+        // When I request report data
+        // Then the case is not in the report data
+
+        submitEvents.add(caseDataBuilder
+                .withHearing(INVALID_HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_MEDIATION, YES)
+                .withJudgment(INVALID_JUDGMENT_HEARING_DATE, DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
+                .buildAsSubmitEvent(ACCEPTED_STATE));
+
+        var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        assertCommonValues(reportData);
+        assertEquals(0, reportData.getReportDetails().size());
+    }
+
+    @Test
+    void shouldNotShowHearingsWithInvalidJudgments() {
+        // Given a case is accepted
+        // And has been heard
+        // And has invalid judgment
+        // When I request report data
+        // Then the case is not in the report data
+
+        submitEvents.add(caseDataBuilder
+                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_MEDIATION, YES)
+                .withJudgment(INVALID_JUDGMENT_HEARING_DATE, DATE_WITHIN_4WKS, DATE_WITHIN_4WKS)
+                .buildAsSubmitEvent(ACCEPTED_STATE));
+
+        var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        assertCommonValues(reportData);
+        assertEquals(0, reportData.getReportDetails().size());
     }
 
     @Test
