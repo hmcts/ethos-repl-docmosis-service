@@ -23,6 +23,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.Cas
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CcdReportDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.CasesCompletedReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesourcelocalreport.CaseSourceLocalReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims.ServingClaimsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
 
@@ -38,6 +39,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_SOURCE_LOCAL_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
@@ -68,6 +70,7 @@ public class ListingService {
     private final CasesCompletedReport casesCompletedReport;
     private final TimeToFirstHearingReport timeToFirstHearingReport;
     private final ServingClaimsReport servingClaimsReport;
+    private final CaseSourceLocalReport caseSourceLocalReport;
 
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
@@ -247,6 +250,8 @@ public class ListingService {
                 return timeToFirstHearingReport.generateReportData(listingDetails, submitEvents);
             case SERVING_CLAIMS_REPORT:
                 return servingClaimsReport.generateReportData(listingDetails, submitEvents);
+            case CASE_SOURCE_LOCAL_REPORT:
+                return caseSourceLocalReport.generateReportData(listingDetails, submitEvents);
             default:
                 return listingDetails.getCaseData();
         }

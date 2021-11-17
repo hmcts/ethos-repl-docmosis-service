@@ -27,6 +27,7 @@ public class ReportDocHelperTest {
     private ListingDetails reportDetails2;
     private ListingDetails reportDetails3;
     private ListingDetails reportDetails4;
+    private ListingDetails reportDetails5;
     private ListingDetails reportDetailsClaimsServed;
     private UserDetails userDetails;
 
@@ -36,6 +37,7 @@ public class ReportDocHelperTest {
         reportDetails2 = generateReportDetails("reportDetailsTest2.json");
         reportDetails3 = generateReportDetails("reportDetailsTest3.json");
         reportDetails4 = generateReportDetails("reportDetailsTest4.json");
+        reportDetails5 = generateReportDetails("reportDetailsTest5.json");
         reportDetailsClaimsServed = generateReportDetails("reportDetailsTestClaimsServed.json");
         userDetails = HelperTest.getUserDetails();
     }
@@ -250,6 +252,32 @@ public class ReportDocHelperTest {
                 + "}\n";
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails4.getCaseData(), "",
                 "EM-TRB-SCO-ENG-00751", userDetails).toString());
+    }
+
+    @Test
+    public void buildCaseSourceLocalReport() {
+        String expected = "{\n"
+                + "\"accessKey\":\"\",\n"
+                + "\"templateName\":\"EM-TRB-SCO-ENG-00783.docx\",\n"
+                + "\"outputName\":\"document.docx\",\n"
+                + "\"data\":{\n"
+                + "\"Listed_date_from\":\"1 December 2021\",\n"
+                + "\"Listed_date_to\":\"3 December 2021\",\n"
+                + "\"Report_Office\":\"Manchester\",\n"
+                + "\"Manually_Created\":\"\",\n"
+                + "\"Migration_Cases\":\"\",\n"
+                + "\"ET1_Online_Cases\":\"\",\n"
+                + "\"ECC_Cases\":\"\",\n"
+                + "\"Manually_Created_Percent\":\"\",\n"
+                + "\"Migration_Cases_Percent\":\"\",\n"
+                + "\"ET1_Online_Cases_Percent\":\"\",\n"
+                + "\"ECC_Cases_Percent\":\"\",\n"
+                + "\"Report_Clerk\":\"Mike Jordan\",\n"
+                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n"
+                + "}\n"
+                + "}\n";
+        assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails5.getCaseData(), "",
+                "EM-TRB-SCO-ENG-00783", userDetails).toString());
     }
 
     @Test

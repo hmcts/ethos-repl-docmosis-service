@@ -37,6 +37,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_SOURCE_LOCAL_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
@@ -451,7 +452,7 @@ public class ListingHelper {
                 .stream()
                 .filter(listingTypeItem -> !isEmptyHearingRoom(listingTypeItem.getValue()))
                 .collect(Collectors.groupingBy(listingTypeItem -> listingTypeItem.getValue().getHearingRoom(),
-                        () -> new TreeMap<>(getVenueComparator()), Collectors.toList()));
+                    () -> new TreeMap<>(getVenueComparator()), Collectors.toList()));
         List<ListingTypeItem> notAllocated = listingSubCollection
                 .stream()
                 .filter(listingTypeItem -> isEmptyHearingRoom(listingTypeItem.getValue()))
@@ -666,6 +667,8 @@ public class ListingHelper {
                     return "EM-TRB-SCO-ENG-00751";
                 case SERVING_CLAIMS_REPORT:
                     return "EM-TRB-SCO-ENG-00781";
+                case CASE_SOURCE_LOCAL_REPORT:
+                    return "EM-TRB-SCO-ENG-00783";
                 default:
                     return "No document found";
             }
