@@ -1,18 +1,22 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleObject;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.SortedMap;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 @Service("multipleBatchUpdate2Service")
@@ -79,7 +83,7 @@ public class MultipleBatchUpdate2Service {
 
                     log.info("Reading excel and add sub multiple references");
 
-                    readExcelAndAddSubMultipleRef(userToken, multipleDetails.getCaseData(), errors,
+                    readExcelAndAddSubMultipleRef(userToken, multipleDetails, errors,
                             multipleObjectsFiltered, updatedSubMultipleRef);
 
                 }
@@ -138,7 +142,7 @@ public class MultipleBatchUpdate2Service {
 
         log.info("Read current excel and remove cases in multiple");
 
-        readCurrentExcelAndRemoveCasesInMultiple(userToken, multipleDetails.getCaseData(), errors,
+        readCurrentExcelAndRemoveCasesInMultiple(userToken, multipleDetails, errors,
                 multipleObjectsFiltered);
 
         log.info("Perform actions with the new lead if exists");
@@ -195,31 +199,29 @@ public class MultipleBatchUpdate2Service {
     private String checkIfNewMultipleWasEmpty(String updatedLeadCase, List<String> multipleObjectsFiltered) {
 
         if (updatedLeadCase.isEmpty() && !multipleObjectsFiltered.isEmpty()) {
-
-                return multipleObjectsFiltered.get(0);
-
+            return multipleObjectsFiltered.get(0);
         }
 
         return updatedLeadCase;
 
     }
 
-    private void readExcelAndAddSubMultipleRef(String userToken, MultipleData multipleData,
+    private void readExcelAndAddSubMultipleRef(String userToken, MultipleDetails multipleDetails,
                                                List<String> errors, List<String> multipleObjectsFiltered,
                                                String updatedSubMultipleRef) {
 
         SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
-                        MultiplesHelper.getExcelBinaryUrl(multipleData),
+                        MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                         errors,
-                        multipleData,
+                        multipleDetails.getCaseData(),
                         FilterExcelType.ALL);
 
         List<MultipleObject> newMultipleObjectsUpdated = addSubMultipleRefToMultipleObjects(multipleObjectsFiltered,
                 multipleObjects, updatedSubMultipleRef);
 
-        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, multipleData);
+        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, multipleDetails);
 
     }
 
@@ -241,21 +243,21 @@ public class MultipleBatchUpdate2Service {
 
     }
 
-    private void readCurrentExcelAndRemoveCasesInMultiple(String userToken, MultipleData multipleData,
+    private void readCurrentExcelAndRemoveCasesInMultiple(String userToken, MultipleDetails multipleDetails,
                                                           List<String> errors, List<String> multipleObjectsFiltered) {
 
         SortedMap<String, Object> multipleObjects =
                 excelReadingService.readExcel(
                         userToken,
-                        MultiplesHelper.getExcelBinaryUrl(multipleData),
+                        MultiplesHelper.getExcelBinaryUrl(multipleDetails.getCaseData()),
                         errors,
-                        multipleData,
+                        multipleDetails.getCaseData(),
                         FilterExcelType.ALL);
 
         List<MultipleObject> newMultipleObjectsUpdated = removeCasesInMultiple(multipleObjectsFiltered,
                 multipleObjects);
 
-        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, multipleData);
+        excelDocManagementService.generateAndUploadExcel(newMultipleObjectsUpdated, userToken, multipleDetails);
 
     }
 

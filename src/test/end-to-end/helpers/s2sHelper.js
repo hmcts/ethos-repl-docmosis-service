@@ -1,7 +1,7 @@
 const {Logger} = require('@hmcts/nodejs-logging');
 const requestModule = require('request-promise-native');
 const request = requestModule.defaults();
-const testConfig = require('../tests/config.js');
+const testConfig = require('../../config.js');
 const logger = Logger.getLogger('helpers/s2sHelper.js');
 
 async function getServiceToken() {
@@ -18,7 +18,7 @@ async function getServiceToken() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({microservice: 'nfdiv_case_api', oneTimePassword})
+        body: JSON.stringify({microservice: 'ethos_repl_service', oneTimePassword})
     });
 
     logger.debug(serviceToken);

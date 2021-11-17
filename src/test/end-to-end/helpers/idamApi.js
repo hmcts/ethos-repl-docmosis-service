@@ -1,7 +1,7 @@
 const {Logger} = require('@hmcts/nodejs-logging');
 const requestModule = require('request-promise-native');
 const request = requestModule.defaults();
-const testConfig = require('../tests/config.js');
+const testConfig = require('../../config.js');
 const logger = Logger.getLogger('helpers/idamApi.js');
 
 async function getUserToken() {

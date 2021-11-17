@@ -48,7 +48,8 @@ public class DynamicListHelper {
         }
     }
 
-    private static List<DynamicValueType> createDynamicRespondentName(List<RespondentSumTypeItem> respondentCollection) {
+    private static List<DynamicValueType> createDynamicRespondentName(
+            List<RespondentSumTypeItem> respondentCollection) {
         List<DynamicValueType> listItems = new ArrayList<>();
         if (respondentCollection != null) {
             for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
