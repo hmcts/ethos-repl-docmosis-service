@@ -115,7 +115,6 @@ task functional(type: Test, description: 'Runs the functional tests.', group: 'V
     }
 
     systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
-
     maxHeapSize = '1G'
 }
 
