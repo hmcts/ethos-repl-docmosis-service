@@ -214,8 +214,13 @@ public class CaseManagementForCaseWorkerService {
                     for (DateListedTypeItem dateListedTypeItem
                             : hearingTypeItem.getValue().getHearingDateCollection()) {
                         var dateListedType = dateListedTypeItem.getValue();
+                        var listedDateWithZeroTime = dateListedType.getListedDate().split("T")[0] + "T00:00:00";
                         if (dateListedType.getHearingStatus() == null) {
                             dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
+                            dateListedType.setHearingTimingStart(dateListedType.getListedDate());
+                            dateListedType.setHearingTimingBreak(listedDateWithZeroTime);
+                            dateListedType.setHearingTimingResume(listedDateWithZeroTime);
+                            dateListedType.setHearingTimingFinish(listedDateWithZeroTime);
                         }
                         populateHearingVenueFromHearingLevelToDayLevel(dateListedType, hearingType, caseTypeId);
                     }
