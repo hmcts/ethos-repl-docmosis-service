@@ -85,7 +85,7 @@ public class ListingHelper {
     private static final String LISTING_NEWLINE = "\"listing\":[\n";
     static final List<String> REPORTS = Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
         LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT, TIME_TO_FIRST_HEARING_REPORT,
-        SERVING_CLAIMS_REPORT);
+        SERVING_CLAIMS_REPORT, CASE_SOURCE_LOCAL_REPORT);
 
     private ListingHelper() {
     }
