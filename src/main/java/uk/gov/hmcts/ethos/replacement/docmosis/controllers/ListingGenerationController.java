@@ -15,6 +15,7 @@ import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
 import uk.gov.hmcts.ecm.common.model.listing.ListingCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
@@ -244,7 +245,12 @@ public class ListingGenerationController {
     }
 
     private boolean hasServedClaims(ListingData listingData) {
-        return CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail());
+        if (SERVING_CLAIMS_REPORT.equals(listingData.getReportType())) {
+            return CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail());
+        }
+        else {
+            return true;
+        }
     }
 
     private boolean isAllowedReportType(ListingData listingData) {
