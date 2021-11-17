@@ -867,7 +867,8 @@ public class CaseActionsForCaseWorkerController {
 
         List<String> errors = new ArrayList<>();
         var caseData = ccdRequest.getCaseDetails().getCaseData();
-        eventValidationService.validateCaseBeforeCloseEvent(caseData,
+
+        errors = eventValidationService.validateCaseBeforeCloseEvent(caseData,
                 ccdRequest.getCaseDetails().getState().equals(REJECTED_STATE), false, errors);
 
         if (errors.isEmpty()) {
