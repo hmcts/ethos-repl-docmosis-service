@@ -331,6 +331,24 @@ public class EventValidationService {
         return errors;
     }
 
+    public void validateJudgementsHasJurisdiction(CaseData caseData, boolean partOfMMultiple, List<String> errors) {
+        if (CollectionUtils.isEmpty(caseData.getJudgementCollection())) {
+            return;
+        }
+
+        for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
+            var judgementType = judgementTypeItem.getValue();
+            if (CollectionUtils.isEmpty(judgementType.getJurisdictionCodes())) {
+                if (partOfMMultiple) {
+                    errors.add(caseData.getEthosCaseReference() + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
+                } else {
+                    errors.add(MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
+                }
+                break;
+            }
+        }
+    }
+
     public List<String> validateDepositRefunded(CaseData caseData) {
         List<String> errors = new ArrayList<>();
         if (caseData.getDepositCollection() != null && !caseData.getDepositCollection().isEmpty()) {
@@ -421,24 +439,6 @@ public class EventValidationService {
         } else if (!isRejected) {
             errors.add(getJurisdictionOutcomeErrorText(partOfMultiple, false,
                     caseData.getEthosCaseReference()));
-        }
-    }
-
-    public void validateJudgementsHasJurisdiction(CaseData caseData, boolean partOfMMultiple, List<String> errors) {
-        if (CollectionUtils.isEmpty(caseData.getJudgementCollection())) {
-            return;
-        }
-
-        for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
-            var judgementType = judgementTypeItem.getValue();
-            if (CollectionUtils.isEmpty(judgementType.getJurisdictionCodes())) {
-                if (partOfMMultiple) {
-                    errors.add(caseData.getEthosCaseReference() + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
-                } else {
-                    errors.add(MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
-                }
-                return;
-            }
         }
     }
 

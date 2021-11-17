@@ -756,7 +756,10 @@ public class ListingServiceTest {
                 + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
                 + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
                 + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                + "claimServedTotal=null, claimServedItems=null"
+                + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, "
+                + "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, "
+                + "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, "
+                + "eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
                 + "), "
                 + "localReportsDetail=[AdhocReportTypeItem(id=null, value=AdhocReportType(reportDate=null, reportOffice=null, receiptDate=null, " +
                 "hearingDate=null, date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=4210000/2019, " +
@@ -783,7 +786,10 @@ public class ListingServiceTest {
                 + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
                 + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
                 + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                + "claimServedTotal=null, claimServedItems=null"
+                + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, " +
+                "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, " +
+                "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, " +
+                "eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
                 +"))])";
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
@@ -824,7 +830,10 @@ public class ListingServiceTest {
                  + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
                  + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
                  + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                 + "claimServedTotal=null, claimServedItems=null"
+                 + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, " +
+                 "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, " +
+                 "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null," +
+                 " eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
                  + "), " +
                 "localReportsDetail=[AdhocReportTypeItem(id=null, value=AdhocReportType(reportDate=null, reportOffice=null, receiptDate=null, " +
                 "hearingDate=null, date=null, full=null, half=null, mins=null, total=null, eeMember=null, erMember=null, caseReference=4210000/2019, " +
@@ -850,7 +859,10 @@ public class ListingServiceTest {
                  + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
                  + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
                  + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                 + "claimServedTotal=null, claimServedItems=null"
+                 + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, " +
+                 "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, " +
+                 "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, " +
+                 "eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
                  +"))])";
         listingDetails.setCaseTypeId(SCOTLAND_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
@@ -901,7 +913,11 @@ public class ListingServiceTest {
                 + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
                 + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
                 + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                + "claimServedTotal=null, claimServedItems=null"
+                + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null," +
+                " et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, " +
+                "manuallyCreatedTotalCasesPercent=null, " +
+                "et1OnlineTotalCasesPercent=null, eccTotalCasesPercent=null, " +
+                "migratedTotalCasesPercent=null"
                 + "), localReportsSummary=null, "
                 + "localReportsSummaryHdr2=null, "
                 + "localReportsSummary2=null, localReportsDetailHdr=AdhocReportType(reportDate=null, "
@@ -936,7 +952,10 @@ public class ListingServiceTest {
                 + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
                 + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
                 + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                + "claimServedTotal=null, claimServedItems=null"
+                + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, " +
+                "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, " +
+                "manuallyCreatedTotalCasesPercent=null, " +
+                "et1OnlineTotalCasesPercent=null, eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
                 + "), "
                 + "localReportsDetail=[AdhocReportTypeItem(id=null, "
                 + "value=AdhocReportType(reportDate=null, reportOffice=Manchester, receiptDate=null, hearingDate=null, "
@@ -970,7 +989,10 @@ public class ListingServiceTest {
                 + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
                 + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
                 + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                + "claimServedTotal=null, claimServedItems=null"
+                + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, " +
+                "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, " +
+                "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, " +
+                "eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
                 +"))])";
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(LIVE_CASELOAD_REPORT);
@@ -1021,7 +1043,9 @@ public class ListingServiceTest {
                 + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
                 + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
                 + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-                + "claimServedTotal=null, claimServedItems=null"
+                + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, et1OnlineTotalCases=null," +
+                " eccTotalCases=null, migratedTotalCases=null, manuallyCreatedTotalCasesPercent=null," +
+                " et1OnlineTotalCasesPercent=null, eccTotalCasesPercent=null, migratedTotalCasesPercent=null"
                 + "), localReportsSummary=null, "
                 + "localReportsSummaryHdr2=null, "
                 + "localReportsSummary2=null, localReportsDetailHdr=AdhocReportType(reportDate=null, "
@@ -1058,7 +1082,10 @@ public class ListingServiceTest {
         + "claimServedDay2Percent=null, claimServedDay3Total=null, claimServedDay3Percent=null, "
         + "claimServedDay4Total=null, claimServedDay4Percent=null, claimServedDay5Total=null, "
         + "claimServedDay5Percent=null, claimServed6PlusDaysTotal=null, claimServed6PlusDaysPercent=null, "
-        + "claimServedTotal=null, claimServedItems=null), localReportsDetail=[])";
+        + "claimServedTotal=null, claimServedItems=null, manuallyCreatedTotalCases=null, " +
+                "et1OnlineTotalCases=null, eccTotalCases=null, migratedTotalCases=null, " +
+                "manuallyCreatedTotalCasesPercent=null, et1OnlineTotalCasesPercent=null, " +
+                "eccTotalCasesPercent=null, migratedTotalCasesPercent=null), localReportsDetail=[])";
         listingDetails.setCaseTypeId(SCOTLAND_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(LIVE_CASELOAD_REPORT);
         when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
