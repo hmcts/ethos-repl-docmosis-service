@@ -54,6 +54,38 @@
     "feeGroupReference": "12212121",
     "hearingCollection": [
     ],
+    "depositType": [
+      {
+        "id": "a1e2b95e-4873-4f43-b7b4-65808c422de0",
+        "value": {
+          "Deposit_amount": 300,
+          "depositAmountRefunded": "222",
+          "depositNotes": null,
+          "deposit_due": null,
+          "deposit_order_sent": null,
+          "deposit_refund": null,
+          "depositRefundedTo": "Respondent",
+          "depositOrderAgainst": "Respondent",
+          "deposit_requested_by": "Tribunal",
+          "dynamicDepositRefundedTo": {
+            "value": {
+              "code": "Dummy",
+              "label": "Dummy"
+            },
+            "list_items": [
+              {
+                "code": "R: Antonio Vazquez",
+                "label": "Antonio Vazquez"
+              },
+              {
+                "code": "C: Anton Rodriguez",
+                "label": "Anton Rodriguez"
+              }
+            ]
+          }
+        }
+      }
+    ],
     "respondentCollection": [
       {
         "id" : "123345",

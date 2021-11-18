@@ -403,7 +403,26 @@
           "depositNotes": null,
           "deposit_due": null,
           "deposit_order_sent": null,
-          "deposit_refund": null
+          "deposit_refund": null,
+          "depositRefundedTo": "Respondent",
+          "depositOrderAgainst": "Respondent",
+          "deposit_requested_by": "Tribunal",
+          "dynamicDepositOrderAgainst": {
+            "value": {
+              "code": "R: Antonio Vazquez",
+              "label": "Antonio Vazquez"
+            },
+            "list_items": [
+              {
+                "code": "R: Antonio Vazquez",
+                "label": "Antonio Vazquez"
+              },
+              {
+                "code": "C: Anton Rodriguez",
+                "label": "Anton Rodriguez"
+              }
+            ]
+          }
         }
       }
     ],
