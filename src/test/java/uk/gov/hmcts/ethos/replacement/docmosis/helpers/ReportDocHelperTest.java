@@ -11,6 +11,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.Cas
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.PositionTypeSummary;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportDetail;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportSummary;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportDetail;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportSummary;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -346,6 +349,18 @@ public class ReportDocHelperTest {
                 "", "EM-TRB-SCO-ENG-00780", userDetails).toString());
     }
 
+    @Test
+    public void buildHearingsToJudgmentsReport() throws URISyntaxException, IOException {
+        var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+                .getResource("hearingsToJudgmentsExpected.json")).toURI())));
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        expectedJson = expectedJson.replace("replace-with-current-date", today);
+        var reportData = getHearingsToJudgmentsReportData();
+        var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "",
+                "EM-TRB-SCO-ENG-00790", userDetails).toString();
+        assertEquals(expectedJson, actualJson);
+    }
+
     private CasesAwaitingJudgmentReportData getCasesAwaitingJudgementReportData() {
         var reportSummary = new ReportSummary("Newcastle");
         reportSummary.getPositionTypes()
@@ -400,6 +415,54 @@ public class ReportDocHelperTest {
         reportDetail.setCurrentPosition("Manually Created");
         reportDetail.setDateToPosition("10 Jul 2021");
         reportDetail.setConciliationTrack("Standard Track");
+        reportData.getReportDetails().add(reportDetail);
+
+        return reportData;
+    }
+
+    private HearingsToJudgmentsReportData getHearingsToJudgmentsReportData() {
+        var reportSummary = new HearingsToJudgmentsReportSummary("Newcastle");
+        reportSummary.setTotalCases("5");
+        reportSummary.setTotal4Wk("2");
+        reportSummary.setTotal4WkPercent("40.00");
+        reportSummary.setTotalX4Wk("3");
+        reportSummary.setTotalX4WkPercent("60.00");
+
+        var reportData = new HearingsToJudgmentsReportData(reportSummary);
+        reportData.setReportType(Constants.HEARINGS_TO_JUDGEMENTS_REPORT);
+        reportData.setDocumentName("TestDocument");
+        reportData.setHearingDateType(Constants.RANGE_HEARING_DATE_TYPE);
+        reportData.setListingDateFrom("2021-06-20");
+        reportData.setListingDateTo("2021-09-20");
+
+        var reportDetail = new HearingsToJudgmentsReportDetail();
+        reportDetail.setReportOffice("Newcastle");
+        reportDetail.setCaseReference("250003/2021");
+        reportDetail.setHearingDate("2021-07-03");
+        reportDetail.setJudgementDateSent("2021-08-03");
+        reportDetail.setTotalDays("30");
+        reportDetail.setReservedHearing("Yes");
+        reportDetail.setHearingJudge("judge one");
+        reportData.getReportDetails().add(reportDetail);
+
+        reportDetail = new HearingsToJudgmentsReportDetail();
+        reportDetail.setReportOffice("Newcastle");
+        reportDetail.setCaseReference("250004/2021");
+        reportDetail.setHearingDate("2021-08-03");
+        reportDetail.setJudgementDateSent("2021-09-03");
+        reportDetail.setTotalDays("31");
+        reportDetail.setReservedHearing("No");
+        reportDetail.setHearingJudge("judge two");
+        reportData.getReportDetails().add(reportDetail);
+
+        reportDetail = new HearingsToJudgmentsReportDetail();
+        reportDetail.setReportOffice("Newcastle");
+        reportDetail.setCaseReference("250005/2021");
+        reportDetail.setHearingDate("2021-09-03");
+        reportDetail.setJudgementDateSent("2021-10-04");
+        reportDetail.setTotalDays("32");
+        reportDetail.setReservedHearing("Yes");
+        reportDetail.setHearingJudge("judge three");
         reportData.getReportDetails().add(reportDetail);
 
         return reportData;
