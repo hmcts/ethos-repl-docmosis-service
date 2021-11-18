@@ -72,7 +72,7 @@ public class BFHelper {
 
             var dynamicFixedListType = new DynamicFixedListType();
             dynamicFixedListType.setListItems(Helper.getDefaultBfListItems());
-            dynamicFixedListType.setValue(Helper.getDynamicValue(BF_ACTION_ACAS));
+            dynamicFixedListType.setValue(DynamicListHelper.getDynamicValue(BF_ACTION_ACAS));
 
             var bfActionTypeItem = new BFActionTypeItem();
             var bfActionType = new BFActionType();

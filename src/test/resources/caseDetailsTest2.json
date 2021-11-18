@@ -90,6 +90,45 @@
       "part_2_Documents": "2.2A",
       "hearingNumber": "1"
     },
+    "restrictedReporting": {
+      "imposed": "No",
+      "rule503b": "No",
+      "startDate": "2021-07-15",
+      "excludedRegister": "No",
+      "deletedPhyRegister": "No",
+      "dynamicRequestedBy": {
+        "value": {
+          "code": "C: Anton Rodriguez",
+          "label": "Anton Rodriguez"
+        },
+        "list_items": [
+          {
+            "code": "R: Antonio Vazquez",
+            "label": "Antonio Vazquez"
+          },
+          {
+            "code": "C: Anton Rodriguez",
+            "label": "Anton Rodriguez"
+          },
+          {
+            "code": "Judge",
+            "label": "Judge"
+          },
+          {
+            "code": "Both Parties",
+            "label": "Both Parties"
+          },
+          {
+            "code": "Other",
+            "label": "Other"
+          },
+          {
+            "code": "None",
+            "label": "None"
+          }
+        ]
+      }
+    },
     "repCollection": [
       {
         "id" : "123345",

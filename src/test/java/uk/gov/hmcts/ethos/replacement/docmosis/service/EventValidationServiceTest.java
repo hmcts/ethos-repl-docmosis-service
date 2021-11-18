@@ -608,6 +608,15 @@ class EventValidationServiceTest {
     }
 
     @Test
+    void validateRestrictedBy() {
+        eventValidationService.validateRestrictedReportingNames(caseDetails2.getCaseData());
+        assertEquals("Claimant", caseDetails2.getCaseData().getRestrictedReporting().getRequestedBy());
+        eventValidationService.validateRestrictedReportingNames(caseDetails1.getCaseData());
+        assertEquals("Judge", caseDetails1.getCaseData().getRestrictedReporting().getRequestedBy());
+        eventValidationService.validateRestrictedReportingNames(caseDetails3.getCaseData());
+        assertEquals("Respondent", caseDetails3.getCaseData().getRestrictedReporting().getRequestedBy());
+    }
+
     void shouldReturnsNoErrorsForHearingHearingStatusValidationWithNoHearings() {
         List<String> errors = new ArrayList<>();
         var caseWithNoHearings = validHearingStatusCaseCloseEventCaseDetails.getCaseData();
