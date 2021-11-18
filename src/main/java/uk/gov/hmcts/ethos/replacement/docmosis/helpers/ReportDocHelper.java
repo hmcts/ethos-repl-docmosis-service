@@ -80,8 +80,10 @@ public class ReportDocHelper {
             if (listingData.getLocalReportsDetailHdr() != null) {
                 sb.append(REPORT_OFFICE).append(
                         nullCheck(listingData.getLocalReportsDetailHdr().getReportOffice())).append(NEW_LINE);
+            } else if (!CollectionUtils.isEmpty(listingData.getLocalReportsSummary())) {
+                sb.append("\"Report_Office\":\"").append(
+                        nullCheck(listingData.getLocalReportsSummary().get(0).getValue().getReportOffice())).append(NEW_LINE);
             }
-
             switch (listingData.getReportType()) {
                 case CLAIMS_ACCEPTED_REPORT:
                     sb.append(getCasesAcceptedReport(listingData));
