@@ -65,12 +65,48 @@
           "deposit_order_sent": null,
           "deposit_refund": null,
           "depositRefundedTo": "Respondent",
-          "depositOrderAgainst": "Respondent",
-          "deposit_requested_by": "Tribunal",
+          "depositOrderAgainst": "Claimant",
+          "deposit_requested_by": "Claimant",
           "dynamicDepositRefundedTo": {
             "value": {
               "code": "Dummy",
               "label": "Dummy"
+            },
+            "list_items": [
+              {
+                "code": "R: Antonio Vazquez",
+                "label": "Antonio Vazquez"
+              },
+              {
+                "code": "C: Anton Rodriguez",
+                "label": "Anton Rodriguez"
+              }
+            ]
+          },
+          "dynamicDepositRequestedBy": {
+            "value": {
+              "code": "C: Anton Rodriguez",
+              "label": "Anton Rodriguez"
+            },
+            "list_items": [
+              {
+                "code": "R: Antonio Vazquez",
+                "label": "Antonio Vazquez"
+              },
+              {
+                "code": "C: Anton Rodriguez",
+                "label": "Anton Rodriguez"
+              },
+              {
+                "code": "Tribunal",
+                "label": "Tribunal"
+              }
+            ]
+          },
+          "dynamicDepositOrderAgainst": {
+            "value": {
+              "code": "C: Anton Rodriguez",
+              "label": "Anton Rodriguez"
             },
             "list_items": [
               {
