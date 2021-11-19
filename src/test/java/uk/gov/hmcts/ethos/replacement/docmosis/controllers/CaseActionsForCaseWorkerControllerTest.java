@@ -97,6 +97,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String ABOUT_TO_START_DISPOSAL_URL = "/aboutToStartDisposal";
     private static final String DYNAMIC_RESPONDENT_REPRESENTATIVE_NAMES_URL = "/dynamicRespondentRepresentativeNames";
     private static final String DYNAMIC_RESTRICTED_REPORTING_URL = "/dynamicRestrictedReporting";
+    private static final String DYNAMIC_DEPOSIT_ORDER_URL = "/dynamicDepositOrder";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -722,6 +723,19 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void dynamicDepositOrderErrors() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        mvc.perform(post(DYNAMIC_DEPOSIT_ORDER_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
     public void dynamicRestrictedReportingErrors() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(DYNAMIC_RESTRICTED_REPORTING_URL)
@@ -998,6 +1012,15 @@ public class CaseActionsForCaseWorkerControllerTest {
     @Test
     public void dynamicRespondentRepresentativeNamesUrlError400() throws Exception {
         mvc.perform(post(DYNAMIC_RESPONDENT_REPRESENTATIVE_NAMES_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void dynamicDepositOrderError400() throws Exception {
+        mvc.perform(post(DYNAMIC_DEPOSIT_ORDER_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -1461,6 +1484,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void dynamicRespondentRepresentativeNamesUrlForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(DYNAMIC_RESPONDENT_REPRESENTATIVE_NAMES_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void dynamicDepositOrderUrlForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(DYNAMIC_DEPOSIT_ORDER_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

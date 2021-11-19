@@ -60,6 +60,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_TITLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESP_REP_NAME_MISMATCH_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.UNABLE_TO_FIND_PARTY;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRespondents;
 
 @Slf4j
@@ -352,9 +353,9 @@ public class EventValidationService {
         }
     }
 
-    public List<String> validateDepositRefunded(CaseData caseData) {
+    public List<String> validateDepositOrder(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        if (caseData.getDepositCollection() != null && !caseData.getDepositCollection().isEmpty()) {
+        if (!CollectionUtils.isEmpty(caseData.getDepositCollection())) {
 
             for (DepositTypeItem depositTypeItem : caseData.getDepositCollection()) {
                 if (!isNullOrEmpty(depositTypeItem.getValue().getDepositAmountRefunded())
@@ -362,6 +363,44 @@ public class EventValidationService {
                         || Integer.parseInt(depositTypeItem.getValue().getDepositAmountRefunded())
                         > Integer.parseInt(depositTypeItem.getValue().getDepositAmount()))) {
                     errors.add(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR);
+                }
+
+                if (depositTypeItem.getValue().getDynamicDepositOrderAgainst() != null) {
+                    var dynamicOrderAgainst = depositTypeItem.getValue().getDynamicDepositOrderAgainst()
+                            .getValue().getCode();
+                    if (dynamicOrderAgainst.startsWith("R:")) {
+                        depositTypeItem.getValue().setDepositOrderAgainst(RESPONDENT_TITLE);
+                    } else if (dynamicOrderAgainst.startsWith("C:")) {
+                        depositTypeItem.getValue().setDepositOrderAgainst(CLAIMANT_TITLE);
+                    } else {
+                        errors.add(UNABLE_TO_FIND_PARTY);
+                    }
+                }
+
+                if (depositTypeItem.getValue().getDynamicDepositRequestedBy() != null) {
+                    var dynamicRequestedBy = depositTypeItem.getValue().getDynamicDepositRequestedBy()
+                            .getValue().getCode();
+                    if (dynamicRequestedBy.startsWith("R:")) {
+                        depositTypeItem.getValue().setDepositRequestedBy(RESPONDENT_TITLE);
+                    } else if (dynamicRequestedBy.startsWith("C:")) {
+                        depositTypeItem.getValue().setDepositRequestedBy(CLAIMANT_TITLE);
+                    } else if (dynamicRequestedBy.equals("Tribunal")) {
+                        depositTypeItem.getValue().setDepositRequestedBy("Tribunal");
+                    } else {
+                        errors.add(UNABLE_TO_FIND_PARTY);
+                    }
+                }
+
+                if (depositTypeItem.getValue().getDynamicDepositRefundedTo() != null) {
+                    var dynamicRefundedTo = depositTypeItem.getValue().getDynamicDepositRefundedTo()
+                            .getValue().getCode();
+                    if (dynamicRefundedTo.startsWith("R: ")) {
+                        depositTypeItem.getValue().setDepositRefundedTo(RESPONDENT_TITLE);
+                    } else if (dynamicRefundedTo.startsWith("C: ")) {
+                        depositTypeItem.getValue().setDepositRefundedTo(CLAIMANT_TITLE);
+                    } else {
+                        errors.add(UNABLE_TO_FIND_PARTY);
+                    }
                 }
             }
         }

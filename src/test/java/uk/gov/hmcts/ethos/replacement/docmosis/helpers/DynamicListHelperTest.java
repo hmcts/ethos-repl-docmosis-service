@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicDepositOrder;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRespondentRepresentative;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRestrictedReporting;
 
@@ -90,6 +91,22 @@ public class DynamicListHelperTest {
         listItems.add(DynamicListHelper.getDynamicCodeLabel("C: " + caseDetails1.getCaseData().getClaimant(), caseDetails1.getCaseData().getClaimant()));
         var dynamicValue = DynamicListHelper.getDynamicValueType(caseDetails1.getCaseData(), listItems, "Respondent");
         assertEquals(dynamicValue, dynamicValueRespondent);
+    }
+
+    @Test
+    public void dynamicDepositOrder() {
+        DynamicDepositOrder.dynamicDepositOrder(caseDetails1.getCaseData());
+        assertNotNull(caseDetails1.getCaseData().getDepositCollection());
+        dynamicValueType.setCode("R: Antonio Vazquez");
+        dynamicValueType.setLabel("Antonio Vazquez");
+        assertEquals(dynamicValueType, caseDetails1.getCaseData().getDepositCollection().get(0)
+                .getValue().getDynamicDepositOrderAgainst().getValue());
+        assertEquals(dynamicValueType, caseDetails1.getCaseData().getDepositCollection().get(0)
+                .getValue().getDynamicDepositRefundedTo().getValue());
+        dynamicValueType.setCode("Tribunal");
+        dynamicValueType.setLabel("Tribunal");
+        assertEquals(dynamicValueType, caseDetails1.getCaseData().getDepositCollection().get(0)
+                .getValue().getDynamicDepositRequestedBy().getValue());
     }
 
 }

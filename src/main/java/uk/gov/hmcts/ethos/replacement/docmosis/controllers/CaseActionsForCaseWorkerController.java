@@ -19,6 +19,7 @@ import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicDepositOrder;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRespondentRepresentative;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRestrictedReporting;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.AddSingleCaseToMultipleService;
@@ -797,9 +798,31 @@ public class CaseActionsForCaseWorkerController {
         }
 
         var caseData =  ccdRequest.getCaseDetails().getCaseData();
-        List<String> errors = eventValidationService.validateDepositRefunded(caseData);
+        List<String> errors = eventValidationService.validateDepositOrder(caseData);
 
         return getCallbackRespEntityErrors(errors, caseData);
+    }
+
+    @PostMapping(value = "/dynamicDepositOrder", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the respondents names into a dynamic list")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> dynamicDepositOrder(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DYNAMIC DEPOSIT ORDER ---> " + LOG_MESSAGE
+                + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
+        DynamicDepositOrder.dynamicDepositOrder(caseData);
+        return getCallbackRespEntityNoErrors(caseData);
     }
 
     @PostMapping(value = "/dynamicListOffices", consumes = APPLICATION_JSON_VALUE)
