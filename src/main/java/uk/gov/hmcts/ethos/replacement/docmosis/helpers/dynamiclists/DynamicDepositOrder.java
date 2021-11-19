@@ -47,7 +47,10 @@ public class DynamicDepositOrder {
                 depositType.setDynamicDepositRequestedBy(listAll);
                 depositType.setDynamicDepositRefundedTo(listClaimantRespondent);
                 var depositTypeItem = new DepositTypeItem();
-                caseData.setDepositCollection(List.of(depositTypeItem));
+                depositTypeItem.setValue(depositType);
+                List<DepositTypeItem> depositTypeItems = new ArrayList<>();
+                depositTypeItems.add(depositTypeItem);
+                caseData.setDepositCollection(depositTypeItems);
             }
 
         }
