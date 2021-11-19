@@ -15,23 +15,23 @@ public class HearingsToJudgmentsReportData extends ListingData {
     // because the properties are not in the CCD config
 
     @JsonIgnore
-    private final HearingsToJudgmentsReportSummary hearingsToJudgmentsReportSummary;
+    private final HearingsToJudgmentsReportSummary reportSummary;
     @JsonIgnore
-    private final List<HearingsToJudgmentsReportDetail> hearingsToJudgmentsReportDetails = new ArrayList<>();
+    private final List<HearingsToJudgmentsReportDetail> reportDetails = new ArrayList<>();
 
     public HearingsToJudgmentsReportData(HearingsToJudgmentsReportSummary hearingsToJudgmentsReportSummary) {
-        this.hearingsToJudgmentsReportSummary = hearingsToJudgmentsReportSummary;
+        this.reportSummary = hearingsToJudgmentsReportSummary;
     }
 
-    public HearingsToJudgmentsReportSummary getHearingsToJudgmentsReportSummary() {
-        return hearingsToJudgmentsReportSummary;
+    public HearingsToJudgmentsReportSummary getReportSummary() {
+        return reportSummary;
     }
 
     public void addReportDetail(HearingsToJudgmentsReportDetail hearingsToJudgmentsReportDetail) {
-        hearingsToJudgmentsReportDetails.add(hearingsToJudgmentsReportDetail);
+        reportDetails.add(hearingsToJudgmentsReportDetail);
     }
 
     public List<HearingsToJudgmentsReportDetail> getReportDetails() {
-        return hearingsToJudgmentsReportDetails;
+        return reportDetails;
     }
 }

@@ -122,7 +122,7 @@ public class HearingsToJudgmentsReport {
             }
         }
 
-        addReportSummary(reportData.getHearingsToJudgmentsReportSummary(), allHearingsWithJudgments);
+        addReportSummary(reportData.getReportSummary(), allHearingsWithJudgments);
     }
 
     private void addReportSummary(HearingsToJudgmentsReportSummary hearingsToJudgmentsReportSummary,
