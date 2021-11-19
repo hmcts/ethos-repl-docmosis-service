@@ -27,8 +27,8 @@ public class HearingsToJudgmentsReportData extends ListingData {
         return reportSummary;
     }
 
-    public void addReportDetail(HearingsToJudgmentsReportDetail hearingsToJudgmentsReportDetail) {
-        reportDetails.add(hearingsToJudgmentsReportDetail);
+    public void addReportDetail(HearingsToJudgmentsReportDetail reportDetail) {
+        reportDetails.add(reportDetail);
     }
 
     public List<HearingsToJudgmentsReportDetail> getReportDetails() {

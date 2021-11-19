@@ -125,7 +125,7 @@ public class HearingsToJudgmentsReport {
         addReportSummary(reportData.getReportSummary(), allHearingsWithJudgments);
     }
 
-    private void addReportSummary(HearingsToJudgmentsReportSummary hearingsToJudgmentsReportSummary,
+    private void addReportSummary(HearingsToJudgmentsReportSummary reportSummary,
                                   List<HearingWithJudgment> hearings) {
         int totalCases = hearings.size();
         long totalCasesWithin4Weeks = hearings.stream().filter(h -> h.judgmentWithin4Weeks).count();
@@ -136,12 +136,12 @@ public class HearingsToJudgmentsReport {
         float totalCasesNotWithin4WeeksPercent = (totalCases != 0)
                 ? ((float) totalCasesNotWithin4Weeks / totalCases) * 100 : 0;
 
-        hearingsToJudgmentsReportSummary.setTotalCases(String.valueOf(totalCases));
-        hearingsToJudgmentsReportSummary.setTotal4Wk(String.valueOf(totalCasesWithin4Weeks));
-        hearingsToJudgmentsReportSummary.setTotalX4Wk(String.valueOf(totalCasesNotWithin4Weeks));
-        hearingsToJudgmentsReportSummary.setTotal4WkPercent(String.format(PERCENTAGE_FORMAT,
+        reportSummary.setTotalCases(String.valueOf(totalCases));
+        reportSummary.setTotal4Wk(String.valueOf(totalCasesWithin4Weeks));
+        reportSummary.setTotalX4Wk(String.valueOf(totalCasesNotWithin4Weeks));
+        reportSummary.setTotal4WkPercent(String.format(PERCENTAGE_FORMAT,
                 totalCasesWithin4WeeksPercent));
-        hearingsToJudgmentsReportSummary.setTotalX4WkPercent(String.format(PERCENTAGE_FORMAT,
+        reportSummary.setTotalX4WkPercent(String.format(PERCENTAGE_FORMAT,
                 totalCasesNotWithin4WeeksPercent));
     }
 
