@@ -126,7 +126,7 @@ public class MultipleBatchUpdate3Service {
 
             if (respondentSumTypeItemOptional.isPresent() && CollectionUtils.isNotEmpty(caseData.getRepCollection())) {
                 List<RepresentedTypeRItem> toBeRemoved = caseData.getRepCollection().stream().filter(
-                        a -> a.getValue().getRespRepName().equals(representedType.getRespRepName()))
+                    a -> a.getValue().getRespRepName().equals(representedType.getRespRepName()))
                         .collect(Collectors.toList());
                 if (CollectionUtils.isNotEmpty(toBeRemoved)) {
                     log.info("Respondent representatives to be removed are: " + toBeRemoved.size());

@@ -97,6 +97,14 @@
       "representative_preference": "Post",
       "representative_reference": "1111111"
     },
+    "restrictedReporting": {
+      "imposed": "No",
+      "rule503b": "No",
+      "startDate": "2021-07-15",
+      "requestedBy": "Judge",
+      "excludedRegister": "No",
+      "deletedPhyRegister": "No"
+    },
     "locationType": "Manchester",
     "multipleReference": "No",
     "positionType": "First",

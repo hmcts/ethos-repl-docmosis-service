@@ -40,7 +40,7 @@ jacocoTestCoverageVerification {
 }
 
 checkstyle {
-    maxWarnings = 501
+    maxWarnings = 5
     sourceSets = [project.sourceSets.main]
     toolVersion = '8.29'
 }
@@ -115,7 +115,6 @@ task functional(type: Test, description: 'Runs the functional tests.', group: 'V
     }
 
     systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
-
     maxHeapSize = '1G'
 }
 
@@ -195,7 +194,8 @@ def versions = [
 
 dependencies {
 
-    implementation 'com.github.hmcts:ecm-common:0.1.147'
+    implementation 'com.github.hmcts:ecm-common:0.1.154'
+
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'

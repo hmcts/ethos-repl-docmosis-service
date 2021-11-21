@@ -40,11 +40,12 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleH
 public class ListingHelper {
 
     private static final String ROOM_NOT_ALLOCATED = "* Not Allocated";
+    private static final String NO_DOCUMENT_FOUND = "No document found";
     private static final int NUMBER_CHAR_PARSING_DATE = 20;
     private static final String LISTING_NEWLINE = "\"listing\":[\n";
     static final List<String> REPORTS = Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
         LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT, TIME_TO_FIRST_HEARING_REPORT,
-        SERVING_CLAIMS_REPORT, HEARINGS_BY_HEARING_TYPE_REPORT);
+        SERVING_CLAIMS_REPORT, CASE_SOURCE_LOCAL_REPORT, HEARINGS_TO_JUDGEMENTS_REPORT, HEARINGS_BY_HEARING_TYPE_REPORT);
 
     private ListingHelper() {
     }
@@ -383,7 +384,7 @@ public class ListingHelper {
     }
 
     private static StringBuilder getServedClaimsReportPeriod(ListingData listingData) {
-        String listedDate = "";
+        String listedDate;
         var sb = new StringBuilder();
 
         if (listingData.getListingDateFrom() != null && listingData.getListingDateTo() != null) {
@@ -579,58 +580,12 @@ public class ListingHelper {
     }
 
     public static String getListingDocName(ListingData listingData) {
-        String roomOrNoRoom = !isNullOrEmpty(listingData.getRoomOrNoRoom()) ? listingData.getRoomOrNoRoom() : "";
         if (listingData.getHearingDocType() != null) {
-            if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
-                    && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)
-                    && roomOrNoRoom.equals(NO)) {
-                return STAFF_CASE_CAUSE_LIST_TEMPLATE;
-            } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
-                    && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)
-                    && roomOrNoRoom.equals(YES)) {
-                return STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE;
-            } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
-                    && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC)
-                    && roomOrNoRoom.equals(NO)) {
-                return PUBLIC_CASE_CAUSE_LIST_TEMPLATE;
-            } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
-                    && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC)
-                    && roomOrNoRoom.equals(YES)) {
-                return PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE;
-            } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
-                    && listingData.getHearingDocETCL().equals(HEARING_ETCL_PRESS_LIST)
-                    && listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
-                return PRESS_LIST_CAUSE_LIST_RANGE_TEMPLATE;
-            } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
-                    && listingData.getHearingDocETCL().equals(HEARING_ETCL_PRESS_LIST)
-                    && !listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
-                return PRESS_LIST_CAUSE_LIST_SINGLE_TEMPLATE;
-            } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT56)) {
-                return IT56_TEMPLATE;
-            } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT57)) {
-                return IT57_TEMPLATE;
-            }
+            return getHearingDocTemplateName(listingData);
         } else if (listingData.getReportType() != null) {
-            switch (listingData.getReportType()) {
-                case BROUGHT_FORWARD_REPORT:
-                    return "EM-TRB-SCO-ENG-00218";
-                case CLAIMS_ACCEPTED_REPORT:
-                    return "EM-TRB-SCO-ENG-00219";
-                case LIVE_CASELOAD_REPORT:
-                    return "EM-TRB-SCO-ENG-00220";
-                case CASES_COMPLETED_REPORT:
-                    return "EM-TRB-SCO-ENG-00221";
-                case CASES_AWAITING_JUDGMENT_REPORT:
-                    return "EM-TRB-SCO-ENG-00749";
-                case TIME_TO_FIRST_HEARING_REPORT:
-                    return "EM-TRB-SCO-ENG-00751";
-                case SERVING_CLAIMS_REPORT:
-                    return "EM-TRB-SCO-ENG-00780";
-                default:
-                    return "No document found";
-            }
+            return getReportDocTemplateName(listingData.getReportType());
         }
-        return "No document found";
+        return NO_DOCUMENT_FOUND;
     }
 
     public static Map<String, String> createMap(String key, String value) {
@@ -687,21 +642,22 @@ public class ListingHelper {
     }
 
     public static String getVenueFromDateListedType(DateListedType dateListedType) {
-        if (dateListedType.getHearingVenueDay() != null) {
-            switch (dateListedType.getHearingVenueDay()) {
-                case GLASGOW_OFFICE:
-                    return dateListedType.getHearingGlasgow() != null ? dateListedType.getHearingGlasgow() : " ";
-                case DUNDEE_OFFICE:
-                    return dateListedType.getHearingDundee() != null ? dateListedType.getHearingDundee() : " ";
-                case EDINBURGH_OFFICE:
-                    return dateListedType.getHearingEdinburgh() != null ? dateListedType.getHearingEdinburgh() : " ";
-                case ABERDEEN_OFFICE:
-                    return dateListedType.getHearingAberdeen() != null ? dateListedType.getHearingAberdeen() : " ";
-                default:
-                    return dateListedType.getHearingVenueDay() != null ? dateListedType.getHearingVenueDay() : " ";
-            }
+        if (dateListedType.getHearingVenueDay() == null) {
+            return " ";
         }
-        return " ";
+
+        switch (dateListedType.getHearingVenueDay()) {
+            case GLASGOW_OFFICE:
+                return dateListedType.getHearingGlasgow() != null ? dateListedType.getHearingGlasgow() : " ";
+            case DUNDEE_OFFICE:
+                return dateListedType.getHearingDundee() != null ? dateListedType.getHearingDundee() : " ";
+            case EDINBURGH_OFFICE:
+                return dateListedType.getHearingEdinburgh() != null ? dateListedType.getHearingEdinburgh() : " ";
+            case ABERDEEN_OFFICE:
+                return dateListedType.getHearingAberdeen() != null ? dateListedType.getHearingAberdeen() : " ";
+            default:
+                return dateListedType.getHearingVenueDay() != null ? dateListedType.getHearingVenueDay() : " ";
+        }
     }
 
     private static String getRespOthersName(CaseData caseData) {
@@ -814,6 +770,65 @@ public class ListingHelper {
 
     public static boolean isReportType(String reportType) {
         return REPORTS.contains(reportType);
+    }
+
+    private static String getReportDocTemplateName(String reportType) {
+        switch (reportType) {
+            case BROUGHT_FORWARD_REPORT:
+                return "EM-TRB-SCO-ENG-00218";
+            case CLAIMS_ACCEPTED_REPORT:
+                return "EM-TRB-SCO-ENG-00219";
+            case LIVE_CASELOAD_REPORT:
+                return "EM-TRB-SCO-ENG-00220";
+            case CASES_COMPLETED_REPORT:
+                return "EM-TRB-SCO-ENG-00221";
+            case CASES_AWAITING_JUDGMENT_REPORT:
+                return "EM-TRB-SCO-ENG-00749";
+            case TIME_TO_FIRST_HEARING_REPORT:
+                return "EM-TRB-SCO-ENG-00751";
+            case SERVING_CLAIMS_REPORT:
+                return "EM-TRB-SCO-ENG-00781";
+            case CASE_SOURCE_LOCAL_REPORT:
+                return "EM-TRB-SCO-ENG-00783";
+            case HEARINGS_TO_JUDGEMENTS_REPORT:
+                return "EM-TRB-SCO-ENG-00790";
+            default:
+                return NO_DOCUMENT_FOUND;
+        }
+    }
+
+    private static String getHearingDocTemplateName(ListingData listingData) {
+        String roomOrNoRoom = !isNullOrEmpty(listingData.getRoomOrNoRoom()) ? listingData.getRoomOrNoRoom() : "";
+        if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)
+                && roomOrNoRoom.equals(NO)) {
+            return STAFF_CASE_CAUSE_LIST_TEMPLATE;
+        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                && listingData.getHearingDocETCL().equals(HEARING_ETCL_STAFF)
+                && roomOrNoRoom.equals(YES)) {
+            return STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE;
+        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC)
+                && roomOrNoRoom.equals(NO)) {
+            return PUBLIC_CASE_CAUSE_LIST_TEMPLATE;
+        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                && listingData.getHearingDocETCL().equals(HEARING_ETCL_PUBLIC)
+                && roomOrNoRoom.equals(YES)) {
+            return PUBLIC_CASE_CAUSE_LIST_ROOM_TEMPLATE;
+        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                && listingData.getHearingDocETCL().equals(HEARING_ETCL_PRESS_LIST)
+                && listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
+            return PRESS_LIST_CAUSE_LIST_RANGE_TEMPLATE;
+        } else if (listingData.getHearingDocType().equals(HEARING_DOC_ETCL)
+                && listingData.getHearingDocETCL().equals(HEARING_ETCL_PRESS_LIST)
+                && !listingData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
+            return PRESS_LIST_CAUSE_LIST_SINGLE_TEMPLATE;
+        } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT56)) {
+            return IT56_TEMPLATE;
+        } else if (listingData.getHearingDocType().equals(HEARING_DOC_IT57)) {
+            return IT57_TEMPLATE;
+        }
+        return NO_DOCUMENT_FOUND;
     }
 }
 
