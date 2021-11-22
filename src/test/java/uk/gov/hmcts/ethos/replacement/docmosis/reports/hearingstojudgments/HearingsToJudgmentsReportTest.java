@@ -313,7 +313,7 @@ class HearingsToJudgmentsReportTest {
 
         var reportData = hearingsToJudgmentsReport.runReport(SCOTLAND_LISTING_CASE_TYPE_ID);
         assertNotNull(reportData);
-        assertEquals(SCOTLAND_CASE_TYPE_ID, reportData.getHearingsToJudgmentsReportSummary().getOffice());
+        assertEquals(SCOTLAND_CASE_TYPE_ID, reportData.getReportSummary().getOffice());
         assertEquals(1, reportData.getReportDetails().size());
 
         var reportDetail = reportData.getReportDetails().get(0);
@@ -336,12 +336,12 @@ class HearingsToJudgmentsReportTest {
 
         var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
-        assertEquals("4", reportData.getHearingsToJudgmentsReportSummary().getTotalCases());
+        assertEquals("4", reportData.getReportSummary().getTotalCases());
         assertEquals(1, reportData.getReportDetails().size());
-        assertEquals("3", reportData.getHearingsToJudgmentsReportSummary().getTotal4Wk());
-        assertEquals("75.00", reportData.getHearingsToJudgmentsReportSummary().getTotal4WkPercent());
-        assertEquals("1", reportData.getHearingsToJudgmentsReportSummary().getTotalX4Wk());
-        assertEquals("25.00", reportData.getHearingsToJudgmentsReportSummary().getTotalX4WkPercent());
+        assertEquals("3", reportData.getReportSummary().getTotal4Wk());
+        assertEquals("75.00", reportData.getReportSummary().getTotal4WkPercent());
+        assertEquals("1", reportData.getReportSummary().getTotalX4Wk());
+        assertEquals("25.00", reportData.getReportSummary().getTotalX4WkPercent());
     }
 
     @ParameterizedTest
@@ -442,6 +442,6 @@ class HearingsToJudgmentsReportTest {
 
     private void assertCommonValues(HearingsToJudgmentsReportData reportData) {
         assertNotNull(reportData);
-        assertEquals("Newcastle", reportData.getHearingsToJudgmentsReportSummary().getOffice());
+        assertEquals("Newcastle", reportData.getReportSummary().getOffice());
     }
 }

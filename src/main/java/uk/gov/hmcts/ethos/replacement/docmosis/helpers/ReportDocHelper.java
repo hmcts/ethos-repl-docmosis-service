@@ -81,7 +81,7 @@ public class ReportDocHelper {
                 sb.append(REPORT_OFFICE).append(
                         nullCheck(listingData.getLocalReportsDetailHdr().getReportOffice())).append(NEW_LINE);
             } else if (!CollectionUtils.isEmpty(listingData.getLocalReportsSummary())) {
-                sb.append("\"Report_Office\":\"").append(
+                sb.append(REPORT_OFFICE).append(
                         nullCheck(listingData.getLocalReportsSummary().get(0).getValue().getReportOffice())).append(NEW_LINE);
             }
             switch (listingData.getReportType()) {
@@ -574,17 +574,17 @@ public class ReportDocHelper {
         var reportData = (HearingsToJudgmentsReportData) listingData;
 
         var sb = new StringBuilder();
-        sb.append(REPORT_OFFICE).append(reportData.getHearingsToJudgmentsReportSummary().getOffice()).append(NEW_LINE);
+        sb.append(REPORT_OFFICE).append(reportData.getReportSummary().getOffice()).append(NEW_LINE);
         sb.append("\"Total_Cases\":\"").append(
-                nullCheck(reportData.getHearingsToJudgmentsReportSummary().getTotalCases())).append(NEW_LINE);
+                nullCheck(reportData.getReportSummary().getTotalCases())).append(NEW_LINE);
         sb.append("\"Total_Within_4Weeks\":\"").append(
-                nullCheck(reportData.getHearingsToJudgmentsReportSummary().getTotal4Wk())).append(NEW_LINE);
+                nullCheck(reportData.getReportSummary().getTotal4Wk())).append(NEW_LINE);
         sb.append("\"Total_Percent_Within_4Weeks\":\"").append(
-                nullCheck(reportData.getHearingsToJudgmentsReportSummary().getTotal4WkPercent())).append(NEW_LINE);
+                nullCheck(reportData.getReportSummary().getTotal4WkPercent())).append(NEW_LINE);
         sb.append("\"Total_Not_Within_4Weeks\":\"").append(
-                nullCheck(reportData.getHearingsToJudgmentsReportSummary().getTotalX4Wk())).append(NEW_LINE);
+                nullCheck(reportData.getReportSummary().getTotalX4Wk())).append(NEW_LINE);
         sb.append("\"Total_Percent_Not_Within_4Weeks\":\"").append(
-                nullCheck(reportData.getHearingsToJudgmentsReportSummary().getTotalX4WkPercent())).append(NEW_LINE);
+                nullCheck(reportData.getReportSummary().getTotalX4WkPercent())).append(NEW_LINE);
         addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
         return sb;
     }
