@@ -39,7 +39,9 @@ public class DynamicDepositOrder {
                 for (DepositTypeItem depositTypeItem : depositCollection) {
                     dynamicOrderAgainst(caseData, depositTypeItem.getValue(), listClaimantRespondent);
                     dynamicRequestedBy(caseData, depositTypeItem.getValue(), listAll);
-                    dynamicRefundedTo(caseData, depositTypeItem.getValue(), listClaimantRespondent);
+                    if (!isNullOrEmpty(depositTypeItem.getValue().getDepositRefund())) {
+                        dynamicRefundedTo(caseData, depositTypeItem.getValue(), listClaimantRespondent);
+                    }
                 }
             } else {
                 var depositType = new DepositType();
