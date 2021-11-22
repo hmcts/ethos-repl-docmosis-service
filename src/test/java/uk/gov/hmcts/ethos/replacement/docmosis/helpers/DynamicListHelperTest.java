@@ -107,4 +107,14 @@ public class DynamicListHelperTest {
                 .getValue().getDynamicDepositRequestedBy().getValue());
     }
 
+    @Test
+    public void dynamicDepositRefund() {
+        caseDetails1.getCaseData().getDepositCollection().get(0).getValue().setDepositRefund("Yes");
+        DynamicDepositOrder.dynamicDepositOrder(caseDetails1.getCaseData());
+        dynamicValueType.setCode("R: Antonio Vazquez");
+        dynamicValueType.setLabel("Antonio Vazquez");
+        assertEquals(dynamicValueType, caseDetails1.getCaseData().getDepositCollection().get(0)
+                .getValue().getDynamicDepositRefundedTo().getValue());
+    }
+
 }
