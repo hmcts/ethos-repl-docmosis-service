@@ -1,9 +1,9 @@
 'use strict';
 
-const testConfig = require('src/test/config');
+const testConfig = require('../../../config');
 const createCaseConfig = require('./createCaseConfig');
 const randomstring = require('randomstring');
-const commonConfig = require('src/test/end-to-end/pages/common/commonConfig');
+const commonConfig = require('../../pages/common/commonConfig');
 
 module.exports = function() {
     const I = this;

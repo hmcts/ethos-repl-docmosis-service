@@ -1,11 +1,11 @@
-const config = require('src/test/config.js');
+const config = require('../config');
 
 exports.config = {
     'tests': config.TestPathToRun,
     'output': `${process.cwd()}/${config.TestOutputDir}`,
     'helpers': {
         'Puppeteer': {
-            'url': config.TestFrontendUrl,
+            'url': config.TestUrl,
             'waitForTimeout': 60000,
             'getPageTimeout': 20000,
             'waitForAction': 1000,
@@ -50,11 +50,12 @@ exports.config = {
                 options: {mochaFile: './functional-output/result.xml'}
             },
             mochawesome: {
-                stdout: './functional-output/console.log',
+                stdout: './functional-output/ecm-e2e-mochawesome-stdout.log',
                 options: {
                     reportDir: config.TestOutputDir || './functional-output',
-                    reportName: 'index',
-                    inlineAssets: true
+                    reportFilename: 'ecm-e2e-result',
+                    inlineAssets: true,
+                    reportTitle: `ECM E2E tests result`
                 }
             }
         }

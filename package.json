@@ -6,17 +6,11 @@
   "engines": {
     "node": ">=12.15.0"
   },
-  "scripts": {
-    "lint": "NODE_PATH=. eslint .",
-    "eslint": "NODE_PATH=. eslint .",
-    "test-smoke": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run -c ./src/test/end-to-end/ --grep @smoke --steps --reporter mocha-multi",
-    "test-e2e": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run -c ./src/test/end-to-end/ --grep @e2e --steps --reporter mocha-multi",
-    "test-crossbrowser-e2e": "NODE_PATH=. codeceptjs run -c src/test/end-to-end/saucelabs.conf.js --steps",
-    "test:fullfunctional": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run-multiple parallel -c ./src/test/end-to-end/ --steps --reporter mochawesome"
-  },
   "dependencies": {
+    "@hmcts/nodejs-logging": "^3.0.0",
     "randomstring": "^1.1.5",
-    "require-directory": "^2.1.1"
+    "require-directory": "^2.1.1",
+    "request-promise-native": "^1.0.9"
   },
   "devDependencies": {
     "codeceptjs": "^3.0.7",

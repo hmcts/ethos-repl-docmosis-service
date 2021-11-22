@@ -9,8 +9,25 @@ def product = "ethos"
 def component = "repl-docmosis-backend"
 def branchesToSync = ['demo', 'perftest']
 
+def secrets = [
+        'ethos-${env}': [
+                secret('ccd-user-email', 'CCD_CASEWORKER_E2E_EMAIL'),
+                secret('ccd-user-password', 'CCD_CASEWORKER_E2E_PASSWORD')
+        ]
+]
+
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+  [ $class: 'AzureKeyVaultSecret',
+    secretType: 'Secret',
+    name: secretName,
+    version: '',
+    envVariable: envVar
+  ]
+}
+
 withPipeline(type, product, component) {
   env.PACT_BROKER_FULL_URL = 'https://pact-broker.platform.hmcts.net'
+  loadVaultSecrets(secrets)
   enableAksStagingDeployment()
   onMaster {
     disableLegacyDeployment()
@@ -33,7 +50,29 @@ withPipeline(type, product, component) {
   syncBranchesWithMaster(branchesToSync)
   enableSlackNotifications('#ethos-repl-service')
 
-  after('functional') {
-    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+  after('smoketest:aat') {
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
+
+    publishHTML target: [
+            allowMissing : true,
+            alwaysLinkToLastBuild: true,
+            keepAll : true,
+            reportDir : "functional-output",
+            reportFiles : "ecm-e2e-result.html",
+            reportName : "ECM CCD smoke tests result"
+    ]
+  }
+
+  after('functionalTest:aat') {
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
+
+    publishHTML target: [
+            allowMissing : true,
+            alwaysLinkToLastBuild: true,
+            keepAll : true,
+            reportDir : "functional-output",
+            reportFiles : "ecm-e2e-result.html",
+            reportName : "ECM E2E functional tests result"
+    ]
   }
 }
