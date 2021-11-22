@@ -1,0 +1,22 @@
+{
+"accessKey":"",
+"templateName":"EM-TRB-SCO-ENG-00790.docx",
+"outputName":"document.docx",
+"data":{
+"Listed_date_from":"20 June 2021",
+"Listed_date_to":"20 September 2021",
+"Report_Office":"Newcastle",
+"Total_Cases":"5",
+"Total_Within_4Weeks":"2",
+"Total_Percent_Within_4Weeks":"40.00",
+"Total_Not_Within_4Weeks":"3",
+"Total_Percent_Not_Within_4Weeks":"60.00",
+"reportDetails":[
+{"reportOffice":"Newcastle","caseReference":"250003/2021","hearingDate":"2021-07-03","judgementDateSent":"2021-08-03","totalDays":"30","reservedHearing":"Yes","hearingJudge":"judge one"},
+{"reportOffice":"Newcastle","caseReference":"250004/2021","hearingDate":"2021-08-03","judgementDateSent":"2021-09-03","totalDays":"31","reservedHearing":"No","hearingJudge":"judge two"},
+{"reportOffice":"Newcastle","caseReference":"250005/2021","hearingDate":"2021-09-03","judgementDateSent":"2021-10-04","totalDays":"32","reservedHearing":"Yes","hearingJudge":"judge three"}
+],
+"Report_Clerk":"Mike Jordan",
+"Today_date":"replace-with-current-date"
+}
+}

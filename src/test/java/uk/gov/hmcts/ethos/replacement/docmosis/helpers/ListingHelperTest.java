@@ -1271,6 +1271,14 @@ public class ListingHelperTest {
         assertEquals("EM-TRB-SCO-ENG-00221", ListingHelper.getListingDocName(listingData));
         listingData.setReportType(CASES_AWAITING_JUDGMENT_REPORT);
         assertEquals("EM-TRB-SCO-ENG-00749", ListingHelper.getListingDocName(listingData));
+        listingData.setReportType(TIME_TO_FIRST_HEARING_REPORT);
+        assertEquals("EM-TRB-SCO-ENG-00751", ListingHelper.getListingDocName(listingData));
+        listingData.setReportType(SERVING_CLAIMS_REPORT);
+        assertEquals("EM-TRB-SCO-ENG-00781", ListingHelper.getListingDocName(listingData));
+        listingData.setReportType(CASE_SOURCE_LOCAL_REPORT);
+        assertEquals("EM-TRB-SCO-ENG-00783", ListingHelper.getListingDocName(listingData));
+        listingData.setReportType(HEARINGS_TO_JUDGEMENTS_REPORT);
+        assertEquals("EM-TRB-SCO-ENG-00790", ListingHelper.getListingDocName(listingData));
         listingData.setReportType("");
         assertEquals("No document found", ListingHelper.getListingDocName(listingData));
     }
