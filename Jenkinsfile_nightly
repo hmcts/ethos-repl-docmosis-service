@@ -18,7 +18,7 @@ def product = "ethos"
 def component = "repl-docmosis-backend"
 
 def secrets = [
-        'ethos-${params.ENVIRONMENT}': [
+        "ethos-${params.ENVIRONMENT}": [
                 secret('ccd-user-email', 'CCD_CASEWORKER_E2E_EMAIL'),
                 secret('ccd-user-password', 'CCD_CASEWORKER_E2E_PASSWORD')
         ]
