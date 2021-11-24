@@ -48,7 +48,31 @@
     "correspondenceScotType": {
       "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-00044",
       "part_3_Scot_Documents": "34",
-      "hearingNumber": "1"
+      "hearingNumber": "1",
+      "dynamicHearingNumber": {
+        "value": {
+          "code": "1",
+          "label": "1 - Aberdeen - 01 Nov 2019"
+        },
+        "list_items": [
+          {
+            "code": "1",
+            "label": "1 - Aberdeen - 01 Nov 2019"
+          },
+          {
+            "code": "2",
+            "label": "2 - Glasgow - 01 Nov 2019"
+          },
+          {
+            "code": "3",
+            "label": "3 - Edinburgh - 01 Nov 2019"
+          },
+          {
+            "code": "4",
+            "label": "4 - Dundee - 01 Nov 2019"
+          }
+        ]
+      }
     },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",

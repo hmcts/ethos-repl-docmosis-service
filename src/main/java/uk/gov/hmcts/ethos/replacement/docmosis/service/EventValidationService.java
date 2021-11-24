@@ -163,7 +163,7 @@ public class EventValidationService {
         String correspondenceHearingNumber = DocumentHelper.getCorrespondenceHearingNumber(
                 correspondenceType, correspondenceScotType);
         if (correspondenceHearingNumber != null) {
-            if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
+            if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
                 var hearingType = DocumentHelper.getHearingByNumber(
                         caseData.getHearingCollection(), correspondenceHearingNumber);
                 if (hearingType.getHearingNumber() == null
