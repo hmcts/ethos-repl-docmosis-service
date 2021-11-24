@@ -391,7 +391,8 @@ public class EventValidationService {
                     }
                 }
 
-                if (depositTypeItem.getValue().getDynamicDepositRefundedTo() != null) {
+                if (!isNullOrEmpty(depositTypeItem.getValue().getDepositRefund())
+                        && depositTypeItem.getValue().getDynamicDepositRefundedTo() != null) {
                     var dynamicRefundedTo = depositTypeItem.getValue().getDynamicDepositRefundedTo()
                             .getValue().getCode();
                     if (dynamicRefundedTo.startsWith("R: ")) {
