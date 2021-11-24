@@ -3,6 +3,7 @@ const requestModule = require('request-promise-native');
 const request = requestModule.defaults();
 const testConfig = require('../../config.js');
 const logger = Logger.getLogger('helpers/idamApi.js');
+const env = testConfig.TestEnv;
 
 async function getUserToken() {
     logger.info('Getting User Token');
