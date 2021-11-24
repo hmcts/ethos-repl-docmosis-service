@@ -6,22 +6,26 @@ import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicDepositOrder;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicLetters;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRespondentRepresentative;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRestrictedReporting;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class DynamicListHelperTest {
 
     private CaseDetails caseDetails1;
     private CaseDetails caseDetails4;
     private CaseDetails caseDetails6;
+    private CaseDetails caseDetailsScotTest1;
     private DynamicValueType dynamicValueType;
 
     @Before
@@ -29,6 +33,7 @@ public class DynamicListHelperTest {
         caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
         caseDetails4 = generateCaseDetails("caseDetailsTest4.json");
         caseDetails6 = generateCaseDetails("caseDetailsTest6.json");
+        caseDetailsScotTest1 = generateCaseDetails("caseDetailsScotTest1.json");
         dynamicValueType = new DynamicValueType();
     }
 
@@ -115,6 +120,35 @@ public class DynamicListHelperTest {
         dynamicValueType.setLabel("Antonio Vazquez");
         assertEquals(dynamicValueType, caseDetails1.getCaseData().getDepositCollection().get(0)
                 .getValue().getDynamicDepositRefundedTo().getValue());
+    }
+
+    @Test
+    public void dynamicHearingList() {
+        List<DynamicValueType> dynamicHearingList = DynamicListHelper.createDynamicHearingList(caseDetails1.getCaseData());
+        dynamicValueType.setCode("1");
+        dynamicValueType.setLabel("1 - Single - Manchester - 01 Nov 2019");
+        assertEquals(dynamicValueType, dynamicHearingList.get(0));
+        dynamicValueType.setCode("2");
+        dynamicValueType.setLabel("2 - Single - Manchester - 25 Nov 2019");
+        assertEquals(dynamicValueType, dynamicHearingList.get(1));
+    }
+
+    @Test
+    public void dynamicLettersEngWales() {
+        DynamicLetters.dynamicLetters(caseDetails1.getCaseData(), "Manchester");
+        dynamicValueType.setCode("1");
+        dynamicValueType.setLabel("1 - Single - Manchester - 01 Nov 2019");
+        assertEquals(dynamicValueType, caseDetails1.getCaseData().getCorrespondenceType().getDynamicHearingNumber().getListItems().get(0));
+        assertNull(caseDetails1.getCaseData().getCorrespondenceScotType());
+    }
+
+    @Test
+    public void dynamicLettersScotland() {
+        DynamicLetters.dynamicLetters(caseDetailsScotTest1.getCaseData(), "Scotland");
+        dynamicValueType.setCode("1");
+        dynamicValueType.setLabel("1 - Single - Glasgow - 25 Nov 2019");
+        assertEquals(dynamicValueType, caseDetailsScotTest1.getCaseData().getCorrespondenceScotType().getDynamicHearingNumber().getListItems().get(0));
+        assertNull(caseDetailsScotTest1.getCaseData().getCorrespondenceType());
     }
 
 }
