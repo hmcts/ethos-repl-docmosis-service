@@ -51,6 +51,7 @@ public class DocumentGenerationControllerTest {
     private static final String MID_VALIDATE_ADDRESS_LABELS_URL = "/midValidateAddressLabels";
     private static final String GEN_DOC_URL = "/generateDocument";
     private static final String GEN_DOC_CONFIRMATION_URL = "/generateDocumentConfirmation";
+    private static final String DYNAMIC_LETTERS = "/dynamicLetters";
     private static final String DOC_NAME = "doc_name";
 
     @Autowired
@@ -323,6 +324,25 @@ public class DocumentGenerationControllerTest {
     public void generateDocumentConfirmationForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(GEN_DOC_CONFIRMATION_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void dynamicLettersError400() throws Exception {
+        mvc.perform(post(DYNAMIC_LETTERS)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void dynamicLettersForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(DYNAMIC_LETTERS)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
