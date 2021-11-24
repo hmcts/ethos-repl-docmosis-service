@@ -15,9 +15,12 @@ exports.config = {
                 'ignoreHTTPSErrors': true,
                 'ignore-certificate-errors': true,
                 args: [
-                    '--headless', '--disable-gpu', '--no-sandbox', '--allow-running-insecure-content', '--ignore-certificate-errors',
-                    //'--proxy-server=proxyout.reform.hmcts.net:8080',
-                    //'--proxy-bypass-list=*beta*LB.reform.hmcts.net'
+                    '--headless',
+                    '--disable-gpu',
+                    '--no-sandbox',
+                    '--allow-running-insecure-content',
+                    '--ignore-certificate-errors',
+                    '--window-size=1440,1400'
                 ]
             },
         },
@@ -66,5 +69,5 @@ exports.config = {
             browsers: ['chrome']
         }
     },
-    'name': 'Caveat E2E Tests'
+    'name': 'ecm-ccd-e2e-tests'
 };
