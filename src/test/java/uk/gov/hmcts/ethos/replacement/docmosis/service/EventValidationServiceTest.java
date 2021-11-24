@@ -8,7 +8,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
@@ -529,7 +528,7 @@ class EventValidationServiceTest {
 
     @Test
     void shouldValidateDepositRefunded() {
-        List<String> errors = eventValidationService.validateDepositOrder(caseDetails3.getCaseData());
+        List<String> errors = DepositOrderValidationService.validateDepositOrder(caseDetails3.getCaseData());
 
         assertEquals(1, errors.size());
         assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.get(0));
@@ -537,14 +536,14 @@ class EventValidationServiceTest {
 
     @Test
     void shouldValidateNullDepositRefunded() {
-        List<String> errors = eventValidationService.validateDepositOrder(caseDetails2.getCaseData());
+        List<String> errors = DepositOrderValidationService.validateDepositOrder(caseDetails2.getCaseData());
 
         assertEquals(0, errors.size());
     }
 
     @Test
     void shouldValidateDepositRefundedWithNullAmount() {
-        List<String> errors = eventValidationService.validateDepositOrder(caseDetails1.getCaseData());
+        List<String> errors = DepositOrderValidationService.validateDepositOrder(caseDetails1.getCaseData());
 
         assertEquals(1, errors.size());
         assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.get(0));
@@ -676,7 +675,7 @@ class EventValidationServiceTest {
         var caseData = caseDetails1.getCaseData();
         caseData.getDepositCollection().get(0).getValue().setDepositAmount("300");
         DynamicDepositOrder.dynamicDepositOrder(caseData);
-        List<String> errors = eventValidationService.validateDepositOrder(caseData);
+        List<String> errors = DepositOrderValidationService.validateDepositOrder(caseData);
         assertEquals(0, errors.size());
         assertEquals("Tribunal", caseDetails1.getCaseData().getDepositCollection().get(0).getValue().getDepositRequestedBy());
     }
@@ -684,7 +683,7 @@ class EventValidationServiceTest {
     @Test
     void shouldReturnErrorForDepositValidation() {
         var caseData = caseDetails5.getCaseData();
-        List<String> errors = eventValidationService.validateDepositOrder(caseData);
+        List<String> errors = DepositOrderValidationService.validateDepositOrder(caseData);
         assertEquals(1, errors.size());
         assertEquals(UNABLE_TO_FIND_PARTY, errors.get(0));
     }

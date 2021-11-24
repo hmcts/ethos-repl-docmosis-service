@@ -29,6 +29,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorke
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseTransferService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseUpdateForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.DepositOrderValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleCaseMultipleMidEventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleReferenceService;
@@ -798,7 +799,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         var caseData =  ccdRequest.getCaseDetails().getCaseData();
-        List<String> errors = eventValidationService.validateDepositOrder(caseData);
+        List<String> errors = DepositOrderValidationService.validateDepositOrder(caseData);
 
         return getCallbackRespEntityErrors(errors, caseData);
     }
