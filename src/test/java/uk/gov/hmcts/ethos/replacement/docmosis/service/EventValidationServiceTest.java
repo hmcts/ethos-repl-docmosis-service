@@ -526,28 +526,7 @@ class EventValidationServiceTest {
         assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, COM", errors.get(0));
     }
 
-    @Test
-    void shouldValidateDepositRefunded() {
-        List<String> errors = DepositOrderValidationService.validateDepositOrder(caseDetails3.getCaseData());
 
-        assertEquals(1, errors.size());
-        assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.get(0));
-    }
-
-    @Test
-    void shouldValidateNullDepositRefunded() {
-        List<String> errors = DepositOrderValidationService.validateDepositOrder(caseDetails2.getCaseData());
-
-        assertEquals(0, errors.size());
-    }
-
-    @Test
-    void shouldValidateDepositRefundedWithNullAmount() {
-        List<String> errors = DepositOrderValidationService.validateDepositOrder(caseDetails1.getCaseData());
-
-        assertEquals(1, errors.size());
-        assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.get(0));
-    }
 
     @Test
     void shouldValidateReportDateRangeValidDates() {
@@ -670,22 +649,5 @@ class EventValidationServiceTest {
         assertEquals(0, errors.size());
     }
 
-    @Test
-    void shouldReturnNoErrorsForDepositValidation() {
-        var caseData = caseDetails1.getCaseData();
-        caseData.getDepositCollection().get(0).getValue().setDepositAmount("300");
-        DynamicDepositOrder.dynamicDepositOrder(caseData);
-        List<String> errors = DepositOrderValidationService.validateDepositOrder(caseData);
-        assertEquals(0, errors.size());
-        assertEquals("Tribunal", caseDetails1.getCaseData().getDepositCollection().get(0).getValue().getDepositRequestedBy());
-    }
-
-    @Test
-    void shouldReturnErrorForDepositValidation() {
-        var caseData = caseDetails5.getCaseData();
-        List<String> errors = DepositOrderValidationService.validateDepositOrder(caseData);
-        assertEquals(1, errors.size());
-        assertEquals(UNABLE_TO_FIND_PARTY, errors.get(0));
-    }
 
 }

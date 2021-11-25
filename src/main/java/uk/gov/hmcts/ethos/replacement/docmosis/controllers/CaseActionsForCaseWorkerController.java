@@ -71,6 +71,7 @@ public class CaseActionsForCaseWorkerController {
     private final EventValidationService eventValidationService;
     private final SingleCaseMultipleMidEventValidationService singleCaseMultipleMidEventValidationService;
     private final AddSingleCaseToMultipleService addSingleCaseToMultipleService;
+    private final DepositOrderValidationService depositOrderValidationService;
 
     @PostMapping(value = "/createCase", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "create a case for a caseWorker.")
@@ -799,7 +800,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         var caseData =  ccdRequest.getCaseDetails().getCaseData();
-        List<String> errors = DepositOrderValidationService.validateDepositOrder(caseData);
+        List<String> errors = depositOrderValidationService.validateDepositOrder(caseData);
 
         return getCallbackRespEntityErrors(errors, caseData);
     }

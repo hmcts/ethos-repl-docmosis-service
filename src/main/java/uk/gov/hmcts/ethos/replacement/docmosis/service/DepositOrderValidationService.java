@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DepositTypeItem;
 
@@ -13,23 +14,15 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEPOSIT_REFUNDED_GR
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_TITLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.UNABLE_TO_FIND_PARTY;
 
+@Service("depositOrderValidationService")
 public class DepositOrderValidationService {
 
-    private DepositOrderValidationService() {
-    }
-
-    public static List<String> validateDepositOrder(CaseData caseData) {
+    public List<String> validateDepositOrder(CaseData caseData) {
         List<String> errors = new ArrayList<>();
         if (!CollectionUtils.isEmpty(caseData.getDepositCollection())) {
 
             for (DepositTypeItem depositTypeItem : caseData.getDepositCollection()) {
-                if (!isNullOrEmpty(depositTypeItem.getValue().getDepositAmountRefunded())
-                        && (isNullOrEmpty(depositTypeItem.getValue().getDepositAmount())
-                        || Integer.parseInt(depositTypeItem.getValue().getDepositAmountRefunded())
-                        > Integer.parseInt(depositTypeItem.getValue().getDepositAmount()))) {
-                    errors.add(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR);
-                }
-
+                validateIfDepositRefundIsValid(errors, depositTypeItem);
                 validateDepositOrderAgainst(errors, depositTypeItem);
                 validateDepositRequestedBy(errors, depositTypeItem);
                 validateDepositRefunded(errors, depositTypeItem);
@@ -38,7 +31,16 @@ public class DepositOrderValidationService {
         return errors;
     }
 
-    public static void validateDepositRefunded(List<String> errors, DepositTypeItem depositTypeItem) {
+    private void validateIfDepositRefundIsValid(List<String> errors, DepositTypeItem depositTypeItem) {
+        if (!isNullOrEmpty(depositTypeItem.getValue().getDepositAmountRefunded())
+                && (isNullOrEmpty(depositTypeItem.getValue().getDepositAmount())
+                || Integer.parseInt(depositTypeItem.getValue().getDepositAmountRefunded())
+                > Integer.parseInt(depositTypeItem.getValue().getDepositAmount()))) {
+            errors.add(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR);
+        }
+    }
+
+    private void validateDepositRefunded(List<String> errors, DepositTypeItem depositTypeItem) {
         if (!isNullOrEmpty(depositTypeItem.getValue().getDepositRefund())
                 && depositTypeItem.getValue().getDynamicDepositRefundedTo() != null) {
             var dynamicRefundedTo = depositTypeItem.getValue().getDynamicDepositRefundedTo()
@@ -53,7 +55,7 @@ public class DepositOrderValidationService {
         }
     }
 
-    public static void validateDepositRequestedBy(List<String> errors, DepositTypeItem depositTypeItem) {
+    private void validateDepositRequestedBy(List<String> errors, DepositTypeItem depositTypeItem) {
         if (depositTypeItem.getValue().getDynamicDepositRequestedBy() != null) {
             var dynamicRequestedBy = depositTypeItem.getValue().getDynamicDepositRequestedBy()
                     .getValue().getCode();
@@ -69,7 +71,7 @@ public class DepositOrderValidationService {
         }
     }
 
-    public static void validateDepositOrderAgainst(List<String> errors, DepositTypeItem depositTypeItem) {
+    private void validateDepositOrderAgainst(List<String> errors, DepositTypeItem depositTypeItem) {
         if (depositTypeItem.getValue().getDynamicDepositOrderAgainst() != null) {
             var dynamicOrderAgainst = depositTypeItem.getValue().getDynamicDepositOrderAgainst()
                     .getValue().getCode();
