@@ -833,7 +833,7 @@ public class ListingHelper {
             case CASE_SOURCE_LOCAL_REPORT:
                 return "EM-TRB-SCO-ENG-00783";
             case HEARINGS_TO_JUDGEMENTS_REPORT:
-                return "EM-TRB-SCO-ENG-00790";
+                return "EM-TRB-SCO-ENG-00786";
             default:
                 return NO_DOCUMENT_FOUND;
         }
