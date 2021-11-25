@@ -88,8 +88,19 @@
     "correspondenceType": {
       "topLevel_Documents": "EM-TRB-EGW-ENG-00027",
       "part_2_Documents": "2.2A",
-      "hearingNumber": "1"
-    },
+      "hearingNumber": "1",
+      "dynamicHearingNumber": {
+        "value": {
+          "code": "1",
+          "label": "1 - Manchester - 25 Nov 2019"
+        },
+        "list_items": [
+          {
+            "code": "1",
+            "label": "1 - Manchester - 25 Nov 2019"
+          }
+        ]
+      }    },
     "restrictedReporting": {
       "imposed": "No",
       "rule503b": "No",
