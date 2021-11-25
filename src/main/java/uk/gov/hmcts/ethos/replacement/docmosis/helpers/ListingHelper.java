@@ -833,6 +833,8 @@ public class ListingHelper {
                 return "EM-TRB-SCO-ENG-00781";
             case CASE_SOURCE_LOCAL_REPORT:
                 return "EM-TRB-SCO-ENG-00783";
+            case HEARINGS_BY_HEARING_TYPE_REPORT:
+                return "EM-TRB-SCO-ENG-00785";
             case HEARINGS_TO_JUDGEMENTS_REPORT:
                 return "EM-TRB-SCO-ENG-00790";
             default:
