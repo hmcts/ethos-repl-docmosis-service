@@ -16,6 +16,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.UploadedDocument;
 import uk.gov.hmcts.ecm.common.model.ccd.items.AddressLabelTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
@@ -162,6 +164,23 @@ public class MultipleUtil {
         caseData.setRepCollection(new ArrayList<>(Collections.singletonList(representedTypeRItem)));
         caseData.setFileLocation("Manchester");
         caseData.setEthosCaseReference(ethosCaseReference);
+        HearingTypeItem hearingTypeItem = new HearingTypeItem();
+        HearingType hearingType = new HearingType();
+        DateListedType dateListedType = new DateListedType();
+        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
+        hearingType.setHearingNumber("1");
+        hearingType.setHearingType("Hearing");
+        hearingType.setHearingEstLengthNumType("1");
+        hearingType.setHearingFormat(List.of("Video", "Hybrid"));
+        hearingType.setHearingSitAlone("Sit Alone");
+        hearingType.setHearingEstLengthNumType("Days");
+        dateListedType.setHearingVenueDay("Manchester");
+        dateListedType.setListedDate("2021-11-01T:00:00:00.000");
+        dateListedType.setHearingStatus("Listed");
+        dateListedTypeItem.setValue(dateListedType);
+        hearingType.setHearingDateCollection(List.of(dateListedTypeItem));
+        hearingTypeItem.setValue(hearingType);
+        caseData.setHearingCollection(List.of(hearingTypeItem));
         return caseData;
     }
 
