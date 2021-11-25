@@ -49,6 +49,7 @@ public class MultipleDocGenerationControllerTest {
     private static final String PRINT_DOCUMENT_CONFIRMATION_URL = "/printDocumentConfirmation";
     private static final String MID_SELECTED_ADDRESS_LABELS_MULTIPLE_URL = "/midSelectedAddressLabelsMultiple";
     private static final String MID_VALIDATE_ADDRESS_LABELS_MULTIPLE_URL = "/midValidateAddressLabelsMultiple";
+    private static final String DYNAMIC_MULTIPLE_LETTERS = "/dynamicMultipleLetters";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -264,6 +265,29 @@ public class MultipleDocGenerationControllerTest {
     public void midValidateAddressLabelsMultipleForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
         mvc.perform(post(MID_VALIDATE_ADDRESS_LABELS_MULTIPLE_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void dynamicMultipleLetters() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(true);
+        mvc.perform(post(DYNAMIC_MULTIPLE_LETTERS)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void dynamicMultipleLettersForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(eq(AUTH_TOKEN))).thenReturn(false);
+        mvc.perform(post(DYNAMIC_MULTIPLE_LETTERS)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

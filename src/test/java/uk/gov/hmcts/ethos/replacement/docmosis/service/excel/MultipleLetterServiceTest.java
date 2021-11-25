@@ -40,6 +40,9 @@ public class MultipleLetterServiceTest {
     private EventValidationService eventValidationService;
     @InjectMocks
     private MultipleLetterService multipleLetterService;
+    @Mock
+    private MultipleDynamicListFlagsService multipleDynamicListFlagsService;
+
 
     private TreeMap<String, Object> multipleObjectsFlags;
     private MultipleDetails multipleDetails;
@@ -197,6 +200,23 @@ public class MultipleLetterServiceTest {
         verify(singleCasesReadingService, times(1)).retrieveLabelCases(userToken,
                 multipleDetails.getCaseTypeId(),
                 new ArrayList<>(multipleObjectsFlags.keySet()));
+        verifyNoMoreInteractions(singleCasesReadingService);
+    }
+
+    @Test
+    public void dynamicMultipleLetters() {
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjectsFlags);
+        when(singleCasesReadingService.retrieveSingleCase(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleObjectsFlags.firstKey(),
+                multipleDetails.getCaseData().getMultipleSource()))
+                .thenReturn(submitEvents.get(0));
+        multipleLetterService.dynamicMultipleLetters(userToken, multipleDetails, errors);
+        verify(singleCasesReadingService, times(1)).retrieveSingleCase(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleObjectsFlags.firstKey(),
+                multipleDetails.getCaseData().getMultipleSource());
         verifyNoMoreInteractions(singleCasesReadingService);
     }
 
