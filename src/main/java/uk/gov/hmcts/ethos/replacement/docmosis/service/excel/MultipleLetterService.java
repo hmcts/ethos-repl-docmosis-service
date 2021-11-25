@@ -5,14 +5,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.exceptions.DocumentManagementException;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadEvent;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.LabelsHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicLetters;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.TornadoService;
 
@@ -37,6 +40,7 @@ public class MultipleLetterService {
     private final ExcelReadingService excelReadingService;
     private final SingleCasesReadingService singleCasesReadingService;
     private final EventValidationService eventValidationService;
+    private final MultipleDynamicListFlagsService multipleDynamicListFlagsService;
 
     public DocumentInfo bulkLetterLogic(String userToken, MultipleDetails multipleDetails, List<String> errors,
                                         boolean validation) {
@@ -194,6 +198,36 @@ public class MultipleLetterService {
 
         return documentInfo;
 
+    }
+
+    public void dynamicMultipleLetters(String userToken, MultipleDetails multipleDetails,
+                                        List<String> errors) {
+        log.info("Read excel for letter logic");
+        MultipleData multipleData = multipleDetails.getCaseData();
+
+        multipleDynamicListFlagsService.populateDynamicListFlagsLogic(userToken, multipleDetails, errors);
+        SortedMap<String, Object> multipleObjects =
+                excelReadingService.readExcel(
+                        userToken,
+                        MultiplesHelper.getExcelBinaryUrl(multipleData),
+                        errors,
+                        multipleData,
+                        FilterExcelType.FLAGS);
+
+        if (!multipleObjects.keySet().isEmpty()) {
+            log.info("Cases in multiple: " + multipleObjects.keySet());
+            List<DynamicValueType> listItems = new ArrayList<>();
+            for (String key : multipleObjects.keySet()) {
+                var submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
+                        multipleDetails.getCaseTypeId(), key,
+                        multipleData.getMultipleSource());
+
+                DynamicLetters.dynamicMultipleLetters(submitEvent, multipleData,
+                        multipleDetails.getCaseTypeId(), listItems);
+            }
+        } else {
+            errors.add(NO_CASES_SEARCHED);
+        }
     }
 
 }
