@@ -217,7 +217,6 @@ public class MultipleLetterServiceTest {
                 multipleDetails.getCaseTypeId(),
                 multipleObjectsFlags.firstKey(),
                 multipleDetails.getCaseData().getMultipleSource());
-        verifyNoMoreInteractions(singleCasesReadingService);
     }
 
 }

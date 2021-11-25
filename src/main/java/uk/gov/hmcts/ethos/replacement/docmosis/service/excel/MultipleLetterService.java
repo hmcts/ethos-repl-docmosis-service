@@ -221,9 +221,11 @@ public class MultipleLetterService {
                 var submitEvent = singleCasesReadingService.retrieveSingleCase(userToken,
                         multipleDetails.getCaseTypeId(), key,
                         multipleData.getMultipleSource());
+                if (submitEvent != null) {
+                    DynamicLetters.dynamicMultipleLetters(submitEvent, multipleData,
+                            multipleDetails.getCaseTypeId(), listItems);
+                }
 
-                DynamicLetters.dynamicMultipleLetters(submitEvent, multipleData,
-                        multipleDetails.getCaseTypeId(), listItems);
             }
         } else {
             errors.add(NO_CASES_SEARCHED);
