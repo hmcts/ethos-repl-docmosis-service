@@ -219,7 +219,8 @@ public class ReportHelper {
             boolean liveCaseloadIsValid = liveCaseloadIsValid(caseData);
             if (matchingDateIsValid && liveCaseloadIsValid) {
                 var adhocReportType = new AdhocReportType();
-                adhocReportType.setReportOffice(getTribunalOffice(listingDetails, caseData));
+                adhocReportType.setReportOffice(getTribunalOffice(listingDetails.getCaseTypeId(),
+                        caseData.getManagingOffice()));
                 // TODO : hearingCollection.Hearing_stage implementation
                 getCommonReportDetailFields(listingDetails, caseData, adhocReportType);
                 adhocReportTypeItem.setValue(adhocReportType);
@@ -271,9 +272,9 @@ public class ReportHelper {
         }
     }
 
-    private static String getTribunalOffice(ListingDetails listingDetails, CaseData caseData) {
-        String caseTypeId = UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId());
-        return caseTypeId.equals(SCOTLAND_CASE_TYPE_ID) ? caseData.getManagingOffice() : caseTypeId;
+    public static String getTribunalOffice(String listingCaseTypeId, String managingOffice) {
+        String caseTypeId = UtilHelper.getListingCaseTypeId(listingCaseTypeId);
+        return caseTypeId.equals(SCOTLAND_CASE_TYPE_ID) ? managingOffice : caseTypeId;
     }
 
     private static boolean liveCaseloadIsValid(CaseData caseData) {

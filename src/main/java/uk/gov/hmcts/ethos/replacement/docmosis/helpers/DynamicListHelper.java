@@ -1,65 +1,58 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
-import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_TITLE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_TITLE;
 
 public class DynamicListHelper {
 
     private DynamicListHelper() {
     }
 
-    public static void dynamicRespondentRepresentativeNames(CaseData caseData) {
-        List<DynamicValueType> listItems = createDynamicRespondentName(caseData.getRespondentCollection());
-        if (!listItems.isEmpty()) {
-            var dynamicFixedListType = new DynamicFixedListType();
-            dynamicFixedListType.setListItems(listItems);
-            if (caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty()) {
-                ListIterator<RepresentedTypeRItem> repItr = caseData.getRepCollection().listIterator();
-                while (repItr.hasNext()) {
-                    var respRepCollection = caseData.getRepCollection().get(repItr.nextIndex());
-                    var dynamicValueType = new DynamicValueType();
-                    if (respRepCollection.getValue().getDynamicRespRepName() == null) {
-                        repItr.next().getValue().setDynamicRespRepName(dynamicFixedListType);
-                        var respRepName = respRepCollection.getValue().getRespRepName();
-                        dynamicValueType.setLabel(respRepName);
-                        dynamicValueType.setCode(respRepName);
-                    } else {
-                        dynamicValueType = respRepCollection.getValue().getDynamicRespRepName().getValue();
-                        repItr.next().getValue().setDynamicRespRepName(dynamicFixedListType);
-                    }
-                    respRepCollection.getValue().getDynamicRespRepName().setValue(dynamicValueType);
-                }
-            } else {
-                var representedTypeR = new RepresentedTypeR();
-                representedTypeR.setDynamicRespRepName(dynamicFixedListType);
-                var representedTypeRItem = new RepresentedTypeRItem();
-                representedTypeRItem.setValue(representedTypeR);
-                var collection = List.of(representedTypeRItem);
-                caseData.setRepCollection(collection);
-            }
-        }
-    }
-
-    private static List<DynamicValueType> createDynamicRespondentName(
-            List<RespondentSumTypeItem> respondentCollection) {
+    public static List<DynamicValueType> createDynamicRespondentName(List<RespondentSumTypeItem> respondentCollection) {
         List<DynamicValueType> listItems = new ArrayList<>();
         if (respondentCollection != null) {
             for (RespondentSumTypeItem respondentSumTypeItem : respondentCollection) {
                 var dynamicValueType = new DynamicValueType();
                 var respondentSumType = respondentSumTypeItem.getValue();
-                dynamicValueType.setCode(respondentSumType.getRespondentName());
+                dynamicValueType.setCode("R: " + respondentSumType.getRespondentName());
                 dynamicValueType.setLabel(respondentSumType.getRespondentName());
                 listItems.add(dynamicValueType);
             }
         }
         return listItems;
+    }
+
+    public static DynamicValueType getDynamicValue(String value) {
+        var dynamicValueType = new DynamicValueType();
+        dynamicValueType.setCode(value);
+        dynamicValueType.setLabel(value);
+        return dynamicValueType;
+    }
+
+    public static DynamicValueType getDynamicCodeLabel(String code, String label) {
+        var dynamicValueType = new DynamicValueType();
+        dynamicValueType.setCode(code);
+        dynamicValueType.setLabel(label);
+        return dynamicValueType;
+    }
+
+    public static DynamicValueType getDynamicValueType(CaseData caseData, List<DynamicValueType> listItems,
+                                                       String party) {
+        DynamicValueType dynamicValueType;
+        if (party.equals(CLAIMANT_TITLE)) {
+            dynamicValueType = getDynamicCodeLabel("C: " + caseData.getClaimant(), caseData.getClaimant());
+        } else if (party.equals(RESPONDENT_TITLE)) {
+            dynamicValueType = listItems.get(0);
+        } else {
+            dynamicValueType = getDynamicValue(party);
+        }
+        return dynamicValueType;
     }
 }

@@ -3,36 +3,40 @@
   "claimantRepresentedQuestion":"No",
   "respondentCollection":[
     {
-      "id":"4b818aa8-985b-4d06-b65a-d1aee141aac6",
+      "id":"4e994932-436b-44fe-b891-ef3243a08b56",
       "value":{
-        "respondent_ACAS":"45647457547",
-        "respondent_name":"Respondent1",
+        "respondent_name":"Resp1",
+        "responseContinue":"Yes",
+        "responseReceived":"Yes",
         "responseStruckOut":"No",
+        "respondent_ACAS_no":"Employer already in touch",
         "respondent_address":{
-          "PostCode":"PL7 1RF",
-          "PostTown":"Plymouth",
-          "AddressLine1":"1 Valley Road",
-          "AddressLine2":"1 Valley Road"
+          "Country":"United Kingdom",
+          "PostCode":"S2 1RS",
+          "PostTown":"Sheffield",
+          "AddressLine1":"66 Beaumont Road North"
         },
-        "respondent_ACAS_question":"Yes",
+        "respondent_ACAS_question":"No",
         "responseRespondentAddress":{
 
         }
       }
     }
   ],
-  "respondent":"Respondent1",
+  "respondent":"Resp1",
+  "tribunalCorrespondenceDX":"DX 742940 Leeds 75",
   "claimantOtherType":{
 
   },
   "tribunalCorrespondenceFax":"01264 785136",
   "caseType":"Single",
-  "feeGroupReference":"098987898980",
-  "ethosCaseReference":"1800007/2021",
+  "feeGroupReference":"123453222211",
   "claimantIndType":{
+    "claimant_gender":"Male",
     "claimant_title1":"Mr",
-    "claimant_last_name":"claimant_last_name",
-    "claimant_first_names":"claimant_first_names"
+    "claimant_last_name":"Perla",
+    "claimant_first_names":"Phani",
+    "claimant_date_of_birth":"1977-02-09"
   },
   "claimant_TypeOfClaimant":"Individual",
   "tribunalCorrespondenceEmail":"LeedsET@justice.gov.uk",
@@ -43,30 +47,38 @@
     "AddressLine2":"City Exchange",
     "AddressLine3":"11 Albion Street"
   },
-  "claimant":"claimant_first_names claimant_last_name",
-  "dateToPosition":"2021-03-01",
+  "representativeClaimantType":{
+
+  },
+  "claimant":"Phani Perla",
+  "dateToPosition":"2021-11-23",
   "claimantWorkAddress":{
     "claimant_work_address":{
-      "PostCode":"PL7 1RF",
-      "PostTown":"Plymouth",
-      "AddressLine1":"1 Valley Road",
-      "AddressLine2":"1 Valley Road"
+      "Country":"United Kingdom",
+      "PostCode":"S2 1RS",
+      "PostTown":"Sheffield",
+      "AddressLine1":"66 Beaumont Road North"
     }
   },
   "multipleFlag":"No",
   "currentPosition":"Manually Created",
-  "receiptDate":"2021-02-10",
+  "receiptDate":"2021-01-12",
   "caseSource":"Manually Created",
   "tribunalCorrespondenceTelephone":"0113 245 9741",
-  "claimantWorkAddressQuestion":"No",
+  "claimantWorkAddressQuestion":"Yes",
   "claimantType":{
     "claimant_addressUK":{
-      "PostCode":"PL7 1RF",
-      "PostTown":"Plymouth",
-      "AddressLine1":"1 Valley Road",
-      "AddressLine2":"1 Valley Road"
-    }
+      "Country":"United Kingdom",
+      "PostCode":"E14 3XA",
+      "PostTown":"London",
+      "AddressLine1":"Flat 19",
+      "AddressLine2":"Vermeer Court",
+      "AddressLine3":"1 Rembrandt Close"
+    },
+    "claimant_phone_number":"07931773771",
+    "claimant_email_address":"kumar.perlaa@gmail.com",
+    "claimant_contact_preference":"Post"
   },
-  "flagsImageFileName":"EMP-TRIB-0000000.jpg",
-  "targetHearingDate":"2021-08-09"
+  "flagsImageFileName":"EMP-TRIB-000000000.jpg",
+  "targetHearingDate":"2021-07-11"
 }

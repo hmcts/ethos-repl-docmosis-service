@@ -403,10 +403,68 @@
           "depositNotes": null,
           "deposit_due": null,
           "deposit_order_sent": null,
-          "deposit_refund": null
+          "deposit_refund": null,
+          "depositRefundedTo": "Respondent",
+          "depositOrderAgainst": "Respondent",
+          "deposit_requested_by": "Tribunal",
+          "dynamicDepositOrderAgainst": {
+            "value": {
+              "code": "R: Antonio Vazquez",
+              "label": "Antonio Vazquez"
+            },
+            "list_items": [
+              {
+                "code": "R: Antonio Vazquez",
+                "label": "Antonio Vazquez"
+              },
+              {
+                "code": "C: Anton Rodriguez",
+                "label": "Anton Rodriguez"
+              }
+            ]
+          }
         }
       }
     ],
+    "restrictedReporting": {
+      "imposed": "No",
+      "rule503b": "No",
+      "startDate": "2021-07-15",
+      "excludedRegister": "No",
+      "deletedPhyRegister": "No",
+      "dynamicRequestedBy": {
+        "value": {
+          "code": "Judge",
+          "label": "Judge"
+        },
+        "list_items": [
+          {
+            "code": "R: Antonio Vazquez",
+            "label": "Antonio Vazquez"
+          },
+          {
+            "code": "C: Anton Rodriguez",
+            "label": "Anton Rodriguez"
+          },
+          {
+            "code": "Judge",
+            "label": "Judge"
+          },
+          {
+            "code": "Both Parties",
+            "label": "Both Parties"
+          },
+          {
+            "code": "Other",
+            "label": "Other"
+          },
+          {
+            "code": "None",
+            "label": "None"
+          }
+        ]
+      }
+    },
     "locationType": "Manchester",
     "multipleReference": "No",
     "multipleType": "No",
