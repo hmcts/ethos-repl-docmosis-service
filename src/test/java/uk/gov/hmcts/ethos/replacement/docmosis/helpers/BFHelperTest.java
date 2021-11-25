@@ -49,7 +49,7 @@ public class BFHelperTest {
     public static DynamicFixedListType getBfActionsDynamicFixedList() {
         DynamicFixedListType dynamicFixedListType = new DynamicFixedListType();
         dynamicFixedListType.setListItems(Helper.getDefaultBfListItems());
-        dynamicFixedListType.setValue(Helper.getDynamicValue(BF_ACTION_ACAS));
+        dynamicFixedListType.setValue(DynamicListHelper.getDynamicValue(BF_ACTION_ACAS));
         return dynamicFixedListType;
     }
 

@@ -6,12 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicDepositOrder;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -20,10 +22,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_LISTED_CASE_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EMPTY_HEARING_COLLECTION_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.EMPTY_RESPONDENT_COLLECTION_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RECEIPT_DATE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_NUMBER_MISMATCH_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_DELETED_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_CODES_EXISTENCE_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JUDGEMENT_JURISDICTION_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.UNABLE_TO_FIND_PARTY;
 
 @ExtendWith(SpringExtension.class)
 class EventValidationServiceTest {
@@ -34,7 +61,8 @@ class EventValidationServiceTest {
     private static final LocalDate PAST_ACCEPTED_DATE = LocalDate.now().minusDays(1);
 
     private static final LocalDate PAST_TARGET_HEARING_DATE = PAST_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
-    private static final LocalDate CURRENT_TARGET_HEARING_DATE = CURRENT_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
+    private static final LocalDate CURRENT_TARGET_HEARING_DATE =
+            CURRENT_RECEIPT_DATE.plusDays(TARGET_HEARING_DATE_INCREMENT);
 
     private static final LocalDate PAST_RESPONSE_RECEIVED_DATE = LocalDate.now().minusDays(1);
     private static final LocalDate CURRENT_RESPONSE_RECEIVED_DATE = LocalDate.now();
@@ -47,6 +75,14 @@ class EventValidationServiceTest {
     private CaseDetails caseDetails3;
     private CaseDetails caseDetails4;
     private CaseDetails caseDetails5;
+    private CaseDetails validHearingStatusCaseCloseEventCaseDetails;
+    private CaseDetails invalidHearingStatusCaseCloseEventCaseDetails;
+    private CaseDetails validJudgeAllocationCaseDetails;
+    private CaseDetails invalidJudgeAllocationCaseDetails;
+    private CaseDetails outcomeNotAllocatedCaseDetails;
+    private CaseDetails caseDetails16;
+    private CaseDetails caseDetails17;
+    private CaseDetails caseDetails18;
     private ListingRequest listingRequestValidDateRange;
     private ListingRequest listingRequestInvalidDateRange;
     private ListingRequest listingRequest31DaysInvalidRange;
@@ -64,6 +100,19 @@ class EventValidationServiceTest {
         caseDetails3 = generateCaseDetails("caseDetailsTest3.json");
         caseDetails4 = generateCaseDetails("caseDetailsTest4.json");
         caseDetails5 = generateCaseDetails("caseDetailsTest5.json");
+        validHearingStatusCaseCloseEventCaseDetails = generateCaseDetails(
+                "CaseCloseEvent_ValidHearingStatusCaseDetails.json");
+        invalidHearingStatusCaseCloseEventCaseDetails = generateCaseDetails(
+                "CaseCloseEvent_InValidHearingStatusCaseDetails.json");
+        validJudgeAllocationCaseDetails = generateCaseDetails(
+                "CaseCloseEvent_ValidJudgeAllocationStatusCaseDetails.json");
+        invalidJudgeAllocationCaseDetails = generateCaseDetails(
+                "CaseCloseEvent_InValidJudgeAllocationStatusCaseDetails.json");
+        outcomeNotAllocatedCaseDetails = generateCaseDetails(
+                "CaseCloseEvent_JurisdictionOutcomeNotAllocated.json");
+        caseDetails16 = generateCaseDetails("caseDetailsTest16.json");
+        caseDetails17 = generateCaseDetails("caseDetailsTest17.json");
+        caseDetails18 = generateCaseDetails("caseDetailsTest18.json");
 
         listingRequestValidDateRange = generateListingDetails("exampleListingV1.json");
         listingRequestInvalidDateRange = generateListingDetails("exampleListingV3.json");
@@ -106,10 +155,10 @@ class EventValidationServiceTest {
 
     @ParameterizedTest
     @CsvSource({
-            MULTIPLE_CASE_TYPE + "," + SUBMITTED_STATE,
-            MULTIPLE_CASE_TYPE + "," + ACCEPTED_STATE,
-            SINGLE_CASE_TYPE + "," + SUBMITTED_STATE,
-            SINGLE_CASE_TYPE + "," + ACCEPTED_STATE
+        MULTIPLE_CASE_TYPE + "," + SUBMITTED_STATE,
+        MULTIPLE_CASE_TYPE + "," + ACCEPTED_STATE,
+        SINGLE_CASE_TYPE + "," + SUBMITTED_STATE,
+        SINGLE_CASE_TYPE + "," + ACCEPTED_STATE
     })
     void shouldValidateCaseState(String caseType, String caseState) {
         caseDetails1.getCaseData().setCaseType(caseType);
@@ -176,7 +225,8 @@ class EventValidationServiceTest {
         List<String> errors = eventValidationService.validateET3ResponseFields(caseDetails1.getCaseData());
 
         assertEquals(1, errors.size());
-        assertEquals(EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE + " for respondent 1 (Antonio Vazquez)", errors.get(0));
+        assertEquals(EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE
+                + " for respondent 1 (Antonio Vazquez)", errors.get(0));
     }
 
     @Test
@@ -190,14 +240,18 @@ class EventValidationServiceTest {
     void shouldValidateResponseReceivedDateIsFutureDate() {
         CaseData caseData = caseDetails1.getCaseData();
 
-        caseData.getRespondentCollection().get(0).getValue().setResponseReceivedDate(PAST_RESPONSE_RECEIVED_DATE.toString());
-        caseData.getRespondentCollection().get(1).getValue().setResponseReceivedDate(CURRENT_RESPONSE_RECEIVED_DATE.toString());
-        caseData.getRespondentCollection().get(2).getValue().setResponseReceivedDate(FUTURE_RESPONSE_RECEIVED_DATE.toString());
+        caseData.getRespondentCollection().get(0).getValue()
+                .setResponseReceivedDate(PAST_RESPONSE_RECEIVED_DATE.toString());
+        caseData.getRespondentCollection().get(1).getValue()
+                .setResponseReceivedDate(CURRENT_RESPONSE_RECEIVED_DATE.toString());
+        caseData.getRespondentCollection().get(2).getValue()
+                .setResponseReceivedDate(FUTURE_RESPONSE_RECEIVED_DATE.toString());
 
         List<String> errors = eventValidationService.validateET3ResponseFields(caseData);
 
         assertEquals(2, errors.size());
-        assertEquals(FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE + " for respondent 3 (Mike Jordan)", errors.get(1));
+        assertEquals(FUTURE_RESPONSE_RECEIVED_DATE_ERROR_MESSAGE
+                + " for respondent 3 (Mike Jordan)", errors.get(1));
     }
 
     @Test
@@ -257,7 +311,8 @@ class EventValidationServiceTest {
     @Test
     void shouldValidateHearingNumberMatching() {
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails1.getCaseData(),
-                caseDetails1.getCaseData().getCorrespondenceType(), caseDetails1.getCaseData().getCorrespondenceScotType());
+                caseDetails1.getCaseData().getCorrespondenceType(),
+                caseDetails1.getCaseData().getCorrespondenceScotType());
 
         assertEquals(0, errors.size());
     }
@@ -265,7 +320,8 @@ class EventValidationServiceTest {
     @Test
     void shouldValidateHearingNumberMismatch() {
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails2.getCaseData(),
-                caseDetails2.getCaseData().getCorrespondenceType(), caseDetails2.getCaseData().getCorrespondenceScotType());
+                caseDetails2.getCaseData().getCorrespondenceType(),
+                caseDetails2.getCaseData().getCorrespondenceScotType());
 
         assertEquals(1, errors.size());
         assertEquals(HEARING_NUMBER_MISMATCH_ERROR_MESSAGE, errors.get(0));
@@ -274,7 +330,8 @@ class EventValidationServiceTest {
     @Test
     void shouldValidateHearingNumberMissing() {
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails3.getCaseData(),
-                caseDetails3.getCaseData().getCorrespondenceType(), caseDetails3.getCaseData().getCorrespondenceScotType());
+                caseDetails3.getCaseData().getCorrespondenceType(),
+                caseDetails3.getCaseData().getCorrespondenceScotType());
 
         assertEquals(0, errors.size());
     }
@@ -282,7 +339,8 @@ class EventValidationServiceTest {
     @Test
     void shouldValidateHearingNumberForEmptyHearings() {
         List<String> errors = eventValidationService.validateHearingNumber(caseDetails4.getCaseData(),
-                caseDetails4.getCaseData().getCorrespondenceType(), caseDetails4.getCaseData().getCorrespondenceScotType());
+                caseDetails4.getCaseData().getCorrespondenceType(),
+                caseDetails4.getCaseData().getCorrespondenceScotType());
 
         assertEquals(1, errors.size());
         assertEquals(EMPTY_HEARING_COLLECTION_ERROR_MESSAGE, errors.get(0));
@@ -294,7 +352,8 @@ class EventValidationServiceTest {
         eventValidationService.validateJurisdictionCodes(caseDetails1.getCaseData(), errors);
 
         assertEquals(2, errors.size());
-        assertEquals(DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE + " \"COM\" in Jurisdiction 3 - \"DOD\" in Jurisdiction 5 ", errors.get(0));
+        assertEquals(DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE + " \"COM\" in Jurisdiction 3 "
+                + "- \"DOD\" in Jurisdiction 5 ", errors.get(0));
         assertEquals(JURISDICTION_CODES_DELETED_ERROR + "[CCP, ADG]", errors.get(1));
     }
 
@@ -315,12 +374,12 @@ class EventValidationServiceTest {
         assertEquals(0, errors.size());
     }
 
-     @ParameterizedTest
-     @CsvSource({"false,false", "true,false", "false,true", "true,true"})
-     void shouldValidateJurisdictionOutcomePresentAndMissing(boolean isRejected, boolean partOfMultiple) {
+    @ParameterizedTest
+    @CsvSource({"false,false", "true,false", "false,true", "true,true"})
+    void shouldValidateJurisdictionOutcomePresentAndMissing(boolean isRejected, boolean partOfMultiple) {
         List<String> errors = new ArrayList<>();
-        eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(),
-                isRejected, partOfMultiple, errors);
+        eventValidationService.validateJurisdictionOutcome(caseDetails1.getCaseData(), isRejected,
+                partOfMultiple, errors);
 
         assertEquals(1, errors.size());
         if (partOfMultiple) {
@@ -328,6 +387,22 @@ class EventValidationServiceTest {
                     + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
         } else {
             assertEquals(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({"false,false", "true,false", "false,true", "true,true"})
+    void shouldValidateWhenJurisdictionOutcomeSetToNotAllocated(boolean isRejected, boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJurisdictionOutcome(outcomeNotAllocatedCaseDetails.getCaseData(),
+                isRejected, partOfMultiple, errors);
+
+        assertEquals(1, errors.size());
+        if (partOfMultiple) {
+            assertEquals(outcomeNotAllocatedCaseDetails.getCaseData().getEthosCaseReference() + " - "
+                    + JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE, errors.get(0));
+        } else {
+            assertEquals(JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE, errors.get(0));
         }
     }
 
@@ -352,6 +427,7 @@ class EventValidationServiceTest {
             assertEquals(0, errors.size());
         } else {
             assertEquals(1, errors.size());
+
             if (partOfMultiple) {
                 assertEquals(caseDetails1.getCaseData().getEthosCaseReference() + " - "
                         + MISSING_JURISDICTION_MESSAGE, errors.get(0));
@@ -361,45 +437,96 @@ class EventValidationServiceTest {
         }
     }
 
-    @Test
-    void shouldValidateJurisdictionCodesWithinJudgement() {
-        List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(caseDetails1.getCaseData());
-
-        assertEquals(2, errors.size());
-        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, ADG, ADG, CCP, CCP", errors.get(0));
-        assertEquals(DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR + "Case Management - [COM] & Reserved - [CCP, ADG]", errors.get(1));
-    }
-
-    @Test
-    void shouldValidateJurisdictionCodesWithinJudgementEmptyJurCodesCollection() {
-        List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(caseDetails3.getCaseData());
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void shouldValidateJurisdictionCodeForJudgementPresentAndMissing(boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJudgementsHasJurisdiction(caseDetails18.getCaseData(), partOfMultiple, errors);
 
         assertEquals(1, errors.size());
-        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, COM", errors.get(0));
+        if (partOfMultiple) {
+            assertEquals(caseDetails18.getCaseData().getEthosCaseReference() + " - "
+                    + MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(0));
+        } else {
+            assertEquals(MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(0));
+        }
     }
 
-    @Test
-    void shouldValidateDepositRefunded() {
-        List<String> errors = eventValidationService.validateDepositRefunded(caseDetails3.getCaseData());
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void shouldValidateJurisdictionCodeForJudgementPresent(boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJudgementsHasJurisdiction(caseDetails17.getCaseData(), partOfMultiple, errors);
+
+        assertEquals(0, errors.size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void shouldValidateJurisdictionCodeForJudgementMissing(boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateJudgementsHasJurisdiction(caseDetails16.getCaseData(), partOfMultiple, errors);
 
         assertEquals(1, errors.size());
-        assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.get(0));
+        if (partOfMultiple) {
+            assertEquals(caseDetails16.getCaseData().getEthosCaseReference() + " - "
+                    + MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(0));
+        } else {
+            assertEquals(MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(0));
+        }
     }
 
-    @Test
-    void shouldValidateNullDepositRefunded() {
-        List<String> errors = eventValidationService.validateDepositRefunded(caseDetails2.getCaseData());
+    @ParameterizedTest
+    @CsvSource({"false,false", "true,false", "false,true", "true,true"})
+    void shouldValidateCaseBeforeCloseEventWithErrors(boolean isRejected, boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateCaseBeforeCloseEvent(caseDetails18.getCaseData(),
+                isRejected, partOfMultiple, errors);
+
+        assertEquals(3, errors.size());
+        if (partOfMultiple) {
+            assertThat(errors).asList().contains(caseDetails18.getCaseData().getEthosCaseReference()
+                    + " - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE);
+            assertThat(errors).asList().doesNotContain(caseDetails18.getCaseData().getEthosCaseReference()
+                    + " - " + CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
+        } else {
+            assertThat(errors).asList().contains(MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE);
+            assertThat(errors).asList().doesNotContain(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR);
+            assertThat(errors).asList().contains(CLOSING_LISTED_CASE_ERROR);
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({"false,false", "true,false", "false,true", "true,true"})
+    void shouldValidateCaseBeforeCloseEventNoErrors(boolean isRejected, boolean partOfMultiple) {
+        List<String> errors = new ArrayList<>();
+        eventValidationService.validateCaseBeforeCloseEvent(caseDetails17.getCaseData(),
+                isRejected, partOfMultiple, errors);
 
         assertEquals(0, errors.size());
     }
 
     @Test
-    void shouldValidateDepositRefundedWithNullAmount() {
-        List<String> errors = eventValidationService.validateDepositRefunded(caseDetails1.getCaseData());
+    void shouldValidateJurisdictionCodesWithinJudgement() {
+        List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(
+                caseDetails1.getCaseData());
+
+        assertEquals(2, errors.size());
+        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, ADG, ADG, CCP, CCP", errors.get(0));
+        assertEquals(DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR + "Case Management - [COM] & Reserved "
+                + "- [CCP, ADG]", errors.get(1));
+    }
+
+    @Test
+    void shouldValidateJurisdictionCodesWithinJudgementEmptyJurCodesCollection() {
+        List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(
+                caseDetails3.getCaseData());
 
         assertEquals(1, errors.size());
-        assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.get(0));
+        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, COM", errors.get(0));
     }
+
+
 
     @Test
     void shouldValidateReportDateRangeValidDates() {
@@ -460,4 +587,67 @@ class EventValidationServiceTest {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, ListingRequest.class);
     }
+
+    @Test
+    void validateRestrictedBy() {
+        eventValidationService.validateRestrictedReportingNames(caseDetails2.getCaseData());
+        assertEquals("Claimant", caseDetails2.getCaseData().getRestrictedReporting().getRequestedBy());
+        eventValidationService.validateRestrictedReportingNames(caseDetails1.getCaseData());
+        assertEquals("Judge", caseDetails1.getCaseData().getRestrictedReporting().getRequestedBy());
+        eventValidationService.validateRestrictedReportingNames(caseDetails3.getCaseData());
+        assertEquals("Respondent", caseDetails3.getCaseData().getRestrictedReporting().getRequestedBy());
+    }
+
+    void shouldReturnsNoErrorsForHearingHearingStatusValidationWithNoHearings() {
+        List<String> errors = new ArrayList<>();
+        var caseWithNoHearings = validHearingStatusCaseCloseEventCaseDetails.getCaseData();
+        caseWithNoHearings.getHearingCollection().clear();
+        eventValidationService.validateHearingStatusForCaseCloseEvent(caseWithNoHearings, errors);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    void shouldPassCaseCloseEventValidationCaseWithNoListedHearingStatus() {
+        List<String> errors = new ArrayList<>();
+        var validCase = validHearingStatusCaseCloseEventCaseDetails.getCaseData();
+        eventValidationService.validateHearingStatusForCaseCloseEvent(validCase, errors);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    void shouldFailCaseCloseEventValidationCaseWithListedHearingStatus() {
+        List<String> errors = new ArrayList<>();
+        var invalidCase = invalidHearingStatusCaseCloseEventCaseDetails.getCaseData();
+        eventValidationService.validateHearingStatusForCaseCloseEvent(invalidCase, errors);
+        assertEquals(1, errors.size());
+        assertEquals(CLOSING_LISTED_CASE_ERROR, errors.get(0));
+    }
+
+    @Test
+    void shouldPassHearingJudgeAllocationValidationForCaseCloseEventHearingWithJudge() {
+        List<String> errors = new ArrayList<>();
+        var validCase = validJudgeAllocationCaseDetails.getCaseData();
+        eventValidationService.validateHearingJudgeAllocationForCaseCloseEvent(validCase, errors);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    void shouldFailHearingJudgeAllocationValidationForCaseCloseEventHearingWithNoJudge() {
+        List<String> errors = new ArrayList<>();
+        var invalidCase = invalidJudgeAllocationCaseDetails.getCaseData();
+        eventValidationService.validateHearingJudgeAllocationForCaseCloseEvent(invalidCase, errors);
+        assertEquals(1, errors.size());
+        assertEquals(CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR, errors.get(0));
+    }
+
+    @Test
+    void shouldReturnsNoErrorsForHearingJudgeAllocationValidationWithNoHearings() {
+        List<String> errors = new ArrayList<>();
+        var caseWithNoHearings = invalidJudgeAllocationCaseDetails.getCaseData();
+        caseWithNoHearings.getHearingCollection().clear();
+        eventValidationService.validateHearingJudgeAllocationForCaseCloseEvent(caseWithNoHearings, errors);
+        assertEquals(0, errors.size());
+    }
+
+
 }

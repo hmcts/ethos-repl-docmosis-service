@@ -3,6 +3,7 @@ const requestModule = require('request-promise-native');
 const request = requestModule.defaults();
 const testConfig = require('../../config.js');
 const logger = Logger.getLogger('helpers/s2sHelper.js');
+const env = testConfig.TestEnv;
 
 async function getServiceToken() {
     const serviceSecret = testConfig.TestS2SAuthSecret;

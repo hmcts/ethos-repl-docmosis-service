@@ -1,6 +1,6 @@
 'use strict';
 
-const testConfig = require('src/test/config.js');
+const testConfig = require('../../../config');
 const createCaseConfig = require('./createCaseConfig');
 
 module.exports = function (jurisdiction,caseType, event) {

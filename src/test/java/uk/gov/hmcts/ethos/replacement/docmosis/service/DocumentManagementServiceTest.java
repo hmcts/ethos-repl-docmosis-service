@@ -115,13 +115,13 @@ public class DocumentManagementServiceTest {
 
         UploadedDocument uploadedDocument = documentManagementService.downloadFile("authString",
                 "http://dm-store:8080/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary");
-        assertEquals(uploadedDocument.getName(), "fileName");
-        assertEquals(uploadedDocument.getContentType(), "xslx");
+        assertEquals("fileName", uploadedDocument.getName());
+        assertEquals("xslx", uploadedDocument.getContentType());
 
         uploadedDocument = documentManagementService.downloadFile("authString",
                 "documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary");
-        assertEquals(uploadedDocument.getName(), "fileName");
-        assertEquals(uploadedDocument.getContentType(), "xslx");
+        assertEquals("fileName", uploadedDocument.getName());
+        assertEquals("xslx", uploadedDocument.getContentType());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -145,13 +145,13 @@ public class DocumentManagementServiceTest {
                 .thenReturn(responseEntity);
         UploadedDocument uploadedDocument = documentManagementService.downloadFile("authString",
                 "http://dm-store:8080/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary");
-        assertEquals(uploadedDocument.getName(), "fileName");
-        assertEquals(uploadedDocument.getContentType(), "xslx");
+        assertEquals("fileName", uploadedDocument.getName());
+        assertEquals("xslx", uploadedDocument.getContentType());
 
         uploadedDocument = documentManagementService.downloadFile("authString",
                 "documents/85d97996-22a5-40d7-882e-3a382c8ae1b4/binary");
-        assertEquals(uploadedDocument.getName(), "fileName");
-        assertEquals(uploadedDocument.getContentType(), "xslx");
+        assertEquals("fileName", uploadedDocument.getName());
+        assertEquals("xslx", uploadedDocument.getContentType());
     }
 
 }
