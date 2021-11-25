@@ -96,7 +96,7 @@ test {
     useJUnitPlatform()
 }
 
-task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verification') {
+task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verification', dependsOn: ':codeceptSmoke') {
     testClassesDirs = sourceSets.functional.output.classesDirs
     classpath = sourceSets.functional.runtimeClasspath
 
@@ -106,7 +106,7 @@ task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verificatio
     systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
 }
 
-task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
+task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification', dependsOn: ':codeceptFunctional') {
     testClassesDirs = sourceSets.functional.output.classesDirs
     classpath = sourceSets.functional.runtimeClasspath
 
@@ -116,6 +116,19 @@ task functional(type: Test, description: 'Runs the functional tests.', group: 'V
 
     systemProperty('VAULTNAME', System.getenv('VAULTNAME'))
     maxHeapSize = '1G'
+}
+
+task yarnInstall(type: Exec) {
+    workingDir '.'
+    commandLine 'yarn', 'install'
+}
+
+task codeceptSmoke(type: Exec, dependsOn: ':yarnInstall') {
+    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@smoke', '--steps', '--reporter', 'mocha-multi'
+}
+
+task codeceptFunctional(type: Exec, dependsOn :'yarnInstall') {
+    commandLine './node_modules/codeceptjs/bin/codecept.js', 'run', '-c', './src/test/end-to-end/', '--grep', '@e2e', '--steps', '--reporter', 'mocha-multi'
 }
 
 project.ext {
