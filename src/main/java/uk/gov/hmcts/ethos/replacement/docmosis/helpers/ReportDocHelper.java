@@ -2,12 +2,10 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.items.ReportListingsTypeItem;
@@ -16,10 +14,25 @@ import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
-
 import java.time.LocalDate;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_SOURCE_LOCAL_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_BY_HEARING_TYPE_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_TO_JUDGEMENTS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -70,17 +83,33 @@ public class ReportDocHelper {
                         nullCheck(listingData.getLocalReportsDetailHdr().getReportOffice())).append(NEW_LINE);
             } else if (!CollectionUtils.isEmpty(listingData.getLocalReportsSummary())) {
                 sb.append(REPORT_OFFICE).append(
-                        nullCheck(listingData.getLocalReportsSummary().get(0).getValue().getReportOffice())).append(NEW_LINE);
+                        nullCheck(listingData.getLocalReportsSummary().get(0)
+                                .getValue().getReportOffice())).append(NEW_LINE);
             }
             switch (listingData.getReportType()) {
-                case CLAIMS_ACCEPTED_REPORT -> sb.append(getCasesAcceptedReport(listingData));
-                case LIVE_CASELOAD_REPORT -> sb.append(getLiveCaseLoadReport(listingData));
-                case CASES_COMPLETED_REPORT -> sb.append(getCasesCompletedReport(listingData));
-                case TIME_TO_FIRST_HEARING_REPORT -> sb.append(getTimeToFirstHearingReport(listingData));
-                case CASE_SOURCE_LOCAL_REPORT -> sb.append(getCaseSourceLocalReport(listingData));
-                case SERVING_CLAIMS_REPORT -> sb.append(getServedClaimsReport(listingData));
-                case HEARINGS_BY_HEARING_TYPE_REPORT -> sb.append(getHearingsByHearingTypeReport(listingData));
-                default -> throw new IllegalStateException("Report type - Unexpected value: " + listingData.getReportType());
+                case CLAIMS_ACCEPTED_REPORT:
+                    sb.append(getCasesAcceptedReport(listingData));
+                    break;
+                case LIVE_CASELOAD_REPORT:
+                    sb.append(getLiveCaseLoadReport(listingData));
+                    break;
+                case CASES_COMPLETED_REPORT:
+                    sb.append(getCasesCompletedReport(listingData));
+                    break;
+                case TIME_TO_FIRST_HEARING_REPORT:
+                    sb.append(getTimeToFirstHearingReport(listingData));
+                    break;
+                case CASE_SOURCE_LOCAL_REPORT:
+                    sb.append(getCaseSourceLocalReport(listingData));
+                    break;
+                case SERVING_CLAIMS_REPORT:
+                    sb.append(getServedClaimsReport(listingData));
+                    break;
+                case HEARINGS_BY_HEARING_TYPE_REPORT:
+                    sb.append(getHearingsByHearingTypeReport(listingData));
+                    break;
+                default:
+                    throw new IllegalStateException("Report type - Unexpected value: " + listingData.getReportType());
             }
         }
 
@@ -98,7 +127,6 @@ public class ReportDocHelper {
             throw new IllegalStateException(("ListingData is not instanceof CasesAwaitingJudgmentReportData"));
         }
         var reportData = (CasesAwaitingJudgmentReportData) listingData;
-
         var sb = new StringBuilder();
         sb.append(REPORT_OFFICE).append(reportData.getReportSummary().getOffice()).append(NEW_LINE);
         addJsonCollection("positionTypes", reportData.getReportSummary().getPositionTypes().iterator(), sb);
@@ -564,45 +592,46 @@ public class ReportDocHelper {
         addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
         return sb;
     }
+
     private static StringBuilder getHearingsByHearingTypeReport(ListingData listingData) {
         var sb = new StringBuilder();
         AdhocReportType localReportSummaryHdr = listingData.getLocalReportsSummaryHdr();
-        List<AdhocReportTypeItem> localReportSummary = listingData.getLocalReportsSummary();
-        List<AdhocReportTypeItem> localReportSummary2 = listingData.getLocalReportsSummary2();
         AdhocReportType localReportSummaryHdr2 = listingData.getLocalReportsSummaryHdr2();
-        List<AdhocReportTypeItem> localReportSummaryDetail = listingData.getLocalReportsDetail();
         if (localReportSummaryHdr != null) {
             sb.append(getHearingCounts(localReportSummaryHdr));
         }
+        List<AdhocReportTypeItem> localReportSummary = listingData.getLocalReportsSummary();
 
         if (!CollectionUtils.isEmpty(localReportSummary)) {
             sb.append(REPORT_LIST);
             for (var i = 0; i < localReportSummary.size(); i++) {
-                sb.append(getHearingsByHearingTypeLocalReportSummaryRow(localReportSummary.get(i).getValue(), "localSummary"));
+                sb.append(getHearingsByHearingTypeLocalReportSummaryRow(
+                        localReportSummary.get(i).getValue(), "localSummary"));
                 if (i != localReportSummary.size() - 1) {
                     sb.append(",\n");
                 }
             }
             sb.append("],\n");
         }
-
+        List<AdhocReportTypeItem> localReportSummary2 = listingData.getLocalReportsSummary2();
         sb.append(getHearingByHearingTypeLocalReportSummaryHdr2(localReportSummaryHdr2));
-
         if (!CollectionUtils.isEmpty(localReportSummary2)) {
             sb.append(REPORT_LIST);
             for (var i = 0; i < localReportSummary2.size(); i++) {
-                sb.append(getHearingsByHearingTypeLocalReportSummaryRow(localReportSummary2.get(i).getValue(), "localSummary2"));
+                sb.append(getHearingsByHearingTypeLocalReportSummaryRow(
+                        localReportSummary2.get(i).getValue(), "localSummary2"));
                 if (i != localReportSummary2.size() - 1) {
                     sb.append(",\n");
                 }
             }
             sb.append("],\n");
         }
-
+        List<AdhocReportTypeItem> localReportSummaryDetail = listingData.getLocalReportsDetail();
         if (!CollectionUtils.isEmpty(localReportSummaryDetail)) {
             sb.append(REPORT_LIST);
             for (var i = 0; i < localReportSummaryDetail.size(); i++) {
-                sb.append(getHearingsByHearingTypeLocalReportDetailRow(localReportSummaryDetail.get(i).getValue()));
+                sb.append(getHearingsByHearingTypeLocalReportDetailRow(
+                        localReportSummaryDetail.get(i).getValue()));
                 if (i != localReportSummaryDetail.size() - 1) {
                     sb.append(",\n");
                 }
@@ -613,29 +642,20 @@ public class ReportDocHelper {
         return sb;
     }
 
-    private static  StringBuilder getHearingsByHearingTypeLocalReportDetailRow(AdhocReportType adhocReportType) {
-           var sb = new StringBuilder();
-            sb.append("{\"date\":\"").append(
-                    nullCheck(adhocReportType.getDate())).append(NEW_LINE);
-            sb.append("{\"multiple_sub\":\"").append(
-                    nullCheck(adhocReportType.getMultSub())).append(NEW_LINE);
-            sb.append("{\"case_no\":\"").append(
-                    nullCheck(adhocReportType.getCaseReference())).append(NEW_LINE);
-            sb.append("{\"lead\":\"").append(
-                    nullCheck(adhocReportType.getLeadCase())).append(NEW_LINE);
-            sb.append("\"hear_no\":\"").append(
-                    nullCheck(adhocReportType.getHearingNumber())).append(NEW_LINE);
-            sb.append("\"type\":\"").append(
-                    nullCheck(adhocReportType.getHearingType())).append(NEW_LINE);
-            sb.append("\"tel\":\"").append(
-                    nullCheck(adhocReportType.getHearingTelConf())).append(NEW_LINE);
-            sb.append("\"jm\":\"").append(
-                    nullCheck(adhocReportType.getJudicialMediation())).append(NEW_LINE);
-            sb.append("\"dur\":\"").append(
-                    nullCheck(adhocReportType.getHearingDuration())).append(NEW_LINE);
-            sb.append("\"clerk\":\"").append(
-                    nullCheck(adhocReportType.getHearingClerk())).append("\"}");
-            return sb;
+    private static  StringBuilder getHearingsByHearingTypeLocalReportDetailRow(
+            AdhocReportType adhocReportType) {
+        var sb = new StringBuilder();
+        sb.append("{\"date\":\"").append(nullCheck(adhocReportType.getDate())).append(NEW_LINE);
+        sb.append("{\"multiple_sub\":\"").append(nullCheck(adhocReportType.getMultSub())).append(NEW_LINE);
+        sb.append("{\"case_no\":\"").append(nullCheck(adhocReportType.getCaseReference())).append(NEW_LINE);
+        sb.append("{\"lead\":\"").append(nullCheck(adhocReportType.getLeadCase())).append(NEW_LINE);
+        sb.append("\"hear_no\":\"").append(nullCheck(adhocReportType.getHearingNumber())).append(NEW_LINE);
+        sb.append("\"type\":\"").append(nullCheck(adhocReportType.getHearingType())).append(NEW_LINE);
+        sb.append("\"tel\":\"").append(nullCheck(adhocReportType.getHearingTelConf())).append(NEW_LINE);
+        sb.append("\"jm\":\"").append(nullCheck(adhocReportType.getJudicialMediation())).append(NEW_LINE);
+        sb.append("\"dur\":\"").append(nullCheck(adhocReportType.getHearingDuration())).append(NEW_LINE);
+        sb.append("\"clerk\":\"").append(nullCheck(adhocReportType.getHearingClerk())).append("\"}");
+        return sb;
     }
 
     private static StringBuilder getHearingByHearingTypeLocalReportSummaryHdr2(AdhocReportType adhocReportType) {
@@ -645,12 +665,12 @@ public class ReportDocHelper {
             return sb;
         }
         for (var item : listingHistory) {
-         String s = item.getValue().getHearingNumber();
-         List<String> fields = List.of(s.split("|").clone());
-         if (CollectionUtils.isEmpty(fields) || fields.size() < 8) {
-            continue;
-         }
-         var tempAdhocReportType = new AdhocReportType();
+            String s = item.getValue().getHearingNumber();
+            List<String> fields = List.of(s.split("|").clone());
+            if (CollectionUtils.isEmpty(fields) || fields.size() < 8) {
+                continue;
+            }
+            var tempAdhocReportType = new AdhocReportType();
             tempAdhocReportType.setHearing(fields.get(0));
             tempAdhocReportType.setHearingPrelim(fields.get(1));
             tempAdhocReportType.setHearingCM(fields.get(2));
@@ -664,7 +684,8 @@ public class ReportDocHelper {
         return sb;
     }
 
-    private static StringBuilder getHearingsByHearingTypeLocalReportSummaryRow(AdhocReportType adhocReportType, String reportType) {
+    private static StringBuilder getHearingsByHearingTypeLocalReportSummaryRow(
+            AdhocReportType adhocReportType, String reportType) {
         var sb = new StringBuilder();
         if ("localSummary".equals(reportType)) {
             sb.append("{\"date\":\"").append(
@@ -681,7 +702,8 @@ public class ReportDocHelper {
         sb.append(getHearingCounts(adhocReportType));
         return sb;
     }
-    private static StringBuilder getHearingCounts (AdhocReportType adhocReportType) {
+
+    private static StringBuilder getHearingCounts(AdhocReportType adhocReportType) {
         var sb = new StringBuilder();
         sb.append("\"cm\":\"").append(
                 nullCheck(adhocReportType.getHearingCM())).append(NEW_LINE);
