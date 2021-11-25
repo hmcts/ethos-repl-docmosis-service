@@ -153,7 +153,7 @@ public class HearingsByHearingTypeReport {
         List<ReportListingsTypeItem> listingHistory = new ArrayList<>();
         for (var subSplitHeader : subSplitList) {
             var fields = new Fields();
-            ReportListingsType reportListingsType = new ReportListingsType();
+            var reportListingsType = new ReportListingsType();
             fields.hearing =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                             b -> HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType())
@@ -189,7 +189,7 @@ public class HearingsByHearingTypeReport {
 
 
             reportListingsType.setHearingNumber(hearingNumber);
-            ReportListingsTypeItem item = new ReportListingsTypeItem();
+            var item = new ReportListingsTypeItem();
             item.setId(UUID.randomUUID().toString());
             item.setValue(reportListingsType);
             listingHistory.add(item);
