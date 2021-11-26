@@ -36,10 +36,12 @@ public class HearingsByHearingTypeReport {
     private static final List<String> subSplitList = List.of("EJ Sit Alone", "Full Panel", "JM",
             "Tel Con", "Video", "Hybrid", "In Person", "Stage 1", "Stage 2", "Stage 3");
     private String costsHearingType = "Costs Hearing";
+    private boolean casesExistWithHearingStatusHeard;
 
     public ListingData processHearingsByHearingTypeRequest(ListingDetails listingDetails,
                                                            List<SubmitEvent> submitEvents) {
 
+        casesExistWithHearingStatusHeard = CollectionUtils.isNotEmpty(getDatesList(submitEvents));
         if (CollectionUtils.isNotEmpty(submitEvents)) {
             executeReport(listingDetails, submitEvents);
         }
@@ -59,8 +61,12 @@ public class HearingsByHearingTypeReport {
         populateLocalReportSummaryHdr2(listingDetails.getCaseData(), submitEvents);
         populateLocalReportSummary2(listingDetails.getCaseData(), submitEvents);
         populateLocalReportSummaryDetail(listingDetails.getCaseData(), submitEvents);
-        listingDetails.getCaseData().getLocalReportsDetailHdr().setReportOffice(
-                UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
+
+        if (CollectionUtils.isNotEmpty(listingDetails.getCaseData().getLocalReportsSummary())) {
+            listingDetails.getCaseData().getLocalReportsSummary().get(0).getValue().setReportOffice(
+                    UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
+        }
+
     }
 
     private static class Fields {
@@ -101,34 +107,35 @@ public class HearingsByHearingTypeReport {
 
     private void populateLocalReportSummaryHdr(ListingData listingData, List<SubmitEvent> submitEventList) {
         var fields = new Fields();
-        fields.hearing =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                a.getCaseData().getHearingCollection())
-                && a.getCaseData().getHearingCollection().stream().anyMatch(
+        if (casesExistWithHearingStatusHeard) {
+            fields.hearing =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
+                    a.getCaseData().getHearingCollection())
+                    && a.getCaseData().getHearingCollection().stream().anyMatch(
                     b -> HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType()))).count();
-        fields.hearingPrelimCM =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                a.getCaseData().getHearingCollection())
-                && a.getCaseData().getHearingCollection().stream().anyMatch(
+            fields.hearingPrelimCM =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
+                    a.getCaseData().getHearingCollection())
+                    && a.getCaseData().getHearingCollection().stream().anyMatch(
                     b -> HEARING_TYPE_PERLIMINARY_HEARING_CM.equals(b.getValue().getHearingType()))).count();
-        fields.hearingPrelim =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                a.getCaseData().getHearingCollection())
-                && a.getCaseData().getHearingCollection().stream().anyMatch(
+            fields.hearingPrelim =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
+                    a.getCaseData().getHearingCollection())
+                    && a.getCaseData().getHearingCollection().stream().anyMatch(
                     b -> HEARING_TYPE_PERLIMINARY_HEARING.equals(b.getValue().getHearingType()))).count();
-        fields.costs = (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                a.getCaseData().getHearingCollection())
-                && a.getCaseData().getHearingCollection().stream().anyMatch(
+            fields.costs = (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
+                    a.getCaseData().getHearingCollection())
+                    && a.getCaseData().getHearingCollection().stream().anyMatch(
                     b -> costsHearingType.equals(b.getValue().getHearingType()))).count();
-        fields.reconsider = (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                a.getCaseData().getHearingCollection())
-                && a.getCaseData().getHearingCollection().stream().anyMatch(
+            fields.reconsider = (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
+                    a.getCaseData().getHearingCollection())
+                    && a.getCaseData().getHearingCollection().stream().anyMatch(
                     b -> HEARING_TYPE_JUDICIAL_RECONSIDERATION.equals(b.getValue().getHearingType()))).count();
-        fields.remedy =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                a.getCaseData().getHearingCollection())
-                && a.getCaseData().getHearingCollection().stream().anyMatch(
+            fields.remedy =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
+                    a.getCaseData().getHearingCollection())
+                    && a.getCaseData().getHearingCollection().stream().anyMatch(
                     b -> HEARING_TYPE_JUDICIAL_REMEDY.equals(b.getValue().getHearingType()))).count();
-        fields.calculateTotal();
+            fields.calculateTotal();
+        }
         var adhocReportType = new AdhocReportType();
         setAdhocReport(adhocReportType, fields, null, true);
-
         listingData.setLocalReportsSummaryHdr(adhocReportType);
     }
 
@@ -137,6 +144,7 @@ public class HearingsByHearingTypeReport {
         List<AdhocReportTypeItem> adhocReportTypeItemList = new ArrayList<>();
         for (var date : datesList) {
             var fields = new Fields();
+
             fields.hearing =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                     a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
@@ -144,6 +152,7 @@ public class HearingsByHearingTypeReport {
                             && b.getValue().getHearingDateCollection().stream().anyMatch(c -> date.equals(
                                     c.getValue().getListedDate()))
                                 && HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType()))).count();
+
             fields.hearingPrelimCM =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                     a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
@@ -184,61 +193,65 @@ public class HearingsByHearingTypeReport {
             var adhocReportType = new AdhocReportType();
             setAdhocReport(adhocReportType, fields, adhocReportTypeItemList, false);
         }
+
         listingData.setLocalReportsSummary(adhocReportTypeItemList);
     }
 
     private void populateLocalReportSummaryHdr2(ListingData listingData, List<SubmitEvent> submitEventList) {
         var adhocReportType = new AdhocReportType();
         List<ReportListingsTypeItem> listingHistory = new ArrayList<>();
-        for (var subSplitHeader : subSplitList) {
-            var fields = new Fields();
-            fields.hearing =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                    a.getCaseData().getHearingCollection())
-                    && a.getCaseData().getHearingCollection().stream().anyMatch(
+        if (casesExistWithHearingStatusHeard) {
+            for (var subSplitHeader : subSplitList) {
+                var fields = new Fields();
+                fields.hearing =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
+                        a.getCaseData().getHearingCollection())
+                        && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType())
-                                    && isHearingFormatValid(subSplitHeader, b))).count();
-            fields.hearingPrelimCM =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                    a.getCaseData().getHearingCollection())
-                    && a.getCaseData().getHearingCollection().stream().anyMatch(
+                                && isHearingFormatValid(subSplitHeader, b))).count();
+                fields.hearingPrelimCM =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
+                        a.getCaseData().getHearingCollection())
+                        && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> HEARING_TYPE_PERLIMINARY_HEARING_CM.equals(b.getValue().getHearingType())
-                                    && isHearingFormatValid(subSplitHeader, b))).count();
-            fields.hearingPrelim =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                    a.getCaseData().getHearingCollection())
-                    && a.getCaseData().getHearingCollection().stream().anyMatch(
+                                && isHearingFormatValid(subSplitHeader, b))).count();
+                fields.hearingPrelim =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
+                        a.getCaseData().getHearingCollection())
+                        && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> HEARING_TYPE_PERLIMINARY_HEARING.equals(b.getValue().getHearingType())
-                                    && isHearingFormatValid(subSplitHeader, b))).count();
-            fields.costs =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                    a.getCaseData().getHearingCollection())
-                    && a.getCaseData().getHearingCollection().stream().anyMatch(
+                                && isHearingFormatValid(subSplitHeader, b))).count();
+                fields.costs =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
+                        a.getCaseData().getHearingCollection())
+                        && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> costsHearingType.equals(b.getValue().getHearingType())
-                                    && isHearingFormatValid(subSplitHeader, b))).count();
-            fields.reconsider =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                    a.getCaseData().getHearingCollection())
-                    && a.getCaseData().getHearingCollection().stream().anyMatch(
+                                && isHearingFormatValid(subSplitHeader, b))).count();
+                fields.reconsider =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
+                        a.getCaseData().getHearingCollection())
+                        && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> HEARING_TYPE_JUDICIAL_RECONSIDERATION.equals(b.getValue().getHearingType())
-                                    && isHearingFormatValid(subSplitHeader, b))).count();
-            fields.remedy =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                    a.getCaseData().getHearingCollection())
-                    && a.getCaseData().getHearingCollection().stream().anyMatch(
+                                && isHearingFormatValid(subSplitHeader, b))).count();
+                fields.remedy =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
+                        a.getCaseData().getHearingCollection())
+                        && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> HEARING_TYPE_JUDICIAL_REMEDY.equals(b.getValue().getHearingType())
-                                    && isHearingFormatValid(subSplitHeader, b))).count();
-            fields.calculateTotal();
-            String hearingNumber = fields.hearing + "|"
-                    + fields.hearingPrelim + "|"
-                    + fields.hearingPrelimCM + "|"
-                    + fields.remedy + "|"
-                    + fields.reconsider + "|"
-                    + fields.costs + "|"
-                    + fields.total + "|"
-                    + subSplitHeader;
+                                && isHearingFormatValid(subSplitHeader, b))).count();
+                fields.calculateTotal();
+                String hearingNumber = fields.hearing + "|"
+                        + fields.hearingPrelim + "|"
+                        + fields.hearingPrelimCM + "|"
+                        + fields.remedy + "|"
+                        + fields.reconsider + "|"
+                        + fields.costs + "|"
+                        + fields.total + "|"
+                        + subSplitHeader;
 
-            var reportListingsType = new ReportListingsType();
-            reportListingsType.setHearingNumber(hearingNumber);
-            var item = new ReportListingsTypeItem();
-            item.setId(UUID.randomUUID().toString());
-            item.setValue(reportListingsType);
-            listingHistory.add(item);
+                var reportListingsType = new ReportListingsType();
+                reportListingsType.setHearingNumber(hearingNumber);
+                var item = new ReportListingsTypeItem();
+                item.setId(UUID.randomUUID().toString());
+                item.setValue(reportListingsType);
+                listingHistory.add(item);
+            }
         }
+
         adhocReportType.setListingHistory(listingHistory);
         listingData.setLocalReportsSummaryHdr2(adhocReportType);
     }
@@ -300,6 +313,7 @@ public class HearingsByHearingTypeReport {
                 fields.date = date;
                 fields.calculateTotal();
                 var adhocReportType = new AdhocReportType();
+                adhocReportType.setSubSplit(subSplitHeader);
                 setAdhocReport(adhocReportType, fields, adhocReportTypeItemList, false);
             }
         }
@@ -307,42 +321,49 @@ public class HearingsByHearingTypeReport {
     }
 
     private void populateLocalReportSummaryDetail(ListingData listingData, List<SubmitEvent> submitEventList) {
+
         List<AdhocReportTypeItem> adhocReportTypeItemList = new ArrayList<>();
-        for (var submitEvent : submitEventList) {
-            var caseData = submitEvent.getCaseData();
-            if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
-                for (var hearingTypeItem : caseData.getHearingCollection()) {
-                    if (CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
-                        for (var dateListedTypedItem : hearingTypeItem.getValue().getHearingDateCollection()) {
-                            if (HEARING_STATUS_HEARD.equals(dateListedTypedItem.getValue().getHearingStatus())) {
-                                var adhocReportType = new AdhocReportType();
-                                adhocReportType.setDate(dateListedTypedItem.getValue().getListedDate());
-                                adhocReportType.setMultSub(
-                                        caseData.getMultipleReference() + ", " + caseData.getSubMultipleName());
-                                adhocReportType.setCaseReference(caseData.getEthosCaseReference());
-                                adhocReportType.setLeadCase(caseData.getLeadClaimant());
-                                adhocReportType.setHearingNumber(hearingTypeItem.getValue().getHearingNumber());
-                                adhocReportType.setHearingType(hearingTypeItem.getValue().getHearingType());
-                                adhocReportType.setHearingTelConf(CollectionUtils.isNotEmpty(
-                                        hearingTypeItem.getValue().getHearingFormat())
-                                        && hearingTypeItem.getValue().getHearingFormat()
-                                        .contains("Telephone") ? "Y" : "");
-                                adhocReportType.setJudicialMediation("JM".equals(
-                                        hearingTypeItem.getValue().getJudicialMediation()) ? "Y" : "");
-                                adhocReportType.setHearingClerk(Strings.isNullOrEmpty(
-                                        dateListedTypedItem.getValue().getHearingClerk()) ? "" :
-                                        dateListedTypedItem.getValue().getHearingClerk());
-                                adhocReportType.setHearingDuration(getHearingDuration(dateListedTypedItem));
-                                var adhocReportTypeItem = new AdhocReportTypeItem();
-                                adhocReportTypeItem.setId(UUID.randomUUID().toString());
-                                adhocReportTypeItem.setValue(adhocReportType);
-                                adhocReportTypeItemList.add(adhocReportTypeItem);
-                            }
-                        }
-                    }
+        if (casesExistWithHearingStatusHeard) {
+            for (var submitEvent : submitEventList) {
+                var caseData = submitEvent.getCaseData();
+                if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+                    continue;
                 }
+                    for (var hearingTypeItem : caseData.getHearingCollection()) {
+                        if (CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                            continue;
+                        }
+                            for (var dateListedTypedItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                                if (!HEARING_STATUS_HEARD.equals(dateListedTypedItem.getValue().getHearingStatus())) {
+                                    continue;
+                                }
+                                    var adhocReportType = new AdhocReportType();
+                                    adhocReportType.setDate(dateListedTypedItem.getValue().getListedDate());
+                                    adhocReportType.setMultSub(
+                                            caseData.getMultipleReference() + ", " + caseData.getSubMultipleName());
+                                    adhocReportType.setCaseReference(caseData.getEthosCaseReference());
+                                    adhocReportType.setLeadCase(Strings.isNullOrEmpty(caseData.getLeadClaimant()) ? "" : "Y");
+                                    adhocReportType.setHearingNumber(hearingTypeItem.getValue().getHearingNumber());
+                                    adhocReportType.setHearingType(hearingTypeItem.getValue().getHearingType());
+                                    adhocReportType.setHearingTelConf(CollectionUtils.isNotEmpty(
+                                            hearingTypeItem.getValue().getHearingFormat())
+                                            && hearingTypeItem.getValue().getHearingFormat()
+                                            .contains("Telephone") ? "Y" : "");
+                                    adhocReportType.setJudicialMediation("JM".equals(
+                                            hearingTypeItem.getValue().getJudicialMediation()) ? "Y" : "");
+                                    adhocReportType.setHearingClerk(Strings.isNullOrEmpty(
+                                            dateListedTypedItem.getValue().getHearingClerk()) ? "" :
+                                            dateListedTypedItem.getValue().getHearingClerk());
+                                    adhocReportType.setHearingDuration(getHearingDuration(dateListedTypedItem));
+                                    var adhocReportTypeItem = new AdhocReportTypeItem();
+                                    adhocReportTypeItem.setId(UUID.randomUUID().toString());
+                                    adhocReportTypeItem.setValue(adhocReportType);
+                                    adhocReportTypeItemList.add(adhocReportTypeItem);
+                            }
+                    }
             }
         }
+
         listingData.setLocalReportsDetail(adhocReportTypeItemList);
     }
 
@@ -386,11 +407,13 @@ public class HearingsByHearingTypeReport {
             case "JM":
                 return "JM".equals(hearingTypeItem.getValue().getJudicialMediation());
             case "Tel Con":
-                return hearingTypeItem.getValue().getHearingFormat().contains("Telephone");
+                return CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingFormat())
+                        && hearingTypeItem.getValue().getHearingFormat().contains("Telephone");
             case "Video":
             case "Hybrid":
             case "In Person":
-                return hearingTypeItem.getValue().getHearingFormat().contains(subSplitHeader);
+                return CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingFormat())
+                        && hearingTypeItem.getValue().getHearingFormat().contains(subSplitHeader);
             case "Stage 1":
             case "Stage 2":
             case "Stage 3":

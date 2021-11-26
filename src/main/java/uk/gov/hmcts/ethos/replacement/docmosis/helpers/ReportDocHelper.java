@@ -666,7 +666,7 @@ public class ReportDocHelper {
         }
         for (var item : listingHistory) {
             String s = item.getValue().getHearingNumber();
-            List<String> fields = List.of(s.split("|").clone());
+            List<String> fields = List.of(s.split("[|]").clone());
             if (CollectionUtils.isEmpty(fields) || fields.size() < 8) {
                 continue;
             }
