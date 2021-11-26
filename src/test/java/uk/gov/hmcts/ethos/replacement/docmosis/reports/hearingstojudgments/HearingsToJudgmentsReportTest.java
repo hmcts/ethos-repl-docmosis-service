@@ -145,8 +145,9 @@ class HearingsToJudgmentsReportTest {
         judgmentTypeItem.setValue(null);
         var submitEvent = caseDataBuilder
                 .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING, YES)
+                .withJudgment("2021-07-16", DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
                 .buildAsSubmitEvent(ACCEPTED_STATE);
-        submitEvent.getCaseData().setJudgementCollection(List.of(judgmentTypeItem));
+        submitEvent.getCaseData().getJudgementCollection().add(judgmentTypeItem);
         submitEvents.add(submitEvent);
 
         var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
@@ -164,6 +165,7 @@ class HearingsToJudgmentsReportTest {
 
         var submitEvent = caseDataBuilder
                 .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING, YES)
+                .withJudgment("2021-07-16", DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
                 .withJudgment(null, null, null)
                 .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEvent);
@@ -183,6 +185,7 @@ class HearingsToJudgmentsReportTest {
 
         var submitEvent = caseDataBuilder
                 .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING, YES)
+                .withJudgment("2021-07-16", DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
                 .withJudgment("test", null, null)
                 .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEvent);
