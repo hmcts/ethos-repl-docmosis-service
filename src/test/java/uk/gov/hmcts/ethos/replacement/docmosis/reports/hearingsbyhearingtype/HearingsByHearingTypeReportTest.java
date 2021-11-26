@@ -90,7 +90,7 @@ public class HearingsByHearingTypeReportTest {
         List<SubmitEvent> submitEvents = new ArrayList<>();
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
         ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents);
-        verifyReportHeaderIsZero(listingData);
+        verifyReportHeaderIsZeroWhenNoCasesExist(listingData);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseData(caseData);
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
         ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventsWithoutHearings);
-        verifyReportHeaderIsZero(listingData);
+        verifyReportHeaderIsZeroWithNoHearings(listingData);
     }
 
     @Test
@@ -114,18 +114,30 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseData(caseData);
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
         ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventsWithoutDates);
-        verifyReportHeaderIsZero(listingData);
+        verifyReportHeaderIsZeroWithNoHearings(listingData);
     }
 
-    private void verifyReportHeaderIsZero(ListingData listingData) {
+    private void verifyReportHeaderIsZeroWhenNoCasesExist(ListingData listingData) {
         AdhocReportType adhocReportType = listingData.getLocalReportsSummaryHdr();
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getTotal())?0:Integer.parseInt(adhocReportType.getTotal()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearing())?0:Integer.parseInt(adhocReportType.getHearing()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingCM())?0:Integer.parseInt(adhocReportType.getHearingCM()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getCosts())?0:Integer.parseInt(adhocReportType.getCosts()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingPrelim())?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getReconsider())?0:Integer.parseInt(adhocReportType.getReconsider()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getRemedy())?0:Integer.parseInt(adhocReportType.getRemedy()));
+        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getTotal()));
+        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getHearing()));
+        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getHearingCM()));
+        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getCosts()));
+        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
+        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getReconsider()));
+        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getRemedy()));
+
+    }
+
+    private void verifyReportHeaderIsZeroWithNoHearings(ListingData listingData) {
+        AdhocReportType adhocReportType = listingData.getLocalReportsSummaryHdr();
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getTotal())?0:Integer.parseInt(adhocReportType.getTotal()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getHearing())?0:Integer.parseInt(adhocReportType.getHearing()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getHearingCM())?0:Integer.parseInt(adhocReportType.getHearingCM()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getCosts())?0:Integer.parseInt(adhocReportType.getCosts()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getHearingPrelim())?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getReconsider())?0:Integer.parseInt(adhocReportType.getReconsider()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getRemedy())?0:Integer.parseInt(adhocReportType.getRemedy()));
 
     }
 
@@ -147,7 +159,7 @@ public class HearingsByHearingTypeReportTest {
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
         ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents);
 
-        verifyReportHeaderIsZero(reportListingData);
+        verifyReportHeaderIsZeroWithNoHearings(reportListingData);
     }
 
     @Test
