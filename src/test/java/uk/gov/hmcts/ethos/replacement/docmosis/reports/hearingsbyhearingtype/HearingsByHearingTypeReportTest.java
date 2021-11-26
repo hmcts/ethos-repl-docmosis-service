@@ -71,10 +71,11 @@ public class HearingsByHearingTypeReportTest {
 
     private void createSubmitEventsWithoutDates() {
         DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
+        DateListedType type = new DateListedType();
+        dateListedTypeItem.setValue(type);
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING, "JM",
                 dateListedTypeItem));
         submitEventsWithoutDates.add(createSubmitEvent(hearings, "1", "lead1" ));
-        dateListedTypeItem = new DateListedTypeItem();
         hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_REMEDY, "Hybrid",
                 dateListedTypeItem));
         submitEventsWithoutDates.add(createSubmitEvent(hearings, "2", "lead2"));
@@ -119,13 +120,13 @@ public class HearingsByHearingTypeReportTest {
 
     private void verifyReportHeaderIsZeroWhenNoCasesExist(ListingData listingData) {
         AdhocReportType adhocReportType = listingData.getLocalReportsSummaryHdr();
-        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getTotal()));
-        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getHearing()));
-        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getHearingCM()));
-        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getCosts()));
-        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
-        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getReconsider()));
-        assertEquals(0, adhocReportType == null ?0:Integer.parseInt(adhocReportType.getRemedy()));
+        assertEquals(0, adhocReportType == null ? 0:Integer.parseInt(adhocReportType.getTotal()));
+        assertEquals(0, adhocReportType == null ? 0:Integer.parseInt(adhocReportType.getHearing()));
+        assertEquals(0, adhocReportType == null ? 0:Integer.parseInt(adhocReportType.getHearingCM()));
+        assertEquals(0, adhocReportType == null ? 0:Integer.parseInt(adhocReportType.getCosts()));
+        assertEquals(0, adhocReportType == null ? 0:Integer.parseInt(adhocReportType.getHearingPrelim()));
+        assertEquals(0, adhocReportType == null ? 0:Integer.parseInt(adhocReportType.getReconsider()));
+        assertEquals(0, adhocReportType == null ? 0:Integer.parseInt(adhocReportType.getRemedy()));
 
     }
 
