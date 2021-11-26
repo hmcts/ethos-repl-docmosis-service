@@ -125,7 +125,7 @@ class HearingsToJudgmentsReportTest {
         // Then the case should not be in the report data
 
         submitEvents.add(caseDataBuilder
-                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING, YES)
+                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING, YES)
                 .buildAsSubmitEvent(ACCEPTED_STATE));
 
         var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
@@ -144,7 +144,7 @@ class HearingsToJudgmentsReportTest {
         var judgmentTypeItem = new JudgementTypeItem();
         judgmentTypeItem.setValue(null);
         var submitEvent = caseDataBuilder
-                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING, YES)
+                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING, YES)
                 .withJudgment("2021-07-16", DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
                 .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvent.getCaseData().getJudgementCollection().add(judgmentTypeItem);
@@ -164,29 +164,9 @@ class HearingsToJudgmentsReportTest {
         // Then the case should not be in the report data
 
         var submitEvent = caseDataBuilder
-                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING, YES)
+                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING, YES)
                 .withJudgment("2021-07-16", DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
                 .withJudgment(null, null, null)
-                .buildAsSubmitEvent(ACCEPTED_STATE);
-        submitEvents.add(submitEvent);
-
-        var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
-        assertCommonValues(reportData);
-        assertTrue(reportData.getReportDetails().isEmpty());
-    }
-
-    @Test
-    void shouldNotShowCaseIfHeardButJudgmentsHasHearingDateCannotBeParsed() {
-        // Given a case is accepted
-        // And has been heard
-        // And has judgment with a hearing date that cannot be parsed
-        // When I request report data
-        // Then the case should not be in the report data
-
-        var submitEvent = caseDataBuilder
-                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING, YES)
-                .withJudgment("2021-07-16", DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
-                .withJudgment("test", null, null)
                 .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEvent);
 
@@ -313,7 +293,7 @@ class HearingsToJudgmentsReportTest {
         // Then the case is not in the report data
 
         submitEvents.add(caseDataBuilder
-                .withHearing(INVALID_HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_MEDIATION, YES)
+                .withHearing(INVALID_HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING, YES)
                 .withJudgment(INVALID_JUDGMENT_HEARING_DATE, DATE_NOT_WITHIN_4WKS, DATE_NOT_WITHIN_4WKS)
                 .buildAsSubmitEvent(ACCEPTED_STATE));
 
@@ -331,7 +311,7 @@ class HearingsToJudgmentsReportTest {
         // Then the case is not in the report data
 
         submitEvents.add(caseDataBuilder
-                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_MEDIATION, YES)
+                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_HEARING, YES)
                 .withJudgment(INVALID_JUDGMENT_HEARING_DATE, DATE_WITHIN_4WKS, DATE_WITHIN_4WKS)
                 .buildAsSubmitEvent(ACCEPTED_STATE));
 
