@@ -157,7 +157,9 @@ public class HearingsToJudgmentsReport {
             var dateListedType = dateListedTypeItem.getValue();
             var hearingListedDate = LocalDate.parse(dateListedType.getListedDate(), OLD_DATE_TIME_PATTERN);
             var judgements = judgmentsCollection.stream()
-                                                    .filter(j -> hearingListedDate.isEqual(
+                                                    .filter(j -> j.getValue() != null
+                                                            && j.getValue().getJudgmentHearingDate() != null
+                                                            && hearingListedDate.isEqual(
                                                                 LocalDate.parse(j.getValue().getJudgmentHearingDate(),
                                                                         OLD_DATE_TIME_PATTERN2)))
                                                     .collect(Collectors.toList());

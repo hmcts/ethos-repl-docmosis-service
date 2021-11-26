@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
 
 import java.time.LocalDateTime;
@@ -127,6 +129,46 @@ class HearingsToJudgmentsReportTest {
         submitEvents.add(caseDataBuilder
                 .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING, YES)
                 .buildAsSubmitEvent(ACCEPTED_STATE));
+
+        var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        assertCommonValues(reportData);
+        assertTrue(reportData.getReportDetails().isEmpty());
+    }
+
+    @Test
+    void shouldNotShowCaseIfHeardButJudgmentsHasNoValue() {
+        // Given a case is accepted
+        // And has been heard
+        // And has judgement but without a value
+        // When I request report data
+        // Then the case should not be in the report data
+
+        var submitEvent = caseDataBuilder
+                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING, YES)
+                .buildAsSubmitEvent(ACCEPTED_STATE);
+        submitEvent.getCaseData().setJudgementCollection(List.of(new JudgementTypeItem()));
+        submitEvents.add(submitEvent);
+
+        var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        assertCommonValues(reportData);
+        assertTrue(reportData.getReportDetails().isEmpty());
+    }
+
+    @Test
+    void shouldNotShowCaseIfHeardButJudgmentsHasNoHearingDate() {
+        // Given a case is accepted
+        // And has been heard
+        // And has judgment btu without a hearing date
+        // When I request report data
+        // Then the case should not be in the report data
+
+        var judgmentTypeItem = new JudgementTypeItem();
+        judgmentTypeItem.setValue(new JudgementType());
+        var submitEvent = caseDataBuilder
+                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING, YES)
+                .buildAsSubmitEvent(ACCEPTED_STATE);
+        submitEvent.getCaseData().setJudgementCollection(List.of(judgmentTypeItem));
+        submitEvents.add(submitEvent);
 
         var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
