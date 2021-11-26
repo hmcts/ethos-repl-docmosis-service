@@ -111,27 +111,27 @@ public class HearingsByHearingTypeReport {
             fields.hearing =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                     a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
-                    b -> HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType()))).count();
+                        b -> HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType()))).count();
             fields.hearingPrelimCM =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                    a.getCaseData().getHearingCollection())
+                        a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
-                    b -> HEARING_TYPE_PERLIMINARY_HEARING_CM.equals(b.getValue().getHearingType()))).count();
+                        b -> HEARING_TYPE_PERLIMINARY_HEARING_CM.equals(b.getValue().getHearingType()))).count();
             fields.hearingPrelim =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                    a.getCaseData().getHearingCollection())
+                        a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
-                    b -> HEARING_TYPE_PERLIMINARY_HEARING.equals(b.getValue().getHearingType()))).count();
+                        b -> HEARING_TYPE_PERLIMINARY_HEARING.equals(b.getValue().getHearingType()))).count();
             fields.costs = (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                    a.getCaseData().getHearingCollection())
+                        a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
-                    b -> costsHearingType.equals(b.getValue().getHearingType()))).count();
+                        b -> costsHearingType.equals(b.getValue().getHearingType()))).count();
             fields.reconsider = (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                    a.getCaseData().getHearingCollection())
+                        a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
-                    b -> HEARING_TYPE_JUDICIAL_RECONSIDERATION.equals(b.getValue().getHearingType()))).count();
+                        b -> HEARING_TYPE_JUDICIAL_RECONSIDERATION.equals(b.getValue().getHearingType()))).count();
             fields.remedy =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                    a.getCaseData().getHearingCollection())
+                        a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
-                    b -> HEARING_TYPE_JUDICIAL_REMEDY.equals(b.getValue().getHearingType()))).count();
+                        b -> HEARING_TYPE_JUDICIAL_REMEDY.equals(b.getValue().getHearingType()))).count();
             fields.calculateTotal();
         }
         var adhocReportType = new AdhocReportType();
@@ -206,32 +206,32 @@ public class HearingsByHearingTypeReport {
                 fields.hearing =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                         a.getCaseData().getHearingCollection())
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
-                        b -> HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType())
-                                && isHearingFormatValid(subSplitHeader, b))).count();
+                            b -> HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType())
+                                        && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.hearingPrelimCM =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                         a.getCaseData().getHearingCollection())
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
-                        b -> HEARING_TYPE_PERLIMINARY_HEARING_CM.equals(b.getValue().getHearingType())
-                                && isHearingFormatValid(subSplitHeader, b))).count();
+                            b -> HEARING_TYPE_PERLIMINARY_HEARING_CM.equals(b.getValue().getHearingType())
+                                    && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.hearingPrelim =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                         a.getCaseData().getHearingCollection())
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
-                        b -> HEARING_TYPE_PERLIMINARY_HEARING.equals(b.getValue().getHearingType())
+                            b -> HEARING_TYPE_PERLIMINARY_HEARING.equals(b.getValue().getHearingType())
                                 && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.costs =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                         a.getCaseData().getHearingCollection())
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
-                        b -> costsHearingType.equals(b.getValue().getHearingType())
+                            b -> costsHearingType.equals(b.getValue().getHearingType())
                                 && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.reconsider =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                         a.getCaseData().getHearingCollection())
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
-                        b -> HEARING_TYPE_JUDICIAL_RECONSIDERATION.equals(b.getValue().getHearingType())
+                            b -> HEARING_TYPE_JUDICIAL_RECONSIDERATION.equals(b.getValue().getHearingType())
                                 && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.remedy =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                         a.getCaseData().getHearingCollection())
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
-                        b -> HEARING_TYPE_JUDICIAL_REMEDY.equals(b.getValue().getHearingType())
+                            b -> HEARING_TYPE_JUDICIAL_REMEDY.equals(b.getValue().getHearingType())
                                 && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.calculateTotal();
                 String hearingNumber = fields.hearing + "|"
@@ -329,38 +329,38 @@ public class HearingsByHearingTypeReport {
                 if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
                     continue;
                 }
-                    for (var hearingTypeItem : caseData.getHearingCollection()) {
-                        if (CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                for (var hearingTypeItem : caseData.getHearingCollection()) {
+                    if (CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                        continue;
+                    }
+                    for (var dateListedTypedItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                        if (!HEARING_STATUS_HEARD.equals(dateListedTypedItem.getValue().getHearingStatus())) {
                             continue;
                         }
-                            for (var dateListedTypedItem : hearingTypeItem.getValue().getHearingDateCollection()) {
-                                if (!HEARING_STATUS_HEARD.equals(dateListedTypedItem.getValue().getHearingStatus())) {
-                                    continue;
-                                }
-                                    var adhocReportType = new AdhocReportType();
-                                    adhocReportType.setDate(dateListedTypedItem.getValue().getListedDate());
-                                    adhocReportType.setMultSub(
-                                            caseData.getMultipleReference() + ", " + caseData.getSubMultipleName());
-                                    adhocReportType.setCaseReference(caseData.getEthosCaseReference());
-                                    adhocReportType.setLeadCase(Strings.isNullOrEmpty(caseData.getLeadClaimant()) ? "" : "Y");
-                                    adhocReportType.setHearingNumber(hearingTypeItem.getValue().getHearingNumber());
-                                    adhocReportType.setHearingType(hearingTypeItem.getValue().getHearingType());
-                                    adhocReportType.setHearingTelConf(CollectionUtils.isNotEmpty(
-                                            hearingTypeItem.getValue().getHearingFormat())
-                                            && hearingTypeItem.getValue().getHearingFormat()
-                                            .contains("Telephone") ? "Y" : "");
-                                    adhocReportType.setJudicialMediation("JM".equals(
-                                            hearingTypeItem.getValue().getJudicialMediation()) ? "Y" : "");
-                                    adhocReportType.setHearingClerk(Strings.isNullOrEmpty(
-                                            dateListedTypedItem.getValue().getHearingClerk()) ? "" :
-                                            dateListedTypedItem.getValue().getHearingClerk());
-                                    adhocReportType.setHearingDuration(getHearingDuration(dateListedTypedItem));
-                                    var adhocReportTypeItem = new AdhocReportTypeItem();
-                                    adhocReportTypeItem.setId(UUID.randomUUID().toString());
-                                    adhocReportTypeItem.setValue(adhocReportType);
-                                    adhocReportTypeItemList.add(adhocReportTypeItem);
-                            }
+                        var adhocReportType = new AdhocReportType();
+                        adhocReportType.setDate(dateListedTypedItem.getValue().getListedDate());
+                        adhocReportType.setMultSub(
+                                caseData.getMultipleReference() + ", " + caseData.getSubMultipleName());
+                        adhocReportType.setCaseReference(caseData.getEthosCaseReference());
+                        adhocReportType.setLeadCase(Strings.isNullOrEmpty(caseData.getLeadClaimant()) ? "" : "Y");
+                        adhocReportType.setHearingNumber(hearingTypeItem.getValue().getHearingNumber());
+                        adhocReportType.setHearingType(hearingTypeItem.getValue().getHearingType());
+                        adhocReportType.setHearingTelConf(CollectionUtils.isNotEmpty(
+                                hearingTypeItem.getValue().getHearingFormat())
+                                && hearingTypeItem.getValue().getHearingFormat()
+                                .contains("Telephone") ? "Y" : "");
+                        adhocReportType.setJudicialMediation("JM".equals(
+                                hearingTypeItem.getValue().getJudicialMediation()) ? "Y" : "");
+                        adhocReportType.setHearingClerk(Strings.isNullOrEmpty(
+                                dateListedTypedItem.getValue().getHearingClerk()) ? ""
+                                : dateListedTypedItem.getValue().getHearingClerk());
+                        adhocReportType.setHearingDuration(getHearingDuration(dateListedTypedItem));
+                        var adhocReportTypeItem = new AdhocReportTypeItem();
+                        adhocReportTypeItem.setId(UUID.randomUUID().toString());
+                        adhocReportTypeItem.setValue(adhocReportType);
+                        adhocReportTypeItemList.add(adhocReportTypeItem);
                     }
+                }
             }
         }
 

@@ -114,12 +114,12 @@ public class HearingsByHearingTypeReportTest {
         ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents);
 
         AdhocReportType adhocReportType = reportListingData.getLocalReportsSummaryHdr();
-        assertEquals(4, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getTotal())?0:Integer.parseInt(adhocReportType.getTotal()));
+        assertEquals(6, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getTotal())?0:Integer.parseInt(adhocReportType.getTotal()));
         assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearing())?0:Integer.parseInt(adhocReportType.getHearing()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingCM())?0:Integer.parseInt(adhocReportType.getHearingCM()));
+        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingCM())?0:Integer.parseInt(adhocReportType.getHearingCM()));
         assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getCosts())?0:Integer.parseInt(adhocReportType.getCosts()));
         assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingPrelim())?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getReconsider())?0:Integer.parseInt(adhocReportType.getReconsider()));
+        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getReconsider())?0:Integer.parseInt(adhocReportType.getReconsider()));
         assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getRemedy())?0:Integer.parseInt(adhocReportType.getRemedy()));
 
     }
@@ -161,9 +161,9 @@ public class HearingsByHearingTypeReportTest {
         var listingHistory = adhocReportType.getListingHistory();
         var number = listingHistory.get(2).getValue().getHearingNumber();
         var numbers = number.split("[|]");
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(numbers[6])?0:Integer.parseInt(numbers[6]));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearing())?0:Integer.parseInt(adhocReportType.getHearing()));
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(numbers[1])?0:Integer.parseInt(numbers[1]));
+        assertEquals(2, adhocReportType == null || Strings.isNullOrEmpty(numbers[6])?0:Integer.parseInt(numbers[6]));
+        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(numbers[0])?0:Integer.parseInt(numbers[0]));
+        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(numbers[2])?0:Integer.parseInt(numbers[2]));
         assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getCosts())?0:Integer.parseInt(adhocReportType.getCosts()));
         assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingPrelim())?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
         assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getReconsider())?0:Integer.parseInt(adhocReportType.getReconsider()));
