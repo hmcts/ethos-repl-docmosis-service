@@ -64,20 +64,20 @@ public class HearingsByHearingTypeReportTest {
 
     private void createSubmitEventsWithoutHearings() {
         List<HearingTypeItem> hearings = new ArrayList<>();
-        submitEvents.add(createSubmitEvent(hearings, "1", "lead1" ));
+        submitEventsWithoutHearings.add(createSubmitEvent(hearings, "1", "lead1" ));
         hearings = new ArrayList<>();
-        submitEvents.add(createSubmitEvent(hearings, "2", "lead2"));
+        submitEventsWithoutHearings.add(createSubmitEvent(hearings, "2", "lead2"));
     }
 
     private void createSubmitEventsWithoutDates() {
         DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING, "JM",
                 dateListedTypeItem));
-        submitEvents.add(createSubmitEvent(hearings, "1", "lead1" ));
+        submitEventsWithoutDates.add(createSubmitEvent(hearings, "1", "lead1" ));
         dateListedTypeItem = new DateListedTypeItem();
         hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_REMEDY, "Hybrid",
                 dateListedTypeItem));
-        submitEvents.add(createSubmitEvent(hearings, "2", "lead2"));
+        submitEventsWithoutDates.add(createSubmitEvent(hearings, "2", "lead2"));
     }
 
     @Test
