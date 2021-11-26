@@ -158,7 +158,7 @@ class HearingsToJudgmentsReportTest {
     void shouldNotShowCaseIfHeardButJudgmentsHasNoHearingDate() {
         // Given a case is accepted
         // And has been heard
-        // And has judgment btu without a hearing date
+        // And has judgment but without a hearing date
         // When I request report data
         // Then the case should not be in the report data
 
