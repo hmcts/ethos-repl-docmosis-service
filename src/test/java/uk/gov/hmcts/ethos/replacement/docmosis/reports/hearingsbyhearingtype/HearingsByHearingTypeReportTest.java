@@ -22,6 +22,8 @@ import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 
 public class HearingsByHearingTypeReportTest {
     List<SubmitEvent> submitEvents = new ArrayList<>();
+    List<SubmitEvent> submitEventsWithoutHearings = new ArrayList<>();
+    List<SubmitEvent> submitEventsWithoutDates = new ArrayList<>();
 
     @Before
     public void setup() {
@@ -56,7 +58,28 @@ public class HearingsByHearingTypeReportTest {
         hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_RECONSIDERATION, "Yes",
                 dateListedTypeItem));
         submitEvents.add(createSubmitEvent(hearings, "6", "lead6"));
+        createSubmitEventsWithoutHearings();
+        createSubmitEventsWithoutDates();
     }
+
+    private void createSubmitEventsWithoutHearings() {
+        List<HearingTypeItem> hearings = new ArrayList<>();
+        submitEvents.add(createSubmitEvent(hearings, "1", "lead1" ));
+        hearings = new ArrayList<>();
+        submitEvents.add(createSubmitEvent(hearings, "2", "lead2"));
+    }
+
+    private void createSubmitEventsWithoutDates() {
+        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING, "JM",
+                dateListedTypeItem));
+        submitEvents.add(createSubmitEvent(hearings, "1", "lead1" ));
+        dateListedTypeItem = new DateListedTypeItem();
+        hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_REMEDY, "Hybrid",
+                dateListedTypeItem));
+        submitEvents.add(createSubmitEvent(hearings, "2", "lead2"));
+    }
+
     @Test
     public void testReportHeaderAreZeroIfNoCasesExist() {
 
@@ -67,6 +90,30 @@ public class HearingsByHearingTypeReportTest {
         List<SubmitEvent> submitEvents = new ArrayList<>();
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
         ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents);
+        verifyReportHeaderIsZero(listingData);
+    }
+
+    @Test
+    public void testReportHeaderAreZeroIfNoHearingCollectionExist() {
+
+        ListingDetails listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        ListingData caseData = new ListingData();
+        listingDetails.setCaseData(caseData);
+        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventsWithoutHearings);
+        verifyReportHeaderIsZero(listingData);
+    }
+
+    @Test
+    public void testReportHeaderAreZeroIfNoDateCollectionExist() {
+
+        ListingDetails listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        ListingData caseData = new ListingData();
+        listingDetails.setCaseData(caseData);
+        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventsWithoutDates);
         verifyReportHeaderIsZero(listingData);
     }
 
