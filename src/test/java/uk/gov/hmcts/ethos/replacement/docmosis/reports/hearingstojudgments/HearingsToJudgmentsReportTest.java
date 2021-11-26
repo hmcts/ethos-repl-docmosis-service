@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
 
 import java.time.LocalDateTime;
@@ -94,8 +93,7 @@ class HearingsToJudgmentsReportTest {
         // When I request report data
         // Then the case should not be in the report data
 
-        submitEvents.add(caseDataBuilder
-                .buildAsSubmitEvent(ACCEPTED_STATE));
+        submitEvents.add(caseDataBuilder.buildAsSubmitEvent(ACCEPTED_STATE));
 
         var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
@@ -167,6 +165,25 @@ class HearingsToJudgmentsReportTest {
         var submitEvent = caseDataBuilder
                 .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING, YES)
                 .withJudgment(null, null, null)
+                .buildAsSubmitEvent(ACCEPTED_STATE);
+        submitEvents.add(submitEvent);
+
+        var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        assertCommonValues(reportData);
+        assertTrue(reportData.getReportDetails().isEmpty());
+    }
+
+    @Test
+    void shouldNotShowCaseIfHeardButJudgmentsHasHearingDateCannotBeParsed() {
+        // Given a case is accepted
+        // And has been heard
+        // And has judgment with a hearing date that cannot be parsed
+        // When I request report data
+        // Then the case should not be in the report data
+
+        var submitEvent = caseDataBuilder
+                .withHearing(HEARING_LISTING_DATE, HEARING_STATUS_HEARD, HEARING_TYPE_JUDICIAL_COSTS_HEARING, YES)
+                .withJudgment("test", null, null)
                 .buildAsSubmitEvent(ACCEPTED_STATE);
         submitEvents.add(submitEvent);
 
@@ -440,7 +457,7 @@ class HearingsToJudgmentsReportTest {
         // Then I have correct hearing values for hearing #2
         var expectedTotalDays = "30";
         var caseReference = "2500123/2021";
-        var judge = "Hugh Parkfield";
+        var judge = "Hugh Garfield";
         var judgmentHearingDate = "2021-07-05";
         var dateJudgmentSent = "2021-08-04";
 
