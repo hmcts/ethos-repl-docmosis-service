@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists;
 
+import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -20,7 +21,7 @@ public class DynamicLetters {
 
     public static void dynamicLetters(CaseData caseData, String caseTypeId) {
         List<DynamicValueType> listItems = DynamicListHelper.createDynamicHearingList(caseData);
-        if (!listItems.isEmpty()) {
+        if (CollectionUtils.isNotEmpty(listItems)) {
             var dynamicFixedListType = new DynamicFixedListType();
             dynamicFixedListType.setListItems(listItems);
             if (!caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)) {
@@ -38,7 +39,7 @@ public class DynamicLetters {
     public static void dynamicMultipleLetters(SubmitEvent submitEvent, MultipleData multipleData, String caseTypeId,
                                               List<DynamicValueType> listItems) {
         listItems.addAll(DynamicListHelper.createDynamicHearingList(submitEvent.getCaseData()));
-        if (!listItems.isEmpty()) {
+        if (CollectionUtils.isNotEmpty(listItems)) {
             var dynamicFixedListType = new DynamicFixedListType();
             dynamicFixedListType.setListItems(listItems);
             if (!caseTypeId.equals(SCOTLAND_BULK_CASE_TYPE_ID)) {
