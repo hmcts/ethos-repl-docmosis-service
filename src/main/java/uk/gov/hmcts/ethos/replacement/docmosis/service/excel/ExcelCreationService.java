@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -142,7 +143,7 @@ public class ExcelCreationService {
         Cell cell = row.createCell(cellIndex);
         cell.setCellStyle(style);
 
-        if (!value.isEmpty() && !value.isBlank()) {
+        if (!Strings.isNullOrEmpty(value) && !value.isBlank()) {
             cell.setCellValue(value);
         }
     }
