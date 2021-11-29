@@ -18,7 +18,7 @@ module "key-vault" {
 }
 
 module "db" {
-  source             = "git@github.com:hmcts/cnp-module-postgres?ref=master"
+  source             = "git@github.com:hmcts/cnp-module-postgres?ref=postgresql_tf"
   product            = "${var.product}-postgres-db"
   location           = var.location_api
   env                = var.env
