@@ -243,7 +243,7 @@ public class CaseActionsForCaseWorkerController {
             log.error(INVALID_TOKEN, userToken);
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
-
+        // Test changes
         var caseDetails = ccdRequest.getCaseDetails();
         var caseData = caseDetails.getCaseData();
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
