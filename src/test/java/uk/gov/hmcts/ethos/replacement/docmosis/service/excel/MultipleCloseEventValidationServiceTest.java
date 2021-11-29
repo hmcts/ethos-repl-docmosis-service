@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JUDGEMENT_JURISDICTION_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -115,8 +116,9 @@ public class MultipleCloseEventValidationServiceTest {
                 userToken,
                 multipleDetails);
 
-        assertEquals(1, errors.size());
+        assertEquals(2, errors.size());
         assertEquals("245004/2020 - " + MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE, errors.get(0));
+        assertEquals("245004/2020 - " + MISSING_JUDGEMENT_JURISDICTION_MESSAGE, errors.get(1));
     }
 
     @Test
