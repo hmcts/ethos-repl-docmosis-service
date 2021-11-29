@@ -174,13 +174,13 @@ public class HearingsByHearingTypeReportTest {
         ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents);
 
         AdhocReportType adhocReportType = reportListingData.getLocalReportsSummaryHdr();
-        assertEquals(6, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getTotal())?0:Integer.parseInt(adhocReportType.getTotal()));
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearing())?0:Integer.parseInt(adhocReportType.getHearing()));
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingCM())?0:Integer.parseInt(adhocReportType.getHearingCM()));
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getCosts())?0:Integer.parseInt(adhocReportType.getCosts()));
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingPrelim())?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getReconsider())?0:Integer.parseInt(adhocReportType.getReconsider()));
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getRemedy())?0:Integer.parseInt(adhocReportType.getRemedy()));
+        assertEquals(6, Strings.isNullOrEmpty(adhocReportType.getTotal())?0:Integer.parseInt(adhocReportType.getTotal()));
+        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getHearing())?0:Integer.parseInt(adhocReportType.getHearing()));
+        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getHearingCM())?0:Integer.parseInt(adhocReportType.getHearingCM()));
+        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getCosts())?0:Integer.parseInt(adhocReportType.getCosts()));
+        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getHearingPrelim())?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
+        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getReconsider())?0:Integer.parseInt(adhocReportType.getReconsider()));
+        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getRemedy())?0:Integer.parseInt(adhocReportType.getRemedy()));
 
     }
 
@@ -196,14 +196,14 @@ public class HearingsByHearingTypeReportTest {
 
         List<AdhocReportTypeItem> adhocReportTypeItemList = reportListingData.getLocalReportsSummary();
         AdhocReportType adhocReportType = adhocReportTypeItemList.get(0).getValue();
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getTotal())?0:Integer.parseInt(adhocReportType.getTotal()));
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearing())?0:Integer.parseInt(adhocReportType.getHearing()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingCM())?0:Integer.parseInt(adhocReportType.getHearingCM()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getCosts())?0:Integer.parseInt(adhocReportType.getCosts()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingPrelim())?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getReconsider())?0:Integer.parseInt(adhocReportType.getReconsider()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getRemedy())?0:Integer.parseInt(adhocReportType.getRemedy()));
-        assertEquals("1970-06-01T00:00:00.000", adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getDate())?0:adhocReportType.getDate());
+        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getTotal())?0:Integer.parseInt(adhocReportType.getTotal()));
+        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getHearing())?0:Integer.parseInt(adhocReportType.getHearing()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getHearingCM())?0:Integer.parseInt(adhocReportType.getHearingCM()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getCosts())?0:Integer.parseInt(adhocReportType.getCosts()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getHearingPrelim())?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getReconsider())?0:Integer.parseInt(adhocReportType.getReconsider()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getRemedy())?0:Integer.parseInt(adhocReportType.getRemedy()));
+        assertEquals("1970-06-01T00:00:00.000", Strings.isNullOrEmpty(adhocReportType.getDate())?0:adhocReportType.getDate());
 
     }
 
@@ -221,14 +221,14 @@ public class HearingsByHearingTypeReportTest {
         var listingHistory = adhocReportType.getListingHistory();
         var number = listingHistory.get(2).getValue().getHearingNumber();
         var numbers = number.split("[|]");
-        assertEquals(2, adhocReportType == null || Strings.isNullOrEmpty(numbers[6])?0:Integer.parseInt(numbers[6]));
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(numbers[0])?0:Integer.parseInt(numbers[0]));
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(numbers[2])?0:Integer.parseInt(numbers[2]));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getCosts())?0:Integer.parseInt(adhocReportType.getCosts()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingPrelim())?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getReconsider())?0:Integer.parseInt(adhocReportType.getReconsider()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getRemedy())?0:Integer.parseInt(adhocReportType.getRemedy()));
-        assertEquals("JM", adhocReportType == null || Strings.isNullOrEmpty(numbers[7])?"":numbers[7]);
+        assertEquals(2, Strings.isNullOrEmpty(numbers[6])?0:Integer.parseInt(numbers[6]));
+        assertEquals(1, Strings.isNullOrEmpty(numbers[0])?0:Integer.parseInt(numbers[0]));
+        assertEquals(1, Strings.isNullOrEmpty(numbers[2])?0:Integer.parseInt(numbers[2]));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getCosts())?0:Integer.parseInt(adhocReportType.getCosts()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getHearingPrelim())?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getReconsider())?0:Integer.parseInt(adhocReportType.getReconsider()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getRemedy())?0:Integer.parseInt(adhocReportType.getRemedy()));
+        assertEquals("JM", Strings.isNullOrEmpty(numbers[7])?"":numbers[7]);
 
     }
 
@@ -245,15 +245,15 @@ public class HearingsByHearingTypeReportTest {
         List<AdhocReportTypeItem> adhocReportTypeItemList = reportListingData.getLocalReportsSummary2();
 
         AdhocReportType adhocReportType = adhocReportTypeItemList.get(2).getValue();
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getTotal())?0:Integer.parseInt(adhocReportType.getTotal()));
-        assertEquals(1, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearing())?0:Integer.parseInt(adhocReportType.getHearing()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingCM())?0:Integer.parseInt(adhocReportType.getHearingCM()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getCosts())?0:Integer.parseInt(adhocReportType.getCosts()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingPrelim())?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getReconsider())?0:Integer.parseInt(adhocReportType.getReconsider()));
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getRemedy())?0:Integer.parseInt(adhocReportType.getRemedy()));
-        assertEquals("1970-06-01T00:00:00.000", adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getDate())?0:adhocReportType.getDate());
-        assertEquals("JM", adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getSubSplit())?0:adhocReportType.getSubSplit());
+        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getTotal())?0:Integer.parseInt(adhocReportType.getTotal()));
+        assertEquals(1, Strings.isNullOrEmpty(adhocReportType.getHearing())?0:Integer.parseInt(adhocReportType.getHearing()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getHearingCM())?0:Integer.parseInt(adhocReportType.getHearingCM()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getCosts())?0:Integer.parseInt(adhocReportType.getCosts()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getHearingPrelim())?0:Integer.parseInt(adhocReportType.getHearingPrelim()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getReconsider())?0:Integer.parseInt(adhocReportType.getReconsider()));
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getRemedy())?0:Integer.parseInt(adhocReportType.getRemedy()));
+        assertEquals("1970-06-01T00:00:00.000", Strings.isNullOrEmpty(adhocReportType.getDate())?0:adhocReportType.getDate());
+        assertEquals("JM", Strings.isNullOrEmpty(adhocReportType.getSubSplit())?0:adhocReportType.getSubSplit());
 
     }
 
@@ -270,17 +270,17 @@ public class HearingsByHearingTypeReportTest {
         List<AdhocReportTypeItem> adhocReportTypeItemList = reportListingData.getLocalReportsDetail();
 
         AdhocReportType adhocReportType = adhocReportTypeItemList.get(0).getValue();
-        assertEquals("1", adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getCaseReference())?0:adhocReportType.getCaseReference());
-        assertEquals("Y", adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getLeadCase())?0:adhocReportType.getLeadCase());
-        assertEquals(471, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingDuration())
+        assertEquals("1", Strings.isNullOrEmpty(adhocReportType.getCaseReference())?0:adhocReportType.getCaseReference());
+        assertEquals("Y", Strings.isNullOrEmpty(adhocReportType.getLeadCase())?0:adhocReportType.getLeadCase());
+        assertEquals(471, Strings.isNullOrEmpty(adhocReportType.getHearingDuration())
                 ? 0:Integer.parseInt(adhocReportType.getHearingDuration()));
-        assertEquals("multiRef, subMulti", adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getMultSub())?0:adhocReportType.getMultSub());
-        assertEquals("Hearing", adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingType())?0:adhocReportType.getHearingType());
-        assertEquals(0, adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingTelConf())?0:adhocReportType.getHearingTelConf());
-        assertEquals("Y", adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getJudicialMediation())?0:adhocReportType.getJudicialMediation());
-        assertEquals("clerk1", adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getHearingClerk())?0:adhocReportType.getHearingClerk());
+        assertEquals("multiRef, subMulti", Strings.isNullOrEmpty(adhocReportType.getMultSub())?0:adhocReportType.getMultSub());
+        assertEquals("Hearing", Strings.isNullOrEmpty(adhocReportType.getHearingType())?0:adhocReportType.getHearingType());
+        assertEquals(0, Strings.isNullOrEmpty(adhocReportType.getHearingTelConf())?0:adhocReportType.getHearingTelConf());
+        assertEquals("Y", Strings.isNullOrEmpty(adhocReportType.getJudicialMediation())?0:adhocReportType.getJudicialMediation());
+        assertEquals("clerk1", Strings.isNullOrEmpty(adhocReportType.getHearingClerk())?0:adhocReportType.getHearingClerk());
 
-        assertEquals("1970-06-01T00:00:00.000", adhocReportType == null || Strings.isNullOrEmpty(adhocReportType.getDate())?0:adhocReportType.getDate());
+        assertEquals("1970-06-01T00:00:00.000", Strings.isNullOrEmpty(adhocReportType.getDate())?0:adhocReportType.getDate());
 
     }
 
