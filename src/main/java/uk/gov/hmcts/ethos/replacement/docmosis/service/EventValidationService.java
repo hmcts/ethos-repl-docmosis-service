@@ -223,7 +223,7 @@ public class EventValidationService {
     }
 
     private String getJurisdictionOutcomeNotAllocatedErrorText(boolean partOfMultiple,
-                                                                String ethosReference) {
+                                                               String ethosReference) {
         if (partOfMultiple) {
             return ethosReference + " - " + JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE;
         }
@@ -348,60 +348,6 @@ public class EventValidationService {
                 break;
             }
         }
-    }
-
-    public List<String> validateDepositOrder(CaseData caseData) {
-        List<String> errors = new ArrayList<>();
-        if (CollectionUtils.isNotEmpty(caseData.getDepositCollection())) {
-
-            for (DepositTypeItem depositTypeItem : caseData.getDepositCollection()) {
-                if (!isNullOrEmpty(depositTypeItem.getValue().getDepositAmountRefunded())
-                        && (isNullOrEmpty(depositTypeItem.getValue().getDepositAmount())
-                        || Integer.parseInt(depositTypeItem.getValue().getDepositAmountRefunded())
-                        > Integer.parseInt(depositTypeItem.getValue().getDepositAmount()))) {
-                    errors.add(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR);
-                }
-
-                if (depositTypeItem.getValue().getDynamicDepositOrderAgainst() != null) {
-                    var dynamicOrderAgainst = depositTypeItem.getValue().getDynamicDepositOrderAgainst()
-                            .getValue().getCode();
-                    if (dynamicOrderAgainst.startsWith("R:")) {
-                        depositTypeItem.getValue().setDepositOrderAgainst(RESPONDENT_TITLE);
-                    } else if (dynamicOrderAgainst.startsWith("C:")) {
-                        depositTypeItem.getValue().setDepositOrderAgainst(CLAIMANT_TITLE);
-                    } else {
-                        errors.add(UNABLE_TO_FIND_PARTY);
-                    }
-                }
-
-                if (depositTypeItem.getValue().getDynamicDepositRequestedBy() != null) {
-                    var dynamicRequestedBy = depositTypeItem.getValue().getDynamicDepositRequestedBy()
-                            .getValue().getCode();
-                    if (dynamicRequestedBy.startsWith("R:")) {
-                        depositTypeItem.getValue().setDepositRequestedBy(RESPONDENT_TITLE);
-                    } else if (dynamicRequestedBy.startsWith("C:")) {
-                        depositTypeItem.getValue().setDepositRequestedBy(CLAIMANT_TITLE);
-                    } else if (dynamicRequestedBy.equals("Tribunal")) {
-                        depositTypeItem.getValue().setDepositRequestedBy("Tribunal");
-                    } else {
-                        errors.add(UNABLE_TO_FIND_PARTY);
-                    }
-                }
-
-                if (depositTypeItem.getValue().getDynamicDepositRefundedTo() != null) {
-                    var dynamicRefundedTo = depositTypeItem.getValue().getDynamicDepositRefundedTo()
-                            .getValue().getCode();
-                    if (dynamicRefundedTo.startsWith("R: ")) {
-                        depositTypeItem.getValue().setDepositRefundedTo(RESPONDENT_TITLE);
-                    } else if (dynamicRefundedTo.startsWith("C: ")) {
-                        depositTypeItem.getValue().setDepositRefundedTo(CLAIMANT_TITLE);
-                    } else {
-                        errors.add(UNABLE_TO_FIND_PARTY);
-                    }
-                }
-            }
-        }
-        return errors;
     }
 
     public List<String> validateListingDateRange(String listingFrom, String listingTo) {
