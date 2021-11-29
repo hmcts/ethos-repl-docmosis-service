@@ -140,8 +140,11 @@ public class ExcelCreationService {
 
     private void createCell(XSSFRow row, int cellIndex, String value, CellStyle style) {
         Cell cell = row.createCell(cellIndex);
-        cell.setCellValue(value);
         cell.setCellStyle(style);
+
+        if (!value.isEmpty() && !value.isBlank()) {
+            cell.setCellValue(value);
+        }
     }
 
     private void initializeData(XSSFWorkbook workbook, XSSFSheet sheet, List<?> multipleCollection,
