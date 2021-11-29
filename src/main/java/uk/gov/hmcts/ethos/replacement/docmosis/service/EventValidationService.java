@@ -138,7 +138,7 @@ public class EventValidationService {
                 index = repItr.nextIndex() + 1;
                 String respRepName = repItr.next().getValue().getDynamicRespRepName().getValue().getLabel();
                 if (!isNullOrEmpty(respRepName)
-                        && !CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
+                        && CollectionUtils.isNotEmpty(caseData.getRespondentCollection())) {
                     ListIterator<RespondentSumTypeItem> respItr = caseData.getRespondentCollection().listIterator();
                     var validLink = false;
                     while (respItr.hasNext()) {
@@ -355,7 +355,7 @@ public class EventValidationService {
 
     public List<String> validateDepositOrder(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(caseData.getDepositCollection())) {
+        if (CollectionUtils.isNotEmpty(caseData.getDepositCollection())) {
 
             for (DepositTypeItem depositTypeItem : caseData.getDepositCollection()) {
                 if (!isNullOrEmpty(depositTypeItem.getValue().getDepositAmountRefunded())

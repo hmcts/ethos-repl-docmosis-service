@@ -242,6 +242,6 @@ public class HearingsToJudgmentsReport {
     }
 
     private boolean caseHasJudgments(HearingsToJudgmentsCaseData caseData) {
-        return !CollectionUtils.isEmpty(caseData.getJudgementCollection());
+        return CollectionUtils.isNotEmpty(caseData.getJudgementCollection());
     }
 }

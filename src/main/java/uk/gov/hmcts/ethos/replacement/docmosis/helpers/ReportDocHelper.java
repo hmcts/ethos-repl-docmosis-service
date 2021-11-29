@@ -3,7 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
@@ -81,7 +81,7 @@ public class ReportDocHelper {
             if (listingData.getLocalReportsDetailHdr() != null) {
                 sb.append(REPORT_OFFICE).append(
                         nullCheck(listingData.getLocalReportsDetailHdr().getReportOffice())).append(NEW_LINE);
-            } else if (!CollectionUtils.isEmpty(listingData.getLocalReportsSummary())) {
+            } else if (CollectionUtils.isNotEmpty(listingData.getLocalReportsSummary())) {
                 sb.append(REPORT_OFFICE).append(
                         nullCheck(listingData.getLocalReportsSummary().get(0)
                                 .getValue().getReportOffice())).append(NEW_LINE);
@@ -304,7 +304,7 @@ public class ReportDocHelper {
 
         }
 
-        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())) {
+        if (CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail())) {
             var adhocReportTypeItems = listingData.getLocalReportsDetail();
             sb.append(REPORT_LIST);
             for (var i = 0; i < adhocReportTypeItems.size(); i++) {
@@ -435,7 +435,7 @@ public class ReportDocHelper {
     private static StringBuilder getLiveCaseLoadReport(ListingData listingData) {
         var sb = getLiveCaseLoadReportSummaryHdr(listingData);
 
-        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())) {
+        if (CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail())) {
             List<AdhocReportTypeItem> adhocReportTypeItems = listingData.getLocalReportsDetail();
             sb.append(REPORT_LIST);
             for (var i = 0; i < adhocReportTypeItems.size(); i++) {
@@ -453,7 +453,7 @@ public class ReportDocHelper {
         var reportContent = getServedClaimsReportSummary(listingData);
         var claimsServedDayListUpperBoundary = 5;
 
-        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())) {
+        if (CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail())) {
             var listBlockOpeners = List.of(DAY_1_LIST, DAY_2_LIST,
                                                        DAY_3_LIST, DAY_4_LIST,
                                                        DAY_5_LIST, DAY_6_LIST);
@@ -529,7 +529,7 @@ public class ReportDocHelper {
     private static StringBuilder getServedClaimsReportSummary(ListingData listingData) {
         var reportSummaryContent = new StringBuilder();
 
-        if (!CollectionUtils.isEmpty(listingData.getLocalReportsDetail())) {
+        if (CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail())) {
             var adhocReportTypeItem = listingData.getLocalReportsDetail().get(0);
             var adhocReportType = adhocReportTypeItem.getValue();
 
@@ -602,7 +602,7 @@ public class ReportDocHelper {
         }
         List<AdhocReportTypeItem> localReportSummary = listingData.getLocalReportsSummary();
 
-        if (!CollectionUtils.isEmpty(localReportSummary)) {
+        if (CollectionUtils.isNotEmpty(localReportSummary)) {
             sb.append(REPORT_LIST);
             for (var i = 0; i < localReportSummary.size(); i++) {
                 sb.append(getHearingsByHearingTypeLocalReportSummaryRow(
@@ -615,7 +615,7 @@ public class ReportDocHelper {
         }
         List<AdhocReportTypeItem> localReportSummary2 = listingData.getLocalReportsSummary2();
         sb.append(getHearingByHearingTypeLocalReportSummaryHdr2(localReportSummaryHdr2));
-        if (!CollectionUtils.isEmpty(localReportSummary2)) {
+        if (CollectionUtils.isNotEmpty(localReportSummary2)) {
             sb.append(REPORT_LIST);
             for (var i = 0; i < localReportSummary2.size(); i++) {
                 sb.append(getHearingsByHearingTypeLocalReportSummaryRow(
@@ -627,7 +627,7 @@ public class ReportDocHelper {
             sb.append("],\n");
         }
         List<AdhocReportTypeItem> localReportSummaryDetail = listingData.getLocalReportsDetail();
-        if (!CollectionUtils.isEmpty(localReportSummaryDetail)) {
+        if (CollectionUtils.isNotEmpty(localReportSummaryDetail)) {
             sb.append(REPORT_LIST);
             for (var i = 0; i < localReportSummaryDetail.size(); i++) {
                 sb.append(getHearingsByHearingTypeLocalReportDetailRow(

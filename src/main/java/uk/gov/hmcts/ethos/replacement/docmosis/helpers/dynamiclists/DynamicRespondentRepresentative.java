@@ -22,7 +22,7 @@ public class DynamicRespondentRepresentative {
         if (!listItems.isEmpty()) {
             var dynamicFixedListType = new DynamicFixedListType();
             dynamicFixedListType.setListItems(listItems);
-            if (!CollectionUtils.isEmpty(caseData.getRepCollection())) {
+            if (CollectionUtils.isNotEmpty(caseData.getRepCollection())) {
                 ListIterator<RepresentedTypeRItem> repItr = caseData.getRepCollection().listIterator();
                 while (repItr.hasNext()) {
                     var respRepCollection = caseData.getRepCollection().get(repItr.nextIndex());
