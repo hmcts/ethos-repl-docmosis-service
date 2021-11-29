@@ -456,15 +456,14 @@ public class DocumentHelper {
 
     public static String getCorrespondenceHearingNumber(CorrespondenceType correspondenceType,
                                                         CorrespondenceScotType correspondenceScotType) {
-        if (correspondenceType != null) {
+        if (correspondenceType != null && correspondenceType.getDynamicHearingNumber() != null) {
             return correspondenceType.getDynamicHearingNumber().getValue().getCode();
+        } else if (correspondenceScotType != null && correspondenceScotType.getDynamicHearingNumber() != null) {
+            return correspondenceScotType.getDynamicHearingNumber().getValue().getCode();
         } else {
-            if (correspondenceScotType != null) {
-                return correspondenceScotType.getDynamicHearingNumber().getValue().getCode();
-            } else {
-                return "";
-            }
+            return null;
         }
+
     }
 
     public static HearingType getHearingByNumber(List<HearingTypeItem> hearingCollection,
