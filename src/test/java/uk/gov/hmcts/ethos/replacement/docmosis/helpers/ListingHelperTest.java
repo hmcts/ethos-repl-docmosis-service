@@ -1278,7 +1278,7 @@ public class ListingHelperTest {
         listingData.setReportType(CASE_SOURCE_LOCAL_REPORT);
         assertEquals("EM-TRB-SCO-ENG-00783", ListingHelper.getListingDocName(listingData));
         listingData.setReportType(HEARINGS_TO_JUDGEMENTS_REPORT);
-        assertEquals("EM-TRB-SCO-ENG-00790", ListingHelper.getListingDocName(listingData));
+        assertEquals("EM-TRB-SCO-ENG-00786", ListingHelper.getListingDocName(listingData));
         listingData.setReportType("");
         assertEquals("No document found", ListingHelper.getListingDocName(listingData));
     }

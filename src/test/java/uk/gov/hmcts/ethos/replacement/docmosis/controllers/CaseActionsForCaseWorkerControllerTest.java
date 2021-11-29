@@ -27,6 +27,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorke
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseTransferService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseUpdateForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.DepositOrderValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleCaseMultipleMidEventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleReferenceService;
@@ -128,6 +129,9 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @MockBean
     private EventValidationService eventValidationService;
+
+    @MockBean
+    private DepositOrderValidationService depositOrderValidationService;
 
     @MockBean
     private SingleCaseMultipleMidEventValidationService singleCaseMultipleMidEventValidationService;

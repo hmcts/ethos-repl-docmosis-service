@@ -837,7 +837,7 @@ public class ListingHelper {
             case HEARINGS_BY_HEARING_TYPE_REPORT:
                 return "EM-TRB-SCO-ENG-00785";
             case HEARINGS_TO_JUDGEMENTS_REPORT:
-                return "EM-TRB-SCO-ENG-00790";
+                return "EM-TRB-SCO-ENG-00786";
             default:
                 return NO_DOCUMENT_FOUND;
         }

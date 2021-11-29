@@ -360,7 +360,7 @@ public class ReportDocHelperTest {
         expectedJson = expectedJson.replace("replace-with-current-date", today);
         var reportData = getHearingsToJudgmentsReportData();
         var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "",
-                "EM-TRB-SCO-ENG-00790", userDetails).toString();
+                "EM-TRB-SCO-ENG-00786", userDetails).toString();
         assertEquals(expectedJson, actualJson);
     }
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const testConfig = require('src/test/config.js');
+const testConfig = require('../../../config');
 
 module.exports = function () {
 
@@ -8,7 +8,7 @@ module.exports = function () {
 
     I.amOnPage('/');
     I.see('Sign in');
-    I.waitForText('Sign in', testConfig.TestWaitForTextToAppear);
+    I.waitForText('Sign in');
     I.fillField('username', testConfig.TestEnvCWUser);
     I.fillField('password', testConfig.TestEnvCWPassword);
     I.click('input[value="Sign in"]');

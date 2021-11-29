@@ -1,6 +1,6 @@
 'use strict';
 const testConfig = require('../../config');
-const createCaseConfig = require('src/test/end-to-end/pages/createCase/createCaseConfig');
+const createCaseConfig = require('../pages/createCase/createCaseConfig');
 Feature('Scotland individual Journey').retry(testConfig.TestRetryFeatures);
 
 Scenario('01 BO Caveat E2E - Order summons', async ({ I }) =>  {

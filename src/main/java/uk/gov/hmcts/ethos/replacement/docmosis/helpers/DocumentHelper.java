@@ -457,10 +457,10 @@ public class DocumentHelper {
     public static String getCorrespondenceHearingNumber(CorrespondenceType correspondenceType,
                                                         CorrespondenceScotType correspondenceScotType) {
         if (correspondenceType != null) {
-            return correspondenceType.getHearingNumber();
+            return correspondenceType.getDynamicHearingNumber().getValue().getCode();
         } else {
             if (correspondenceScotType != null) {
-                return correspondenceScotType.getHearingNumber();
+                return correspondenceScotType.getDynamicHearingNumber().getValue().getCode();
             } else {
                 return "";
             }
