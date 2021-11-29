@@ -120,25 +120,18 @@ public class HearingsByHearingTypeReportTest {
 
     private void verifyReportHeaderIsZeroWhenNoCasesExist(ListingData listingData) {
         AdhocReportType adhocReportType = listingData.getLocalReportsSummaryHdr();
-        assertEquals("", adhocReportType.getTotal());
-        assertEquals("", adhocReportType.getHearing());
-        assertEquals("", adhocReportType.getHearingCM());
-        assertEquals("", adhocReportType.getCosts());
-        assertEquals("", adhocReportType.getHearingPrelim());
-        assertEquals("", adhocReportType.getReconsider());
-        assertEquals("", adhocReportType.getRemedy());
-
+        assertNull(adhocReportType);
     }
 
     private void verifyReportHeaderIsZeroWithNoHearings(ListingData listingData) {
         AdhocReportType adhocReportType = listingData.getLocalReportsSummaryHdr();
-        assertEquals("", adhocReportType.getTotal());
-        assertEquals("", adhocReportType.getHearing());
-        assertEquals("",adhocReportType.getHearingCM());
-        assertEquals("",adhocReportType.getCosts());
-        assertEquals("",adhocReportType.getHearingPrelim());
-        assertEquals("",adhocReportType.getReconsider());
-        assertEquals("",adhocReportType.getRemedy());
+        assertEquals("0", adhocReportType.getTotal());
+        assertEquals("0", adhocReportType.getHearing());
+        assertEquals("0",adhocReportType.getHearingCM());
+        assertEquals("0",adhocReportType.getCosts());
+        assertEquals("0",adhocReportType.getHearingPrelim());
+        assertEquals("0",adhocReportType.getReconsider());
+        assertEquals("0",adhocReportType.getRemedy());
 
     }
 
@@ -224,10 +217,10 @@ public class HearingsByHearingTypeReportTest {
         assertEquals("2", numbers[6]);
         assertEquals("1", numbers[0]);
         assertEquals("1", numbers[2]);
-        assertEquals("", adhocReportType.getCosts());
-        assertEquals("", adhocReportType.getHearingPrelim());
-        assertEquals("", adhocReportType.getReconsider());
-        assertEquals("", adhocReportType.getRemedy());
+        assertNull(adhocReportType.getCosts());
+        assertNull(adhocReportType.getHearingPrelim());
+        assertNull(adhocReportType.getReconsider());
+        assertNull(adhocReportType.getRemedy());
         assertEquals("JM", numbers[7]);
 
     }
