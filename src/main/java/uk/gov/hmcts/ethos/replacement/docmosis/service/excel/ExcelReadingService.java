@@ -48,7 +48,6 @@ public class ExcelReadingService {
     }
 
     public XSSFWorkbook readWorkbook(String userToken, String documentBinaryUrl) throws IOException {
-        ZipSecureFile.setMinInflateRatio(0);
         var excelInputStream =
                 excelDocManagementService.downloadExcelDocument(userToken, documentBinaryUrl);
         return new XSSFWorkbook(excelInputStream);
