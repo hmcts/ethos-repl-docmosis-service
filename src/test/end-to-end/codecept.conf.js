@@ -1,21 +1,28 @@
-const config = require('../config');
+const config = require('src/test/config.js');
 
 exports.config = {
-    'tests': config.TestPathToRun,
-    'output': `${process.cwd()}/${config.TestOutputDir}`,
-    'helpers': {
-        'Puppeteer': {
-            'url': config.TestUrl,
-            'waitForTimeout': 60000,
-            'getPageTimeout': 20000,
-            'waitForAction': 1000,
-            'show': config.TestShowBrowserWindow,
-            'waitForNavigation': ['domcontentloaded', 'networkidle0'],
-            'chrome': {
-                'ignoreHTTPSErrors': true,
+    tests: config.TestPathToRun,
+    output: `${process.cwd()}/${config.TestOutputDir}`,
+    helpers: {
+        Puppeteer: {
+            url: config.TestUrl,
+            waitForTimeout: 60000,
+            getPageTimeout: 60000,
+            // waitForAction: 1000,
+            show: config.TestShowBrowserWindow,
+            waitForNavigation: ['domcontentloaded'],
+            restart: true,
+            keepCookies: false,
+            keepBrowserState: false,
+            chrome: {
+                ignoreHTTPSErrors: true,
                 'ignore-certificate-errors': true,
+                'defaultViewport': {
+                    'width': 1280,
+                    'height': 960
+                },
                 args: [
-                    '--headless',
+                    // '--headless',
                     '--disable-gpu',
                     '--no-sandbox',
                     '--allow-running-insecure-content',
@@ -23,6 +30,9 @@ exports.config = {
                     '--window-size=1440,1400'
                 ]
             },
+        },
+        PuppeteerHelper: {
+            require: './helpers/PuppeteerHelper.js'
         },
         JSWait: {require: './helpers/JSWait.js'},
     },

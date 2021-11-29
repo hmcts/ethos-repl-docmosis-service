@@ -2,12 +2,10 @@
 
 const testConfig = require('../../../config');
 
-module.exports = function () {
+module.exports = async function () {
 
     const I = this;
-
-    I.amOnPage('/');
-    I.see('Sign in');
+    I.amOnPage('/', 60);
     I.waitForText('Sign in');
     I.fillField('username', testConfig.TestEnvCWUser);
     I.fillField('password', testConfig.TestEnvCWPassword);
