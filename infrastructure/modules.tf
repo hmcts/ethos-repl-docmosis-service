@@ -33,12 +33,15 @@ module "db" {
 
 module "db-v11" {
   source             = "git@github.com:hmcts/cnp-module-postgres?ref=postgresql_tf"
-  product            = "${var.product}-postgres-db-v11"
-  location           = var.location_api
+  product            = var.product
+  component          = var.component
+  name               = join("-", [var.product,var.component,"postgres-db-v11"])
+  location           = var.location
   env                = var.env
-  database_name      = "ethos"
   postgresql_user    = "ethos"
+  database_name      = "ethos"
   postgresql_version = "11"
+  subnet_id          = data.azurerm_subnet.postgres.id
   sku_name           = "GP_Gen5_2"
   sku_tier           = "GeneralPurpose"
   common_tags        = var.common_tags

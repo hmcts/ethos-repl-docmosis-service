@@ -66,6 +66,7 @@ variable "ccd_gateway_url" {
 }
 
 variable "component" {
+  default = "repl-docomosis-service"
 }
 
 variable "location_api" {
