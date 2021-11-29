@@ -1,9 +1,9 @@
 module.exports = {
     TestUrl: process.env.TEST_E2E_URL || 'https://manage-case.aat.platform.hmcts.net',
     TestEnv: process.env.RUNNING_ENV || 'aat',
-    TestShowBrowserWindow: process.env.SHOW_BROWSER_WINDOW || true,
+    TestShowBrowserWindow: process.env.SHOW_BROWSER_WINDOW || false,
     TestRetryFeatures: process.env.RETRY_FEATURES || 0,
-    TestRetryScenarios: process.env.RETRY_SCENARIOS || 0,
+    TestRetryScenarios: process.env.RETRY_SCENARIOS || 2,
     TestPathToRun: process.env.E2E_TEST_PATH || './paths/**/*.js',
     TestOutputDir: process.env.E2E_OUTPUT_DIR || './functional-output',
     TestTimeToWaitForText: parseInt(process.env.E2E_TEST_TIME_TO_WAIT_FOR_TEXT || 120),
