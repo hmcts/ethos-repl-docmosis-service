@@ -518,7 +518,7 @@ public class ReportDocHelperTest {
                 "\"dur\":\"430\",\n" +
                 "\"clerk\":\"clerk1\"}],\n" +
                 "\"Report_Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"26 November 2021\"\n" +
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
                 "}\n" +
                 "}\n";
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails6.getCaseData(), "",
