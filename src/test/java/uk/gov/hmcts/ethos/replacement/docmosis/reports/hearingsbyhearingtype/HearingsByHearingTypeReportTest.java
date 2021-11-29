@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -119,25 +120,25 @@ public class HearingsByHearingTypeReportTest {
 
     private void verifyReportHeaderIsZeroWhenNoCasesExist(ListingData listingData) {
         AdhocReportType adhocReportType = listingData.getLocalReportsSummaryHdr();
-        assertEquals("0", adhocReportType.getTotal());
-        assertEquals("0", adhocReportType.getHearing());
-        assertEquals("0", adhocReportType.getHearingCM());
-        assertEquals("0", adhocReportType.getCosts());
-        assertEquals("0", adhocReportType.getHearingPrelim());
-        assertEquals("0", adhocReportType.getReconsider());
-        assertEquals("0", adhocReportType.getRemedy());
+        assertEquals("", adhocReportType.getTotal());
+        assertEquals("", adhocReportType.getHearing());
+        assertEquals("", adhocReportType.getHearingCM());
+        assertEquals("", adhocReportType.getCosts());
+        assertEquals("", adhocReportType.getHearingPrelim());
+        assertEquals("", adhocReportType.getReconsider());
+        assertEquals("", adhocReportType.getRemedy());
 
     }
 
     private void verifyReportHeaderIsZeroWithNoHearings(ListingData listingData) {
         AdhocReportType adhocReportType = listingData.getLocalReportsSummaryHdr();
-        assertEquals("0", adhocReportType.getTotal());
-        assertEquals("0", adhocReportType.getHearing());
-        assertEquals("0",adhocReportType.getHearingCM());
-        assertEquals("0",adhocReportType.getCosts());
-        assertEquals("0",adhocReportType.getHearingPrelim());
-        assertEquals("0",adhocReportType.getReconsider());
-        assertEquals("0",adhocReportType.getRemedy());
+        assertEquals("", adhocReportType.getTotal());
+        assertEquals("", adhocReportType.getHearing());
+        assertEquals("",adhocReportType.getHearingCM());
+        assertEquals("",adhocReportType.getCosts());
+        assertEquals("",adhocReportType.getHearingPrelim());
+        assertEquals("",adhocReportType.getReconsider());
+        assertEquals("",adhocReportType.getRemedy());
 
     }
 
@@ -223,10 +224,10 @@ public class HearingsByHearingTypeReportTest {
         assertEquals("2", numbers[6]);
         assertEquals("1", numbers[0]);
         assertEquals("1", numbers[2]);
-        assertEquals("0", adhocReportType.getCosts());
-        assertEquals("0", adhocReportType.getHearingPrelim());
-        assertEquals("0", adhocReportType.getReconsider());
-        assertEquals("0", adhocReportType.getRemedy());
+        assertEquals("", adhocReportType.getCosts());
+        assertEquals("", adhocReportType.getHearingPrelim());
+        assertEquals("", adhocReportType.getReconsider());
+        assertEquals("", adhocReportType.getRemedy());
         assertEquals("JM", numbers[7]);
 
     }
@@ -274,7 +275,7 @@ public class HearingsByHearingTypeReportTest {
         assertEquals("471", adhocReportType.getHearingDuration());
         assertEquals("multiRef, subMulti", adhocReportType.getMultSub());
         assertEquals("Hearing", adhocReportType.getHearingType());
-        assertEquals("0", adhocReportType.getHearingTelConf());
+        assertEquals("", adhocReportType.getHearingTelConf());
         assertEquals("Y", adhocReportType.getJudicialMediation());
         assertEquals("clerk1", adhocReportType.getHearingClerk());
 
