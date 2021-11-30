@@ -135,7 +135,7 @@ public class EventValidationService {
                 index = repItr.nextIndex() + 1;
                 String respRepName = repItr.next().getValue().getDynamicRespRepName().getValue().getLabel();
                 if (!isNullOrEmpty(respRepName)
-                        && !CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
+                        && CollectionUtils.isNotEmpty(caseData.getRespondentCollection())) {
                     ListIterator<RespondentSumTypeItem> respItr = caseData.getRespondentCollection().listIterator();
                     var validLink = false;
                     while (respItr.hasNext()) {
@@ -223,7 +223,7 @@ public class EventValidationService {
     }
 
     private String getJurisdictionOutcomeNotAllocatedErrorText(boolean partOfMultiple,
-                                                                String ethosReference) {
+                                                               String ethosReference) {
         if (partOfMultiple) {
             return ethosReference + " - " + JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE;
         }

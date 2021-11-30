@@ -2,12 +2,12 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.Address;
@@ -265,7 +265,7 @@ public class DocumentHelper {
     private static StringBuilder getRespondentData(CaseData caseData) {
         log.info("Respondent Data");
         var sb = new StringBuilder();
-        List<RespondentSumTypeItem> respondentSumTypeItemList = !CollectionUtils.isEmpty(
+        List<RespondentSumTypeItem> respondentSumTypeItemList = CollectionUtils.isNotEmpty(
                 caseData.getRespondentCollection())
                 ? caseData.getRespondentCollection() : new ArrayList<>();
 
@@ -310,7 +310,7 @@ public class DocumentHelper {
         RespondentSumType finalRespondentToBeShown = respondentToBeShown;
         Optional<RepresentedTypeRItem> representedTypeRItem = Optional.empty();
 
-        if (!CollectionUtils.isEmpty(representedTypeRList) && responseNotStruckOut && responseContinue
+        if (CollectionUtils.isNotEmpty(representedTypeRList) && responseNotStruckOut && responseContinue
                 && !finalRespondentToBeShown.equals(new RespondentSumType())) {
             representedTypeRItem = representedTypeRList.stream()
                     .filter(a -> a.getValue().getRespRepName().equals(
@@ -334,7 +334,7 @@ public class DocumentHelper {
 
         } else {
             log.info("Respondent not represented");
-            if (!CollectionUtils.isEmpty(caseData.getRespondentCollection())
+            if (CollectionUtils.isNotEmpty(caseData.getRespondentCollection())
                     && responseNotStruckOut && responseContinue
                     && !finalRespondentToBeShown.equals(new RespondentSumType())) {
                 sb.append("\"respondent_or_rep_full_name\":\"").append(nullCheck(finalRespondentToBeShown
@@ -346,7 +346,7 @@ public class DocumentHelper {
                 sb.append(getRespondentOrRepAddressUK(new Address()));
             }
         }
-        if (!CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
+        if (CollectionUtils.isNotEmpty(caseData.getRespondentCollection())) {
             log.info("Respondent collection");
             sb.append("\"respondent_full_name\":\"").append(
                     nullCheck((Strings.isNullOrEmpty(finalRespondentToBeShown.getResponseContinue())
@@ -456,15 +456,14 @@ public class DocumentHelper {
 
     public static String getCorrespondenceHearingNumber(CorrespondenceType correspondenceType,
                                                         CorrespondenceScotType correspondenceScotType) {
-        if (correspondenceType != null) {
-            return correspondenceType.getHearingNumber();
+        if (correspondenceType != null && correspondenceType.getDynamicHearingNumber() != null) {
+            return correspondenceType.getDynamicHearingNumber().getValue().getCode();
+        } else if (correspondenceScotType != null && correspondenceScotType.getDynamicHearingNumber() != null) {
+            return correspondenceScotType.getDynamicHearingNumber().getValue().getCode();
         } else {
-            if (correspondenceScotType != null) {
-                return correspondenceScotType.getHearingNumber();
-            } else {
-                return "";
-            }
+            return null;
         }
+
     }
 
     public static HearingType getHearingByNumber(List<HearingTypeItem> hearingCollection,
