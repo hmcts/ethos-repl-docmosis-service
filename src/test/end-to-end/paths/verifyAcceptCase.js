@@ -1,4 +1,4 @@
-const testConfig = require('src/test/config.js');
+const testConfig = require('./../../config');
 const {createCaseInCcd} = require("../helpers/ccdDataStoreApi");
 const {eventNames} = require('../pages/common/constants.js');
 let caseNumber;
