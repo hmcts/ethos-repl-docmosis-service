@@ -177,10 +177,10 @@ public class MultipleDocGenerationController {
     @PostMapping(value = "/dynamicMultipleLetters", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "populate flags in dynamic lists with all flags values are in the excel.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Accessed successfully",
-                    response = MultipleCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = 200, message = "Accessed successfully",
+                response = MultipleCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public ResponseEntity<MultipleCallbackResponse> dynamicMultipleLetters(
             @RequestBody MultipleRequest multipleRequest,
