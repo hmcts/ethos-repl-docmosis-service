@@ -49,8 +49,19 @@
     "correspondenceType": {
       "topLevel_Documents": "EM-TRB-EGW-ENG-00029",
       "part_4_Documents": "4.2",
-      "hearingNumber": "1"
-    },
+      "hearingNumber": "1",
+      "dynamicHearingNumber": {
+        "value": {
+          "code": "1",
+          "label": "1 - Manchester - 25 Nov 2019"
+        },
+        "list_items": [
+          {
+            "code": "1",
+            "label": "1 - Manchester - 25 Nov 2019"
+          }
+        ]
+      }    },
     "clerkResponsible": "Juan Diego",
     "feeGroupReference": "12212121",
     "hearingCollection": [
@@ -96,6 +107,14 @@
       "representative_phone_number": "07577136570",
       "representative_preference": "Post",
       "representative_reference": "1111111"
+    },
+    "restrictedReporting": {
+      "imposed": "No",
+      "rule503b": "No",
+      "startDate": "2021-07-15",
+      "requestedBy": "Judge",
+      "excludedRegister": "No",
+      "deletedPhyRegister": "No"
     },
     "locationType": "Manchester",
     "multipleReference": "No",

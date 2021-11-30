@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DepositTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
@@ -32,9 +31,9 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.stream.Collectors.joining;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_TITLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_LISTED_CASE_ERROR;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE;
@@ -55,6 +54,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTIO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NOT_ALLOCATED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_TITLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESP_REP_NAME_MISMATCH_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
@@ -133,9 +133,9 @@ public class EventValidationService {
             int index;
             while (repItr.hasNext()) {
                 index = repItr.nextIndex() + 1;
-                String respRepName = repItr.next().getValue().getRespRepName();
+                String respRepName = repItr.next().getValue().getDynamicRespRepName().getValue().getLabel();
                 if (!isNullOrEmpty(respRepName)
-                        && !CollectionUtils.isEmpty(caseData.getRespondentCollection())) {
+                        && CollectionUtils.isNotEmpty(caseData.getRespondentCollection())) {
                     ListIterator<RespondentSumTypeItem> respItr = caseData.getRespondentCollection().listIterator();
                     var validLink = false;
                     while (respItr.hasNext()) {
@@ -144,6 +144,7 @@ public class EventValidationService {
                                 || (respondentSumType.getResponseRespondentName() != null
                                 && respRepName.equals(respondentSumType.getResponseRespondentName()))) {
                             validLink = true;
+                            caseData.getRepCollection().get(index - 1).getValue().setRespRepName(respRepName);
                             break;
                         }
                     }
@@ -222,7 +223,7 @@ public class EventValidationService {
     }
 
     private String getJurisdictionOutcomeNotAllocatedErrorText(boolean partOfMultiple,
-                                                                String ethosReference) {
+                                                               String ethosReference) {
         if (partOfMultiple) {
             return ethosReference + " - " + JURISDICTION_OUTCOME_NOT_ALLOCATED_ERROR_MESSAGE;
         }
@@ -349,22 +350,6 @@ public class EventValidationService {
         }
     }
 
-    public List<String> validateDepositRefunded(CaseData caseData) {
-        List<String> errors = new ArrayList<>();
-        if (caseData.getDepositCollection() != null && !caseData.getDepositCollection().isEmpty()) {
-
-            for (DepositTypeItem depositTypeItem : caseData.getDepositCollection()) {
-                if (!isNullOrEmpty(depositTypeItem.getValue().getDepositAmountRefunded())
-                        && (isNullOrEmpty(depositTypeItem.getValue().getDepositAmount())
-                        || Integer.parseInt(depositTypeItem.getValue().getDepositAmountRefunded())
-                        > Integer.parseInt(depositTypeItem.getValue().getDepositAmount()))) {
-                    errors.add(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR);
-                }
-            }
-        }
-        return errors;
-    }
-
     public List<String> validateListingDateRange(String listingFrom, String listingTo) {
 
         List<String> errors = new ArrayList<>();
@@ -439,6 +424,21 @@ public class EventValidationService {
         } else if (!isRejected) {
             errors.add(getJurisdictionOutcomeErrorText(partOfMultiple, false,
                     caseData.getEthosCaseReference()));
+        }
+    }
+
+    public void validateRestrictedReportingNames(CaseData caseData) {
+        if (caseData.getRestrictedReporting() != null) {
+            var restrictedReportingType = caseData.getRestrictedReporting();
+            var dynamicListCode = restrictedReportingType.getDynamicRequestedBy().getValue().getCode();
+            if (dynamicListCode.startsWith("R: ")) {
+                restrictedReportingType.setRequestedBy(RESPONDENT_TITLE);
+            } else if (dynamicListCode.startsWith("C: ")) {
+                restrictedReportingType.setRequestedBy(CLAIMANT_TITLE);
+            } else {
+                restrictedReportingType.setRequestedBy(dynamicListCode);
+            }
+
         }
     }
 

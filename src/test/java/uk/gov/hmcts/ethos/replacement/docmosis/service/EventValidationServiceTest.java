@@ -13,6 +13,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicDepositOrder;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -49,6 +50,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.RECEIPT_DATE_LATER_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.UNABLE_TO_FIND_PARTY;
 
 @ExtendWith(SpringExtension.class)
 class EventValidationServiceTest {
@@ -524,28 +526,7 @@ class EventValidationServiceTest {
         assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, COM", errors.get(0));
     }
 
-    @Test
-    void shouldValidateDepositRefunded() {
-        List<String> errors = eventValidationService.validateDepositRefunded(caseDetails3.getCaseData());
 
-        assertEquals(1, errors.size());
-        assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.get(0));
-    }
-
-    @Test
-    void shouldValidateNullDepositRefunded() {
-        List<String> errors = eventValidationService.validateDepositRefunded(caseDetails2.getCaseData());
-
-        assertEquals(0, errors.size());
-    }
-
-    @Test
-    void shouldValidateDepositRefundedWithNullAmount() {
-        List<String> errors = eventValidationService.validateDepositRefunded(caseDetails1.getCaseData());
-
-        assertEquals(1, errors.size());
-        assertEquals(DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR, errors.get(0));
-    }
 
     @Test
     void shouldValidateReportDateRangeValidDates() {
@@ -608,6 +589,15 @@ class EventValidationServiceTest {
     }
 
     @Test
+    void validateRestrictedBy() {
+        eventValidationService.validateRestrictedReportingNames(caseDetails2.getCaseData());
+        assertEquals("Claimant", caseDetails2.getCaseData().getRestrictedReporting().getRequestedBy());
+        eventValidationService.validateRestrictedReportingNames(caseDetails1.getCaseData());
+        assertEquals("Judge", caseDetails1.getCaseData().getRestrictedReporting().getRequestedBy());
+        eventValidationService.validateRestrictedReportingNames(caseDetails3.getCaseData());
+        assertEquals("Respondent", caseDetails3.getCaseData().getRestrictedReporting().getRequestedBy());
+    }
+
     void shouldReturnsNoErrorsForHearingHearingStatusValidationWithNoHearings() {
         List<String> errors = new ArrayList<>();
         var caseWithNoHearings = validHearingStatusCaseCloseEventCaseDetails.getCaseData();
@@ -658,5 +648,6 @@ class EventValidationServiceTest {
         eventValidationService.validateHearingJudgeAllocationForCaseCloseEvent(caseWithNoHearings, errors);
         assertEquals(0, errors.size());
     }
+
 
 }

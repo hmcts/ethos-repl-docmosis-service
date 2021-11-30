@@ -430,6 +430,14 @@ public class CaseManagementForCaseWorkerServiceTest {
                 .getHearingDateCollection().get(0).getValue().getHearingStatus());
         assertEquals("Manchester", caseData.getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().getHearingVenueDay());
+        assertEquals("2019-11-01T12:11:00.000", caseData.getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().getHearingTimingStart());
+        assertEquals("2019-11-01T00:00:00", caseData.getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().getHearingTimingFinish());
+        assertEquals("2019-11-01T00:00:00", caseData.getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().getHearingTimingResume());
+        assertEquals("2019-11-01T00:00:00", caseData.getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().getHearingTimingBreak());
     }
 
     @Test
