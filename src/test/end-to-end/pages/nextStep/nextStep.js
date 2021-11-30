@@ -1,6 +1,5 @@
 'use strict';
-
-const testConfig = require('src/test/config.js');
+const testConfig = require('../../../config');
 const commonConfig = require('../../data/commonConfig.json');
 
 module.exports = async function (nextStep, webDriverWait) {
