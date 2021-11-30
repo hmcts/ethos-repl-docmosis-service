@@ -3,7 +3,7 @@
 const testConfig = require('../../../config');
 const createCaseConfig = require('./createCaseConfig');
 const randomstring = require('randomstring');
-const commonConfig = require('../../pages/common/commonConfig');
+const commonConfig = require('../../data/commonConfig.json');
 
 module.exports = function() {
     const I = this;
