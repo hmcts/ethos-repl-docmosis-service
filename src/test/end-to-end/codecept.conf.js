@@ -1,4 +1,4 @@
-const config = require('src/test/config.js');
+const config = require('../config.js');
 
 exports.config = {
     tests: config.TestPathToRun,
