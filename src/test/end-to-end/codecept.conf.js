@@ -7,7 +7,7 @@ exports.config = {
         Puppeteer: {
             url: config.TestUrl,
             waitForTimeout: 60000,
-            getPageTimeout: 60000,
+            getPageTimeout: 40000,
             // waitForAction: 1000,
             show: config.TestShowBrowserWindow,
             waitForNavigation: ['domcontentloaded'],
@@ -68,7 +68,7 @@ exports.config = {
                     reportDir: config.TestOutputDir || './functional-output',
                     reportFilename: 'ecm-e2e-result',
                     inlineAssets: true,
-                    reportTitle: `ECM E2E tests result`
+                    reportTitle: 'ECM ExUI E2E Tests'
                 }
             }
         }
