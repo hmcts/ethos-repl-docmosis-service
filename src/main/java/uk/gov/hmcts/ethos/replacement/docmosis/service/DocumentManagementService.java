@@ -67,6 +67,7 @@ public class DocumentManagementService {
         try {
             MultipartFile file = new InMemoryMultipartFile(FILES_NAME, outputFileName, type, byteArray);
             if (secureDocStoreEnabled) {
+                log.info("Using Case Document Client");
                 var response = caseDocumentClient.uploadDocuments(
                         authToken,
                         authTokenGenerator.generate(),
@@ -84,6 +85,7 @@ public class DocumentManagementService {
                 log.info("Uploaded document successful");
                 return URI.create(document.links.self.href);
             } else {
+                log.info("Using Document Upload Client");
                 var user = userService.getUserDetails(authToken);
                 var response = documentUploadClient.upload(
                        authToken,
