@@ -598,7 +598,7 @@ public class ReportDocHelper {
         AdhocReportType localReportSummaryHdr = listingData.getLocalReportsSummaryHdr();
         AdhocReportType localReportSummaryHdr2 = listingData.getLocalReportsSummaryHdr2();
         if (localReportSummaryHdr != null) {
-            sb.append(getHearingCounts(localReportSummaryHdr));
+            sb.append(getHearingCounts(localReportSummaryHdr, true));
         }
         List<AdhocReportTypeItem> localReportSummary = listingData.getLocalReportsSummary();
 
@@ -646,9 +646,9 @@ public class ReportDocHelper {
             AdhocReportType adhocReportType) {
         var sb = new StringBuilder();
         sb.append("{\"date\":\"").append(nullCheck(adhocReportType.getDate())).append(NEW_LINE);
-        sb.append("{\"multiple_sub\":\"").append(nullCheck(adhocReportType.getMultSub())).append(NEW_LINE);
-        sb.append("{\"case_no\":\"").append(nullCheck(adhocReportType.getCaseReference())).append(NEW_LINE);
-        sb.append("{\"lead\":\"").append(nullCheck(adhocReportType.getLeadCase())).append(NEW_LINE);
+        sb.append("\"multiple_sub\":\"").append(nullCheck(adhocReportType.getMultSub())).append(NEW_LINE);
+        sb.append("\"case_no\":\"").append(nullCheck(adhocReportType.getCaseReference())).append(NEW_LINE);
+        sb.append("\"lead\":\"").append(nullCheck(adhocReportType.getLeadCase())).append(NEW_LINE);
         sb.append("\"hear_no\":\"").append(nullCheck(adhocReportType.getHearingNumber())).append(NEW_LINE);
         sb.append("\"type\":\"").append(nullCheck(adhocReportType.getHearingType())).append(NEW_LINE);
         sb.append("\"tel\":\"").append(nullCheck(adhocReportType.getHearingTelConf())).append(NEW_LINE);
@@ -659,11 +659,13 @@ public class ReportDocHelper {
     }
 
     private static StringBuilder getHearingByHearingTypeLocalReportSummaryHdr2(AdhocReportType adhocReportType) {
+
         var sb = new StringBuilder();
         List<ReportListingsTypeItem> listingHistory = adhocReportType.getListingHistory();
         if (CollectionUtils.isEmpty(listingHistory)) {
             return sb;
         }
+        sb.append(REPORT_LIST);
         for (var item : listingHistory) {
             String s = item.getValue().getHearingNumber();
             List<String> fields = List.of(s.split("[|]").clone());
@@ -680,7 +682,11 @@ public class ReportDocHelper {
             tempAdhocReportType.setTotal(fields.get(6));
             tempAdhocReportType.setSubSplit(fields.get(7));
             sb.append(getHearingsByHearingTypeLocalReportSummaryRow(tempAdhocReportType, "localSummaryHdr2"));
+            if (item != listingHistory.get(listingHistory.size() - 1)) {
+                sb.append(",\n");
+            }
         }
+        sb.append("],\n");
         return sb;
     }
 
@@ -699,11 +705,11 @@ public class ReportDocHelper {
             sb.append("\"subSplit\":\"").append(
                     nullCheck(adhocReportType.getSubSplit())).append(NEW_LINE);
         }
-        sb.append(getHearingCounts(adhocReportType));
+        sb.append(getHearingCounts(adhocReportType, false));
         return sb;
     }
 
-    private static StringBuilder getHearingCounts(AdhocReportType adhocReportType) {
+    private static StringBuilder getHearingCounts(AdhocReportType adhocReportType, boolean hdr) {
         var sb = new StringBuilder();
         sb.append("\"cm\":\"").append(
                 nullCheck(adhocReportType.getHearingCM())).append(NEW_LINE);
@@ -718,7 +724,7 @@ public class ReportDocHelper {
         sb.append("\"remedy\":\"").append(
                 nullCheck(adhocReportType.getRemedy())).append(NEW_LINE);
         sb.append("\"total\":\"").append(
-                nullCheck(adhocReportType.getTotal())).append("\"}");
+                nullCheck(adhocReportType.getTotal())).append(hdr ? NEW_LINE : "\"}");
         return sb;
     }
 
