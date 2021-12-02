@@ -481,55 +481,56 @@ public class ReportDocHelperTest {
                 "\"Listed_date_from\":\"1 December 2021\",\n" +
                 "\"Listed_date_to\":\"3 December 2021\",\n" +
                 "\"Report_Office\":\"\",\n" +
-                "\"cm\":\"2\",\n" +
-                "\"costs\":\"2\",\n" +
-                "\"hearing\":\"2\",\n" +
-                "\"hearingPrelim\":\"2\",\n" +
-                "\"reconsider\":\"2\",\n" +
-                "\"remedy\":\"2\",\n" +
-                "\"total\":\"12\",\n" +
+                "\"cm_summary1\":\"2\",\n" +
+                "\"costs_summary1\":\"2\",\n" +
+                "\"hearing_summary1\":\"2\",\n" +
+                "\"hearingPrelim_summary1\":\"2\",\n" +
+                "\"reconsider_summary1\":\"2\",\n" +
+                "\"remedy_summary1\":\"2\",\n" +
+                "\"total_summary1\":\"12\",\n" +
                 "\"Report_List\":[\n" +
-                "{\"date\":\"20 October 2021\",\n" +
-                "\"cm\":\"2\",\n" +
-                "\"costs\":\"2\",\n" +
-                "\"hearing\":\"2\",\n" +
-                "\"hearingPrelim\":\"2\",\n" +
-                "\"reconsider\":\"2\",\n" +
-                "\"remedy\":\"2\",\n" +
-                "\"total\":\"12\"}],\n" +
+                "{\"date_summary1_list\":\"20 October 2021\",\n" +
+                "\"cm_summary1_list\":\"2\",\n" +
+                "\"costs_summary1_list\":\"2\",\n" +
+                "\"hearing_summary1_list\":\"2\",\n" +
+                "\"hearingPrelim_summary1_list\":\"2\",\n" +
+                "\"reconsider_summary1_list\":\"2\",\n" +
+                "\"remedy_summary1_list\":\"2\",\n" +
+                "\"total_summary1_list\":\"12\"}],\n" +
                 "\"Report_List\":[\n" +
-                "{\"subSplit\":\"JM\",\n" +
-                "\"cm\":\"1\",\n" +
-                "\"costs\":\"1\",\n" +
-                "\"hearing\":\"1\",\n" +
-                "\"hearingPrelim\":\"1\",\n" +
-                "\"reconsider\":\"1\",\n" +
-                "\"remedy\":\"1\",\n" +
-                "\"total\":\"6\"}],\n" +
+                "{\"subSplit_summary2\":\"JM\",\n" +
+                "\"cm_summary2\":\"1\",\n" +
+                "\"costs_summary2\":\"1\",\n" +
+                "\"hearing_summary2\":\"1\",\n" +
+                "\"hearingPrelim_summary2\":\"1\",\n" +
+                "\"reconsider_summary2\":\"1\",\n" +
+                "\"remedy_summary2\":\"1\",\n" +
+                "\"total_summary2\":\"6\"}],\n" +
                 "\"Report_List\":[\n" +
-                "{\"date\":\"20 October 2021\",\n" +
-                "\"subSplit\":\"JM\",\n" +
-                "\"cm\":\"2\",\n" +
-                "\"costs\":\"2\",\n" +
-                "\"hearing\":\"2\",\n" +
-                "\"hearingPrelim\":\"2\",\n" +
-                "\"reconsider\":\"2\",\n" +
-                "\"remedy\":\"2\",\n" +
-                "\"total\":\"12\"}],\n" +
+                "{\"date_summary2_list\":\"20 October 2021\",\n" +
+                "\"subSplit_summary2_list\":\"JM\",\n" +
+                "\"cm_summary2_list\":\"2\",\n" +
+                "\"costs_summary2_list\":\"2\",\n" +
+                "\"hearing_summary2_list\":\"2\",\n" +
+                "\"hearingPrelim_summary2_list\":\"2\",\n" +
+                "\"reconsider_summary2_list\":\"2\",\n" +
+                "\"remedy_summary2_list\":\"2\",\n" +
+                "\"total_summary2_list\":\"12\"}],\n" +
                 "\"Report_List\":[\n" +
-                "{\"date\":\"2020-10-20T10:00:00.000\",\n" +
-                "\"multiple_sub\":\"multSub\",\n" +
-                "\"case_no\":\"1112\",\n" +
-                "\"lead\":\"212323\",\n" +
-                "\"hear_no\":\"1\",\n" +
-                "\"type\":\"Hearing\",\n" +
-                "\"tel\":\"Y\",\n" +
-                "\"jm\":\"Y\",\n" +
-                "\"dur\":\"430\",\n" +
-                "\"clerk\":\"clerk1\"}],\n" +
+                "{\"date_detail\":\"2020-10-20T10:00:00.000\",\n" +
+                "\"multiple_sub_detail\":\"multSub\",\n" +
+                "\"case_no_detail\":\"1112\",\n" +
+                "\"lead_detail\":\"212323\",\n" +
+                "\"hear_no_detail\":\"1\",\n" +
+                "\"type_detail\":\"Hearing\",\n" +
+                "\"tel_detail\":\"Y\",\n" +
+                "\"jm_detail\":\"Y\",\n" +
+                "\"dur_detail\":\"430\",\n" +
+                "\"clerk_detail\":\"clerk1\"}],\n" +
                 "\"Report_Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"" +
-                "\n}\n}\n";
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
+                "}\n" +
+                "}\n";
 
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails6.getCaseData(), "",
                 "EM-TRB-SCO-ENG-00785", userDetails).toString());
