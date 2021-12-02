@@ -487,7 +487,8 @@ public class ReportDocHelperTest {
                 "\"hearingPrelim\":\"2\",\n" +
                 "\"reconsider\":\"2\",\n" +
                 "\"remedy\":\"2\",\n" +
-                "\"total\":\"12\"}\"Report_List\":[\n" +
+                "\"total\":\"12\",\n" +
+                "\"Report_List\":[\n" +
                 "{\"date\":\"20 October 2021\",\n" +
                 "\"cm\":\"2\",\n" +
                 "\"costs\":\"2\",\n" +
@@ -496,6 +497,15 @@ public class ReportDocHelperTest {
                 "\"reconsider\":\"2\",\n" +
                 "\"remedy\":\"2\",\n" +
                 "\"total\":\"12\"}],\n" +
+                "\"Report_List\":[\n" +
+                "{\"subSplit\":\"JM\",\n" +
+                "\"cm\":\"1\",\n" +
+                "\"costs\":\"1\",\n" +
+                "\"hearing\":\"1\",\n" +
+                "\"hearingPrelim\":\"1\",\n" +
+                "\"reconsider\":\"1\",\n" +
+                "\"remedy\":\"1\",\n" +
+                "\"total\":\"6\"}],\n" +
                 "\"Report_List\":[\n" +
                 "{\"date\":\"20 October 2021\",\n" +
                 "\"subSplit\":\"JM\",\n" +
@@ -508,9 +518,9 @@ public class ReportDocHelperTest {
                 "\"total\":\"12\"}],\n" +
                 "\"Report_List\":[\n" +
                 "{\"date\":\"2020-10-20T10:00:00.000\",\n" +
-                "{\"multiple_sub\":\"multSub\",\n" +
-                "{\"case_no\":\"1112\",\n" +
-                "{\"lead\":\"212323\",\n" +
+                "\"multiple_sub\":\"multSub\",\n" +
+                "\"case_no\":\"1112\",\n" +
+                "\"lead\":\"212323\",\n" +
                 "\"hear_no\":\"1\",\n" +
                 "\"type\":\"Hearing\",\n" +
                 "\"tel\":\"Y\",\n" +
@@ -518,9 +528,9 @@ public class ReportDocHelperTest {
                 "\"dur\":\"430\",\n" +
                 "\"clerk\":\"clerk1\"}],\n" +
                 "\"Report_Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
-                "}\n" +
-                "}\n";
+                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"" +
+                "\n}\n}\n";
+
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails6.getCaseData(), "",
                 "EM-TRB-SCO-ENG-00785", userDetails).toString());
     }
