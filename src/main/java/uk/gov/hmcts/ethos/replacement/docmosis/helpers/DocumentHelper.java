@@ -178,17 +178,17 @@ public class DocumentHelper {
             sb.append("\"claimant_reference\":\"").append(nullCheck(representedTypeC.getRepresentativeReference()))
                     .append(NEW_LINE);
             Optional<String> claimantTypeOfClaimant = Optional.ofNullable(caseData.getClaimantTypeOfClaimant());
-            if (claimantIndType.isPresent()) {
-                sb.append("\"claimant_full_name\":\"").append(nullCheck(claimantIndType.get().claimantFullName()))
-                        .append(NEW_LINE);
-                sb.append("\"Claimant\":\"").append(nullCheck(claimantIndType.get().claimantFullName()))
-                        .append(NEW_LINE);
-            } else if (claimantTypeOfClaimant.isPresent() && caseData.getClaimantTypeOfClaimant()
+            if (claimantTypeOfClaimant.isPresent() && caseData.getClaimantTypeOfClaimant()
                     .equals(COMPANY_TYPE_CLAIMANT)) {
                 log.info("Claimant Company");
                 sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantCompany()))
                         .append(NEW_LINE);
                 sb.append("\"Claimant\":\"").append(nullCheck(caseData.getClaimantCompany())).append(NEW_LINE);
+            } else if (claimantIndType.isPresent()) {
+                sb.append("\"claimant_full_name\":\"").append(nullCheck(claimantIndType.get().claimantFullName()))
+                        .append(NEW_LINE);
+                sb.append("\"Claimant\":\"").append(nullCheck(claimantIndType.get().claimantFullName()))
+                        .append(NEW_LINE);
             } else {
                 sb.append("\"claimant_full_name\":\"").append(NEW_LINE);
                 sb.append("\"Claimant\":\"").append(NEW_LINE);
