@@ -36,6 +36,7 @@ public class DocumentManagementService {
     private static final String FILES_NAME = "files";
     public static final String APPLICATION_DOCX_VALUE =
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    private static final String JURISDICTION = "EMPLOYMENT";
     private final DocumentUploadClientApi documentUploadClient;
     private final AuthTokenGenerator authTokenGenerator;
     private final DocumentDownloadClientApi documentDownloadClientApi;
@@ -72,7 +73,7 @@ public class DocumentManagementService {
                         authToken,
                         authTokenGenerator.generate(),
                         caseTypeID,
-                        "EMPLOYMENT",
+                        JURISDICTION,
                         singletonList(file),
                         Classification.PUBLIC
                 );
