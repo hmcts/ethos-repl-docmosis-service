@@ -65,10 +65,11 @@ async function createECMCase(dataLocation = 'ccd-case-basic-data.json') {
     return saveCaseResponse;
 }
 
-async function updateCaseInCcd(caseId, eventId, dataLocation = 'data/ccd-update-data.json') {
-    const authToken = await getUserToken();
-    const userId = await getUserId(authToken);
-    const serviceToken = await getServiceToken();
+async function updateECMCaseInCcd(caseId, eventId, dataLocation = 'ccd-accept-case.json') {
+
+    const authToken = await idamApi.getUserToken();
+    const userId = await idamApi.getUserId(authToken);
+    const serviceToken = await s2sService.getServiceToken();
     logger.info('Updating case with id %s and event %s', caseId, eventId);
 
     const ccdApiUrl = `http://ccd-data-store-api-${env}.service.core-compute-${env}.internal`;
@@ -86,7 +87,6 @@ async function updateCaseInCcd(caseId, eventId, dataLocation = 'data/ccd-update-
     };
 
     const startEventResponse = await request(startEventOptions);
-
     const eventToken = JSON.parse(startEventResponse).token;
 
     var data = fs.readFileSync(dataLocation);
@@ -118,5 +118,5 @@ async function updateCaseInCcd(caseId, eventId, dataLocation = 'data/ccd-update-
 module.exports = {
     createCaseInCcd,
     createECMCase,
-    updateCaseInCcd,
+    updateECMCaseInCcd,
 };
