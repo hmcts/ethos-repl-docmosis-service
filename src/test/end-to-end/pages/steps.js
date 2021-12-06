@@ -9,6 +9,7 @@ module.exports = () => {
         chooseNextStep: steps.nextStep.nextStep,
         acceptTheCase: steps.acceptanceCase.acceptCase,
         rejectTheCase:steps.acceptanceCase.rejectCase,
+        amendTheCaseDetails:steps.amendCaseDetails.amendCaseDetails,
         selectNewCase: steps.newCase.newCase,
         selectCaseTypeOptions: steps.createCase.createCase,
         enterCreateCasePage1: steps.createCasePages.page1initiateCase1,

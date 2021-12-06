@@ -5,7 +5,10 @@ const ccdUserType = {
 
 const eventNames = {
     ACCEPT_CASE: 'Accept/Reject Case',
-    REJECT_CASE: 'Accept/Reject Case'
+    REJECT_CASE: 'Accept/Reject Case',
+    CASE_DETAILS: 'Case Details',
+    PRE_ACCEPTANCE_CASE: 'preAcceptanceCase',
+    ACCEPT_REJECTED_CASE:'acceptRejectedCase'
 
 };
 
