@@ -37,7 +37,15 @@ public class HearingsByHearingTypeReport {
             "Tel Con", "Video", "Hybrid", "In Person", "Stage 1", "Stage 2", "Stage 3");
     private String costsHearingType = "Costs Hearing";
     private boolean casesExistWithHearingStatusHeard;
-    static final String ZERO = "0";
+    private static final String ZERO = "0";
+    private static final String hearingNumber = ZERO + "|"
+            + ZERO + "|"
+            + ZERO + "|"
+            + ZERO + "|"
+            + ZERO + "|"
+            + ZERO + "|"
+            + ZERO + "|"
+            + ZERO;
 
     public ListingData processHearingsByHearingTypeRequest(ListingDetails listingDetails,
                                                            List<SubmitEvent> submitEvents) {
@@ -73,9 +81,32 @@ public class HearingsByHearingTypeReport {
 
     private void initReport(ListingDetails listingDetails) {
 
+        var reportListingsType = new ReportListingsType();
+        reportListingsType.setHearingNumber(hearingNumber);
+        var item = new ReportListingsTypeItem();
+        item.setId(UUID.randomUUID().toString());
+        item.setValue(reportListingsType);
+        List<ReportListingsTypeItem> listingHistory = new ArrayList<>();
+        listingHistory.add(item);
         var adhocReportType = new AdhocReportType();
+        initSummaryFields(adhocReportType);
+        adhocReportType.setListingHistory(listingHistory);
+        adhocReportType.setReportOffice(
+                UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
 
-        //LocalReportsSummary fields
+        var listingData = listingDetails.getCaseData();
+        listingData.setLocalReportsSummaryHdr(adhocReportType);
+        listingData.setLocalReportsSummaryHdr2(adhocReportType);
+
+        var adhocReportTypeItem = new AdhocReportTypeItem();
+        adhocReportTypeItem.setId(UUID.randomUUID().toString());
+        adhocReportTypeItem.setValue(adhocReportType);
+        listingData.setLocalReportsSummary(List.of(adhocReportTypeItem));
+        listingData.setLocalReportsSummary2(List.of(adhocReportTypeItem));
+        listingData.setLocalReportsDetail(List.of(adhocReportTypeItem));
+    }
+
+    private void initSummaryFields(AdhocReportType adhocReportType) {
         adhocReportType.setCosts(ZERO);
         adhocReportType.setRemedy(ZERO);
         adhocReportType.setHearingCM(ZERO);
@@ -92,37 +123,6 @@ public class HearingsByHearingTypeReport {
         adhocReportType.setHearingTelConf(ZERO);
         adhocReportType.setHearingDuration(ZERO);
         adhocReportType.setHearingClerk(ZERO);
-
-        String hearingNumber = ZERO + "|"
-                + ZERO + "|"
-                + ZERO + "|"
-                + ZERO + "|"
-                + ZERO + "|"
-                + ZERO + "|"
-                + ZERO + "|"
-                + ZERO;
-
-        var reportListingsType = new ReportListingsType();
-        reportListingsType.setHearingNumber(hearingNumber);
-        var item = new ReportListingsTypeItem();
-        item.setId(UUID.randomUUID().toString());
-        item.setValue(reportListingsType);
-        List<ReportListingsTypeItem> listingHistory = new ArrayList<>();
-        listingHistory.add(item);
-        adhocReportType.setListingHistory(listingHistory);
-        adhocReportType.setReportOffice(
-                UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
-
-        var listingData = listingDetails.getCaseData();
-        listingData.setLocalReportsSummaryHdr(adhocReportType);
-        listingData.setLocalReportsSummaryHdr2(adhocReportType);
-
-        var adhocReportTypeItem = new AdhocReportTypeItem();
-        adhocReportTypeItem.setId(UUID.randomUUID().toString());
-        adhocReportTypeItem.setValue(adhocReportType);
-        listingData.setLocalReportsSummary(List.of(adhocReportTypeItem));
-        listingData.setLocalReportsSummary2(List.of(adhocReportTypeItem));
-        listingData.setLocalReportsDetail(List.of(adhocReportTypeItem));
     }
 
     private static class Fields {
