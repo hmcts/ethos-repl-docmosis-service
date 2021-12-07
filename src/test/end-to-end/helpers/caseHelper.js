@@ -13,7 +13,14 @@ async function caseDetails(I, caseId, eventName, clerkResponcible, physicalLocat
     await I.amendTheCaseDetails(clerkResponcible, physicalLocation, conciliationTrack);
 }
 
+async function claimantDetails(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(5);
+    await I.executeClaimantDetails();
+}
+
 module.exports = {
     acceptCaseEvent,
-    caseDetails
+    caseDetails,
+    claimantDetails
 };
