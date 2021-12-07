@@ -91,7 +91,7 @@ public class HearingsByHearingTypeReportTest {
         List<SubmitEvent> submitEvents = new ArrayList<>();
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
         ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents);
-        verifyReportHeaderIsZeroWhenNoCasesExist(listingData);
+        verifyReportHeaderIsZeroWithNoHearings(listingData);
     }
 
     @Test

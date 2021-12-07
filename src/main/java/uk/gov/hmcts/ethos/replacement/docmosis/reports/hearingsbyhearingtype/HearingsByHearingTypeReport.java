@@ -93,6 +93,26 @@ public class HearingsByHearingTypeReport {
         adhocReportType.setHearingDuration(ZERO);
         adhocReportType.setHearingClerk(ZERO);
 
+        String hearingNumber = ZERO + "|"
+                + ZERO + "|"
+                + ZERO + "|"
+                + ZERO + "|"
+                + ZERO + "|"
+                + ZERO + "|"
+                + ZERO + "|"
+                + ZERO;
+
+        var reportListingsType = new ReportListingsType();
+        reportListingsType.setHearingNumber(hearingNumber);
+        var item = new ReportListingsTypeItem();
+        item.setId(UUID.randomUUID().toString());
+        item.setValue(reportListingsType);
+        List<ReportListingsTypeItem> listingHistory = new ArrayList<>();
+        listingHistory.add(item);
+        adhocReportType.setListingHistory(listingHistory);
+        adhocReportType.setReportOffice(
+                UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
+
         var listingData = listingDetails.getCaseData();
         listingData.setLocalReportsSummaryHdr(adhocReportType);
         listingData.setLocalReportsSummaryHdr2(adhocReportType);
@@ -149,23 +169,23 @@ public class HearingsByHearingTypeReport {
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType()))).count();
             fields.hearingPrelimCM =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                        a.getCaseData().getHearingCollection())
+                    a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> HEARING_TYPE_PERLIMINARY_HEARING_CM.equals(b.getValue().getHearingType()))).count();
             fields.hearingPrelim =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                        a.getCaseData().getHearingCollection())
+                    a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> HEARING_TYPE_PERLIMINARY_HEARING.equals(b.getValue().getHearingType()))).count();
             fields.costs = (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                        a.getCaseData().getHearingCollection())
+                    a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> costsHearingType.equals(b.getValue().getHearingType()))).count();
             fields.reconsider = (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                        a.getCaseData().getHearingCollection())
+                    a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> HEARING_TYPE_JUDICIAL_RECONSIDERATION.equals(b.getValue().getHearingType()))).count();
             fields.remedy =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
-                        a.getCaseData().getHearingCollection())
+                    a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> HEARING_TYPE_JUDICIAL_REMEDY.equals(b.getValue().getHearingType()))).count();
             fields.calculateTotal();
@@ -186,43 +206,43 @@ public class HearingsByHearingTypeReport {
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> CollectionUtils.isNotEmpty(b.getValue().getHearingDateCollection())
                             && b.getValue().getHearingDateCollection().stream().anyMatch(c -> date.equals(
-                                    c.getValue().getListedDate()))
-                                && HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType()))).count();
+                            c.getValue().getListedDate()))
+                            && HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType()))).count();
 
             fields.hearingPrelimCM =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                     a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> CollectionUtils.isNotEmpty(b.getValue().getHearingDateCollection())
                             && b.getValue().getHearingDateCollection().stream().anyMatch(c -> date.equals(
-                                    c.getValue().getListedDate()))
+                            c.getValue().getListedDate()))
                             && HEARING_TYPE_PERLIMINARY_HEARING_CM.equals(b.getValue().getHearingType()))).count();
             fields.hearingPrelim =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                     a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> CollectionUtils.isNotEmpty(b.getValue().getHearingDateCollection())
                             && b.getValue().getHearingDateCollection().stream().anyMatch(c -> date.equals(
-                                    c.getValue().getListedDate()))
+                            c.getValue().getListedDate()))
                             && HEARING_TYPE_PERLIMINARY_HEARING.equals(b.getValue().getHearingType()))).count();
             fields.costs = (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                     a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> CollectionUtils.isNotEmpty(b.getValue().getHearingDateCollection())
                             && b.getValue().getHearingDateCollection().stream().anyMatch(c -> date.equals(
-                                    c.getValue().getListedDate()))
+                            c.getValue().getListedDate()))
                             && costsHearingType.equals(b.getValue().getHearingType()))).count();
             fields.reconsider = (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                     a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> CollectionUtils.isNotEmpty(b.getValue().getHearingDateCollection())
                             && b.getValue().getHearingDateCollection().stream().anyMatch(c -> date.equals(
-                                    c.getValue().getListedDate()))
+                            c.getValue().getListedDate()))
                             && HEARING_TYPE_JUDICIAL_RECONSIDERATION.equals(b.getValue().getHearingType()))).count();
             fields.remedy =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                     a.getCaseData().getHearingCollection())
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> CollectionUtils.isNotEmpty(b.getValue().getHearingDateCollection())
                             && b.getValue().getHearingDateCollection().stream().anyMatch(c -> date.equals(
-                                    c.getValue().getListedDate()))
+                            c.getValue().getListedDate()))
                             && HEARING_TYPE_JUDICIAL_REMEDY.equals(b.getValue().getHearingType()))).count();
             fields.date = date;
             fields.calculateTotal();
@@ -243,12 +263,12 @@ public class HearingsByHearingTypeReport {
                         a.getCaseData().getHearingCollection())
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
                             b -> HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType())
-                                        && isHearingFormatValid(subSplitHeader, b))).count();
+                                && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.hearingPrelimCM =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                         a.getCaseData().getHearingCollection())
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
                             b -> HEARING_TYPE_PERLIMINARY_HEARING_CM.equals(b.getValue().getHearingType())
-                                    && isHearingFormatValid(subSplitHeader, b))).count();
+                                && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.hearingPrelim =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                         a.getCaseData().getHearingCollection())
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
@@ -303,7 +323,7 @@ public class HearingsByHearingTypeReport {
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
                             b -> CollectionUtils.isNotEmpty(b.getValue().getHearingDateCollection())
                                 && b.getValue().getHearingDateCollection().stream().anyMatch(c -> date.equals(
-                                        c.getValue().getListedDate()))
+                                c.getValue().getListedDate()))
                                 && HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType())
                                 && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.hearingPrelimCM =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
@@ -311,7 +331,7 @@ public class HearingsByHearingTypeReport {
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
                             b -> CollectionUtils.isNotEmpty(b.getValue().getHearingDateCollection())
                                 && b.getValue().getHearingDateCollection().stream().anyMatch(c -> date.equals(
-                                        c.getValue().getListedDate()))
+                                c.getValue().getListedDate()))
                                 && HEARING_TYPE_PERLIMINARY_HEARING_CM.equals(b.getValue().getHearingType())
                                 && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.hearingPrelim =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
@@ -319,7 +339,7 @@ public class HearingsByHearingTypeReport {
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
                             b -> CollectionUtils.isNotEmpty(b.getValue().getHearingDateCollection())
                                 && b.getValue().getHearingDateCollection().stream().anyMatch(c -> date.equals(
-                                        c.getValue().getListedDate()))
+                                c.getValue().getListedDate()))
                                 && HEARING_TYPE_PERLIMINARY_HEARING.equals(b.getValue().getHearingType())
                                 && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.costs =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
@@ -327,7 +347,7 @@ public class HearingsByHearingTypeReport {
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
                             b -> CollectionUtils.isNotEmpty(b.getValue().getHearingDateCollection())
                                 && b.getValue().getHearingDateCollection().stream().anyMatch(c -> date.equals(
-                                        c.getValue().getListedDate()))
+                                c.getValue().getListedDate()))
                                 && costsHearingType.equals(b.getValue().getHearingType())
                                 && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.reconsider =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
@@ -335,7 +355,7 @@ public class HearingsByHearingTypeReport {
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
                             b -> CollectionUtils.isNotEmpty(b.getValue().getHearingDateCollection())
                                 && b.getValue().getHearingDateCollection().stream().anyMatch(c -> date.equals(
-                                        c.getValue().getListedDate()))
+                                c.getValue().getListedDate()))
                                 && HEARING_TYPE_JUDICIAL_RECONSIDERATION.equals(b.getValue().getHearingType())
                                 && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.remedy =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
@@ -343,7 +363,7 @@ public class HearingsByHearingTypeReport {
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
                             b -> CollectionUtils.isNotEmpty(b.getValue().getHearingDateCollection())
                                 && b.getValue().getHearingDateCollection().stream().anyMatch(c -> date.equals(
-                                        c.getValue().getListedDate()))
+                                c.getValue().getListedDate()))
                                 && HEARING_TYPE_JUDICIAL_REMEDY.equals(b.getValue().getHearingType())
                                 && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.date = date;
