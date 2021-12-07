@@ -497,7 +497,7 @@ public class ReportDocHelperTest {
                 "\"reconsider_summary1_list\":\"2\",\n" +
                 "\"remedy_summary1_list\":\"2\",\n" +
                 "\"total_summary1_list\":\"12\"}],\n" +
-                "\"Report_List\":[\n" +
+                "\"reportSummaryHdr2\":[\n" +
                 "{\"subSplit_summary2\":\"JM\",\n" +
                 "\"cm_summary2\":\"1\",\n" +
                 "\"costs_summary2\":\"1\",\n" +
@@ -506,7 +506,7 @@ public class ReportDocHelperTest {
                 "\"reconsider_summary2\":\"1\",\n" +
                 "\"remedy_summary2\":\"1\",\n" +
                 "\"total_summary2\":\"6\"}],\n" +
-                "\"Report_List\":[\n" +
+                "\"reportSummary2\":[\n" +
                 "{\"date_summary2_list\":\"20 October 2021\",\n" +
                 "\"subSplit_summary2_list\":\"JM\",\n" +
                 "\"cm_summary2_list\":\"2\",\n" +
@@ -516,7 +516,7 @@ public class ReportDocHelperTest {
                 "\"reconsider_summary2_list\":\"2\",\n" +
                 "\"remedy_summary2_list\":\"2\",\n" +
                 "\"total_summary2_list\":\"12\"}],\n" +
-                "\"Report_List\":[\n" +
+                "\"reportDetails\":[\n" +
                 "{\"date_detail\":\"2020-10-20T10:00:00.000\",\n" +
                 "\"multiple_sub_detail\":\"multSub\",\n" +
                 "\"case_no_detail\":\"1112\",\n" +

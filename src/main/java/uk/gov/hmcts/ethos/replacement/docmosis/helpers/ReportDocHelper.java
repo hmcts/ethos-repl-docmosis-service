@@ -455,8 +455,8 @@ public class ReportDocHelper {
 
         if (CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail())) {
             var listBlockOpeners = List.of(DAY_1_LIST, DAY_2_LIST,
-                                                       DAY_3_LIST, DAY_4_LIST,
-                                                       DAY_5_LIST, DAY_6_LIST);
+                    DAY_3_LIST, DAY_4_LIST,
+                    DAY_5_LIST, DAY_6_LIST);
             for (var dayIndex = 0; dayIndex <= claimsServedDayListUpperBoundary; dayIndex++) {
                 addEntriesByServingDay(dayIndex, listBlockOpeners.get(dayIndex),
                         reportContent, listingData);
@@ -616,7 +616,7 @@ public class ReportDocHelper {
         List<AdhocReportTypeItem> localReportSummary2 = listingData.getLocalReportsSummary2();
         sb.append(getHearingByHearingTypeLocalReportSummaryHdr2(localReportSummaryHdr2));
         if (CollectionUtils.isNotEmpty(localReportSummary2)) {
-            sb.append(REPORT_LIST);
+            sb.append("\"reportSummary2\":[\n");
             for (var i = 0; i < localReportSummary2.size(); i++) {
                 sb.append(getHearingsByHearingTypeLocalReportSummaryRow(
                         localReportSummary2.get(i).getValue(), "localSummary2"));
@@ -628,7 +628,7 @@ public class ReportDocHelper {
         }
         List<AdhocReportTypeItem> localReportSummaryDetail = listingData.getLocalReportsDetail();
         if (CollectionUtils.isNotEmpty(localReportSummaryDetail)) {
-            sb.append(REPORT_LIST);
+            sb.append("\"reportDetails\":[\n");
             for (var i = 0; i < localReportSummaryDetail.size(); i++) {
                 sb.append(getHearingsByHearingTypeLocalReportDetailRow(
                         localReportSummaryDetail.get(i).getValue()));
@@ -665,7 +665,7 @@ public class ReportDocHelper {
         if (CollectionUtils.isEmpty(listingHistory)) {
             return sb;
         }
-        sb.append(REPORT_LIST);
+        sb.append("\"reportSummaryHdr2\":[\n");
         for (var item : listingHistory) {
             String s = item.getValue().getHearingNumber();
             List<String> fields = List.of(s.split("[|]").clone());
