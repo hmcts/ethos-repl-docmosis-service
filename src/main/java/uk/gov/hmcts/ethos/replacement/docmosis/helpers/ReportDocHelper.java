@@ -661,10 +661,11 @@ public class ReportDocHelper {
     private static StringBuilder getHearingByHearingTypeLocalReportSummaryHdr2(AdhocReportType adhocReportType) {
 
         var sb = new StringBuilder();
-        List<ReportListingsTypeItem> listingHistory = adhocReportType.getListingHistory();
-        if (CollectionUtils.isEmpty(listingHistory)) {
+        if (adhocReportType == null || CollectionUtils.isEmpty(adhocReportType.getListingHistory())) {
             return sb;
         }
+        List<ReportListingsTypeItem> listingHistory = adhocReportType.getListingHistory();
+
         sb.append(REPORT_LIST);
         for (var item : listingHistory) {
             String s = item.getValue().getHearingNumber();

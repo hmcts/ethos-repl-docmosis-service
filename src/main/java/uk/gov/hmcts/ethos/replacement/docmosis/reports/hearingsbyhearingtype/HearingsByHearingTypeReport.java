@@ -37,10 +37,12 @@ public class HearingsByHearingTypeReport {
             "Tel Con", "Video", "Hybrid", "In Person", "Stage 1", "Stage 2", "Stage 3");
     private String costsHearingType = "Costs Hearing";
     private boolean casesExistWithHearingStatusHeard;
+    static final String ZERO = "0";
 
     public ListingData processHearingsByHearingTypeRequest(ListingDetails listingDetails,
                                                            List<SubmitEvent> submitEvents) {
 
+        initReport(listingDetails);
         casesExistWithHearingStatusHeard = CollectionUtils.isNotEmpty(getDatesList(submitEvents));
         if (CollectionUtils.isNotEmpty(submitEvents)) {
             executeReport(listingDetails, submitEvents);
@@ -67,6 +69,40 @@ public class HearingsByHearingTypeReport {
                     UtilHelper.getListingCaseTypeId(listingDetails.getCaseTypeId()));
         }
 
+    }
+
+    private void initReport(ListingDetails listingDetails) {
+
+        var adhocReportType = new AdhocReportType();
+
+        //LocalReportsSummary fields
+        adhocReportType.setCosts(ZERO);
+        adhocReportType.setRemedy(ZERO);
+        adhocReportType.setHearingCM(ZERO);
+        adhocReportType.setHearingPrelim(ZERO);
+        adhocReportType.setReconsider(ZERO);
+        adhocReportType.setHearing(ZERO);
+        adhocReportType.setTotal(ZERO);
+        adhocReportType.setDate(ZERO);
+        adhocReportType.setSubSplit(ZERO);
+        adhocReportType.setCaseReference(ZERO);
+        adhocReportType.setLeadCase(ZERO);
+        adhocReportType.setHearingType(ZERO);
+        adhocReportType.setJudicialMediation(ZERO);
+        adhocReportType.setHearingTelConf(ZERO);
+        adhocReportType.setHearingDuration(ZERO);
+        adhocReportType.setHearingClerk(ZERO);
+
+        var listingData = listingDetails.getCaseData();
+        listingData.setLocalReportsSummaryHdr(adhocReportType);
+        listingData.setLocalReportsSummaryHdr2(adhocReportType);
+
+        var adhocReportTypeItem = new AdhocReportTypeItem();
+        adhocReportTypeItem.setId(UUID.randomUUID().toString());
+        adhocReportTypeItem.setValue(adhocReportType);
+        listingData.setLocalReportsSummary(List.of(adhocReportTypeItem));
+        listingData.setLocalReportsSummary2(List.of(adhocReportTypeItem));
+        listingData.setLocalReportsDetail(List.of(adhocReportTypeItem));
     }
 
     private static class Fields {
