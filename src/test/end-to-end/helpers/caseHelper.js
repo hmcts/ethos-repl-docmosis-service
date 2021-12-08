@@ -19,8 +19,15 @@ async function claimantDetails(I, eventName) {
     await I.executeClaimantDetails();
 }
 
+async function claimantRepresentative(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(5);
+    await I.executeClaimantRepresentative();
+}
+
 module.exports = {
     acceptCaseEvent,
     caseDetails,
-    claimantDetails
+    claimantDetails,
+    claimantRepresentative
 };
