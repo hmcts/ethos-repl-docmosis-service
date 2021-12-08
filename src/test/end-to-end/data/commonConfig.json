@@ -9,6 +9,7 @@
   "submit": "Submit",
   "claimantRepresentativeYes": "#claimantRepresentedQuestion_Yes",
   "claimantRepresentativeName": "ECMRep1",
-  "findAddressButton": "Find address"
-
+  "findAddressButton": "Find address",
+  "claimantRepresentativePostCode": "E14 3XA",
+  "claimantRepresentativeAddress": "Flat 13, Vermeer Court, 1 Rembrandt Close, London, E14 3XA"
 }
