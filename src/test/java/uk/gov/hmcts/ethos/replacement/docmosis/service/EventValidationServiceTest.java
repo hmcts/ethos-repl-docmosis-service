@@ -518,6 +518,14 @@ class EventValidationServiceTest {
     }
 
     @Test
+    void shouldValidateDatesWithinJudgement() {
+        List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(
+                caseDetails1.getCaseData());
+        assertEquals("Date of Judgement Made can't be in future", errors.get(0));
+        assertEquals("Date of Judgement Sent can't be in future", errors.get(1));
+    }
+
+    @Test
     void shouldValidateJurisdictionCodesWithinJudgementEmptyJurCodesCollection() {
         List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(
                 caseDetails3.getCaseData());
