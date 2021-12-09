@@ -511,10 +511,10 @@ class EventValidationServiceTest {
         List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(
                 caseDetails1.getCaseData());
 
-        assertEquals(2, errors.size());
-        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, ADG, ADG, CCP, CCP", errors.get(0));
+        assertEquals(4, errors.size());
+        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, ADG, ADG, CCP, CCP", errors.get(2));
         assertEquals(DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR + "Case Management - [COM] & Reserved "
-                + "- [CCP, ADG]", errors.get(1));
+                + "- [CCP, ADG]", errors.get(3));
     }
 
     @Test
