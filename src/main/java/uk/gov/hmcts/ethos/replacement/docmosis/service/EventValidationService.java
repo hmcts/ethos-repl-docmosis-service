@@ -326,7 +326,18 @@ public class EventValidationService {
                         duplicatedJurCodesMap,
                         judgementType.getJudgementType());
 
-                log.info("Check if dates are not in future");
+            }
+            getJurisdictionCodesErrors(errors, jurCodesDoesNotExist, duplicatedJurCodesMap);
+        }
+        return errors;
+    }
+
+    public List<String> validateJudgementDates(CaseData caseData) {
+        List<String> errors = new ArrayList<>();
+        log.info("Check if dates are not in future for case: " + caseData.getEthosCaseReference());
+        if (CollectionUtils.isNotEmpty(caseData.getJudgementCollection())) {
+            for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
+                var judgementType = judgementTypeItem.getValue();
                 if (LocalDate.parse(judgementType.getDateJudgmentMade()).isAfter(LocalDate.now())) {
                     errors.add("Date of Judgement Made can't be in future");
                 }
@@ -334,7 +345,6 @@ public class EventValidationService {
                     errors.add("Date of Judgement Sent can't be in future");
                 }
             }
-            getJurisdictionCodesErrors(errors, jurCodesDoesNotExist, duplicatedJurCodesMap);
         }
         return errors;
     }

@@ -511,15 +511,15 @@ class EventValidationServiceTest {
         List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(
                 caseDetails1.getCaseData());
 
-        assertEquals(4, errors.size());
-        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, ADG, ADG, CCP, CCP", errors.get(2));
+        assertEquals(2, errors.size());
+        assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, ADG, ADG, CCP, CCP", errors.get(0));
         assertEquals(DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR + "Case Management - [COM] & Reserved "
-                + "- [CCP, ADG]", errors.get(3));
+                + "- [CCP, ADG]", errors.get(1));
     }
 
     @Test
     void shouldValidateDatesWithinJudgement() {
-        List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(
+        List<String> errors = eventValidationService.validateJudgementDates(
                 caseDetails1.getCaseData());
         assertEquals("Date of Judgement Made can't be in future", errors.get(0));
         assertEquals("Date of Judgement Sent can't be in future", errors.get(1));
