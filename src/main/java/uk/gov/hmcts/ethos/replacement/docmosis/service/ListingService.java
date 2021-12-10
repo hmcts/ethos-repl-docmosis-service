@@ -28,6 +28,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.Hea
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsCcdReportDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeCcdDataSource;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims.ServingClaimsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
 import java.io.IOException;
@@ -65,6 +68,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -226,6 +230,8 @@ public class ListingService {
                     return getCasesAwaitingJudgmentReport(listingDetails, authToken);
                 case HEARINGS_TO_JUDGEMENTS_REPORT:
                     return getHearingsToJudgmentsReport(listingDetails, authToken);
+                case NO_CHANGE_IN_CURRENT_POSITION_REPORT:
+                    return getNoPositionChangeReport(listingDetails, authToken);
                 default:
                     return getDateRangeReport(listingDetails, authToken);
             }
@@ -262,6 +268,19 @@ public class ListingService {
         reportData.setListingDateFrom(listingDetails.getCaseData().getListingDateFrom());
         reportData.setListingDateTo(listingDetails.getCaseData().getListingDateTo());
         reportData.setListingDate(listingDetails.getCaseData().getListingDate());
+        return reportData;
+    }
+
+    private NoPositionChangeReportData getNoPositionChangeReport(ListingDetails listingDetails, String authToken) {
+        log.info("No Change In Current Position for {}", listingDetails.getCaseTypeId());
+        var reportDataSource = new NoPositionChangeCcdDataSource(authToken, ccdClient);
+        var hearingsToJudgmentsReport = new NoPositionChangeReport(reportDataSource,
+                listingDetails.getCaseData().getReportDate());
+        var reportData = hearingsToJudgmentsReport.runReport(
+                listingDetails.getCaseTypeId());
+        reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
+        reportData.setReportType(listingDetails.getCaseData().getReportType());
+        reportData.setReportDate(listingDetails.getCaseData().getReportDate());
         return reportData;
     }
 

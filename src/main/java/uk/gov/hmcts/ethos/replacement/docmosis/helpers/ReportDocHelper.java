@@ -14,6 +14,8 @@ import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
+
 import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +36,9 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.REPORT_OFFICE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.TOTAL_CASES;
 
 @Slf4j
 public class ReportDocHelper {
@@ -45,7 +50,8 @@ public class ReportDocHelper {
     private static final String DAY_5_LIST = "\"Day_5_List\":[\n";
     private static final String DAY_6_LIST = "\"Day_6_List\":[\n";
     private static final String CASE_REFERENCE = "{\"Case_Reference\":\"";
-    private static final String REPORT_OFFICE = "\"Report_Office\":\"";
+    private static final String CANNOT_CREATE_REPORT_DATA_EXCEPTION = "Unable to create report data";
+    private static final String LISTING_DATA_STATE_EXCEPTION = "ListingData is not instanceof ";
 
     private ReportDocHelper() {
     }
@@ -55,62 +61,76 @@ public class ReportDocHelper {
         log.info("Building {} report document data", listingData.getReportType());
 
         var sb = new StringBuilder();
-
         sb.append("{\n");
         sb.append("\"accessKey\":\"").append(accessKey).append(NEW_LINE);
         sb.append("\"templateName\":\"").append(templateName).append(FILE_EXTENSION).append(NEW_LINE);
         sb.append("\"outputName\":\"").append(OUTPUT_FILE_NAME).append(NEW_LINE);
         sb.append("\"data\":{\n");
 
-        if (CASES_AWAITING_JUDGMENT_REPORT.equals(listingData.getReportType())) {
-            try {
-                sb.append(getCasesAwaitingJudgmentReport(listingData));
-            } catch (JsonProcessingException e) {
-                throw new ReportException("Unable to create report data", e);
-            }
-        } else if (HEARINGS_TO_JUDGEMENTS_REPORT.equals(listingData.getReportType())) {
-            try {
+        switch (listingData.getReportType()) {
+            case CLAIMS_ACCEPTED_REPORT:
                 sb.append(ListingHelper.getListingDate(listingData));
-                sb.append(getHearingsToJudgmentsReport(listingData));
-            } catch (JsonProcessingException e) {
-                throw new ReportException("Unable to create report data", e);
-            }
-        } else {
-            sb.append(ListingHelper.getListingDate(listingData));
-
-            if (listingData.getLocalReportsDetailHdr() != null) {
-                sb.append(REPORT_OFFICE).append(
-                        nullCheck(listingData.getLocalReportsDetailHdr().getReportOffice())).append(NEW_LINE);
-            } else if (CollectionUtils.isNotEmpty(listingData.getLocalReportsSummary())) {
-                sb.append(REPORT_OFFICE).append(
-                        nullCheck(listingData.getLocalReportsSummary().get(0)
-                                .getValue().getReportOffice())).append(NEW_LINE);
-            }
-            switch (listingData.getReportType()) {
-                case CLAIMS_ACCEPTED_REPORT:
-                    sb.append(getCasesAcceptedReport(listingData));
-                    break;
-                case LIVE_CASELOAD_REPORT:
-                    sb.append(getLiveCaseLoadReport(listingData));
-                    break;
-                case CASES_COMPLETED_REPORT:
-                    sb.append(getCasesCompletedReport(listingData));
-                    break;
-                case TIME_TO_FIRST_HEARING_REPORT:
-                    sb.append(getTimeToFirstHearingReport(listingData));
-                    break;
-                case CASE_SOURCE_LOCAL_REPORT:
-                    sb.append(getCaseSourceLocalReport(listingData));
-                    break;
-                case SERVING_CLAIMS_REPORT:
-                    sb.append(getServedClaimsReport(listingData));
-                    break;
-                case HEARINGS_BY_HEARING_TYPE_REPORT:
-                    sb.append(getHearingsByHearingTypeReport(listingData));
-                    break;
-                default:
-                    throw new IllegalStateException("Report type - Unexpected value: " + listingData.getReportType());
-            }
+                addReportOffice(listingData, sb);
+                sb.append(getCasesAcceptedReport(listingData));
+                break;
+            case LIVE_CASELOAD_REPORT:
+                sb.append(ListingHelper.getListingDate(listingData));
+                addReportOffice(listingData, sb);
+                sb.append(getLiveCaseLoadReport(listingData));
+                break;
+            case CASES_COMPLETED_REPORT:
+                sb.append(ListingHelper.getListingDate(listingData));
+                addReportOffice(listingData, sb);
+                sb.append(getCasesCompletedReport(listingData));
+                break;
+            case TIME_TO_FIRST_HEARING_REPORT:
+                sb.append(ListingHelper.getListingDate(listingData));
+                addReportOffice(listingData, sb);
+                sb.append(getTimeToFirstHearingReport(listingData));
+                break;
+            case CASE_SOURCE_LOCAL_REPORT:
+                sb.append(ListingHelper.getListingDate(listingData));
+                addReportOffice(listingData, sb);
+                sb.append(getCaseSourceLocalReport(listingData));
+                break;
+            case SERVING_CLAIMS_REPORT:
+                sb.append(ListingHelper.getListingDate(listingData));
+                addReportOffice(listingData, sb);
+                sb.append(getServedClaimsReport(listingData));
+                break;
+            case HEARINGS_BY_HEARING_TYPE_REPORT:
+                sb.append(ListingHelper.getListingDate(listingData));
+                addReportOffice(listingData, sb);
+                sb.append(getHearingsByHearingTypeReport(listingData));
+                break;
+            case CASES_AWAITING_JUDGMENT_REPORT:
+                try {
+                    sb.append(getCasesAwaitingJudgmentReport(listingData));
+                } catch (JsonProcessingException e) {
+                    throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
+                }
+                break;
+            case HEARINGS_TO_JUDGEMENTS_REPORT:
+                try {
+                    sb.append(ListingHelper.getListingDate(listingData));
+                    sb.append(getHearingsToJudgmentsReport(listingData));
+                } catch (JsonProcessingException e) {
+                    throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
+                }
+                break;
+            case NO_CHANGE_IN_CURRENT_POSITION_REPORT:
+                if (!(listingData instanceof NoPositionChangeReportData)) {
+                    throw new IllegalStateException((LISTING_DATA_STATE_EXCEPTION + "NoPositionChangeReportData"));
+                }
+                try {
+                    var reportData = (NoPositionChangeReportData) listingData;
+                    sb.append(reportData.toReportObjectString());
+                } catch (JsonProcessingException e) {
+                    throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
+                }
+                break;
+            default:
+                throw new IllegalStateException("Report type - Unexpected value: " + listingData.getReportType());
         }
 
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
@@ -121,10 +141,21 @@ public class ReportDocHelper {
         return sb;
     }
 
+    private static void addReportOffice(ListingData listingData, StringBuilder sb) {
+        if (listingData.getLocalReportsDetailHdr() != null) {
+            sb.append(REPORT_OFFICE).append(
+                    nullCheck(listingData.getLocalReportsDetailHdr().getReportOffice())).append(NEW_LINE);
+        } else if (CollectionUtils.isNotEmpty(listingData.getLocalReportsSummary())) {
+            sb.append(REPORT_OFFICE).append(
+                    nullCheck(listingData.getLocalReportsSummary().get(0)
+                            .getValue().getReportOffice())).append(NEW_LINE);
+        }
+    }
+
     private static StringBuilder getCasesAwaitingJudgmentReport(ListingData listingData)
             throws JsonProcessingException {
         if (!(listingData instanceof CasesAwaitingJudgmentReportData)) {
-            throw new IllegalStateException(("ListingData is not instanceof CasesAwaitingJudgmentReportData"));
+            throw new IllegalStateException((LISTING_DATA_STATE_EXCEPTION + "CasesAwaitingJudgmentReportData"));
         }
         var reportData = (CasesAwaitingJudgmentReportData) listingData;
         var sb = new StringBuilder();
@@ -134,7 +165,7 @@ public class ReportDocHelper {
         return sb;
     }
 
-    private static void addJsonCollection(String name, Iterator<?> iterator, StringBuilder sb)
+    public static void addJsonCollection(String name, Iterator<?> iterator, StringBuilder sb)
             throws JsonProcessingException {
         sb.append("\"").append(name).append("\":[\n");
         var objectMapper = new ObjectMapper();
@@ -251,7 +282,7 @@ public class ReportDocHelper {
         AdhocReportType localReportDetailHdr = listingData.getLocalReportsDetailHdr();
         AdhocReportType localReportSummary = listingData.getLocalReportsSummary().get(0).getValue();
         if (localReportDetailHdr != null) {
-            sb.append("\"Total_Cases\":\"").append(
+            sb.append(TOTAL_CASES).append(
                     nullCheck(localReportDetailHdr.getTotalCases())).append(NEW_LINE);
             sb.append("\"Total_Within_26Weeks\":\"").append(
                     nullCheck(localReportDetailHdr.getTotal26wk())).append(NEW_LINE);
@@ -573,13 +604,13 @@ public class ReportDocHelper {
     private static StringBuilder getHearingsToJudgmentsReport(ListingData listingData)
             throws JsonProcessingException {
         if (!(listingData instanceof HearingsToJudgmentsReportData)) {
-            throw new IllegalStateException(("ListingData is not instanceof HearingsToJudgmentsReportData"));
+            throw new IllegalStateException((LISTING_DATA_STATE_EXCEPTION + "HearingsToJudgmentsReportData"));
         }
         var reportData = (HearingsToJudgmentsReportData) listingData;
 
         var sb = new StringBuilder();
         sb.append(REPORT_OFFICE).append(reportData.getReportSummary().getOffice()).append(NEW_LINE);
-        sb.append("\"Total_Cases\":\"").append(
+        sb.append(TOTAL_CASES).append(
                 nullCheck(reportData.getReportSummary().getTotalCases())).append(NEW_LINE);
         sb.append("\"Total_Within_4Weeks\":\"").append(
                 nullCheck(reportData.getReportSummary().getTotal4Wk())).append(NEW_LINE);
