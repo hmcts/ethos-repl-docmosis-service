@@ -10,6 +10,7 @@ module.exports = () => {
         acceptTheCase: steps.acceptanceCase.acceptCase,
         rejectTheCase:steps.acceptanceCase.rejectCase,
         executeClaimantDetails:steps.amendClaimantDetails.amendClaimantDetails,
+        executeClaimantRepresentative:steps.amendClaimantRepresentative.amendClaimantRepresentative,
         amendTheCaseDetails:steps.amendCaseDetails.amendCaseDetails,
         selectNewCase: steps.newCase.newCase,
         selectCaseTypeOptions: steps.createCase.createCase,
