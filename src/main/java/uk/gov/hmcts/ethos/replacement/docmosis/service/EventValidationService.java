@@ -18,7 +18,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,6 +29,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.joining;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_TITLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR;
@@ -305,7 +305,7 @@ public class EventValidationService {
 
     public List<String> validateJurisdictionCodesWithinJudgement(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        if (caseData.getJudgementCollection() != null && !caseData.getJudgementCollection().isEmpty()) {
+        if (CollectionUtils.isNotEmpty(caseData.getJudgementCollection())) {
 
             List<String> jurCodesCollection = Helper.getJurCodesCollection(caseData.getJurCodesCollection());
             List<String> jurCodesDoesNotExist = new ArrayList<>();
@@ -325,9 +325,26 @@ public class EventValidationService {
                 populateJurCodesDuplicatedWithinJudgement(jurCodesCollectionWithinJudgement,
                         duplicatedJurCodesMap,
                         judgementType.getJudgementType());
-            }
 
+            }
             getJurisdictionCodesErrors(errors, jurCodesDoesNotExist, duplicatedJurCodesMap);
+        }
+        return errors;
+    }
+
+    public List<String> validateJudgementDates(CaseData caseData) {
+        List<String> errors = new ArrayList<>();
+        log.info("Check if dates are not in future for case: " + caseData.getEthosCaseReference());
+        if (CollectionUtils.isNotEmpty(caseData.getJudgementCollection())) {
+            for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
+                var judgementType = judgementTypeItem.getValue();
+                if (LocalDate.parse(judgementType.getDateJudgmentMade()).isAfter(LocalDate.now())) {
+                    errors.add("Date of Judgement Made can't be in future");
+                }
+                if (LocalDate.parse(judgementType.getDateJudgmentSent()).isAfter(LocalDate.now())) {
+                    errors.add("Date of Judgement Sent can't be in future");
+                }
+            }
         }
         return errors;
     }
@@ -356,7 +373,7 @@ public class EventValidationService {
         if (listingFrom != null && listingTo != null) {
             var startDate = LocalDate.parse(listingFrom);
             var endDate = LocalDate.parse(listingTo);
-            var numberOfDays = ChronoUnit.DAYS.between(startDate, endDate);
+            var numberOfDays = DAYS.between(startDate, endDate);
             if (numberOfDays > 30) {
                 errors.add(INVALID_LISTING_DATE_RANGE_ERROR_MESSAGE);
             }

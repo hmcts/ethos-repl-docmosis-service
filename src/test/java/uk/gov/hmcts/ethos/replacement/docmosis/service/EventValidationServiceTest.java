@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.UUID;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,7 +12,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicDepositOrder;
@@ -23,9 +27,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_LISTED_CASE_ERROR;
@@ -515,6 +516,35 @@ class EventValidationServiceTest {
         assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, ADG, ADG, CCP, CCP", errors.get(0));
         assertEquals(DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR + "Case Management - [COM] & Reserved "
                 + "- [CCP, ADG]", errors.get(1));
+    }
+
+    @Test
+    void shouldCreateErrorMessageWithDatesInFutureWithinJudgement() {
+        var caseData = new CaseData();
+        var judgementTypeItem = new JudgementTypeItem();
+        var judgementType = new JudgementType();
+        judgementTypeItem.setId(UUID.randomUUID().toString());
+        judgementType.setDateJudgmentMade("2777-01-01");
+        judgementType.setDateJudgmentSent("2777-01-01");
+        judgementTypeItem.setValue(judgementType);
+        caseData.setJudgementCollection(List.of(judgementTypeItem));
+        List<String> errors = eventValidationService.validateJudgementDates(caseData);
+        assertEquals("Date of Judgement Made can't be in future", errors.get(0));
+        assertEquals("Date of Judgement Sent can't be in future", errors.get(1));
+    }
+
+    @Test
+    void shouldNotCreateErrorMessageWithDatesBeforeTodayWithinJudgement() {
+        var caseData = new CaseData();
+        var judgementTypeItem = new JudgementTypeItem();
+        var judgementType = new JudgementType();
+        judgementTypeItem.setId(UUID.randomUUID().toString());
+        judgementType.setDateJudgmentMade("2020-01-01");
+        judgementType.setDateJudgmentSent("2021-12-01");
+        judgementTypeItem.setValue(judgementType);
+        caseData.setJudgementCollection(List.of(judgementTypeItem));
+        List<String> errors = eventValidationService.validateJudgementDates(caseData);
+        assertEquals(0, errors.size());
     }
 
     @Test

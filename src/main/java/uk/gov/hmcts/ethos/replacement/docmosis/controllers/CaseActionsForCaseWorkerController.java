@@ -778,7 +778,7 @@ public class CaseActionsForCaseWorkerController {
 
         var caseData =  ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = eventValidationService.validateJurisdictionCodesWithinJudgement(caseData);
-
+        errors.addAll(eventValidationService.validateJudgementDates(caseData));
         return getCallbackRespEntityErrors(errors, caseData);
     }
 
