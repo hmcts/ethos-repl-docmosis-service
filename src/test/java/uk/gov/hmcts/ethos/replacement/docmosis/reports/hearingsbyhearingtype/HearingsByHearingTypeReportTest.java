@@ -214,9 +214,9 @@ public class HearingsByHearingTypeReportTest {
         var listingHistory = adhocReportType.getListingHistory();
         var number = listingHistory.get(2).getValue().getHearingNumber();
         var numbers = number.split("[|]");
-        assertEquals("2", numbers[6]);
+        assertEquals("1", numbers[6]);
         assertEquals("1", numbers[0]);
-        assertEquals("1", numbers[2]);
+        assertEquals("0", numbers[2]);
         assertNull(adhocReportType.getCosts());
         assertNull(adhocReportType.getHearingPrelim());
         assertNull(adhocReportType.getReconsider());
