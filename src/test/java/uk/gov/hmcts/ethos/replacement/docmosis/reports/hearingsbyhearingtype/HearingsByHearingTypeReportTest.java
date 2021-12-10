@@ -358,24 +358,34 @@ public class HearingsByHearingTypeReportTest {
         switch (subSplitHeader) {
             case "Full Panel":
                 hearingType.setHearingSitAlone("Full");
+                break;
             case "EJ Sit Alone":
                 hearingType.setHearingSitAlone("Yes");
+                break;
             case "JM":
                 hearingType.setJudicialMediation("JM");
+                break;
             case "Tel Con":
                 hearingType.setHearingFormat(List.of ("Telephone"));
+                break;
             case "Video":
                 hearingType.setHearingFormat(List.of ("Video"));
+                break;
             case "Hybrid":
                 hearingType.setHearingFormat(List.of ("Hybrid"));
+                break;
             case "In Person":
                 hearingType.setHearingFormat(List.of ("In Person"));
+                break;
             case "Stage 1":
                 hearingType.setHearingStage("Stage 1");
+                break;
             case "Stage 2":
                 hearingType.setHearingStage("Stage 2");
+                break;
             case "Stage 3":
                 hearingType.setHearingStage("Stage 3");
+                break;
             default:
         }
 
