@@ -214,9 +214,9 @@ public class HearingsByHearingTypeReportTest {
         var listingHistory = adhocReportType.getListingHistory();
         var number = listingHistory.get(2).getValue().getHearingNumber();
         var numbers = number.split("[|]");
-        assertEquals("2", numbers[6]);
+        assertEquals("1", numbers[6]);
         assertEquals("1", numbers[0]);
-        assertEquals("1", numbers[2]);
+        assertEquals("0", numbers[2]);
         assertNull(adhocReportType.getCosts());
         assertNull(adhocReportType.getHearingPrelim());
         assertNull(adhocReportType.getReconsider());
@@ -274,6 +274,53 @@ public class HearingsByHearingTypeReportTest {
 
         assertEquals("1970-06-01T00:00:00.000", adhocReportType.getDate());
 
+
+    }
+
+    @Test
+    public void testConsiderCaseIfNullMultSubInReportDetail() {
+
+
+        ListingDetails listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        ListingData listingData = new ListingData();
+        listingDetails.setCaseData(listingData);
+        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed("1970-06-01T00:00:00.000",
+                HEARING_STATUS_HEARD);
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING, "JM",
+                dateListedTypeItem));
+        SubmitEvent submitEvent = new SubmitEvent();
+        CaseData caseData = new CaseData();
+        caseData.setHearingCollection(hearings);
+        submitEvent.setCaseData(caseData);
+        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, List.of(submitEvent));
+        List<AdhocReportTypeItem> adhocReportTypeItemList = reportListingData.getLocalReportsDetail();
+        AdhocReportType adhocReportType = adhocReportTypeItemList.get(0).getValue();
+        assertEquals("0 -  Not Allocated, 0 -  Not Allocated", adhocReportType.getMultSub());
+    }
+
+    @Test
+    public void testConsiderCaseIfNotNullMultSubInReportDetail() {
+        ListingDetails listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        ListingData listingData = new ListingData();
+        listingDetails.setCaseData(listingData);
+        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed("1970-06-01T00:00:00.000",
+                HEARING_STATUS_HEARD);
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING, "JM",
+                dateListedTypeItem));
+        SubmitEvent submitEvent = new SubmitEvent();
+        CaseData caseData = new CaseData();
+        caseData.setHearingCollection(hearings);
+        caseData.setMultipleReference("multiRef");
+        caseData.setSubMultipleName("subMulti");
+        submitEvent.setCaseData(caseData);
+        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, List.of(submitEvent));
+        List<AdhocReportTypeItem> adhocReportTypeItemList = reportListingData.getLocalReportsDetail();
+        AdhocReportType adhocReportType = adhocReportTypeItemList.get(0).getValue();
+        assertEquals("multiRef, subMulti", adhocReportType.getMultSub());
     }
 
     private SubmitEvent createSubmitEvent(List<HearingTypeItem> hearingCollection, String caseNo,String lead) {
@@ -311,25 +358,35 @@ public class HearingsByHearingTypeReportTest {
         switch (subSplitHeader) {
             case "Full Panel":
                 hearingType.setHearingSitAlone("Full");
+                break;
             case "EJ Sit Alone":
                 hearingType.setHearingSitAlone("Yes");
+                break;
             case "JM":
                 hearingType.setJudicialMediation("JM");
+                break;
             case "Tel Con":
                 hearingType.setHearingFormat(List.of ("Telephone"));
+                break;
             case "Video":
                 hearingType.setHearingFormat(List.of ("Video"));
+                break;
             case "Hybrid":
                 hearingType.setHearingFormat(List.of ("Hybrid"));
+                break;
             case "In Person":
                 hearingType.setHearingFormat(List.of ("In Person"));
+                break;
             case "Stage 1":
                 hearingType.setHearingStage("Stage 1");
+                break;
             case "Stage 2":
                 hearingType.setHearingStage("Stage 2");
+                break;
             case "Stage 3":
                 hearingType.setHearingStage("Stage 3");
-                default:
+                break;
+            default:
         }
 
         List<DateListedTypeItem> hearingDateCollection = new ArrayList<>();
