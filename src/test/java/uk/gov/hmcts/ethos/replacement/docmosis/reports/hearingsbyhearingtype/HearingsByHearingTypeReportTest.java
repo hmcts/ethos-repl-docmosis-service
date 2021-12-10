@@ -274,10 +274,12 @@ public class HearingsByHearingTypeReportTest {
 
         assertEquals("1970-06-01T00:00:00.000", adhocReportType.getDate());
 
+
     }
 
     @Test
     public void testConsiderCaseIfNullMultSubInReportDetail() {
+
 
         ListingDetails listingDetails = new ListingDetails();
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);

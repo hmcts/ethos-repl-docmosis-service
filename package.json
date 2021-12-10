@@ -6,16 +6,6 @@
   "engines": {
     "node": ">=12.15.0"
   },
-  "scripts": {
-    "lint": "NODE_PATH=. eslint .",
-    "eslint": "NODE_PATH=. eslint .",
-    "test-smoke": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run -c ./src/test/end-to-end/ --grep @smoke --steps --reporter mocha-multi",
-    "test-e2e": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run -c ./src/test/end-to-end/ --grep @e2e --steps --reporter mocha-multi",
-    "test:functional": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run-multiple parallel -c ./src/test/end-to-end/ --grep @e2e --steps --reporter mocha-multi"
-  },
-  "pre-commit": [
-    "lint"
-  ],
   "dependencies": {
     "randomstring": "^1.1.5",
     "require-directory": "^2.1.1",

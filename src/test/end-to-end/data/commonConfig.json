@@ -6,5 +6,10 @@
   "caseAcceptedDay": "05",
   "caseAcceptedMonth": "05",
   "caseAcceptedYear": "2021",
-  "submit": "Submit"
+  "submit": "Submit",
+  "claimantRepresentativeYes": "#claimantRepresentedQuestion_Yes",
+  "claimantRepresentativeName": "ECMRep1",
+  "findAddressButton": "Find address",
+  "claimantRepresentativePostCode": "E14 3XA",
+  "claimantRepresentativeAddress": "Flat 13, Vermeer Court, 1 Rembrandt Close, London"
 }

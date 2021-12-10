@@ -7,7 +7,11 @@ module.exports = () => {
     return actor({
         authenticateWithIdam: steps.IDAM.signIn,
         chooseNextStep: steps.nextStep.nextStep,
-        acceptTheCase: steps.preAcceptanceCase.acceptCase,
+        acceptTheCase: steps.acceptanceCase.acceptCase,
+        rejectTheCase:steps.acceptanceCase.rejectCase,
+        executeClaimantDetails:steps.amendClaimantDetails.amendClaimantDetails,
+        executeClaimantRepresentative:steps.amendClaimantRepresentative.amendClaimantRepresentative,
+        amendTheCaseDetails:steps.amendCaseDetails.amendCaseDetails,
         selectNewCase: steps.newCase.newCase,
         selectCaseTypeOptions: steps.createCase.createCase,
         enterCreateCasePage1: steps.createCasePages.page1initiateCase1,
