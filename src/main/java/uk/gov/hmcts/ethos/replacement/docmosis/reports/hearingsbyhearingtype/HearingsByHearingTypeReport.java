@@ -395,8 +395,10 @@ public class HearingsByHearingTypeReport {
                         }
                         var adhocReportType = new AdhocReportType();
                         adhocReportType.setDate(dateListedTypedItem.getValue().getListedDate());
-                        var mulRef = Strings.isNullOrEmpty(caseData.getMultipleReference()) ? "": caseData.getMultipleReference();
-                        var subMul = Strings.isNullOrEmpty(caseData.getSubMultipleName()) ? "": caseData.getSubMultipleName();
+                        var mulRef = Strings.isNullOrEmpty(caseData.getMultipleReference())
+                                ? "" : caseData.getMultipleReference();
+                        var subMul = Strings.isNullOrEmpty(caseData.getSubMultipleName())
+                                ? "" : caseData.getSubMultipleName();
                         adhocReportType.setMultSub(mulRef + ", " + subMul);
                         adhocReportType.setCaseReference(caseData.getEthosCaseReference());
                         adhocReportType.setLeadCase(Strings.isNullOrEmpty(caseData.getLeadClaimant()) ? "" : "Y");
