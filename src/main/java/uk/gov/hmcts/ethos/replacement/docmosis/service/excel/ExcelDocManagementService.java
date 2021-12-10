@@ -54,7 +54,7 @@ public class ExcelDocManagementService {
 
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
 
-        log.info("Add document to multiple");
+        log.info("Add document to multiple with reference:" + multipleData.getMultipleReference());
 
         addDocumentToMultiple(userToken, multipleData, documentSelfPath);
 
