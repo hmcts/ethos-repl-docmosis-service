@@ -2,6 +2,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.util.StringUtil;
 import org.elasticsearch.common.Strings;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
@@ -395,10 +397,8 @@ public class HearingsByHearingTypeReport {
                         }
                         var adhocReportType = new AdhocReportType();
                         adhocReportType.setDate(dateListedTypedItem.getValue().getListedDate());
-                        var mulRef = Strings.isNullOrEmpty(caseData.getMultipleReference())
-                                ? "" : caseData.getMultipleReference();
-                        var subMul = Strings.isNullOrEmpty(caseData.getSubMultipleName())
-                                ? "" : caseData.getSubMultipleName();
+                        var mulRef = StringUtils.defaultString(caseData.getMultipleReference(), "0 -  Not Allocated");
+                        var subMul = StringUtils.defaultString(caseData.getSubMultipleName(), "0 -  Not Allocated");
                         adhocReportType.setMultSub(mulRef + ", " + subMul);
                         adhocReportType.setCaseReference(caseData.getEthosCaseReference());
                         adhocReportType.setLeadCase(Strings.isNullOrEmpty(caseData.getLeadClaimant()) ? "" : "Y");
