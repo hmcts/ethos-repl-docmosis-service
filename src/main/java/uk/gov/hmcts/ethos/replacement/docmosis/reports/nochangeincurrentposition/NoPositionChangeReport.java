@@ -102,7 +102,7 @@ public class NoPositionChangeReport {
             return false;
         }
 
-        var reportDateMinus3Months = LocalDate.parse(reportDate, OLD_DATE_TIME_PATTERN2).minusMonths(3);
+        var reportDateMinus3Months = LocalDate.parse(reportDate, OLD_DATE_TIME_PATTERN2).minusMonths(3).plusDays(1);
         var dateToPosition = LocalDate.parse(caseData.getDateToPosition(), OLD_DATE_TIME_PATTERN2);
         return dateToPosition.isBefore(reportDateMinus3Months);
     }
