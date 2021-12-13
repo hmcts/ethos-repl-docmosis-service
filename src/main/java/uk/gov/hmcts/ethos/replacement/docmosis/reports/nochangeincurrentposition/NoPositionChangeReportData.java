@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class NoPositionChangeReportData extends ListingData {
     public StringBuilder toReportObjectString() throws JsonProcessingException {
         var sb = new StringBuilder();
         sb.append(REPORT_OFFICE).append(reportSummary.getOffice()).append(NEW_LINE);
-        sb.append(REPORT_DATE).append(getReportDate()).append(NEW_LINE);
+        sb.append(REPORT_DATE).append(UtilHelper.listingFormatLocalDate(getReportDate())).append(NEW_LINE);
         sb.append(TOTAL_CASES).append(StringUtils.defaultString(reportSummary.getTotalCases(), "0"))
                 .append(NEW_LINE);
         sb.append(TOTAL_SINGLE).append(StringUtils.defaultString(reportSummary.getTotalSingleCases(), "0"))

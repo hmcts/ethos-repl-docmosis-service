@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
@@ -113,7 +114,7 @@ class NoPositionChangeReportDataTests {
                                                   String totalSingle, String totalMultiple) {
         var sb = new StringBuilder();
         sb.append(REPORT_OFFICE).append(StringUtils.defaultString(office, "")).append(NEW_LINE);
-        sb.append(REPORT_DATE).append(StringUtils.defaultString(reportDate, "")).append(NEW_LINE);
+        sb.append(REPORT_DATE).append(UtilHelper.listingFormatLocalDate(reportDate)).append(NEW_LINE);
         sb.append(TOTAL_CASES).append(StringUtils.defaultString(totalCases, "0")).append(NEW_LINE);
         sb.append(TOTAL_SINGLE).append(StringUtils.defaultString(totalSingle, "0")).append(NEW_LINE);
         sb.append(TOTAL_MULTIPLE).append(StringUtils.defaultString(totalMultiple, "0")).append(NEW_LINE);

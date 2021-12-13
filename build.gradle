@@ -207,7 +207,7 @@ def versions = [
 
 dependencies {
 
-    implementation 'com.github.hmcts:ecm-common:0.1.158'
+    implementation 'com.github.hmcts:ecm-common:0.1.159'
 
 
     implementation 'org.springframework.boot:spring-boot-starter-web'

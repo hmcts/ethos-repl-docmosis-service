@@ -2,7 +2,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
@@ -15,6 +14,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.Rep
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportDetail;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportSummary;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportDetailMultiple;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportDetailSingle;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportSummary;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -24,6 +27,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
 
 public class ReportDocHelperTest {
 
@@ -534,5 +538,54 @@ public class ReportDocHelperTest {
 
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails6.getCaseData(), "",
                 "EM-TRB-SCO-ENG-00785", userDetails).toString());
+    }
+
+    @Test
+    public void buildNoPositionChangeReport() throws URISyntaxException, IOException {
+        var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+                .getResource("noChangeInCurrentPositionExpected.json")).toURI())));
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        expectedJson = expectedJson.replace("replace-with-current-date", today);
+        var reportData = getNoPositionChangeReportData();
+        var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "",
+                "EM-TRB-SCO-ENG-00794", userDetails).toString();
+        assertEquals(expectedJson, actualJson);
+    }
+
+    private NoPositionChangeReportData getNoPositionChangeReportData() {
+        var reportSummary = new NoPositionChangeReportSummary("Newcastle");
+        reportSummary.setTotalCases("3");
+        reportSummary.setTotalSingleCases("2");
+        reportSummary.setTotalMultipleCases("1");
+
+        var reportData = new NoPositionChangeReportData(reportSummary, "2021-06-20");
+        reportData.setReportType(NO_CHANGE_IN_CURRENT_POSITION_REPORT);
+        reportData.setDocumentName("TestDocument");
+
+        var reportDetailSingle = new NoPositionChangeReportDetailSingle();
+        reportDetailSingle.setCaseReference("250003/2021");
+        reportDetailSingle.setYear("2021");
+        reportDetailSingle.setCurrentPosition("Test1");
+        reportDetailSingle.setDateToPosition("2021-08-03");
+        reportDetailSingle.setRespondent("Resp1");
+        reportData.getReportDetailsSingle().add(reportDetailSingle);
+
+        reportDetailSingle = new NoPositionChangeReportDetailSingle();
+        reportDetailSingle.setCaseReference("250004/2021");
+        reportDetailSingle.setYear("2022");
+        reportDetailSingle.setCurrentPosition("Test2");
+        reportDetailSingle.setDateToPosition("2021-09-03");
+        reportDetailSingle.setRespondent("Resp2 & Others");
+        reportData.getReportDetailsSingle().add(reportDetailSingle);
+
+        var reportDetailMultiple = new NoPositionChangeReportDetailMultiple();
+        reportDetailMultiple.setCaseReference("250005/2021");
+        reportDetailMultiple.setYear("2023");
+        reportDetailMultiple.setCurrentPosition("Test3");
+        reportDetailMultiple.setDateToPosition("2021-10-04");
+        reportDetailMultiple.setMultipleName("Multi1");
+        reportData.getReportDetailsMultiple().add(reportDetailMultiple);
+
+        return reportData;
     }
 }
