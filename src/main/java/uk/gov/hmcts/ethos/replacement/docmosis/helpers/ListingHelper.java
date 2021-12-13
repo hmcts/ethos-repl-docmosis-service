@@ -840,7 +840,7 @@ public class ListingHelper {
             case HEARINGS_TO_JUDGEMENTS_REPORT:
                 return "EM-TRB-SCO-ENG-00786";
             case NO_CHANGE_IN_CURRENT_POSITION_REPORT:
-                return "NoPosition";
+                return "EM-TRB-SCO-ENG-00794";
             default:
                 return NO_DOCUMENT_FOUND;
         }

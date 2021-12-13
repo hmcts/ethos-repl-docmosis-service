@@ -3,16 +3,21 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentpositio
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportDocHelper.addJsonCollection;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.REPORT_DATE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.REPORT_DETAILS_MULTIPLE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.REPORT_DETAILS_SINGLE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.REPORT_OFFICE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.TOTAL_CASES;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.TOTAL_MULTIPLE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.TOTAL_SINGLE;
 
 @Getter
 public class NoPositionChangeReportData extends ListingData {
@@ -28,8 +33,10 @@ public class NoPositionChangeReportData extends ListingData {
     @JsonIgnore
     private final List<NoPositionChangeReportDetailMultiple> reportDetailsMultiple = new ArrayList<>();
 
-    public NoPositionChangeReportData(NoPositionChangeReportSummary hearingsToJudgmentsReportSummary) {
+    public NoPositionChangeReportData(NoPositionChangeReportSummary hearingsToJudgmentsReportSummary,
+                                      String reportDate) {
         this.reportSummary = hearingsToJudgmentsReportSummary;
+        this.setReportDate(reportDate);
     }
 
     public void addReportDetailsSingle(NoPositionChangeReportDetailSingle reportDetailSingle) {
@@ -43,12 +50,15 @@ public class NoPositionChangeReportData extends ListingData {
     public StringBuilder toReportObjectString() throws JsonProcessingException {
         var sb = new StringBuilder();
         sb.append(REPORT_OFFICE).append(reportSummary.getOffice()).append(NEW_LINE);
-        sb.append("\"Report_Date\":\"").append(getReportDate()).append(NEW_LINE);
-        sb.append(TOTAL_CASES).append(nullCheck(reportSummary.getTotalCases())).append(NEW_LINE);
-        sb.append("\"Total_Single\":\"").append(nullCheck(reportSummary.getTotalSingleCases())).append(NEW_LINE);
-        sb.append("\"Total_Multiple\":\"").append(nullCheck(reportSummary.getTotalMultipleCases())).append(NEW_LINE);
-        addJsonCollection("reportDetailsSingle", reportDetailsSingle.iterator(), sb);
-        addJsonCollection("reportDetailsMultiple", reportDetailsMultiple.iterator(), sb);
+        sb.append(REPORT_DATE).append(getReportDate()).append(NEW_LINE);
+        sb.append(TOTAL_CASES).append(StringUtils.defaultString(reportSummary.getTotalCases(), "0"))
+                .append(NEW_LINE);
+        sb.append(TOTAL_SINGLE).append(StringUtils.defaultString(reportSummary.getTotalSingleCases(), "0"))
+                .append(NEW_LINE);
+        sb.append(TOTAL_MULTIPLE).append(StringUtils.defaultString(reportSummary.getTotalMultipleCases(), "0"))
+                .append(NEW_LINE);
+        addJsonCollection(REPORT_DETAILS_SINGLE, reportDetailsSingle.iterator(), sb);
+        addJsonCollection(REPORT_DETAILS_MULTIPLE, reportDetailsMultiple.iterator(), sb);
         return sb;
     }
 }

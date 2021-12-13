@@ -280,7 +280,6 @@ public class ListingService {
                 listingDetails.getCaseTypeId());
         reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
         reportData.setReportType(listingDetails.getCaseData().getReportType());
-        reportData.setReportDate(listingDetails.getCaseData().getReportDate());
         return reportData;
     }
 

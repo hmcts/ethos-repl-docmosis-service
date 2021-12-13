@@ -35,7 +35,7 @@ public class NoPositionChangeReport {
 
     private NoPositionChangeReportData initReport(String caseTypeId) {
         var reportSummary = new NoPositionChangeReportSummary(UtilHelper.getListingCaseTypeId(caseTypeId));
-        return new NoPositionChangeReportData(reportSummary);
+        return new NoPositionChangeReportData(reportSummary, reportDate);
     }
 
     private List<NoPositionChangeSubmitEvent> getCases(String caseTypeId) {
