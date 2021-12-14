@@ -33,10 +33,11 @@ public class NoPositionChangeReport {
             return reportData;
         }
 
-        var multipleIds = submitEvents.stream()
+        var multipleIds = submitEvents.parallelStream()
                 .filter(se -> se.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)
                         && StringUtils.isNotBlank(se.getCaseData().getMultipleReference()))
                 .map(e -> e.getCaseData().getMultipleReference())
+                .distinct()
                 .collect(Collectors.toList());
 
         if (CollectionUtils.isNotEmpty(multipleIds)) {
