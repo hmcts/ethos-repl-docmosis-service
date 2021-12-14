@@ -78,6 +78,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARI
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
 
 @Slf4j
 public class ListingHelper {
@@ -89,7 +90,7 @@ public class ListingHelper {
     static final List<String> REPORTS = Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
         LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT, TIME_TO_FIRST_HEARING_REPORT,
         SERVING_CLAIMS_REPORT, CASE_SOURCE_LOCAL_REPORT, HEARINGS_TO_JUDGEMENTS_REPORT,
-            HEARINGS_BY_HEARING_TYPE_REPORT);
+            HEARINGS_BY_HEARING_TYPE_REPORT, NO_CHANGE_IN_CURRENT_POSITION_REPORT);
 
     private ListingHelper() {
     }
@@ -838,6 +839,8 @@ public class ListingHelper {
                 return "EM-TRB-SCO-ENG-00785";
             case HEARINGS_TO_JUDGEMENTS_REPORT:
                 return "EM-TRB-SCO-ENG-00786";
+            case NO_CHANGE_IN_CURRENT_POSITION_REPORT:
+                return "EM-TRB-SCO-ENG-00794";
             default:
                 return NO_DOCUMENT_FOUND;
         }
