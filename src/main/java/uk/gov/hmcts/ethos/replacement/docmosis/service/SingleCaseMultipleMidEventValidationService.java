@@ -27,19 +27,21 @@ public class SingleCaseMultipleMidEventValidationService {
 
     public void singleCaseMultipleValidationLogic(String userToken, CaseDetails caseDetails, List<String> errors) {
 
-        log.info("Validating if single case has the correct case type");
+        log.info(String.format("Validating if single case %s has the correct case type",
+                caseDetails.getCaseData().getEthosCaseReference()));
 
         if (caseDetails.getCaseData().getCaseType().equals(SINGLE_CASE_TYPE)) {
 
             if (caseDetails.getCaseData().getMultipleFlag().equals(YES)) {
 
-                log.info("Case belongs to a multiple. It cannot be moved to single");
+                log.info(String.format("Case %s belongs to a multiple. It cannot be moved to single",
+                        caseDetails.getCaseData().getEthosCaseReference()));
 
                 errors.add("Case belongs to a multiple. It cannot be moved to single");
 
             } else {
 
-                log.info("No changes. Skip validation");
+                log.info("No changes. Skip validation for case:" + caseDetails.getCaseData().getEthosCaseReference());
 
             }
 
@@ -50,15 +52,11 @@ public class SingleCaseMultipleMidEventValidationService {
         if (caseDetails.getCaseData().getMultipleFlag().equals(NO)
                 && caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
-            log.info("Validating multiple and subMultiple in singles");
-
-            String multipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseDetails.getCaseTypeId());
-
             String multipleReference = caseDetails.getCaseData().getMultipleReference();
 
+            log.info("Validating multiple and subMultiple for multipleReference: " + multipleReference);
+            String multipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseDetails.getCaseTypeId());
             String subMultipleName = caseDetails.getCaseData().getSubMultipleName();
-
-            log.info("MultipleReference: " + multipleReference);
 
             multipleHelperService.validateExternalMultipleAndSubMultiple(userToken,
                     multipleCaseTypeId,

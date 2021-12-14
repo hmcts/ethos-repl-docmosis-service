@@ -151,8 +151,6 @@ public class ExcelCreationService {
     private void initializeData(XSSFWorkbook workbook, XSSFSheet sheet, List<?> multipleCollection,
                                 List<String> subMultipleCollection, String leadCaseString) {
         String leadCase = MultiplesHelper.getCurrentLead(leadCaseString);
-        log.info("Creating lead case EXCEL STRING: " + leadCaseString);
-        log.info("Creating lead case EXCEL: " + leadCase);
 
         if (multipleCollection.isEmpty()) {
             return;

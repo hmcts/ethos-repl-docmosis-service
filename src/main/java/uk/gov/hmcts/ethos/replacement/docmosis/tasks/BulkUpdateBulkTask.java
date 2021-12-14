@@ -36,7 +36,7 @@ public class BulkUpdateBulkTask implements Runnable {
             if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null) {
                 String bulkCaseId = String.valueOf(submitBulkEventSubmitEventType
                         .getSubmitBulkEventToUpdate().getCaseId());
-                log.info("Update the bulk");
+                log.info("Update the bulk with case id:" + bulkCaseId);
                 CCDRequest returnedRequest = ccdClient.startBulkEventForCase(authToken, bulkDetails.getCaseTypeId(),
                         bulkDetails.getJurisdiction(), bulkCaseId);
                 submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate().getCaseData().setFilterCases("No");
@@ -44,7 +44,6 @@ public class BulkUpdateBulkTask implements Runnable {
                                 .getSubmitBulkEventToUpdate().getCaseData(), bulkDetails.getCaseTypeId(),
                         bulkDetails.getJurisdiction(), returnedRequest, bulkCaseId);
             } else {
-                log.info("Update the single cases");
                 for (SubmitEvent submitEvent : submitBulkEventSubmitEventType.getSubmitEventList()) {
                     String caseId = String.valueOf(submitEvent.getCaseId());
                     if (!leadId.equals(caseId)) {
@@ -58,7 +57,7 @@ public class BulkUpdateBulkTask implements Runnable {
                 }
             }
         } catch (IOException e) {
-            log.error("Error processing bulk update task threads");
+            log.error("Error processing bulk update task threads", e);
         }
     }
 }

@@ -40,13 +40,15 @@ public class BulkCreationTask implements Runnable {
         try {
             if (submitEvent.getState().equals(PENDING_STATE)) {
                 // Moving to submitted_state
-                log.info("Moving from pending to submitted");
+                log.info(String.format("Moving case %s from pending to submitted",
+                        submitEvent.getCaseData().getEthosCaseReference()));
                 returnedRequest = ccdClient.startEventForCaseBulkSingle(authToken,
                         UtilHelper.getCaseTypeId(
                                 bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             } else {
                 // Moving to accepted_state
-                log.info("Moving to accepted state");
+                log.info(String.format("Moving case %s to accepted state",
+                        submitEvent.getCaseData().getEthosCaseReference()));
                 returnedRequest = ccdClient.startEventForCase(authToken,
                         UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             }
@@ -56,7 +58,7 @@ public class BulkCreationTask implements Runnable {
                     UtilHelper.getCaseTypeId(
                             bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
         } catch (IOException e) {
-            log.error("Error processing bulk update threads");
+            log.error("Error processing bulk update threads:", e);
         }
     }
 }

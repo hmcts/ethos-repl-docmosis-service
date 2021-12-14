@@ -71,7 +71,7 @@ public class ExcelReadingService {
 
         } catch (IOException e) {
 
-            log.error("Error reading the Excel");
+            log.error("Error reading the Excel", e);
 
             throw new RuntimeException("Error reading the excel", e);
 

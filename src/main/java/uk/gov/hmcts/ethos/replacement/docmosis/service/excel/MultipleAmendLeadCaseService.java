@@ -32,14 +32,15 @@ public class MultipleAmendLeadCaseService {
 
         if (checkAmendLeadCaseExistsAndIsDifferent(multipleObjects, multipleDetails.getCaseData(), amendLeadCase)) {
 
-            log.info("Send updates to single cases");
+            log.info(String.format("Updating lead case %s of multiple with reference %s ",
+                    amendLeadCase, multipleDetails.getCaseData().getMultipleReference()));
 
             multipleHelperService.sendUpdatesToSinglesLogic(userToken, multipleDetails,
                     errors, amendLeadCase, multipleObjects, new ArrayList<>(Collections.singletonList(amendLeadCase)));
 
         } else {
 
-            log.info("Case is not part of the multiple");
+            log.info(String.format("Case %s is not part of the multiple", amendLeadCase));
 
             errors.add(CASE_IS_NOT_IN_MULTIPLE_ERROR);
 
@@ -52,7 +53,7 @@ public class MultipleAmendLeadCaseService {
     private boolean checkAmendLeadCaseExistsAndIsDifferent(SortedMap<String, Object> multipleObjects,
                                                            MultipleData multipleData, String amendLeadCase) {
 
-        log.info("AmendLeadCase: " + amendLeadCase);
+        log.info(String.format("Checking if lead case %s exists and is different", amendLeadCase));
 
         String oldLeadCase = MultiplesHelper.getCurrentLead(multipleData.getLeadCase());
 

@@ -94,7 +94,7 @@ public class ExcelDocManagementService {
                 multipleData.getLeadCase());
         uploadExcelDocument(userToken, multipleDetails, excelBytes);
 
-        log.info("Add multiple case counter");
+        log.info("Add multiple case counter for multipleReference:" + multipleData.getMultipleReference());
 
         multipleData.setCaseCounter(String.valueOf(multipleCollection.size()));
 

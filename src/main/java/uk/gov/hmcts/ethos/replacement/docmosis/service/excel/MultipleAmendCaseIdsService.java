@@ -32,21 +32,21 @@ public class MultipleAmendCaseIdsService {
 
         List<String> newEthosCaseRefCollection = MultiplesHelper.getCaseIds(multipleDetails.getCaseData());
 
-        log.info("Calculate union new and old cases");
+        log.info("Calculate union new and old cases for multipleReference:"
+                + multipleDetails.getCaseData().getMultipleReference());
         List<String> unionLists = concatNewAndOldCases(multipleObjects, newEthosCaseRefCollection);
 
         String multipleLeadCase = getCurrentLead(multipleDetails.getCaseData(), unionLists.get(0));
 
         if (!newEthosCaseRefCollection.isEmpty()) {
 
-            log.info("Send updates to single cases");
+            log.info(String.format("Updating %d singles of multiple with reference %s ",
+                    newEthosCaseRefCollection.size(), multipleDetails.getCaseData().getMultipleReference()));
 
             multipleHelperService.sendUpdatesToSinglesLogic(userToken, multipleDetails, errors, multipleLeadCase,
                     multipleObjects, newEthosCaseRefCollection);
 
         }
-
-        log.info("Create a new Excel");
 
         return generateMultipleObjects(unionLists, multipleObjects);
 
