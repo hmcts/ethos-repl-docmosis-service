@@ -13,6 +13,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.*;
 import uk.gov.hmcts.ecm.common.model.ccd.types.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CaseDataBuilder;
@@ -1192,9 +1194,41 @@ public class ListingServiceTest {
         result.setCases(List.of(caseDataBuilder.withCaseType("SINGLE")
                                     .withCurrentPosition("Position")
                                     .withDateToPosition("2021-04-03")
+                                    .withReceiptDate("2021-03-03")
                                     .buildAsSubmitEvent(ACCEPTED_STATE)));
         when(ccdClient.runElasticSearch(anyString(), anyString(), anyString(), eq(NoPositionChangeSearchResult.class)))
                 .thenReturn(result);
+        when(ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(anyString(), anyString(), anyString()))
+                .thenReturn(new ArrayList<>());
+        var listingDataResult = (NoPositionChangeReportData) listingService.generateReportData(listingDetails, "authToken");
+        assertEquals("name", listingDataResult.getDocumentName());
+        assertEquals(NO_CHANGE_IN_CURRENT_POSITION_REPORT, listingDataResult.getReportType());
+        assertEquals("2021-12-12", listingDataResult.getReportDate());
+    }
+
+    @Test
+    public void generateNoPositionChangeReportDataWithMultiple() throws IOException {
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.getCaseData().setReportType(NO_CHANGE_IN_CURRENT_POSITION_REPORT);
+        listingDetails.getCaseData().setDocumentName("name");
+        listingDetails.getCaseData().setReportDate("2021-12-12");
+        var caseDataBuilder = new NoPositionChangeCaseDataBuilder();
+        var result =  new NoPositionChangeSearchResult();
+        result.setCases(List.of(caseDataBuilder.withCaseType(MULTIPLE_CASE_TYPE)
+                .withCurrentPosition("Position")
+                .withDateToPosition("2021-04-03")
+                .withMultipleReference("multipleRef")
+                .withReceiptDate("2021-03-03")
+                .buildAsSubmitEvent(ACCEPTED_STATE)));
+        var multipleData = new MultipleData();
+        multipleData.setMultipleReference("multipleRef");
+        multipleData.setMultipleName("Multiple Name");
+        var submitMultipleData = new SubmitMultipleEvent();
+        submitMultipleData.setCaseData(multipleData);
+        when(ccdClient.runElasticSearch(anyString(), anyString(), anyString(), eq(NoPositionChangeSearchResult.class)))
+                .thenReturn(result);
+        when(ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(anyString(), anyString(), anyString()))
+                .thenReturn(List.of(submitMultipleData));
         var listingDataResult = (NoPositionChangeReportData) listingService.generateReportData(listingDetails, "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(NO_CHANGE_IN_CURRENT_POSITION_REPORT, listingDataResult.getReportType());

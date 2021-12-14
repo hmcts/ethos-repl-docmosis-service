@@ -2,6 +2,8 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentpositio
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
+import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,6 +12,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
@@ -27,6 +31,7 @@ class NoPositionChangeReportTests {
     NoPositionChangeReport noPositionChangeReport;
     NoPositionChangeCaseDataBuilder caseDataBuilder;
     List<NoPositionChangeSubmitEvent> submitEvents = new ArrayList<>();
+    List<SubmitMultipleEvent> submitMultipleEvents = new ArrayList<>();
 
     static final LocalDateTime BASE_DATE = LocalDateTime.of(2021, 7, 1, 0, 0,0);
     static final String REPORT_CREATE_DATE = BASE_DATE.plusMonths(3).format(OLD_DATE_TIME_PATTERN2);
@@ -43,6 +48,7 @@ class NoPositionChangeReportTests {
 
         noPositionChangeDataSource = mock(NoPositionChangeDataSource.class);
         when(noPositionChangeDataSource.getData(NEWCASTLE_CASE_TYPE_ID, REPORT_CREATE_DATE)).thenReturn(submitEvents);
+        when(noPositionChangeDataSource.getMultiplesData(eq(NEWCASTLE_CASE_TYPE_ID), anyList())).thenReturn(submitMultipleEvents);
 
         noPositionChangeReport = new NoPositionChangeReport(noPositionChangeDataSource, REPORT_CREATE_DATE);
     }
@@ -147,6 +153,13 @@ class NoPositionChangeReportTests {
                 .withEthosCaseReference("2500123/2021")
                 .buildAsSubmitEvent(ACCEPTED_STATE));
 
+        var multipleData = new MultipleData();
+        multipleData.setMultipleReference("Multi2");
+        multipleData.setMultipleName("Multiple Name");
+        var submitMultipleData = new SubmitMultipleEvent();
+        submitMultipleData.setCaseData(multipleData);
+        submitMultipleEvents.add(submitMultipleData);
+
         var reportData = noPositionChangeReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
         assertEquals("1" , reportData.getReportSummary().getTotalCases());
@@ -158,7 +171,7 @@ class NoPositionChangeReportTests {
         assertEquals("2500123/2021", reportDetail.getCaseReference());
         assertEquals(DATE_BEFORE_3MONTHS, reportDetail.getDateToPosition());
         assertEquals("test4", reportDetail.getCurrentPosition());
-        assertEquals("Multi2", reportDetail.getMultipleName());
+        assertEquals("Multiple Name", reportDetail.getMultipleName());
         assertEquals("2021", reportDetail.getYear());
     }
 
