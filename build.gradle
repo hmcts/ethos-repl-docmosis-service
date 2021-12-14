@@ -205,10 +205,12 @@ def versions = [
         pact_version    : '4.1.7'
 ]
 
+ext {
+    log4JVersion = '2.15.0'
+}
+
 dependencies {
-
-    implementation 'com.github.hmcts:ecm-common:0.1.158'
-
+    implementation 'com.github.hmcts:ecm-common:0.1.160'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -224,7 +226,8 @@ dependencies {
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.21'
-
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4JVersion
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4JVersion
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.48'
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.48'
 
