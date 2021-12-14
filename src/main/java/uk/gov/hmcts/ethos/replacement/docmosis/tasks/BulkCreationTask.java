@@ -40,15 +40,15 @@ public class BulkCreationTask implements Runnable {
         try {
             if (submitEvent.getState().equals(PENDING_STATE)) {
                 // Moving to submitted_state
-                log.info(String.format("Moving case %s from pending to submitted",
-                        submitEvent.getCaseData().getEthosCaseReference()));
+                log.info("Moving case {} from pending to submitted",
+                        submitEvent.getCaseData().getEthosCaseReference());
                 returnedRequest = ccdClient.startEventForCaseBulkSingle(authToken,
                         UtilHelper.getCaseTypeId(
                                 bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             } else {
                 // Moving to accepted_state
-                log.info(String.format("Moving case %s to accepted state",
-                        submitEvent.getCaseData().getEthosCaseReference()));
+                log.info("Moving case {} to accepted state",
+                        submitEvent.getCaseData().getEthosCaseReference());
                 returnedRequest = ccdClient.startEventForCase(authToken,
                         UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             }
