@@ -2,7 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentpositio
 
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
-import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
+import uk.gov.hmcts.ecm.common.model.multiples.MultipleCaseSearchResult;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 
 import java.io.IOException;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -55,16 +56,15 @@ public class NoPositionChangeCcdDataSourceTests {
         var authToken = "A test token";
         var caseTypeId = "A test case type";
         var ccdClient = mock(CcdClient.class);
-        var searchResult = new ArrayList<SubmitMultipleEvent>();
-        searchResult.add(new SubmitMultipleEvent());
-        when(ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(anyString(), anyString(), anyString()))
+        var searchResult = new MultipleCaseSearchResult();
+        when(ccdClient.runElasticSearch(anyString(), anyString(), anyString(), eq(MultipleCaseSearchResult.class)))
                 .thenReturn(searchResult);
 
         var ccdReportDataSource = new NoPositionChangeCcdDataSource(authToken, ccdClient);
         var results = ccdReportDataSource.getMultiplesData(caseTypeId, new ArrayList<>());
 
-        assertEquals(1, results.size());
-        assertEquals(searchResult.get(0), results.get(0));
+        assertNotNull(results);
+        assertEquals(0, results.size());
     }
 
     @Test(expected = ReportException.class)
@@ -72,7 +72,7 @@ public class NoPositionChangeCcdDataSourceTests {
         var authToken = "A test token";
         var caseTypeId = "A test case type";
         var ccdClient = mock(CcdClient.class);
-        when(ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(anyString(), anyString(), anyString()))
+        when(ccdClient.runElasticSearch(anyString(), anyString(), anyString(), eq(MultipleCaseSearchResult.class)))
                 .thenThrow(new IOException());
 
         var ccdReportDataSource = new NoPositionChangeCcdDataSource(authToken, ccdClient);
