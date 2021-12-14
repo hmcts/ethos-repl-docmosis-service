@@ -10,7 +10,9 @@ const eventNames = {
     PRE_ACCEPTANCE_CASE: 'preAcceptanceCase',
     ACCEPT_REJECTED_CASE:'acceptRejectedCase',
     CLAIMANT_DETAILS:'Claimant Details',
-    CLAIMANT_REPRESENTATIVE: 'Claimant Representative'
+    CLAIMANT_REPRESENTATIVE: 'Claimant Representative',
+    CLAIMANT_RESPONDENT_DETAILS: 'Respondent Details'
+
 
 };
 
