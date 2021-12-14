@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 
 import java.time.LocalDate;
@@ -37,6 +38,26 @@ public class NoPositionChangeCcdDataSource implements NoPositionChangeDataSource
         } catch (Exception e) {
             throw new ReportException(String.format(
                     "Failed to get No Change In Current Position search results for case type id %s", caseTypeId), e);
+        }
+    }
+
+    @Override
+    public List<SubmitMultipleEvent> getMultiplesData(String caseTypeId, List<String> multipleRefsList) {
+        try {
+            var query = NoPositionChangeMultiplesElasticSearchQuery.create(multipleRefsList);
+            var submitEvents = new ArrayList<SubmitMultipleEvent>();
+            var searchResult = ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(authToken, caseTypeId,
+                    query);
+
+            if (CollectionUtils.isNotEmpty(searchResult)) {
+                submitEvents.addAll(searchResult);
+            }
+
+            return submitEvents;
+        } catch (Exception e) {
+            throw new ReportException(String.format(
+                    "Failed to get No Change In Current Position multiples search results for case type id %s",
+                    caseTypeId), e);
         }
     }
 }

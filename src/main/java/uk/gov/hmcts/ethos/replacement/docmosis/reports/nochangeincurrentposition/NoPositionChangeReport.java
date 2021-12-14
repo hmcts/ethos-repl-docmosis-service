@@ -4,9 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
@@ -26,8 +29,21 @@ public class NoPositionChangeReport {
         var submitEvents = getCases(caseTypeId);
         var reportData = initReport(caseTypeId);
 
-        if (CollectionUtils.isNotEmpty(submitEvents)) {
-            populateData(reportData, submitEvents, caseTypeId);
+        if (CollectionUtils.isEmpty(submitEvents)) {
+            return reportData;
+        }
+
+        var multipleIds = submitEvents.stream()
+                .filter(se -> se.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)
+                        && StringUtils.isNotBlank(se.getCaseData().getMultipleReference()))
+                .map(e -> e.getCaseData().getMultipleReference())
+                .collect(Collectors.toList());
+
+        if (CollectionUtils.isNotEmpty(multipleIds)) {
+            var submitMultipleEvents = getMultipleCases(caseTypeId, multipleIds);
+            populateData(reportData, caseTypeId, submitEvents, submitMultipleEvents);
+        } else {
+            populateData(reportData, caseTypeId, submitEvents);
         }
 
         return reportData;
@@ -42,9 +58,19 @@ public class NoPositionChangeReport {
         return noPositionChangeDataSource.getData(UtilHelper.getListingCaseTypeId(caseTypeId), reportDate);
     }
 
+    private List<SubmitMultipleEvent> getMultipleCases(String casTypeId, List<String> multipleCaseIds) {
+        return noPositionChangeDataSource.getMultiplesData(UtilHelper.getListingCaseTypeId(casTypeId),
+                multipleCaseIds);
+    }
+
     private void populateData(NoPositionChangeReportData reportData,
-                              List<NoPositionChangeSubmitEvent> submitEvents,
-                              String caseTypeId) {
+                              String caseTypeId, List<NoPositionChangeSubmitEvent> submitEvents) {
+        populateData(reportData, caseTypeId, submitEvents, new ArrayList<>());
+    }
+
+    private void populateData(NoPositionChangeReportData reportData,
+                              String caseTypeId, List<NoPositionChangeSubmitEvent> submitEvents,
+                              List<SubmitMultipleEvent> submitMultipleEvents) {
         log.info(String.format("No change in current position case type id %s search results: %d",
                 caseTypeId, submitEvents.size()));
 
@@ -70,11 +96,16 @@ public class NoPositionChangeReport {
 
                 reportData.addReportDetailsSingle(reportDetailSingle);
             } else if (caseData.getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+                var multipleCase = submitMultipleEvents.stream()
+                        .filter(sme -> sme.getCaseData().getMultipleReference().equals(caseData.getMultipleReference()))
+                        .findFirst();
+
                 var reportDetailMultiple = new NoPositionChangeReportDetailMultiple();
                 reportDetailMultiple.setCaseReference(caseData.getEthosCaseReference());
                 reportDetailMultiple.setCurrentPosition(caseData.getCurrentPosition());
                 reportDetailMultiple.setDateToPosition(caseData.getDateToPosition());
-                reportDetailMultiple.setMultipleName(caseData.getMultipleReference());
+                reportDetailMultiple.setMultipleName(multipleCase.isPresent()
+                        ? multipleCase.get().getCaseData().getMultipleName() : "");
 
                 var year = LocalDate.parse(caseData.getReceiptDate(), OLD_DATE_TIME_PATTERN2).getYear();
                 reportDetailMultiple.setYear(String.valueOf(year));

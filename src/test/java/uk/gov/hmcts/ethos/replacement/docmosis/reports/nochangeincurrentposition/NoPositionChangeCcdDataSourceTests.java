@@ -2,9 +2,11 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentpositio
 
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
+import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -45,6 +47,36 @@ public class NoPositionChangeCcdDataSourceTests {
 
         var ccdReportDataSource = new NoPositionChangeCcdDataSource(authToken, ccdClient);
         ccdReportDataSource.getData(caseTypeId, reportDate);
+        fail("Should throw exception instead");
+    }
+
+    @Test
+    public void shouldReturnMultipleSearchResults() throws IOException {
+        var authToken = "A test token";
+        var caseTypeId = "A test case type";
+        var ccdClient = mock(CcdClient.class);
+        var searchResult = new ArrayList<SubmitMultipleEvent>();
+        searchResult.add(new SubmitMultipleEvent());
+        when(ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(anyString(), anyString(), anyString()))
+                .thenReturn(searchResult);
+
+        var ccdReportDataSource = new NoPositionChangeCcdDataSource(authToken, ccdClient);
+        var results = ccdReportDataSource.getMultiplesData(caseTypeId, new ArrayList<>());
+
+        assertEquals(1, results.size());
+        assertEquals(searchResult.get(0), results.get(0));
+    }
+
+    @Test(expected = ReportException.class)
+    public void shouldThrowReportExceptionWhenMultipleSearchFails() throws IOException {
+        var authToken = "A test token";
+        var caseTypeId = "A test case type";
+        var ccdClient = mock(CcdClient.class);
+        when(ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(anyString(), anyString(), anyString()))
+                .thenThrow(new IOException());
+
+        var ccdReportDataSource = new NoPositionChangeCcdDataSource(authToken, ccdClient);
+        ccdReportDataSource.getMultiplesData(caseTypeId, new ArrayList<>());
         fail("Should throw exception instead");
     }
 }
