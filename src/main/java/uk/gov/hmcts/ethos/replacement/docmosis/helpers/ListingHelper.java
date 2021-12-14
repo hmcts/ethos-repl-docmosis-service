@@ -106,7 +106,7 @@ public class ListingHelper {
             listingType.setCauseListDate(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalDate(listedDate) : " ");
             listingType.setCauseListTime(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalTime(listedDate) : " ");
             log.info("getJurCodesCollection");
-            listingType.setJurisdictionCodesList(BulkHelper.getJurCodesCollection(caseData.getJurCodesCollection()));
+            listingType.setJurisdictionCodesList(BulkHelper.getJurCodesCollectionWithHide(caseData.getJurCodesCollection()));
             listingType
                     .setHearingType(!isNullOrEmpty(hearingType.getHearingType()) ? hearingType.getHearingType() : " ");
             listingType.setPositionType(!isNullOrEmpty(caseData.getPositionType()) ? caseData.getPositionType() : " ");

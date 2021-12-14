@@ -255,6 +255,17 @@ public class BulkHelper {
     static String getJurCodesCollection(List<JurCodesTypeItem> jurCodesTypeItems) {
         if (jurCodesTypeItems != null) {
             return jurCodesTypeItems.stream()
+                    .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
+                    .distinct()
+                    .collect(Collectors.joining(", "));
+        } else {
+            return " ";
+        }
+    }
+
+    static String getJurCodesCollectionWithHide(List<JurCodesTypeItem> jurCodesTypeItems) {
+        if (jurCodesTypeItems != null) {
+            return jurCodesTypeItems.stream()
                     .filter(jurCodesTypeItem ->
                             !HIDE_JURISDICTION_OUTCOME.contains(jurCodesTypeItem.getValue().getJudgmentOutcome()))
                     .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
