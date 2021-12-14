@@ -119,15 +119,7 @@ public class ReportDocHelper {
                 }
                 break;
             case NO_CHANGE_IN_CURRENT_POSITION_REPORT:
-                if (!(listingData instanceof NoPositionChangeReportData)) {
-                    throw new IllegalStateException((LISTING_DATA_STATE_EXCEPTION + "NoPositionChangeReportData"));
-                }
-                try {
-                    var reportData = (NoPositionChangeReportData) listingData;
-                    sb.append(reportData.toReportObjectString());
-                } catch (JsonProcessingException e) {
-                    throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
-                }
+                sb.append(getNoPositionChangeReport(listingData));
                 break;
             default:
                 throw new IllegalStateException("Report type - Unexpected value: " + listingData.getReportType());
@@ -150,6 +142,21 @@ public class ReportDocHelper {
                     nullCheck(listingData.getLocalReportsSummary().get(0)
                             .getValue().getReportOffice())).append(NEW_LINE);
         }
+    }
+
+    private static StringBuilder getNoPositionChangeReport(ListingData listingData) {
+        if (!(listingData instanceof NoPositionChangeReportData)) {
+            throw new IllegalStateException((LISTING_DATA_STATE_EXCEPTION + "NoPositionChangeReportData"));
+        }
+
+        var sb = new StringBuilder();
+        try {
+            var reportData = (NoPositionChangeReportData) listingData;
+            sb.append(reportData.toReportObjectString());
+        } catch (JsonProcessingException e) {
+            throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
+        }
+        return sb;
     }
 
     private static StringBuilder getCasesAwaitingJudgmentReport(ListingData listingData)
