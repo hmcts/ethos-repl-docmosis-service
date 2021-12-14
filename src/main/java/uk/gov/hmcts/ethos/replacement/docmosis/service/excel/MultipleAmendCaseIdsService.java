@@ -40,8 +40,8 @@ public class MultipleAmendCaseIdsService {
 
         if (!newEthosCaseRefCollection.isEmpty()) {
 
-            log.info(String.format("Updating %d singles of multiple with reference %s ",
-                    newEthosCaseRefCollection.size(), multipleDetails.getCaseData().getMultipleReference()));
+            log.info("Updating {} singles of multiple with reference {} ",
+                    newEthosCaseRefCollection.size(), multipleDetails.getCaseData().getMultipleReference());
 
             multipleHelperService.sendUpdatesToSinglesLogic(userToken, multipleDetails, errors, multipleLeadCase,
                     multipleObjects, newEthosCaseRefCollection);
