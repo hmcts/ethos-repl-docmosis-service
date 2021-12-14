@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkData;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
@@ -264,18 +266,15 @@ public class BulkHelper {
     }
 
     static String getJurCodesCollectionWithHide(List<JurCodesTypeItem> jurCodesTypeItems) {
-        if (jurCodesTypeItems != null) {
-            return jurCodesTypeItems.stream()
-                    .filter(jurCodesTypeItem ->
-                            !HIDE_JURISDICTION_OUTCOME.contains(jurCodesTypeItem.getValue().getJudgmentOutcome()))
-                    .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
-                    .distinct()
-                    .collect(Collectors.collectingAndThen(Collectors.joining(", "), str -> {
-                        if (str.isEmpty()) {
-                            return " ";
-                        }
-                        return str;
-                    }));
+        if (CollectionUtils.isNotEmpty(jurCodesTypeItems)) {
+            return StringUtils.defaultIfEmpty(
+                    jurCodesTypeItems.stream()
+                        .filter(jurCodesTypeItem ->
+                                !HIDE_JURISDICTION_OUTCOME.contains(jurCodesTypeItem.getValue().getJudgmentOutcome()))
+                        .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
+                        .distinct()
+                        .collect(Collectors.joining(", ")),
+                    " ");
         } else {
             return " ";
         }
