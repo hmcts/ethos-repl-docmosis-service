@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
-import uk.gov.hmcts.ecm.common.model.multiples.MultipleCaseSearchResult;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 
@@ -47,10 +46,11 @@ public class NoPositionChangeCcdDataSource implements NoPositionChangeDataSource
         try {
             var query = NoPositionChangeMultiplesElasticSearchQuery.create(multipleRefsList);
             var submitEvents = new ArrayList<SubmitMultipleEvent>();
-            var searchResult = ccdClient.runElasticSearch(authToken, caseTypeId, query, MultipleCaseSearchResult.class);
+            var searchResult = ccdClient.buildAndGetElasticSearchRequestWithRetriesMultiples(authToken, caseTypeId,
+                    query);
 
-            if (searchResult != null && CollectionUtils.isNotEmpty(searchResult.getCases())) {
-                submitEvents.addAll(searchResult.getCases());
+            if (CollectionUtils.isNotEmpty(searchResult)) {
+                submitEvents.addAll(searchResult);
             }
 
             return submitEvents;
