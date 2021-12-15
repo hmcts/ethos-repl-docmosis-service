@@ -29,6 +29,7 @@ public class NoPositionChangeReport {
         var submitEvents = getCases(caseTypeId);
         var reportData = initReport(caseTypeId);
 
+        log.info("Retrieved No Change In Current Position report case data");
         if (CollectionUtils.isEmpty(submitEvents)) {
             return reportData;
         }
