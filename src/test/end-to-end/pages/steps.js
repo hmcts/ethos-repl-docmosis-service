@@ -13,6 +13,7 @@ module.exports = () => {
         executeClaimantRepresentative:steps.amendClaimantRepresentative.amendClaimantRepresentative,
         executeRespondentDetails:steps.amendRespondentDetails.amendRespondentDetails,
         amendTheCaseDetails:steps.amendCaseDetails.amendCaseDetails,
+        executeRespondentRepresentative:steps.amendRespondentRepresentative.amendRespondentRepresentative,
         selectNewCase: steps.newCase.newCase,
         selectCaseTypeOptions: steps.createCase.createCase,
         enterCreateCasePage1: steps.createCasePages.page1initiateCase1,
