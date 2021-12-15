@@ -37,6 +37,22 @@ public class NoPositionChangeCcdDataSourceTests {
         assertEquals(searchResult.getCases().get(0), results.get(0));
     }
 
+    @Test
+    public void shouldReturnEmptyListForNullSearchResults() throws IOException {
+        var authToken = "A test token";
+        var caseTypeId = "A test case type";
+        var reportDate = "2021-07-10";
+        var ccdClient = mock(CcdClient.class);
+        when(ccdClient.runElasticSearch(anyString(), anyString(), anyString(), eq(NoPositionChangeSearchResult.class)))
+                .thenReturn(null);
+
+        var ccdReportDataSource = new NoPositionChangeCcdDataSource(authToken, ccdClient);
+        var results = ccdReportDataSource.getData(caseTypeId, reportDate);
+
+        assertNotNull(results);
+        assertEquals(0, results.size());
+    }
+
     @Test(expected = ReportException.class)
     public void shouldThrowReportExceptionWhenSearchFails() throws IOException {
         var authToken = "A test token";
@@ -59,6 +75,21 @@ public class NoPositionChangeCcdDataSourceTests {
         var searchResult = new MultipleCaseSearchResult();
         when(ccdClient.runElasticSearch(anyString(), anyString(), anyString(), eq(MultipleCaseSearchResult.class)))
                 .thenReturn(searchResult);
+
+        var ccdReportDataSource = new NoPositionChangeCcdDataSource(authToken, ccdClient);
+        var results = ccdReportDataSource.getMultiplesData(caseTypeId, new ArrayList<>());
+
+        assertNotNull(results);
+        assertEquals(0, results.size());
+    }
+
+    @Test
+    public void shouldReturnEmptyListForNullMultipleSearchResults() throws IOException {
+        var authToken = "A test token";
+        var caseTypeId = "A test case type";
+        var ccdClient = mock(CcdClient.class);
+        when(ccdClient.runElasticSearch(anyString(), anyString(), anyString(), eq(MultipleCaseSearchResult.class)))
+                .thenReturn(null);
 
         var ccdReportDataSource = new NoPositionChangeCcdDataSource(authToken, ccdClient);
         var results = ccdReportDataSource.getMultiplesData(caseTypeId, new ArrayList<>());
