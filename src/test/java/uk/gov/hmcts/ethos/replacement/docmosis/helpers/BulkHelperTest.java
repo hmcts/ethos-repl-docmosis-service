@@ -181,6 +181,15 @@ public class BulkHelperTest {
         return new ArrayList<>(Arrays.asList(jurCodesTypeItem, jurCodesTypeItem1, jurCodesTypeItem2));
     }
 
+    private JurCodesTypeItem getJurCodesWithOutcome(String codes, String outcome) {
+        JurCodesType jurCodesType = new JurCodesType();
+        jurCodesType.setJuridictionCodesList(codes);
+        jurCodesType.setJudgmentOutcome(outcome);
+        JurCodesTypeItem jurCodesTypeItem = new JurCodesTypeItem();
+        jurCodesTypeItem.setValue(jurCodesType);
+        return jurCodesTypeItem;
+    }
+
     @Test
     public void containsAllJurCodes() {
         List<JurCodesTypeItem> jurCodesTypeItemsInput = getJurCodesTypeItems("A", "B", "C");
@@ -213,6 +222,53 @@ public class BulkHelperTest {
         assertFalse(BulkHelper.containsAllJurCodes(new ArrayList<>(), BulkHelper.getJurCodesListFromString(null)));
         assertFalse(BulkHelper.containsAllJurCodes(new ArrayList<>(), BulkHelper.getJurCodesListFromString("")));
         assertFalse(BulkHelper.containsAllJurCodes(new ArrayList<>(), BulkHelper.getJurCodesListFromString(" ")));
+    }
+
+    @Test
+    public void getJurCodesCollectionWithHide_ListFromString() {
+        List<JurCodesTypeItem> jurCodesTypeItems1 = getJurCodesTypeItems("A", "B", "C");
+        List<JurCodesTypeItem> jurCodesTypeItems2 = getJurCodesTypeItems("A", "B", "C");
+        String jurCodes = BulkHelper.getJurCodesCollectionWithHide(jurCodesTypeItems2);
+        assertTrue(BulkHelper.containsAllJurCodes(jurCodesTypeItems1, BulkHelper.getJurCodesListFromString(jurCodes)));
+
+        jurCodesTypeItems1 = getJurCodesTypeItems("A", "B", "D");
+        jurCodesTypeItems2 = getJurCodesTypeItems("A", "C", "B");
+        jurCodes = BulkHelper.getJurCodesCollectionWithHide(jurCodesTypeItems2);
+        assertFalse(BulkHelper.containsAllJurCodes(jurCodesTypeItems1, BulkHelper.getJurCodesListFromString(jurCodes)));
+
+        assertFalse(BulkHelper.containsAllJurCodes(null, BulkHelper.getJurCodesListFromString(jurCodes)));
+        assertFalse(BulkHelper.containsAllJurCodes(new ArrayList<>(), BulkHelper.getJurCodesListFromString(jurCodes)));
+
+        assertFalse(BulkHelper.containsAllJurCodes(new ArrayList<>(), BulkHelper.getJurCodesListFromString(null)));
+        assertFalse(BulkHelper.containsAllJurCodes(new ArrayList<>(), BulkHelper.getJurCodesListFromString("")));
+        assertFalse(BulkHelper.containsAllJurCodes(new ArrayList<>(), BulkHelper.getJurCodesListFromString(" ")));
+    }
+
+    @Test
+    public void getJurCodesCollectionWithHide_AllJurCodesAreFiltered_ReturnsEmptyString() {
+        JurCodesTypeItem JurCodesTypeItem1 = getJurCodesWithOutcome("A", "Acas conciliated settlement");
+        JurCodesTypeItem JurCodesTypeItem2 = getJurCodesWithOutcome("B", "Withdrawn or private settlement");
+        JurCodesTypeItem JurCodesTypeItem3 = getJurCodesWithOutcome("C", "Input in error");
+        List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>(Arrays.asList(JurCodesTypeItem1, JurCodesTypeItem2, JurCodesTypeItem3));
+        assertEquals(" ", BulkHelper.getJurCodesCollectionWithHide(jurCodesTypeItems));
+    }
+
+    @Test
+    public void getJurCodesCollectionWithHide_NoJurCodeFiltered_ReturnsAllOutputs() {
+        JurCodesTypeItem JurCodesTypeItem1 = getJurCodesWithOutcome("A", "Successful at hearing");
+        JurCodesTypeItem JurCodesTypeItem2 = getJurCodesWithOutcome("B", "Unsuccessful at hearing");
+        JurCodesTypeItem JurCodesTypeItem3 = getJurCodesWithOutcome("C", "Dismissed at hearing - out of scope");
+        List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>(Arrays.asList(JurCodesTypeItem1, JurCodesTypeItem2, JurCodesTypeItem3));
+        assertEquals("A, B, C", BulkHelper.getJurCodesCollectionWithHide(jurCodesTypeItems));
+    }
+
+    @Test
+    public void getJurCodesCollectionWithHide_PartJurCodesFiltered_ReturnsSomeOutputs() {
+        JurCodesTypeItem JurCodesTypeItem1 = getJurCodesWithOutcome("A", "Acas conciliated settlement");
+        JurCodesTypeItem JurCodesTypeItem2 = getJurCodesWithOutcome("B", "Successful at hearing");
+        JurCodesTypeItem JurCodesTypeItem3 = getJurCodesWithOutcome("C", "Withdrawn or private settlement");
+        List<JurCodesTypeItem> jurCodesTypeItems = new ArrayList<>(Arrays.asList(JurCodesTypeItem1, JurCodesTypeItem2, JurCodesTypeItem3));
+        assertEquals("B", BulkHelper.getJurCodesCollectionWithHide(jurCodesTypeItems));
     }
 
     @Test

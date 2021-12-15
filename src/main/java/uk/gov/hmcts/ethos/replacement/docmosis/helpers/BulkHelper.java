@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkData;
 import uk.gov.hmcts.ecm.common.model.bulk.BulkDetails;
@@ -47,6 +49,14 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
 public class BulkHelper {
+
+    private static final String JURISDICTION_OUTCOME_ACAS_CONCILIATED_SETTLEMENT = "Acas conciliated settlement";
+    private static final String JURISDICTION_OUTCOME_WITHDRAWN_OR_PRIVATE_SETTLEMENT = "Withdrawn or private settlement";
+    private static final String JURISDICTION_OUTCOME_INPUT_IN_ERROR = "Input in error";
+    static final List<String> HIDE_JURISDICTION_OUTCOME = Arrays.asList(
+            JURISDICTION_OUTCOME_ACAS_CONCILIATED_SETTLEMENT,
+            JURISDICTION_OUTCOME_WITHDRAWN_OR_PRIVATE_SETTLEMENT,
+            JURISDICTION_OUTCOME_INPUT_IN_ERROR);
 
     private BulkHelper() {
     }
@@ -250,6 +260,21 @@ public class BulkHelper {
                     .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
                     .distinct()
                     .collect(Collectors.joining(", "));
+        } else {
+            return " ";
+        }
+    }
+
+    static String getJurCodesCollectionWithHide(List<JurCodesTypeItem> jurCodesTypeItems) {
+        if (CollectionUtils.isNotEmpty(jurCodesTypeItems)) {
+            return StringUtils.defaultIfEmpty(
+                    jurCodesTypeItems.stream()
+                        .filter(jurCodesTypeItem ->
+                                !HIDE_JURISDICTION_OUTCOME.contains(jurCodesTypeItem.getValue().getJudgmentOutcome()))
+                        .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
+                        .distinct()
+                        .collect(Collectors.joining(", ")),
+                    " ");
         } else {
             return " ";
         }
