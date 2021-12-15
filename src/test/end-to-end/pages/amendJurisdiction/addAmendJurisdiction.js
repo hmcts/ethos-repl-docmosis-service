@@ -9,8 +9,8 @@ module.exports = async function () {
     I.waitForText(commonConfig.jurisdictionCode, testConfig.TestTimeToWaitForText);
     await I.selectOption('#jurCodesCollection_0_juridictionCodesList', commonConfig.jurisdictionCode);
     await I.wait(2);
-    I.waitForText(commonConfig.discriminatoryTermsOrRules, testConfig.TestTimeToWaitForText);
-    await I.selectOption('#jurCodesCollection_0_judgmentOutcome', commonConfig.discriminatoryTermsOrRules);
+    I.waitForText(commonConfig.jurisdictionRule, testConfig.TestTimeToWaitForText);
+    await I.selectOption('#jurCodesCollection_0_judgmentOutcome', commonConfig.jurisdictionRule);
     await I.wait(2);
 
     await I.navByClick(commonConfig.continue);
