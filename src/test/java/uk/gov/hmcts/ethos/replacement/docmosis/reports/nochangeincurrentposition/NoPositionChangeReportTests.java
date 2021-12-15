@@ -19,6 +19,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_BULK_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
@@ -48,7 +49,7 @@ class NoPositionChangeReportTests {
 
         noPositionChangeDataSource = mock(NoPositionChangeDataSource.class);
         when(noPositionChangeDataSource.getData(NEWCASTLE_CASE_TYPE_ID, REPORT_CREATE_DATE)).thenReturn(submitEvents);
-        when(noPositionChangeDataSource.getMultiplesData(eq(NEWCASTLE_CASE_TYPE_ID), anyList())).thenReturn(submitMultipleEvents);
+        when(noPositionChangeDataSource.getMultiplesData(eq(NEWCASTLE_BULK_CASE_TYPE_ID), anyList())).thenReturn(submitMultipleEvents);
 
         noPositionChangeReport = new NoPositionChangeReport(noPositionChangeDataSource, REPORT_CREATE_DATE);
     }

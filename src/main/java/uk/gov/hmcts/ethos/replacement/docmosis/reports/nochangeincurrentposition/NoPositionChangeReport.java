@@ -33,10 +33,11 @@ public class NoPositionChangeReport {
             return reportData;
         }
 
-        var multipleIds = submitEvents.stream()
+        var multipleIds = submitEvents.parallelStream()
                 .filter(se -> se.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)
                         && StringUtils.isNotBlank(se.getCaseData().getMultipleReference()))
                 .map(e -> e.getCaseData().getMultipleReference())
+                .distinct()
                 .collect(Collectors.toList());
 
         if (CollectionUtils.isNotEmpty(multipleIds)) {
@@ -59,8 +60,8 @@ public class NoPositionChangeReport {
     }
 
     private List<SubmitMultipleEvent> getMultipleCases(String casTypeId, List<String> multipleCaseIds) {
-        return noPositionChangeDataSource.getMultiplesData(UtilHelper.getListingCaseTypeId(casTypeId),
-                multipleCaseIds);
+        var multipleCaseTypeId = UtilHelper.getListingCaseTypeId(casTypeId) + "_Multiple";
+        return noPositionChangeDataSource.getMultiplesData(multipleCaseTypeId, multipleCaseIds);
     }
 
     private void populateData(NoPositionChangeReportData reportData,
