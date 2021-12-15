@@ -7,6 +7,7 @@
   "caseAcceptedMonth": "05",
   "caseAcceptedYear": "2021",
   "submit": "Submit",
+  "addNewButton": "Add new",
   "claimantRepresentativeYes": "#claimantRepresentedQuestion_Yes",
   "claimantRepresentativeName": "ECMRep1",
   "findAddressButton": "Find address",
@@ -17,5 +18,7 @@
   "respondentName": "Resp1",
   "respondentRepresentativeName": "ECMGita",
   "respondentRepPostCode": "E14 7FZ",
-  "respondentRepAddress": "Flat 105, Carat House, 34 Ursula Gould Way, London"
+  "respondentRepAddress": "Flat 105, Carat House, 34 Ursula Gould Way, London",
+  "jurisdictionCode": "ADT",
+  "jurisdictionRule": "Not allocated"
 }
