@@ -260,8 +260,7 @@ public class ListingService {
         setListingDateRangeForSearch(listingDetails);
         var reportDataSource = new HearingsToJudgmentsCcdReportDataSource(authToken, ccdClient);
         var hearingsToJudgmentsReport = new HearingsToJudgmentsReport(reportDataSource, listingDateFrom, listingDateTo);
-        var reportData = hearingsToJudgmentsReport.runReport(
-                listingDetails.getCaseTypeId());
+        var reportData = hearingsToJudgmentsReport.runReport(listingDetails.getCaseTypeId());
         reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
         reportData.setReportType(listingDetails.getCaseData().getReportType());
         reportData.setHearingDateType(listingDetails.getCaseData().getHearingDateType());
@@ -274,10 +273,9 @@ public class ListingService {
     private NoPositionChangeReportData getNoPositionChangeReport(ListingDetails listingDetails, String authToken) {
         log.info("No Change In Current Position for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new NoPositionChangeCcdDataSource(authToken, ccdClient);
-        var hearingsToJudgmentsReport = new NoPositionChangeReport(reportDataSource,
+        var noPositionChangeReport = new NoPositionChangeReport(reportDataSource,
                 listingDetails.getCaseData().getReportDate());
-        var reportData = hearingsToJudgmentsReport.runReport(
-                listingDetails.getCaseTypeId());
+        var reportData = noPositionChangeReport.runReport(listingDetails.getCaseTypeId());
         reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
         reportData.setReportType(listingDetails.getCaseData().getReportType());
         return reportData;
@@ -302,8 +300,7 @@ public class ListingService {
             case CASE_SOURCE_LOCAL_REPORT:
                 return caseSourceLocalReport.generateReportData(listingDetails, submitEvents);
             case HEARINGS_BY_HEARING_TYPE_REPORT:
-                return hearingsByHearingTypeReport.processHearingsByHearingTypeRequest(
-                        listingDetails, submitEvents);
+                return hearingsByHearingTypeReport.processHearingsByHearingTypeRequest( listingDetails, submitEvents);
             default:
                 return listingDetails.getCaseData();
         }
