@@ -68,7 +68,7 @@ exports.config = {
                     reportDir: config.TestOutputDir || './functional-output',
                     reportFilename: 'ecm-e2e-result',
                     inlineAssets: true,
-                    reportTitle: 'ECM ExUI E2E Tests'
+                    reportTitle: 'ECM CCD E2E Tests'
                 }
             }
         }
