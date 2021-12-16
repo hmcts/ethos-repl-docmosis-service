@@ -40,13 +40,6 @@
       "claimant_mobile_number": "07577136570",
       "claimant_phone_number": "07577136570"
     },
-    "claimantIndType": {
-      "claimant_date_of_birth": "1990-02-25",
-      "claimant_first_names": "Anton Juliet",
-      "claimant_gender": "Male",
-      "claimant_last_name": "Rodriguez",
-      "claimant_title1": "Mr"
-    },
     "correspondenceType": {
       "topLevel_Documents": "EM-TRB-EGW-ENG-00031",
       "Part_6_Documents": "6.2"

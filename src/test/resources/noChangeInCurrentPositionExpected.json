@@ -1,0 +1,21 @@
+{
+"accessKey":"",
+"templateName":"EM-TRB-SCO-ENG-00794.docx",
+"outputName":"document.docx",
+"data":{
+"Report_Office":"Newcastle",
+"Report_Date":"20 June 2021",
+"Total_Cases":"3",
+"Total_Single":"2",
+"Total_Multiple":"1",
+"reportDetailsSingle":[
+{"caseReference":"250003/2021","year":"2021","currentPosition":"Test1","dateToPosition":"2021-08-03","respondent":"Resp1"},
+{"caseReference":"250004/2021","year":"2022","currentPosition":"Test2","dateToPosition":"2021-09-03","respondent":"Resp2 & Others"}
+],
+"reportDetailsMultiple":[
+{"caseReference":"250005/2021","year":"2023","currentPosition":"Test3","dateToPosition":"2021-10-04","multipleName":"Multi1"}
+],
+"Report_Clerk":"Mike Jordan",
+"Today_date":"replace-with-current-date"
+}
+}

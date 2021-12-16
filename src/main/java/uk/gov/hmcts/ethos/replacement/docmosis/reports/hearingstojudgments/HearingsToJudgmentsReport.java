@@ -62,7 +62,7 @@ public class HearingsToJudgmentsReport {
     }
 
     public HearingsToJudgmentsReportData runReport(String caseTypeId) {
-        var submitEvents = getCases(caseTypeId, listingDateFrom, listingDateTo);
+        var submitEvents = getCases(caseTypeId);
         var reportData = initReport(caseTypeId);
 
         if (CollectionUtils.isNotEmpty(submitEvents)) {
@@ -77,8 +77,7 @@ public class HearingsToJudgmentsReport {
         return new HearingsToJudgmentsReportData(reportSummary);
     }
 
-    private List<HearingsToJudgmentsSubmitEvent> getCases(String caseTypeId, String listingDateFrom,
-                                                          String listingDateTo) {
+    private List<HearingsToJudgmentsSubmitEvent> getCases(String caseTypeId) {
         return hearingsToJudgmentsReportDataSource.getData(UtilHelper.getListingCaseTypeId(caseTypeId),
                 listingDateFrom, listingDateTo);
     }

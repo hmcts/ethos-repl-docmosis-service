@@ -2,7 +2,7 @@
 
 const Helper = codecept_helper;
 const helperName = 'Puppeteer';
-const testConfig = require('src/test/config.js');
+const testConfig = require('../../config');
 
 class PuppeteerHelper extends Helper {
 

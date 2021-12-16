@@ -1,0 +1,104 @@
+{
+  "positionType":"Manually Created",
+  "claimantRepresentedQuestion":"Yes",
+  "respondentCollection":[
+    {
+      "id":"c4747595-f289-4cf0-bb44-17a9900e7672",
+      "value":{
+        "respondent_name": "Antonio Vazquez",
+        "respondent_contact_preference": "Post",
+        "respondent_email": "Antonio@gmail.com",
+        "respondent_phone1": "07577136570",
+        "respondent_phone2": "07577136570",
+        "responseContinue":"Yes",
+        "responseReceived":"Yes",
+        "responseStruckOut":"No",
+        "respondent_ACAS_no":"Employer already in touch",
+        "respondent_address":{
+          "AddressLine1": "11 Small Street",
+          "AddressLine2": "22 House",
+          "Country": "UK",
+          "County": "North West",
+          "PostCode": "M12 42R",
+          "PostTown": "Manchester"
+        },
+        "respondent_ACAS_question":"No",
+        "responseRespondentAddress":{
+
+        }
+      }
+    }
+  ],
+  "claimantOtherType":{
+
+  },
+  "caseType":"Single",
+  "feeGroupReference":"123456654321",
+  "claimantIndType":{
+    "claimant_gender": "Male",
+    "claimant_title1": "Mr",
+    "claimant_first_names": "Anton Juliet",
+    "claimant_last_name": "Rodriguez",
+    "claimant_date_of_birth": "1990-02-25"
+  },
+  "claimantWorkAddress":{
+    "claimant_work_address":{
+      "AddressLine1": "34",
+      "AddressLine2": "Low Street",
+      "Country": "UK",
+      "County": "Lancashire",
+      "PostCode": "M3 6gw",
+      "PostTown": "Manchester"
+    }
+  },
+  "claimant_TypeOfClaimant":"Individual",
+  "tribunalCorrespondenceAddress":{
+    "PostCode": "M3 2JA",
+    "PostTown": "Manchester,",
+    "AddressLine1": "Manchester Employment Tribunal,",
+    "AddressLine2": "Alexandra House,",
+    "AddressLine3": "14-22 The Parsonage,"
+  },
+  "tribunalCorrespondenceTelephone":"0113 245 9741",
+  "tribunalCorrespondenceFax":"01264 785136",
+  "tribunalCorrespondenceDX":"DX 123456 MANCHESTER",
+  "tribunalCorrespondenceEmail":"ManchesterOfficeET@hmcts.gov.uk",
+  "representativeClaimantType":{
+    "name_of_organisation": "RepresentativeOrganisation",
+    "name_of_representative": "RepresentativeNameClaimant",
+    "representative_address": {
+      "AddressLine1": "56 Block C",
+      "AddressLine2": "Ellesmere Street",
+      "Country": "UK",
+      "County": "Lancashire",
+      "PostCode": "M3 KJR",
+      "PostTown": "Manchester"
+    },
+    "representative_email_address": "example@gmail.com",
+    "representative_mobile_number": "07577136570",
+    "representative_phone_number": "07577136570",
+    "representative_preference": "Post",
+    "representative_reference": "1111111"
+  },
+  "claimant":"Joe Bloggs",
+  "dateToPosition":"2021-11-23",
+  "multipleFlag":"No",
+  "currentPosition":"Manually Created",
+  "receiptDate":"2021-08-12",
+  "caseSource":"Manually Created",
+  "claimantWorkAddressQuestion":"Yes",
+  "claimantType":{
+    "claimant_addressUK":{
+      "AddressLine1":"Flat 19",
+      "AddressLine2":"Vermeer Court",
+      "AddressLine3":"1 Rembrandt Close",
+      "Country":"United Kingdom",
+      "PostCode":"E14 3XA",
+      "PostTown":"London"
+    },
+    "claimant_contact_preference": "Post",
+    "claimant_email_address": "anton@gmail.com",
+    "claimant_mobile_number": "07577136570",
+    "claimant_phone_number": "07577136570"
+  }
+}

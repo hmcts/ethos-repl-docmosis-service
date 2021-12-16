@@ -150,17 +150,13 @@
       }
     ],
     "localReportsSummaryHdr2": {
-      "hearingDate": "20 October 2020",
-      "reportOffice": "Manchester",
-      "reconsider": "2",
-      "remedy": "2",
-      "costs": "2",
-      "total": "12",
-      "hearingPrelim": "2",
-      "hearing": "2",
-      "hearingCM": "2",
-      "subSplit": "JM"
-    },
+      "listingHistory" :[ {
+         "value" : {
+           "hearingNumber": "1|1|1|1|1|1|6|JM"
+         },
+        "id": "97087d19-795a-4886-8cdb-06489b3432ef5"
+      }
+    ]},
     "localReportsSummary2": [
       {
         "value": {

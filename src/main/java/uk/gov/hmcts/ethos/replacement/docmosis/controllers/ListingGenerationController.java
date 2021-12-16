@@ -22,6 +22,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.ListingService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
@@ -266,7 +267,8 @@ public class ListingGenerationController {
 
     private boolean hasSummaryAndDetails(ListingData listingData) {
         return listingData.getClass() == HearingsToJudgmentsReportData.class
-                || listingData.getClass() == CasesAwaitingJudgmentReportData.class;
+                || listingData.getClass() == CasesAwaitingJudgmentReportData.class
+                || listingData.getClass() == NoPositionChangeReportData.class;
     }
 
     private void updateListingDocMarkUp(ListingData listingData, DocumentInfo documentInfo) {

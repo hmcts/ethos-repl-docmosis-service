@@ -6,7 +6,7 @@ Feature('Manchester individual Journey').retry(testConfig.TestRetryFeatures);
 Scenario('01 BO Caveat E2E - Order summons', async ({ I }) =>  {
 
     // IdAM
-    I.authenticateWithIdamIfAvailable();
+    I.authenticateWithIdam();
     I.selectNewCase();
     I.selectCaseTypeOptions(createCaseConfig.list1_text, createCaseConfig.list2_text_case_type_manchester, createCaseConfig.list3_text_event);
     I.enterCreateCasePage1();
