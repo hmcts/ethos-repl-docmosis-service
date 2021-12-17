@@ -146,7 +146,7 @@ public class SingleCasesValidatorTest {
         submitEvent.setState(state);
         var caseData = new CaseData();
         caseData.setEthosCaseReference(ethosReference);
-        caseData.setCaseType(caseType);
+        caseData.setEcmCaseType(caseType);
         caseData.setMultipleReference(multipleReference);
         submitEvent.setCaseData(caseData);
 

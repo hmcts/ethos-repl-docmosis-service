@@ -218,8 +218,8 @@ public class CaseActionsForCaseWorkerController {
             caseManagementForCaseWorkerService.caseDataDefaults(caseData);
             generateEthosCaseReference(caseData, ccdRequest);
             FlagsImageHelper.buildFlagsImageFileName(caseData);
-            caseData.setMultipleFlag(caseData.getCaseType() != null
-                    && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
+            caseData.setMultipleFlag(caseData.getEcmCaseType() != null
+                    && caseData.getEcmCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
         }
 
         log.info("PostDefaultValues for case: " + caseData.getEthosCaseReference());

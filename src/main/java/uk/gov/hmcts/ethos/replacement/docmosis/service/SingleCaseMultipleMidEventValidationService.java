@@ -29,7 +29,7 @@ public class SingleCaseMultipleMidEventValidationService {
 
         log.info("Validating if single case has the correct case type");
 
-        if (caseDetails.getCaseData().getCaseType().equals(SINGLE_CASE_TYPE)) {
+        if (caseDetails.getCaseData().getEcmCaseType().equals(SINGLE_CASE_TYPE)) {
 
             if (caseDetails.getCaseData().getMultipleFlag().equals(YES)) {
 
@@ -48,7 +48,7 @@ public class SingleCaseMultipleMidEventValidationService {
         }
 
         if (caseDetails.getCaseData().getMultipleFlag().equals(NO)
-                && caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+                && caseDetails.getCaseData().getEcmCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
             log.info("Validating multiple and subMultiple in singles");
 

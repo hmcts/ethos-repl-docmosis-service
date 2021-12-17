@@ -51,7 +51,7 @@ public class BulkCreationTask implements Runnable {
                         UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), caseId);
             }
             submitEvent.getCaseData().setMultipleReference(multipleRef);
-            submitEvent.getCaseData().setCaseType(caseType);
+            submitEvent.getCaseData().setEcmCaseType(caseType);
             ccdClient.submitEventForCase(authToken, submitEvent.getCaseData(),
                     UtilHelper.getCaseTypeId(
                             bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);

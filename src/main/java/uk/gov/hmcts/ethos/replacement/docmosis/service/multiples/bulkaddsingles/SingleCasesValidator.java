@@ -85,7 +85,7 @@ class SingleCasesValidator {
     }
 
     private boolean isSingleCaseType(SubmitEvent submitEvent) {
-        return SINGLE_CASE_TYPE.equals(submitEvent.getCaseData().getCaseType());
+        return SINGLE_CASE_TYPE.equals(submitEvent.getCaseData().getEcmCaseType());
     }
 
     private String getExistingMultipleReference(SubmitEvent submitEvent, String multipleEthosReference) {
