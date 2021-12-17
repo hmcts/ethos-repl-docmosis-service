@@ -20,5 +20,10 @@
   "respondentRepPostCode": "E14 7FZ",
   "respondentRepAddress": "Flat 105, Carat House, 34 Ursula Gould Way, London",
   "jurisdictionCode": "ADT",
-  "jurisdictionRule": "Not allocated"
+  "jurisdictionRule": "Not allocated",
+  "requestedBy": "Both Parties",
+  "rule503bStartDate": "10",
+  "rule503bStartDateMonth": "12",
+  "rule503bStartDateYear": "2021",
+  "excludedFromRegister": "No"
 }

@@ -5,7 +5,7 @@ const assert = require('assert');
 const {acceptCaseEvent, caseDetails} = require("../helpers/caseHelper");
 let caseNumber;
 
-Feature('Create a Manchester Single Case and move to Accepted state');
+Feature('Manchester Singles Case and move to Accepted & Rejected state');
 
 Scenario('Verify Manchester Accept Case', async ({I}) => {
     caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-manchester-data.json', 'Manchester');

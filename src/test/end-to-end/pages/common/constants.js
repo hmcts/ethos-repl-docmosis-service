@@ -13,7 +13,8 @@ const eventNames = {
     CLAIMANT_REPRESENTATIVE: 'Claimant Representative',
     CLAIMANT_RESPONDENT_DETAILS: 'Respondent Details',
     RESPONDENT_REPRESENTATIVE: 'Respondent Representative',
-    JURISDICTION: 'Jurisdiction'
+    JURISDICTION: 'Jurisdiction',
+    RESTRICTED_REPORTING:'Restricted Reporting'
 };
 
 const states = {
