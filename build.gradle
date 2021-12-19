@@ -206,7 +206,7 @@ def versions = [
 ]
 
 ext {
-    log4JVersion = '2.16.0'
+    log4JVersion = '2.17.0'
 }
 
 dependencies {
