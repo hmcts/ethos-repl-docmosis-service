@@ -23,7 +23,7 @@
   "jurisdictionRule": "Not allocated",
   "jurisdictionRule": "Case discontinued",
   "clerkResponsible": "A Clerk",
-  "physicalLocation": "Casework Table"
+  "physicalLocation": "Casework Table",
   "requestedBy": "Both Parties",
   "rule503bStartDate": "10",
   "rule503bStartDateMonth": "12",
