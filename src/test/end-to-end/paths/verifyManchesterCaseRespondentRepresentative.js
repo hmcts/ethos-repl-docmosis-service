@@ -8,7 +8,7 @@ Feature('Manchester Office Individual Single Case & Execute Respondent Represent
 
 Scenario('Verify Respondent Representative', async ({I}) => {
 
-    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-manchester-data.json', 'Leeds');
+    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-manchester-data.json', 'Manchester');
     await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
     await respondentRepresentative(I, eventNames.RESPONDENT_REPRESENTATIVE);
 

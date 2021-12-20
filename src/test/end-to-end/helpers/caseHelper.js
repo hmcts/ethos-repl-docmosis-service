@@ -43,10 +43,10 @@ async function jurisdiction(I, eventName) {
     await I.executeAddAmendJurisdiction();
 }
 
-async function closeCase(I, eventName) {
+async function closeCase(I, eventName, clerkResponsible, physicalLocation) {
     await I.chooseNextStep(eventName, 3);
     await I.wait(5);
-    await I.executeCloseCase();
+    await I.executeCloseCase(clerkResponsible, physicalLocation);
 }
 
 module.exports = {
