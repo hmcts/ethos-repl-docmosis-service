@@ -31,10 +31,10 @@ async function claimantRespondentDetails(I, eventName) {
     await I.executeRespondentDetails();
 }
 
-async function respondentRepresentative(I, eventName) {
+async function respondentRepresentative(I, eventName, jurisdiction) {
     await I.chooseNextStep(eventName, 3);
     await I.wait(5);
-    await I.executeRespondentRepresentative();
+    await I.executeRespondentRepresentative(jurisdiction);
 }
 
 async function jurisdiction(I, eventName) {
