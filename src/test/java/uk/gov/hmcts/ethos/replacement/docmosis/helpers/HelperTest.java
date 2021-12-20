@@ -1,19 +1,20 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.*;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
-import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRespondentRepresentative;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -137,6 +138,48 @@ public class HelperTest {
                 .setHearingDateCollection(null);
 
         assertEquals(0, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
+
+    }
+
+    @Test
+    public void validateHearingDatesNotInFutureTest() {
+
+        var caseData = new CaseData();
+        List<HearingTypeItem> hearingTypeItems = new ArrayList<>();
+        HearingTypeItem item = new HearingTypeItem();
+        item.setId(UUID.randomUUID().toString());
+        HearingType value = new HearingType();
+        List<DateListedTypeItem> dates = new ArrayList<>();
+        DateListedTypeItem dateItem = new DateListedTypeItem();
+        dateItem.setId(UUID.randomUUID().toString());
+        dateItem.setValue(new DateListedType());
+        dates.add(dateItem);
+        value.setHearingDateCollection(dates);
+        item.setValue(value);
+        hearingTypeItems.add(item);
+        caseData.setHearingCollection(hearingTypeItems);
+
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingBreak("2021-12-19T10:00:00");
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingResume("2021-12-19T10:00:00");
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingFinish("2021-12-19T10:00:00");
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingStart("2021-12-19T10:00:00");
+        assertEquals(0,
+                Helper.validateHearingDatesNotInFuture(caseData).size());
+
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingBreak("2777-12-19T10:00:00");
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingResume("2777-12-19T10:00:00");
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingFinish("2777-12-19T10:00:00");
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingStart("2777-12-19T10:00:00");
+        assertEquals(4,
+                Helper.validateHearingDatesNotInFuture(caseData).size());
 
     }
 
