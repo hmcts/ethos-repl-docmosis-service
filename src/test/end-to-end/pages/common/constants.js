@@ -14,6 +14,7 @@ const eventNames = {
     CLAIMANT_RESPONDENT_DETAILS: 'Respondent Details',
     RESPONDENT_REPRESENTATIVE: 'Respondent Representative',
     JURISDICTION: 'Jurisdiction',
+    CLOSE_CASE:'Close Case',
     RESTRICTED_REPORTING:'Restricted Reporting'
 };
 

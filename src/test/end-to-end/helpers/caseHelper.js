@@ -43,6 +43,12 @@ async function jurisdiction(I, eventName) {
     await I.executeAddAmendJurisdiction();
 }
 
+async function closeCase(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(5);
+    await I.executeCloseCase();
+}
+
 async function restrictedReporting(I, eventName) {
     await I.chooseNextStep(eventName, 3);
     await I.wait(5);
@@ -56,6 +62,7 @@ module.exports = {
     claimantRepresentative,
     claimantRespondentDetails,
     respondentRepresentative,
+    restrictedReporting,
     jurisdiction,
-    restrictedReporting
+    closeCase
 };
