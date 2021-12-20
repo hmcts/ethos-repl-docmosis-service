@@ -49,6 +49,12 @@ async function closeCase(I, eventName) {
     await I.executeCloseCase();
 }
 
+async function letters(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(5);
+    await I.executeLettersEvent();
+}
+
 async function restrictedReporting(I, eventName) {
     await I.chooseNextStep(eventName, 3);
     await I.wait(5);
@@ -64,5 +70,6 @@ module.exports = {
     respondentRepresentative,
     restrictedReporting,
     jurisdiction,
-    closeCase
+    closeCase,
+    letters
 };

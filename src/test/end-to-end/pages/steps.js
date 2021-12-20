@@ -16,6 +16,7 @@ module.exports = () => {
         executeRespondentRepresentative:steps.amendRespondentRepresentative.amendRespondentRepresentative,
         executeAddAmendJurisdiction:steps.amendJurisdiction.addAmendJurisdiction,
         executeCloseCase:steps.desposeCase.desposeCase,
+        executeLettersEvent:steps.generateCorrespondence.generateCorrespondence,
         setRestrictedReporting:steps.restrictedCases.restrictedCases,
         selectNewCase: steps.newCase.newCase,
         selectCaseTypeOptions: steps.createCase.createCase,
