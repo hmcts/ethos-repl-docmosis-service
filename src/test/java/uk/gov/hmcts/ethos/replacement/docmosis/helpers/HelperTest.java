@@ -22,6 +22,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POST
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.HEARING_CREATION_DAY_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.HEARING_CREATION_NUMBER_ERROR;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.findHearingNumber;
 
 public class HelperTest {
 
@@ -158,6 +159,19 @@ public class HelperTest {
 
         assertNull(caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().getPostponedDate());
+    }
+
+    @Test
+    public void findDateOfHearingTest() {
+        var hearingDate = caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().getListedDate().substring(0, 10);
+        var hearingNumber = findHearingNumber(caseDetails1.getCaseData(), hearingDate);
+        assertEquals(hearingNumber, caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingNumber());
+    }
+
+    @Test
+    public void findDateOfHearing_DateNotInHearing() {
+        assertNull(findHearingNumber(caseDetails1.getCaseData(), "1970-10-01"));
     }
 
 }

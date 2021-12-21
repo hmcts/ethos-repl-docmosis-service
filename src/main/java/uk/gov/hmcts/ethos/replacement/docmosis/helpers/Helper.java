@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
@@ -9,19 +10,25 @@ import uk.gov.hmcts.ecm.common.model.ccd.DocumentInfo;
 import uk.gov.hmcts.ecm.common.model.ccd.SignificantItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadES;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_ACAS;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_CASE_LISTED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BF_ACTION_CASE_PAPERS;
@@ -324,6 +331,35 @@ public class Helper {
                 .map(jurCodesTypeItem -> jurCodesTypeItem.getValue().getJuridictionCodesList())
                 .collect(Collectors.toList())
                 : new ArrayList<>();
+    }
+
+    public static String findHearingNumber(CaseData caseData, String hearingDate) {
+        if (CollectionUtils.isNotEmpty(caseData.getHearingCollection())) {
+            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+                for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                    var listedDate = dateListedTypeItem.getValue().getListedDate().substring(0, 10);
+                    if (listedDate.equals(hearingDate)) {
+                        return hearingTypeItem.getValue().getHearingNumber();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void populateJudgmentDateOfHearing(CaseData caseData) throws ParseException {
+        if (CollectionUtils.isNotEmpty(caseData.getJudgementCollection())) {
+            for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
+                if (!isNullOrEmpty(judgementTypeItem.getValue().getDynamicJudgementHearing().getValue().getLabel())) {
+                    var hearingDate = judgementTypeItem.getValue().getDynamicJudgementHearing().getValue().getLabel();
+                    hearingDate = hearingDate.substring(hearingDate.length() - 11);
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
+                    Date date = simpleDateFormat.parse(hearingDate);
+                    simpleDateFormat.applyPattern("yyyy-MM-dd");
+                    judgementTypeItem.getValue().setJudgmentHearingDate(simpleDateFormat.format(date));
+                }
+            }
+        }
     }
 
 }
