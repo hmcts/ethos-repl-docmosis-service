@@ -211,7 +211,7 @@ public class ListingServiceTest {
         CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
         casePreAcceptType.setDateAccepted("2019-12-12");
         caseData.setPreAcceptCase(casePreAcceptType);
-        caseData.setCaseType(SINGLE_CASE_TYPE);
+        caseData.setEcmCaseType(SINGLE_CASE_TYPE);
         caseData.setPositionType("Awaiting ET3");
         caseData.setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
         submitEvent1.setCaseData(caseData);

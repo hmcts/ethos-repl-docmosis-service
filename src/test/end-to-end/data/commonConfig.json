@@ -24,5 +24,10 @@
   "clerkResponsible": "A Clerk",
   "physicalLocation": "Casework Table",
   "lettersCorrespondence": "PART 2 – The response to the claim: Rules 15-22",
-  "lettersCorrespondence1": "2.4 - Interim relief - notice of application"
+  "lettersCorrespondence1": "2.4 - Interim relief - notice of application",
+  "requestedBy": "Both Parties",
+  "rule503bStartDate": "10",
+  "rule503bStartDateMonth": "12",
+  "rule503bStartDateYear": "2021",
+  "excludedFromRegister": "No"
 }

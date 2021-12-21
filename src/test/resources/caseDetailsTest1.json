@@ -355,7 +355,7 @@
           "date_judgment_made": "2000-01-01",
           "date_judgment_sent": "2000-01-01",
           "liability_optional": null,
-          "non_hearing_judgment": "Yes"
+          "non_hearing_judgment": "No"
         }
       },
       {

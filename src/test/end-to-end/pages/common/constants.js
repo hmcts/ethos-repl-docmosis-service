@@ -15,7 +15,9 @@ const eventNames = {
     RESPONDENT_REPRESENTATIVE: 'Respondent Representative',
     JURISDICTION: 'Jurisdiction',
     CLOSE_CASE:'Close Case',
-    LETTERS:'Letters'
+    LETTERS:'Letters',
+    RESTRICTED_REPORTING:'Restricted Reporting',
+    FIX_CASE_API:'Fix Case API'
 };
 
 const states = {

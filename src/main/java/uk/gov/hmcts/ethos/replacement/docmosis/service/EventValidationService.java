@@ -91,7 +91,7 @@ public class EventValidationService {
         log.info("Checking whether the case " + caseDetails.getCaseData().getEthosCaseReference()
                 + " is in accepted state");
         if (caseDetails.getState().equals(SUBMITTED_STATE)
-                && caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+                && caseDetails.getCaseData().getEcmCaseType().equals(MULTIPLE_CASE_TYPE)) {
             validated = false;
         }
         return validated;

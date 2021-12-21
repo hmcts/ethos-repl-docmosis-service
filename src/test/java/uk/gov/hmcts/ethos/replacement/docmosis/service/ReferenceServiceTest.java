@@ -126,7 +126,7 @@ public class ReferenceServiceTest {
     public void fetchHearingVenueRefDataWithThreeVenuesPresent() throws IOException {
         String result = "CaseData(tribunalCorrespondenceAddress=null, "
                 + "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, "
-                + "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, "
+                + "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, "
                 + "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, "
                 + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, "
@@ -170,7 +170,7 @@ public class ReferenceServiceTest {
     public void fetchHearingVenueRefDataWithNoVenuesRefData() throws IOException {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
-                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
+                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, " +
                 "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, "
                 + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, "
@@ -210,7 +210,7 @@ public class ReferenceServiceTest {
     public void fetchHearingVenueRefDataWithNoReferenceData() throws IOException {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
-                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
+                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, " +
                 "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
@@ -248,7 +248,7 @@ public class ReferenceServiceTest {
     public void fetchDateListedRefDataWithAllRefDataPresent() throws IOException {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
-                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
+                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, " +
                 "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
@@ -286,7 +286,7 @@ public class ReferenceServiceTest {
     public void fetchDateListedRefDataWithNoVenuesRefData() throws IOException {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
-                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
+                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, " +
                 "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
@@ -321,7 +321,7 @@ public class ReferenceServiceTest {
     public void fetchDateListedRefDataWithNoClerksRefData() throws IOException {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, "
-                + "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, "
+                + "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, "
                 + "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, "
                 + "claimantType=null, claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, "
@@ -361,7 +361,7 @@ public class ReferenceServiceTest {
     public void fetchDateListedRefDataWithNoJudgesRefData() throws IOException {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
-                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
+                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, " +
                 "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +
@@ -400,7 +400,7 @@ public class ReferenceServiceTest {
     public void fetchDateListedRefDataWithNoReferenceData() throws IOException {
         String result = "CaseData(tribunalCorrespondenceAddress=null, " +
                 "tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, " +
-                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, caseType=null, " +
+                "tribunalCorrespondenceEmail=null, ethosCaseReference=null, ecmCaseType=null, " +
                 "multipleReference=null, multipleReferenceLinkMarkUp=null, subMultipleName=null, leadClaimant=null, "
                 + "multipleFlag=null, claimantTypeOfClaimant=null, claimantCompany=null, claimantIndType=null, claimantType=null, " +
                 "claimantOtherType=null, preAcceptCase=null, receiptDate=null, claimServedDate=null, feeGroupReference=null, claimantWorkAddressQuestion=null, " +

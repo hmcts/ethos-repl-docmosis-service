@@ -163,7 +163,7 @@ class EventValidationServiceTest {
         SINGLE_CASE_TYPE + "," + ACCEPTED_STATE
     })
     void shouldValidateCaseState(String caseType, String caseState) {
-        caseDetails1.getCaseData().setCaseType(caseType);
+        caseDetails1.getCaseData().setEcmCaseType(caseType);
         caseDetails1.setState(caseState);
 
         boolean validated = eventValidationService.validateCaseState(caseDetails1);

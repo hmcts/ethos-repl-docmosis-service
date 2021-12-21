@@ -38,7 +38,7 @@ public class AddSingleCaseToMultipleService {
         log.info("Adding single case to multiple logic");
 
         if (caseData.getMultipleFlag().equals(NO)
-                && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+                && caseData.getEcmCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
             log.info("Case was single and now will be multiple");
             String leadClaimant = caseData.getLeadClaimant();
@@ -95,7 +95,7 @@ public class AddSingleCaseToMultipleService {
     private void updateCaseDataForMultiple(CaseData caseData, String newMultipleReference,
                                            String leadClaimant, String multipleCaseId) {
         caseData.setMultipleReference(newMultipleReference);
-        caseData.setCaseType(MULTIPLE_CASE_TYPE);
+        caseData.setEcmCaseType(MULTIPLE_CASE_TYPE);
 
         log.info("setLeadClaimant is set to " + leadClaimant);
         caseData.setLeadClaimant(leadClaimant);

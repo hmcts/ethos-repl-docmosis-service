@@ -144,7 +144,7 @@ public class ECCHelper {
 
     private static void populateCaseDataDetails(CaseData caseData, CaseData originalCaseData) {
         caseData.setFeeGroupReference(originalCaseData.getFeeGroupReference());
-        caseData.setCaseType(SINGLE_CASE_TYPE);
+        caseData.setEcmCaseType(SINGLE_CASE_TYPE);
         caseData.setCaseSource(originalCaseData.getCaseSource());
         caseData.setCounterClaim(originalCaseData.getEthosCaseReference());
         caseData.setManagingOffice(originalCaseData.getManagingOffice() != null

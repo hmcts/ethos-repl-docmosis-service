@@ -20,6 +20,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POST
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.HEARING_CREATION_DAY_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.HEARING_CREATION_NUMBER_ERROR;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.findHearingNumber;
 
 public class HelperTest {
 
@@ -95,67 +96,8 @@ public class HelperTest {
         assertEquals(activeRespondentsFound, activeRespondents.size());
     }
 
-    @Test
-    public void hearingMidEventValidationNumberError() {
 
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue().setHearingNumber(null);
 
-        assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
 
-        assertEquals(HEARING_CREATION_NUMBER_ERROR,
-                Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
-
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue().setHearingNumber("");
-
-        assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
-
-        assertEquals(HEARING_CREATION_NUMBER_ERROR,
-                Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
-
-    }
-
-    @Test
-    public void hearingMidEventValidationDayError() {
-
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
-                .getHearingDateCollection().get(0).getValue().setListedDate(null);
-
-        assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
-
-        assertEquals(HEARING_CREATION_DAY_ERROR, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
-
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
-                .getHearingDateCollection().get(0).getValue().setListedDate("");
-
-        assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
-
-        assertEquals(HEARING_CREATION_DAY_ERROR, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
-
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
-                .setHearingDateCollection(null);
-
-        assertEquals(0, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
-
-    }
-
-    @Test
-    public void updatePostponedDate() {
-
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
-                .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_POSTPONED);
-
-        Helper.updatePostponedDate(caseDetails1.getCaseData());
-
-        assertNotNull(caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
-                .getHearingDateCollection().get(0).getValue().getPostponedDate());
-
-        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
-                .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_SETTLED);
-
-        Helper.updatePostponedDate(caseDetails1.getCaseData());
-
-        assertNull(caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
-                .getHearingDateCollection().get(0).getValue().getPostponedDate());
-    }
 
 }
