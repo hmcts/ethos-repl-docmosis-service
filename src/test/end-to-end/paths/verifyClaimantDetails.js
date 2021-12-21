@@ -4,7 +4,7 @@ const {eventNames} = require('../pages/common/constants.js');
 const {acceptCaseEvent, claimantDetails} = require("../helpers/caseHelper");
 let caseNumber;
 
-Feature('Create A Single Case And Execute Claimant Details...');
+Feature('Leeds Singles Case And Execute Claimant Details...');
 
 Scenario('Verify Claimant Details', async ({I}) => {
 

@@ -4,7 +4,7 @@ const {eventNames} = require('../pages/common/constants.js');
 const {acceptCaseEvent, jurisdiction} = require("../helpers/caseHelper");
 let caseNumber;
 
-Feature('Leeds Office Single Case & Execute Jurisdiction Event');
+Feature('Leeds Office Singles Case & Execute Jurisdiction Event');
 
 Scenario('Verify Jurisdiction', async ({I}) => {
 
