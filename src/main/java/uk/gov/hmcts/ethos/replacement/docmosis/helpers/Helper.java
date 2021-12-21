@@ -353,8 +353,8 @@ public class Helper {
                 if (!isNullOrEmpty(judgementTypeItem.getValue().getDynamicJudgementHearing().getValue().getLabel())) {
                     var hearingDate = judgementTypeItem.getValue().getDynamicJudgementHearing().getValue().getLabel();
                     hearingDate = hearingDate.substring(hearingDate.length() - 11);
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
-                    Date date = simpleDateFormat.parse(hearingDate);
+                    var simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
+                    var date = simpleDateFormat.parse(hearingDate);
                     simpleDateFormat.applyPattern("yyyy-MM-dd");
                     judgementTypeItem.getValue().setJudgmentHearingDate(simpleDateFormat.format(date));
                 }

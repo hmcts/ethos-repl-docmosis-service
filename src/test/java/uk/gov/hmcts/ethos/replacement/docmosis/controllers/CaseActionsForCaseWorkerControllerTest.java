@@ -99,6 +99,9 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String DYNAMIC_RESPONDENT_REPRESENTATIVE_NAMES_URL = "/dynamicRespondentRepresentativeNames";
     private static final String DYNAMIC_RESTRICTED_REPORTING_URL = "/dynamicRestrictedReporting";
     private static final String DYNAMIC_DEPOSIT_ORDER_URL = "/dynamicDepositOrder";
+    private static final String DYNAMIC_JUDGMENT_URL = "/dynamicJudgments";
+    private static final String JUDGEMENT_SUBMITTED_URL = "/judgementSubmitted";
+
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -1041,6 +1044,24 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void dynamicJudgmentError400() throws Exception {
+        mvc.perform(post(DYNAMIC_JUDGMENT_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void judgmentSubmittedError400() throws Exception {
+        mvc.perform(post(JUDGEMENT_SUBMITTED_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void createCaseError500() throws Exception {
         when(caseCreationForCaseWorkerService.caseCreationRequest(isA(CCDRequest.class),
                 eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
@@ -1508,6 +1529,26 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void dynamicRestrictedReportingUrlForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(DYNAMIC_RESTRICTED_REPORTING_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void dynamicJudgmentUrlForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(DYNAMIC_JUDGMENT_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void judgmentSubmittedUrlForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(JUDGEMENT_SUBMITTED_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
