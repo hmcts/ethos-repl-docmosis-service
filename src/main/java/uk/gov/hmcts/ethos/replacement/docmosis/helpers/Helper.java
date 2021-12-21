@@ -59,6 +59,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.WALES_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.WATFORD_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Slf4j
 public class Helper {
@@ -350,13 +351,16 @@ public class Helper {
     public static void populateJudgmentDateOfHearing(CaseData caseData) throws ParseException {
         if (CollectionUtils.isNotEmpty(caseData.getJudgementCollection())) {
             for (JudgementTypeItem judgementTypeItem : caseData.getJudgementCollection()) {
-                if (!isNullOrEmpty(judgementTypeItem.getValue().getDynamicJudgementHearing().getValue().getLabel())) {
+                if (NO.equals(judgementTypeItem.getValue().getNonHearingJudgment())) {
                     var hearingDate = judgementTypeItem.getValue().getDynamicJudgementHearing().getValue().getLabel();
                     hearingDate = hearingDate.substring(hearingDate.length() - 11);
                     var simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
                     var date = simpleDateFormat.parse(hearingDate);
                     simpleDateFormat.applyPattern("yyyy-MM-dd");
                     judgementTypeItem.getValue().setJudgmentHearingDate(simpleDateFormat.format(date));
+                } else {
+                    judgementTypeItem.getValue().setDynamicJudgementHearing(null);
+                    judgementTypeItem.getValue().setJudgmentHearingDate(null);
                 }
             }
         }
