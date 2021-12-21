@@ -2,11 +2,15 @@
 const commonConfig = require('../../data/commonConfig.json');
 const testConfig = require("../../../config");
 
-module.exports = async function () {
+module.exports = async function (jurisdiction) {
 
     const I = this;
     I.waitForText(commonConfig.requestedBy, testConfig.TestTimeToWaitForText);
-    await I.selectOption('#restrictedReporting_dynamicRequestedBy', commonConfig.requestedBy);
+    if (jurisdiction === 'Manchester') {
+        await I.selectOption('#restrictedReporting_requestedBy', commonConfig.requestedBy);
+    } if (jurisdiction === 'Leeds')   {
+        await I.selectOption('#restrictedReporting_dynamicRequestedBy', commonConfig.requestedBy);
+    }
     await I.click('#restrictedReporting_imposed_Yes');
     await I.click('#restrictedReporting_rule503b_Yes');
     await I.wait(2);
