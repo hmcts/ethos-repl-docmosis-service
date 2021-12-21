@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
@@ -11,9 +12,7 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Objects;
 
-import static org.junit.Assert.assertEquals;
-
-public class JudgmentValidationServiceTest {
+class JudgmentValidationServiceTest {
 
     private JudgmentValidationService judgmentValidationService;
 
@@ -33,11 +32,11 @@ public class JudgmentValidationServiceTest {
     }
 
     @Test
-    public void populateJudgmentDateOfHearingTest() throws ParseException {
+    void populateJudgmentDateOfHearingTest() throws ParseException {
         DynamicJudgements.dynamicJudgements(caseDetails1.getCaseData());
         caseDetails1.getCaseData().getJudgementCollection().get(0).getValue().getDynamicJudgementHearing().setValue(caseDetails1.getCaseData().getJudgementCollection().get(0).getValue().getDynamicJudgementHearing().getListItems().get(0));
         judgmentValidationService.validateJudgments(caseDetails1.getCaseData());
-        assertEquals("2019-11-01", caseDetails1.getCaseData().getJudgementCollection().get(0).getValue().getJudgmentHearingDate());
+        Assertions.assertEquals("2019-11-01", caseDetails1.getCaseData().getJudgementCollection().get(0).getValue().getJudgmentHearingDate());
 
     }
 }
