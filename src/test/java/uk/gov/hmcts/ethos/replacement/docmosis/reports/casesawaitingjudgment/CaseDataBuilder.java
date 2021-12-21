@@ -28,12 +28,12 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder withSingleCaseType() {
-        caseData.setCaseType(SINGLE_CASE_TYPE);
+        caseData.setEcmCaseType(SINGLE_CASE_TYPE);
         return this;
     }
 
     public CaseDataBuilder withMultipleCaseType(String multipleReference) {
-        caseData.setCaseType(MULTIPLE_CASE_TYPE);
+        caseData.setEcmCaseType(MULTIPLE_CASE_TYPE);
         caseData.setMultipleReference(multipleReference);
         return this;
     }
