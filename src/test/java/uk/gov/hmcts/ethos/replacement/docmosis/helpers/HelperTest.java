@@ -7,10 +7,12 @@ import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicJudgements;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRespondentRepresentative;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -172,6 +174,16 @@ public class HelperTest {
     @Test
     public void findDateOfHearing_DateNotInHearing() {
         assertNull(findHearingNumber(caseDetails1.getCaseData(), "1970-10-01"));
+    }
+
+    @Test
+    public void populateJudgmentDateOfHearing() throws ParseException {
+        var casedata = caseDetails1.getCaseData();
+        DynamicJudgements.dynamicJudgements(casedata);
+        casedata.getJudgementCollection().get(0).getValue().getDynamicJudgementHearing().setValue(casedata.getJudgementCollection().get(0).getValue().getDynamicJudgementHearing().getListItems().get(0));
+        Helper.populateJudgmentDateOfHearing(casedata);
+        assertEquals("2019-11-01", casedata.getJudgementCollection().get(0).getValue().getJudgmentHearingDate());
+
     }
 
 }
