@@ -61,6 +61,12 @@ async function restrictedReporting(I, eventName) {
     await I.setRestrictedReporting();
 }
 
+async function fixCaseAPI(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.executeFixCaseAPI();
+}
+
 module.exports = {
     acceptCaseEvent,
     caseDetails,
@@ -71,5 +77,6 @@ module.exports = {
     restrictedReporting,
     jurisdiction,
     closeCase,
-    letters
+    letters,
+    fixCaseAPI
 };
