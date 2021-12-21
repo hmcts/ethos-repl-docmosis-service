@@ -142,48 +142,6 @@ public class HelperTest {
     }
 
     @Test
-    public void validateHearingDatesNotInFutureTest() {
-
-        var caseData = new CaseData();
-        List<HearingTypeItem> hearingTypeItems = new ArrayList<>();
-        HearingTypeItem item = new HearingTypeItem();
-        item.setId(UUID.randomUUID().toString());
-        HearingType value = new HearingType();
-        List<DateListedTypeItem> dates = new ArrayList<>();
-        DateListedTypeItem dateItem = new DateListedTypeItem();
-        dateItem.setId(UUID.randomUUID().toString());
-        dateItem.setValue(new DateListedType());
-        dates.add(dateItem);
-        value.setHearingDateCollection(dates);
-        item.setValue(value);
-        hearingTypeItems.add(item);
-        caseData.setHearingCollection(hearingTypeItems);
-
-        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setHearingTimingBreak("2021-12-19T10:00:00");
-        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setHearingTimingResume("2021-12-19T10:00:00");
-        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setHearingTimingFinish("2021-12-19T10:00:00");
-        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setHearingTimingStart("2021-12-19T10:00:00");
-        assertEquals(0,
-                Helper.validateHearingDatesNotInFuture(caseData).size());
-
-        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setHearingTimingBreak("2777-12-19T10:00:00");
-        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setHearingTimingResume("2777-12-19T10:00:00");
-        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setHearingTimingFinish("2777-12-19T10:00:00");
-        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
-                .get(0).getValue().setHearingTimingStart("2777-12-19T10:00:00");
-        assertEquals(4,
-                Helper.validateHearingDatesNotInFuture(caseData).size());
-
-    }
-
-    @Test
     public void updatePostponedDate() {
 
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue()

@@ -1,8 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
@@ -18,7 +16,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.labels.LabelPayloadES;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -236,44 +233,6 @@ public class Helper {
             }
         }
         return errors;
-    }
-
-    public static List<String> validateHearingDatesNotInFuture(CaseData caseData) {
-        List<String> errors = new ArrayList<>();
-        log.info("Check if dates are not in future for case: " + caseData.getEthosCaseReference());
-        if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
-            return errors;
-        }
-        for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-            if (CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
-                return errors;
-            }
-            for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
-                errors.addAll(checkIfDateInFuture(dateListedTypeItem));
-            }
-        }
-        return errors;
-    }
-
-    private static List<String> checkIfDateInFuture(DateListedTypeItem dateListedTypeItem) {
-        List<String> errors = new ArrayList<>();
-        if (isDateInFuture(dateListedTypeItem.getValue().getHearingTimingStart())) {
-            errors.add("Start time can't be in future");
-        }
-        if (isDateInFuture(dateListedTypeItem.getValue().getHearingTimingResume())) {
-            errors.add("Resume time can't be in future");
-        }
-        if (isDateInFuture(dateListedTypeItem.getValue().getHearingTimingBreak())) {
-            errors.add("Break time can't be in future");
-        }
-        if (isDateInFuture(dateListedTypeItem.getValue().getHearingTimingFinish())) {
-            errors.add("Finish time can't be in future");
-        }
-        return errors;
-    }
-
-    private static boolean isDateInFuture(String date) {
-        return !Strings.isNullOrEmpty(date) && LocalDateTime.parse(date).isAfter(LocalDateTime.now());
     }
 
     public static void updatePositionTypeToClosed(CaseData caseData) {
