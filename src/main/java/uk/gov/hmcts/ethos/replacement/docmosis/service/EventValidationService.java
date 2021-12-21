@@ -196,13 +196,13 @@ public class EventValidationService {
                 continue;
             }
             for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
-                errors.addAll(checkIfDateInFuture(dateListedTypeItem));
+                errors.addAll(addErrorMessages(dateListedTypeItem));
             }
         }
         return errors;
     }
 
-    private List<String> checkIfDateInFuture(DateListedTypeItem dateListedTypeItem) {
+    private List<String> addErrorMessages(DateListedTypeItem dateListedTypeItem) {
         List<String> errors = new ArrayList<>();
         if (isDateInFuture(dateListedTypeItem.getValue().getHearingTimingStart())) {
             errors.add("Start time can't be in future");
