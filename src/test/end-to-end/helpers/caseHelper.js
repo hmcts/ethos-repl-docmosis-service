@@ -55,10 +55,10 @@ async function letters(I, eventName) {
     await I.executeLettersEvent();
 }
 
-async function restrictedReporting(I, eventName) {
+async function restrictedReporting(I, eventName, jurisdiction) {
     await I.chooseNextStep(eventName, 3);
     await I.wait(5);
-    await I.setRestrictedReporting();
+    await I.setRestrictedReporting(jurisdiction);
 }
 
 module.exports = {

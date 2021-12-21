@@ -4,15 +4,14 @@ const {eventNames} = require('../pages/common/constants.js');
 const {acceptCaseEvent, restrictedReporting} = require("../helpers/caseHelper");
 let caseNumber;
 
-Feature('Create a Leeds Singles Case & Execute Restricted Reporting');
+Feature('Create a Manchester Singles Case & Execute Restricted Reporting');
 
-Scenario('Verify Restricted Reporting', async ({I}) => {
+Scenario('Verify Manchester case Restricted Reporting', async ({I}) => {
 
-    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
+    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-manchester-data.json', 'Manchester');
     await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
-    await restrictedReporting(I, eventNames.RESTRICTED_REPORTING, 'Leeds');
+    await restrictedReporting(I, eventNames.RESTRICTED_REPORTING, 'Manchester');
 
 }).tag('@e2e')
-    .tag('@nightly')
-    .tag('@ecm-518')
+    .tag('@manchester')
     .retry(testConfig.TestRetryScenarios);
