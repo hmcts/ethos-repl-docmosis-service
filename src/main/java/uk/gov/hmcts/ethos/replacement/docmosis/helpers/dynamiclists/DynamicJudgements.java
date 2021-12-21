@@ -8,7 +8,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DynamicListHelper;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +62,7 @@ public class DynamicJudgements {
             judgementType.setDynamicJudgementHearing(hearingDynamicList);
             if (StringUtils.isNotEmpty(judgementType.getJudgmentHearingDate())) {
                 var judgementHearingDate = judgementType.getJudgmentHearingDate();
-                var hearingNumber = Helper.findHearingNumber(caseData, judgementHearingDate);
+                var hearingNumber = HearingsHelper.findHearingNumber(caseData, judgementHearingDate);
                 dynamicValueType = DynamicListHelper.findDynamicValue(hearingDynamicList.getListItems(), hearingNumber);
             } else {
                 dynamicValueType = hearingDynamicList.getListItems().get(0);

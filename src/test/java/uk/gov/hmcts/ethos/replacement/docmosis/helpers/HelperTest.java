@@ -4,15 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
-import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicJudgements;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRespondentRepresentative;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +20,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POST
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.HEARING_CREATION_DAY_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.HEARING_CREATION_NUMBER_ERROR;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.findHearingNumber;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.findHearingNumber;
 
 public class HelperTest {
 
@@ -105,17 +101,17 @@ public class HelperTest {
 
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue().setHearingNumber(null);
 
-        assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
+        assertEquals(1, HearingsHelper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
 
         assertEquals(HEARING_CREATION_NUMBER_ERROR,
-                Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
+                HearingsHelper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
 
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue().setHearingNumber("");
 
-        assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
+        assertEquals(1, HearingsHelper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
 
         assertEquals(HEARING_CREATION_NUMBER_ERROR,
-                Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
+                HearingsHelper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
 
     }
 
@@ -125,21 +121,21 @@ public class HelperTest {
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setListedDate(null);
 
-        assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
+        assertEquals(1, HearingsHelper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
 
-        assertEquals(HEARING_CREATION_DAY_ERROR, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
+        assertEquals(HEARING_CREATION_DAY_ERROR, HearingsHelper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
 
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setListedDate("");
 
-        assertEquals(1, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
+        assertEquals(1, HearingsHelper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
 
-        assertEquals(HEARING_CREATION_DAY_ERROR, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
+        assertEquals(HEARING_CREATION_DAY_ERROR, HearingsHelper.hearingMidEventValidation(caseDetails1.getCaseData()).get(0));
 
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
                 .setHearingDateCollection(null);
 
-        assertEquals(0, Helper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
+        assertEquals(0, HearingsHelper.hearingMidEventValidation(caseDetails1.getCaseData()).size());
 
     }
 
@@ -149,7 +145,7 @@ public class HelperTest {
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_POSTPONED);
 
-        Helper.updatePostponedDate(caseDetails1.getCaseData());
+        HearingsHelper.updatePostponedDate(caseDetails1.getCaseData());
 
         assertNotNull(caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().getPostponedDate());
@@ -157,7 +153,7 @@ public class HelperTest {
         caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_SETTLED);
 
-        Helper.updatePostponedDate(caseDetails1.getCaseData());
+        HearingsHelper.updatePostponedDate(caseDetails1.getCaseData());
 
         assertNull(caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().getPostponedDate());
@@ -176,14 +172,6 @@ public class HelperTest {
         assertNull(findHearingNumber(caseDetails1.getCaseData(), "1970-10-01"));
     }
 
-    @Test
-    public void populateJudgmentDateOfHearing() throws ParseException {
-        var casedata = caseDetails1.getCaseData();
-        DynamicJudgements.dynamicJudgements(casedata);
-        casedata.getJudgementCollection().get(0).getValue().getDynamicJudgementHearing().setValue(casedata.getJudgementCollection().get(0).getValue().getDynamicJudgementHearing().getListItems().get(0));
-        Helper.populateJudgmentDateOfHearing(casedata);
-        assertEquals("2019-11-01", casedata.getJudgementCollection().get(0).getValue().getJudgmentHearingDate());
 
-    }
 
 }
