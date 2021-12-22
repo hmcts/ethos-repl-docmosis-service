@@ -10,7 +10,7 @@ Scenario('Verify B/F Action', async ({I}) => {
 
     caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
     await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
-    await bfAction(I, caseNumber, eventNames.BF_ACTION);
+    await bfAction(I, eventNames.BF_ACTION);
 
 }).tag('@e2e')
     .tag('@nightly')

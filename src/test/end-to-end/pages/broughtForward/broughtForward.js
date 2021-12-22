@@ -7,7 +7,7 @@ module.exports = async function () {
     const I = this;
     await I.click(commonConfig.addNewButton);
     await I.wait(2);
-    I.waitForText(commonConfig.bfActionDescription, testConfig.TestTimeToWaitForText);
+    await I.waitForText(commonConfig.bfActionDescription, testConfig.TestTimeToWaitForText);
     await I.selectOption('#bfActions_0_cwActions', commonConfig.bfActionDescription);
 
     await I.fillField('#bfDate-day', commonConfig.bfDateDay);
