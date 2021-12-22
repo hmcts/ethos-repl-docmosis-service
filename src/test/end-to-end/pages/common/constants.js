@@ -17,7 +17,8 @@ const eventNames = {
     CLOSE_CASE:'Close Case',
     LETTERS:'Letters',
     RESTRICTED_REPORTING:'Restricted Reporting',
-    FIX_CASE_API:'Fix Case API'
+    FIX_CASE_API:'Fix Case API',
+    BF_ACTION:'B/F Action'
 };
 
 const states = {
