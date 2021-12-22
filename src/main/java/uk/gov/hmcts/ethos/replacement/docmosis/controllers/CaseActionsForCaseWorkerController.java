@@ -713,7 +713,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         var caseDetails = ccdRequest.getCaseDetails();
-        List<String> errors = Helper.hearingMidEventValidation(caseDetails.getCaseData());
+        List<String> errors = HearingsHelper.hearingMidEventValidation(caseDetails.getCaseData());
         errors.addAll(eventValidationService.validateHearingDatesNotInFuture(caseDetails.getCaseData()));
 
 
