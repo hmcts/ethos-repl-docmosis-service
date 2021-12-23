@@ -67,6 +67,12 @@ async function fixCaseAPI(I, eventName) {
     await I.executeFixCaseAPI();
 }
 
+async function bfAction(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.executeBFAction();
+}
+
 module.exports = {
     acceptCaseEvent,
     caseDetails,
@@ -78,5 +84,6 @@ module.exports = {
     jurisdiction,
     closeCase,
     letters,
-    fixCaseAPI
+    fixCaseAPI,
+    bfAction
 };

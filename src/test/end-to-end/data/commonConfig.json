@@ -29,5 +29,9 @@
   "rule503bStartDate": "10",
   "rule503bStartDateMonth": "12",
   "rule503bStartDateYear": "2021",
-  "excludedFromRegister": "No"
+  "excludedFromRegister": "No",
+  "bfActionDescription": "Enquiry letter issued",
+  "bfDateDay": "10",
+  "bfDateMonth": "11",
+  "bfDateYear": "2021"
 }

@@ -19,6 +19,7 @@ module.exports = () => {
         executeLettersEvent:steps.generateCorrespondence.generateCorrespondence,
         setRestrictedReporting:steps.restrictedCases.restrictedCases,
         executeFixCaseAPI:steps.fixCaseApi.fixCaseApi,
+        executeBFAction:steps.broughtForward.broughtForward,
         selectNewCase: steps.newCase.newCase,
         selectCaseTypeOptions: steps.createCase.createCase,
         enterCreateCasePage1: steps.createCasePages.page1initiateCase1,
