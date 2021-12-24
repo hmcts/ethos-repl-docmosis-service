@@ -20,6 +20,7 @@ module.exports = () => {
         setRestrictedReporting:steps.restrictedCases.restrictedCases,
         executeFixCaseAPI:steps.fixCaseApi.fixCaseApi,
         executeBFAction:steps.broughtForward.broughtForward,
+        executePrintHearingLists:steps.printHearingLists.printHearingLists,
         selectNewCase: steps.newCase.newCase,
         selectCaseTypeOptions: steps.createCase.createCase,
         enterCreateCasePage1: steps.createCasePages.page1initiateCase1,

@@ -73,6 +73,12 @@ async function bfAction(I, eventName) {
     await I.executeBFAction();
 }
 
+async function printHearingLists(I, eventName, jurisdiction) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.executePrintHearingLists(jurisdiction);
+}
+
 module.exports = {
     acceptCaseEvent,
     caseDetails,
@@ -85,5 +91,6 @@ module.exports = {
     closeCase,
     letters,
     fixCaseAPI,
-    bfAction
+    bfAction,
+    printHearingLists
 };
