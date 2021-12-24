@@ -14,6 +14,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.EccCounterClaimType;
@@ -24,6 +25,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -40,6 +42,10 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -53,6 +59,17 @@ public class CaseManagementForCaseWorkerService {
     private static final String MISSING_RESPONDENT = "Missing respondent";
     private static final String MESSAGE = "Failed to link ECC case for case id : ";
     private static final String CASE_NOT_FOUND_MESSAGE = "Case Reference Number not found.";
+    private static final List<String> JUR_CODE_CONCILIATION_TRACK_OP = Arrays.asList(
+            "DAG", "DDA", "DRB", "DSO", "EQP", "PID", "RRD", "SXD");
+    private static final List<String> JUR_CODE_CONCILIATION_TRACK_SH = Arrays.asList(
+            "BOC", "FML", "FPA", "FTC", "FTO", "FTP", "FTR", "FTS", "FTU", "PAY", "RPT", "WA", "WTR(AL)");
+    private static final List<String> JUR_CODE_CONCILIATION_TRACK_ST = Arrays.asList(
+            "ADG", "APA", "AWR", "DOD", "FCT", "FLW", "FT1", "FTE", "FWP", "FWS",
+            "HSD", "HSR", "IRF", "MAT", "MWD", "PAC", "PLD", "PTE", "RTR(ST)", "SUN",
+            "TPE", "TT", "TUE", "TUM", "TUR", "TUS", "TXC(ST)", "UDC", "UDL", "UIA", "WTR");
+    private static final List<String> JUR_CODE_CONCILIATION_TRACK_NO = Arrays.asList(
+            "ADT", "ADT(ST)", "CCP", "COM", "EAP", "HAS", "ISV", "LEV ", "LSO", "MWA",
+            "NNA", "PEN",  "RPT(S)", "RTR", "TXC", "WTA");
 
     @Autowired
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
@@ -315,6 +332,38 @@ public class CaseManagementForCaseWorkerService {
                     currentCaseDetails.getJurisdiction(), returnedRequest, caseIdToLink);
         } catch (Exception e) {
             throw new CaseCreationException(MESSAGE + caseIdToLink + e.getMessage());
+        }
+    }
+
+    public static void populateConciliationTrack(CaseData caseData) {
+        boolean isConTrackOp = false;
+        boolean isConTrackSh = false;
+        boolean isConTrackSt = false;
+        boolean isConTrackNo = false;
+
+        for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
+            if (JUR_CODE_CONCILIATION_TRACK_OP.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
+                isConTrackOp = true;
+                break;
+            } else if (JUR_CODE_CONCILIATION_TRACK_SH.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
+                isConTrackSh = true;
+            } else if (!isConTrackSh
+                    && JUR_CODE_CONCILIATION_TRACK_ST.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
+                isConTrackSt = true;
+            } else if (!isConTrackSh && !isConTrackSt
+                    && JUR_CODE_CONCILIATION_TRACK_NO.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
+                isConTrackNo = true;
+            }
+        }
+
+        if (isConTrackOp) {
+            caseData.setConciliationTrack(CONCILIATION_TRACK_OPEN_TRACK);
+        } else if (isConTrackSh) {
+            caseData.setConciliationTrack(CONCILIATION_TRACK_FAST_TRACK);
+        } else if (isConTrackSt) {
+            caseData.setConciliationTrack(CONCILIATION_TRACK_STANDARD_TRACK);
+        } else if (isConTrackNo) {
+            caseData.setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
         }
     }
 

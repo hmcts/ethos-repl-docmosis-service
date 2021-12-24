@@ -575,6 +575,29 @@ public class CaseActionsForCaseWorkerController {
         return getCallbackRespEntityErrors(errors, caseData);
     }
 
+    @PostMapping(value = "/addAmendJurisdiction", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "amend jurisdiction details for a single case.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> addAmendJurisdiction(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("AMEND JURISDICTION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
+        CaseManagementForCaseWorkerService.populateConciliationTrack(caseData);
+
+        return getCallbackRespEntityNoErrors(caseData);
+    }
+
     @PostMapping(value = "/generateCaseRefNumbers", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "generates ethos case numbers according to caseRefNumberCount field.")
     @ApiResponses(value = {
