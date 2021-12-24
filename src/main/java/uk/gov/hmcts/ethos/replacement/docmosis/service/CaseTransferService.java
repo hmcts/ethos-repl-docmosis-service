@@ -16,7 +16,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class CaseTransferService {
             var caseData = caseDetails.getCaseData();
             if (!Strings.isNullOrEmpty(caseData.getCounterClaim())) {
                 List<SubmitEvent> submitEvents =  ccdClient.retrieveCasesElasticSearch(userToken,
-                        caseDetails.getCaseTypeId(), Arrays.asList(caseData.getCounterClaim()));
+                        caseDetails.getCaseTypeId(), List.of(caseData.getCounterClaim()));
                 return submitEvents.get(0).getCaseData();
             } else {
                 return caseDetails.getCaseData();

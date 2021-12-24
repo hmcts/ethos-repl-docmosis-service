@@ -23,13 +23,18 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CaseTransferServiceTest {
@@ -73,7 +78,8 @@ public class CaseTransferServiceTest {
         List<String> errors = new ArrayList<>();
         caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
-        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
+        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID,
+                ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
     }
 
     @Test
@@ -97,10 +103,12 @@ public class CaseTransferServiceTest {
         type.setCounterClaim("2123456/2020");
         item.setId(UUID.randomUUID().toString());
         item.setValue(type);
-        caseData.setEccCases(Arrays.asList(item));
+        caseData.setEccCases(List.of(item));
         submitEvent1.setCaseData(caseData);
-        when(ccdClient.retrieveCasesElasticSearch(authToken,ccdRequest.getCaseDetails().getCaseTypeId(), Arrays.asList("3434232323"))).thenReturn(submitEventList1);
-        when(ccdClient.retrieveCasesElasticSearch(authToken,ccdRequest.getCaseDetails().getCaseTypeId(), Arrays.asList("2123456/2020"))).thenReturn(submitEventList);
+        when(ccdClient.retrieveCasesElasticSearch(authToken,ccdRequest.getCaseDetails().getCaseTypeId(),
+                List.of("3434232323"))).thenReturn(submitEventList1);
+        when(ccdClient.retrieveCasesElasticSearch(authToken,ccdRequest.getCaseDetails().getCaseTypeId(),
+                List.of("2123456/2020"))).thenReturn(submitEventList);
         when(ccdClient.startEventForCase(authToken, "Manchester", "Employment", "12345")).thenReturn(ccdRequest);
         caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals("PositionTypeCT", submitEvent.getCaseData().getPositionType());
@@ -115,7 +123,8 @@ public class CaseTransferServiceTest {
         ccdRequest.getCaseDetails().getCaseData().setStateAPI(MULTIPLE);
         caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals("PositionTypeCT", ccdRequest.getCaseDetails().getCaseData().getPositionType());
-        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID, ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
+        assertEquals("Transferred to " + LEEDS_CASE_TYPE_ID,
+                ccdRequest.getCaseDetails().getCaseData().getLinkedCaseCT());
     }
 
     @Test
@@ -126,7 +135,8 @@ public class CaseTransferServiceTest {
         caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals(1, errors.size());
         assertEquals("There are one or more open Brought Forward actions that must be cleared before the "
-                + "case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " can be transferred", errors.get(0));
+                + "case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " can be transferred",
+                errors.get(0));
     }
 
     @Test
@@ -136,7 +146,8 @@ public class CaseTransferServiceTest {
         caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals(1, errors.size());
         assertEquals("There are one or more hearings that have the status Listed. These must be updated "
-                + "before the case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " can be transferred", errors.get(0));
+                + "before the case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference()
+                + " can be transferred", errors.get(0));
     }
 
     @Test
@@ -148,9 +159,11 @@ public class CaseTransferServiceTest {
         caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, authToken);
         assertEquals(2, errors.size());
         assertEquals("There are one or more open Brought Forward actions that must be cleared before the "
-                + "case " +  ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " can be transferred", errors.get(0));
+                + "case " +  ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " can be transferred",
+                errors.get(0));
         assertEquals("There are one or more hearings that have the status Listed. These must be updated "
-                + "before the case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference() + " can be transferred", errors.get(1));
+                + "before the case " + ccdRequest.getCaseDetails().getCaseData().getEthosCaseReference()
+                + " can be transferred", errors.get(1));
     }
 
     @Test
