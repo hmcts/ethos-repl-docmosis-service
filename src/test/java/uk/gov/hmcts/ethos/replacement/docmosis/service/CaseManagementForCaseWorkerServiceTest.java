@@ -577,28 +577,10 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void populateConciliationTrack_OpMix_ReturnOp() {
         CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
-        List<JurCodesTypeItem> jurCodesTypeItems = getJurCodesTypeItems("LEV", "EQP", "RPT", "FLW"); // No OP SH ST
+        List<JurCodesTypeItem> jurCodesTypeItems = getJurCodesTypeItems("LEV", "PID", "RPT", "FLW"); // No OP SH ST
         caseData.setJurCodesCollection(jurCodesTypeItems);
         CaseManagementForCaseWorkerService.populateConciliationTrack(caseData);
         assertEquals(CONCILIATION_TRACK_OPEN_TRACK, caseData.getConciliationTrack());
-    }
-
-    @Test
-    public void populateConciliationTrack_ShOnly_ReturnSh() {
-        CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
-        List<JurCodesTypeItem> jurCodesTypeItems = getJurCodesTypeItems("BOC", "FTO", "PAY"); // SH SH SH
-        caseData.setJurCodesCollection(jurCodesTypeItems);
-        CaseManagementForCaseWorkerService.populateConciliationTrack(caseData);
-        assertEquals(CONCILIATION_TRACK_FAST_TRACK, caseData.getConciliationTrack());
-    }
-
-    @Test
-    public void populateConciliationTrack_ShMix_ReturnSh() {
-        CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
-        List<JurCodesTypeItem> jurCodesTypeItems = getJurCodesTypeItems("HAS", "FTU", "MAT"); // No SH ST
-        caseData.setJurCodesCollection(jurCodesTypeItems);
-        CaseManagementForCaseWorkerService.populateConciliationTrack(caseData);
-        assertEquals(CONCILIATION_TRACK_FAST_TRACK, caseData.getConciliationTrack());
     }
 
     @Test
@@ -613,16 +595,34 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void populateConciliationTrack_StMix_ReturnSt() {
         CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
-        List<JurCodesTypeItem> jurCodesTypeItems = getJurCodesTypeItems("MWA", "RTR(ST)", "EAP"); // No ST No
+        List<JurCodesTypeItem> jurCodesTypeItems = getJurCodesTypeItems("MWA", "RTR(ST)", "PAY"); // No ST SH
         caseData.setJurCodesCollection(jurCodesTypeItems);
         CaseManagementForCaseWorkerService.populateConciliationTrack(caseData);
         assertEquals(CONCILIATION_TRACK_STANDARD_TRACK, caseData.getConciliationTrack());
     }
 
     @Test
+    public void populateConciliationTrack_ShOnly_ReturnSh() {
+        CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
+        List<JurCodesTypeItem> jurCodesTypeItems = getJurCodesTypeItems("BOC", "FTO", "PAY"); // SH SH SH
+        caseData.setJurCodesCollection(jurCodesTypeItems);
+        CaseManagementForCaseWorkerService.populateConciliationTrack(caseData);
+        assertEquals(CONCILIATION_TRACK_FAST_TRACK, caseData.getConciliationTrack());
+    }
+
+    @Test
+    public void populateConciliationTrack_ShMix_ReturnSh() {
+        CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
+        List<JurCodesTypeItem> jurCodesTypeItems = getJurCodesTypeItems("HAS", "FTU", "ISV"); // No SH No
+        caseData.setJurCodesCollection(jurCodesTypeItems);
+        CaseManagementForCaseWorkerService.populateConciliationTrack(caseData);
+        assertEquals(CONCILIATION_TRACK_FAST_TRACK, caseData.getConciliationTrack());
+    }
+
+    @Test
     public void populateConciliationTrack_NoOnly_ReturnNo() {
         CaseData caseData = ccdRequest11.getCaseDetails().getCaseData();
-        List<JurCodesTypeItem> jurCodesTypeItems = getJurCodesTypeItems("ADT(ST)", "COM", "RPT(S)"); // No No No
+        List<JurCodesTypeItem> jurCodesTypeItems = getJurCodesTypeItems("ADT(ST)", "RPT(S)", "RTR"); // No No No
         caseData.setJurCodesCollection(jurCodesTypeItems);
         CaseManagementForCaseWorkerService.populateConciliationTrack(caseData);
         assertEquals(CONCILIATION_TRACK_NO_CONCILIATION, caseData.getConciliationTrack());

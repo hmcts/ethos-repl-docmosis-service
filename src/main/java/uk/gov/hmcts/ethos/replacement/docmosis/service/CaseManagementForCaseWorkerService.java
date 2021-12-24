@@ -34,6 +34,10 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
@@ -42,10 +46,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_NO_CONCILIATION;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_FAST_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_STANDARD_TRACK;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CONCILIATION_TRACK_OPEN_TRACK;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 @Slf4j
@@ -337,19 +337,19 @@ public class CaseManagementForCaseWorkerService {
 
     public static void populateConciliationTrack(CaseData caseData) {
         boolean isConTrackOp = false;
-        boolean isConTrackSh = false;
         boolean isConTrackSt = false;
+        boolean isConTrackSh = false;
         boolean isConTrackNo = false;
 
         for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
             if (JUR_CODE_CONCILIATION_TRACK_OP.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
                 isConTrackOp = true;
                 break;
-            } else if (JUR_CODE_CONCILIATION_TRACK_SH.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
-                isConTrackSh = true;
-            } else if (!isConTrackSh
-                    && JUR_CODE_CONCILIATION_TRACK_ST.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
+            } else if (JUR_CODE_CONCILIATION_TRACK_ST.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
                 isConTrackSt = true;
+            } else if (!isConTrackSt
+                    && JUR_CODE_CONCILIATION_TRACK_SH.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
+                isConTrackSh = true;
             } else if (!isConTrackSh && !isConTrackSt
                     && JUR_CODE_CONCILIATION_TRACK_NO.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
                 isConTrackNo = true;
@@ -358,10 +358,10 @@ public class CaseManagementForCaseWorkerService {
 
         if (isConTrackOp) {
             caseData.setConciliationTrack(CONCILIATION_TRACK_OPEN_TRACK);
-        } else if (isConTrackSh) {
-            caseData.setConciliationTrack(CONCILIATION_TRACK_FAST_TRACK);
         } else if (isConTrackSt) {
             caseData.setConciliationTrack(CONCILIATION_TRACK_STANDARD_TRACK);
+        } else if (isConTrackSh) {
+            caseData.setConciliationTrack(CONCILIATION_TRACK_FAST_TRACK);
         } else if (isConTrackNo) {
             caseData.setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
         }
