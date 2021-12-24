@@ -42,25 +42,6 @@ public class CaseTransferService {
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
 
-    static class TransferEventParams {
-        final String userToken;
-        final String caseTypeId;
-        final String officeCT;
-        final String positionTypeCT;
-        final String reasonForCT;
-        final String jurisdiction;
-
-        private TransferEventParams(String userToken, String caseTypeId, String officeCT, String positionTypeCT,
-                                    String reasonForCT, String jurisdiction) {
-            this.userToken = userToken;
-            this.caseTypeId = caseTypeId;
-            this.officeCT = officeCT;
-            this.positionTypeCT = positionTypeCT;
-            this.reasonForCT = reasonForCT;
-            this.jurisdiction = jurisdiction;
-        }
-    }
-
     public List<String> createCaseTransfer(CaseDetails caseDetails, String userToken) {
         var errors = new ArrayList<String>();
         var caseDataList = getAllCasesToBeTransferred(caseDetails, userToken);
@@ -155,45 +136,36 @@ public class CaseTransferService {
     }
 
     private List<String> transferCases(CaseDetails caseDetails, List<CaseData> caseDataList, String userToken) {
-        var caseTypeId = caseDetails.getCaseTypeId();
-        var officeCT = caseDetails.getCaseData().getOfficeCT().getValue().getCode();
-        var positionTypeCT = caseDetails.getCaseData().getPositionTypeCT();
-        var reasonForCT = caseDetails.getCaseData().getReasonForCT();
-        var jurisdiction = caseDetails.getJurisdiction();
-        var transferEventParams = new TransferEventParams(userToken, caseTypeId, officeCT, positionTypeCT, reasonForCT,
-                jurisdiction);
-
         var errors = new ArrayList<String>();
         for (CaseData caseData : caseDataList) {
-            createCaseTransferEvent(transferEventParams, caseData, errors);
+            createCaseTransferEvent(caseDetails, caseData, userToken, errors);
         }
 
         return errors;
     }
 
-    private void createCaseTransferEvent(TransferEventParams transferEventParams, CaseData caseData,
+    private void createCaseTransferEvent(CaseDetails caseDetails, CaseData caseData, String userToken,
                                          List<String> errors) {
         persistentQHelperService.sendCreationEventToSingles(
-                transferEventParams.userToken,
-                transferEventParams.caseTypeId,
-                transferEventParams.jurisdiction,
+                userToken,
+                caseDetails.getCaseTypeId(),
+                caseDetails.getJurisdiction(),
                 errors,
                 List.of(caseData.getEthosCaseReference()),
-                transferEventParams.officeCT,
-                transferEventParams.positionTypeCT,
+                caseDetails.getCaseData().getOfficeCT().getValue().getCode(),
+                caseDetails.getCaseData().getPositionTypeCT(),
                 ccdGatewayBaseUrl,
-                transferEventParams.reasonForCT,
+                caseDetails.getCaseData().getReasonForCT(),
                 SINGLE_CASE_TYPE,
                 NO,
                 null
         );
 
-        caseData.setLinkedCaseCT("Transferred to " + transferEventParams.officeCT);
-        caseData.setPositionType(transferEventParams.positionTypeCT);
+        caseData.setLinkedCaseCT("Transferred to " + caseDetails.getCaseData().getOfficeCT().getValue().getCode());
+        caseData.setPositionType(caseDetails.getCaseData().getPositionTypeCT());
         log.info("Clearing the CT payload for case: " + caseData.getEthosCaseReference());
         caseData.setOfficeCT(null);
         caseData.setPositionTypeCT(null);
         caseData.setStateAPI(null);
     }
 }
-
