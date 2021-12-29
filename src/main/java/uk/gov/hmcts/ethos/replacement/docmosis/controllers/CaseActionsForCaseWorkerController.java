@@ -70,6 +70,7 @@ public class CaseActionsForCaseWorkerController {
     private final CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     private final CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService;
     private final CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
+    private final ConciliationTrackService conciliationTrackService;
     private final DefaultValuesReaderService defaultValuesReaderService;
     private final SingleReferenceService singleReferenceService;
     private final VerifyTokenService verifyTokenService;
@@ -78,7 +79,6 @@ public class CaseActionsForCaseWorkerController {
     private final AddSingleCaseToMultipleService addSingleCaseToMultipleService;
     private final DepositOrderValidationService depositOrderValidationService;
     private final JudgmentValidationService judgmentValidationService;
-    private final ConciliationTrackService conciliationTrackService;
 
     @PostMapping(value = "/createCase", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "create a case for a caseWorker.")
