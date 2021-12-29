@@ -35,6 +35,8 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.joining;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_TITLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_LISTED_CASE_ERROR;
@@ -58,6 +60,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTIO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NOT_ALLOCATED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_TITLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESP_REP_NAME_MISMATCH_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
@@ -95,6 +98,17 @@ public class EventValidationService {
             validated = false;
         }
         return validated;
+    }
+
+    public boolean validateCurrentPosition(CaseDetails caseDetails) {
+        if (CASE_CLOSED_POSITION.equals(caseDetails.getCaseData().getCurrentPosition())
+                && (SUBMITTED_STATE.equals(caseDetails.getState())
+                || ACCEPTED_STATE.equals(caseDetails.getState())
+                || REJECTED_STATE.equals(caseDetails.getState()))
+        ) {
+            return false;
+        }
+        return true;
     }
 
     public List<String> validateReceiptDateMultiple(MultipleData multipleData) {
