@@ -258,7 +258,7 @@ dependencies {
     implementation group: 'io.netty', name: 'netty-codec', version: versions.netty
     implementation group: 'io.netty', name: 'netty-codec-dns', version: versions.netty
     implementation group: 'io.netty', name: 'netty-codec-haproxy', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-memcache', version: versions.netty
+    implementation group: 'io.netty', name: 'netty-codec-memcache', version: versions.netty
     implementation group: 'io.netty', name: 'netty-codec-mqtt', version: versions.netty
     implementation group: 'io.netty', name: 'netty-codec-redis', version: versions.netty
     implementation group: 'io.netty', name: 'netty-codec-smtp', version: versions.netty
