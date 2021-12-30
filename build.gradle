@@ -202,7 +202,8 @@ def versions = [
         springfoxSwagger: '2.9.2',
         logging         : '5.1.7',
         serenity        : '2.3.31',
-        pact_version    : '4.1.7'
+        pact_version    : '4.1.7',
+        netty           : '4.1.72.Final'
 ]
 
 ext {
@@ -244,11 +245,15 @@ dependencies {
     implementation group: 'org.apache.xmlgraphics', name: 'batik-svgbrowser', version: '1.14'
 
     implementation group: 'org.slf4j', name: 'slf4j-ext', version: '2.0.0-alpha2'
-    implementation group: 'io.netty', name: 'netty-codec-http2', version: '4.1.66.Final'
+    implementation group: 'io.netty', name: 'netty-codec-http2', version: versions.netty
 
     //To Remove vulnerability CVE-2021-21295
-    implementation group: 'io.netty', name: 'netty-all', version: '4.1.61.Final'
-    implementation group: 'io.netty', name: 'netty-codec-http', version: '4.1.61.Final'
+    implementation group: 'io.netty', name: 'netty-all', version: versions.netty
+    implementation group: 'io.netty', name: 'netty-codec-http', version: versions.netty
+
+    //Remove CVE-2021-37136-37
+    implementation group: 'io.netty', name: 'netty-resolver-dns-native-macos', version: versions.netty
+    implementation group: 'io.netty', name: 'netty-transport-native-kqueue', version: versions.netty
 
     //To Remove vulnerability CVE-2020-11988
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.6'
