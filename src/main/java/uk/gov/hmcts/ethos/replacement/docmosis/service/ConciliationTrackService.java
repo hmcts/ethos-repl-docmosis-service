@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
@@ -28,15 +29,36 @@ public class ConciliationTrackService {
             "NNA", "PEN",  "RPT(S)", "RTR", "TXC", "WTA");
 
     public void populateConciliationTrackForJurisdiction(CaseData caseData) {
-        boolean isConTrackOp = false;
+        if (CollectionUtils.isNotEmpty(caseData.getJurCodesCollection())) {
+            switch (checkConciliationTrack(caseData)) {
+                case "OP":
+                    caseData.setConciliationTrack(CONCILIATION_TRACK_OPEN_TRACK);
+                    break;
+                case "ST":
+                    caseData.setConciliationTrack(CONCILIATION_TRACK_STANDARD_TRACK);
+                    break;
+                case "SH":
+                    caseData.setConciliationTrack(CONCILIATION_TRACK_FAST_TRACK);
+                    break;
+                case "NO":
+                    caseData.setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
+                    break;
+                default:
+                    caseData.setConciliationTrack(null);
+            }
+        } else {
+            caseData.setConciliationTrack(null);
+        }
+    }
+
+    private String checkConciliationTrack(CaseData caseData) {
         boolean isConTrackSt = false;
         boolean isConTrackSh = false;
         boolean isConTrackNo = false;
 
         for (JurCodesTypeItem jurCodesTypeItem : caseData.getJurCodesCollection()) {
             if (JUR_CODE_CONCILIATION_TRACK_OP.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
-                isConTrackOp = true;
-                break;
+                return "OP";
             } else if (JUR_CODE_CONCILIATION_TRACK_ST.contains(jurCodesTypeItem.getValue().getJuridictionCodesList())) {
                 isConTrackSt = true;
             } else if (!isConTrackSt
@@ -48,16 +70,14 @@ public class ConciliationTrackService {
             }
         }
 
-        if (isConTrackOp) {
-            caseData.setConciliationTrack(CONCILIATION_TRACK_OPEN_TRACK);
-        } else if (isConTrackSt) {
-            caseData.setConciliationTrack(CONCILIATION_TRACK_STANDARD_TRACK);
+        if (isConTrackSt) {
+            return "ST";
         } else if (isConTrackSh) {
-            caseData.setConciliationTrack(CONCILIATION_TRACK_FAST_TRACK);
+            return "SH";
         } else if (isConTrackNo) {
-            caseData.setConciliationTrack(CONCILIATION_TRACK_NO_CONCILIATION);
+            return "NO";
         } else {
-            caseData.setConciliationTrack(null);
+            return "";
         }
     }
 
