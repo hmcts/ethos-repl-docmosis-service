@@ -253,15 +253,14 @@ public class CaseActionsForCaseWorkerController {
         var caseData = caseDetails.getCaseData();
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
 
-        if (errors.isEmpty()) {
-            boolean caseStateValidated = eventValidationService.validateCaseState(caseDetails);
-            if (!caseStateValidated) {
-                errors.add(caseData.getEthosCaseReference() + " Case has not been Accepted.");
-            }
+        if (!eventValidationService.validateCaseState(caseDetails)) {
+            errors.add(caseData.getEthosCaseReference() + " Case has not been Accepted.");
         }
 
-        log.info("Event fields and/or case state validation for case "
-                + caseData.getEthosCaseReference() + ": " + errors);
+        if (!eventValidationService.validateCurrentPosition(caseDetails)) {
+            errors.add("To set the current position to 'Case closed' "
+                    + "and to close the case, please take the Close Case action.");
+        }
 
         if (errors.isEmpty()) {
             var defaultValues = getPostDefaultValues(caseDetails);

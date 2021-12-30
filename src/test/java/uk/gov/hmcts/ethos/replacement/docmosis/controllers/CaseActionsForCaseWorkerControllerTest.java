@@ -1143,6 +1143,7 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .thenThrow(new InternalException(ERROR_MESSAGE));
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         when(eventValidationService.validateCaseState(isA(CaseDetails.class))).thenReturn(true);
+        when(eventValidationService.validateCurrentPosition(isA(CaseDetails.class))).thenReturn(true);
         mvc.perform(post(AMEND_CASE_DETAILS_URL)
                 .content(requestContent.toString())
                 .header("Authorization", AUTH_TOKEN)

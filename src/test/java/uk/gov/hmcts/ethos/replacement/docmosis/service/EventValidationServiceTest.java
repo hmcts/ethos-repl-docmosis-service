@@ -31,6 +31,8 @@ import java.util.Objects;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_LISTED_CASE_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR;
@@ -50,6 +52,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTIO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
@@ -365,6 +368,18 @@ class EventValidationServiceTest {
         eventValidationService.validateJurisdictionCodes(caseDetails2.getCaseData(), errors);
 
         assertEquals(0, errors.size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({SUBMITTED_STATE + ",false", ACCEPTED_STATE + ",false", REJECTED_STATE + ",false", CLOSED_STATE + ",true"})
+    void validateCurrentPositionCaseClosed(String state, boolean expected) {
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setState(state);
+        CaseData caseData = new CaseData();
+        caseData.setCurrentPosition(CASE_CLOSED_POSITION);
+        caseDetails.setCaseData(caseData);
+        boolean validated = eventValidationService.validateCurrentPosition(caseDetails);
+        assertEquals(expected, validated);
     }
 
     @Test
