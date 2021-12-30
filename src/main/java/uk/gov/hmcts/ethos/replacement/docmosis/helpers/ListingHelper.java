@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -126,6 +127,13 @@ public class ListingHelper {
             listingType.setHearingPanel(!isNullOrEmpty(hearingType.getHearingSitAlone())
                     ? hearingType.getHearingSitAlone()
                     : " ");
+            listingType.setHearingFormat(CollectionUtils.isNotEmpty(hearingType.getHearingFormat())
+                    ? String.join(", ", hearingType.getHearingFormat())
+                    : " ");
+            listingType.setJudicialMediation(
+                    isNullOrEmpty(hearingType.getJudicialMediation()) || NO.equals(hearingType.getJudicialMediation())
+                    ? " "
+                    : hearingType.getJudicialMediation());
 
             log.info("getVenueFromDateListedType");
             listingType.setCauseListVenue(getVenueFromDateListedType(dateListedType));
@@ -144,6 +152,10 @@ public class ListingHelper {
                     ? DocumentHelper.getHearingDuration(hearingType)
                     : " ");
 
+            log.info("checkScotlandReadingDeliberationDay");
+            listingType.setHearingReadingDeliberationMembersChambers(checkScotlandReadingDeliberationDay(dateListedType,
+                    caseData));
+
             log.info("End getListingTypeFromCaseData");
             return getClaimantRespondentDetails(listingType, listingData, caseData);
 
@@ -155,6 +167,16 @@ public class ListingHelper {
             log.error("index: " + index);
             log.error("hearingCollectionSize: " + hearingCollectionSize);
             return listingType;
+        }
+    }
+
+    private static String checkScotlandReadingDeliberationDay(DateListedType dateListedType, CaseData caseData) {
+        if (caseData.getManagingOffice() == null
+            || isNullOrEmpty(dateListedType.getHearingTypeReadingDeliberation())
+            || dateListedType.getHearingTypeReadingDeliberation().equals("Neither")) {
+            return " ";
+        } else {
+            return dateListedType.getHearingTypeReadingDeliberation();
         }
     }
 
@@ -574,6 +596,10 @@ public class ListingHelper {
         sb.append("\"Hearing_dayofdays\":\"").append(nullCheck(listingType.getHearingDay())).append(NEW_LINE);
         sb.append("\"Hearing_panel\":\"").append(nullCheck(listingType.getHearingPanel())).append(NEW_LINE);
         sb.append("\"Hearing_notes\":\"").append(nullCheck(extractHearingNotes(listingType))).append(NEW_LINE);
+        sb.append("\"Judicial_mediation\":\"").append(nullCheck(listingType.getJudicialMediation())).append(NEW_LINE);
+        sb.append("\"Reading_deliberation_day\":\"")
+                .append(nullCheck(listingType.getHearingReadingDeliberationMembersChambers())).append(NEW_LINE);
+        sb.append("\"Hearing_format\":\"").append(nullCheck(listingType.getHearingFormat())).append(NEW_LINE);
         sb.append("\"respondent_representative\":\"")
                 .append(nullCheck(listingType.getRespondentRepresentative())).append("\"}");
         return sb;
