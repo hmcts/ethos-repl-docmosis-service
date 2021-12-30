@@ -372,7 +372,7 @@ class EventValidationServiceTest {
 
     @ParameterizedTest
     @CsvSource({SUBMITTED_STATE + ",false", ACCEPTED_STATE + ",false", REJECTED_STATE + ",false", CLOSED_STATE + ",true"})
-    void inValidateCurrentPositionCaseClosed(String state, boolean expected) {
+    void validateCurrentPositionCaseClosed(String state, boolean expected) {
         CaseDetails caseDetails = new CaseDetails();
         caseDetails.setState(state);
         CaseData caseData = new CaseData();
