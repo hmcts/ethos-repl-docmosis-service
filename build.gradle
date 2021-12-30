@@ -264,19 +264,19 @@ dependencies {
     implementation group: 'io.netty', name: 'netty-codec-smtp', version: versions.netty
     implementation group: 'io.netty', name: 'netty-codec-socks', version: versions.netty
     implementation group: 'io.netty', name: 'netty-codec-stomp', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-codex-xml', version: versions.netty
+    implementation group: 'io.netty', name: 'netty-codec-xml', version: versions.netty
     implementation group: 'io.netty', name: 'netty-common', version: versions.netty
     implementation group: 'io.netty', name: 'netty-handler', version: versions.netty
     implementation group: 'io.netty', name: 'netty-handler-proxy', version: versions.netty
     implementation group: 'io.netty', name: 'netty-resolver', version: versions.netty
     implementation group: 'io.netty', name: 'netty-resolver-dns', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-tcnative-classes', version: versions.netty
+    implementation group: 'io.netty', name: 'netty-tcnative-classes', version: '2.0.46.Final'
     implementation group: 'io.netty', name: 'netty-transport', version: versions.netty
     implementation group: 'io.netty', name: 'netty-transport-native-epoll', version: versions.netty
     implementation group: 'io.netty', name: 'netty-transport-native-unix-common', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-transport-native-txtx', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-transport-native-sctp', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-transport-native-udt', version: versions.netty
+    implementation group: 'io.netty', name: 'netty-transport-rxtx', version: versions.netty
+    implementation group: 'io.netty', name: 'netty-transport-sctp', version: versions.netty
+    implementation group: 'io.netty', name: 'netty-transport-udt', version: versions.netty
 
     //To Remove vulnerability CVE-2020-11988
     implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.6'
