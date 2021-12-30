@@ -370,27 +370,16 @@ class EventValidationServiceTest {
         assertEquals(0, errors.size());
     }
 
-    @Test
-    void validateCurrentPositionCaseClosed() {
-        CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setState(CLOSED_STATE);
-        CaseData caseData = new CaseData();
-        caseData.setCurrentPosition(CASE_CLOSED_POSITION);
-        caseDetails.setCaseData(caseData);
-        boolean validated = eventValidationService.validateCurrentPosition(caseDetails);
-        assertTrue(validated);
-    }
-
     @ParameterizedTest
-    @CsvSource({SUBMITTED_STATE, ACCEPTED_STATE, REJECTED_STATE})
-    void inValidateCurrentPositionCaseClosed(String state) {
+    @CsvSource({SUBMITTED_STATE + ",false", ACCEPTED_STATE + ",false", REJECTED_STATE + ",false", CLOSED_STATE + ",true"})
+    void inValidateCurrentPositionCaseClosed(String state, boolean expected) {
         CaseDetails caseDetails = new CaseDetails();
         caseDetails.setState(state);
         CaseData caseData = new CaseData();
         caseData.setCurrentPosition(CASE_CLOSED_POSITION);
         caseDetails.setCaseData(caseData);
         boolean validated = eventValidationService.validateCurrentPosition(caseDetails);
-        assertFalse(validated);
+        assertEquals(expected, validated);
     }
 
     @Test

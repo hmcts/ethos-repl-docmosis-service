@@ -71,6 +71,8 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRe
 @Service("eventValidationService")
 public class EventValidationService {
 
+    private static final List<String> INVALID_STATES_FOR_CLOSED_CURRENT_POSITION = List.of(SUBMITTED_STATE, ACCEPTED_STATE, REJECTED_STATE);
+
     public List<String> validateReceiptDate(CaseData caseData) {
         List<String> errors = new ArrayList<>();
         var dateOfReceipt = LocalDate.parse(caseData.getReceiptDate());
@@ -102,9 +104,7 @@ public class EventValidationService {
 
     public boolean validateCurrentPosition(CaseDetails caseDetails) {
         if (CASE_CLOSED_POSITION.equals(caseDetails.getCaseData().getCurrentPosition())
-                && (SUBMITTED_STATE.equals(caseDetails.getState())
-                || ACCEPTED_STATE.equals(caseDetails.getState())
-                || REJECTED_STATE.equals(caseDetails.getState()))
+                && INVALID_STATES_FOR_CLOSED_CURRENT_POSITION.contains(caseDetails.getState())
         ) {
             return false;
         }
