@@ -92,6 +92,8 @@ public class ListingHelper {
         LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT, TIME_TO_FIRST_HEARING_REPORT,
         SERVING_CLAIMS_REPORT, CASE_SOURCE_LOCAL_REPORT, HEARINGS_TO_JUDGEMENTS_REPORT,
             HEARINGS_BY_HEARING_TYPE_REPORT, NO_CHANGE_IN_CURRENT_POSITION_REPORT);
+    private static final List<String> SCOTLAND_HEARING_LIST = List.of("Reading Day", "Deliberation Day",
+            "Members meeting", "In Chambers");
 
     private ListingHelper() {
     }
@@ -152,10 +154,12 @@ public class ListingHelper {
                     ? DocumentHelper.getHearingDuration(hearingType)
                     : " ");
 
-            log.info("checkScotlandReadingDeliberationDay");
-            listingType.setHearingReadingDeliberationMembersChambers(checkScotlandReadingDeliberationDay(dateListedType,
-                    caseData));
-
+            listingType.setHearingReadingDeliberationMembersChambers(
+                    !isNullOrEmpty(dateListedType.getHearingTypeReadingDeliberation())
+                    && SCOTLAND_HEARING_LIST.contains(dateListedType.getHearingTypeReadingDeliberation())
+                    ? dateListedType.getHearingTypeReadingDeliberation()
+                    : " ");
+            
             log.info("End getListingTypeFromCaseData");
             return getClaimantRespondentDetails(listingType, listingData, caseData);
 
@@ -167,16 +171,6 @@ public class ListingHelper {
             log.error("index: " + index);
             log.error("hearingCollectionSize: " + hearingCollectionSize);
             return listingType;
-        }
-    }
-
-    private static String checkScotlandReadingDeliberationDay(DateListedType dateListedType, CaseData caseData) {
-        if (caseData.getManagingOffice() == null
-            || isNullOrEmpty(dateListedType.getHearingTypeReadingDeliberation())
-            || dateListedType.getHearingTypeReadingDeliberation().equals("Neither")) {
-            return " ";
-        } else {
-            return dateListedType.getHearingTypeReadingDeliberation();
         }
     }
 
