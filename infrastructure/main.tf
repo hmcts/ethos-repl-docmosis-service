@@ -27,12 +27,6 @@ locals {
 
 }
 
-data "azurerm_subnet" "postgres" {
-  name                 = "core-infra-subnet-0-${var.env}"
-  resource_group_name  = "core-infra-${var.env}"
-  virtual_network_name = "core-infra-vnet-${var.env}"
-}
-
 module "repl-docmosis-backend" {
   source                          = "git@github.com:hmcts/cnp-module-webapp?ref=master"
   product                         = "${var.product}-${local.app}"
@@ -64,11 +58,6 @@ module "repl-docmosis-backend" {
     ETHOS_REPL_DB_USER_NAME            = module.db.user_name
     ETHOS_REPL_DB_NAME                 = module.db.postgresql_database
     ETHOS_REPL_DB_CONN_OPTIONS         = local.db_connection_options
-    ETHOS_REPL_DB_HOST_V11             = module.db-v11.host_name
-    ETHOS_REPL_DB_PORT_V11             = module.db-v11.postgresql_listen_port
-    ETHOS_REPL_DB_PASSWORD_V11         = module.db-v11.postgresql_password
-    ETHOS_REPL_DB_USER_NAME_V11        = module.db-v11.user_name
-    ETHOS_REPL_DB_NAME_V11             = module.db-v11.postgresql_database
     CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING = data.azurerm_key_vault_secret.create_updates_queue_send_conn_str.value
   }
 }
