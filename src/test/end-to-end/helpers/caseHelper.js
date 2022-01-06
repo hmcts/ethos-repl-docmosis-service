@@ -73,6 +73,24 @@ async function bfAction(I, eventName) {
     await I.executeBFAction();
 }
 
+async function listHearing(I, eventName, jurisdiction) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.executeAddAmendHearing(jurisdiction);
+}
+
+async function allocateHearing(I, eventName, jurisdiction) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.executeAllocateHearing(jurisdiction);
+}
+
+async function hearingDetails(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.executeHearingDetails();
+}
+
 async function printHearingLists(I, eventName, jurisdiction) {
     await I.chooseNextStep(eventName, 3);
     await I.wait(3);
@@ -92,5 +110,8 @@ module.exports = {
     letters,
     fixCaseAPI,
     bfAction,
-    printHearingLists
+    listHearing,
+    printHearingLists,
+    allocateHearing,
+    hearingDetails
 };
