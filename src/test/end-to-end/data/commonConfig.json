@@ -33,5 +33,18 @@
   "bfActionDescription": "Enquiry letter issued",
   "bfDateDay": "10",
   "bfDateMonth": "11",
-  "bfDateYear": "2021"
+  "bfDateYear": "2021",
+  "listHearing": "List Hearing",
+  "hearingNumber": "11",
+  "hearingType": "Hearing",
+  "hearingLength": "1",
+  "hearingLengthType": "Days",
+  "hearingDate": "01",
+  "hearingDateMonth": "02",
+  "hearingDateYear": "2022",
+  "allocateHearing": "Allocate Hearing",
+  "hearingDetails": "Hearing Details",
+  "hearingList": "Hearing List",
+  "hearingDocType": "ETCL - Cause List",
+  "dailyCauseList": "Daily Cause List"
 }

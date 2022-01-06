@@ -18,7 +18,11 @@ const eventNames = {
     LETTERS:'Letters',
     RESTRICTED_REPORTING:'Restricted Reporting',
     FIX_CASE_API:'Fix Case API',
-    BF_ACTION:'B/F Action'
+    BF_ACTION:'B/F Action',
+    PRINT_HEARING_LISTS:'Print Hearing lists',
+    LIST_HEARING:'List Hearing',
+    ALLOCATE_HEARING:'Allocate Hearing',
+    HEARING_DETAILS:'Hearing Details'
 };
 
 const states = {
