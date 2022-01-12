@@ -46,5 +46,8 @@
   "hearingDetails": "Hearing Details",
   "hearingList": "Hearing List",
   "hearingDocType": "ETCL - Cause List",
-  "dailyCauseList": "Daily Cause List"
+  "dailyCauseList": "Daily Cause List",
+  "caseTransfer": "Case Transfer",
+  "caseTransferOffice": "Wales",
+  "caseTransferPositionType": "Case transferred - same country"
 }
