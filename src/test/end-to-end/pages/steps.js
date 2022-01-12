@@ -24,6 +24,7 @@ module.exports = () => {
         executeAllocateHearing:steps.allocateHearing.allocateHearing,
         executeHearingDetails:steps.hearingDetails.hearingDetails,
         executePrintHearingLists:steps.printHearingLists.printHearingLists,
+        executeCaseTransfer:steps.caseTransfer.caseTransfer,
         selectNewCase: steps.newCase.newCase,
         selectCaseTypeOptions: steps.createCase.createCase,
         enterCreateCasePage1: steps.createCasePages.page1initiateCase1,

@@ -22,7 +22,8 @@ const eventNames = {
     PRINT_HEARING_LISTS:'Print Hearing lists',
     LIST_HEARING:'List Hearing',
     ALLOCATE_HEARING:'Allocate Hearing',
-    HEARING_DETAILS:'Hearing Details'
+    HEARING_DETAILS:'Hearing Details',
+    CASE_TRANSFER:'Case Transfer'
 };
 
 const states = {
