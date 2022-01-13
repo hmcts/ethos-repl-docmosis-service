@@ -27,6 +27,12 @@ locals {
 
 }
 
+data "azurerm_subnet" "postgres" {
+  name                 = "core-infra-subnet-0-${var.env}"
+  resource_group_name  = "core-infra-${var.env}"
+  virtual_network_name = "core-infra-vnet-${var.env}"
+}
+
 module "repl-docmosis-backend" {
   source                          = "git@github.com:hmcts/cnp-module-webapp?ref=master"
   product                         = "${var.product}-${local.app}"
