@@ -137,7 +137,7 @@ class HearingsToJudgmentsReportTest {
     void shouldNotShowCaseIfHeardButJudgmentsHasNoValue() {
         // Given a case is accepted
         // And has been heard
-        // And has judgment but without a value
+        // And has judgement but without a value
         // When I request report data
         // Then the case should not be in the report data
 
@@ -366,11 +366,11 @@ class HearingsToJudgmentsReportTest {
     @Test
     void shouldShowTotalHearingsInSummary() {
         // Given I have 2 valid cases with hearings with judgements within 4 weeks
-        // And 1 valid case with hearings with judgment not within 4 weeks
+        // And 1 valid case with hearings with judgement not within 4 weeks
         // When I request report data
         // Then the report summary shows 3 total hearings
         // And 2 total hearings with judgements within 4 weeks
-        // And 1 total hearings with judgment not within 4 weeks
+        // And 1 total hearings with judgement not within 4 weeks
 
         submitEvents.add(createValidSubmitEventNotWithin4Wks());
         submitEvents.add(createValidSubmitEventWithin4Wks());

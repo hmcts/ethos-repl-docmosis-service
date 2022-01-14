@@ -833,7 +833,7 @@ public class CaseActionsForCaseWorkerController {
     }
 
     @PostMapping(value = "/judgmentValidation", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "validates jurisdiction codes within judgment collection.")
+    @ApiOperation(value = "validates jurisdiction codes within judgement collection.")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
         @ApiResponse(code = 400, message = "Bad Request"),
