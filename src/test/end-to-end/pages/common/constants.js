@@ -23,7 +23,8 @@ const eventNames = {
     LIST_HEARING:'List Hearing',
     ALLOCATE_HEARING:'Allocate Hearing',
     HEARING_DETAILS:'Hearing Details',
-    CASE_TRANSFER:'Case Transfer'
+    CASE_TRANSFER:'Case Transfer',
+    JUDGMENT:'Judgment'
 };
 
 const states = {

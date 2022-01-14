@@ -372,7 +372,7 @@ public class EventValidationService {
                 List<String> jurCodesCollectionWithinJudgement =
                         Helper.getJurCodesCollection(judgementType.getJurisdictionCodes());
 
-                log.info("Check if jurCodes collection within judgement exist in jurCodesCollection");
+                log.info("Check if jurCodes collection within judgment exist in jurCodesCollection");
                 jurCodesDoesNotExist.addAll(jurCodesCollectionWithinJudgement.stream()
                         .filter(element -> !jurCodesCollection.contains(element))
                         .collect(Collectors.toList()));
