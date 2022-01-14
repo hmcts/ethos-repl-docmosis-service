@@ -58,6 +58,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.LISTINGS;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LISTINGS_DEV;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LISTINGS_USER;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_TIME_PATTERN;
@@ -91,7 +92,7 @@ public class ListingHelper {
     static final List<String> REPORTS = Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
         LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT, TIME_TO_FIRST_HEARING_REPORT,
         SERVING_CLAIMS_REPORT, CASE_SOURCE_LOCAL_REPORT, HEARINGS_TO_JUDGEMENTS_REPORT,
-            HEARINGS_BY_HEARING_TYPE_REPORT, NO_CHANGE_IN_CURRENT_POSITION_REPORT);
+            HEARINGS_BY_HEARING_TYPE_REPORT, NO_CHANGE_IN_CURRENT_POSITION_REPORT, MEMBER_DAYS_REPORT);
     private static final List<String> SCOTLAND_HEARING_LIST = List.of("Reading Day", "Deliberation Day",
             "Members meeting", "In Chambers");
 
@@ -159,7 +160,7 @@ public class ListingHelper {
                     && SCOTLAND_HEARING_LIST.contains(dateListedType.getHearingTypeReadingDeliberation())
                     ? dateListedType.getHearingTypeReadingDeliberation()
                     : " ");
-            
+
             log.info("End getListingTypeFromCaseData");
             return getClaimantRespondentDetails(listingType, listingData, caseData);
 
@@ -863,6 +864,8 @@ public class ListingHelper {
                 return "EM-TRB-SCO-ENG-00786";
             case NO_CHANGE_IN_CURRENT_POSITION_REPORT:
                 return "EM-TRB-SCO-ENG-00794";
+            case MEMBER_DAYS_REPORT:
+                return "EM-TRB-SCO-ENG-00800";
             default:
                 return NO_DOCUMENT_FOUND;
         }

@@ -227,13 +227,11 @@ public class ListingGenerationController {
     }
 
     private ResponseEntity<ListingCallbackResponse> getResponseEntity(ListingData listingData,
-                                                                      String caseTypeId,
-                                                                      String userToken) {
+                                                                      String caseTypeId, String userToken) {
         List<String> errorsList = new ArrayList<>();
 
-        if (hasListings(listingData)
-                || (isAllowedReportType(listingData)
-                    && (hasServedClaims(listingData) || hasSummaryAndDetails(listingData)))) {
+        if (hasListings(listingData) || (isAllowedReportType(listingData)
+            && (hasServedClaims(listingData) || hasSummaryAndDetails(listingData)))) {
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
             updateListingDocMarkUp(listingData, documentInfo);
             return ResponseEntity.ok(ListingCallbackResponse.builder()

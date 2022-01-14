@@ -109,7 +109,7 @@ public class ListingServiceTest {
     private List<SubmitEvent> submitEvents;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         documentInfo = new DocumentInfo();
         caseDetails = new CaseDetails();
         listingDetails = new ListingDetails();
@@ -146,6 +146,10 @@ public class ListingServiceTest {
         dateListedType.setHearingAberdeen("AberdeenVenue");
         dateListedType.setHearingVenueDay("Aberdeen");
         dateListedType.setListedDate("2019-12-12T12:11:00.000");
+        dateListedType.setHearingTimingStart("2019-12-12T12:11:00.000");
+        dateListedType.setHearingTimingBreak("2019-12-12T12:11:00.000");
+        dateListedType.setHearingTimingResume("2019-12-12T12:11:00.000");
+        dateListedType.setHearingTimingFinish("2019-12-12T12:11:00.000");
         dateListedTypeItem.setId("123");
         dateListedTypeItem.setValue(dateListedType);
 
@@ -157,6 +161,10 @@ public class ListingServiceTest {
         dateListedType1.setHearingAberdeen("AberdeenVenue");
         dateListedType1.setHearingVenueDay("Aberdeen");
         dateListedType1.setListedDate("2019-12-10T12:11:00.000");
+        dateListedType1.setHearingTimingStart("2019-12-10T11:00:00.000");
+        dateListedType1.setHearingTimingBreak("2019-12-10T12:00:00.000");
+        dateListedType1.setHearingTimingResume("2019-12-10T13:00:00.000");
+        dateListedType1.setHearingTimingFinish("2019-12-10T14:00:00.000");
         dateListedTypeItem1.setId("124");
         dateListedTypeItem1.setValue(dateListedType1);
 
@@ -181,6 +189,10 @@ public class ListingServiceTest {
         dateListedType3.setHearingAberdeen("AberdeenVenue2");
         dateListedType3.setHearingVenueDay("Aberdeen");
         dateListedType3.setListedDate("2019-12-12T12:11:55.000");
+        dateListedType3.setHearingTimingStart("2019-12-12T14:11:55.000");
+        dateListedType3.setHearingTimingBreak("2019-12-12T15:11:55.000");
+        dateListedType3.setHearingTimingResume("2019-12-12T15:30:55.000");
+        dateListedType3.setHearingTimingFinish("2019-12-12T16:30:55.000");
         dateListedTypeItem3.setId("124");
         dateListedTypeItem3.setValue(dateListedType3);
 
@@ -1197,7 +1209,8 @@ public class ListingServiceTest {
     public void generateCasesCompletedReportDataForEnglandWithConTrackOpen() throws IOException {
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_COMPLETED_REPORT);
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(),
+            anyString(), anyString())).thenReturn(submitEvents);
         submitEvents.get(0).getCaseData().setConciliationTrack(CONCILIATION_TRACK_OPEN_TRACK);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
         assertNotNull(listingDataResult.getLocalReportsDetailHdr());
@@ -1214,8 +1227,10 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setListingDate("2021-07-13");
         listingDetails.getCaseData().setListingDateFrom("2021-07-12");
         listingDetails.getCaseData().setListingDateTo("2021-07-14");
-        when(ccdClient.hearingsToJudgementsSearch(anyString(), anyString(), anyString())).thenReturn(List.of(new HearingsToJudgmentsSubmitEvent()));
-        var listingDataResult = (HearingsToJudgmentsReportData) listingService.generateReportData(listingDetails, "authToken");
+        when(ccdClient.hearingsToJudgementsSearch(anyString(), anyString(),
+            anyString())).thenReturn(List.of(new HearingsToJudgmentsSubmitEvent()));
+        var listingDataResult = (HearingsToJudgmentsReportData) listingService.generateReportData(listingDetails,
+            "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(HEARINGS_TO_JUDGEMENTS_REPORT, listingDataResult.getReportType());
         assertEquals("Ranged", listingDataResult.getHearingDateType());
@@ -1234,7 +1249,8 @@ public class ListingServiceTest {
                 List.of(caseDataBuilder.withPositionType("Draft with members")
                         .withHearing("1970-01-01T00:00:00.000", HEARING_STATUS_HEARD)
                         .buildAsSubmitEvent(ACCEPTED_STATE)));
-        var listingDataResult = (CasesAwaitingJudgmentReportData) listingService.generateReportData(listingDetails, "authToken");
+        var listingDataResult = (CasesAwaitingJudgmentReportData) listingService.generateReportData(listingDetails,
+            "authToken");
         assertEquals("name", listingDataResult.getDocumentName());
         assertEquals(CASES_AWAITING_JUDGMENT_REPORT, listingDataResult.getReportType());
     }

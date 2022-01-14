@@ -59,6 +59,7 @@ public class TornadoService {
             buildInstruction(conn, caseData, authToken, caseTypeId,
                     correspondenceType, correspondenceScotType, multipleData);
             var documentName = Helper.getDocumentName(correspondenceType, correspondenceScotType);
+
             return checkResponseStatus(authToken, conn, documentName, caseTypeId);
         } catch (IOException e) {
             log.error(UNABLE_TO_CONNECT_TO_DOCMOSIS, e);
@@ -132,6 +133,7 @@ public class TornadoService {
             sb = ListingHelper.buildListingDocumentContent(listingData, tornadoConnection.getAccessKey(),
                     documentName, userDetails, caseType);
         }
+        log.info("In Tornado Service - Content of Document to generate: " + sb);
         try (var outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
             writeOutputStream(outputStreamWriter, sb);
         }
@@ -155,7 +157,6 @@ public class TornadoService {
 
     private void buildScheduleInstruction(HttpURLConnection conn, BulkData bulkData) throws IOException {
         var sb = BulkHelper.buildScheduleDocumentContent(bulkData, tornadoConnection.getAccessKey());
-
         try (var outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
             writeOutputStream(outputStreamWriter, sb);
         }

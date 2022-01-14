@@ -28,6 +28,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.Hea
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsCcdReportDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
@@ -61,6 +62,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIM
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PRIVATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
@@ -84,7 +86,7 @@ public class ListingService {
     private String listingDateTo;
     private final CaseSourceLocalReport caseSourceLocalReport;
     private final HearingsByHearingTypeReport hearingsByHearingTypeReport;
-
+    private final MemberDaysReport memberDaysReport;
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
 
@@ -241,7 +243,7 @@ public class ListingService {
     }
 
     private CasesAwaitingJudgmentReportData getCasesAwaitingJudgmentReport(ListingDetails listingDetails,
-                                                                           String authToken) {
+                                                                          String authToken) {
         log.info("Cases Awaiting Judgment for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new CcdReportDataSource(authToken, ccdClient);
 
@@ -304,6 +306,8 @@ public class ListingService {
             case HEARINGS_BY_HEARING_TYPE_REPORT:
                 return hearingsByHearingTypeReport.processHearingsByHearingTypeRequest(
                         listingDetails, submitEvents);
+            case MEMBER_DAYS_REPORT:
+                return memberDaysReport.runReport(listingDetails, submitEvents);
             default:
                 return listingDetails.getCaseData();
         }

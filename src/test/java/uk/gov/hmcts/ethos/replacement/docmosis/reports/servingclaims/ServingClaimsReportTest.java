@@ -198,8 +198,7 @@ public class ServingClaimsReportTest {
     public void shouldSetCorrectCountForDay1Serving() {
         var servingClaimsReport = new ServingClaimsReport();
         var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
-        var adhocReportType =  resultListingData.getLocalReportsDetail().get(0)
-                .getValue();
+        var adhocReportType =  resultListingData.getLocalReportsDetail().get(0).getValue();
         var expectedDay1Count = adhocReportType.getClaimServedDay1Total();
         var expectedDay1Percent = adhocReportType.getClaimServedDay1Percent();
         assertEquals("2", expectedDay1Count);
