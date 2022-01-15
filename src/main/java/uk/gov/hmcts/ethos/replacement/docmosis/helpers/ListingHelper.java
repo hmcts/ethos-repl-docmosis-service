@@ -89,6 +89,7 @@ public class ListingHelper {
     private static final String NO_DOCUMENT_FOUND = "No document found";
     private static final int NUMBER_CHAR_PARSING_DATE = 20;
     private static final String LISTING_NEWLINE = "\"listing\":[\n";
+    private static final String ARRAY_ELEMENT_CLOSING_NEWLINE = "}],\n";
     static final List<String> REPORTS = Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
         LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT, TIME_TO_FIRST_HEARING_REPORT,
         SERVING_CLAIMS_REPORT, CASE_SOURCE_LOCAL_REPORT, HEARINGS_TO_JUDGEMENTS_REPORT,
@@ -407,7 +408,7 @@ public class ListingHelper {
             if (entries.hasNext()) {
                 sb.append("},\n");
             } else {
-                sb.append("}],\n");
+                sb.append(ARRAY_ELEMENT_CLOSING_NEWLINE);
             }
         }
         return sb;
@@ -423,7 +424,7 @@ public class ListingHelper {
             if (entries.hasNext()) {
                 sb.append("},\n");
             } else {
-                sb.append("}],\n");
+                sb.append(ARRAY_ELEMENT_CLOSING_NEWLINE);
             }
         }
         return sb;
@@ -536,7 +537,7 @@ public class ListingHelper {
             if (entries.hasNext()) {
                 sb.append("},\n");
             } else {
-                sb.append("}],\n");
+                sb.append(ARRAY_ELEMENT_CLOSING_NEWLINE);
             }
         }
         return sb;
