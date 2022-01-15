@@ -31,9 +31,9 @@ public class MemberDaysReport {
     private ListingDetails listingDetails;
     private static final String FULL_PANEL = "Full Panel";
 
-    public MemberDaysReportData runReport(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
-        this.submitEvents = submitEvents;
-        this.listingDetails = listingDetails;
+    public MemberDaysReportData runReport(ListingDetails listings, List<SubmitEvent> submitEventList) {
+        submitEvents = submitEventList;
+        listingDetails = listings;
 
         var memberDaysReportData = initiateReport(listingDetails.getCaseTypeId());
         addReportDetails(memberDaysReportData);
@@ -47,21 +47,21 @@ public class MemberDaysReport {
         var office = UtilHelper.getListingCaseTypeId(caseTypeId);
         var reportData = new MemberDaysReportData();
         reportData.setOffice(office);
-        reportData.setDurationDescription(getDurationText());
+        reportData.setDurationDescription(getDurationText(reportData));
         reportData.setReportType(MEMBER_DAYS_REPORT);
         return reportData;
     }
 
-    private String getDurationText() {
+    private String getDurationText(MemberDaysReportData reportData) {
         var description = "";
-
-        if (listingDetails.getCaseData().getHearingDateType().equals("Single")) {
-            description = "On " + listingDetails.getCaseData().getListingDate();
-        } else if (listingDetails.getCaseData().getHearingDateType().equals("Range")) {
-            description = "Between " + listingDetails.getCaseData().getListingDateFrom()
-                    + " and " + listingDetails.getCaseData().getListingDateTo();
+        var currentCaseData = listingDetails.getCaseData();
+        if (currentCaseData.getHearingDateType().equals("Single")) {
+            description = "On " + currentCaseData.getListingDate();
+        } else if (currentCaseData.getHearingDateType().equals("Range")) {
+            description = "Between " + currentCaseData.getListingDateFrom()
+                    + " and " + currentCaseData.getListingDateTo();
         }
-
+        reportData.setHearingDateType(currentCaseData.getHearingDateType());
         return description;
     }
 

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
@@ -15,26 +14,20 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_LISTING_CASE_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.TRANSFERRED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
-import groovy.util.MapEntry;
-import org.assertj.core.util.Strings;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.BFActionType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JurCodesType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims.ServingClaimsReport;
 
 public class MemberDaysReportTest {
 
@@ -81,9 +74,7 @@ public class MemberDaysReportTest {
         dateListedType.setHearingTimingResume("2019-12-11T12:11:00.000");
         dateListedType.setHearingTimingFinish("2019-12-11T14:11:00.000");
         dateListedTypeItem.setId("12300");
-
         dateListedTypeItem.setValue(dateListedType);
-
 
         var dateListedTypeItem1 = new DateListedTypeItem();
 
@@ -99,7 +90,6 @@ public class MemberDaysReportTest {
         dateListedType1.setHearingTimingResume("2019-12-10T13:00:00.000");
         dateListedType1.setHearingTimingFinish("2019-12-10T14:00:00.000");
         dateListedTypeItem1.setId("12400");
-
         dateListedTypeItem1.setValue(dateListedType1);
 
         var dateListedTypeItem2 = new DateListedTypeItem();
@@ -116,7 +106,6 @@ public class MemberDaysReportTest {
         dateListedType2.setHearingTimingResume("2019-12-12T12:30:00.000");
         dateListedType2.setHearingTimingFinish("2019-12-12T14:30:00.000");
         dateListedTypeItem2.setId("12500");
-
         dateListedTypeItem2.setValue(dateListedType2);
 
         var dateListedTypeItem3 = new DateListedTypeItem();
@@ -133,7 +122,6 @@ public class MemberDaysReportTest {
         dateListedType3.setHearingTimingFinish("2019-12-13T16:30:55.000");
         dateListedTypeItem3.setId("12600");
         dateListedTypeItem3.setValue(dateListedType3);
-
 
         HearingTypeItem hearingTypeItem = new HearingTypeItem();
         HearingType hearingType = new HearingType();
@@ -162,14 +150,13 @@ public class MemberDaysReportTest {
         caseData.setHearingCollection(hearingTypeItems);
         submitEvent1.setCaseData(caseData);
 
-        //case - 2
         var caseData2 = new CaseData();
         caseData2.setEthosCaseReference("1800522/2020");
         caseData2.setReceiptDate("2018-08-10");
         var casePreAcceptType2 = new CasePreAcceptType();
         casePreAcceptType2.setDateAccepted("2018-08-10");
         caseData2.setPreAcceptCase(casePreAcceptType2);
-        //caseData2.setCaseType(SINGLE_CASE_TYPE);
+        caseData2.setEcmCaseType(SINGLE_CASE_TYPE);
 
         HearingTypeItem hearingTypeItem2 = new HearingTypeItem();
         HearingType hearingType2 = new HearingType();
@@ -210,14 +197,13 @@ public class MemberDaysReportTest {
         submitEvent2.setState(ACCEPTED_STATE);
         submitEvent2.setCaseData(caseData2);
 
-        //case - 3
         var caseData3 = new CaseData();
         caseData3.setEthosCaseReference("1800522/2020");
         caseData3.setReceiptDate("2018-08-12");
         var casePreAcceptType3 = new CasePreAcceptType();
         casePreAcceptType3.setDateAccepted("2018-08-12");
         caseData3.setPreAcceptCase(casePreAcceptType3);
-        //caseData3.setCaseType(SINGLE_CASE_TYPE);
+        caseData3.setEcmCaseType(SINGLE_CASE_TYPE);
 
         HearingTypeItem hearingTypeItem3 = new HearingTypeItem();
         HearingType hearingType3 = new HearingType();
@@ -230,7 +216,6 @@ public class MemberDaysReportTest {
         hearingType3.setHearingEEMember("ee memb 1");
         hearingType3.setHearingERMember("er memb 1");
         hearingTypeItem3.setId("1234500033");
-
 
         var hearingTypeItems3 = new ArrayList<HearingTypeItem>();
         hearingTypeItems3.add(hearingTypeItem3);
@@ -294,14 +279,16 @@ public class MemberDaysReportTest {
                 .collect(Collectors.toList()).size()));
 
         var expectedFullPanelHearingsCount = validHearingsCountList.stream().filter(x->x.intValue() > 0).count();
-
+        var expectedReportDateType = "Range";
         var resultListingData = memberDaysReport.runReport(listingDetails, submitEvents);
 
         var actualFullPanelHearingsCount  = resultListingData.getReportDetails()
             .stream().map(MemberDaysReportDetail::getParentHearingId)
             .collect(Collectors.toList()).stream().distinct().count();
+        var actualReportDateType = resultListingData.getHearingDateType();
 
         assertEquals(expectedFullPanelHearingsCount, actualFullPanelHearingsCount);
+        assertEquals(expectedReportDateType, actualReportDateType);
     }
 
     @Test
@@ -354,4 +341,22 @@ public class MemberDaysReportTest {
         assertEquals("360", reportDetails.get(4).getHearingDuration());
     }
 
+    @Test
+    public void shouldReturnOnlySelectedSingleDateDetailedItemsList() {
+        listingDetails.getCaseData().setListingDate("2019-12-11");
+        listingDetails.getCaseData().setListingDateFrom(null);
+        listingDetails.getCaseData().setListingDateTo(null);
+        listingDetails.getCaseData().setListingVenue("Leeds");
+        listingDetails.getCaseData().setReportType(MEMBER_DAYS_REPORT);
+        listingDetails.getCaseData().setHearingDateType(SINGLE_HEARING_DATE_TYPE);
+
+        var memberDaysReport = new MemberDaysReport();
+        var resultListingData = memberDaysReport.runReport(listingDetails, submitEvents);
+        var reportDetails = resultListingData.getReportDetails();
+
+        assertEquals("11 December 2019", reportDetails.get(0).getHearingDate());
+        assertEquals("1800522/2020", reportDetails.get(0).getCaseReference());
+        assertEquals("33", reportDetails.get(0).getHearingNumber());
+        assertEquals("120", reportDetails.get(0).getHearingDuration());
+    }
 }

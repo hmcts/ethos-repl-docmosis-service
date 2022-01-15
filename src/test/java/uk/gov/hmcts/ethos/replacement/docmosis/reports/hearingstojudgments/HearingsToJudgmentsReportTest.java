@@ -68,7 +68,8 @@ class HearingsToJudgmentsReportTest {
         submitEvents.clear();
 
         hearingsToJudgmentsReportDataSource = mock(HearingsToJudgmentsReportDataSource.class);
-        when(hearingsToJudgmentsReportDataSource.getData(NEWCASTLE_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
+        when(hearingsToJudgmentsReportDataSource.getData(NEWCASTLE_CASE_TYPE_ID, DATE_FROM, DATE_TO))
+            .thenReturn(submitEvents);
 
         hearingsToJudgmentsReport = new HearingsToJudgmentsReport(hearingsToJudgmentsReportDataSource, DATE_FROM, DATE_TO);
     }

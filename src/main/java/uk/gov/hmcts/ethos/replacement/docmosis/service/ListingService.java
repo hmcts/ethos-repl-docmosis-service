@@ -307,7 +307,7 @@ public class ListingService {
                 return hearingsByHearingTypeReport.processHearingsByHearingTypeRequest(
                         listingDetails, submitEvents);
             case MEMBER_DAYS_REPORT:
-                return memberDaysReport.runReport(listingDetails, submitEvents);
+                return new MemberDaysReport().runReport(listingDetails, submitEvents);
             default:
                 return listingDetails.getCaseData();
         }
