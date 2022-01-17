@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 
 import java.time.Duration;
@@ -27,34 +28,29 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE
 @Slf4j
 public class MemberDaysReport {
     private static final int MINUTES = 60;
-    private List<SubmitEvent> submitEvents;
-    private ListingDetails listingDetails;
     private static final String FULL_PANEL = "Full Panel";
 
     public MemberDaysReportData runReport(ListingDetails listings, List<SubmitEvent> submitEventList) {
-        submitEvents = submitEventList;
-        listingDetails = listings;
-
-        var memberDaysReportData = initiateReport(listingDetails.getCaseTypeId());
-        addReportDetails(memberDaysReportData);
+        var memberDaysReportData = initiateReport(listings);
+        addReportDetails(memberDaysReportData, submitEventList, listings.getCaseData());
         addReportSummary(memberDaysReportData);
         addReportSummaryHeader(memberDaysReportData);
 
         return memberDaysReportData;
     }
 
-    private MemberDaysReportData initiateReport(String caseTypeId) {
+    private MemberDaysReportData initiateReport(ListingDetails listingDetails) {
+        String caseTypeId = listingDetails.getCaseTypeId();
         var office = UtilHelper.getListingCaseTypeId(caseTypeId);
         var reportData = new MemberDaysReportData();
         reportData.setOffice(office);
-        reportData.setDurationDescription(getDurationText(reportData));
+        reportData.setDurationDescription(getDurationText(reportData, listingDetails.getCaseData()));
         reportData.setReportType(MEMBER_DAYS_REPORT);
         return reportData;
     }
 
-    private String getDurationText(MemberDaysReportData reportData) {
+    private String getDurationText(MemberDaysReportData reportData, ListingData currentCaseData) {
         var description = "";
-        var currentCaseData = listingDetails.getCaseData();
         if (currentCaseData.getHearingDateType().equals("Single")) {
             description = "On " + currentCaseData.getListingDate();
         } else if (currentCaseData.getHearingDateType().equals("Range")) {
@@ -65,19 +61,17 @@ public class MemberDaysReport {
         return description;
     }
 
-    private void addReportDetails(MemberDaysReportData reportData) {
+    private void addReportDetails(MemberDaysReportData reportData, List<SubmitEvent> submitEvents,
+                                  ListingData listingData) {
         List<MemberDaysReportDetail> interimReportDetails = new ArrayList<>();
         for (var submitEvent : submitEvents) {
-
             if (!isValidCase(submitEvent)) {
                 continue;
             }
 
             var caseData = submitEvent.getCaseData();
-            log.info("Adding case {} to Member Days report", caseData.getEthosCaseReference());
-
             var hearings = getValidHearings(caseData);
-            extractValidHearingsFromCurrentCase(hearings, caseData, interimReportDetails);
+            extractValidHearingsFromCurrentCase(hearings, caseData, interimReportDetails, listingData);
         }
         var sortedReportDetails = interimReportDetails.stream()
             .sorted((o1, o2) -> o1.comparedTo(o2)).collect(Collectors.toList());
@@ -87,17 +81,16 @@ public class MemberDaysReport {
 
     private void extractValidHearingsFromCurrentCase(List<HearingTypeItem> hearings,
                                                      CaseData caseData,
-                                                     List<MemberDaysReportDetail> interimReportDetails) {
-        log.info("Adding hearings from the current case {} to the valid hearings list",
-            caseData.getEthosCaseReference());
-
+                                                     List<MemberDaysReportDetail> interimReportDetails,
+                                                     ListingData listingData) {
         for (var hearingItem : hearings) {
             var dateListedTypeItems = filterHearingsWithHeardStatus(hearingItem);
-            var dateListedItems = filterValidHearingDates(dateListedTypeItems);
+            var dateListedItems = filterValidHearingDates(dateListedTypeItems, listingData);
 
             if (!CollectionUtils.isEmpty(dateListedItems)) {
                 for (var listedItem : dateListedItems) {
-                    var hearingDate = getLocalDate(listedItem.getValue().getListedDate());
+                    var hearingDatePart = getDatePart(listedItem.getValue().getListedDate());
+                    var hearingDate = hearingDatePart != null ?  LocalDate.parse(hearingDatePart) : null;
                     if (hearingDate != null) {
                         var reportDetail = new MemberDaysReportDetail();
                         reportDetail.setSortingHearingDate(hearingDate.toString());
@@ -117,21 +110,17 @@ public class MemberDaysReport {
         }
     }
 
-    private LocalDate getLocalDate(String listedDate) {
-        var dateParts = splitDateTimeString(removeMilliSeconds(listedDate));
-        var formattedDate = generateLocalDateTime(dateParts);
-        if (formattedDate == null) {
-            return null;
-        }
-        return formattedDate.toLocalDate();
+    private String getDatePart(String dateTimeValue) {
+        return dateTimeValue.split("T")[0];
     }
 
-    private List<DateListedTypeItem> filterValidHearingDates(List<DateListedTypeItem> dateListedTypeItems) {
+    private List<DateListedTypeItem> filterValidHearingDates(List<DateListedTypeItem> dateListedTypeItems,
+                                                             ListingData listingData) {
         //if search is not date range, exclude other dates from current case
-        if (SINGLE_HEARING_DATE_TYPE.equals(listingDetails.getCaseData().getHearingDateType())) {
+        if (SINGLE_HEARING_DATE_TYPE.equals(listingData.getHearingDateType())) {
             return dateListedTypeItems.stream()
                 .filter(x -> x.getValue().getListedDate().split("T")[0]
-                    .equals(listingDetails.getCaseData().getListingDate()))
+                    .equals(listingData.getListingDate()))
                 .collect(Collectors.toList());
         }
 
@@ -145,63 +134,20 @@ public class MemberDaysReport {
     }
 
     private String getHearingDuration(DateListedTypeItem dateListedTypeItem) {
-        var dateListedType = dateListedTypeItem.getValue();
-        var startTimeComponents = splitDateTimeString(removeMilliSeconds(
-            dateListedType.getHearingTimingStart()));
-        var hearingTimingFinish = splitDateTimeString(removeMilliSeconds(
-            dateListedType.getHearingTimingFinish()));
-        var hearingTimingBreak = splitDateTimeString(removeMilliSeconds(
-            dateListedType.getHearingTimingBreak()));
-        var hearingTimingResume = splitDateTimeString(removeMilliSeconds(
-            dateListedType.getHearingTimingResume()));
+        var hearingStart = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingStart()
+            .replace(".000", ""));
+        var hearingFinish = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingFinish()
+            .replace(".000", ""));
+        var hearingBreak2 = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingBreak()
+            .replace(".000", ""));
+        var hearingResume2 = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingResume()
+            .replace(".000", ""));
 
-        LocalDateTime start = generateLocalDateTime(startTimeComponents);
-        LocalDateTime finish = generateLocalDateTime(hearingTimingFinish);
-        LocalDateTime hearingBreak = generateLocalDateTime(hearingTimingBreak);
-        LocalDateTime hearingResume = generateLocalDateTime(hearingTimingResume);
-
-        var startFinishDuration = Duration.between(start, finish).toMinutes();
-        var breakResumeDuration = Duration.between(hearingBreak, hearingResume).toMinutes();
+        var startFinishDuration = Duration.between(hearingStart, hearingFinish).toMinutes();
+        var breakResumeDuration = Duration.between(hearingBreak2, hearingResume2).toMinutes();
         var duration = startFinishDuration - breakResumeDuration;
 
         return String.valueOf(duration);
-    }
-
-    private LocalDateTime generateLocalDateTime(String[] dateParts) {
-        LocalDateTime localDateTime = null;
-        if (dateParts != null) {
-            localDateTime = LocalDateTime.of(Integer.parseInt(dateParts[0]),
-                Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]),
-                Integer.parseInt(dateParts[3]), Integer.parseInt(dateParts[4]),
-                Integer.parseInt(dateParts[5]));
-        }
-        return localDateTime;
-    }
-
-    private String removeMilliSeconds(String hearingTime) {
-        String hearingTimeWithNoMill = null;
-        if (hearingTime.contains(".000")) {
-            hearingTimeWithNoMill = hearingTime.replace(".000", "");
-        } else {
-            hearingTimeWithNoMill = hearingTime;
-        }
-
-        return hearingTimeWithNoMill;
-    }
-
-    private String[] splitDateTimeString(String hearingTime) {
-        String[] dateTimeParts = null;
-        if (hearingTime != null) {
-            String formattedHearingTime = "";
-            if (hearingTime.contains("T")) {
-                formattedHearingTime = hearingTime.replace("T", "-");
-            }
-            if (formattedHearingTime.contains(":")) {
-                formattedHearingTime = formattedHearingTime.replace(":", "-");
-            }
-            dateTimeParts = formattedHearingTime.split("-");
-        }
-        return dateTimeParts;
     }
 
     private List<HearingTypeItem> getValidHearings(CaseData caseData) {

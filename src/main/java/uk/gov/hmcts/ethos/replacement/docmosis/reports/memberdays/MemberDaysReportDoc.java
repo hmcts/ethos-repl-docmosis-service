@@ -16,7 +16,7 @@ public class MemberDaysReportDoc {
         return getMemberDaysReport(data);
     }
 
-    private static StringBuilder getMemberDaysReport(ListingData listingData) {
+    private StringBuilder getMemberDaysReport(ListingData listingData) {
         if (!(listingData instanceof MemberDaysReportData)) {
             throw new IllegalStateException(("ListingData is not instance of MemberDaysReportData"));
         }
