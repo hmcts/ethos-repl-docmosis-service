@@ -104,7 +104,7 @@ public class EventValidationService {
     }
 
     public boolean validateCurrentPosition(CaseDetails caseDetails) {
-        if (CASE_CLOSED_POSITION.equals(caseDetails.getCaseData().getCurrentPosition())
+        if (CASE_CLOSED_POSITION.equals(caseDetails.getCaseData().getPositionType())
                 && INVALID_STATES_FOR_CLOSED_CURRENT_POSITION.contains(caseDetails.getState())
         ) {
             return false;
