@@ -2,7 +2,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays;
 
 import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.interfaces.ReportDocPartial;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -11,9 +10,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.REPORT_OFFICE;
 
-public class MemberDaysReportDoc implements ReportDocPartial {
+public class MemberDaysReportDoc {
 
-    @Override
     public StringBuilder getReportDocPart(ListingData data) {
         return getMemberDaysReport(data);
     }
