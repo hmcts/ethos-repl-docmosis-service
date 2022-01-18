@@ -18,8 +18,10 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicDepositOrder;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicJudgements;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRespondentRepresentative;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRestrictedReporting;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.AddSingleCaseToMultipleService;
@@ -28,13 +30,16 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseManagementForCaseWork
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseTransferService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseUpdateForCaseWorkerService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.ConciliationTrackService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DepositOrderValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.JudgmentValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleCaseMultipleMidEventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleReferenceService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +70,7 @@ public class CaseActionsForCaseWorkerController {
     private final CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService;
     private final CaseUpdateForCaseWorkerService caseUpdateForCaseWorkerService;
     private final CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
+    private final ConciliationTrackService conciliationTrackService;
     private final DefaultValuesReaderService defaultValuesReaderService;
     private final SingleReferenceService singleReferenceService;
     private final VerifyTokenService verifyTokenService;
@@ -72,6 +78,7 @@ public class CaseActionsForCaseWorkerController {
     private final SingleCaseMultipleMidEventValidationService singleCaseMultipleMidEventValidationService;
     private final AddSingleCaseToMultipleService addSingleCaseToMultipleService;
     private final DepositOrderValidationService depositOrderValidationService;
+    private final JudgmentValidationService judgmentValidationService;
 
     @PostMapping(value = "/createCase", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "create a case for a caseWorker.")
@@ -218,8 +225,8 @@ public class CaseActionsForCaseWorkerController {
             caseManagementForCaseWorkerService.caseDataDefaults(caseData);
             generateEthosCaseReference(caseData, ccdRequest);
             FlagsImageHelper.buildFlagsImageFileName(caseData);
-            caseData.setMultipleFlag(caseData.getCaseType() != null
-                    && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
+            caseData.setMultipleFlag(caseData.getEcmCaseType() != null
+                    && caseData.getEcmCaseType().equals(MULTIPLE_CASE_TYPE) ? YES : NO);
         }
 
         log.info("PostDefaultValues for case: " + caseData.getEthosCaseReference());
@@ -248,15 +255,14 @@ public class CaseActionsForCaseWorkerController {
         var caseData = caseDetails.getCaseData();
         List<String> errors = eventValidationService.validateReceiptDate(caseData);
 
-        if (errors.isEmpty()) {
-            boolean caseStateValidated = eventValidationService.validateCaseState(caseDetails);
-            if (!caseStateValidated) {
-                errors.add(caseData.getEthosCaseReference() + " Case has not been Accepted.");
-            }
+        if (!eventValidationService.validateCaseState(caseDetails)) {
+            errors.add(caseData.getEthosCaseReference() + " Case has not been Accepted.");
         }
 
-        log.info("Event fields and/or case state validation for case "
-                + caseData.getEthosCaseReference() + ": " + errors);
+        if (!eventValidationService.validateCurrentPosition(caseDetails)) {
+            errors.add("To set the current position to 'Case closed' "
+                    + "and to close the case, please take the Close Case action.");
+        }
 
         if (errors.isEmpty()) {
             var defaultValues = getPostDefaultValues(caseDetails);
@@ -418,7 +424,7 @@ public class CaseActionsForCaseWorkerController {
         }
 
         var caseData = ccdRequest.getCaseDetails().getCaseData();
-        Helper.updatePostponedDate(caseData);
+        HearingsHelper.updatePostponedDate(caseData);
 
         return getCallbackRespEntityNoErrors(caseData);
     }
@@ -570,6 +576,28 @@ public class CaseActionsForCaseWorkerController {
         return getCallbackRespEntityErrors(errors, caseData);
     }
 
+    @PostMapping(value = "/addAmendJurisdiction", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "amend jurisdiction details for a single case.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> addAmendJurisdiction(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("AMEND JURISDICTION ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
+        conciliationTrackService.populateConciliationTrackForJurisdiction(caseData);
+        return getCallbackRespEntityNoErrors(caseData);
+    }
+
     @PostMapping(value = "/generateCaseRefNumbers", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "generates ethos case numbers according to caseRefNumberCount field.")
     @ApiResponses(value = {
@@ -708,7 +736,8 @@ public class CaseActionsForCaseWorkerController {
         }
 
         var caseDetails = ccdRequest.getCaseDetails();
-        List<String> errors = Helper.hearingMidEventValidation(caseDetails.getCaseData());
+        List<String> errors = HearingsHelper.hearingMidEventValidation(caseDetails.getCaseData());
+        errors.addAll(eventValidationService.validateHearingDatesNotInFuture(caseDetails.getCaseData()));
 
         return getCallbackRespEntity(errors, caseDetails);
     }
@@ -756,6 +785,50 @@ public class CaseActionsForCaseWorkerController {
         var caseData = ccdRequest.getCaseDetails().getCaseData();
         BFHelper.updateBfActionItems(caseData);
 
+        return getCallbackRespEntityNoErrors(caseData);
+    }
+
+    @PostMapping(value = "/dynamicJudgments", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the dynamic lists for judgements")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> dynamicJudgementList(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DYNAMIC JUDGEMENT LIST ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
+        DynamicJudgements.dynamicJudgements(caseData);
+        return getCallbackRespEntityNoErrors(caseData);
+    }
+
+    @PostMapping(value = "/judgementSubmitted", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates the dynamic lists for judgements")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> judgementSubmitted(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) throws ParseException {
+        log.info("JUDGEMENT SUBMITTED ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
+        judgmentValidationService.validateJudgments(caseData);
         return getCallbackRespEntityNoErrors(caseData);
     }
 
@@ -867,8 +940,7 @@ public class CaseActionsForCaseWorkerController {
             return ResponseEntity.status(FORBIDDEN.value()).build();
         }
 
-        List<String> errors = new ArrayList<>();
-        caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), errors, userToken);
+        var errors = caseTransferService.createCaseTransfer(ccdRequest.getCaseDetails(), userToken);
 
         return getCallbackRespEntityErrors(errors, ccdRequest.getCaseDetails().getCaseData());
     }

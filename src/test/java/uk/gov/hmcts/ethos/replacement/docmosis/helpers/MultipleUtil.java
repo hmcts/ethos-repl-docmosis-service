@@ -416,7 +416,7 @@ public class MultipleUtil {
         caseData.setMultipleReference("246000");
         caseData.setSubMultipleName("updatedSubMultipleName");
 
-        caseData.setCaseType(MULTIPLE_CASE_TYPE);
+        caseData.setEcmCaseType(MULTIPLE_CASE_TYPE);
         caseData.setMultipleFlag(NO);
 
         return caseData;

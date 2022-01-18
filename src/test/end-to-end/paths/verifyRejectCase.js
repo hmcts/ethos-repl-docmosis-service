@@ -3,7 +3,7 @@ const {createCaseInCcd} = require("../helpers/ccdDataStoreApi");
 const {eventNames} = require('../pages/common/constants.js');
 let caseNumber;
 
-Feature('Create a Leeds Single Case and move to Rejected state');
+Feature('Create a Leeds Singles Case and move to Rejected state');
 
 Scenario('Verify Reject Case', async ({I}) => {
     caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');

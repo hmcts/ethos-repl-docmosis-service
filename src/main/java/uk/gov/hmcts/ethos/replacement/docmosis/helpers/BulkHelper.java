@@ -51,7 +51,8 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 public class BulkHelper {
 
     private static final String JURISDICTION_OUTCOME_ACAS_CONCILIATED_SETTLEMENT = "Acas conciliated settlement";
-    private static final String JURISDICTION_OUTCOME_WITHDRAWN_OR_PRIVATE_SETTLEMENT = "Withdrawn or private settlement";
+    private static final String JURISDICTION_OUTCOME_WITHDRAWN_OR_PRIVATE_SETTLEMENT =
+            "Withdrawn or private settlement";
     private static final String JURISDICTION_OUTCOME_INPUT_IN_ERROR = "Input in error";
     static final List<String> HIDE_JURISDICTION_OUTCOME = Arrays.asList(
             JURISDICTION_OUTCOME_ACAS_CONCILIATED_SETTLEMENT,

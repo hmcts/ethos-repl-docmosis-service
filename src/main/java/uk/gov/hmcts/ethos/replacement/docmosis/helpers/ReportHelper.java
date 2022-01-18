@@ -202,7 +202,7 @@ public class ReportHelper {
                     validateMatchingDate(listingData, caseData.getPreAcceptCase().getDateAccepted());
             if (matchingDateIsValid) {
                 var adhocReportType = new AdhocReportType();
-                adhocReportType.setCaseType(caseData.getCaseType());
+                adhocReportType.setCaseType(caseData.getEcmCaseType());
                 getCommonReportDetailFields(listingDetails, caseData, adhocReportType);
                 adhocReportTypeItem.setValue(adhocReportType);
             }
@@ -249,7 +249,7 @@ public class ReportHelper {
         adhocReportType.setDateToPosition(caseData.getDateToPosition());
         adhocReportType.setFileLocation(getFileLocation(listingDetails, caseData));
         adhocReportType.setClerk(caseData.getClerkResponsible());
-        adhocReportType.setCaseType(caseData.getCaseType());
+        adhocReportType.setCaseType(caseData.getEcmCaseType());
     }
 
     private static String getFileLocation(ListingDetails listingDetails, CaseData caseData) {

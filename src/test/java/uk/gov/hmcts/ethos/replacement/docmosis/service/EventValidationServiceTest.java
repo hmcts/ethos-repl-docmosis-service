@@ -12,12 +12,15 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicDepositOrder;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -28,9 +31,10 @@ import java.util.Objects;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_LISTED_CASE_ERROR;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEPOSIT_REFUNDED_GREATER_DEPOSIT_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATED_JURISDICTION_CODES_JUDGEMENT_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.EARLY_DATE_RETURNED_FROM_JUDGE_ERROR_MESSAGE;
@@ -48,10 +52,10 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTIO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTION_OUTCOME_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TARGET_HEARING_DATE_INCREMENT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.UNABLE_TO_FIND_PARTY;
 
 @ExtendWith(SpringExtension.class)
 class EventValidationServiceTest {
@@ -162,7 +166,7 @@ class EventValidationServiceTest {
         SINGLE_CASE_TYPE + "," + ACCEPTED_STATE
     })
     void shouldValidateCaseState(String caseType, String caseState) {
-        caseDetails1.getCaseData().setCaseType(caseType);
+        caseDetails1.getCaseData().setEcmCaseType(caseType);
         caseDetails1.setState(caseState);
 
         boolean validated = eventValidationService.validateCaseState(caseDetails1);
@@ -364,6 +368,18 @@ class EventValidationServiceTest {
         eventValidationService.validateJurisdictionCodes(caseDetails2.getCaseData(), errors);
 
         assertEquals(0, errors.size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({SUBMITTED_STATE + ",false", ACCEPTED_STATE + ",false", REJECTED_STATE + ",false", CLOSED_STATE + ",true"})
+    void validateCurrentPositionCaseClosed(String state, boolean expected) {
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setState(state);
+        CaseData caseData = new CaseData();
+        caseData.setPositionType(CASE_CLOSED_POSITION);
+        caseDetails.setCaseData(caseData);
+        boolean validated = eventValidationService.validateCurrentPosition(caseDetails);
+        assertEquals(expected, validated);
     }
 
     @Test
@@ -628,6 +644,7 @@ class EventValidationServiceTest {
         assertEquals("Respondent", caseDetails3.getCaseData().getRestrictedReporting().getRequestedBy());
     }
 
+    @Test
     void shouldReturnsNoErrorsForHearingHearingStatusValidationWithNoHearings() {
         List<String> errors = new ArrayList<>();
         var caseWithNoHearings = validHearingStatusCaseCloseEventCaseDetails.getCaseData();
@@ -677,6 +694,55 @@ class EventValidationServiceTest {
         caseWithNoHearings.getHearingCollection().clear();
         eventValidationService.validateHearingJudgeAllocationForCaseCloseEvent(caseWithNoHearings, errors);
         assertEquals(0, errors.size());
+    }
+
+    CaseData generateCaseData() {
+        var caseData = new CaseData();
+        List<HearingTypeItem> hearingTypeItems = new ArrayList<>();
+        HearingTypeItem item = new HearingTypeItem();
+        item.setId(UUID.randomUUID().toString());
+        HearingType value = new HearingType();
+        List<DateListedTypeItem> dates = new ArrayList<>();
+        DateListedTypeItem dateItem = new DateListedTypeItem();
+        dateItem.setId(UUID.randomUUID().toString());
+        dateItem.setValue(new DateListedType());
+        dates.add(dateItem);
+        value.setHearingDateCollection(dates);
+        item.setValue(value);
+        hearingTypeItems.add(item);
+        caseData.setHearingCollection(hearingTypeItems);
+        return caseData;
+    }
+
+    @Test
+     void validateHearingDatesInPastTest() {
+        var caseData = generateCaseData();
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingBreak("2021-12-19T10:00:00");
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingResume("2021-12-19T10:00:00");
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingFinish("2021-12-19T10:00:00");
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingStart("2021-12-19T10:00:00");
+        assertEquals(0,
+                eventValidationService.validateHearingDatesNotInFuture(caseData).size());
+    }
+
+    @Test
+    void invalidateHearingDatesInFutureTest() {
+        var caseData = generateCaseData();
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingBreak("2777-12-19T10:00:00");
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingResume("2777-12-19T10:00:00");
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingFinish("2777-12-19T10:00:00");
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection()
+                .get(0).getValue().setHearingTimingStart("2777-12-19T10:00:00");
+        assertEquals(4,
+                eventValidationService.validateHearingDatesNotInFuture(caseData).size());
+
     }
 
 

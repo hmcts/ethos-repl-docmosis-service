@@ -51,8 +51,8 @@ public class DefaultValuesReaderService {
         if (defaultValues.getManagingOffice() != null) {
             caseData.setManagingOffice(defaultValues.getManagingOffice());
         }
-        if (caseData.getCaseType() == null) {
-            caseData.setCaseType(defaultValues.getCaseType());
+        if (caseData.getEcmCaseType() == null) {
+            caseData.setEcmCaseType(defaultValues.getCaseType());
         }
         caseData.setTribunalCorrespondenceAddress(getTribunalCorrespondenceAddress(defaultValues));
         caseData.setTribunalCorrespondenceTelephone(defaultValues.getTribunalCorrespondenceTelephone());

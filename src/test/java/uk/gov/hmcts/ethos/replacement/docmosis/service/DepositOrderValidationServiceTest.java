@@ -1,13 +1,16 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicDepositOrder;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicJudgements;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,6 +21,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.UNABLE_TO_FIND_PART
 public class DepositOrderValidationServiceTest {
 
     private DepositOrderValidationService depositOrderValidationService;
+    private JudgmentValidationService judgmentValidationService;
 
     private CaseDetails caseDetails1;
     private CaseDetails caseDetails2;
@@ -28,6 +32,7 @@ public class DepositOrderValidationServiceTest {
     @BeforeEach
     public void setup() throws Exception {
         depositOrderValidationService = new DepositOrderValidationService();
+        judgmentValidationService = new JudgmentValidationService();
         caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
         caseDetails2 = generateCaseDetails("caseDetailsTest2.json");
         caseDetails3 = generateCaseDetails("caseDetailsTest3.json");

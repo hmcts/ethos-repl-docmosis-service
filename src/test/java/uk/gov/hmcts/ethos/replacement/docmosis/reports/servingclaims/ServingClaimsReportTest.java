@@ -49,7 +49,7 @@ public class ServingClaimsReportTest {
         CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
         casePreAcceptType.setDateAccepted("2020-08-10");
         caseData.setPreAcceptCase(casePreAcceptType);
-        caseData.setCaseType(SINGLE_CASE_TYPE);
+        caseData.setEcmCaseType(SINGLE_CASE_TYPE);
 
         var bfActionTypeItem = new BFActionTypeItem();
         var bfActionType = new BFActionType();
@@ -71,7 +71,7 @@ public class ServingClaimsReportTest {
         var casePreAcceptType2 = new CasePreAcceptType();
         casePreAcceptType2.setDateAccepted("2020-08-16");
         caseData2.setPreAcceptCase(casePreAcceptType2);
-        caseData2.setCaseType(SINGLE_CASE_TYPE);
+        caseData2.setEcmCaseType(SINGLE_CASE_TYPE);
 
         var bfActionTypeItem2 = new BFActionTypeItem();
         var bfActionType2 = new BFActionType();
@@ -93,7 +93,7 @@ public class ServingClaimsReportTest {
         var casePreAcceptType3 = new CasePreAcceptType();
         casePreAcceptType3.setDateAccepted("2020-08-25");
         caseData3.setPreAcceptCase(casePreAcceptType3);
-        caseData3.setCaseType(SINGLE_CASE_TYPE);
+        caseData3.setEcmCaseType(SINGLE_CASE_TYPE);
 
         var bfActionTypeItem3 = new BFActionTypeItem();
         var bfActionType3 = new BFActionType();
@@ -115,7 +115,7 @@ public class ServingClaimsReportTest {
         var casePreAcceptType4 = new CasePreAcceptType();
         casePreAcceptType4.setDateAccepted("2020-08-07");
         caseData4.setPreAcceptCase(casePreAcceptType4);
-        caseData4.setCaseType(SINGLE_CASE_TYPE);
+        caseData4.setEcmCaseType(SINGLE_CASE_TYPE);
 
         var bfActionTypeItem4 = new BFActionTypeItem();
         var bfActionType4 = new BFActionType();
@@ -137,7 +137,7 @@ public class ServingClaimsReportTest {
         var casePreAcceptType5 = new CasePreAcceptType();
         casePreAcceptType5.setDateAccepted("2020-08-07");
         caseData5.setPreAcceptCase(casePreAcceptType5);
-        caseData5.setCaseType(SINGLE_CASE_TYPE);
+        caseData5.setEcmCaseType(SINGLE_CASE_TYPE);
 
         var bfActionTypeItem5 = new BFActionTypeItem();
         var bfActionType5 = new BFActionType();

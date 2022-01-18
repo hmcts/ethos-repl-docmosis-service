@@ -3,9 +3,12 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.common.Strings;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
@@ -18,6 +21,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,6 +35,8 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.joining;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_TITLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_HEARD_CASE_WITH_NO_JUDGE_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSING_LISTED_CASE_ERROR;
@@ -54,6 +60,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.MISSING_JURISDICTIO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NOT_ALLOCATED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RECEIPT_DATE_LATER_THAN_ACCEPTED_ERROR_MESSAGE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_TITLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESP_REP_NAME_MISMATCH_ERROR_MESSAGE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
@@ -63,6 +70,9 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.getActiveRe
 @Slf4j
 @Service("eventValidationService")
 public class EventValidationService {
+
+    private static final List<String> INVALID_STATES_FOR_CLOSED_CURRENT_POSITION = List.of(
+            SUBMITTED_STATE, ACCEPTED_STATE, REJECTED_STATE);
 
     public List<String> validateReceiptDate(CaseData caseData) {
         List<String> errors = new ArrayList<>();
@@ -87,10 +97,15 @@ public class EventValidationService {
         log.info("Checking whether the case " + caseDetails.getCaseData().getEthosCaseReference()
                 + " is in accepted state");
         if (caseDetails.getState().equals(SUBMITTED_STATE)
-                && caseDetails.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)) {
+                && caseDetails.getCaseData().getEcmCaseType().equals(MULTIPLE_CASE_TYPE)) {
             validated = false;
         }
         return validated;
+    }
+
+    public boolean validateCurrentPosition(CaseDetails caseDetails) {
+        return !(CASE_CLOSED_POSITION.equals(caseDetails.getCaseData().getPositionType())
+                && INVALID_STATES_FOR_CLOSED_CURRENT_POSITION.contains(caseDetails.getState()));
     }
 
     public List<String> validateReceiptDateMultiple(MultipleData multipleData) {
@@ -180,6 +195,43 @@ public class EventValidationService {
     public void validateJurisdictionCodes(CaseData caseData, List<String> errors) {
         validateDuplicatedJurisdictionCodes(caseData, errors);
         validateJurisdictionCodesExistenceInJudgement(caseData, errors);
+    }
+
+    public List<String> validateHearingDatesNotInFuture(CaseData caseData) {
+        List<String> errors = new ArrayList<>();
+        if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+            return errors;
+        }
+        for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+            if (CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                continue;
+            }
+            for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                errors.addAll(addErrorMessages(dateListedTypeItem));
+            }
+        }
+        return errors;
+    }
+
+    private List<String> addErrorMessages(DateListedTypeItem dateListedTypeItem) {
+        List<String> errors = new ArrayList<>();
+        if (isDateInFuture(dateListedTypeItem.getValue().getHearingTimingStart())) {
+            errors.add("Start time can't be in future");
+        }
+        if (isDateInFuture(dateListedTypeItem.getValue().getHearingTimingResume())) {
+            errors.add("Resume time can't be in future");
+        }
+        if (isDateInFuture(dateListedTypeItem.getValue().getHearingTimingBreak())) {
+            errors.add("Break time can't be in future");
+        }
+        if (isDateInFuture(dateListedTypeItem.getValue().getHearingTimingFinish())) {
+            errors.add("Finish time can't be in future");
+        }
+        return errors;
+    }
+
+    private boolean isDateInFuture(String date) {
+        return !Strings.isNullOrEmpty(date) && LocalDateTime.parse(date).isAfter(LocalDateTime.now());
     }
 
     private void validateJurisdictionCodesExistenceInJudgement(CaseData caseData, List<String> errors) {

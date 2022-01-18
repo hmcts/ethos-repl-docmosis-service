@@ -40,7 +40,7 @@ jacocoTestCoverageVerification {
 }
 
 checkstyle {
-    maxWarnings = 5
+    maxWarnings = 0
     sourceSets = [project.sourceSets.main]
     toolVersion = '8.29'
 }
@@ -210,7 +210,7 @@ ext {
 }
 
 dependencies {
-    implementation 'com.github.hmcts:ecm-common:0.1.161'
+    implementation 'com.github.hmcts:ecm-common:0.1.163'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -295,7 +295,6 @@ dependencies {
     contractTestImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.4'
     contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.7.RELEASE'
     contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-netflix-ribbon', version: '2.2.7.RELEASE'
-
     contractTestImplementation sourceSets.main.runtimeClasspath
     contractTestImplementation sourceSets.test.runtimeClasspath
 }

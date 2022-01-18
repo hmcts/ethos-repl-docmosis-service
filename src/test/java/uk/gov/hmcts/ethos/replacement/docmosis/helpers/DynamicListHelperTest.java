@@ -3,18 +3,26 @@ package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
+import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicDepositOrder;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicJudgements;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicLetters;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRespondentRepresentative;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRestrictedReporting;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +34,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_BULK_CAS
 public class DynamicListHelperTest {
 
     private CaseDetails caseDetails1;
+    private CaseDetails caseDetails2;
     private CaseDetails caseDetails4;
     private CaseDetails caseDetails6;
     private CaseDetails caseDetailsScotTest1;
@@ -36,6 +45,7 @@ public class DynamicListHelperTest {
     @Before
     public void setUp() throws Exception {
         caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
+        caseDetails2 = generateCaseDetails("caseDetailsTest2.json");
         caseDetails4 = generateCaseDetails("caseDetailsTest4.json");
         caseDetails6 = generateCaseDetails("caseDetailsTest6.json");
         caseDetailsScotTest1 = generateCaseDetails("caseDetailsScotTest1.json");
@@ -172,4 +182,64 @@ public class DynamicListHelperTest {
         assertNull(multipleDetails.getCaseData().getCorrespondenceScotType());
     }
 
+    @Test
+    public void createDynamicJurisdictionCodesTest() {
+        List<DynamicValueType> listItems = DynamicListHelper.createDynamicJurisdictionCodes(caseDetails1.getCaseData());
+        var totalJurisdictions = caseDetails1.getCaseData().getJurCodesCollection().size();
+        var dynamicValue = DynamicListHelper.getDynamicValue(caseDetails1.getCaseData().getJurCodesCollection()
+                .get(0).getValue().getJuridictionCodesList());
+        assertEquals(dynamicValue, listItems.get(0));
+        assertEquals(totalJurisdictions, listItems.size());
+    }
+
+    @Test
+    public void findDynamicValueTest() {
+        List<DynamicValueType> listItems = DynamicListHelper.createDynamicJurisdictionCodes(caseDetails1.getCaseData());
+        dynamicValueType.setCode("COM");
+        dynamicValueType.setLabel("COM");
+        assertEquals(dynamicValueType, DynamicListHelper.findDynamicValue(listItems, "COM"));
+    }
+
+    @Test
+    public void dynamicJudgementsTest() {
+        var caseData = caseDetails1.getCaseData();
+        DynamicJudgements.dynamicJudgements(caseData);
+        var totalHearings = caseData.getHearingCollection().size();
+        JudgementType judgementType = caseData.getJudgementCollection().get(0).getValue();
+        assertEquals(totalHearings, judgementType.getDynamicJudgementHearing().getListItems().size());
+    }
+
+    @Test
+    public void dynamicJudgementHearing_HearingDateFilled() {
+        var caseData = caseDetails1.getCaseData();
+        caseData.getJudgementCollection().get(0).getValue().setJudgmentHearingDate("2019-11-01");
+        DynamicJudgements.dynamicJudgements(caseData);
+        dynamicValueType.setCode("1");
+        dynamicValueType.setLabel("1 : Manchester - Single - 2019-11-01");
+        assertEquals(dynamicValueType, caseData.getJudgementCollection().get(0).getValue().getDynamicJudgementHearing().getValue());
+    }
+
+    @Test
+    public void dynamicJudgementHearing_DynamicValue() {
+        var caseData = caseDetails1.getCaseData();
+        List<DynamicValueType> hearingListItems = DynamicListHelper.createDynamicHearingList(caseData);
+        var listHearing = new DynamicFixedListType();
+        listHearing.setListItems(hearingListItems);
+        caseData.getJudgementCollection().get(0).getValue().setDynamicJudgementHearing(listHearing);
+        dynamicValueType.setCode("1");
+        dynamicValueType.setLabel("1 : Manchester - Single - 2019-11-01");
+        caseData.getJudgementCollection().get(0).getValue().getDynamicJudgementHearing().setValue(dynamicValueType);
+        DynamicJudgements.dynamicJudgements(caseData);
+        assertEquals(dynamicValueType, caseData.getJudgementCollection().get(0).getValue().getDynamicJudgementHearing().getValue());
+    }
+
+    @Test
+    public void createDynamicJudgementHearing() {
+        var caseData = caseDetails2.getCaseData();
+        DynamicJudgements.dynamicJudgements(caseData);
+        assertNotNull(caseData.getJudgementCollection());
+        var totalHearings = caseData.getHearingCollection().size();
+        JudgementType judgementType = caseData.getJudgementCollection().get(0).getValue();
+        assertEquals(totalHearings, judgementType.getDynamicJudgementHearing().getListItems().size());
+    }
 }

@@ -9,7 +9,7 @@ const verifyState = (eventResponse, state) => {
     assert.strictEqual(JSON.parse(eventResponse).state, state);
 };
 
-Feature('Create a Single Case and move to Case Details state');
+Feature('Leeds Singles Case and move to Case Details state');
 
 Scenario('Verify Case Details ', async ({I}) => {
 
