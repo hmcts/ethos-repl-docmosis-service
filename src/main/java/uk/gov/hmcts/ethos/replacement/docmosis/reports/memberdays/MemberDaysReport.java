@@ -29,6 +29,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE
 public class MemberDaysReport {
     private static final int MINUTES = 60;
     private static final String FULL_PANEL = "Full Panel";
+    private static final String SINGLE_DATE_HEARING_REPORT = "Single";
+    private static final String DATE_RANGE_HEARING_REPORT = "Range";
 
     public MemberDaysReportData runReport(ListingDetails listings, List<SubmitEvent> submitEventList) {
         var memberDaysReportData = initiateReport(listings);
@@ -44,20 +46,21 @@ public class MemberDaysReport {
         var office = UtilHelper.getListingCaseTypeId(caseTypeId);
         var reportData = new MemberDaysReportData();
         reportData.setOffice(office);
-        reportData.setDurationDescription(getDurationText(reportData, listingDetails.getCaseData()));
+        reportData.setDurationDescription(getDurationText(listingDetails.getCaseData()));
+        reportData.setHearingDateType(listingDetails.getCaseData().getHearingDateType());
         reportData.setReportType(MEMBER_DAYS_REPORT);
         return reportData;
     }
 
-    private String getDurationText(MemberDaysReportData reportData, ListingData currentCaseData) {
+    private String getDurationText(ListingData currentCaseData) {
         var description = "";
-        if (currentCaseData.getHearingDateType().equals("Single")) {
+        if (currentCaseData.getHearingDateType().equals(SINGLE_DATE_HEARING_REPORT)) {
             description = "On " + currentCaseData.getListingDate();
-        } else if (currentCaseData.getHearingDateType().equals("Range")) {
+        } else if (currentCaseData.getHearingDateType().equals(DATE_RANGE_HEARING_REPORT)) {
             description = "Between " + currentCaseData.getListingDateFrom()
                     + " and " + currentCaseData.getListingDateTo();
         }
-        reportData.setHearingDateType(currentCaseData.getHearingDateType());
+
         return description;
     }
 
@@ -138,13 +141,13 @@ public class MemberDaysReport {
             .replace(".000", ""));
         var hearingFinish = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingFinish()
             .replace(".000", ""));
-        var hearingBreak2 = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingBreak()
+        var hearingBreak = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingBreak()
             .replace(".000", ""));
-        var hearingResume2 = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingResume()
+        var hearingResume = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingResume()
             .replace(".000", ""));
 
         var startFinishDuration = Duration.between(hearingStart, hearingFinish).toMinutes();
-        var breakResumeDuration = Duration.between(hearingBreak2, hearingResume2).toMinutes();
+        var breakResumeDuration = Duration.between(hearingBreak, hearingResume).toMinutes();
         var duration = startFinishDuration - breakResumeDuration;
 
         return String.valueOf(duration);
