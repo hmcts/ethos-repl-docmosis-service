@@ -124,7 +124,7 @@ module.exports = {
     bfAction,
     listHearing,
     printHearingLists,
-    allocateHearing,
+    // allocateHearing,
     hearingDetails,
     hearingDetails,
     caseTransfer,

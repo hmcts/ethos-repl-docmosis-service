@@ -21,7 +21,7 @@ module.exports = () => {
         executeFixCaseAPI:steps.fixCaseApi.fixCaseApi,
         executeBFAction:steps.broughtForward.broughtForward,
         executeAddAmendHearing:steps.amendHearing.addAmendHearing,
-        executeAllocateHearing:steps.allocateHearing.allocateHearing,
+        // executeAllocateHearing:steps.allocateHearing.allocateHearing,
         executeHearingDetails:steps.hearingDetails.hearingDetails,
         executePrintHearingLists:steps.printHearingLists.printHearingLists,
         executeCaseTransfer:steps.caseTransfer.caseTransfer,
