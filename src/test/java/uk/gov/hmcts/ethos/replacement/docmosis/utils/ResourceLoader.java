@@ -26,4 +26,10 @@ public class ResourceLoader {
         return jsonMapper.fromJson(response, UploadResponse.class);
     }
 
+    public static uk.gov.hmcts.reform.ccd.document.am.model.UploadResponse successfulDocStoreUpload() throws URISyntaxException, IOException {
+        String response = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(ResourceLoader.class.getClassLoader()
+                .getResource("responseDocStore.success.json")).toURI())));
+        return jsonMapper.fromJson(response, uk.gov.hmcts.reform.ccd.document.am.model.UploadResponse.class);
+    }
+
 }

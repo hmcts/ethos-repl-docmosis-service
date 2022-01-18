@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -43,6 +44,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FILE_EXTENSION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_BY_HEARING_TYPE_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_TO_JUDGEMENTS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_IT56;
@@ -77,6 +79,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARI
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
 
 @Slf4j
 public class ListingHelper {
@@ -87,7 +90,10 @@ public class ListingHelper {
     private static final String LISTING_NEWLINE = "\"listing\":[\n";
     static final List<String> REPORTS = Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
         LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT, TIME_TO_FIRST_HEARING_REPORT,
-        SERVING_CLAIMS_REPORT, CASE_SOURCE_LOCAL_REPORT, HEARINGS_TO_JUDGEMENTS_REPORT);
+        SERVING_CLAIMS_REPORT, CASE_SOURCE_LOCAL_REPORT, HEARINGS_TO_JUDGEMENTS_REPORT,
+            HEARINGS_BY_HEARING_TYPE_REPORT, NO_CHANGE_IN_CURRENT_POSITION_REPORT);
+    private static final List<String> SCOTLAND_HEARING_LIST = List.of("Reading Day", "Deliberation Day",
+            "Members meeting", "In Chambers");
 
     private ListingHelper() {
     }
@@ -104,7 +110,9 @@ public class ListingHelper {
             listingType.setCauseListDate(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalDate(listedDate) : " ");
             listingType.setCauseListTime(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalTime(listedDate) : " ");
             log.info("getJurCodesCollection");
-            listingType.setJurisdictionCodesList(BulkHelper.getJurCodesCollection(caseData.getJurCodesCollection()));
+
+            listingType.setJurisdictionCodesList(BulkHelper.getJurCodesCollectionWithHide(
+                    caseData.getJurCodesCollection()));
             listingType
                     .setHearingType(!isNullOrEmpty(hearingType.getHearingType()) ? hearingType.getHearingType() : " ");
             listingType.setPositionType(!isNullOrEmpty(caseData.getPositionType()) ? caseData.getPositionType() : " ");
@@ -121,6 +129,13 @@ public class ListingHelper {
             listingType.setHearingPanel(!isNullOrEmpty(hearingType.getHearingSitAlone())
                     ? hearingType.getHearingSitAlone()
                     : " ");
+            listingType.setHearingFormat(CollectionUtils.isNotEmpty(hearingType.getHearingFormat())
+                    ? String.join(", ", hearingType.getHearingFormat())
+                    : " ");
+            listingType.setJudicialMediation(
+                    isNullOrEmpty(hearingType.getJudicialMediation()) || NO.equals(hearingType.getJudicialMediation())
+                    ? " "
+                    : hearingType.getJudicialMediation());
 
             log.info("getVenueFromDateListedType");
             listingType.setCauseListVenue(getVenueFromDateListedType(dateListedType));
@@ -139,6 +154,12 @@ public class ListingHelper {
                     ? DocumentHelper.getHearingDuration(hearingType)
                     : " ");
 
+            listingType.setHearingReadingDeliberationMembersChambers(
+                    !isNullOrEmpty(dateListedType.getHearingTypeReadingDeliberation())
+                    && SCOTLAND_HEARING_LIST.contains(dateListedType.getHearingTypeReadingDeliberation())
+                    ? dateListedType.getHearingTypeReadingDeliberation()
+                    : " ");
+            
             log.info("End getListingTypeFromCaseData");
             return getClaimantRespondentDetails(listingType, listingData, caseData);
 
@@ -569,6 +590,10 @@ public class ListingHelper {
         sb.append("\"Hearing_dayofdays\":\"").append(nullCheck(listingType.getHearingDay())).append(NEW_LINE);
         sb.append("\"Hearing_panel\":\"").append(nullCheck(listingType.getHearingPanel())).append(NEW_LINE);
         sb.append("\"Hearing_notes\":\"").append(nullCheck(extractHearingNotes(listingType))).append(NEW_LINE);
+        sb.append("\"Judicial_mediation\":\"").append(nullCheck(listingType.getJudicialMediation())).append(NEW_LINE);
+        sb.append("\"Reading_deliberation_day\":\"")
+                .append(nullCheck(listingType.getHearingReadingDeliberationMembersChambers())).append(NEW_LINE);
+        sb.append("\"Hearing_format\":\"").append(nullCheck(listingType.getHearingFormat())).append(NEW_LINE);
         sb.append("\"respondent_representative\":\"")
                 .append(nullCheck(listingType.getRespondentRepresentative())).append("\"}");
         return sb;
@@ -832,8 +857,12 @@ public class ListingHelper {
                 return "EM-TRB-SCO-ENG-00781";
             case CASE_SOURCE_LOCAL_REPORT:
                 return "EM-TRB-SCO-ENG-00783";
+            case HEARINGS_BY_HEARING_TYPE_REPORT:
+                return "EM-TRB-SCO-ENG-00785";
             case HEARINGS_TO_JUDGEMENTS_REPORT:
-                return "EM-TRB-SCO-ENG-00790";
+                return "EM-TRB-SCO-ENG-00786";
+            case NO_CHANGE_IN_CURRENT_POSITION_REPORT:
+                return "EM-TRB-SCO-ENG-00794";
             default:
                 return NO_DOCUMENT_FOUND;
         }

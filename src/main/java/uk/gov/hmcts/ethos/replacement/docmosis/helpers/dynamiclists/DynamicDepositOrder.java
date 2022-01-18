@@ -34,7 +34,7 @@ public class DynamicDepositOrder {
             var listAll = new DynamicFixedListType();
             listAll.setListItems(listAllParties);
 
-            if (!CollectionUtils.isEmpty(caseData.getDepositCollection())) {
+            if (CollectionUtils.isNotEmpty(caseData.getDepositCollection())) {
                 var depositCollection = caseData.getDepositCollection();
                 for (DepositTypeItem depositTypeItem : depositCollection) {
                     dynamicOrderAgainst(caseData, depositTypeItem.getValue(), listClaimantRespondent);

@@ -3,11 +3,29 @@
 const requireDirectory = require('require-directory');
 const steps = requireDirectory(module);
 
-module.exports = function () {
+module.exports = () => {
     return actor({
-
-        // Login
-        authenticateWithIdamIfAvailable: steps.IDAM.signIn,
+        authenticateWithIdam: steps.IDAM.signIn,
+        chooseNextStep: steps.nextStep.nextStep,
+        acceptTheCase: steps.acceptanceCase.acceptCase,
+        rejectTheCase:steps.acceptanceCase.rejectCase,
+        executeClaimantDetails:steps.amendClaimantDetails.amendClaimantDetails,
+        executeClaimantRepresentative:steps.amendClaimantRepresentative.amendClaimantRepresentative,
+        executeRespondentDetails:steps.amendRespondentDetails.amendRespondentDetails,
+        amendTheCaseDetails:steps.amendCaseDetails.amendCaseDetails,
+        executeRespondentRepresentative:steps.amendRespondentRepresentative.amendRespondentRepresentative,
+        executeAddAmendJurisdiction:steps.amendJurisdiction.addAmendJurisdiction,
+        executeCloseCase:steps.desposeCase.desposeCase,
+        executeLettersEvent:steps.generateCorrespondence.generateCorrespondence,
+        setRestrictedReporting:steps.restrictedCases.restrictedCases,
+        executeFixCaseAPI:steps.fixCaseApi.fixCaseApi,
+        executeBFAction:steps.broughtForward.broughtForward,
+        executeAddAmendHearing:steps.amendHearing.addAmendHearing,
+        executeAllocateHearing:steps.allocateHearing.allocateHearing,
+        executeHearingDetails:steps.hearingDetails.hearingDetails,
+        executePrintHearingLists:steps.printHearingLists.printHearingLists,
+        executeCaseTransfer:steps.caseTransfer.caseTransfer,
+        executeJudgment:steps.amendJudgment.addAmendJudgment,
         selectNewCase: steps.newCase.newCase,
         selectCaseTypeOptions: steps.createCase.createCase,
         enterCreateCasePage1: steps.createCasePages.page1initiateCase1,

@@ -62,7 +62,7 @@ public class HearingsToJudgmentsReport {
     }
 
     public HearingsToJudgmentsReportData runReport(String caseTypeId) {
-        var submitEvents = getCases(caseTypeId, listingDateFrom, listingDateTo);
+        var submitEvents = getCases(caseTypeId);
         var reportData = initReport(caseTypeId);
 
         if (CollectionUtils.isNotEmpty(submitEvents)) {
@@ -77,8 +77,7 @@ public class HearingsToJudgmentsReport {
         return new HearingsToJudgmentsReportData(reportSummary);
     }
 
-    private List<HearingsToJudgmentsSubmitEvent> getCases(String caseTypeId, String listingDateFrom,
-                                                          String listingDateTo) {
+    private List<HearingsToJudgmentsSubmitEvent> getCases(String caseTypeId) {
         return hearingsToJudgmentsReportDataSource.getData(UtilHelper.getListingCaseTypeId(caseTypeId),
                 listingDateFrom, listingDateTo);
     }
@@ -157,14 +156,12 @@ public class HearingsToJudgmentsReport {
             var dateListedType = dateListedTypeItem.getValue();
             var hearingListedDate = LocalDate.parse(dateListedType.getListedDate(), OLD_DATE_TIME_PATTERN);
             var judgements = judgmentsCollection.stream()
-                                                    .filter(j -> hearingListedDate.isEqual(
-                                                                LocalDate.parse(j.getValue().getJudgmentHearingDate(),
-                                                                        OLD_DATE_TIME_PATTERN2)))
-                                                    .collect(Collectors.toList());
+                                .filter(j -> judgmentHearingDateMatchHearingListedDate(j, hearingListedDate))
+                                .collect(Collectors.toList());
 
-            if (!isWithinDateRange(hearingListedDate)
-                    || !isValidHearingDate(dateListedTypeItem)
-                    || judgements.isEmpty()) {
+            if (judgements.isEmpty()
+                    || !isWithinDateRange(hearingListedDate)
+                    || !isValidHearingDate(dateListedTypeItem)) {
                 continue;
             }
 
@@ -187,6 +184,13 @@ public class HearingsToJudgmentsReport {
         }
 
         return hearingJudgmentsList;
+    }
+
+    private boolean judgmentHearingDateMatchHearingListedDate(JudgementTypeItem judgment, LocalDate hearingListedDate) {
+        return judgment.getValue() != null
+                && judgment.getValue().getJudgmentHearingDate() != null
+                && hearingListedDate.isEqual(
+                        LocalDate.parse(judgment.getValue().getJudgmentHearingDate(), OLD_DATE_TIME_PATTERN2));
     }
 
     private boolean isValidCase(HearingsToJudgmentsSubmitEvent submitEvent) {
@@ -242,6 +246,6 @@ public class HearingsToJudgmentsReport {
     }
 
     private boolean caseHasJudgments(HearingsToJudgmentsCaseData caseData) {
-        return !CollectionUtils.isEmpty(caseData.getJudgementCollection());
+        return CollectionUtils.isNotEmpty(caseData.getJudgementCollection());
     }
 }

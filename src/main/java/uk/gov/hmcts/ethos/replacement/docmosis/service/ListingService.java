@@ -23,13 +23,16 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.Cas
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CcdReportDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.CasesCompletedReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesourcelocalreport.CaseSourceLocalReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.HearingsByHearingTypeReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsCcdReportDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesourcelocalreport.CaseSourceLocalReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeCcdDataSource;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims.ServingClaimsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -44,6 +47,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDG
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_SOURCE_LOCAL_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMS_ACCEPTED_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_BY_HEARING_TYPE_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_TO_JUDGEMENTS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_DOC_ETCL;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_ETCL_STAFF;
@@ -64,6 +68,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -78,6 +83,7 @@ public class ListingService {
     private String listingDateFrom;
     private String listingDateTo;
     private final CaseSourceLocalReport caseSourceLocalReport;
+    private final HearingsByHearingTypeReport hearingsByHearingTypeReport;
 
     private static final String MISSING_DOCUMENT_NAME = "Missing document name";
     private static final String MESSAGE = "Failed to generate document for case id : ";
@@ -224,6 +230,8 @@ public class ListingService {
                     return getCasesAwaitingJudgmentReport(listingDetails, authToken);
                 case HEARINGS_TO_JUDGEMENTS_REPORT:
                     return getHearingsToJudgmentsReport(listingDetails, authToken);
+                case NO_CHANGE_IN_CURRENT_POSITION_REPORT:
+                    return getNoPositionChangeReport(listingDetails, authToken);
                 default:
                     return getDateRangeReport(listingDetails, authToken);
             }
@@ -263,6 +271,18 @@ public class ListingService {
         return reportData;
     }
 
+    private NoPositionChangeReportData getNoPositionChangeReport(ListingDetails listingDetails, String authToken) {
+        log.info("No Change In Current Position for {}", listingDetails.getCaseTypeId());
+        var reportDataSource = new NoPositionChangeCcdDataSource(authToken, ccdClient);
+        var hearingsToJudgmentsReport = new NoPositionChangeReport(reportDataSource,
+                listingDetails.getCaseData().getReportDate());
+        var reportData = hearingsToJudgmentsReport.runReport(
+                listingDetails.getCaseTypeId());
+        reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
+        reportData.setReportType(listingDetails.getCaseData().getReportType());
+        return reportData;
+    }
+
     private ListingData getDateRangeReport(ListingDetails listingDetails, String authToken) throws IOException {
         List<SubmitEvent> submitEvents = getDateRangeReportSearch(listingDetails, authToken);
 
@@ -281,6 +301,9 @@ public class ListingService {
                 return servingClaimsReport.generateReportData(listingDetails, submitEvents);
             case CASE_SOURCE_LOCAL_REPORT:
                 return caseSourceLocalReport.generateReportData(listingDetails, submitEvents);
+            case HEARINGS_BY_HEARING_TYPE_REPORT:
+                return hearingsByHearingTypeReport.processHearingsByHearingTypeRequest(
+                        listingDetails, submitEvents);
             default:
                 return listingDetails.getCaseData();
         }

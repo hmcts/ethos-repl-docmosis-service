@@ -1,7 +1,7 @@
 'use strict';
 
 const Helper = codecept_helper;
-const testConfig = require('src/test/config.js');
+const testConfig = require('../../config');
 
 class WebDriverHelper extends Helper {
 

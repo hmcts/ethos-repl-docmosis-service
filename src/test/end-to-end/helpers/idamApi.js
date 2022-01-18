@@ -6,7 +6,6 @@ const logger = Logger.getLogger('helpers/idamApi.js');
 const env = testConfig.TestEnv;
 
 async function getUserToken() {
-    logger.info('Getting User Token');
     const username = testConfig.TestEnvCWUser;
     const password = testConfig.TestEnvCWPassword;
     const redirectUri = `https://manage-case.aat.platform.hmcts.net/oauth2/callback`;
@@ -39,7 +38,6 @@ async function getUserToken() {
 }
 
 async function getUserId(authToken) {
-    logger.info('Getting User Id');
     const idamBaseUrl = 'https://idam-api.aat.platform.hmcts.net';
     const idamDetailsPath = '/details';
 

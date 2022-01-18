@@ -174,4 +174,28 @@ public class MultipleDocGenerationController {
         return getMultipleCallbackRespEntity(errors, multipleRequest.getCaseDetails());
     }
 
+    @PostMapping(value = "/dynamicMultipleLetters", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populate flags in dynamic lists with all flags values are in the excel.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Accessed successfully",
+                response = MultipleCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<MultipleCallbackResponse> dynamicMultipleLetters(
+            @RequestBody MultipleRequest multipleRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("DYNAMIC MULTIPLE LETTERS ---> " + LOG_MESSAGE + multipleRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        List<String> errors = new ArrayList<>();
+        var multipleDetails = multipleRequest.getCaseDetails();
+        multipleLetterService.dynamicMultipleLetters(userToken, multipleDetails, errors);
+        return getMultipleCallbackRespEntity(errors, multipleDetails);
+    }
+
 }

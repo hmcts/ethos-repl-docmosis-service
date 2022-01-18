@@ -72,8 +72,19 @@
     "correspondenceScotType": {
       "topLevel_Scot_Documents": "EM-TRB-SCO-ENG-00043",
       "part_2_Scot_Documents": "24",
-      "hearingNumber": "1"
-    },
+      "hearingNumber": "1",
+      "dynamicHearingNumber": {
+        "value": {
+          "code": "1",
+          "label": "1 - Glasgow - 25 Nov 2019"
+        },
+        "list_items": [
+          {
+            "code": "1",
+            "label": "1 - Glasgow - 25 Nov 2019"
+          }
+        ]
+      }    },
     "repCollection": [
       {
         "id" : "123345",

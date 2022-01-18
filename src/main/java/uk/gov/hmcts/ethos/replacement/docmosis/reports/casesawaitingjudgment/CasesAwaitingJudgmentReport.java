@@ -103,7 +103,7 @@ public class CasesAwaitingJudgmentReport {
             reportDetail.setWeeksSinceHearing(getWeeksSinceHearing(listedDate, today));
             reportDetail.setDaysSinceHearing(getDaysSinceHearing(listedDate, today));
             reportDetail.setCaseNumber(caseData.getEthosCaseReference());
-            if (MULTIPLE_CASE_TYPE.equals(caseData.getCaseType())) {
+            if (MULTIPLE_CASE_TYPE.equals(caseData.getEcmCaseType())) {
                 reportDetail.setMultipleReference(caseData.getMultipleReference());
             } else {
                 reportDetail.setMultipleReference(NO_MULTIPLE_REFERENCE);

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -140,8 +141,11 @@ public class ExcelCreationService {
 
     private void createCell(XSSFRow row, int cellIndex, String value, CellStyle style) {
         Cell cell = row.createCell(cellIndex);
-        cell.setCellValue(value);
         cell.setCellStyle(style);
+
+        if (!Strings.isNullOrEmpty(value) && !value.isBlank()) {
+            cell.setCellValue(value);
+        }
     }
 
     private void initializeData(XSSFWorkbook workbook, XSSFSheet sheet, List<?> multipleCollection,

@@ -16,7 +16,8 @@ public class HearingsToJudgmentsCcdReportDataSource implements HearingsToJudgmen
     private final CcdClient ccdClient;
 
     @Override
-    public List<HearingsToJudgmentsSubmitEvent> getData(String caseTypeId, String listingDateFrom, String listingDateTo) {
+    public List<HearingsToJudgmentsSubmitEvent> getData(String caseTypeId,
+                                                        String listingDateFrom, String listingDateTo) {
         try {
             var query = HearingsToJudgmentsElasticSearchQuery.create(listingDateFrom, listingDateTo);
             return ccdClient.hearingsToJudgementsSearch(authToken, caseTypeId, query);

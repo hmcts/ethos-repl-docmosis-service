@@ -9,38 +9,22 @@ class JSWait extends codecept_helper {
         }
     }
 
-    async navByClick (text, locator) {
+    async navByClick(text, locator) {
         const helper = this.helpers.WebDriver || this.helpers.Puppeteer;
         const helperIsPuppeteer = this.helpers.Puppeteer;
-
-        if (locator) {
-            locator = this.appendNotCookieBannerToSelector(locator);
-        } else {
-            text = this.appendNotCookieBannerToSelector(text);
-        }
 
         if (helperIsPuppeteer) {
             helper.click(text, locator).catch(err => {
                 console.error(err.message);
             });
-            await helper.page.waitForNavigation({waitUntil: 'networkidle0'});
+            await helper.page.waitForNavigation({waitUntil: 'domcontentloaded'});
         } else {
             await helper.click(text, locator);
             await helper.wait(2);
         }
     }
 
-    appendNotCookieBannerToSelector(locator) {
-        const notCookieBanner = ':not([data-cm-action])';
-        if (typeof (locator) === 'string' && locator.indexOf('govuk-button') >= 0) {
-            locator += notCookieBanner;
-        } else if (typeof (locator) === 'object' && locator.css.indexOf('govuk-button') >= 0) {
-            locator.css += notCookieBanner;
-        }
-        return locator;
-    }
-
-    async amOnLoadedPage (url, language ='en') {
+    async amOnLoadedPage(url, language = 'en') {
         let newUrl = `${url}?lng=${language}`;
         const helper = this.helpers.WebDriver || this.helpers.Puppeteer;
         const helperIsPuppeteer = this.helpers.Puppeteer;

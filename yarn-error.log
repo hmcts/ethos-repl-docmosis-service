@@ -1,8 +1,8 @@
 Arguments: 
-  /usr/local/Cellar/node/14.14.0/bin/node /usr/local/Cellar/yarn/1.22.4/libexec/bin/yarn.js test-e2e
+  /usr/local/Cellar/node/14.14.0/bin/node /usr/local/Cellar/yarn/1.22.4/libexec/bin/yarn.js lint
 
 PATH: 
-  /Users/ZeroZerp/.sdkman/candidates/groovy/current/bin:/bin:/usr/bin:/usr/local/bin:/Users/ZeroZerp/.nvm/versions/node/v8.10.0/bin:/usr/local/Cellar/maven/3.5.2/libexec/bin:/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home/bin:.:/Users/ZeroZerp/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin
+  /Users/ZeroZerp/.sdkman/candidates/groovy/current/bin:/bin:/usr/bin:/usr/local/bin:/Users/ZeroZerp/.nvm/versions/node/v8.10.0/bin:/usr/local/Cellar/maven/3.5.2/libexec/bin:/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home/bin:.:/Users/ZeroZerp/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/ZeroZerp/Documents/ECM-2021/ethos-repl-docmosis-service/node_modules/.bin
 
 Yarn version: 
   1.22.4
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  SyntaxError: /Users/ZeroZerp/Documents/ECM-2021/ethos-repl-docmosis-service/package.json: Unexpected token f in JSON at position 908
+  SyntaxError: /Users/ZeroZerp/Documents/ECM-2021/ethos-repl-docmosis-service/package.json: Unexpected token } in JSON at position 736
       at JSON.parse (<anonymous>)
       at /usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:1625:59
       at Generator.next (<anonymous>)
@@ -36,14 +36,13 @@ npm manifest:
       "test-smoke": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run -c ./src/test/end-to-end/ --grep @smoke --steps --reporter mocha-multi",
       "test-e2e": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run -c ./src/test/end-to-end/ --grep @e2e --steps --reporter mocha-multi",
       "test:functional": "NODE_PATH=. node ./node_modules/codeceptjs/bin/codecept.js run-multiple parallel -c ./src/test/end-to-end/ --grep @e2e --steps --reporter mocha-multi",
-      "test:fullfunctional": "./bin/run-e2e-tests.sh"
     },
     "pre-commit": [
       "lint"
     ],
     "dependencies": {
       "randomstring": "^1.1.5",
-      "require-directory": "^2.1.1"fig,
+      "require-directory": "^2.1.1",
       "html_codesniffer": "^2.5.1",
       "@hmcts/nodejs-logging": "^3.0.2",
       "cross-env": "^5.2.1",
