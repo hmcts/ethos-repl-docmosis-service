@@ -49,5 +49,13 @@
   "dailyCauseList": "Daily Cause List",
   "caseTransfer": "Case Transfer",
   "caseTransferOffice": "Wales",
-  "caseTransferPositionType": "Case transferred - same country"
+  "caseTransferPositionType": "Case transferred - same country",
+  "judgment": "Judgment",
+  "judgmentType": "Judgment",
+  "judgmentMadeDate": "04",
+  "judgmentMadeMonth": "01",
+  "judgmentMadeYear": "2022",
+  "judgmentSentDate": "06",
+  "judgmentSentMonth": "01",
+  "judgmentSentYear": "2022"
 }

@@ -376,7 +376,7 @@ class EventValidationServiceTest {
         CaseDetails caseDetails = new CaseDetails();
         caseDetails.setState(state);
         CaseData caseData = new CaseData();
-        caseData.setCurrentPosition(CASE_CLOSED_POSITION);
+        caseData.setPositionType(CASE_CLOSED_POSITION);
         caseDetails.setCaseData(caseData);
         boolean validated = eventValidationService.validateCurrentPosition(caseDetails);
         assertEquals(expected, validated);

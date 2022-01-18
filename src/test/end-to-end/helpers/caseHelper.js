@@ -103,6 +103,12 @@ async function caseTransfer(I, eventName) {
     await I.executeCaseTransfer();
 }
 
+async function judgment(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.executeJudgment();
+}
+
 module.exports = {
     acceptCaseEvent,
     caseDetails,
@@ -120,5 +126,7 @@ module.exports = {
     printHearingLists,
     allocateHearing,
     hearingDetails,
-    caseTransfer
+    hearingDetails,
+    caseTransfer,
+    judgment
 };
