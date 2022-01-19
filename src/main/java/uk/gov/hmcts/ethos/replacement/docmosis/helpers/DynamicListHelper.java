@@ -75,6 +75,8 @@ public class DynamicListHelper {
                         + " - " + date.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
                 listItems.add(getDynamicCodeLabel(hearingNumber, hearingData));
             }
+        } else {
+            listItems.add(getDynamicValue("No Hearings"));
         }
         return listItems;
     }
