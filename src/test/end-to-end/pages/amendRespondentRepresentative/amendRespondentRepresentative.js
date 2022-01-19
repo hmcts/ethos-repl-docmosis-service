@@ -5,7 +5,6 @@ const testConfig = require("../../../config");
 module.exports = async function () {
 
     const I = this;
-    I.waitForText('#repCollection_0_dynamic_resp_rep_name', testConfig.TestTimeToWaitForText);
     await I.selectOption('#repCollection_0_dynamic_resp_rep_name', commonConfig.respondentName);
     await I.wait(2);
     await I.fillField('#repCollection_0_name_of_representative', commonConfig.respondentRepresentativeName);
