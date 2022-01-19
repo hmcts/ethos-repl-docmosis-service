@@ -21,9 +21,6 @@ module.exports = () => {
         executeFixCaseAPI:steps.fixCaseApi.fixCaseApi,
         executeBFAction:steps.broughtForward.broughtForward,
         executeAddAmendHearing:steps.amendHearing.addAmendHearing,
-        executeAllocateHearing:steps.allocateHearing.allocateHearing,
-        executeHearingDetails:steps.hearingDetails.hearingDetails,
-        executePrintHearingLists:steps.printHearingLists.printHearingLists,
         executeCaseTransfer:steps.caseTransfer.caseTransfer,
         executeJudgment:steps.amendJudgment.addAmendJudgment,
         selectNewCase: steps.newCase.newCase,
@@ -37,5 +34,8 @@ module.exports = () => {
         enterClaimantRepresentedPage7: steps.createCasePages.page7claimantRepresented,
         enterUploadDocPage8: steps.createCasePages.page8UploadDocumentsPage,
         submitPage9: steps.createCasePages.page9SubmitPage
+        // executeAllocateHearing:steps.allocateHearing.allocateHearing,
+        // executeHearingDetails:steps.hearingDetails.hearingDetails,
+        // executePrintHearingLists:steps.printHearingLists.printHearingLists,
     });
 };
