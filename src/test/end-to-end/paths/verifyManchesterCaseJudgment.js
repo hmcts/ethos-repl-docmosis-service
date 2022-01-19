@@ -8,7 +8,7 @@ Feature('Manchester Office Singles Case & Execute Judgment Event');
 
 Scenario('Verify Manchester Case Judgment', async ({I}) => {
 
-    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-manchester-data.json');
+    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-manchester-data.json', 'Manchester');
     await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
     await jurisdiction(I, eventNames.JURISDICTION);
     await judgment(I, eventNames.JUDGMENT);
