@@ -2,16 +2,10 @@
 const commonConfig = require('../../data/commonConfig.json');
 const testConfig = require("../../../config");
 
-module.exports = async function (jurisdiction) {
+module.exports = async function () {
 
     const I = this;
-    if (jurisdiction === 'Manchester') {
-        await I.click(commonConfig.addNewButton);
-        await I.wait(5);
-        await I.fillField('#repCollection_0_resp_rep_name', commonConfig.respondentName);
-    } if (jurisdiction === 'Leeds')   {
-        await I.selectOption('#repCollection_0_dynamic_resp_rep_name', commonConfig.respondentName);
-    }
+    await I.selectOption('#repCollection_0_dynamic_resp_rep_name', commonConfig.respondentName);
     await I.wait(2);
     await I.fillField('#repCollection_0_name_of_representative', commonConfig.respondentRepresentativeName);
 
