@@ -242,4 +242,14 @@ public class DynamicListHelperTest {
         JudgementType judgementType = caseData.getJudgementCollection().get(0).getValue();
         assertEquals(totalHearings, judgementType.getDynamicJudgementHearing().getListItems().size());
     }
+
+    @Test
+    public void createDynamicJudgementHearingNoHearing() {
+        var caseData = caseDetails2.getCaseData();
+        caseData.setHearingCollection(null);
+        DynamicJudgements.dynamicJudgements(caseData);
+        assertNotNull(caseData.getJudgementCollection());
+        JudgementType judgementType = caseData.getJudgementCollection().get(0).getValue();
+        assertEquals("No Hearings", judgementType.getDynamicJudgementHearing().getListItems().get(0).getCode());
+    }
 }
