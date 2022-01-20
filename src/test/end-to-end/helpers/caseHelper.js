@@ -31,10 +31,10 @@ async function claimantRespondentDetails(I, eventName) {
     await I.executeRespondentDetails();
 }
 
-async function respondentRepresentative(I, eventName, jurisdiction) {
+async function respondentRepresentative(I, eventName) {
     await I.chooseNextStep(eventName, 3);
     await I.wait(5);
-    await I.executeRespondentRepresentative(jurisdiction);
+    await I.executeRespondentRepresentative();
 }
 
 async function jurisdiction(I, eventName) {
@@ -55,10 +55,10 @@ async function letters(I, eventName) {
     await I.executeLettersEvent();
 }
 
-async function restrictedReporting(I, eventName, jurisdiction) {
+async function restrictedReporting(I, eventName) {
     await I.chooseNextStep(eventName, 3);
     await I.wait(5);
-    await I.setRestrictedReporting(jurisdiction);
+    await I.setRestrictedReporting();
 }
 
 async function fixCaseAPI(I, eventName) {

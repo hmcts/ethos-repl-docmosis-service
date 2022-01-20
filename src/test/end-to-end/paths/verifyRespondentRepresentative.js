@@ -10,7 +10,7 @@ Scenario('Verify Respondent Representative', async ({I}) => {
 
     caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
     await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
-    await respondentRepresentative(I, eventNames.RESPONDENT_REPRESENTATIVE, 'Leeds');
+    await respondentRepresentative(I, eventNames.RESPONDENT_REPRESENTATIVE);
 
 }).tag('@e2e')
     .tag('@nightly')
