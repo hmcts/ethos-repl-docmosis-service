@@ -23,7 +23,8 @@ public class JudgmentValidationService {
     }
 
     private void populateJudgmentDateOfHearing(JudgementType judgementType) throws ParseException {
-        if (NO.equals(judgementType.getNonHearingJudgment())) {
+        if (NO.equals(judgementType.getNonHearingJudgment())
+                && !"No Hearings".equals(judgementType.getDynamicJudgementHearing().getValue().getLabel())) {
             var hearingDate = judgementType.getDynamicJudgementHearing().getValue().getLabel();
             hearingDate = hearingDate.substring(hearingDate.length() - 11);
             var simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
