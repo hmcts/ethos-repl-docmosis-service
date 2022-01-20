@@ -1069,7 +1069,8 @@ public class ListingHelperTest {
     }
 
     @Test
-    public void getListingTypeFromSubmitData() {
+    public void getListingTypeFromSubmitData() throws Exception {
+        var listingDetails = generateListingDetails("listingDetailsTest1.json");
         CaseData caseData = new CaseData();
         ClaimantIndType claimantIndType = new ClaimantIndType();
         claimantIndType.setClaimantLastName("Rodriguez");
