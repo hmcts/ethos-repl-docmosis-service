@@ -14,6 +14,7 @@ import java.util.List;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_TITLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RESPONDENT_TITLE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicJudgements.NO_HEARINGS;
 
 public class DynamicListHelper {
 
@@ -76,7 +77,7 @@ public class DynamicListHelper {
                 listItems.add(getDynamicCodeLabel(hearingNumber, hearingData));
             }
         } else {
-            listItems.add(getDynamicValue("No Hearings"));
+            listItems.add(getDynamicValue(NO_HEARINGS));
         }
         return listItems;
     }
