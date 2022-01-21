@@ -14,6 +14,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.Rep
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportDetail;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportSummary;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaySummaryItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReportDetail;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportDetailMultiple;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportDetailSingle;
@@ -27,6 +30,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
 
 public class ReportDocHelperTest {
@@ -262,6 +267,80 @@ public class ReportDocHelperTest {
                 + "}\n";
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails4.getCaseData(), "",
                 "EM-TRB-SCO-ENG-00751", userDetails).toString());
+    }
+
+    @Test
+    public void buildMembersDayLocalReport() {
+        var todaysDate = UtilHelper.formatCurrentDate(LocalDate.now());
+        var  listingData = new MemberDaysReportData();
+        listingData.setReportDate(todaysDate);
+        listingData.setReportType(MEMBER_DAYS_REPORT);
+
+        var detailItem = new MemberDaysReportDetail();
+        detailItem.setHearingDate("15 September 2021");
+        detailItem.setEmployeeMember("EE Member");
+        detailItem.setEmployerMember("ER Member");
+        detailItem.setCaseReference("1800003/2021");
+        detailItem.setHearingNumber("33");
+        detailItem.setHearingType("Preliminary Hearing");
+        detailItem.setHearingClerk("Tester Clerk");
+        detailItem.setHearingDuration("420");
+        listingData.getReportDetails().add(detailItem);
+        listingData.setDurationDescription("On 2021-09-15");
+        listingData.setOffice("MukeraCity");
+        listingData.setHalfDaysTotal("0");
+        listingData.setFullDaysTotal("2");
+        listingData.setTotalDays("2.0");
+
+        var memberDaySummaryItem = new MemberDaySummaryItem();
+        memberDaySummaryItem.setHearingDate("15 September 2021");
+        memberDaySummaryItem.setFullDays("2");
+        memberDaySummaryItem.setHalfDays("0");
+        memberDaySummaryItem.setTotalDays("2");
+
+        listingData.getMemberDaySummaryItems().add(memberDaySummaryItem);
+        var userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
+        String expected = "{\n"
+            + "\"accessKey\":\"\",\n"
+            + "\"templateName\":\"EM-TRB-SCO-ENG-00800.docx\",\n"
+            + "\"outputName\":\"document.docx\",\n"
+            + "\"data\":{\n"
+            + "\"Duration_Description\":\"On 2021-09-15\",\n"
+            + "\"Report_Office\":\"MukeraCity\",\n"
+            + "\"Total_Full_Days\":\"2\",\n"
+            + "\"Total_Half_Days\":\"0\",\n"
+            + "\"Total_Days\":\"2.0\",\n"
+            + "\"memberDaySummaryItems\":[\n"
+            + "{\n"
+            + "\"Hearing_Date\":\"15 September 2021\",\n"
+            + "\"Full_Days\":\"2\",\n"
+            + "\"Half_Days\":\"0\",\n"
+            + "\"Total_Days\":\"2\"\n"
+            + "}],\n"
+            + "\"reportDetails\":[\n"
+            + "{\n"
+            + "\"Detail_Hearing_Date\":\"15 September 2021\",\n"
+            + "\"Employee_Member\":\"EE Member\",\n"
+            + "\"Employer_Member\":\"ER Member\",\n"
+            + "\"Case_Reference\":\"1800003/2021\",\n"
+            + "\"Hearing_Number\":\"33\",\n"
+            + "\"Hearing_Type\":\"Preliminary Hearing\",\n"
+            + "\"Hearing_Clerk\":\"Tester Clerk\",\n"
+            + "\"Hearing_Duration\":\""
+            + detailItem.getHearingDuration()
+            + "\"\n"
+            + "}],\n"
+            + "\"Report_Clerk\":\""
+            + userName
+            + "\",\n"
+            + "\"Today_date\":\""
+            + todaysDate
+            + "\"\n"
+            + "}\n"
+            + "}\n";
+
+        assertEquals(expected, ReportDocHelper.buildReportDocumentContent(listingData, "",
+            "EM-TRB-SCO-ENG-00800", userDetails).toString());
     }
 
     @Test

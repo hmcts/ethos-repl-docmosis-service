@@ -79,23 +79,23 @@ async function listHearing(I, eventName, jurisdiction) {
     await I.executeAddAmendHearing(jurisdiction);
 }
 
-// async function allocateHearing(I, eventName, jurisdiction) {
-//     await I.chooseNextStep(eventName, 3);
-//     await I.wait(3);
-//     await I.executeAllocateHearing(jurisdiction);
-// }
+async function allocateHearing(I, eventName, jurisdiction) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.executeAllocateHearing(jurisdiction);
+}
 
-// async function hearingDetails(I, eventName) {
-//     await I.chooseNextStep(eventName, 3);
-//     await I.wait(3);
-//     await I.executeHearingDetails();
-// }
+async function hearingDetails(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.executeHearingDetails();
+}
 
-// async function printHearingLists(I, eventName, jurisdiction) {
-//     await I.chooseNextStep(eventName, 3);
-//     await I.wait(3);
-//     await I.executePrintHearingLists(jurisdiction);
-// }
+async function printHearingLists(I, eventName, jurisdiction) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.executePrintHearingLists(jurisdiction);
+}
 
 async function caseTransfer(I, eventName) {
     await I.chooseNextStep(eventName, 3);
@@ -123,10 +123,10 @@ module.exports = {
     fixCaseAPI,
     bfAction,
     listHearing,
-    // printHearingLists,
-    // allocateHearing,
-    // hearingDetails,
-    // hearingDetails,
+    printHearingLists,
+    allocateHearing,
+    hearingDetails,
+    hearingDetails,
     caseTransfer,
     judgment
 };

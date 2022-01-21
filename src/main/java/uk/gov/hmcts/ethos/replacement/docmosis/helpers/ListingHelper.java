@@ -58,6 +58,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.LISTINGS;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LISTINGS_DEV;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LISTINGS_USER;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_DATE_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_TIME_PATTERN;
@@ -88,10 +89,11 @@ public class ListingHelper {
     private static final String NO_DOCUMENT_FOUND = "No document found";
     private static final int NUMBER_CHAR_PARSING_DATE = 20;
     private static final String LISTING_NEWLINE = "\"listing\":[\n";
+    private static final String ARRAY_ELEMENT_CLOSING_NEWLINE = "}],\n";
     static final List<String> REPORTS = Arrays.asList(BROUGHT_FORWARD_REPORT, CLAIMS_ACCEPTED_REPORT,
         LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT, TIME_TO_FIRST_HEARING_REPORT,
         SERVING_CLAIMS_REPORT, CASE_SOURCE_LOCAL_REPORT, HEARINGS_TO_JUDGEMENTS_REPORT,
-            HEARINGS_BY_HEARING_TYPE_REPORT, NO_CHANGE_IN_CURRENT_POSITION_REPORT);
+            HEARINGS_BY_HEARING_TYPE_REPORT, NO_CHANGE_IN_CURRENT_POSITION_REPORT, MEMBER_DAYS_REPORT);
     private static final List<String> SCOTLAND_HEARING_LIST = List.of("Reading Day", "Deliberation Day",
             "Members meeting", "In Chambers");
 
@@ -406,7 +408,7 @@ public class ListingHelper {
             if (entries.hasNext()) {
                 sb.append("},\n");
             } else {
-                sb.append("}],\n");
+                sb.append(ARRAY_ELEMENT_CLOSING_NEWLINE);
             }
         }
         return sb;
@@ -422,7 +424,7 @@ public class ListingHelper {
             if (entries.hasNext()) {
                 sb.append("},\n");
             } else {
-                sb.append("}],\n");
+                sb.append(ARRAY_ELEMENT_CLOSING_NEWLINE);
             }
         }
         return sb;
@@ -535,7 +537,7 @@ public class ListingHelper {
             if (entries.hasNext()) {
                 sb.append("},\n");
             } else {
-                sb.append("}],\n");
+                sb.append(ARRAY_ELEMENT_CLOSING_NEWLINE);
             }
         }
         return sb;
@@ -863,6 +865,8 @@ public class ListingHelper {
                 return "EM-TRB-SCO-ENG-00786";
             case NO_CHANGE_IN_CURRENT_POSITION_REPORT:
                 return "EM-TRB-SCO-ENG-00794";
+            case MEMBER_DAYS_REPORT:
+                return "EM-TRB-SCO-ENG-00800";
             default:
                 return NO_DOCUMENT_FOUND;
         }
