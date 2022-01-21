@@ -80,11 +80,11 @@ const setupConfig = {
             'mocha-junit-reporter': {
                 stdout: '-',
                 options: {
-                    mochaFile: `${testConfig.TestOutputDir}/result.xml`
+                    mochaFile: `${config.TestOutputDir}/result.xml`
                 }
             },
             'mochawesome': {
-                stdout: testConfig.TestOutputDir + '/console.log',
+                stdout: config.TestOutputDir + '/console.log',
                 options: {
                     reportDir: config.TestOutputDir,
                     reportName: 'index',
