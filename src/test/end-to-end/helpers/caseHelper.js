@@ -97,6 +97,18 @@ async function printHearingLists(I, eventName, jurisdiction) {
     await I.executePrintHearingLists(jurisdiction);
 }
 
+async function caseTransfer(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.executeCaseTransfer();
+}
+
+async function judgment(I, eventName) {
+    await I.chooseNextStep(eventName, 3);
+    await I.wait(3);
+    await I.executeJudgment();
+}
+
 module.exports = {
     acceptCaseEvent,
     caseDetails,
@@ -113,5 +125,8 @@ module.exports = {
     listHearing,
     printHearingLists,
     allocateHearing,
-    hearingDetails
+    hearingDetails,
+    hearingDetails,
+    caseTransfer,
+    judgment
 };

@@ -104,12 +104,8 @@ public class EventValidationService {
     }
 
     public boolean validateCurrentPosition(CaseDetails caseDetails) {
-        if (CASE_CLOSED_POSITION.equals(caseDetails.getCaseData().getCurrentPosition())
-                && INVALID_STATES_FOR_CLOSED_CURRENT_POSITION.contains(caseDetails.getState())
-        ) {
-            return false;
-        }
-        return true;
+        return !(CASE_CLOSED_POSITION.equals(caseDetails.getCaseData().getPositionType())
+                && INVALID_STATES_FOR_CLOSED_CURRENT_POSITION.contains(caseDetails.getState()));
     }
 
     public List<String> validateReceiptDateMultiple(MultipleData multipleData) {
