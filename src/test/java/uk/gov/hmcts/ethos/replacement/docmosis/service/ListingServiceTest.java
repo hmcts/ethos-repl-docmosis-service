@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
@@ -39,6 +40,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.Cas
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.CasesCompletedReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeCaseDataBuilder;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeSearchResult;
@@ -55,6 +58,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ALL_VENUES;
@@ -79,6 +83,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PRIVAT
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.JURISDICTION_OUTCOME_SUCCESSFUL_AT_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.LIVE_CASELOAD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_LISTING_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
@@ -146,6 +151,10 @@ public class ListingServiceTest {
         dateListedType.setHearingAberdeen("AberdeenVenue");
         dateListedType.setHearingVenueDay("Aberdeen");
         dateListedType.setListedDate("2019-12-12T12:11:00.000");
+        dateListedType.setHearingTimingStart("2019-12-12T12:11:00.000");
+        dateListedType.setHearingTimingBreak("2019-12-12T12:11:00.000");
+        dateListedType.setHearingTimingResume("2019-12-12T12:11:00.000");
+        dateListedType.setHearingTimingFinish("2019-12-12T12:11:00.000");
         dateListedTypeItem.setId("123");
         dateListedTypeItem.setValue(dateListedType);
 
@@ -157,6 +166,10 @@ public class ListingServiceTest {
         dateListedType1.setHearingAberdeen("AberdeenVenue");
         dateListedType1.setHearingVenueDay("Aberdeen");
         dateListedType1.setListedDate("2019-12-10T12:11:00.000");
+        dateListedType1.setHearingTimingStart("2019-12-10T11:00:00.000");
+        dateListedType1.setHearingTimingBreak("2019-12-10T12:00:00.000");
+        dateListedType1.setHearingTimingResume("2019-12-10T13:00:00.000");
+        dateListedType1.setHearingTimingFinish("2019-12-10T14:00:00.000");
         dateListedTypeItem1.setId("124");
         dateListedTypeItem1.setValue(dateListedType1);
 
@@ -181,6 +194,10 @@ public class ListingServiceTest {
         dateListedType3.setHearingAberdeen("AberdeenVenue2");
         dateListedType3.setHearingVenueDay("Aberdeen");
         dateListedType3.setListedDate("2019-12-12T12:11:55.000");
+        dateListedType3.setHearingTimingStart("2019-12-12T14:11:55.000");
+        dateListedType3.setHearingTimingBreak("2019-12-12T15:11:55.000");
+        dateListedType3.setHearingTimingResume("2019-12-12T15:30:55.000");
+        dateListedType3.setHearingTimingFinish("2019-12-12T16:30:55.000");
         dateListedTypeItem3.setId("124");
         dateListedTypeItem3.setValue(dateListedType3);
 
@@ -1222,6 +1239,39 @@ public class ListingServiceTest {
         assertEquals("2021-07-13", listingDataResult.getListingDate());
         assertEquals("2021-07-12", listingDataResult.getListingDateFrom());
         assertEquals("2021-07-14", listingDataResult.getListingDateTo());
+    }
+
+    @Test
+    public void generateMemberDaysReportData() throws IOException {
+        var localSubmitEvents = submitEvents;
+        String docName = "Member Days Report - Test";
+        listingDetailsRange.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
+        listingDetailsRange.getCaseData().setReportType(MEMBER_DAYS_REPORT);
+        listingDetailsRange.getCaseData().setDocumentName(docName);
+        listingDetailsRange.getCaseData().setHearingDateType("Range");
+        listingDetailsRange.getCaseData().setListingDate("2021-09-12");
+        listingDetailsRange.getCaseData().setListingDateFrom("2021-09-08");
+        listingDetailsRange.getCaseData().setListingDateTo("2021-09-18");
+
+        var memberDaysReportData = new MemberDaysReportData();
+        memberDaysReportData.setFullDaysTotal("0");
+        memberDaysReportData.setHalfDaysTotal("4");
+        memberDaysReportData.setTotalDays("2");
+        memberDaysReportData.setOffice("Manchester");
+        memberDaysReportData.setDocumentName(docName);
+
+        var memberDaysReport = Mockito.mock(MemberDaysReport.class);
+
+        doReturn(localSubmitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
+            anyString(), anyString(), anyString(), anyString());
+
+        doReturn(memberDaysReportData).when(memberDaysReport).runReport(any(ListingDetails.class),
+            Mockito.<SubmitEvent>anyList());
+
+        var listingDataResult = (MemberDaysReportData) listingService.generateReportData(listingDetailsRange,
+            "authToken");
+
+        assertEquals(MEMBER_DAYS_REPORT, listingDataResult.getReportType());
     }
 
     @Test
