@@ -6,7 +6,6 @@ module.exports = async function () {
 
     const I = this;
     I.waitForText(commonConfig.judgment, testConfig.TestTimeToWaitForText);
-    await I.click(commonConfig.addNewButton);
     await I.click('#judgementCollection_0_non_hearing_judgment_Yes');
     await I.selectOption('#judgementCollection_0_judgement_type', commonConfig.judgmentType);
     await I.click('//div[@id=\'judgementCollection_0_jurisdictionCodes\']/div/button');
