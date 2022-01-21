@@ -10,5 +10,5 @@ Scenario('Check whether the user able to create a ccd case or not...', async () 
 
 }).retry(testConfig.TestRetryScenarios)
     .tag('@smoke')
-    .tag('@nightly')
+    .tag('@crossbrowser');
 
