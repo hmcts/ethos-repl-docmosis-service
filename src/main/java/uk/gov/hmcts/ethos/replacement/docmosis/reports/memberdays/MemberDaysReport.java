@@ -49,6 +49,7 @@ public class MemberDaysReport {
         reportData.setDurationDescription(getDurationText(listingDetails.getCaseData()));
         reportData.setHearingDateType(listingDetails.getCaseData().getHearingDateType());
         reportData.setReportType(MEMBER_DAYS_REPORT);
+        reportData.setDocumentName(MEMBER_DAYS_REPORT);
         return reportData;
     }
 
@@ -103,7 +104,7 @@ public class MemberDaysReport {
                         reportDetail.setCaseReference(caseData.getEthosCaseReference());
                         reportDetail.setHearingNumber(hearingItem.getValue().getHearingNumber());
                         reportDetail.setHearingType(hearingItem.getValue().getHearingType());
-                        reportDetail.setHearingClerk(caseData.getClerkResponsible());
+                        reportDetail.setHearingClerk(listedItem.getValue().getHearingClerk());
                         reportDetail.setHearingDuration(getHearingDuration(listedItem));
                         reportDetail.setParentHearingId(hearingItem.getId());
                         interimReportDetails.add(reportDetail);
@@ -141,14 +142,19 @@ public class MemberDaysReport {
             .replace(".000", ""));
         var hearingFinish = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingFinish()
             .replace(".000", ""));
-        var hearingBreak = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingBreak()
-            .replace(".000", ""));
-        var hearingResume = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingResume()
-            .replace(".000", ""));
-
         var startFinishDuration = Duration.between(hearingStart, hearingFinish).toMinutes();
-        var breakResumeDuration = Duration.between(hearingBreak, hearingResume).toMinutes();
-        var duration = startFinishDuration - breakResumeDuration;
+
+        long breakResumeDuration = 0;
+        if (dateListedTypeItem.getValue().getHearingTimingFinish() != null
+            && dateListedTypeItem.getValue().getHearingTimingBreak() != null) {
+            var hearingBreak = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingBreak()
+                .replace(".000", ""));
+            var hearingResume = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingResume()
+                .replace(".000", ""));
+            breakResumeDuration = Duration.between(hearingBreak, hearingResume).toMinutes();
+        }
+
+        var duration = Math.abs(startFinishDuration - breakResumeDuration);
 
         return String.valueOf(duration);
     }
@@ -211,7 +217,8 @@ public class MemberDaysReport {
         summaryItem.setFullDays(String.valueOf(fullDaysTotal));
         var halfDaysTotal = dayCounts.get(1);
         summaryItem.setHalfDays(String.valueOf(halfDaysTotal));
-        var totalDays = fullDaysTotal + (halfDaysTotal / 2);
+        var tempo = ((double)(halfDaysTotal) / 2.0);
+        var totalDays = (double)fullDaysTotal + tempo;
         summaryItem.setTotalDays(String.valueOf(totalDays));
     }
 
