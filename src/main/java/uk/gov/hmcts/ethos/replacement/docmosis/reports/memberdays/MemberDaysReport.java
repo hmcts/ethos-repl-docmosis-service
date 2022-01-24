@@ -217,8 +217,7 @@ public class MemberDaysReport {
         summaryItem.setFullDays(String.valueOf(fullDaysTotal));
         var halfDaysTotal = dayCounts.get(1);
         summaryItem.setHalfDays(String.valueOf(halfDaysTotal));
-        var tempo = ((double)(halfDaysTotal) / 2.0);
-        var totalDays = (double)fullDaysTotal + tempo;
+        var totalDays = (double)fullDaysTotal + ((double)(halfDaysTotal) / 2.0);
         summaryItem.setTotalDays(String.valueOf(totalDays));
     }
 
