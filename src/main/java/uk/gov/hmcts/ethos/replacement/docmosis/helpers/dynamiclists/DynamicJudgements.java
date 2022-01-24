@@ -17,6 +17,8 @@ public class DynamicJudgements {
     private DynamicJudgements() {
     }
 
+    public static final String NO_HEARINGS = "No Hearings";
+
     public static void dynamicJudgements(CaseData caseData) {
         var listHearings = DynamicListHelper.createDynamicHearingList(caseData);
         var caseParties = DynamicListHelper.createDynamicRespondentName(
