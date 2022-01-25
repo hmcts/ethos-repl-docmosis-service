@@ -54,7 +54,7 @@ const setupConfig = {
         },
         SauceLabsReportingHelper: {require: './helpers/SauceLabsReportingHelper.js'},
         PuppeteerHelper: {
-            require: './helpers/PuppeteerHelper.js'
+            require: './helpers/WebDriverHelper.js'
         },
         JSWait: {require: './helpers/JSWait.js'},
     },
