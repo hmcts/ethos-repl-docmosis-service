@@ -15,5 +15,4 @@ Scenario('Verify Manchester Case Close', async ({I}) => {
 
 }).tag('@e2e')
     .tag('@manchester')
-    .tag('@crossbrowser')
     .retry(testConfig.TestRetryScenarios);
