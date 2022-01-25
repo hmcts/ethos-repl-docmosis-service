@@ -49,8 +49,8 @@ public class DynamicListHelper {
         return dynamicValueType;
     }
 
-    public static DynamicValueType getDynamicValueType(CaseData caseData, List<DynamicValueType> listItems,
-                                                       String party) {
+    public static DynamicValueType getDynamicValueParty(CaseData caseData, List<DynamicValueType> listItems,
+                                                        String party) {
         DynamicValueType dynamicValueType;
         if (party.equals(CLAIMANT_TITLE)) {
             dynamicValueType = getDynamicCodeLabel("C: " + caseData.getClaimant(), caseData.getClaimant());
