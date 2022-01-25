@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicJudgements.NO_HEARINGS;
 
 @Service("judgmentValidationService")
 public class JudgmentValidationService {
@@ -23,7 +24,8 @@ public class JudgmentValidationService {
     }
 
     private void populateJudgmentDateOfHearing(JudgementType judgementType) throws ParseException {
-        if (NO.equals(judgementType.getNonHearingJudgment())) {
+        if (NO.equals(judgementType.getNonHearingJudgment())
+                && !NO_HEARINGS.equals(judgementType.getDynamicJudgementHearing().getValue().getLabel())) {
             var hearingDate = judgementType.getDynamicJudgementHearing().getValue().getLabel();
             hearingDate = hearingDate.substring(hearingDate.length() - 11);
             var simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
