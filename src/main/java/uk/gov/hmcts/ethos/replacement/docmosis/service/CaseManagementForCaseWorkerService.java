@@ -215,12 +215,9 @@ public class CaseManagementForCaseWorkerService {
                             : hearingTypeItem.getValue().getHearingDateCollection()) {
                         var dateListedType = dateListedTypeItem.getValue();
                         if (dateListedType.getHearingStatus() == null) {
-                            var listedDateWithZeroTime = dateListedType.getListedDate().split("T")[0] + "T00:00:00";
                             dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
                             dateListedType.setHearingTimingStart(dateListedType.getListedDate());
-                            dateListedType.setHearingTimingBreak(listedDateWithZeroTime);
-                            dateListedType.setHearingTimingResume(listedDateWithZeroTime);
-                            dateListedType.setHearingTimingFinish(listedDateWithZeroTime);
+                            dateListedType.setHearingTimingFinish(dateListedType.getListedDate());
                         }
                         populateHearingVenueFromHearingLevelToDayLevel(dateListedType, hearingType, caseTypeId);
                     }
