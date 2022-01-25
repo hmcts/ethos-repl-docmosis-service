@@ -62,7 +62,7 @@ public class DynamicDepositOrder {
         if (depositType.getDynamicDepositOrderAgainst() == null) {
             depositType.setDynamicDepositOrderAgainst(dynamicFixedListType);
             if (!isNullOrEmpty(depositType.getDepositOrderAgainst())) {
-                dynamicValueType = DynamicListHelper.getDynamicValueType(caseData, dynamicFixedListType.getListItems(),
+                dynamicValueType = DynamicListHelper.getDynamicValueParty(caseData, dynamicFixedListType.getListItems(),
                         depositType.getDepositOrderAgainst());
             }
         } else {
@@ -78,7 +78,7 @@ public class DynamicDepositOrder {
         if (depositType.getDynamicDepositRequestedBy() == null) {
             depositType.setDynamicDepositRequestedBy(dynamicFixedListType);
             if (!isNullOrEmpty(depositType.getDepositRequestedBy())) {
-                dynamicValueType = DynamicListHelper.getDynamicValueType(caseData, dynamicFixedListType.getListItems(),
+                dynamicValueType = DynamicListHelper.getDynamicValueParty(caseData, dynamicFixedListType.getListItems(),
                         depositType.getDepositRequestedBy());
             }
         } else {
@@ -94,7 +94,7 @@ public class DynamicDepositOrder {
         if (depositType.getDynamicDepositRefundedTo() == null) {
             depositType.setDynamicDepositRefundedTo(dynamicFixedListType);
             if (!isNullOrEmpty(depositType.getDepositRefundedTo())) {
-                dynamicValueType = DynamicListHelper.getDynamicValueType(caseData, dynamicFixedListType.getListItems(),
+                dynamicValueType = DynamicListHelper.getDynamicValueParty(caseData, dynamicFixedListType.getListItems(),
                         depositType.getDepositRefundedTo());
             }
         } else {
