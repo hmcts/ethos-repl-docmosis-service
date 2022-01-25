@@ -14,5 +14,4 @@ Scenario('Verify Claimant Details', async ({I}) => {
 
 }).tag('@e2e')
     .tag('@leeds')
-    .tag('@crossbrowser')
     .retry(testConfig.TestRetryScenarios);
