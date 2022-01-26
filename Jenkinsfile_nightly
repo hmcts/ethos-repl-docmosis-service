@@ -42,6 +42,7 @@ withNightlyPipeline(type, product, component) {
 
     loadVaultSecrets(secrets)
     enableFullFunctionalTest()
+    enableCrossBrowserTest()
     enableFortifyScan()
 
     after('fullFunctionalTest') {
