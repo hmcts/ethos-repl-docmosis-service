@@ -94,17 +94,18 @@ public class HearingsHelper {
 
     public static List<String> hearingTimeValidation(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        if (CollectionUtils.isNotEmpty(caseData.getHearingCollection())) {
-            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-                if (CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
-                    for (DateListedTypeItem dateListedTypeItem :
-                            hearingTypeItem.getValue().getHearingDateCollection()) {
-                        var dateListedType = dateListedTypeItem.getValue();
-                        if (HEARING_STATUS_HEARD.equals(dateListedType.getHearingStatus())) {
-                            checkStartFinishTimes(errors, dateListedType,
-                                    hearingTypeItem.getValue().getHearingNumber());
-                        }
-                    }
+        if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+            return errors;
+        }
+        for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+            if (CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                continue;
+            }
+            for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+                var dateListedType = dateListedTypeItem.getValue();
+                if (HEARING_STATUS_HEARD.equals(dateListedType.getHearingStatus())) {
+                    checkStartFinishTimes(errors, dateListedType,
+                            hearingTypeItem.getValue().getHearingNumber());
                 }
             }
         }
@@ -113,9 +114,9 @@ public class HearingsHelper {
 
     private static void checkStartFinishTimes(List<String> errors, DateListedType dateListedType,
                                               String hearingNumber) {
-        var startDate = LocalDateTime.parse(dateListedType.getHearingTimingStart());
+        var startTime = LocalDateTime.parse(dateListedType.getHearingTimingStart());
         var finishTime = LocalDateTime.parse(dateListedType.getHearingTimingFinish());
-        if (startDate.isAfter(finishTime) || startDate.isEqual(finishTime)) {
+        if (finishTime.isBefore(startTime) || finishTime.isEqual(startTime)) {
             errors.add(HEARING_FINISH_INVALID + hearingNumber);
         }
     }
