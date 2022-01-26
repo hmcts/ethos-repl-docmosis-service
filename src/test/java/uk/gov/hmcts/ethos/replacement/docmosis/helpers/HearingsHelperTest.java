@@ -7,13 +7,16 @@ import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_POSTPONED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_SETTLED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.HEARING_FINISH_INVALID;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper.findHearingNumber;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.HEARING_CREATION_DAY_ERROR;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.HEARING_CREATION_NUMBER_ERROR;
@@ -108,5 +111,48 @@ public class HearingsHelperTest {
     @Test
     public void findDateOfHearing_DateNotInHearing() {
         assertNull(findHearingNumber(caseDetails1.getCaseData(), "1970-10-01"));
+    }
+
+    @Test
+    public void validateStartFinishTime_validTime () {
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().setHearingTimingStart("2019-11-01T12:11:00.000");
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().setHearingTimingFinish("2019-11-01T12:11:20.000");
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
+
+        List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void validateStartFinishTime_sameTime () {
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().setHearingTimingStart("2019-11-01T12:11:00.000");
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().setHearingTimingFinish("2019-11-01T12:11:00.000"); // Same time as start time
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
+        var hearingNumber = caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingNumber();
+
+        List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
+        assertEquals(1, errors.size());
+        assertEquals(HEARING_FINISH_INVALID + hearingNumber, errors.get(0));
+    }
+
+    @Test
+    public void validateStartFinishTime_finishTimeBeforeStart () {
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().setHearingTimingStart("2019-11-01T12:11:00.000");
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().setHearingTimingFinish("2019-11-01T12:10:00.000");
+        caseDetails1.getCaseData().getHearingCollection().get(0).getValue()
+                .getHearingDateCollection().get(0).getValue().setHearingStatus(HEARING_STATUS_HEARD);
+        var hearingNumber = caseDetails1.getCaseData().getHearingCollection().get(0).getValue().getHearingNumber();
+
+        List<String> errors = HearingsHelper.hearingTimeValidation(caseDetails1.getCaseData());
+        assertEquals(1, errors.size());
+        assertEquals(HEARING_FINISH_INVALID + hearingNumber, errors.get(0));
     }
 }
