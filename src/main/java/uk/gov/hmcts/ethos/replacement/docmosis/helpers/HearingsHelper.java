@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
@@ -25,6 +26,10 @@ public class HearingsHelper {
             + "only be added from the List Hearing menu item";
     public static final String HEARING_FINISH_INVALID = "The finish time for a hearing cannot be the "
             + "same or before the start time for Hearing ";
+    public static final String HEARING_START_FUTURE = "Start time can't be in future";
+    public static final String HEARING_FINISH_FUTURE = "Finish time can't be in future";
+    public static final String HEARING_BREAK_FUTURE = "Break time can't be in future";
+    public static final String HEARING_RESUME_FUTURE = "Resume time can't be in future";
 
     public static String findHearingNumber(CaseData caseData, String hearingDate) {
         if (CollectionUtils.isNotEmpty(caseData.getHearingCollection())) {
@@ -106,10 +111,30 @@ public class HearingsHelper {
                 if (HEARING_STATUS_HEARD.equals(dateListedType.getHearingStatus())) {
                     checkStartFinishTimes(errors, dateListedType,
                             hearingTypeItem.getValue().getHearingNumber());
+                    checkIfDateInFuture(errors, dateListedType);
                 }
             }
         }
         return errors;
+    }
+
+    private static void checkIfDateInFuture(List<String> errors, DateListedType dateListedType) {
+        if (isDateInFuture(dateListedType.getHearingTimingStart())) {
+            errors.add(HEARING_START_FUTURE);
+        }
+        if (isDateInFuture(dateListedType.getHearingTimingResume())) {
+            errors.add(HEARING_RESUME_FUTURE);
+        }
+        if (isDateInFuture(dateListedType.getHearingTimingBreak())) {
+            errors.add(HEARING_BREAK_FUTURE);
+        }
+        if (isDateInFuture(dateListedType.getHearingTimingFinish())) {
+            errors.add(HEARING_FINISH_FUTURE);
+        }
+    }
+
+    private static boolean isDateInFuture(String date) {
+        return !Strings.isNullOrEmpty(date) && LocalDateTime.parse(date).isAfter(LocalDateTime.now());
     }
 
     private static void checkStartFinishTimes(List<String> errors, DateListedType dateListedType,

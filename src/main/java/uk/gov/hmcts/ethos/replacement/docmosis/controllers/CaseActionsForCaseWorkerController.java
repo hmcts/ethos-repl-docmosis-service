@@ -740,7 +740,6 @@ public class CaseActionsForCaseWorkerController {
         if ("updateHearing".equals(ccdRequest.getEventId())) {
             errors.addAll(HearingsHelper.hearingTimeValidation(caseDetails.getCaseData()));
         }
-        //        errors.addAll(eventValidationService.validateHearingDatesNotInFuture(caseDetails.getCaseData()));
 
         return getCallbackRespEntity(errors, caseDetails);
     }
