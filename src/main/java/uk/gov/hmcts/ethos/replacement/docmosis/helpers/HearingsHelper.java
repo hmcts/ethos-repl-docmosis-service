@@ -116,7 +116,7 @@ public class HearingsHelper {
                                               String hearingNumber) {
         var startTime = LocalDateTime.parse(dateListedType.getHearingTimingStart());
         var finishTime = LocalDateTime.parse(dateListedType.getHearingTimingFinish());
-        if (finishTime.isBefore(startTime) || finishTime.isEqual(startTime)) {
+        if (!finishTime.isAfter(startTime)) {
             errors.add(HEARING_FINISH_INVALID + hearingNumber);
         }
     }
