@@ -295,4 +295,5 @@ public class DynamicListHelperTest {
         DynamicJudgements.dynamicJudgements(caseData); // This will add the claimant to the list
         assertEquals(dynamicValueType, caseData.getJudgementCollection().get(0).getValue().getJudgementReconsiderations().getDynamicReconsiderationPartyInitiative().getValue());
     }
+
 }
