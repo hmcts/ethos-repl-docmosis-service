@@ -354,6 +354,76 @@ public class MemberDaysReportTest {
     }
 
     @Test
+    public void shouldReturnZeroHearingDurationForNullHearingTimingStart() {
+        var memberDaysReport = new MemberDaysReport();
+        submitEvents.remove(2);
+        submitEvents.remove(1);
+
+        var dateListedType = new DateListedType();
+        dateListedType.setHearingStatus(HEARING_STATUS_HEARD);
+        dateListedType.setHearingClerk("Clerk A");
+        dateListedType.setHearingRoomGlasgow("Tribunal 4");
+        dateListedType.setHearingAberdeen("AberdeenVenue");
+        dateListedType.setHearingVenueDay("Aberdeen");
+        dateListedType.setListedDate("2019-12-11T12:11:00.000");
+        dateListedType.setHearingTimingStart(null);
+        dateListedType.setHearingTimingFinish("2019-12-11T14:11:00.000");
+
+        var dateListedTypeItem = new DateListedTypeItem();
+        dateListedTypeItem.setId("12300");
+        dateListedTypeItem.setValue(dateListedType);
+        var caseData = submitEvents.get(0).getCaseData();
+       var hearingType = caseData.getHearingCollection().get(0).getValue();
+        hearingType.getHearingDateCollection().clear();
+        hearingType.setHearingDateCollection(new ArrayList<>(Arrays.asList(dateListedTypeItem)));
+
+        long expectedHearingDatesCount = 1;
+        var expectedHearingDateEntry1Duration = 0;
+        var resultListingData = memberDaysReport.runReport(listingDetails, submitEvents);
+
+        var actualHearingDatesCount  = resultListingData.getReportDetails().stream().distinct().count();
+        var actualHearingDateEntry1Duration = resultListingData.getReportDetails().get(0).getHearingDuration();
+
+        assertEquals(expectedHearingDatesCount, actualHearingDatesCount);
+        assertEquals(String.valueOf(expectedHearingDateEntry1Duration), actualHearingDateEntry1Duration);
+    }
+
+    @Test
+    public void shouldReturnZeroHearingDurationForNullHearingTimingFinish() {
+        var memberDaysReport = new MemberDaysReport();
+        submitEvents.remove(2);
+        submitEvents.remove(1);
+
+        var dateListedType = new DateListedType();
+        dateListedType.setHearingStatus(HEARING_STATUS_HEARD);
+        dateListedType.setHearingClerk("Clerk A");
+        dateListedType.setHearingRoomGlasgow("Tribunal 4");
+        dateListedType.setHearingAberdeen("AberdeenVenue");
+        dateListedType.setHearingVenueDay("Glasgow");
+        dateListedType.setListedDate("2019-12-11T12:11:00.000");
+        dateListedType.setHearingTimingStart("2019-12-11T14:11:00.000");
+        dateListedType.setHearingTimingFinish(null);
+
+        var dateListedTypeItem = new DateListedTypeItem();
+        dateListedTypeItem.setId("12456600");
+        dateListedTypeItem.setValue(dateListedType);
+        var caseData = submitEvents.get(0).getCaseData();
+        var hearingType = caseData.getHearingCollection().get(0).getValue();
+        hearingType.getHearingDateCollection().clear();
+        hearingType.setHearingDateCollection(new ArrayList<>(Arrays.asList(dateListedTypeItem)));
+
+        long expectedHearingDatesCount = 1;
+        var expectedHearingDateEntry1Duration = 0;
+        var resultListingData = memberDaysReport.runReport(listingDetails, submitEvents);
+
+        var actualHearingDatesCount  = resultListingData.getReportDetails().stream().distinct().count();
+        var actualHearingDateEntry1Duration = resultListingData.getReportDetails().get(0).getHearingDuration();
+
+        assertEquals(expectedHearingDatesCount, actualHearingDatesCount);
+        assertEquals(String.valueOf(expectedHearingDateEntry1Duration), actualHearingDateEntry1Duration);
+    }
+
+    @Test
     public void shouldReturnCorrectHearingDurationDaysCount() {
         var memberDaysReport = new MemberDaysReport();
         var resultListingData = memberDaysReport.runReport(listingDetails, submitEvents);

@@ -131,7 +131,7 @@ public class MemberDaysReport {
         } else {
             return dateListedTypeItems.stream()
                 .filter(x -> isHearingDateInRange(x.getValue().getListedDate(),
-                        listingData.getListingDateFrom(), listingData.getListingDateTo()) == true)
+                        listingData.getListingDateFrom(), listingData.getListingDateTo()))
                 .collect(Collectors.toList());
         }
     }
