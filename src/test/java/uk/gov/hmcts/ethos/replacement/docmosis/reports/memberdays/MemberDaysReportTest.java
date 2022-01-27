@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -289,6 +290,67 @@ public class MemberDaysReportTest {
 
         assertEquals(expectedFullPanelHearingsCount, actualFullPanelHearingsCount);
         assertEquals(expectedReportDateType, actualReportDateType);
+    }
+
+    @Test
+    public void shouldIncludeOnlyCasesWithValidHearingDates() {
+        var memberDaysReport = new MemberDaysReport();
+        var thridCase = submitEvents.get(2);
+        var hearingWithInvalidDate = thridCase.getCaseData().getHearingCollection().get(0);
+
+        var dateListedTypeItem6 = new DateListedTypeItem();
+        var dateListedType6 = new DateListedType();
+        dateListedType6.setHearingStatus(HEARING_STATUS_HEARD);
+        dateListedType6.setHearingClerk("Clerk55");
+        dateListedType6.setHearingRoomGlasgow("Tribunal 66");
+        dateListedType6.setHearingAberdeen("AberdeenVenue26");
+        dateListedType6.setHearingVenueDay("Aberdeen6");
+        dateListedType6.setListedDate("2019-12-29T12:11:55.000");
+        dateListedType6.setHearingTimingStart("2019-12-29T13:11:55.000");
+        dateListedType6.setHearingTimingBreak("2019-12-29T15:11:55.000");
+        dateListedType6.setHearingTimingResume("2019-12-29T15:30:55.000");
+        dateListedType6.setHearingTimingFinish("2019-12-29T19:30:55.000");
+        dateListedTypeItem6.setId("1268899999");
+        dateListedTypeItem6.setValue(dateListedType6);
+
+        hearingWithInvalidDate.getValue().getHearingDateCollection().add(dateListedTypeItem6);
+
+        List<Integer> validHearingsCountList = new ArrayList<>();
+        submitEvents.stream().forEach(caseData ->
+            validHearingsCountList.add(caseData.getCaseData().getHearingCollection().stream()
+                .filter(h -> FULL_PANEL.equals(h.getValue().getHearingSitAlone()))
+                .collect(Collectors.toList()).size()));
+
+        List<DateListedTypeItem> dateListedTypeItems = new ArrayList<>();
+        //filter listed hearings with full panel
+        for(var submitEvent :submitEvents) {
+            for(var hearing : submitEvent.getCaseData().getHearingCollection()) {
+                var validDates = hearing.getValue().getHearingDateCollection()
+                    .stream().filter(h -> isValidDate(h.getValue().getListedDate(),
+                        listingDetails.getCaseData().getListingDateFrom(),
+                        listingDetails.getCaseData().getListingDateTo()))
+                    .collect(Collectors.toList());
+                validDates.forEach(vd -> dateListedTypeItems.add(vd));
+            }
+        }
+
+        var expectedValidHearingDatesCount = dateListedTypeItems.stream().distinct().count();
+        var expectedReportDateType = "Range";
+        var resultListingData = memberDaysReport.runReport(listingDetails, submitEvents);
+
+        var actualValidHearingDatesCount  = resultListingData.getReportDetails().size();
+        var actualReportDateType = resultListingData.getHearingDateType();
+
+        assertEquals(expectedValidHearingDatesCount, actualValidHearingDatesCount);
+        assertEquals(expectedReportDateType, actualReportDateType);
+    }
+
+    private boolean isValidDate(String dateListed, String dateFrom, String dateTo){
+        var listed = LocalDate.parse(dateListed.split("T")[0]);
+        var from = LocalDate.parse(dateFrom);
+        var to = LocalDate.parse(dateTo);
+
+        return listed.compareTo(from) >= 0 && listed.compareTo(to) <= 0;
     }
 
     @Test
