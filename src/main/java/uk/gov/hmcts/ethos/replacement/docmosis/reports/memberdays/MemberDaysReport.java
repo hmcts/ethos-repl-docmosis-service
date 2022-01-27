@@ -55,6 +55,7 @@ public class MemberDaysReport {
 
     private String getDurationText(ListingData currentCaseData) {
         var description = "";
+
         if (currentCaseData.getHearingDateType().equals(SINGLE_DATE_HEARING_REPORT)) {
             description = "On " + currentCaseData.getListingDate();
         } else if (currentCaseData.getHearingDateType().equals(DATE_RANGE_HEARING_REPORT)) {
@@ -77,6 +78,7 @@ public class MemberDaysReport {
             var hearings = getValidHearings(caseData);
             extractValidHearingsFromCurrentCase(hearings, caseData, interimReportDetails, listingData);
         }
+
         var sortedReportDetails = interimReportDetails.stream()
             .sorted((o1, o2) -> o1.comparedTo(o2)).collect(Collectors.toList());
         reportData.getReportDetails().clear();
@@ -126,9 +128,20 @@ public class MemberDaysReport {
                 .filter(x -> x.getValue().getListedDate().split("T")[0]
                     .equals(listingData.getListingDate()))
                 .collect(Collectors.toList());
+        } else {
+            return dateListedTypeItems.stream()
+                .filter(x -> isHearingDateInRange(x.getValue().getListedDate(),
+                        listingData.getListingDateFrom(), listingData.getListingDateTo()) == true)
+                .collect(Collectors.toList());
         }
+    }
 
-        return dateListedTypeItems;
+    private boolean isHearingDateInRange(String dateListed, String dateFrom, String dateTo) {
+        var listed = LocalDate.parse(dateListed.split("T")[0]);
+        var from = LocalDate.parse(dateFrom);
+        var to = LocalDate.parse(dateTo);
+
+        return listed.compareTo(from) >= 0 && listed.compareTo(to) <= 0;
     }
 
     private List<DateListedTypeItem> filterHearingsWithHeardStatus(HearingTypeItem hearingItem) {
@@ -138,15 +151,21 @@ public class MemberDaysReport {
     }
 
     private String getHearingDuration(DateListedTypeItem dateListedTypeItem) {
-        var hearingStart = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingStart()
-            .replace(".000", ""));
-        var hearingFinish = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingFinish()
-            .replace(".000", ""));
-        var startFinishDuration = Duration.between(hearingStart, hearingFinish).toMinutes();
+        long startFinishDuration = 0;
+
+        if (dateListedTypeItem.getValue().getHearingTimingStart() != null
+            && dateListedTypeItem.getValue().getHearingTimingFinish() != null) {
+
+            var hearingStart = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingStart()
+                .replace(".000", ""));
+            var hearingFinish = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingFinish()
+                .replace(".000", ""));
+            startFinishDuration = Duration.between(hearingStart, hearingFinish).toMinutes();
+        }
 
         long breakResumeDuration = 0;
-        if (dateListedTypeItem.getValue().getHearingTimingFinish() != null
-            && dateListedTypeItem.getValue().getHearingTimingBreak() != null) {
+        if (dateListedTypeItem.getValue().getHearingTimingBreak() != null
+            && dateListedTypeItem.getValue().getHearingTimingResume() != null) {
             var hearingBreak = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingBreak()
                 .replace(".000", ""));
             var hearingResume = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingResume()
