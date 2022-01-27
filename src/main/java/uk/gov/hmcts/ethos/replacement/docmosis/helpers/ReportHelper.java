@@ -13,6 +13,7 @@ import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,33 +56,62 @@ public class ReportHelper {
 
     public static ListingData processBroughtForwardDatesRequest(ListingDetails listingDetails,
                                                                 List<SubmitEvent> submitEvents) {
+        BfActionReportData bfActionReportData = new BfActionReportData();
         if (submitEvents != null && !submitEvents.isEmpty()) {
             log.info(CASES_SEARCHED + submitEvents.size());
             List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
             for (SubmitEvent submitEvent : submitEvents) {
-                addBfDateTypeItems(submitEvent, listingDetails, bfDateTypeItems);
+                addBfDateTypeItems(submitEvent, listingDetails.getCaseData(), bfDateTypeItems);
             }
-            listingDetails.getCaseData().setBfDateCollection(bfDateTypeItems);
+            bfActionReportData.setBfDateCollection(bfDateTypeItems);
         }
 
-        listingDetails.getCaseData().clearReportFields();
-        return listingDetails.getCaseData();
+        bfActionReportData.clearReportFields();
+        return bfActionReportData;
     }
 
     private static void addBfDateTypeItems(
             SubmitEvent submitEvent,
-            ListingDetails listingDetails,
+            ListingData listingData,
             List<BFDateTypeItem> bfDateTypeItems) {
         if (submitEvent.getCaseData().getBfActions() != null
                 && !submitEvent.getCaseData().getBfActions().isEmpty()) {
             for (BFActionTypeItem bfActionTypeItem : submitEvent.getCaseData().getBfActions()) {
                 var bfDateTypeItem = getBFDateTypeItem(bfActionTypeItem,
-                        listingDetails.getCaseData(), submitEvent.getCaseData());
+                    listingData, submitEvent.getCaseData());
                 if (bfDateTypeItem.getValue() != null) {
                     bfDateTypeItems.add(bfDateTypeItem);
                 }
             }
         }
+    }
+
+    private static BFDateTypeItem getBFDateTypeItem(BFActionTypeItem bfActionTypeItem,
+                                                    ListingData listingData, CaseData caseData) {
+        var bfDateTypeItem = new BFDateTypeItem();
+        var bfActionType = bfActionTypeItem.getValue();
+        if (!isNullOrEmpty(bfActionType.getBfDate()) && isNullOrEmpty(bfActionType.getCleared())) {
+            boolean matchingDateIsValid = validateMatchingDate(listingData, bfActionType.getBfDate());
+            boolean clerkResponsibleIsValid = validateClerkResponsible(listingData, caseData);
+            if (matchingDateIsValid && clerkResponsibleIsValid) {
+                var bfDateType = new BFDateType();
+                bfDateType.setCaseReference(caseData.getEthosCaseReference());
+
+                if (!Strings.isNullOrEmpty(bfActionType.getAllActions())) {
+                    bfDateType.setBroughtForwardAction(bfActionType.getAllActions());
+                } else if (!Strings.isNullOrEmpty(bfActionType.getCwActions())) {
+                    bfDateType.setBroughtForwardAction(bfActionType.getCwActions());
+                }
+                //date taken
+               // bfDateType..setCaseReference();
+                bfDateType.setBroughtForwardDate(bfActionType.getBfDate());
+                bfDateType.setBroughtForwardDateReason(bfActionType.getNotes());
+
+                bfDateTypeItem.setId(String.valueOf(bfActionTypeItem.getId()));
+                bfDateTypeItem.setValue(bfDateType);
+            }
+        }
+        return bfDateTypeItem;
     }
 
     public static ListingData processClaimsAcceptedRequest(ListingDetails listingDetails,
@@ -167,31 +197,6 @@ public class ReportHelper {
                     .filter(reportItem -> MULTIPLE_CASE_TYPE.equals(reportItem.getValue().getCaseType())).count();
         }
         return multiplesTotal;
-    }
-
-    private static BFDateTypeItem getBFDateTypeItem(BFActionTypeItem bfActionTypeItem,
-                                                    ListingData listingData, CaseData caseData) {
-        var bfDateTypeItem = new BFDateTypeItem();
-        var bfActionType = bfActionTypeItem.getValue();
-        if (!isNullOrEmpty(bfActionType.getBfDate()) && isNullOrEmpty(bfActionType.getCleared())) {
-            boolean matchingDateIsValid = validateMatchingDate(listingData, bfActionType.getBfDate());
-            boolean clerkResponsibleIsValid = validateClerkResponsible(listingData, caseData);
-            if (matchingDateIsValid && clerkResponsibleIsValid) {
-                var bfDateType = new BFDateType();
-                bfDateType.setCaseReference(caseData.getEthosCaseReference());
-                if (!Strings.isNullOrEmpty(bfActionType.getAllActions())) {
-                    bfDateType.setBroughtForwardAction(bfActionType.getAllActions());
-                } else if (!Strings.isNullOrEmpty(bfActionType.getCwActions())) {
-                    bfDateType.setBroughtForwardAction(bfActionType.getCwActions());
-                }
-                bfDateType.setBroughtForwardDate(bfActionType.getBfDate());
-                bfDateType.setBroughtForwardDateCleared(bfActionType.getCleared());
-                bfDateType.setBroughtForwardDateReason(bfActionType.getNotes());
-                bfDateTypeItem.setId(String.valueOf(bfActionTypeItem.getId()));
-                bfDateTypeItem.setValue(bfDateType);
-            }
-        }
-        return bfDateTypeItem;
     }
 
     private static AdhocReportTypeItem getClaimsAcceptedDetailItem(ListingDetails listingDetails, CaseData caseData) {

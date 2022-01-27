@@ -12,6 +12,7 @@ import uk.gov.hmcts.ecm.common.model.listing.items.ReportListingsTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportDoc;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReportDoc;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_SOURCE_LOCAL_REPORT;
@@ -125,6 +127,9 @@ public class ReportDocHelper {
                 break;
             case MEMBER_DAYS_REPORT:
                 sb.append(new MemberDaysReportDoc().getReportDocPart(listingData));
+                break;
+            case BROUGHT_FORWARD_REPORT:
+                sb.append(new BfActionReportDoc().getReportDocPart(listingData));
                 break;
             default:
                 throw new IllegalStateException("Report type - Unexpected value: " + listingData.getReportType());

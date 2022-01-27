@@ -133,6 +133,7 @@ public class TornadoService {
                     documentName, userDetails, caseType);
         }
         try (var outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
+            log.error("mukera bf report output:", sb);
             writeOutputStream(outputStreamWriter, sb);
         }
     }
