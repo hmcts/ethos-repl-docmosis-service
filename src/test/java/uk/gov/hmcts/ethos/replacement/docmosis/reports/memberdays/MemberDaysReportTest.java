@@ -346,11 +346,12 @@ public class MemberDaysReportTest {
     }
 
     private boolean isValidDate(String dateListed, String dateFrom, String dateTo){
-        var listed = LocalDate.parse(dateListed.split("T")[0]);
-        var from = LocalDate.parse(dateFrom);
-        var to = LocalDate.parse(dateTo);
+        var hearingListedDate = LocalDate.parse(dateListed.split("T")[0]);
+        var hearingDatesFrom = LocalDate.parse(dateFrom);
+        var hearingDatesTo = LocalDate.parse(dateTo);
 
-        return listed.compareTo(from) >= 0 && listed.compareTo(to) <= 0;
+        return (hearingListedDate.isEqual(hearingDatesFrom) ||  hearingListedDate.isAfter(hearingDatesFrom))
+            && (hearingListedDate.isEqual(hearingDatesTo) || hearingListedDate.isBefore(hearingDatesTo));
     }
 
     @Test
