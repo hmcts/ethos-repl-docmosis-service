@@ -71,8 +71,8 @@ public class MemberDaysReportTest {
         dateListedType.setHearingVenueDay("Aberdeen");
         dateListedType.setListedDate("2019-12-11T12:11:00.000");
         dateListedType.setHearingTimingStart("2019-12-11T12:11:00.000");
-        dateListedType.setHearingTimingBreak("2019-12-11T12:11:00.000");
-        dateListedType.setHearingTimingResume("2019-12-11T12:11:00.000");
+        dateListedType.setHearingTimingBreak("2019-12-11T12:11:00");
+        dateListedType.setHearingTimingResume("2019-12-11T12:11:00");
         dateListedType.setHearingTimingFinish("2019-12-11T14:11:00.000");
         dateListedTypeItem.setId("12300");
         dateListedTypeItem.setValue(dateListedType);
@@ -87,8 +87,8 @@ public class MemberDaysReportTest {
         dateListedType1.setHearingVenueDay("Aberdeen");
         dateListedType1.setListedDate("2019-12-10T12:11:00.000");
         dateListedType1.setHearingTimingStart("2019-12-10T11:00:00.000");
-        dateListedType1.setHearingTimingBreak("2019-12-10T12:00:00.000");
-        dateListedType1.setHearingTimingResume("2019-12-10T13:00:00.000");
+        dateListedType1.setHearingTimingBreak("2019-12-10T12:00:00");
+        dateListedType1.setHearingTimingResume("2019-12-10T13:00:00");
         dateListedType1.setHearingTimingFinish("2019-12-10T14:00:00.000");
         dateListedTypeItem1.setId("12400");
         dateListedTypeItem1.setValue(dateListedType1);
@@ -103,8 +103,8 @@ public class MemberDaysReportTest {
         dateListedType2.setHearingVenueDay("Aberdeen");
         dateListedType2.setListedDate("2019-12-12T12:11:30.000");
         dateListedType2.setHearingTimingStart("2019-12-12T12:30:00.000");
-        dateListedType2.setHearingTimingBreak("2019-12-12T12:30:00.000");
-        dateListedType2.setHearingTimingResume("2019-12-12T12:30:00.000");
+        dateListedType2.setHearingTimingBreak("2019-12-12T12:30:00");
+        dateListedType2.setHearingTimingResume("2019-12-12T12:30:00");
         dateListedType2.setHearingTimingFinish("2019-12-12T14:30:00.000");
         dateListedTypeItem2.setId("12500");
         dateListedTypeItem2.setValue(dateListedType2);
@@ -118,8 +118,8 @@ public class MemberDaysReportTest {
         dateListedType3.setHearingVenueDay("Aberdeen");
         dateListedType3.setListedDate("2019-12-13T12:11:55.000");
         dateListedType3.setHearingTimingStart("2019-12-13T14:11:55.000");
-        dateListedType3.setHearingTimingBreak("2019-12-13T15:11:55.000");
-        dateListedType3.setHearingTimingResume("2019-12-13T15:30:55.000");
+        dateListedType3.setHearingTimingBreak("2019-12-13T15:11:55");
+        dateListedType3.setHearingTimingResume("2019-12-13T15:30:55");
         dateListedType3.setHearingTimingFinish("2019-12-13T16:30:55.000");
         dateListedTypeItem3.setId("12600");
         dateListedTypeItem3.setValue(dateListedType3);
@@ -187,8 +187,8 @@ public class MemberDaysReportTest {
         dateListedType5.setHearingVenueDay("Aberdeen");
         dateListedType5.setListedDate("2019-12-14T12:11:55.000");
         dateListedType5.setHearingTimingStart("2019-12-14T14:11:55.000");
-        dateListedType5.setHearingTimingBreak("2019-12-14T15:11:55.000");
-        dateListedType5.setHearingTimingResume("2019-12-14T15:30:55.000");
+        dateListedType5.setHearingTimingBreak("2019-12-14T15:11:55");
+        dateListedType5.setHearingTimingResume("2019-12-14T15:30:55");
         dateListedType5.setHearingTimingFinish("2019-12-14T16:30:55.000");
         dateListedTypeItem5.setId("12600");
         dateListedTypeItem5.setValue(dateListedType5);
@@ -231,8 +231,8 @@ public class MemberDaysReportTest {
         dateListedType6.setHearingVenueDay("Aberdeen");
         dateListedType6.setListedDate("2019-12-14T12:11:55.000");
         dateListedType6.setHearingTimingStart("2019-12-14T13:11:55.000");
-        dateListedType6.setHearingTimingBreak("2019-12-14T15:11:55.000");
-        dateListedType6.setHearingTimingResume("2019-12-14T15:30:55.000");
+        dateListedType6.setHearingTimingBreak("2019-12-14T15:11:55");
+        dateListedType6.setHearingTimingResume("2019-12-14T15:30:55");
         dateListedType6.setHearingTimingFinish("2019-12-14T19:30:55.000");
         dateListedTypeItem6.setId("12600334");
         dateListedTypeItem6.setValue(dateListedType6);
@@ -307,8 +307,8 @@ public class MemberDaysReportTest {
         dateListedType6.setHearingVenueDay("Aberdeen6");
         dateListedType6.setListedDate("2019-12-29T12:11:55.000");
         dateListedType6.setHearingTimingStart("2019-12-29T13:11:55.000");
-        dateListedType6.setHearingTimingBreak("2019-12-29T15:11:55.000");
-        dateListedType6.setHearingTimingResume("2019-12-29T15:30:55.000");
+        dateListedType6.setHearingTimingBreak("2019-12-29T15:11:55");
+        dateListedType6.setHearingTimingResume("2019-12-29T15:30:55");
         dateListedType6.setHearingTimingFinish("2019-12-29T19:30:55.000");
         dateListedTypeItem6.setId("1268899999");
         dateListedTypeItem6.setValue(dateListedType6);
