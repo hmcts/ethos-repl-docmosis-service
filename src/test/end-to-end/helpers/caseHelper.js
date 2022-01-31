@@ -91,11 +91,11 @@ async function hearingDetails(I, eventName) {
     await I.executeHearingDetails();
 }
 
-async function printHearingLists(I, eventName, jurisdiction) {
-    await I.chooseNextStep(eventName, 3);
-    await I.wait(3);
-    await I.executePrintHearingLists(jurisdiction);
-}
+// async function printHearingLists(I, eventName, jurisdiction) {
+//     await I.chooseNextStep(eventName, 3);
+//     await I.wait(3);
+//     await I.executePrintHearingLists(jurisdiction);
+// }
 
 async function caseTransfer(I, eventName) {
     await I.chooseNextStep(eventName, 3);
