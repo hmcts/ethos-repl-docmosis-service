@@ -123,7 +123,7 @@ module.exports = {
     fixCaseAPI,
     bfAction,
     listHearing,
-    printHearingLists,
+    // printHearingLists,
     allocateHearing,
     hearingDetails,
     hearingDetails,
