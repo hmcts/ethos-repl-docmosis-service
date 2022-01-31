@@ -3,12 +3,9 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.common.Strings;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
@@ -21,7 +18,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -195,43 +191,6 @@ public class EventValidationService {
     public void validateJurisdictionCodes(CaseData caseData, List<String> errors) {
         validateDuplicatedJurisdictionCodes(caseData, errors);
         validateJurisdictionCodesExistenceInJudgement(caseData, errors);
-    }
-
-    public List<String> validateHearingDatesNotInFuture(CaseData caseData) {
-        List<String> errors = new ArrayList<>();
-        if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
-            return errors;
-        }
-        for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
-            if (CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
-                continue;
-            }
-            for (DateListedTypeItem dateListedTypeItem : hearingTypeItem.getValue().getHearingDateCollection()) {
-                errors.addAll(addErrorMessages(dateListedTypeItem));
-            }
-        }
-        return errors;
-    }
-
-    private List<String> addErrorMessages(DateListedTypeItem dateListedTypeItem) {
-        List<String> errors = new ArrayList<>();
-        if (isDateInFuture(dateListedTypeItem.getValue().getHearingTimingStart())) {
-            errors.add("Start time can't be in future");
-        }
-        if (isDateInFuture(dateListedTypeItem.getValue().getHearingTimingResume())) {
-            errors.add("Resume time can't be in future");
-        }
-        if (isDateInFuture(dateListedTypeItem.getValue().getHearingTimingBreak())) {
-            errors.add("Break time can't be in future");
-        }
-        if (isDateInFuture(dateListedTypeItem.getValue().getHearingTimingFinish())) {
-            errors.add("Finish time can't be in future");
-        }
-        return errors;
-    }
-
-    private boolean isDateInFuture(String date) {
-        return !Strings.isNullOrEmpty(date) && LocalDateTime.parse(date).isAfter(LocalDateTime.now());
     }
 
     private void validateJurisdictionCodesExistenceInJudgement(CaseData caseData, List<String> errors) {
