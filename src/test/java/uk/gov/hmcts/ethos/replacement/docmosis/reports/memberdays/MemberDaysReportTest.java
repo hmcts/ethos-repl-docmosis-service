@@ -295,8 +295,8 @@ public class MemberDaysReportTest {
     @Test
     public void shouldIncludeOnlyCasesWithValidHearingDates() {
         var memberDaysReport = new MemberDaysReport();
-        var thridCase = submitEvents.get(2);
-        var hearingWithInvalidDate = thridCase.getCaseData().getHearingCollection().get(0);
+        var thirdCase = submitEvents.get(2);
+        var hearingWithInvalidDate = thirdCase.getCaseData().getHearingCollection().get(0);
 
         var dateListedTypeItem6 = new DateListedTypeItem();
         var dateListedType6 = new DateListedType();
