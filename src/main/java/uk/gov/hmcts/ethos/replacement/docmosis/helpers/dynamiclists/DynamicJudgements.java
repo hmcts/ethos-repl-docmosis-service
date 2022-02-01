@@ -40,7 +40,6 @@ public class DynamicJudgements {
                 var judgementCollection = caseData.getJudgementCollection();
                 for (JudgementTypeItem judgementTypeItem : judgementCollection) {
                     dynamicHearingDate(caseData, hearingDynamicList, judgementTypeItem.getValue());
-                    dynamicReconsiderations(caseData, parties, judgementTypeItem.getValue());
                 }
             } else {
                 createDynamicJudgment(caseData, hearingDynamicList, parties);
@@ -61,34 +60,6 @@ public class DynamicJudgements {
         List<JudgementTypeItem> judgementTypeList = new ArrayList<>();
         judgementTypeList.add(judgmentTypeItem);
         caseData.setJudgementCollection(judgementTypeList);
-    }
-
-    private static void dynamicReconsiderations(CaseData caseData, DynamicFixedListType parties,
-                                                JudgementType judgementType) {
-        DynamicValueType dynamicValueType;
-        JudgmentReconsiderationType reconsiderationType;
-        if (judgementType.getJudgementReconsiderations() == null) {
-            reconsiderationType = new JudgmentReconsiderationType();
-            reconsiderationType.setDynamicReconsiderationPartyInitiative(parties);
-            dynamicValueType = parties.getListItems().get(0);
-            reconsiderationType.getDynamicReconsiderationPartyInitiative().setValue(dynamicValueType);
-            judgementType.setJudgementReconsiderations(reconsiderationType);
-        } else {
-            reconsiderationType = judgementType.getJudgementReconsiderations();
-            if (reconsiderationType.getDynamicReconsiderationPartyInitiative() == null) {
-                reconsiderationType.setDynamicReconsiderationPartyInitiative(parties);
-                if (StringUtils.isNotEmpty(reconsiderationType.getReconsiderationPartyInitiative())) {
-                    dynamicValueType = DynamicListHelper.getDynamicValueParty(caseData, parties.getListItems(),
-                            reconsiderationType.getReconsiderationPartyInitiative());
-                } else {
-                    dynamicValueType = parties.getListItems().get(0);
-                }
-            } else {
-                dynamicValueType = reconsiderationType.getDynamicReconsiderationPartyInitiative().getValue();
-                reconsiderationType.setDynamicReconsiderationPartyInitiative(parties);
-            }
-            reconsiderationType.getDynamicReconsiderationPartyInitiative().setValue(dynamicValueType);
-        }
     }
 
     private static void dynamicHearingDate(CaseData caseData, DynamicFixedListType hearingDynamicList,
