@@ -98,7 +98,8 @@ public class MultipleHelperService {
                         multipleRef);
             } else {
 
-                errors.add("Multiple " + multipleRef + " has been transferred. The case cannot be moved to this multiple");
+                errors.add("Multiple " + multipleRef + " has been transferred. "
+                        + "The case cannot be moved to this multiple");
 
             }
 

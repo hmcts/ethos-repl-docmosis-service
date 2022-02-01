@@ -162,7 +162,7 @@ public class BulkCreationService {
                 errors.addAll(bulkCasesPayload.getErrors());
             }
         } catch (Exception ex) {
-            log.error("Error processing bulk update threads:" + ex.toString());
+            log.error("Error processing bulk update threads: " + ex.getMessage(), ex);
         }
         bulkCasesPayload.setErrors(errors);
         return bulkCasesPayload;

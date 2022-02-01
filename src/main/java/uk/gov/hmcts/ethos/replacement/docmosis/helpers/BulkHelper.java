@@ -476,7 +476,8 @@ public class BulkHelper {
                     .indexOf(caseId);
             if (index != -1) {
                 var submitEvent = submitEvents.get(index);
-                log.info("setLeadClaimant is set to Yes for case: " + submitEvent.getCaseData().getEthosCaseReference());
+                log.info("setLeadClaimant is set to Yes for case: "
+                        + submitEvent.getCaseData().getEthosCaseReference());
                 submitEvent.getCaseData().setLeadClaimant(YES);
                 submitEvents.remove(index);
                 submitEvents.add(0, submitEvent);

@@ -144,7 +144,8 @@ public class BulkUpdateService {
                 submitEvent.getCaseData().setLeadClaimant(YES);
                 executor.execute(new BulkUpdateTask(bulkDetails, submitEvent, authToken, ccdClient));
             } catch (IOException e) {
-                log.error("Error processing ES retrieving lead case" + e.toString());
+                log.error("Error processing ES retrieving lead case" + e.getMessage(), e);
+
             }
         }
         if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null

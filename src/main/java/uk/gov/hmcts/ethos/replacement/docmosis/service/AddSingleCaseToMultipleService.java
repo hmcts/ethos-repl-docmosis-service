@@ -35,7 +35,6 @@ public class AddSingleCaseToMultipleService {
     public void addSingleCaseToMultipleLogic(String userToken, CaseData caseData, String caseTypeId,
                                              String jurisdiction, String caseId, List<String> errors) {
 
-
         if (caseData.getMultipleFlag().equals(NO)
                 && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
