@@ -86,13 +86,13 @@ public class DocumentHelper {
         sb.append("\"data\":{\n");
 
         if (templateName.equals(ADDRESS_LABELS_TEMPLATE) && multipleData == null) {
-            log.info("Labels template");
+            log.info("Getting address labels data for single case:" + caseData.getEthosCaseReference());
             sb.append(getAddressLabelsDataSingleCase(caseData));
         } else if (templateName.equals(ADDRESS_LABELS_TEMPLATE)) {
-            log.info("Multiple template");
+            log.info("Getting address labels data for multiple reference:" + multipleData.getMultipleReference());
             sb.append(getAddressLabelsDataMultipleCase(multipleData));
         } else {
-            log.info("Single template");
+            log.info("Getting data for single template for case:" + caseData.getEthosCaseReference());
             sb.append(getClaimantData(caseData));
             sb.append(getRespondentData(caseData));
             sb.append(getHearingData(caseData, caseTypeId, venueAddressInputStream, correspondenceType,
@@ -102,7 +102,6 @@ public class DocumentHelper {
             sb.append(getCourtData(caseData, allocatedCourtAddress));
         }
 
-        log.info("Check template names");
         sb.append("\"i").append(getEWSectionName(correspondenceType)
                 .replace(".", "_"))
                 .append("_enhmcts\":\"").append("[userImage:").append("enhmcts.png]").append(NEW_LINE);
@@ -122,14 +121,12 @@ public class DocumentHelper {
                 .replace(".", "_"))
                 .append("_schmcts2\":\"").append("[userImage:").append("schmcts.png]").append(NEW_LINE);
 
-        log.info("Clerk info");
         String userName = nullCheck(userDetails.getFirstName() + " " + userDetails.getLastName());
         sb.append("\"Clerk\":\"").append(nullCheck(userName)).append(NEW_LINE);
         sb.append("\"Today_date\":\"").append(UtilHelper.formatCurrentDate(LocalDate.now())).append(NEW_LINE);
         sb.append("\"TodayPlus28Days\":\"").append(UtilHelper.formatCurrentDatePlusDays(LocalDate.now(), 28))
                 .append(NEW_LINE);
         sb.append("\"Case_No\":\"").append(nullCheck(caseData.getEthosCaseReference())).append(NEW_LINE);
-        log.info("End document");
         sb.append("}\n");
         sb.append("}\n");
 
@@ -159,13 +156,13 @@ public class DocumentHelper {
     }
 
     private static StringBuilder getClaimantData(CaseData caseData) {
-        log.info("Claimant Data");
+        log.info("Getting Claimant Data for case: " + caseData.getEthosCaseReference());
         var sb = new StringBuilder();
         var representedTypeC = caseData.getRepresentativeClaimantType();
         Optional<ClaimantIndType> claimantIndType = Optional.ofNullable(caseData.getClaimantIndType());
         if (representedTypeC != null && caseData.getClaimantRepresentedQuestion() != null &&  caseData
                 .getClaimantRepresentedQuestion().equals(YES)) {
-            log.info("Claimant represented");
+            log.info("Claimant is represented for case reference: " + caseData.getEthosCaseReference());
             sb.append("\"claimant_or_rep_full_name\":\"").append(nullCheck(representedTypeC.getNameOfRepresentative()))
                     .append(NEW_LINE);
             sb.append("\"claimant_rep_organisation\":\"").append(nullCheck(representedTypeC.getNameOfOrganisation()))
@@ -180,7 +177,7 @@ public class DocumentHelper {
             Optional<String> claimantTypeOfClaimant = Optional.ofNullable(caseData.getClaimantTypeOfClaimant());
             if (claimantTypeOfClaimant.isPresent() && caseData.getClaimantTypeOfClaimant()
                     .equals(COMPANY_TYPE_CLAIMANT)) {
-                log.info("Claimant Company");
+                log.info("Claimant is a company for case reference: " + caseData.getEthosCaseReference());
                 sb.append("\"claimant_full_name\":\"").append(nullCheck(caseData.getClaimantCompany()))
                         .append(NEW_LINE);
                 sb.append("\"Claimant\":\"").append(nullCheck(caseData.getClaimantCompany())).append(NEW_LINE);
@@ -194,7 +191,7 @@ public class DocumentHelper {
                 sb.append("\"Claimant\":\"").append(NEW_LINE);
             }
         } else {
-            log.info("Claimant not represented");
+            log.info("Claimant is not represented for case: " + caseData.getEthosCaseReference());
             Optional<String> claimantTypeOfClaimant = Optional.ofNullable(caseData.getClaimantTypeOfClaimant());
             if (claimantTypeOfClaimant.isPresent() && caseData.getClaimantTypeOfClaimant()
                     .equals(COMPANY_TYPE_CLAIMANT)) {
