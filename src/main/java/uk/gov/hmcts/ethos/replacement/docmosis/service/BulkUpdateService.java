@@ -198,7 +198,7 @@ public class BulkUpdateService {
                 submitBulkEventSubmitEventType.setSubmitBulkEventToUpdate(submitBulkEvent);
             }
         } catch (Exception ex) {
-            log.error("Error processing bulk update threads" + ex.toString());
+            log.error("Error processing bulk update threads" + ex.getMessage(), ex);
         }
         submitBulkEventSubmitEventType.setBulkDetails(bulkDetails);
         submitBulkEventSubmitEventType.setSubmitEventList(submitEventList);
