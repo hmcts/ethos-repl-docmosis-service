@@ -35,12 +35,10 @@ public class AddSingleCaseToMultipleService {
     public void addSingleCaseToMultipleLogic(String userToken, CaseData caseData, String caseTypeId,
                                              String jurisdiction, String caseId, List<String> errors) {
 
-        log.info("Adding single case to multiple logic");
 
         if (caseData.getMultipleFlag().equals(NO)
                 && caseData.getCaseType().equals(MULTIPLE_CASE_TYPE)) {
 
-            log.info("Case was single and now will be multiple");
             String leadClaimant = caseData.getLeadClaimant();
             String updatedMultipleReference = caseData.getMultipleReference();
             String multipleCaseTypeId = UtilHelper.getBulkCaseTypeId(caseTypeId);
@@ -66,7 +64,6 @@ public class AddSingleCaseToMultipleService {
 
             String newEthosCaseReferenceToAdd = caseData.getEthosCaseReference();
 
-            log.info("If multiple is empty the single will be always the lead");
             if (ethosCaseRefCollection.isEmpty()) {
                 leadClaimant = YES;
             }
@@ -75,19 +72,15 @@ public class AddSingleCaseToMultipleService {
             addNewLeadToMultiple(userToken, multipleCaseTypeId, jurisdiction,
                     multipleData, leadClaimant, newEthosCaseReferenceToAdd, caseId, errors, parentMultipleCaseId);
 
-            log.info("Generate and upload excel with sub multiple and send update to multiple");
             multipleHelperService.moveCasesAndSendUpdateToMultiple(userToken, caseData.getSubMultipleName(),
                     jurisdiction, multipleCaseTypeId, String.valueOf(multipleEvent.getCaseId()),
                     multipleData, new ArrayList<>(Collections.singletonList(newEthosCaseReferenceToAdd)), errors);
 
-            log.info("Update multipleRef, multiple and lead");
             var multipleCaseId = String.valueOf(multipleEvent.getCaseId());
             updateCaseDataForMultiple(caseData, updatedMultipleReference, leadClaimant, multipleCaseId);
 
-            log.info("Reset mid fields");
             caseData.setSubMultipleName(subMultipleName);
 
-            log.info("Update check multiple flag");
             caseData.setMultipleFlag(YES);
         }
     }
@@ -97,7 +90,6 @@ public class AddSingleCaseToMultipleService {
         caseData.setMultipleReference(newMultipleReference);
         caseData.setCaseType(MULTIPLE_CASE_TYPE);
 
-        log.info("setLeadClaimant is set to " + leadClaimant);
         caseData.setLeadClaimant(leadClaimant);
         caseData.setMultipleReferenceLinkMarkUp(getLinkMarkUp(multipleCaseId, newMultipleReference));
     }
@@ -112,18 +104,15 @@ public class AddSingleCaseToMultipleService {
                                       String multipleReferenceLinkMarkUp) {
         if (leadClaimant.equals(YES)) {
 
-            log.info("Checking if there was a lead");
             String currentLeadCase = MultiplesHelper.getCurrentLead(multipleData.getLeadCase());
 
             if (!currentLeadCase.isEmpty()) {
-                log.info("There is already a lead case in the multiple. Sending update to be no LEAD");
                 multipleHelperService.sendCreationUpdatesToSinglesWithoutConfirmation(userToken, multipleCaseTypeId,
                         jurisdiction, multipleData, errors,
                         new ArrayList<>(Collections.singletonList(currentLeadCase)), "",
                         multipleReferenceLinkMarkUp);
             }
 
-            log.info("Adding the new lead");
             multipleHelperService.addLeadMarkUp(userToken, multipleCaseTypeId, multipleData,
                     newEthosCaseReferenceToAdd, caseId);
         }

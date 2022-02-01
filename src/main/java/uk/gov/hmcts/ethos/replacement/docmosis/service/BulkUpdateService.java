@@ -93,7 +93,6 @@ public class BulkUpdateService {
             }
             if (errors.isEmpty()) {
                 // 3) Update fields to the searched cases
-                log.info("Updating fields to the searched cases");
                 var submitBulkEventSubmitEventType =
                         createEventToUpdateCasesSearched(searchTypeItemList, bulkDetails, userToken,
                         multRefComplexType.getSubmitBulkEvent(), multipleReferenceV2);
@@ -145,12 +144,11 @@ public class BulkUpdateService {
                 submitEvent.getCaseData().setLeadClaimant(YES);
                 executor.execute(new BulkUpdateTask(bulkDetails, submitEvent, authToken, ccdClient));
             } catch (IOException e) {
-                log.error("Error processing ES retrieving lead case");
+                log.error("Error processing ES retrieving lead case" + e.toString());
             }
         }
         if (submitBulkEventSubmitEventType.getSubmitBulkEventToUpdate() != null
                 || submitBulkEventSubmitEventType.getSubmitEventList() != null) {
-            log.info("Sending updates for single cases and bulk updated");
             executor.execute(new BulkUpdateBulkTask(bulkDetails, authToken, ccdClient,
                     submitBulkEventSubmitEventType, leadId));
         }
@@ -181,11 +179,9 @@ public class BulkUpdateService {
                 submitBulkEventSubmitEventType = caseUpdateFieldsRequest(bulkDetails, searchTypeItem, userToken,
                         submitBulkEvent);
                 if (submitBulkEventSubmitEventType.getSubmitEvent() != null) {
-                    log.info("Case updated then add to the submitEventList");
                     submitEventList.add(submitBulkEventSubmitEventType.getSubmitEvent());
                 }
                 if (!isNullOrEmpty(multipleReferenceV2)) {
-                    log.info("Removing case from multiples as it has been already moved to a different BULK");
                     bulkDetails.getCaseData().getMultipleCollection()
                             .removeIf(multipleTypeItem -> searchTypeItem.getValue().getEthosCaseReferenceS()
                                     .equals(multipleTypeItem.getValue().getEthosCaseReferenceM()));
@@ -195,14 +191,13 @@ public class BulkUpdateService {
             }
             //Add the cases searched and updated to a different bulk if multiple ref changed
             if (!searchTypeItemList.isEmpty() && !isNullOrEmpty(multipleReferenceV2)) {
-                log.info("Adding the data to the new bulk");
                 if (submitBulkEventSubmitEventType.getSubmitBulkEvent() != null) {
                     submitBulkEvent.setCaseData(submitBulkEventSubmitEventType.getSubmitBulkEvent().getCaseData());
                 }
                 submitBulkEventSubmitEventType.setSubmitBulkEventToUpdate(submitBulkEvent);
             }
         } catch (Exception ex) {
-            log.error("Error processing bulk update threads");
+            log.error("Error processing bulk update threads" + ex.toString());
         }
         submitBulkEventSubmitEventType.setBulkDetails(bulkDetails);
         submitBulkEventSubmitEventType.setSubmitEventList(submitEventList);
