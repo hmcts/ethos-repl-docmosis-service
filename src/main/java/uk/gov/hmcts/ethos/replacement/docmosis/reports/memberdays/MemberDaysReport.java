@@ -178,10 +178,14 @@ public class MemberDaysReport {
         long breakResumeDuration = 0;
         if (dateListedTypeItem.getValue().getHearingTimingBreak() != null
             && dateListedTypeItem.getValue().getHearingTimingResume() != null) {
-            var hearingBreak = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingBreak(),
-                OLD_DATE_TIME_PATTERN3);
-            var hearingResume = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingResume(),
-                OLD_DATE_TIME_PATTERN3);
+            var hearingBreakStart = dateListedTypeItem.getValue().getHearingTimingBreak();
+            var hearingBreak = hearingBreakStart.contains(".000")
+                ? LocalDateTime.parse(hearingBreakStart, OLD_DATE_TIME_PATTERN)
+                : LocalDateTime.parse(hearingBreakStart, OLD_DATE_TIME_PATTERN3);
+            var hearingBreakEnd = dateListedTypeItem.getValue().getHearingTimingResume();
+            var hearingResume = hearingBreakEnd.contains(".000")
+                ? LocalDateTime.parse(hearingBreakEnd, OLD_DATE_TIME_PATTERN)
+                : LocalDateTime.parse(hearingBreakEnd, OLD_DATE_TIME_PATTERN3);
             breakResumeDuration = Duration.between(hearingBreak, hearingResume).toMinutes();
         }
 
