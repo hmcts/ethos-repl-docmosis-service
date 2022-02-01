@@ -162,36 +162,32 @@ public class MemberDaysReport {
         if (dateListedTypeItem.getValue().getHearingTimingStart() != null
             && dateListedTypeItem.getValue().getHearingTimingFinish() != null) {
 
-            var currentHearingTimingStart = dateListedTypeItem.getValue().getHearingTimingStart();
-            var hearingStart = currentHearingTimingStart.endsWith(".000")
-                ? LocalDateTime.parse(currentHearingTimingStart, OLD_DATE_TIME_PATTERN)
-                : LocalDateTime.parse(currentHearingTimingStart, OLD_DATE_TIME_PATTERN3);
-
-            var currentHearingTimingFinish = dateListedTypeItem.getValue().getHearingTimingFinish();
-            var hearingFinish = currentHearingTimingFinish.endsWith(".000")
-                ? LocalDateTime.parse(currentHearingTimingFinish, OLD_DATE_TIME_PATTERN)
-                : LocalDateTime.parse(currentHearingTimingFinish, OLD_DATE_TIME_PATTERN3);
-
+            var hearingStart = convertHearingTime(
+                dateListedTypeItem.getValue().getHearingTimingStart());
+            var hearingFinish = convertHearingTime(
+                dateListedTypeItem.getValue().getHearingTimingFinish());
             startFinishDuration = Duration.between(hearingStart, hearingFinish).toMinutes();
         }
 
         long breakResumeDuration = 0;
         if (dateListedTypeItem.getValue().getHearingTimingBreak() != null
             && dateListedTypeItem.getValue().getHearingTimingResume() != null) {
-            var hearingBreakStart = dateListedTypeItem.getValue().getHearingTimingBreak();
-            var hearingBreak = hearingBreakStart.endsWith(".000")
-                ? LocalDateTime.parse(hearingBreakStart, OLD_DATE_TIME_PATTERN)
-                : LocalDateTime.parse(hearingBreakStart, OLD_DATE_TIME_PATTERN3);
-            var hearingBreakEnd = dateListedTypeItem.getValue().getHearingTimingResume();
-            var hearingResume = hearingBreakEnd.endsWith(".000")
-                ? LocalDateTime.parse(hearingBreakEnd, OLD_DATE_TIME_PATTERN)
-                : LocalDateTime.parse(hearingBreakEnd, OLD_DATE_TIME_PATTERN3);
+            var hearingBreak = convertHearingTime(
+                dateListedTypeItem.getValue().getHearingTimingBreak());
+            var hearingResume = convertHearingTime(
+                dateListedTypeItem.getValue().getHearingTimingResume());
             breakResumeDuration = Duration.between(hearingBreak, hearingResume).toMinutes();
         }
 
         var duration = Math.abs(startFinishDuration - breakResumeDuration);
 
         return String.valueOf(duration);
+    }
+
+    private LocalDateTime convertHearingTime(String dateToConvert) {
+        return dateToConvert.endsWith(".000")
+            ? LocalDateTime.parse(dateToConvert, OLD_DATE_TIME_PATTERN)
+            : LocalDateTime.parse(dateToConvert, OLD_DATE_TIME_PATTERN3);
     }
 
     private List<HearingTypeItem> getValidHearings(CaseData caseData) {
