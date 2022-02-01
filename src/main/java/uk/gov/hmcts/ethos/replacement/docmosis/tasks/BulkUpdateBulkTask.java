@@ -57,7 +57,7 @@ public class BulkUpdateBulkTask implements Runnable {
                 }
             }
         } catch (IOException e) {
-            log.error("Error processing bulk update task threads", e);
+            log.error("Error processing bulk update task threads" + e.getMessage(), e);
         }
     }
 }

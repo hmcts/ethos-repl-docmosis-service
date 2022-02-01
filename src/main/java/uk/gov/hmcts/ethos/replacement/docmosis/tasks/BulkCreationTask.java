@@ -58,7 +58,7 @@ public class BulkCreationTask implements Runnable {
                     UtilHelper.getCaseTypeId(
                             bulkDetails.getCaseTypeId()), bulkDetails.getJurisdiction(), returnedRequest, caseId);
         } catch (IOException e) {
-            log.error("Error processing bulk update threads:", e);
+            log.error("Error processing bulk update threads:" + e.getMessage(), e);
         }
     }
 }
