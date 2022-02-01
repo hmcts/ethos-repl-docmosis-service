@@ -163,12 +163,12 @@ public class MemberDaysReport {
             && dateListedTypeItem.getValue().getHearingTimingFinish() != null) {
 
             var currentHearingTimingStart = dateListedTypeItem.getValue().getHearingTimingStart();
-            var hearingStart = currentHearingTimingStart.contains(".000")
+            var hearingStart = currentHearingTimingStart.endsWith(".000")
                 ? LocalDateTime.parse(currentHearingTimingStart, OLD_DATE_TIME_PATTERN)
                 : LocalDateTime.parse(currentHearingTimingStart, OLD_DATE_TIME_PATTERN3);
 
             var currentHearingTimingFinish = dateListedTypeItem.getValue().getHearingTimingFinish();
-            var hearingFinish = currentHearingTimingFinish.contains(".000")
+            var hearingFinish = currentHearingTimingFinish.endsWith(".000")
                 ? LocalDateTime.parse(currentHearingTimingFinish, OLD_DATE_TIME_PATTERN)
                 : LocalDateTime.parse(currentHearingTimingFinish, OLD_DATE_TIME_PATTERN3);
 
@@ -179,11 +179,11 @@ public class MemberDaysReport {
         if (dateListedTypeItem.getValue().getHearingTimingBreak() != null
             && dateListedTypeItem.getValue().getHearingTimingResume() != null) {
             var hearingBreakStart = dateListedTypeItem.getValue().getHearingTimingBreak();
-            var hearingBreak = hearingBreakStart.contains(".000")
+            var hearingBreak = hearingBreakStart.endsWith(".000")
                 ? LocalDateTime.parse(hearingBreakStart, OLD_DATE_TIME_PATTERN)
                 : LocalDateTime.parse(hearingBreakStart, OLD_DATE_TIME_PATTERN3);
             var hearingBreakEnd = dateListedTypeItem.getValue().getHearingTimingResume();
-            var hearingResume = hearingBreakEnd.contains(".000")
+            var hearingResume = hearingBreakEnd.endsWith(".000")
                 ? LocalDateTime.parse(hearingBreakEnd, OLD_DATE_TIME_PATTERN)
                 : LocalDateTime.parse(hearingBreakEnd, OLD_DATE_TIME_PATTERN3);
             breakResumeDuration = Duration.between(hearingBreak, hearingResume).toMinutes();
