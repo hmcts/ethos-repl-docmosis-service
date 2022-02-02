@@ -52,9 +52,6 @@ public class DynamicJudgements {
                                               DynamicFixedListType partiesDynamicList) {
         var judgmentType = new JudgementType();
         judgmentType.setDynamicJudgementHearing(hearingDynamicList);
-        var reconsiderationType = new JudgmentReconsiderationType();
-        reconsiderationType.setDynamicReconsiderationPartyInitiative(partiesDynamicList);
-        judgmentType.setJudgementReconsiderations(reconsiderationType);
         var judgmentTypeItem = new JudgementTypeItem();
         judgmentTypeItem.setValue(judgmentType);
         List<JudgementTypeItem> judgementTypeList = new ArrayList<>();
