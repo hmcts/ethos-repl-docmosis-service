@@ -5,10 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.JudgmentReconsiderationType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicDepositOrder;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicJudgements;
@@ -18,18 +18,17 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicRestr
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLAIMANT_TITLE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_BULK_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 public class DynamicListHelperTest {
 
@@ -111,7 +110,7 @@ public class DynamicListHelperTest {
         dynamicValueRespondent.setLabel("Antonio Vazquez");
         List<DynamicValueType> listItems = DynamicListHelper.createDynamicRespondentName(caseDetails1.getCaseData().getRespondentCollection());
         listItems.add(DynamicListHelper.getDynamicCodeLabel("C: " + caseDetails1.getCaseData().getClaimant(), caseDetails1.getCaseData().getClaimant()));
-        var dynamicValue = DynamicListHelper.getDynamicValueType(caseDetails1.getCaseData(), listItems, "Respondent");
+        var dynamicValue = DynamicListHelper.getDynamicValueParty(caseDetails1.getCaseData(), listItems, "Respondent");
         assertEquals(dynamicValue, dynamicValueRespondent);
     }
 
@@ -252,4 +251,5 @@ public class DynamicListHelperTest {
         JudgementType judgementType = caseData.getJudgementCollection().get(0).getValue();
         assertEquals("No Hearings", judgementType.getDynamicJudgementHearing().getListItems().get(0).getCode());
     }
+
 }

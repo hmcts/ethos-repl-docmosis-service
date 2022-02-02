@@ -13,11 +13,12 @@ Feature('Leeds Singles Case and move to Case Details state');
 
 Scenario('Verify Case Details ', async ({I}) => {
 
-    // caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
+    caseNumber = await createCaseInCcd('src/test/end-to-end/data/ccd-case-basic-data.json');
     await acceptCaseEvent(I, caseNumber, eventNames.ACCEPT_CASE);
     await caseDetails(I, caseNumber, eventNames.CASE_DETAILS, 'A Clerk', 'Casework Table', 'Standard Track');
 
-}).tag('@nightly')
+}).tag('@e2e')
+    .tag('@crossbrowser')
     .retry(testConfig.TestRetryScenarios);
 
 Scenario('Verify Case Details ( Using API)', async ({I}) => {

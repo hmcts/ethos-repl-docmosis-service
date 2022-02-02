@@ -1069,7 +1069,8 @@ public class ListingHelperTest {
     }
 
     @Test
-    public void getListingTypeFromSubmitData() {
+    public void getListingTypeFromSubmitData() throws Exception {
+        var listingDetails = generateListingDetails("listingDetailsTest1.json");
         CaseData caseData = new CaseData();
         ClaimantIndType claimantIndType = new ClaimantIndType();
         claimantIndType.setClaimantLastName("Rodriguez");
@@ -1342,6 +1343,8 @@ public class ListingHelperTest {
         assertEquals("EM-TRB-SCO-ENG-00783", ListingHelper.getListingDocName(listingData));
         listingData.setReportType(HEARINGS_TO_JUDGEMENTS_REPORT);
         assertEquals("EM-TRB-SCO-ENG-00786", ListingHelper.getListingDocName(listingData));
+        listingData.setReportType(MEMBER_DAYS_REPORT);
+        assertEquals("EM-TRB-SCO-ENG-00800", ListingHelper.getListingDocName(listingData));
         listingData.setReportType("");
         assertEquals("No document found", ListingHelper.getListingDocName(listingData));
     }

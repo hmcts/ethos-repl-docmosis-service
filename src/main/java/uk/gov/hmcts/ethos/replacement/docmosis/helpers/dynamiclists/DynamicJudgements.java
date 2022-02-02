@@ -41,13 +41,14 @@ public class DynamicJudgements {
                     dynamicHearingDate(caseData, hearingDynamicList, judgementTypeItem.getValue());
                 }
             } else {
-                createDynamicJudgment(caseData, hearingDynamicList);
+                createDynamicJudgment(caseData, hearingDynamicList, parties);
             }
 
         }
     }
 
-    private static void createDynamicJudgment(CaseData caseData, DynamicFixedListType hearingDynamicList) {
+    private static void createDynamicJudgment(CaseData caseData, DynamicFixedListType hearingDynamicList,
+                                              DynamicFixedListType partiesDynamicList) {
         var judgmentType = new JudgementType();
         judgmentType.setDynamicJudgementHearing(hearingDynamicList);
         var judgmentTypeItem = new JudgementTypeItem();
