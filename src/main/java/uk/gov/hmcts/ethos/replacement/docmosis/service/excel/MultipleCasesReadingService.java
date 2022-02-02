@@ -67,4 +67,28 @@ public class MultipleCasesReadingService {
 
     }
 
+    public List<SubmitMultipleEvent> retrieveMultipleCasesCcdReference(String userToken,
+                                                           String multipleCaseTypeId,
+                                                           String multipleReference) {
+
+        List<SubmitMultipleEvent> submitMultipleEvents;
+
+        try {
+            submitMultipleEvents = ccdClient.retrieveMultipleCcdReferenceElasticSearch(
+                    userToken,
+                    multipleCaseTypeId,
+                    multipleReference);
+
+        } catch (Exception ex) {
+
+            log.error("Error retrieving multiple cases");
+
+            throw new RuntimeException("Error retrieving multiple cases", ex);
+
+        }
+
+        return submitMultipleEvents;
+
+    }
+
 }

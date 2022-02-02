@@ -34,6 +34,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.ConciliationTrackService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DepositOrderValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.FixCaseApiService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.JudgmentValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleCaseMultipleMidEventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleReferenceService;
@@ -72,6 +73,7 @@ public class CaseActionsForCaseWorkerController {
     private final CaseManagementForCaseWorkerService caseManagementForCaseWorkerService;
     private final ConciliationTrackService conciliationTrackService;
     private final DefaultValuesReaderService defaultValuesReaderService;
+    private final FixCaseApiService fixCaseApiService;
     private final SingleReferenceService singleReferenceService;
     private final VerifyTokenService verifyTokenService;
     private final EventValidationService eventValidationService;
@@ -977,6 +979,28 @@ public class CaseActionsForCaseWorkerController {
 
         log.info(EVENT_FIELDS_VALIDATION + errors);
         return getCallbackRespEntityErrors(errors, caseData);
+    }
+
+    @PostMapping(value = "/dynamicFixCaseAPI", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "populates value in Fix Case API")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> dynamicFixCaseAPI(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("FIX CASE API VALUE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        fixCaseApiService.checkUpdateMultipleReference(ccdRequest, userToken);
+
+        return getCallbackRespEntityNoErrors(ccdRequest.getCaseDetails().getCaseData());
     }
 
     private DefaultValues getPostDefaultValues(CaseDetails caseDetails) {

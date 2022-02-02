@@ -99,4 +99,34 @@ public class MultipleCasesReadingServiceTest {
         verifyNoMoreInteractions(ccdClient);
     }
 
+    @Test
+    public void retrieveMultipleCasesCcdReference() throws IOException {
+        when(ccdClient.retrieveMultipleCcdReferenceElasticSearch(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getCaseData().getMultipleReference()))
+                .thenReturn(submitMultipleEvents);
+        multipleCasesReadingService.retrieveMultipleCasesCcdReference(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getCaseData().getMultipleReference());
+        verify(ccdClient, times(1)).retrieveMultipleCcdReferenceElasticSearch(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getCaseData().getMultipleReference());
+        verifyNoMoreInteractions(ccdClient);
+    }
+
+    @Test(expected = Exception.class)
+    public void retrieveMultipleCasesCcdReferenceException() throws IOException {
+        when(ccdClient.retrieveMultipleCcdReferenceElasticSearch(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getCaseData().getMultipleReference()))
+                .thenThrow(new InternalException(ERROR_MESSAGE));
+        multipleCasesReadingService.retrieveMultipleCasesCcdReference(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getCaseData().getMultipleReference());
+        verify(ccdClient, times(1)).retrieveMultipleCcdReferenceElasticSearch(userToken,
+                multipleDetails.getCaseTypeId(),
+                multipleDetails.getCaseData().getMultipleReference());
+        verifyNoMoreInteractions(ccdClient);
+    }
+
 }
