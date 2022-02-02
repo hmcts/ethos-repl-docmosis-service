@@ -252,4 +252,47 @@ public class DynamicListHelperTest {
         assertEquals("No Hearings", judgementType.getDynamicJudgementHearing().getListItems().get(0).getCode());
     }
 
+    @Test
+    public void dynamicReconsideration_claimantReconsideration() {
+        var caseData = caseDetails1.getCaseData();
+        var reconsiderationType = new JudgmentReconsiderationType();
+        reconsiderationType.setReconsideration(YES);
+        reconsiderationType.setReconsiderationOwnInitiative(NO);
+        reconsiderationType.setReconsiderationPartyInitiative(CLAIMANT_TITLE);
+        caseData.getJudgementCollection().get(0).getValue().setJudgementReconsiderations(reconsiderationType);
+        dynamicValueType = DynamicListHelper.getDynamicCodeLabel("C: " + caseData.getClaimant(), caseData.getClaimant());
+        DynamicJudgements.dynamicJudgements(caseData);
+        assertEquals(dynamicValueType, caseData.getJudgementCollection().get(0).getValue().getJudgementReconsiderations().getDynamicReconsiderationPartyInitiative().getValue());
+    }
+
+    @Test
+    public void dynamicReconsiderations_nullReconsideration() {
+        var caseData = caseDetails1.getCaseData();
+        caseData.getJudgementCollection().get(0).getValue().setJudgementReconsiderations(null);
+        assertNull(caseData.getJudgementCollection().get(0).getValue().getJudgementReconsiderations());
+        DynamicJudgements.dynamicJudgements(caseData);
+        assertNotNull(caseData.getJudgementCollection().get(0).getValue().getJudgementReconsiderations());
+        dynamicValueType = DynamicListHelper.getDynamicCodeLabel("C: " + caseData.getClaimant(), caseData.getClaimant());
+        assertEquals(dynamicValueType, caseData.getJudgementCollection().get(0).getValue().getJudgementReconsiderations().getDynamicReconsiderationPartyInitiative().getValue());
+    }
+
+    @Test
+    public void dynamicReconsideration_existingDynamicValue() {
+        var caseData = caseDetails1.getCaseData();
+        var reconsiderationType = new JudgmentReconsiderationType();
+        reconsiderationType.setReconsideration(YES);
+        reconsiderationType.setReconsiderationOwnInitiative(NO);
+        var dynamicFixedList = new DynamicFixedListType();
+        dynamicFixedList.setListItems(DynamicListHelper.createDynamicHearingList(caseData));
+        reconsiderationType.setDynamicReconsiderationPartyInitiative(dynamicFixedList);
+        reconsiderationType.getDynamicReconsiderationPartyInitiative().setValue(dynamicFixedList.getListItems().get(0));
+        caseData.getJudgementCollection().get(0).getValue().setJudgementReconsiderations(reconsiderationType);
+
+        dynamicValueType.setCode("R: Antonio Vazquez");
+        dynamicValueType.setLabel("Antonio Vazquez");
+        assertEquals(dynamicValueType, caseData.getJudgementCollection().get(0).getValue().getJudgementReconsiderations().getDynamicReconsiderationPartyInitiative().getValue());
+
+        DynamicJudgements.dynamicJudgements(caseData); // This will add the claimant to the list
+        assertEquals(dynamicValueType, caseData.getJudgementCollection().get(0).getValue().getJudgementReconsiderations().getDynamicReconsiderationPartyInitiative().getValue());
+    }
 }
