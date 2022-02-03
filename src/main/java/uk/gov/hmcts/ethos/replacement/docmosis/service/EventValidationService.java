@@ -125,7 +125,7 @@ public class EventValidationService {
 
     public List<String> validateET3ResponseFields(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        if (caseData.getRespondentCollection() != null && !caseData.getRespondentCollection().isEmpty()) {
+        if (CollectionUtils.isNotEmpty(caseData.getRespondentCollection())) {
             ListIterator<RespondentSumTypeItem> itr = caseData.getRespondentCollection().listIterator();
             while (itr.hasNext()) {
                 int index = itr.nextIndex() + 1;
@@ -139,7 +139,7 @@ public class EventValidationService {
 
     public List<String> validateRespRepNames(CaseData caseData) {
         List<String> errors = new ArrayList<>();
-        if (caseData.getRepCollection() != null && !caseData.getRepCollection().isEmpty()) {
+        if (CollectionUtils.isNotEmpty(caseData.getRepCollection())) {
             ListIterator<RepresentedTypeRItem> repItr = caseData.getRepCollection().listIterator();
             int index;
             while (repItr.hasNext()) {
@@ -159,13 +159,17 @@ public class EventValidationService {
                             break;
                         }
                     }
-                    if (!validLink) {
-                        errors.add(RESP_REP_NAME_MISMATCH_ERROR_MESSAGE + " - " + index);
-                    }
+                    respRepNameError(errors, index, validLink);
                 }
             }
         }
         return errors;
+    }
+
+    private void respRepNameError(List<String> errors, int index, boolean validLink) {
+        if (!validLink) {
+            errors.add(RESP_REP_NAME_MISMATCH_ERROR_MESSAGE + " - " + index);
+        }
     }
 
     public List<String> validateHearingNumber(CaseData caseData, CorrespondenceType correspondenceType,
