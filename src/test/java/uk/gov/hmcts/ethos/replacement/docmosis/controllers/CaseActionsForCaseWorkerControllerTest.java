@@ -104,7 +104,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String DYNAMIC_DEPOSIT_ORDER_URL = "/dynamicDepositOrder";
     private static final String DYNAMIC_JUDGMENT_URL = "/dynamicJudgments";
     private static final String JUDGEMENT_SUBMITTED_URL = "/judgementSubmitted";
-
+    private static final String DYNAMIC_FIX_CASE_API_URL = "/dynamicFixCaseAPI";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -1074,6 +1074,15 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void dynamicFixCaseAPIError400() throws Exception {
+        mvc.perform(post(DYNAMIC_FIX_CASE_API_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void createCaseError500() throws Exception {
         when(caseCreationForCaseWorkerService.caseCreationRequest(isA(CCDRequest.class),
                 eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
@@ -1562,6 +1571,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void judgmentSubmittedUrlForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(JUDGEMENT_SUBMITTED_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void dynamicFixCaseAPIForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(DYNAMIC_FIX_CASE_API_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
