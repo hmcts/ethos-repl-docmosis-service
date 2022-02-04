@@ -21,6 +21,7 @@ class JurisdictionServiceTest {
     private CaseDetails caseDetails1;
     private CaseDetails caseDetails2;
     private CaseDetails caseDetails3;
+    private CaseDetails caseDetails6;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -28,6 +29,7 @@ class JurisdictionServiceTest {
         caseDetails1 = generateCaseDetails("caseDetailsTest1.json");
         caseDetails2 = generateCaseDetails("caseDetailsTest2.json");
         caseDetails3 = generateCaseDetails("caseDetailsTest3.json");
+        caseDetails6 = generateCaseDetails("caseDetailsTest6.json");
     }
 
     @Test
@@ -56,6 +58,16 @@ class JurisdictionServiceTest {
         jurisdictionService.validateJurisdictionCodes(caseDetails3.getCaseData(), errors);
 
         assertEquals(0, errors.size());
+    }
+
+    @Test
+    void populateJurisdictionCodeTest() {
+        var caseData = caseDetails6.getCaseData();
+        jurisdictionService.populateJurisdictionCode(caseData);
+        assertEquals(caseData.getJurCodesCollection().get(0).getValue().getJuridictionCodesList(),
+                caseData.getJurCodesCollection().get(0).getValue().getJurisdictionCode());
+        assertEquals(caseData.getJurCodesCollection().get(1).getValue().getJuridictionCodesList(),
+                caseData.getJurCodesCollection().get(1).getValue().getJurisdictionCode());
     }
 
     private CaseDetails generateCaseDetails(String jsonFileName) throws Exception {

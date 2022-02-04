@@ -138,6 +138,21 @@
         }
       }
     ],
+    "jurCodesCollection": [
+      {
+        "id" : "1234561",
+        "value" : {
+          "jurisdictionCode": "COM",
+          "judgmentOutcome": "Successful at hearing"
+        }
+      },
+      {
+        "id" : "1234562",
+        "value" : {
+          "jurisdictionCodes": "DOD"
+        }
+      }
+    ],
     "responseReceived": "none",
     "userLocation": "Liverpool"
   },
