@@ -351,25 +351,6 @@ class EventValidationServiceTest {
         assertEquals(EMPTY_HEARING_COLLECTION_ERROR_MESSAGE, errors.get(0));
     }
 
-    @Test
-    void shouldValidateJurisdictionCodesWithDuplicatesCodesAndExistenceJudgement() {
-        List<String> errors = new ArrayList<>();
-        eventValidationService.validateJurisdictionCodes(caseDetails1.getCaseData(), errors);
-
-        assertEquals(2, errors.size());
-        assertEquals(DUPLICATE_JURISDICTION_CODE_ERROR_MESSAGE + " \"COM\" in Jurisdiction 3 "
-                + "- \"DOD\" in Jurisdiction 5 ", errors.get(0));
-        assertEquals(JURISDICTION_CODES_DELETED_ERROR + "[CCP, ADG]", errors.get(1));
-    }
-
-    @Test
-    void shouldValidateJurisdictionCodesWithUniqueCodes() {
-        List<String> errors = new ArrayList<>();
-        eventValidationService.validateJurisdictionCodes(caseDetails2.getCaseData(), errors);
-
-        assertEquals(0, errors.size());
-    }
-
     @ParameterizedTest
     @CsvSource({SUBMITTED_STATE + ",false", ACCEPTED_STATE + ",false", REJECTED_STATE + ",false", CLOSED_STATE + ",true"})
     void validateCurrentPositionCaseClosed(String state, boolean expected) {
@@ -380,15 +361,6 @@ class EventValidationServiceTest {
         caseDetails.setCaseData(caseData);
         boolean validated = eventValidationService.validateCurrentPosition(caseDetails);
         assertEquals(expected, validated);
-    }
-
-    @Test
-    void shouldValidateJurisdictionCodesWithEmptyCodes() {
-        List<String> errors = new ArrayList<>();
-        caseDetails3.getCaseData().setJudgementCollection(new ArrayList<>());
-        eventValidationService.validateJurisdictionCodes(caseDetails3.getCaseData(), errors);
-
-        assertEquals(0, errors.size());
     }
 
     @ParameterizedTest

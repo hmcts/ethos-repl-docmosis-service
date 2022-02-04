@@ -31,6 +31,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderServic
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DepositOrderValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.JudgmentValidationService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.JurisdictionService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleCaseMultipleMidEventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleReferenceService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
@@ -149,6 +150,9 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @MockBean
     private AddSingleCaseToMultipleService addSingleCaseToMultipleService;
+
+    @MockBean
+    private JurisdictionService jurisdictionService;
 
     private MockMvc mvc;
     private JsonNode requestContent;

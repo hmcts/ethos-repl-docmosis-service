@@ -15,7 +15,6 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
@@ -573,7 +572,7 @@ public class CaseActionsForCaseWorkerController {
 
         List<String> errors = new ArrayList<>();
         var caseData =  ccdRequest.getCaseDetails().getCaseData();
-        eventValidationService.validateJurisdictionCodes(caseData, errors);
+        jurisdictionService.validateJurisdictionCodes(caseData, errors);
         log.info(EVENT_FIELDS_VALIDATION + errors);
 
         return getCallbackRespEntityErrors(errors, caseData);
