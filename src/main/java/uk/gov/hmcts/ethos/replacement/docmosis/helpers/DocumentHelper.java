@@ -60,23 +60,22 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 @Slf4j
 public class DocumentHelper {
 
-    public static final String HEARING_DATE = "\"Hearing_date\":\"";
-    public static final String HEARING_DATE_TIME = "\"Hearing_date_time\":\"";
-    public static final String HEARING_TIME = "\"Hearing_time\":\"";
-    public static final String USER_IMAGE = "[userImage:";
-    public static final String I_SCOT = "\"iScot";
-    public static final String ENHMCTS_PNG = "enhmcts.png]";
-    public static final String SCHMCTS_PNG = "schmcts.png]";
-    public static final String CLAIMANT_OR_REP_FULL_NAME = "\"claimant_or_rep_full_name\":\"";
-    public static final String CLAIMANT_FULL_NAME = "\"claimant_full_name\":\"";
-    public static final String CLAIMANT = "\"Claimant\":\"";
-    public static final String RESPONDENT_OR_REP_FULL_NAME = "\"respondent_or_rep_full_name\":\"";
+    private static final String HEARING_DATE = "\"Hearing_date\":\"";
+    private static final String HEARING_DATE_TIME = "\"Hearing_date_time\":\"";
+    private static final String HEARING_TIME = "\"Hearing_time\":\"";
+    private static final String USER_IMAGE = "[userImage:";
+    private static final String I_SCOT = "\"iScot";
+    private static final String ENHMCTS_PNG = "enhmcts.png]";
+    private static final String SCHMCTS_PNG = "schmcts.png]";
+    private static final String CLAIMANT_OR_REP_FULL_NAME = "\"claimant_or_rep_full_name\":\"";
+    private static final String CLAIMANT_FULL_NAME = "\"claimant_full_name\":\"";
+    private static final String CLAIMANT = "\"Claimant\":\"";
+    private static final String RESPONDENT_OR_REP_FULL_NAME = "\"respondent_or_rep_full_name\":\"";
+    private static final String VENUE_ADDRESS_OPENING_PROCESSING_ERROR = "Failed while opening or "
+            + "processing the entries for the venueAddressValues.xlsx file : ---> ";
 
     private DocumentHelper() {
     }
-
-    private static final String VENUE_ADDRESS_OPENING_PROCESSING_ERROR = "Failed while opening or "
-            + "processing the entries for the venueAddressValues.xlsx file : ---> ";
 
     public static StringBuilder buildDocumentContent(CaseData caseData, String accessKey,
                                                      UserDetails userDetails, String caseTypeId,
