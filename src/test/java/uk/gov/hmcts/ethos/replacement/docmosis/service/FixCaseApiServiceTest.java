@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_BULK_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class FixCaseApiServiceTest {
@@ -82,9 +83,23 @@ public class FixCaseApiServiceTest {
     }
 
     @Test
-    public void checkUpdateMultipleReference_EcmCaseType_Single() {
+    public void checkUpdateMultipleReference_EcmCaseType_getCaseData() {
         CaseData caseData = MultipleUtil.getCaseData("245000/2021");
         caseDetails.setCaseData(caseData);
+        fixCaseApiService.checkUpdateMultipleReference(caseDetails, userToken);
+        assertNull(caseDetails.getCaseData().getMultipleReferenceLinkMarkUp());
+    }
+
+    @Test
+    public void checkUpdateMultipleReference_EcmCaseType_Null() {
+        caseDetails.getCaseData().setEcmCaseType(null);
+        fixCaseApiService.checkUpdateMultipleReference(caseDetails, userToken);
+        assertNull(caseDetails.getCaseData().getMultipleReferenceLinkMarkUp());
+    }
+
+    @Test
+    public void checkUpdateMultipleReference_EcmCaseType_Single() {
+        caseDetails.getCaseData().setEcmCaseType(SINGLE_CASE_TYPE);
         fixCaseApiService.checkUpdateMultipleReference(caseDetails, userToken);
         assertNull(caseDetails.getCaseData().getMultipleReferenceLinkMarkUp());
     }
