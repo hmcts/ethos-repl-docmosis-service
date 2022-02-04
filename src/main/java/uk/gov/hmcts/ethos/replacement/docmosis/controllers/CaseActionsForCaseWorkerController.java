@@ -15,6 +15,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
+import uk.gov.hmcts.ecm.common.model.ccd.items.JurCodesTypeItem;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
@@ -35,6 +36,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderServic
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DepositOrderValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.EventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.JudgmentValidationService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.JurisdictionService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleCaseMultipleMidEventValidationService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.SingleReferenceService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.VerifyTokenService;
@@ -79,6 +81,7 @@ public class CaseActionsForCaseWorkerController {
     private final AddSingleCaseToMultipleService addSingleCaseToMultipleService;
     private final DepositOrderValidationService depositOrderValidationService;
     private final JudgmentValidationService judgmentValidationService;
+    private final JurisdictionService jurisdictionService;
 
     @PostMapping(value = "/createCase", consumes = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "create a case for a caseWorker.")
@@ -595,6 +598,7 @@ public class CaseActionsForCaseWorkerController {
 
         var caseData = ccdRequest.getCaseDetails().getCaseData();
         conciliationTrackService.populateConciliationTrackForJurisdiction(caseData);
+        jurisdictionService.populateJurisdictionCode(caseData);
         return getCallbackRespEntityNoErrors(caseData);
     }
 
