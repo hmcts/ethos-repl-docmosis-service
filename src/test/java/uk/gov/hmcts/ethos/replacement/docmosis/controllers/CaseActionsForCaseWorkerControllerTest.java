@@ -1084,10 +1084,6 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void dynamicFixCaseAPI_VerifyNever() {
         verify(fixCaseApiService, never()).checkUpdateMultipleReference(any(CaseDetails.class), anyString());
     }
 
@@ -1588,12 +1584,14 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void dynamicFixCaseAPIForbidden() throws Exception {
+        CaseDetails caseDetails = new CaseDetails();
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(DYNAMIC_FIX_CASE_API_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
+        verify(fixCaseApiService, never()).checkUpdateMultipleReference(caseDetails, AUTH_TOKEN);
     }
 
 }
