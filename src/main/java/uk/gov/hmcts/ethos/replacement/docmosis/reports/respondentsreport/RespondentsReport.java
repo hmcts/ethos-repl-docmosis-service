@@ -72,8 +72,8 @@ public class RespondentsReport {
                     f.setRespondentName(r.getValue().getRespondentName());
                     var rep = getRepresentative(r.getValue().getRespondentName(), caseData);
                     f.setRepresentativeName(rep);
-                    f.setRepresentativeHasMoreThanOneRespondent
-                            (isRepresentativeRepresentingMoreThanOneRespondent(rep, caseData) ? "Y" : "N");
+                    f.setRepresentativeHasMoreThanOneRespondent(
+                        isRepresentativeRepresentingMoreThanOneRespondent(rep, caseData) ? "Y" : "N");
                     fields.add(f);
                 }
                 detail.setRespondentDataList(fields);
@@ -93,16 +93,16 @@ public class RespondentsReport {
     }
 
     private boolean isRepresentativeRepresentingMoreThanOneRespondent(String rep, RespondentsReportCaseData caseData) {
-       var count = 0;
-       for(RepresentedTypeRItem repItem : caseData.getRepCollection()) {
-           if (repItem.getValue().getNameOfRepresentative().equals(rep)) {
-               for (RespondentSumTypeItem respItem : caseData.getRespondentCollection()) {
-                   if (respItem.getValue().getRespondentName().equals(repItem.getValue().getRespRepName())) {
-                       count = count + 1;
-                   }
-               }
-           }
-       }
+        var count = 0;
+        for (RepresentedTypeRItem repItem : caseData.getRepCollection()) {
+            if (repItem.getValue().getNameOfRepresentative().equals(rep)) {
+                for (RespondentSumTypeItem respItem : caseData.getRespondentCollection()) {
+                    if (respItem.getValue().getRespondentName().equals(repItem.getValue().getRespRepName())) {
+                        count = count + 1;
+                    }
+                }
+            }
+        }
         if (count > 1) {
             return true;
         } else {
@@ -111,12 +111,15 @@ public class RespondentsReport {
     }
 
     private String getRepresentative(String respName, RespondentsReportCaseData caseData) {
-        Optional<RepresentedTypeRItem> rep = caseData.getRepCollection().stream()
-                .filter(a -> a.getValue().getRespRepName().equals(respName)).findFirst();
-        if (rep.isPresent()) {
-            return rep.get().getValue().getNameOfRepresentative();
-        } else {
-            return "N/A";
+        if (CollectionUtils.isNotEmpty(caseData.getRepCollection())) {
+            Optional<RepresentedTypeRItem> rep = caseData.getRepCollection().stream()
+                    .filter(a -> a.getValue().getRespRepName().equals(respName)).findFirst();
+            if (rep.isPresent()) {
+                return rep.get().getValue().getNameOfRepresentative();
+            } else {
+                return "N/A";
+            }
         }
+        return "N/A";
     }
 }

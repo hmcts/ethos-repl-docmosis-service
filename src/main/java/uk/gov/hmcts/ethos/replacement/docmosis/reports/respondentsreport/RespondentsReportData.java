@@ -1,9 +1,10 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
+
 import java.util.ArrayList;
 import java.util.List;
-import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 
 public class RespondentsReportData extends ListingData {
 

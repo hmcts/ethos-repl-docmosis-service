@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -16,7 +16,7 @@ public class RespondentsReportCcdDataSource implements RespondentsReportDataSour
     @Override
     public List<RespondentsReportSubmitEvent> getData(String caseTypeId, String listingDateFrom, String listingDateTo) {
         try {
-            var query = RespondentsReportElasticSearchQuery.create(listingDateFrom,listingDateTo);
+            var query = RespondentsReportElasticSearchQuery.create(listingDateFrom, listingDateTo);
             return ccdClient.respondentsReportSearch(authToken, caseTypeId, query);
         } catch (Exception e) {
             throw new ReportException(String.format(
