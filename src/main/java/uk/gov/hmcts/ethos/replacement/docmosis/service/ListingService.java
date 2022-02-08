@@ -287,7 +287,7 @@ public class ListingService {
     }
 
     private ListingData getDateRangeReport(ListingDetails listingDetails, String authToken) throws IOException {
-        checkForExistingData(listingDetails.getCaseData());
+        clearListingFields(listingDetails.getCaseData());
         List<SubmitEvent> submitEvents = getDateRangeReportSearch(listingDetails, authToken);
 
         switch (listingDetails.getCaseData().getReportType()) {
@@ -312,14 +312,6 @@ public class ListingService {
                 return new MemberDaysReport().runReport(listingDetails, submitEvents);
             default:
                 return listingDetails.getCaseData();
-        }
-    }
-
-    private void checkForExistingData(ListingData listingData) {
-        if (CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail())
-                || CollectionUtils.isNotEmpty(listingData.getLocalReportsSummary())
-                || listingData.getLocalReportsDetailHdr() != null) {
-            clearListingFields(listingData);
         }
     }
 
