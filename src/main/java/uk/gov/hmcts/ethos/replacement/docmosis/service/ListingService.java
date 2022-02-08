@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.exceptions.CaseCreationException;
@@ -34,6 +35,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims.ServingClaimsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -285,6 +287,7 @@ public class ListingService {
     }
 
     private ListingData getDateRangeReport(ListingDetails listingDetails, String authToken) throws IOException {
+        checkForExistingData(listingDetails.getCaseData());
         List<SubmitEvent> submitEvents = getDateRangeReportSearch(listingDetails, authToken);
 
         switch (listingDetails.getCaseData().getReportType()) {
@@ -309,6 +312,19 @@ public class ListingService {
                 return new MemberDaysReport().runReport(listingDetails, submitEvents);
             default:
                 return listingDetails.getCaseData();
+        }
+    }
+
+    private void checkForExistingData(ListingData listingData) {
+        if (CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail())
+                || listingData.getLocalReportsDetailHdr() != null
+                || CollectionUtils.isNotEmpty(listingData.getLocalReportsSummary())) {
+            listingData.setLocalReportsDetail(null);
+            listingData.setLocalReportsDetailHdr(null);
+            listingData.setLocalReportsSummary(null);
+            listingData.setLocalReportsSummary2(null);
+            listingData.setLocalReportsSummaryHdr(null);
+            listingData.setLocalReportsSummaryHdr2(null);
         }
     }
 
