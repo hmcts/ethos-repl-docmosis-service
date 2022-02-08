@@ -88,6 +88,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String RESTRICTED_CASES_URL = "/restrictedCases";
     private static final String AMEND_HEARING_URL = "/amendHearing";
     private static final String AMEND_CASE_STATE_URL = "/amendCaseState";
+    private static final String AMEND_FIX_CASE_API_URL = "/amendFixCaseAPI";
     private static final String MID_RESPONDENT_ADDRESS_URL = "/midRespondentAddress";
     private static final String JURISDICTION_VALIDATION_URL = "/jurisdictionValidation";
     private static final String JUDGEMENT_VALIDATION_URL = "/judgmentValidation";
@@ -108,7 +109,6 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String DYNAMIC_DEPOSIT_ORDER_URL = "/dynamicDepositOrder";
     private static final String DYNAMIC_JUDGMENT_URL = "/dynamicJudgments";
     private static final String JUDGEMENT_SUBMITTED_URL = "/judgementSubmitted";
-    private static final String DYNAMIC_FIX_CASE_API_URL = "/dynamicFixCaseAPI";
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -1079,7 +1079,7 @@ public class CaseActionsForCaseWorkerControllerTest {
 
     @Test
     public void dynamicFixCaseAPIError400() throws Exception {
-        mvc.perform(post(DYNAMIC_FIX_CASE_API_URL)
+        mvc.perform(post(AMEND_FIX_CASE_API_URL)
                 .content("error")
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -1586,7 +1586,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void dynamicFixCaseAPIForbidden() throws Exception {
         CaseDetails caseDetails = new CaseDetails();
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
-        mvc.perform(post(DYNAMIC_FIX_CASE_API_URL)
+        mvc.perform(post(AMEND_FIX_CASE_API_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

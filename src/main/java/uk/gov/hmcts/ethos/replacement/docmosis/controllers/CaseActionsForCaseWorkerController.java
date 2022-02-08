@@ -981,14 +981,14 @@ public class CaseActionsForCaseWorkerController {
         return getCallbackRespEntityErrors(errors, caseData);
     }
 
-    @PostMapping(value = "/dynamicFixCaseAPI", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "populates value in Fix Case API")
+    @PostMapping(value = "/amendFixCaseAPI", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "amend case details in Fix Case API")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<CCDCallbackResponse> dynamicFixCaseAPI(
+    public ResponseEntity<CCDCallbackResponse> amendFixCaseAPI(
             @RequestBody CCDRequest ccdRequest,
             @RequestHeader(value = "Authorization") String userToken) {
         log.info("FIX CASE API VALUE ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
