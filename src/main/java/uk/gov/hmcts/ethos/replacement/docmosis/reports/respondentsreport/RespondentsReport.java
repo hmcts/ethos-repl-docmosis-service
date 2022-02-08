@@ -1,86 +1,122 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport;
 
+import org.apache.commons.collections4.CollectionUtils;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportCaseData;
+import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportSubmitEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.collections4.CollectionUtils;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
-import uk.gov.hmcts.ecm.common.model.listing.ListingData;
-import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 
 public class RespondentsReport {
-    public ListingData generateReportData(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
+
+    private final RespondentsReportDataSource reportDataSource;
+    private final String listingDateFrom;
+    private final String listingDateTo;
+
+    public RespondentsReport(RespondentsReportDataSource reportDataSource,
+                             String listingDateFrom, String listingDateTo) {
+        this.reportDataSource = reportDataSource;
+        this.listingDateFrom = listingDateFrom;
+        this.listingDateTo = listingDateTo;
+    }
+
+    public RespondentsReportData generateReport(String caseTypeId) {
+
+        var submitEvents = getCases(caseTypeId, listingDateFrom, listingDateTo);
+        var reportData = initReport(caseTypeId);
 
         if (CollectionUtils.isNotEmpty(submitEvents)) {
-            executeReport(listingDetails, submitEvents);
+            executeReport(reportData, submitEvents);
         }
-
-        listingDetails.getCaseData().clearReportFields();
-        return listingDetails.getCaseData();
+        return reportData;
     }
 
-    private void executeReport(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
-        var noOfCasesWithMoreThanOneRespondents = 0;
-        var noOfCasesWithMoreThanOneRespondentsAndRepresented = 0;
-        var representativeWithMoreThanOneRespondent = 0;
-        var respondentReportData = new RespondentsReportData();
-       List<RespondentsReportDetail> respondentsReportDetailList = new ArrayList<>();
-        RespondentsReportDetail respondentsReportDetail;
-        for (SubmitEvent submitEvent : submitEvents) {
+    private RespondentsReportData initReport(String caseTypeId) {
+        var office = UtilHelper.getListingCaseTypeId(caseTypeId);
+        var reportSummary = new RespondentsReportSummary();
+        reportSummary.setOffice(office);
+        return new RespondentsReportData(reportSummary);
+    }
+
+    private List<RespondentsReportSubmitEvent> getCases(
+            String caseTypeId, String listingDateFrom, String listingDateTo) {
+        return reportDataSource.getData(UtilHelper.getListingCaseTypeId(
+                caseTypeId), listingDateFrom, listingDateTo);
+    }
+
+    private void executeReport(RespondentsReportData respondentReportData,
+                               List<RespondentsReportSubmitEvent> submitEvents) {
+        var moreThan1Resp =  (int) submitEvents.stream()
+                .filter(s -> CollectionUtils.isNotEmpty(s.getCaseData().getRespondentCollection())
+               && s.getCaseData().getRespondentCollection().size() > 1).count();
+
+        respondentReportData.getReportSummary().setTotalCasesWithMoreThanOneRespondent(String.valueOf(moreThan1Resp));
+        respondentReportData.addReportDetail(getReportDetail(submitEvents));
+
+    }
+
+    private List<RespondentsReportDetail> getReportDetail(List<RespondentsReportSubmitEvent> submitEvents) {
+        var respondentsReportDetailList = new ArrayList<RespondentsReportDetail>();
+        for (RespondentsReportSubmitEvent submitEvent : submitEvents) {
             var caseData = submitEvent.getCaseData();
-            if (CollectionUtils.isNotEmpty(caseData.getRespondentCollection())
-                    && caseData.getRespondentCollection().size() > 1) {
-                noOfCasesWithMoreThanOneRespondents = noOfCasesWithMoreThanOneRespondents + 1;
-                respondentsReportDetail = getReportDetail(caseData);
-                if (respondentsReportDetail != null) {
-                    respondentsReportDetailList.add(respondentsReportDetail);
+            if (hasMultipleRespondents(caseData)) {
+                RespondentsReportDetail detail = new RespondentsReportDetail();
+                detail.setCaseNumber(caseData.getEthosCaseReference());
+                List<RespondentFields> fields = new ArrayList<>();
+                for (RespondentSumTypeItem r : caseData.getRespondentCollection()) {
+                    RespondentFields f = new RespondentFields();
+                    f.setRespondentName(r.getValue().getRespondentName());
+                    var rep = getRepresentative(r.getValue().getRespondentName(), caseData);
+                    f.setRepresentativeName(rep);
+                    f.setRepresentativeHasMoreThanOneRespondent
+                            (isRepresentativeRepresentingMoreThanOneRespondent(rep, caseData) ? "Y" : "N");
+                    fields.add(f);
                 }
-                if (CollectionUtils.isNotEmpty(caseData.getRepCollection())) {
-                    noOfCasesWithMoreThanOneRespondentsAndRepresented = noOfCasesWithMoreThanOneRespondentsAndRepresented + 1;
-                    for (RepresentedTypeRItem rep : caseData.getRepCollection()) {
-                        if (rep.getValue().getDynamicRespRepName().getListItems().size() > 1) {
-                            representativeWithMoreThanOneRespondent = representativeWithMoreThanOneRespondent + 1;
-                            break;
-                        }
-                    }
-                }
-
+                detail.setRespondentDataList(fields);
+                respondentsReportDetailList.add(detail);
             }
         }
-        respondentReportData.setTotalCasesWithMoreThanOneRespondent(String.valueOf(noOfCasesWithMoreThanOneRespondents));
-        respondentReportData.setTotalCasesWithMoreThanOneRespondentAndRepresented(String.valueOf(noOfCasesWithMoreThanOneRespondentsAndRepresented));
-        respondentReportData.setTotalCasesWithRepresentativesWithMoreThanOneRespondent(String.valueOf(representativeWithMoreThanOneRespondent));
-        respondentReportData.setRespondentsReportDetails(respondentsReportDetailList);
+        return respondentsReportDetailList;
     }
 
-    private RespondentsReportDetail getReportDetail(CaseData caseData) {
-        var respondentsReportDetail = new RespondentsReportDetail();
-       List<RespondentData> respondentDataList = new ArrayList<>();
-        respondentsReportDetail.setCaseNumber(caseData.getEthosCaseReference());
-        for(RespondentSumTypeItem resp : caseData.getRespondentCollection()) {
-            var respondentData = new RespondentData();
-            String respondentName = resp.getValue().getRespondentName();
-            respondentData.setRespondentName(respondentName);
-            var representativeName = "N/A";
-            var representingMoreThanOneRespondent = "N/A";
-            Optional<RepresentedTypeRItem> rep = caseData.getRepCollection().stream().filter(
-                    a -> respondentName.equals(a.getValue().getRespRepName())).findFirst();
-            if(rep.isPresent()) {
-                representativeName = rep.get().getValue().getNameOfRepresentative();
-                if (rep.get().getValue().getDynamicRespRepName().getListItems().size() > 1) {
-                    representingMoreThanOneRespondent = "YES";
-                } else {
-                    representingMoreThanOneRespondent = "NO";
-                }
-            }
-            respondentData.setRepresentativeName(representativeName);
-            respondentData.setRepresentativeHasMoreThanOneRespondent(representingMoreThanOneRespondent);
-            respondentDataList.add(respondentData);
+    private boolean hasMultipleRespondents(RespondentsReportCaseData caseData) {
+        if (CollectionUtils.isNotEmpty(caseData.getRespondentCollection())
+                && caseData.getRespondentCollection().size() > 1) {
+            return true;
+        } else {
+            return false;
         }
-        respondentsReportDetail.setRespondentDataList(respondentDataList);
-        return  respondentsReportDetail;
+    }
+
+    private boolean isRepresentativeRepresentingMoreThanOneRespondent(String rep, RespondentsReportCaseData caseData) {
+       var count = 0;
+       for(RepresentedTypeRItem repItem : caseData.getRepCollection()) {
+           if (repItem.getValue().getNameOfRepresentative().equals(rep)) {
+               for (RespondentSumTypeItem respItem : caseData.getRespondentCollection()) {
+                   if (respItem.getValue().getRespondentName().equals(repItem.getValue().getRespRepName())) {
+                       count = count + 1;
+                   }
+               }
+           }
+       }
+        if (count > 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private String getRepresentative(String respName, RespondentsReportCaseData caseData) {
+        Optional<RepresentedTypeRItem> rep = caseData.getRepCollection().stream()
+                .filter(a -> a.getValue().getRespRepName().equals(respName)).findFirst();
+        if (rep.isPresent()) {
+            return rep.get().getValue().getNameOfRepresentative();
+        } else {
+            return "N/A";
+        }
     }
 }

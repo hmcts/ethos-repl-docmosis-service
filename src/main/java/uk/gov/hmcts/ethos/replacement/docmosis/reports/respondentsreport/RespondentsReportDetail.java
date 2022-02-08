@@ -12,7 +12,7 @@ public class RespondentsReportDetail {
     private String caseNumber;
 
     @JsonProperty("RespondentDataList")
-    private List<RespondentData> respondentDataList;
+    private List<RespondentFields> respondentDataList;
 }
 
 

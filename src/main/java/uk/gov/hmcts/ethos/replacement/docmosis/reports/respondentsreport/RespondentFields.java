@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RespondentData {
+public class RespondentFields {
 
     @JsonProperty("respondentName")
     private String respondentName;

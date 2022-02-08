@@ -1,12 +1,15 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.helper.Constants;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.PositionTypeSummary;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportDetail;
@@ -33,6 +36,10 @@ import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentFields;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportDetail;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportSummary;
 
 public class ReportDocHelperTest {
 
@@ -447,6 +454,18 @@ public class ReportDocHelperTest {
         assertEquals(expectedJson, actualJson);
     }
 
+    @Test
+    public void buildRespondentsReport() throws URISyntaxException, IOException {
+        var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+                .getResource("respondentsReportExpected.json")).toURI())));
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        expectedJson = expectedJson.replace("current-date", today);
+        var reportData = getRespondentsReportData();
+        var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "",
+                "EM-TRB-SCO-ENG-00797", userDetails).toString();
+        assertEquals(expectedJson, actualJson);
+    }
+
     private CasesAwaitingJudgmentReportData getCasesAwaitingJudgementReportData() {
         var reportSummary = new ReportSummary("Newcastle");
         reportSummary.getPositionTypes()
@@ -551,6 +570,36 @@ public class ReportDocHelperTest {
         reportDetail.setHearingJudge("judge three");
         reportData.getReportDetails().add(reportDetail);
 
+        return reportData;
+    }
+
+    private RespondentsReportData getRespondentsReportData() {
+        var reportSummary = new RespondentsReportSummary();
+        reportSummary.setTotalCasesWithMoreThanOneRespondent("2");
+        reportSummary.setOffice("Manchester");
+
+        var reportData = new RespondentsReportData(reportSummary);
+        reportData.setReportType(RESPONDENTS_REPORT);
+        reportData.setDocumentName("TestDocument");
+        reportData.setHearingDateType(Constants.RANGE_HEARING_DATE_TYPE);
+        reportData.setListingDateFrom("2022-01-01");
+        reportData.setListingDateTo("2022-01-10");
+
+        var reportDetail1 = new RespondentsReportDetail();
+        reportDetail1.setCaseNumber("110001/2022");
+        var respondentFields1 = new RespondentFields();
+        respondentFields1.setRespondentName("Resp1");
+        respondentFields1.setRepresentativeHasMoreThanOneRespondent("Y");
+        respondentFields1.setRepresentativeName("Rep1");
+        reportDetail1.setRespondentDataList(Collections.singletonList(respondentFields1));
+        var reportDetail2 = new RespondentsReportDetail();
+        reportDetail2.setCaseNumber("110002/2022");
+        var respondentFields2 = new RespondentFields();
+        respondentFields2.setRespondentName("Resp2");
+        respondentFields2.setRepresentativeHasMoreThanOneRespondent("N");
+        respondentFields2.setRepresentativeName("N/A");
+        reportDetail2.setRespondentDataList(Collections.singletonList(respondentFields2));
+        reportData.addReportDetail(Arrays.asList(reportDetail1, reportDetail2));
         return reportData;
     }
 

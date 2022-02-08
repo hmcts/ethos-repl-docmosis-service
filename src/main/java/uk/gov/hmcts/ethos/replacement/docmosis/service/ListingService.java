@@ -33,7 +33,10 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysRepo
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportSummary;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims.ServingClaimsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
 import java.io.IOException;
@@ -246,9 +249,16 @@ public class ListingService {
     }
 
     private RespondentsReportData getRespondentsReport(ListingDetails listingDetails,
-                                                                 String authToken) {
+                                                       String authToken) {
         log.info("Respondents Report for {}", listingDetails.getCaseTypeId());
-        return new RespondentsReportData();
+        var reportDataSource = new RespondentsReportCcdDataSource(authToken, ccdClient);
+        setListingDateRangeForSearch(listingDetails);
+        var respondentsReport = new RespondentsReport(reportDataSource, listingDateFrom, listingDateTo);
+        var reportData = respondentsReport.generateReport(listingDetails.getCaseTypeId());
+
+        reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
+        reportData.setReportType(listingDetails.getCaseData().getReportType());
+        return reportData;
     }
     private CasesAwaitingJudgmentReportData getCasesAwaitingJudgmentReport(ListingDetails listingDetails,
                                                                            String authToken) {

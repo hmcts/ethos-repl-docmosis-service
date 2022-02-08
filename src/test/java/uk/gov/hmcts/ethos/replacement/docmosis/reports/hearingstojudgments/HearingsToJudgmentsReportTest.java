@@ -66,7 +66,6 @@ class HearingsToJudgmentsReportTest {
     @BeforeEach
     public void setup() {
         submitEvents.clear();
-
         hearingsToJudgmentsReportDataSource = mock(HearingsToJudgmentsReportDataSource.class);
         when(hearingsToJudgmentsReportDataSource.getData(NEWCASTLE_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
 

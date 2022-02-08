@@ -1,34 +1,30 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 
-@Slf4j
-@Getter
-@Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class RespondentsReportData extends ListingData {
 
     @JsonIgnore
-    public String office;
-
+    private final RespondentsReportSummary reportSummary;
     @JsonIgnore
-    public String totalCasesWithMoreThanOneRespondent;
+    private final List<RespondentsReportDetail> reportDetails = new ArrayList<>();
 
-    @JsonIgnore
-    private String totalCasesWithMoreThanOneRespondentAndRepresented;
+    public RespondentsReportData(RespondentsReportSummary reportSummary) {
+        this.reportSummary = reportSummary;
+    }
 
-    @JsonIgnore
-    private String totalCasesWithRepresentativesWithMoreThanOneRespondent;
+    public RespondentsReportSummary getReportSummary() {
+        return reportSummary;
+    }
 
-    @JsonIgnore
-    private List<RespondentsReportDetail> respondentsReportDetails = new ArrayList<>();
+    public void addReportDetail(List<RespondentsReportDetail> reportDetails) {
+        this.reportDetails.addAll(reportDetails);
+    }
 
+    public List<RespondentsReportDetail> getReportDetails() {
+        return reportDetails;
+    }
 }
-
