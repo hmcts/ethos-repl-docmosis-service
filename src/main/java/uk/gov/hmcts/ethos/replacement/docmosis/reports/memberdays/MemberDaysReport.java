@@ -11,6 +11,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -29,8 +30,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE
 public class MemberDaysReport {
     private static final int MINUTES = 60;
     private static final String FULL_PANEL = "Full Panel";
-    private static final String SINGLE_DATE_HEARING_REPORT = "Single";
-    private static final String DATE_RANGE_HEARING_REPORT = "Range";
 
     public MemberDaysReportData runReport(ListingDetails listings, List<SubmitEvent> submitEventList) {
         var memberDaysReportData = initiateReport(listings);
@@ -46,22 +45,10 @@ public class MemberDaysReport {
         var office = UtilHelper.getListingCaseTypeId(caseTypeId);
         var reportData = new MemberDaysReportData();
         reportData.setOffice(office);
-        reportData.setDurationDescription(getDurationText(listingDetails.getCaseData()));
+        reportData.setDurationDescription(ReportHelper.getDurationText(listingDetails.getCaseData()));
         reportData.setHearingDateType(listingDetails.getCaseData().getHearingDateType());
         reportData.setReportType(MEMBER_DAYS_REPORT);
         return reportData;
-    }
-
-    private String getDurationText(ListingData currentCaseData) {
-        var description = "";
-        if (currentCaseData.getHearingDateType().equals(SINGLE_DATE_HEARING_REPORT)) {
-            description = "On " + currentCaseData.getListingDate();
-        } else if (currentCaseData.getHearingDateType().equals(DATE_RANGE_HEARING_REPORT)) {
-            description = "Between " + currentCaseData.getListingDateFrom()
-                    + " and " + currentCaseData.getListingDateTo();
-        }
-
-        return description;
     }
 
     private void addReportDetails(MemberDaysReportData reportData, List<SubmitEvent> submitEvents,

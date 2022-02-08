@@ -232,14 +232,15 @@ public class ListingGenerationController {
         List<String> errorsList = new ArrayList<>();
 
         if (hasListings(listingData)
-                || (isAllowedReportType(listingData)
-                    && (hasServedClaims(listingData) || hasSummaryAndDetails(listingData)))) {
+            || (isAllowedReportType(listingData)
+            && (hasServedClaims(listingData) || hasSummaryAndDetails(listingData)))) {
+
             var documentInfo = getDocumentInfo(listingData, caseTypeId, userToken);
             updateListingDocMarkUp(listingData, documentInfo);
             return ResponseEntity.ok(ListingCallbackResponse.builder()
-                    .data(listingData)
-                    .significant_item(Helper.generateSignificantItem(documentInfo, errorsList))
-                    .build());
+                .data(listingData)
+                .significant_item(Helper.generateSignificantItem(documentInfo, errorsList))
+                .build());
         } else {
             errorsList.add("No cases (with hearings / claims served) have been found for your search criteria");
             return ResponseEntity.ok(ListingCallbackResponse.builder()

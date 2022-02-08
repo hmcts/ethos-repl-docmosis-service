@@ -1,25 +1,19 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
-import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
-import uk.gov.hmcts.ecm.common.model.ccd.items.BFActionTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
-import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
-import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABERDEEN_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
@@ -33,6 +27,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_REJEC
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
 
 @Slf4j
 public class ReportHelper {
@@ -54,64 +49,15 @@ public class ReportHelper {
         }
     }
 
-    public static ListingData processBroughtForwardDatesRequest(ListingDetails listingDetails,
-                                                                List<SubmitEvent> submitEvents) {
-        BfActionReportData bfActionReportData = new BfActionReportData();
-        if (submitEvents != null && !submitEvents.isEmpty()) {
-            log.info(CASES_SEARCHED + submitEvents.size());
-            List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
-            for (SubmitEvent submitEvent : submitEvents) {
-                addBfDateTypeItems(submitEvent, listingDetails.getCaseData(), bfDateTypeItems);
-            }
-            bfActionReportData.setBfDateCollection(bfDateTypeItems);
+    public static String getDurationText(ListingData currentCaseData) {
+        var description = "";
+        if (currentCaseData.getHearingDateType().equals(SINGLE_HEARING_DATE_TYPE)) {
+            description = "On " + currentCaseData.getListingDate();
+        } else if (currentCaseData.getHearingDateType().equals(RANGE_HEARING_DATE_TYPE)) {
+            description = "Between " + currentCaseData.getListingDateFrom()
+                + " and " + currentCaseData.getListingDateTo();
         }
-
-        bfActionReportData.clearReportFields();
-        return bfActionReportData;
-    }
-
-    private static void addBfDateTypeItems(
-            SubmitEvent submitEvent,
-            ListingData listingData,
-            List<BFDateTypeItem> bfDateTypeItems) {
-        if (submitEvent.getCaseData().getBfActions() != null
-                && !submitEvent.getCaseData().getBfActions().isEmpty()) {
-            for (BFActionTypeItem bfActionTypeItem : submitEvent.getCaseData().getBfActions()) {
-                var bfDateTypeItem = getBFDateTypeItem(bfActionTypeItem,
-                    listingData, submitEvent.getCaseData());
-                if (bfDateTypeItem.getValue() != null) {
-                    bfDateTypeItems.add(bfDateTypeItem);
-                }
-            }
-        }
-    }
-
-    private static BFDateTypeItem getBFDateTypeItem(BFActionTypeItem bfActionTypeItem,
-                                                    ListingData listingData, CaseData caseData) {
-        var bfDateTypeItem = new BFDateTypeItem();
-        var bfActionType = bfActionTypeItem.getValue();
-        if (!isNullOrEmpty(bfActionType.getBfDate()) && isNullOrEmpty(bfActionType.getCleared())) {
-            boolean matchingDateIsValid = validateMatchingDate(listingData, bfActionType.getBfDate());
-            boolean clerkResponsibleIsValid = validateClerkResponsible(listingData, caseData);
-            if (matchingDateIsValid && clerkResponsibleIsValid) {
-                var bfDateType = new BFDateType();
-                bfDateType.setCaseReference(caseData.getEthosCaseReference());
-
-                if (!Strings.isNullOrEmpty(bfActionType.getAllActions())) {
-                    bfDateType.setBroughtForwardAction(bfActionType.getAllActions());
-                } else if (!Strings.isNullOrEmpty(bfActionType.getCwActions())) {
-                    bfDateType.setBroughtForwardAction(bfActionType.getCwActions());
-                }
-                //date taken
-               // bfDateType..setCaseReference();
-                bfDateType.setBroughtForwardDate(bfActionType.getBfDate());
-                bfDateType.setBroughtForwardDateReason(bfActionType.getNotes());
-
-                bfDateTypeItem.setId(String.valueOf(bfActionTypeItem.getId()));
-                bfDateTypeItem.setValue(bfDateType);
-            }
-        }
-        return bfDateTypeItem;
+        return description;
     }
 
     public static ListingData processClaimsAcceptedRequest(ListingDetails listingDetails,
@@ -232,16 +178,6 @@ public class ReportHelper {
             }
         }
         return adhocReportTypeItem;
-    }
-
-    private static boolean validateClerkResponsible(ListingData listingData, CaseData caseData) {
-        if (listingData.getClerkResponsible() != null) {
-            if (caseData.getClerkResponsible() != null) {
-                return listingData.getClerkResponsible().equals(caseData.getClerkResponsible());
-            }
-            return false;
-        }
-        return true;
     }
 
     private static void getCommonReportDetailFields(ListingDetails listingDetails, CaseData caseData,
