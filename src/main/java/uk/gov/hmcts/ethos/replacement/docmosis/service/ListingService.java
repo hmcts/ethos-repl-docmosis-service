@@ -319,8 +319,17 @@ public class ListingService {
         if (CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail())
                 || CollectionUtils.isNotEmpty(listingData.getLocalReportsSummary())
                 || listingData.getLocalReportsDetailHdr() != null) {
-            listingData.clearLocalReportFields();
+            clearListingFields(listingData);
         }
+    }
+
+    private void clearListingFields(ListingData listingData) {
+        listingData.setLocalReportsSummary(null);
+        listingData.setLocalReportsSummaryHdr(null);
+        listingData.setLocalReportsSummaryHdr2(null);
+        listingData.setLocalReportsSummary2(null);
+        listingData.setLocalReportsDetailHdr(null);
+        listingData.setLocalReportsDetail(null;)
     }
 
     private void setListingDateRangeForSearch(ListingDetails listingDetails) {
