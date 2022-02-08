@@ -317,14 +317,9 @@ public class ListingService {
 
     private void checkForExistingData(ListingData listingData) {
         if (CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail())
-                || listingData.getLocalReportsDetailHdr() != null
-                || CollectionUtils.isNotEmpty(listingData.getLocalReportsSummary())) {
-            listingData.setLocalReportsDetail(null);
-            listingData.setLocalReportsDetailHdr(null);
-            listingData.setLocalReportsSummary(null);
-            listingData.setLocalReportsSummary2(null);
-            listingData.setLocalReportsSummaryHdr(null);
-            listingData.setLocalReportsSummaryHdr2(null);
+                || CollectionUtils.isNotEmpty(listingData.getLocalReportsSummary())
+                || listingData.getLocalReportsDetailHdr() != null) {
+            listingData.clearLocalReportFields();
         }
     }
 
