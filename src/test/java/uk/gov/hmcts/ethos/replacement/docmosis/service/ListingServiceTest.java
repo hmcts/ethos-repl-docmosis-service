@@ -972,12 +972,11 @@ public class ListingServiceTest {
         listingDetails.getCaseData().setLocalReportsSummary(localReportsSummary);
         listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
-
         submitEvents.remove(0);
-        System.out.println(submitEvents);
+        
         when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
-        System.out.println(listingDataResult.getLocalReportsSummary());
+
         assertTrue(CollectionUtils.isEmpty(listingDataResult.getLocalReportsDetail()));
         assertTrue(CollectionUtils.isEmpty(listingDataResult.getLocalReportsSummary2()));
         assertTrue(CollectionUtils.isEmpty(listingDataResult.getLocalReportsSummary()));
