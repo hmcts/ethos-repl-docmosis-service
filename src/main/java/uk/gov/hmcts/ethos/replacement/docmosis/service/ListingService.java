@@ -34,6 +34,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims.ServingClaimsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -285,6 +286,7 @@ public class ListingService {
     }
 
     private ListingData getDateRangeReport(ListingDetails listingDetails, String authToken) throws IOException {
+        clearListingFields(listingDetails.getCaseData());
         List<SubmitEvent> submitEvents = getDateRangeReportSearch(listingDetails, authToken);
 
         switch (listingDetails.getCaseData().getReportType()) {
@@ -310,6 +312,15 @@ public class ListingService {
             default:
                 return listingDetails.getCaseData();
         }
+    }
+
+    private void clearListingFields(ListingData listingData) {
+        listingData.setLocalReportsSummary(null);
+        listingData.setLocalReportsSummaryHdr(null);
+        listingData.setLocalReportsSummaryHdr2(null);
+        listingData.setLocalReportsSummary2(null);
+        listingData.setLocalReportsDetailHdr(null);
+        listingData.setLocalReportsDetail(null);
     }
 
     private void setListingDateRangeForSearch(ListingDetails listingDetails) {
