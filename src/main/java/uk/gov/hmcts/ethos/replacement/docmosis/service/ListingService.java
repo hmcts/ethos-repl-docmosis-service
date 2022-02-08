@@ -329,7 +329,7 @@ public class ListingService {
         listingData.setLocalReportsSummaryHdr2(null);
         listingData.setLocalReportsSummary2(null);
         listingData.setLocalReportsDetailHdr(null);
-        listingData.setLocalReportsDetail(null;)
+        listingData.setLocalReportsDetail(null);
     }
 
     private void setListingDateRangeForSearch(ListingDetails listingDetails) {
