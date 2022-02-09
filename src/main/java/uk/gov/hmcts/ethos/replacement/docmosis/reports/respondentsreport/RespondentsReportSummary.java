@@ -14,7 +14,7 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 public class RespondentsReportSummary extends ListingData {
 
     @JsonIgnore
-    public String office;
+    private String office;
 
     @JsonIgnore
     private String totalCasesWithMoreThanOneRespondent;

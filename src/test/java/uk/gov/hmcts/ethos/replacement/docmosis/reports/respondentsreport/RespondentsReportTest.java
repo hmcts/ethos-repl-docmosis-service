@@ -19,18 +19,16 @@ public class RespondentsReportTest {
 
     RespondentsReportDataSource reportDataSource;
     RespondentsReport respondentsReport;
-    RespondentsReportCaseDataBuilder caseDataBuilder;
+    RespondentsReportCaseDataBuilder caseDataBuilder = new RespondentsReportCaseDataBuilder();
     List<RespondentsReportSubmitEvent> submitEvents = new ArrayList<>();
     static final LocalDateTime BASE_DATE = LocalDateTime.of(2022, 1, 1, 0, 0,0);
     static final String DATE_FROM = BASE_DATE.minusDays(1).format(OLD_DATE_TIME_PATTERN);
     static final String DATE_TO = BASE_DATE.plusDays(15).format(OLD_DATE_TIME_PATTERN);
-    public RespondentsReportTest() {
-        caseDataBuilder = new RespondentsReportCaseDataBuilder();
-    }
 
     @Before
     public void setup() {
         submitEvents.clear();
+        caseDataBuilder = new RespondentsReportCaseDataBuilder();
         reportDataSource = mock(RespondentsReportDataSource.class);
         when(reportDataSource.getData(MANCHESTER_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
         respondentsReport = new RespondentsReport(reportDataSource,DATE_FROM, DATE_TO);
@@ -42,8 +40,6 @@ public class RespondentsReportTest {
         // and report data is requested
         // the case should not be in the report data
 
-            submitEvents.clear();
-            caseDataBuilder = new RespondentsReportCaseDataBuilder();
             caseDataBuilder.withNoRespondents();
             submitEvents.add(caseDataBuilder
                     .buildAsSubmitEvent());
@@ -77,8 +73,7 @@ public class RespondentsReportTest {
         // the cases should be in the report data
 
         caseDataBuilder.withMoreThanOneRespondents();
-        submitEvents.add(caseDataBuilder
-                .buildAsSubmitEvent());
+        submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
 
         var reportData = respondentsReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);

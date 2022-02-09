@@ -462,7 +462,7 @@ public class ReportDocHelperTest {
         expectedJson = expectedJson.replace("current-date", today);
         var reportData = getRespondentsReportData();
         var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "",
-                "EM-TRB-SCO-ENG-00797", userDetails).toString();
+                "EM-TRB-SCO-ENG-00815", userDetails).toString();
         assertEquals(expectedJson, actualJson);
     }
 

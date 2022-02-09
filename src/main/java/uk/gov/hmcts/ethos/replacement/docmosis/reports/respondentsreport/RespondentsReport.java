@@ -118,8 +118,6 @@ public class RespondentsReport {
                     .filter(a -> a.getValue().getRespRepName().equals(respName)).findFirst();
             if (rep.isPresent()) {
                 return rep.get().getValue().getNameOfRepresentative();
-            } else {
-                return "N/A";
             }
         }
         return "N/A";
