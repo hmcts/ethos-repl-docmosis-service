@@ -99,7 +99,7 @@ public class RespondentsReport {
                 if (repItem.getValue().getNameOfRepresentative().equals(rep)) {
                     for (RespondentSumTypeItem respItem : caseData.getRespondentCollection()) {
                         if (respItem.getValue().getRespondentName().equals(repItem.getValue().getRespRepName())) {
-                            count ++;
+                            count++;
                         }
                     }
                 }
