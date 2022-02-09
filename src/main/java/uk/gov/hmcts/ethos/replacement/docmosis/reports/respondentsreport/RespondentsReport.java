@@ -99,17 +99,13 @@ public class RespondentsReport {
                 if (repItem.getValue().getNameOfRepresentative().equals(rep)) {
                     for (RespondentSumTypeItem respItem : caseData.getRespondentCollection()) {
                         if (respItem.getValue().getRespondentName().equals(repItem.getValue().getRespRepName())) {
-                            count = count + 1;
+                            count ++;
                         }
                     }
                 }
             }
         }
-        if (count > 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return count > 1;
     }
 
     private String getRepresentative(String respName, RespondentsReportCaseData caseData) {
