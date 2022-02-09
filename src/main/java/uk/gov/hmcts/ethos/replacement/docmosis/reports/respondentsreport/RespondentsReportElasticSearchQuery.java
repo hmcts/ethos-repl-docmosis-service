@@ -17,7 +17,7 @@ public class RespondentsReportElasticSearchQuery {
         var boolQueryBuilder = boolQuery()
                 .must(new ExistsQueryBuilder("data.respondentCollection"))
                 .filter(new RangeQueryBuilder(
-                "data.hearingCollection.value.hearingDateCollection.value.listedDate")
+                "data.receiptDate")
                         .gte(dateToSearchFrom).lte(dateToSearchTo));
 
         return new SearchSourceBuilder()
