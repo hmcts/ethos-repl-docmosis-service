@@ -126,7 +126,6 @@ public class ReportDocHelper {
                 try {
                     sb.append(ListingHelper.getListingDate(listingData));
                     sb.append(getRespondentsReport(listingData));
-                    log.info(sb.toString());
                 } catch (JsonProcessingException e) {
                     throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
                 }
