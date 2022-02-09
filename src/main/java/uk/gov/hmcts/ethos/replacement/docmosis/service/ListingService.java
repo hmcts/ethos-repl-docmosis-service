@@ -254,9 +254,12 @@ public class ListingService {
         setListingDateRangeForSearch(listingDetails);
         var respondentsReport = new RespondentsReport(reportDataSource, listingDateFrom, listingDateTo);
         var reportData = respondentsReport.generateReport(listingDetails.getCaseTypeId());
-
         reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
         reportData.setReportType(listingDetails.getCaseData().getReportType());
+        reportData.setHearingDateType(listingDetails.getCaseData().getHearingDateType());
+        reportData.setListingDateFrom(listingDetails.getCaseData().getListingDateFrom());
+        reportData.setListingDateTo(listingDetails.getCaseData().getListingDateTo());
+        reportData.setListingDate(listingDetails.getCaseData().getListingDate());
         return reportData;
     }
 

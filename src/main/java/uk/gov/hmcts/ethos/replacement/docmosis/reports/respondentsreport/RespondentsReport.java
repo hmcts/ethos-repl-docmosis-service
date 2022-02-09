@@ -64,20 +64,17 @@ public class RespondentsReport {
         for (RespondentsReportSubmitEvent submitEvent : submitEvents) {
             var caseData = submitEvent.getCaseData();
             if (hasMultipleRespondents(caseData)) {
-                RespondentsReportDetail detail = new RespondentsReportDetail();
-                detail.setCaseNumber(caseData.getEthosCaseReference());
-                List<RespondentFields> fields = new ArrayList<>();
+
                 for (RespondentSumTypeItem r : caseData.getRespondentCollection()) {
-                    RespondentFields f = new RespondentFields();
-                    f.setRespondentName(r.getValue().getRespondentName());
+                    RespondentsReportDetail detail = new RespondentsReportDetail();
+                    detail.setCaseNumber(caseData.getEthosCaseReference());
+                    detail.setRespondentName(r.getValue().getRespondentName());
                     var rep = getRepresentative(r.getValue().getRespondentName(), caseData);
-                    f.setRepresentativeName(rep);
-                    f.setRepresentativeHasMoreThanOneRespondent(
+                    detail.setRepresentativeName(rep);
+                    detail.setRepresentativeHasMoreThanOneRespondent(
                         isRepresentativeRepresentingMoreThanOneRespondent(rep, caseData) ? "Y" : "N");
-                    fields.add(f);
+                    respondentsReportDetailList.add(detail);
                 }
-                detail.setRespondentDataList(fields);
-                respondentsReportDetailList.add(detail);
             }
         }
         return respondentsReportDetailList;

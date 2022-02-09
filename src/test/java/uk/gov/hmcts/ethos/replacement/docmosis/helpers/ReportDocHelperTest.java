@@ -36,7 +36,6 @@ import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentFields;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportDetail;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportSummary;
@@ -587,18 +586,14 @@ public class ReportDocHelperTest {
 
         var reportDetail1 = new RespondentsReportDetail();
         reportDetail1.setCaseNumber("110001/2022");
-        var respondentFields1 = new RespondentFields();
-        respondentFields1.setRespondentName("Resp1");
-        respondentFields1.setRepresentativeHasMoreThanOneRespondent("Y");
-        respondentFields1.setRepresentativeName("Rep1");
-        reportDetail1.setRespondentDataList(Collections.singletonList(respondentFields1));
+        reportDetail1.setRespondentName("Resp1");
+        reportDetail1.setRepresentativeHasMoreThanOneRespondent("Y");
+        reportDetail1.setRepresentativeName("Rep1");
         var reportDetail2 = new RespondentsReportDetail();
         reportDetail2.setCaseNumber("110002/2022");
-        var respondentFields2 = new RespondentFields();
-        respondentFields2.setRespondentName("Resp2");
-        respondentFields2.setRepresentativeHasMoreThanOneRespondent("N");
-        respondentFields2.setRepresentativeName("N/A");
-        reportDetail2.setRespondentDataList(Collections.singletonList(respondentFields2));
+        reportDetail2.setRespondentName("Resp2");
+        reportDetail2.setRepresentativeHasMoreThanOneRespondent("N");
+        reportDetail2.setRepresentativeName("N/A");
         reportData.addReportDetail(Arrays.asList(reportDetail1, reportDetail2));
         return reportData;
     }

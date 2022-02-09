@@ -93,12 +93,10 @@ public class RespondentsReportTest {
         var reportData = respondentsReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID);
         assertCommonValues(reportData);
         assertEquals("111", reportData.getReportDetails().get(0).getCaseNumber());
-        assertEquals("Resp1", reportData.getReportDetails().get(0)
-                .getRespondentDataList().get(0).getRespondentName());
-        assertEquals("Rep1", reportData.getReportDetails().get(0)
-                .getRespondentDataList().get(0).getRepresentativeName());
-        assertEquals("Y", reportData.getReportDetails().get(0)
-                .getRespondentDataList().get(0).getRepresentativeHasMoreThanOneRespondent());
+        assertEquals("Resp1", reportData.getReportDetails().get(0).getRespondentName());
+        assertEquals("Rep1", reportData.getReportDetails().get(0).getRepresentativeName());
+        assertEquals("Y", reportData.getReportDetails()
+                .get(0).getRepresentativeHasMoreThanOneRespondent());
     }
 
     private void assertCommonValues(RespondentsReportData reportData) {

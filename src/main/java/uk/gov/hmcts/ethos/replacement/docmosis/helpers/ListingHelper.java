@@ -869,6 +869,8 @@ public class ListingHelper {
                 return "EM-TRB-SCO-ENG-00794";
             case MEMBER_DAYS_REPORT:
                 return "EM-TRB-SCO-ENG-00800";
+            case RESPONDENTS_REPORT:
+                return "EM-TRB-SCO-ENG-00815";
             default:
                 return NO_DOCUMENT_FOUND;
         }
