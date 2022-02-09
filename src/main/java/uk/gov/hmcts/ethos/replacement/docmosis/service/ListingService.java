@@ -32,6 +32,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysRepo
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportCcdDataSource;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims.ServingClaimsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
 
@@ -72,6 +75,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARI
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -234,12 +238,27 @@ public class ListingService {
                     return getHearingsToJudgmentsReport(listingDetails, authToken);
                 case NO_CHANGE_IN_CURRENT_POSITION_REPORT:
                     return getNoPositionChangeReport(listingDetails, authToken);
+                case RESPONDENTS_REPORT:
+                    return getRespondentsReport(listingDetails, authToken);
                 default:
                     return getDateRangeReport(listingDetails, authToken);
             }
         } catch (Exception ex) {
             throw new CaseRetrievalException(MESSAGE + listingDetails.getCaseId(), ex);
         }
+    }
+
+    private RespondentsReportData getRespondentsReport(ListingDetails listingDetails,
+                                                       String authToken) {
+        log.info("Respondents Report for {}", listingDetails.getCaseTypeId());
+        var reportDataSource = new RespondentsReportCcdDataSource(authToken, ccdClient);
+        setListingDateRangeForSearch(listingDetails);
+        var respondentsReport = new RespondentsReport(reportDataSource, listingDateFrom, listingDateTo);
+        var reportData = respondentsReport.generateReport(listingDetails.getCaseTypeId());
+
+        reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
+        reportData.setReportType(listingDetails.getCaseData().getReportType());
+        return reportData;
     }
 
     private CasesAwaitingJudgmentReportData getCasesAwaitingJudgmentReport(ListingDetails listingDetails,

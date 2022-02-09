@@ -16,6 +16,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.Cas
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReportDoc;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
 
 import java.time.LocalDate;
 import java.util.Iterator;
@@ -40,6 +41,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARI
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.REPORT_OFFICE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.TOTAL_CASES;
 
 @Slf4j
@@ -116,6 +118,14 @@ public class ReportDocHelper {
                 try {
                     sb.append(ListingHelper.getListingDate(listingData));
                     sb.append(getHearingsToJudgmentsReport(listingData));
+                } catch (JsonProcessingException e) {
+                    throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
+                }
+                break;
+            case RESPONDENTS_REPORT:
+                try {
+                    sb.append(ListingHelper.getListingDate(listingData));
+                    sb.append(getRespondentsReport(listingData));
                 } catch (JsonProcessingException e) {
                     throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
                 }
@@ -632,6 +642,21 @@ public class ReportDocHelper {
                 nullCheck(reportData.getReportSummary().getTotalX4Wk())).append(NEW_LINE);
         sb.append("\"Total_Percent_Not_Within_4Weeks\":\"").append(
                 nullCheck(reportData.getReportSummary().getTotalX4WkPercent())).append(NEW_LINE);
+        addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
+        return sb;
+    }
+
+    private static StringBuilder getRespondentsReport(ListingData listingData)
+            throws JsonProcessingException {
+        if (!(listingData instanceof RespondentsReportData)) {
+            throw new IllegalStateException((LISTING_DATA_STATE_EXCEPTION + "RespondentsReportData"));
+        }
+        var reportData = (RespondentsReportData) listingData;
+
+        var sb = new StringBuilder();
+        sb.append(REPORT_OFFICE).append(reportData.getReportSummary().getOffice()).append(NEW_LINE);
+        sb.append("\"MoreThan1Resp\":\"").append(
+                nullCheck(reportData.getReportSummary().getTotalCasesWithMoreThanOneRespondent())).append(NEW_LINE);
         addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
         return sb;
     }
