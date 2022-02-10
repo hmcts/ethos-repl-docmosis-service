@@ -114,7 +114,7 @@ public class BfActionReportTest {
         assertEquals(bFActionType3.getCleared(), firstBFDateTypeItem.getBroughtForwardDateCleared());
 
         var clearedBfDates = resultListingData.getBfDateCollection().stream()
-            .filter(i-> !StringUtils.isBlank(i.getValue().getBroughtForwardDateCleared()));
+            .filter(item -> !StringUtils.isBlank(item.getValue().getBroughtForwardDateCleared()));
         assertEquals(0, clearedBfDates.count());
     }
 

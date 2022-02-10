@@ -59,18 +59,6 @@ public class MemberDaysReport {
         return reportData;
     }
 
-    private String getDurationText(ListingData currentCaseData) {
-        var description = "";
-        if (currentCaseData.getHearingDateType().equals(SINGLE_DATE_HEARING_REPORT)) {
-            description = "On " + currentCaseData.getListingDate();
-        } else if (currentCaseData.getHearingDateType().equals(DATE_RANGE_HEARING_REPORT)) {
-            description = "Between " + currentCaseData.getListingDateFrom()
-                    + " and " + currentCaseData.getListingDateTo();
-        }
-
-        return description;
-    }
-
     private void addReportDetails(MemberDaysReportData reportData, List<SubmitEvent> submitEvents,
                                   ListingData listingData) {
         List<MemberDaysReportDetail> interimReportDetails = new ArrayList<>();
