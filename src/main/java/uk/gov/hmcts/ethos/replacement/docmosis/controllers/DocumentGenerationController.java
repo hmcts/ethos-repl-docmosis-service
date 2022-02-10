@@ -14,8 +14,8 @@ import uk.gov.hmcts.ecm.common.model.ccd.CCDCallbackResponse;
 import uk.gov.hmcts.ecm.common.model.ccd.CCDRequest;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
-import uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.LettersHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.dynamiclists.DynamicLetters;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DefaultValuesReaderService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.DocumentGenerationService;
@@ -225,7 +225,7 @@ public class DocumentGenerationController {
 
         var caseData = ccdRequest.getCaseDetails().getCaseData();
         DynamicLetters.dynamicLetters(caseData, ccdRequest.getCaseDetails().getCaseTypeId());
-        List<String> errors = DocumentHelper.checkNamesForInvalidCharacters(caseData);
+        List<String> errors = LettersHelper.checkNamesForInvalidCharacters(caseData);
         return getCallbackRespEntityErrors(errors, caseData);
     }
 }

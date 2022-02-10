@@ -63,11 +63,6 @@ public class DocumentHelper {
     private DocumentHelper() {
     }
 
-    public static final String NEW_LINE_ERROR = " is split over 2 lines. Please correct this before "
-            + "generating a letter";
-    public static final String DOUBLE_SPACE_ERROR = " contains a double space. Please correct this before"
-            + " generating a letter";
-
     private static final String VENUE_ADDRESS_OPENING_PROCESSING_ERROR = "Failed while opening or "
             + "processing the entries for the venueAddressValues.xlsx file : ---> ";
 
@@ -1030,40 +1025,6 @@ public class DocumentHelper {
                 ? respondentSumType.getResponseRespondentAddress()
                 : respondentSumType.getRespondentAddress();
 
-    }
-
-    public static List<String> checkNamesForInvalidCharacters(CaseData caseData) {
-        List<String> errors = new ArrayList<>();
-        List<String> nameOfParties = findAllParties(caseData);
-        for (String name : nameOfParties) {
-            if (name.contains("  ")) {
-                errors.add(name + DOUBLE_SPACE_ERROR);
-            }
-            if (name.contains("\n")) {
-                errors.add(name + NEW_LINE_ERROR);
-            }
-        }
-        return errors;
-    }
-
-    private static List<String> findAllParties(CaseData caseData) {
-        List<String> parties = new ArrayList<>();
-        parties.add(caseData.getClaimant());
-        if (YES.equals(caseData.getClaimantRepresentedQuestion())) {
-            parties.add(caseData.getRepresentativeClaimantType().getNameOfRepresentative());
-        }
-        if (CollectionUtils.isNotEmpty(caseData.getRespondentCollection())) {
-            for (RespondentSumTypeItem respondentSumTypeItem : caseData.getRespondentCollection()) {
-                parties.add(respondentSumTypeItem.getValue().getRespondentName());
-            }
-        }
-        if (CollectionUtils.isNotEmpty(caseData.getRepCollection())) {
-            for (RepresentedTypeRItem representedTypeRItem : caseData.getRepCollection()) {
-                parties.add(representedTypeRItem.getValue().getNameOfRepresentative());
-            }
-        }
-
-        return parties;
     }
 
 }

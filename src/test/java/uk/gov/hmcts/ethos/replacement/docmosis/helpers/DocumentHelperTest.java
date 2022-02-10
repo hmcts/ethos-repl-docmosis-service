@@ -7,13 +7,9 @@ import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsAttributesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-
-import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
@@ -21,12 +17,13 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.DOUBLE_SPACE_ERROR;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.NEW_LINE_ERROR;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ADDRESS_LABELS_TEMPLATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 
 public class DocumentHelperTest {
 
@@ -2048,29 +2045,6 @@ public class DocumentHelperTest {
         assertEquals(expectedHearingVenue,
                 DocumentHelper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(),
                         correspondenceHearingNumber).getHearingVenue());
-    }
-
-    @Test
-    public void checkInvalidCharactersInNames() {
-        var casedata = caseDetails1.getCaseData();
-        casedata.setClaimant("Double  Space");
-        casedata.getRepresentativeClaimantType().setNameOfRepresentative("New\nLine");
-        casedata.getRespondentCollection().get(0).getValue().setRespondentName("Double  Space and New\nLine");
-
-        var representedTypeR = new RepresentedTypeR();
-        representedTypeR.setNameOfRepresentative("No Errors In Name");
-        var representedTypeRItem = new RepresentedTypeRItem();
-        representedTypeRItem.setValue(representedTypeR);
-        casedata.setRepCollection(List.of(representedTypeRItem));
-
-        List<String> errors = DocumentHelper.checkNamesForInvalidCharacters(casedata);
-
-        assertEquals(4, errors.size());
-        assertEquals("Double  Space" + DOUBLE_SPACE_ERROR, errors.get(0));
-        assertEquals("New\nLine" + NEW_LINE_ERROR, errors.get(1));
-        assertEquals("Double  Space and New\nLine" + DOUBLE_SPACE_ERROR, errors.get(2));
-        assertEquals("Double  Space and New\nLine" + NEW_LINE_ERROR, errors.get(3));
-
     }
 
 }
