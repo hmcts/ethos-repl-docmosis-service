@@ -8,8 +8,8 @@
 "Report_Office":"Manchester",
 "MoreThan1Resp":"2",
 "reportDetails":[
-{"caseNumber":"110001/2022","RespondentDataList":[{"respondentName":"Resp1","representativeName":"Rep1","representativeHasMoreThanOneRespondent":"Y"}]},
-{"caseNumber":"110002/2022","RespondentDataList":[{"respondentName":"Resp2","representativeName":"N/A","representativeHasMoreThanOneRespondent":"N"}]}
+{"caseNumber":"110001/2022","respondentName":"Resp1","representativeName":"Rep1","representativeHasMoreThanOneRespondent":"Y"},
+{"caseNumber":"110002/2022","respondentName":"Resp2","representativeName":"N/A","representativeHasMoreThanOneRespondent":"N"}
 ],
 "Report_Clerk":"Mike Jordan",
 "Today_date":"current-date"
