@@ -1,25 +1,22 @@
-package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
+package uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LettersHelper.DOUBLE_SPACE_ERROR;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.LettersHelper.NEW_LINE_ERROR;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck.DOUBLE_SPACE_ERROR;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters.InvalidCharacterCheck.NEW_LINE_ERROR;
 
-public class LettersHelperTest {
+public class InvalidCharacterCheckTest {
 
     private CaseDetails caseDetails1;
 
@@ -48,7 +45,7 @@ public class LettersHelperTest {
         representedTypeRItem.setValue(representedTypeR);
         casedata.setRepCollection(List.of(representedTypeRItem));
 
-        List<String> errors = LettersHelper.checkNamesForInvalidCharacters(casedata);
+        List<String> errors = InvalidCharacterCheck.checkNamesForInvalidCharacters(casedata);
 
         assertEquals(4, errors.size());
         assertEquals("Double  Space" + DOUBLE_SPACE_ERROR, errors.get(0));

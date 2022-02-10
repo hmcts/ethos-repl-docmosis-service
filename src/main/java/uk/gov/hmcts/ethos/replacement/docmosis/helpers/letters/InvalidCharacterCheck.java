@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
+package uk.gov.hmcts.ethos.replacement.docmosis.helpers.letters;
 
 import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -10,14 +10,14 @@ import java.util.List;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
-public class LettersHelper {
+public class InvalidCharacterCheck {
 
     public static final String NEW_LINE_ERROR = " is split over 2 lines. Please correct this before "
             + "generating a letter";
     public static final String DOUBLE_SPACE_ERROR = " contains a double space. Please correct this before"
             + " generating a letter";
 
-    private LettersHelper() {
+    private InvalidCharacterCheck() {
     }
 
     public static List<String> checkNamesForInvalidCharacters(CaseData caseData) {
@@ -53,5 +53,4 @@ public class LettersHelper {
 
         return parties;
     }
-
 }
