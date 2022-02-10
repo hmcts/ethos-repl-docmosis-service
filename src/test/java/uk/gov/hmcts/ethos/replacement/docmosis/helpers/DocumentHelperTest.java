@@ -7,10 +7,13 @@ import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.AddressLabelsAttributesType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceScotType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CorrespondenceType;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 
@@ -2053,6 +2056,13 @@ public class DocumentHelperTest {
         casedata.setClaimant("Double  Space");
         casedata.getRepresentativeClaimantType().setNameOfRepresentative("New\nLine");
         casedata.getRespondentCollection().get(0).getValue().setRespondentName("Double  Space and New\nLine");
+
+        var representedTypeR = new RepresentedTypeR();
+        representedTypeR.setNameOfRepresentative("No Errors In Name");
+        var representedTypeRItem = new RepresentedTypeRItem();
+        representedTypeRItem.setValue(representedTypeR);
+        casedata.setRepCollection(List.of(representedTypeRItem));
+
         List<String> errors = DocumentHelper.checkNamesForInvalidCharacters(casedata);
 
         assertEquals(4, errors.size());
