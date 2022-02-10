@@ -18,9 +18,12 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.DOUBLE_SPACE_ERROR;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.DocumentHelper.NEW_LINE_ERROR;
 
 public class DocumentHelperTest {
 
@@ -2042,6 +2045,22 @@ public class DocumentHelperTest {
         assertEquals(expectedHearingVenue,
                 DocumentHelper.getHearingByNumber(caseDetails1.getCaseData().getHearingCollection(),
                         correspondenceHearingNumber).getHearingVenue());
+    }
+
+    @Test
+    public void checkInvalidCharactersInNames() {
+        var casedata = caseDetails1.getCaseData();
+        casedata.setClaimant("Double  Space");
+        casedata.getRepresentativeClaimantType().setNameOfRepresentative("New\nLine");
+        casedata.getRespondentCollection().get(0).getValue().setRespondentName("Double  Space and New\nLine");
+        List<String> errors = DocumentHelper.checkNamesForInvalidCharacters(casedata);
+
+        assertEquals(4, errors.size());
+        assertEquals("Double  Space" + DOUBLE_SPACE_ERROR, errors.get(0));
+        assertEquals("New\nLine" + NEW_LINE_ERROR, errors.get(1));
+        assertEquals("Double  Space and New\nLine" + DOUBLE_SPACE_ERROR, errors.get(2));
+        assertEquals("Double  Space and New\nLine" + NEW_LINE_ERROR, errors.get(3));
+
     }
 
 }
