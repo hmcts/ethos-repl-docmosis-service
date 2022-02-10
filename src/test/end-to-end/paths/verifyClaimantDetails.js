@@ -13,5 +13,5 @@ Scenario('Verify Claimant Details', async ({I}) => {
     await claimantDetails(I, eventNames.CLAIMANT_DETAILS);
 
 }).tag('@e2e')
-    .tag('@nightly')
+    .tag('@leeds')
     .retry(testConfig.TestRetryScenarios);

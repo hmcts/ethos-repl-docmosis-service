@@ -150,9 +150,6 @@ public class ExcelCreationService {
 
     private void initializeData(XSSFWorkbook workbook, XSSFSheet sheet, List<?> multipleCollection,
                                 List<String> subMultipleCollection, String leadCaseString) {
-        String leadCase = MultiplesHelper.getCurrentLead(leadCaseString);
-        log.info("Creating lead case EXCEL STRING: " + leadCaseString);
-        log.info("Creating lead case EXCEL: " + leadCase);
 
         if (multipleCollection.isEmpty()) {
             return;
@@ -165,7 +162,7 @@ public class ExcelCreationService {
         if (orderedAllCasesList.isEmpty()) {
             return;
         }
-
+        String leadCase = MultiplesHelper.getCurrentLead(leadCaseString);
         final int[] rowIndex = {1};
         orderedAllCasesList.forEach((String caseYear, Map<String, Object> caseYearList) ->
             caseYearList.forEach((String caseNum, Object caseItem) -> {

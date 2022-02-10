@@ -54,7 +54,7 @@ public class VerifyTokenService {
         try {
             return JWKSet.load(new URL(jwksUrl));
         } catch (Exception e) {
-            log.error("JWKS key loading error");
+            log.error("JWKS key loading error", e);
             throw new RuntimeException("JWKS error", e);
         }
     }
@@ -73,7 +73,7 @@ public class VerifyTokenService {
             }
             throw new RuntimeException("Unsupported JWK " + jsonWebKey.getClass().getName());
         } catch (JOSEException e) {
-            log.error("Invalid JWK key");
+            log.error("Invalid JWK key", e);
             throw new RuntimeException("Invalid JWK", e);
         }
     }

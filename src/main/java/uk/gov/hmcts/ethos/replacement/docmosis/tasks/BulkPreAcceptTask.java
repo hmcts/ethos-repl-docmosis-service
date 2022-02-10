@@ -34,7 +34,8 @@ public class BulkPreAcceptTask implements Runnable {
         log.info("Waiting: " + Thread.currentThread().getName());
         String caseId = String.valueOf(submitEvent.getCaseId());
         try {
-            log.info("Moving to accepted state");
+            log.info(String.format("Moving case %s to accepted state",
+                    submitEvent.getCaseData().getEthosCaseReference()));
             CasePreAcceptType casePreAcceptType = new CasePreAcceptType();
             casePreAcceptType.setCaseAccepted(YES);
             casePreAcceptType.setDateAccepted(UtilHelper.formatCurrentDate2(LocalDate.now()));
@@ -46,7 +47,7 @@ public class BulkPreAcceptTask implements Runnable {
                     UtilHelper.getCaseTypeId(bulkDetails.getCaseTypeId()),
                     bulkDetails.getJurisdiction(), returnedRequest, caseId);
         } catch (IOException e) {
-            log.error("Error processing bulk pre accept threads");
+            log.error("Error processing bulk pre accept threads:", e);
         }
     }
 }

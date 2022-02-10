@@ -162,7 +162,7 @@ public class BulkCreationService {
                 errors.addAll(bulkCasesPayload.getErrors());
             }
         } catch (Exception ex) {
-            log.error("Error processing bulk update threads");
+            log.error("Error processing bulk update threads: " + ex.getMessage(), ex);
         }
         bulkCasesPayload.setErrors(errors);
         return bulkCasesPayload;
@@ -181,12 +181,9 @@ public class BulkCreationService {
             String ethosCaseRef = submitEvent.getCaseData().getEthosCaseReference();
             if (!submitEvent.getCaseData().getEthosCaseReference().equals(leadId)) {
                 submitEvent.getCaseData().setLeadClaimant(NO);
-                log.info("setLeadClaimant is set to No");
             }
-            log.info("State SubmitEvent: " + submitEvent.getState());
 
             if (!isPersistentQ) {
-                log.info("Is not persistent queue");
                 ExecutorService executor = Executors.newFixedThreadPool(NUMBER_THREADS);
                 if (!caseIds.contains(ethosCaseRef) && multipleCaseIds.contains(ethosCaseRef)) {
                     executor.execute(new BulkCreationTask(bulkDetails, submitEvent, authToken, " ",
@@ -200,9 +197,7 @@ public class BulkCreationService {
                 executor.shutdown();
 
             } else {
-                log.info("MultipleCaseIds: " + multipleCaseIds);
-                log.info("CaseIds: " + caseIds);
-                log.info("EthosCaseRef: " + ethosCaseRef);
+
                 if (!caseIds.contains(ethosCaseRef) && multipleCaseIds.contains(ethosCaseRef)) {
                     detachCasesList.add(ethosCaseRef);
                 } else {
@@ -215,10 +210,7 @@ public class BulkCreationService {
 
         if (isPersistentQ) {
 
-            log.info("DetachCaseList: " + detachCasesList);
-            log.info("AttachCaseList: " + attachCasesList);
             var updateSize = String.valueOf(detachCasesList.size() + attachCasesList.size());
-            log.info("UpdateSize: " + updateSize);
             String username = userService.getUserDetails(authToken).getEmail();
 
             PersistentQHelper.sendUpdatesPersistentQ(bulkDetails,

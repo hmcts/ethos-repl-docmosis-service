@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,12 +35,17 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
+import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
+import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportCaseData;
+import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportData;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CaseDataBuilder;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.CasesCompletedReport;
@@ -49,6 +55,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysRepo
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeCaseDataBuilder;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeSearchResult;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
@@ -59,6 +66,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -959,6 +968,35 @@ public class ListingServiceTest {
     }
 
     @Test
+    public void checkExistingDataInReport() throws IOException {
+        var adhocReportType = new AdhocReportType();
+        adhocReportType.setSinglesTotal("6");
+        adhocReportType.setMultiplesTotal("10");
+        listingDetails.getCaseData().setLocalReportsSummaryHdr(adhocReportType);
+        var adhocReportType2 = new AdhocReportType();
+        adhocReportType2.setCaseReference("1800001/2021");
+        adhocReportType2.setDateOfAcceptance("2021-01-01");
+        var adhocReportTypeItem = new AdhocReportTypeItem();
+        adhocReportTypeItem.setValue(adhocReportType2);
+        List<AdhocReportTypeItem> localReportsSummary = List.of(adhocReportTypeItem);
+        listingDetails.getCaseData().setLocalReportsSummary(localReportsSummary);
+        listingDetails.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
+        listingDetails.getCaseData().setReportType(CLAIMS_ACCEPTED_REPORT);
+        submitEvents.remove(0);
+
+        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
+        ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
+
+        assertTrue(CollectionUtils.isEmpty(listingDataResult.getLocalReportsDetail()));
+        assertTrue(CollectionUtils.isEmpty(listingDataResult.getLocalReportsSummary2()));
+        assertTrue(CollectionUtils.isEmpty(listingDataResult.getLocalReportsSummary()));
+        assertNull(listingDataResult.getLocalReportsDetailHdr());
+        assertNull(listingDataResult.getLocalReportsSummaryHdr());
+        assertNull(listingDataResult.getLocalReportsSummaryHdr2());
+
+    }
+
+    @Test
     public void generateLiveCaseloadReportDataForEnglandWithValidPositionType() throws IOException {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
                 + "tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
@@ -1245,6 +1283,60 @@ public class ListingServiceTest {
         assertEquals("2021-07-13", listingDataResult.getListingDate());
         assertEquals("2021-07-12", listingDataResult.getListingDateFrom());
         assertEquals("2021-07-14", listingDataResult.getListingDateTo());
+    }
+
+    @Test
+    public void generateRespondentsReportData() throws IOException {
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        listingDetails.getCaseData().setReportType(RESPONDENTS_REPORT);
+        listingDetails.getCaseData().setDocumentName("name");
+        listingDetails.getCaseData().setHearingDateType("Ranged");
+        listingDetails.getCaseData().setListingDate("2022-01-13");
+        listingDetails.getCaseData().setListingDateFrom("2022-01-31");
+        listingDetails.getCaseData().setListingDateTo("2022-02-08");
+        var submitEvent = new RespondentsReportSubmitEvent();
+        submitEvent.setCaseData(new RespondentsReportCaseData());
+        when(ccdClient.respondentsReportSearch(anyString(), anyString(), anyString())).thenReturn(List.of(submitEvent));
+        var listingDataResult = (RespondentsReportData) listingService.generateReportData(listingDetails, "authToken");
+        assertEquals("name", listingDataResult.getDocumentName());
+        assertEquals(RESPONDENTS_REPORT, listingDataResult.getReportType());
+        assertEquals("Ranged", listingDataResult.getHearingDateType());
+        assertEquals("2022-01-13", listingDataResult.getListingDate());
+        assertEquals("2022-01-31", listingDataResult.getListingDateFrom());
+        assertEquals("2022-02-08", listingDataResult.getListingDateTo());
+    }
+
+    @Test
+    public void generateMemberDaysReportData() throws IOException {
+        var localSubmitEvents = submitEvents;
+        String docName = "Member Days Report - Test";
+        listingDetailsRange.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
+        listingDetailsRange.getCaseData().setReportType(MEMBER_DAYS_REPORT);
+        listingDetailsRange.getCaseData().setDocumentName(docName);
+        listingDetailsRange.getCaseData().setHearingDateType("Range");
+        listingDetailsRange.getCaseData().setListingDate("2021-09-12");
+        listingDetailsRange.getCaseData().setListingDateFrom("2021-09-08");
+        listingDetailsRange.getCaseData().setListingDateTo("2021-09-18");
+
+        var memberDaysReportData = new MemberDaysReportData();
+        memberDaysReportData.setFullDaysTotal("0");
+        memberDaysReportData.setHalfDaysTotal("4");
+        memberDaysReportData.setTotalDays("2");
+        memberDaysReportData.setOffice("Manchester");
+        memberDaysReportData.setDocumentName(docName);
+
+        var memberDaysReport = Mockito.mock(MemberDaysReport.class);
+
+        doReturn(localSubmitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
+            anyString(), anyString(), anyString(), anyString());
+
+        doReturn(memberDaysReportData).when(memberDaysReport).runReport(any(ListingDetails.class),
+            Mockito.<SubmitEvent>anyList());
+
+        var listingDataResult = (MemberDaysReportData) listingService.generateReportData(listingDetailsRange,
+            "authToken");
+
+        assertEquals(MEMBER_DAYS_REPORT, listingDataResult.getReportType());
     }
 
     @Test

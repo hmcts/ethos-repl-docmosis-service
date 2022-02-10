@@ -54,7 +54,7 @@ public class ExcelDocManagementService {
 
         log.info("URI documentSelfPath uploaded and created: " + documentSelfPath.toString());
 
-        log.info("Add document to multiple");
+        log.info("Add document to multiple with reference:" + multipleData.getMultipleReference());
 
         addDocumentToMultiple(userToken, multipleData, documentSelfPath);
 
@@ -94,7 +94,7 @@ public class ExcelDocManagementService {
                 multipleData.getLeadCase());
         uploadExcelDocument(userToken, multipleDetails, excelBytes);
 
-        log.info("Add multiple case counter");
+        log.info("Add multiple case counter for multipleReference:" + multipleData.getMultipleReference());
 
         multipleData.setCaseCounter(String.valueOf(multipleCollection.size()));
 
