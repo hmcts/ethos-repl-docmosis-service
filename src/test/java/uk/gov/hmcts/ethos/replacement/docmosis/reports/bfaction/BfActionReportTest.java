@@ -119,6 +119,73 @@ public class BfActionReportTest {
     }
 
     @Test
+    public void shouldReturnBfActionsWithMillisecondInBfDate() {
+        listingData.setListingDateFrom("2019-12-13");
+        listingData.setListingDateTo("2019-12-28");
+        listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
+        listingDetails.setCaseData(listingData);
+        var caseData = getTestCaseData();
+        List<BFActionTypeItem> items = getBFActionTypeItemsWithClearedBfAction();
+        var bfActionTypeItem = new BFActionTypeItem();
+        bfActionTypeItem.setId("123");
+        var bFActionType = new BFActionType();
+        bFActionType.setCwActions("Case papers prepared");
+        bFActionType.setBfDate("2019-12-18T19:30:55.000");
+        bFActionType.setDateEntered("2019-11-20");
+        bFActionType.setNotes("test comment one");
+        bfActionTypeItem.setValue(bFActionType);
+        items.add(bfActionTypeItem);
+
+        caseData.setBfActions(items);
+        var bfActionReport = new BfActionReport();
+        var submitEvent = new SubmitEvent();
+        submitEvent.setCaseId(2);
+        submitEvent.setState(ACCEPTED_STATE);
+        submitEvent.setCaseData(caseData);
+        submitEvents.add(submitEvent);
+
+        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
+        var firstBFDateTypeItem = resultListingData.getBfDateCollection().get(2).getValue();
+        assertEquals(bFActionType.getBfDate().split("T")[0], firstBFDateTypeItem.getBroughtForwardDate());
+        assertEquals(bFActionType.getCwActions(), firstBFDateTypeItem.getBroughtForwardAction());
+        assertEquals(bFActionType.getNotes(), firstBFDateTypeItem.getBroughtForwardDateReason());
+        assertEquals(bFActionType.getDateEntered(), firstBFDateTypeItem.getBroughtForwardEnteredDate());
+        assertEquals(bFActionType.getCleared(), firstBFDateTypeItem.getBroughtForwardDateCleared());
+    }
+
+    @Test
+    public void shouldReturnBfActionsWithOnlyDateAndTimeInBfDate() {
+        listingData.setListingDateFrom("2019-12-08");
+        listingData.setListingDateTo("2019-12-20");
+        listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
+        listingDetails.setCaseData(listingData);
+        var caseData = getTestCaseData();
+        List<BFActionTypeItem> items = getBFActionTypeItemsWithClearedBfAction();
+        var bfActionTypeItem2 = new BFActionTypeItem();
+        bfActionTypeItem2.setId("456");
+        var bFActionType2 = new BFActionType();
+        bFActionType2.setCwActions("Interlocutory order requested");
+        bFActionType2.setBfDate("2019-12-14T13:30:55");
+        bFActionType2.setDateEntered("2019-11-20");
+        bFActionType2.setCleared("2019-12-15");
+        bFActionType2.setNotes("test non-cleared bf");
+        bfActionTypeItem2.setValue(bFActionType2);
+        items.add(bfActionTypeItem2);
+        caseData.setBfActions(items);
+
+        var bfActionReport = new BfActionReport();
+        var submitEvent = new SubmitEvent();
+        submitEvent.setCaseId(2);
+        submitEvent.setState(ACCEPTED_STATE);
+        submitEvent.setCaseData(caseData);
+        submitEvents.add(submitEvent);
+
+        var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
+        var expectedBfDateCount = 2;
+        assertEquals(expectedBfDateCount, resultListingData.getBfDateCollection().size());
+    }
+
+    @Test
     public void shouldNotReturnClearedBfActionsWithInDateRange() {
         var caseData = getTestCaseData();
         List<BFActionTypeItem> items = getBFActionTypeItemsWithClearedBfAction();
@@ -138,11 +205,21 @@ public class BfActionReportTest {
     @Test
     public void shouldReturnBfActionsSortedByBfDate() {
         listingData.setListingDateFrom("2019-12-08");
-        listingData.setListingDateTo("2019-12-20");
+        listingData.setListingDateTo("2019-12-25");
         listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
         listingDetails.setCaseData(listingData);
         var caseData = getTestCaseData();
         List<BFActionTypeItem> items = getBFActionTypeItemsWithClearedBfAction();
+
+        var bfActionTypeItem6 = new BFActionTypeItem();
+        bfActionTypeItem6.setId("456");
+        var bFActionType6 = new BFActionType();
+        bFActionType6.setCwActions("Interlocutory new order requested");
+        bFActionType6.setBfDate("2019-12-08");
+        bFActionType6.setDateEntered("2019-11-20");
+        bFActionType6.setNotes("test non-cleared bf sixth");
+        bfActionTypeItem6.setValue(bFActionType6);
+        items.add(bfActionTypeItem6);
         caseData.setBfActions(items);
         var bfActionReport = new BfActionReport();
 
@@ -177,38 +254,28 @@ public class BfActionReportTest {
     }
 
     private List<BFActionTypeItem> getBFActionTypeItemsWithClearedBfAction() {
-        var bfActionTypeItem = new BFActionTypeItem();
-        bfActionTypeItem.setId("123");
-        var bFActionType = new BFActionType();
-        bFActionType.setCwActions("Case papers prepared");
-        bFActionType.setBfDate("2019-12-18");
-        bFActionType.setDateEntered("2019-11-20");
-        bFActionType.setNotes("test comment one");
-        bfActionTypeItem.setValue(bFActionType);
-
-        var bfActionTypeItem2 = new BFActionTypeItem();
-        bfActionTypeItem2.setId("456");
-        var bFActionType2 = new BFActionType();
-        bFActionType2.setCwActions("Interlocutory order requested");
-        bFActionType2.setBfDate("2019-12-14");
-        bFActionType2.setDateEntered("2019-11-20");
-        bFActionType2.setCleared("2019-12-15");
-        bFActionType2.setNotes("test non-cleared bf");
-        bfActionTypeItem2.setValue(bFActionType2);
 
         var bfActionTypeItem3 = new BFActionTypeItem();
-        bfActionTypeItem3.setId("456");
+        bfActionTypeItem3.setId("116");
         var bFActionType3 = new BFActionType();
         bFActionType3.setCwActions("Interlocutory order requested");
-        bFActionType3.setBfDate("2019-12-08");
+        bFActionType3.setBfDate("2019-12-13");
         bFActionType3.setDateEntered("2019-11-20");
         bFActionType3.setNotes("test non-cleared bf two");
         bfActionTypeItem3.setValue(bFActionType3);
 
+        var bfActionTypeItem4 = new BFActionTypeItem();
+        bfActionTypeItem4.setId("99456");
+        var bFActionType4 = new BFActionType();
+        bFActionType4.setCwActions("Interlocutory new order requested");
+        bFActionType4.setBfDate("2019-12-16 08:30:55");
+        bFActionType4.setDateEntered("2019-11-23");
+        bFActionType4.setNotes("test another non-cleared bf three");
+        bfActionTypeItem4.setValue(bFActionType4);
+
         List<BFActionTypeItem> items = new ArrayList<>();
-        items.add(bfActionTypeItem);
-        items.add(bfActionTypeItem2);
         items.add(bfActionTypeItem3);
+        items.add(bfActionTypeItem4);
 
         return items;
     }
