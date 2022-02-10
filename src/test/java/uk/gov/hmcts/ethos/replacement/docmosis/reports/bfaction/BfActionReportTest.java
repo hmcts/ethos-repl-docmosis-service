@@ -23,6 +23,9 @@ public class BfActionReportTest {
     private List<SubmitEvent> submitEvents;
     private ListingDetails listingDetails;
     private ListingData listingData;
+    private BfActionReport bfActionReport;
+    private SubmitEvent submitEvent;
+    private CaseData caseData;
 
     @Before
     public void setUp() {
@@ -38,17 +41,21 @@ public class BfActionReportTest {
         listingData.setListingDateTo("2019-12-20");
         listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
         listingDetails.setCaseData(listingData);
-    }
+        bfActionReport = new BfActionReport();
+        submitEvent = new SubmitEvent();
 
-    @Test
-    public void shouldReturnOnlyOpenBfActionsWithInDateRange() {
-        var caseData = new CaseData();
+        caseData = new CaseData();
         caseData.setEthosCaseReference("1800522/2020");
         caseData.setReceiptDate("2018-08-10");
         var casePreAcceptType2 = new CasePreAcceptType();
         casePreAcceptType2.setDateAccepted("2018-08-10");
         caseData.setPreAcceptCase(casePreAcceptType2);
         caseData.setEcmCaseType(SINGLE_CASE_TYPE);
+
+    }
+
+    @Test
+    public void shouldReturnOnlyOpenBfActionsWithInDateRange() {
 
         var bfActionTypeItem = new BFActionTypeItem();
         bfActionTypeItem.setId("123");
@@ -94,8 +101,6 @@ public class BfActionReportTest {
 
         caseData.setBfActions(items);
 
-        var bfActionReport = new BfActionReport();
-        var submitEvent = new SubmitEvent();
         submitEvent.setCaseId(2);
         submitEvent.setState(ACCEPTED_STATE);
         submitEvent.setCaseData(caseData);
@@ -124,7 +129,6 @@ public class BfActionReportTest {
         listingData.setListingDateTo("2019-12-28");
         listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
         listingDetails.setCaseData(listingData);
-        var caseData = getTestCaseData();
         List<BFActionTypeItem> items = getBFActionTypeItemsWithClearedBfAction();
         var bfActionTypeItem = new BFActionTypeItem();
         bfActionTypeItem.setId("123");
@@ -137,8 +141,6 @@ public class BfActionReportTest {
         items.add(bfActionTypeItem);
 
         caseData.setBfActions(items);
-        var bfActionReport = new BfActionReport();
-        var submitEvent = new SubmitEvent();
         submitEvent.setCaseId(2);
         submitEvent.setState(ACCEPTED_STATE);
         submitEvent.setCaseData(caseData);
@@ -159,7 +161,6 @@ public class BfActionReportTest {
         listingData.setListingDateTo("2019-12-20");
         listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
         listingDetails.setCaseData(listingData);
-        var caseData = getTestCaseData();
         List<BFActionTypeItem> items = getBFActionTypeItemsWithClearedBfAction();
         var bfActionTypeItem2 = new BFActionTypeItem();
         bfActionTypeItem2.setId("456");
@@ -173,8 +174,6 @@ public class BfActionReportTest {
         items.add(bfActionTypeItem2);
         caseData.setBfActions(items);
 
-        var bfActionReport = new BfActionReport();
-        var submitEvent = new SubmitEvent();
         submitEvent.setCaseId(2);
         submitEvent.setState(ACCEPTED_STATE);
         submitEvent.setCaseData(caseData);
@@ -187,11 +186,9 @@ public class BfActionReportTest {
 
     @Test
     public void shouldNotReturnClearedBfActionsWithInDateRange() {
-        var caseData = getTestCaseData();
         List<BFActionTypeItem> items = getBFActionTypeItemsWithClearedBfAction();
         caseData.setBfActions(items);
-        var bfActionReport = new BfActionReport();
-        var submitEvent = new SubmitEvent();
+
         submitEvent.setCaseId(2);
         submitEvent.setState(ACCEPTED_STATE);
         submitEvent.setCaseData(caseData);
@@ -208,7 +205,6 @@ public class BfActionReportTest {
         listingData.setListingDateTo("2019-12-25");
         listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
         listingDetails.setCaseData(listingData);
-        var caseData = getTestCaseData();
         List<BFActionTypeItem> items = getBFActionTypeItemsWithClearedBfAction();
 
         var bfActionTypeItem6 = new BFActionTypeItem();
@@ -223,7 +219,6 @@ public class BfActionReportTest {
         caseData.setBfActions(items);
         var bfActionReport = new BfActionReport();
 
-        var submitEvent = new SubmitEvent();
         submitEvent.setCaseId(2);
         submitEvent.setState(ACCEPTED_STATE);
         submitEvent.setCaseData(caseData);
@@ -240,17 +235,6 @@ public class BfActionReportTest {
         assertEquals(bFActionType3.getNotes(), firstBFDateTypeItem.getBroughtForwardDateReason());
         assertEquals(bFActionType3.getDateEntered(), firstBFDateTypeItem.getBroughtForwardEnteredDate());
         assertEquals(bFActionType3.getCleared(), firstBFDateTypeItem.getBroughtForwardDateCleared());
-    }
-
-    private CaseData getTestCaseData() {
-        var caseData = new CaseData();
-        caseData.setEthosCaseReference("1800522/2020");
-        caseData.setReceiptDate("2018-08-10");
-        var casePreAcceptType2 = new CasePreAcceptType();
-        casePreAcceptType2.setDateAccepted("2018-08-10");
-        caseData.setPreAcceptCase(casePreAcceptType2);
-        caseData.setEcmCaseType(SINGLE_CASE_TYPE);
-        return caseData;
     }
 
     private List<BFActionTypeItem> getBFActionTypeItemsWithClearedBfAction() {

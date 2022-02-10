@@ -43,7 +43,6 @@ public class BfActionReport {
         String caseTypeId = listingDetails.getCaseTypeId();
         var office = UtilHelper.getListingCaseTypeId(caseTypeId);
         bfActionReportData.clearReportFields();
-        bfActionReportData.setReportType(listingDetails.getCaseData().getReportType());
         bfActionReportData.setReportType(BROUGHT_FORWARD_REPORT);
         bfActionReportData.setDocumentName(BROUGHT_FORWARD_REPORT);
         bfActionReportData.setOffice(office);
