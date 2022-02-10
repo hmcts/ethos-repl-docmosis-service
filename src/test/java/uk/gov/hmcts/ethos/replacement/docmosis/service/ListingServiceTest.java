@@ -1307,39 +1307,6 @@ public class ListingServiceTest {
     }
 
     @Test
-    public void generateMemberDaysReportData() throws IOException {
-        var localSubmitEvents = submitEvents;
-        String docName = "Member Days Report - Test";
-        listingDetailsRange.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
-        listingDetailsRange.getCaseData().setReportType(MEMBER_DAYS_REPORT);
-        listingDetailsRange.getCaseData().setDocumentName(docName);
-        listingDetailsRange.getCaseData().setHearingDateType("Range");
-        listingDetailsRange.getCaseData().setListingDate("2021-09-12");
-        listingDetailsRange.getCaseData().setListingDateFrom("2021-09-08");
-        listingDetailsRange.getCaseData().setListingDateTo("2021-09-18");
-
-        var memberDaysReportData = new MemberDaysReportData();
-        memberDaysReportData.setFullDaysTotal("0");
-        memberDaysReportData.setHalfDaysTotal("4");
-        memberDaysReportData.setTotalDays("2");
-        memberDaysReportData.setOffice("Manchester");
-        memberDaysReportData.setDocumentName(docName);
-
-        var memberDaysReport = Mockito.mock(MemberDaysReport.class);
-
-        doReturn(localSubmitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
-            anyString(), anyString(), anyString(), anyString());
-
-        doReturn(memberDaysReportData).when(memberDaysReport).runReport(any(ListingDetails.class),
-            Mockito.<SubmitEvent>anyList());
-
-        var listingDataResult = (MemberDaysReportData) listingService.generateReportData(listingDetailsRange,
-            "authToken");
-
-        assertEquals(MEMBER_DAYS_REPORT, listingDataResult.getReportType());
-    }
-
-    @Test
     public void generateCasesAwaitingJudgmentsReportData() throws IOException {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         listingDetails.getCaseData().setReportType(CASES_AWAITING_JUDGMENT_REPORT);
