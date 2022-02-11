@@ -768,8 +768,7 @@ public class ListingServiceTest {
         var bfActionReportData = new BfActionReportData();
         bfActionReportData.setDocumentName(docName);
         bfActionReportData.setOffice("Manchester");
-        bfActionReportData.setDurationDescription("Between 2021-09-08 and 2021-09-18");
-
+        
         List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
         var bFDateTypeItem = new BFDateTypeItem();
         bFDateTypeItem.setValue(new BFDateType());

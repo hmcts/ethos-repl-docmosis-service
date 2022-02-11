@@ -14,23 +14,27 @@ import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
 
 public class BfActionReportDocTest {
-    private BfActionReportData bfActionReportData;
     private BfActionReportDoc bfActionReportDoc;
-    private String bfActionReportDocTestResource;
+    private String bfActionReportDocTestDateRangeResource;
+    private String bfActionReportDocTestSingleDateResource;
 
     @Before
     public void setUp() throws Exception {
-        bfActionReportData = new BfActionReportData();
         bfActionReportDoc = new BfActionReportDoc();
-        bfActionReportDocTestResource = getBfActionDocTestFileContent("bfActionReportDocTestResource.json");
+        bfActionReportDocTestDateRangeResource =
+            getBfActionDocTestFileContent("bfActionReportDocTestDateRangeResource.json");
+        bfActionReportDocTestSingleDateResource =
+            getBfActionDocTestFileContent("bfActionReportDocTestSingleDateResource.json");
     }
 
     @Test
-    public void shouldReturnCorrectReportPartialWithDetails() {
-        bfActionReportData.setOffice("Leeds");
-        bfActionReportData.setDocumentName(BROUGHT_FORWARD_REPORT);
-        bfActionReportData.setReportType(BROUGHT_FORWARD_REPORT);
-        bfActionReportData.setDurationDescription("Between 2019-12-08 and 2019-12-20");
+    public void shouldReturnCorrectReportPartialWithDetailsForDateRange() {
+        BfActionReportData bfActionReportDataDateRange = new BfActionReportData();
+        bfActionReportDataDateRange.setOffice("Leeds");
+        bfActionReportDataDateRange.setDocumentName(BROUGHT_FORWARD_REPORT);
+        bfActionReportDataDateRange.setReportType(BROUGHT_FORWARD_REPORT);
+        bfActionReportDataDateRange.setListingDateFrom("2019-12-08");
+        bfActionReportDataDateRange.setListingDateTo("2019-12-20");
 
         var bfDateTypeItem = new BFDateTypeItem();
         var bFDateType = new BFDateType();
@@ -55,10 +59,49 @@ public class BfActionReportDocTest {
         List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
         bfDateTypeItems.add(bfDateTypeItem);
         bfDateTypeItems.add(bfDateTypeItem2);
-        bfActionReportData.setBfDateCollection(bfDateTypeItems);
-        var resultListingData = bfActionReportDoc.getReportDocPart(bfActionReportData);
+        bfActionReportDataDateRange.setBfDateCollection(bfDateTypeItems);
+        var resultListingData = bfActionReportDoc.getReportDocPart(bfActionReportDataDateRange);
         assertFalse(resultListingData.toString().isEmpty());
-        assertEquals(bfActionReportDocTestResource, resultListingData.toString());
+        assertEquals(bfActionReportDocTestDateRangeResource, resultListingData.toString());
+    }
+
+    @Test
+    public void shouldReturnCorrectReportPartialWithDetailsForSingleDate() {
+        BfActionReportData bfActionReportDataSingleDate = new BfActionReportData();
+        bfActionReportDataSingleDate.setOffice("Leeds");
+        bfActionReportDataSingleDate.setDocumentName(BROUGHT_FORWARD_REPORT);
+        bfActionReportDataSingleDate.setReportType(BROUGHT_FORWARD_REPORT);
+        bfActionReportDataSingleDate.setListingDateFrom(null);
+        bfActionReportDataSingleDate.setListingDateTo(null);
+        bfActionReportDataSingleDate.setListingDate("2019-06-18");
+
+        var bfDateTypeItem = new BFDateTypeItem();
+        var bFDateType = new BFDateType();
+        bFDateType.setCaseReference("1800909/2020");
+        bFDateType.setBroughtForwardAction("Application of letter to ACAS/RPO");
+        bFDateType.setBroughtForwardEnteredDate("2019-11-20");
+        bFDateType.setBroughtForwardDate("2019-06-18");
+        bFDateType.setBroughtForwardDateReason("test");
+        bfDateTypeItem.setId("7895");
+        bfDateTypeItem.setValue(bFDateType);
+
+        var bfDateTypeItem2 = new BFDateTypeItem();
+        var bFDateType2 = new BFDateType();
+        bFDateType2.setCaseReference("1800888/2020");
+        bFDateType2.setBroughtForwardAction("Interlocutory order requested");
+        bFDateType2.setBroughtForwardEnteredDate("2019-11-20");
+        bFDateType2.setBroughtForwardDate("2019-06-18");
+        bFDateType2.setBroughtForwardDateReason("test reason two");
+        bfDateTypeItem2.setId("654");
+        bfDateTypeItem2.setValue(bFDateType2);
+
+        List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
+        bfDateTypeItems.add(bfDateTypeItem);
+        bfDateTypeItems.add(bfDateTypeItem2);
+        bfActionReportDataSingleDate.setBfDateCollection(bfDateTypeItems);
+        var resultListingData = bfActionReportDoc.getReportDocPart(bfActionReportDataSingleDate);
+        assertFalse(resultListingData.toString().isEmpty());
+        assertEquals(bfActionReportDocTestSingleDateResource, resultListingData.toString());
     }
 
     private String getBfActionDocTestFileContent(String jsonFileName) throws Exception {
@@ -67,5 +110,4 @@ public class BfActionReportDocTest {
         // returns the content by excluding the opening and closing curly brackets
         return json.substring(1, (json.length() - 1));
     }
-
 }

@@ -21,9 +21,15 @@ public class BfActionReportDoc {
         }
 
         var reportData = (BfActionReportData) listingData;
+        var startDate = reportData.getListingDate();
+        reportData.setListingDate(null);
         var sb = new StringBuilder();
-        sb.append("\"Duration_Description\":\"")
-            .append(nullCheck(reportData.getDurationDescription())).append(NEW_LINE);
+        sb.append("\"Listed_date\":\"")
+            .append(nullCheck(startDate)).append(NEW_LINE);
+        sb.append("\"Listed_date_from\":\"")
+            .append(nullCheck(reportData.getListingDateFrom())).append(NEW_LINE);
+        sb.append("\"Listed_date_to\":\"")
+            .append(nullCheck(reportData.getListingDateTo())).append(NEW_LINE);
         sb.append(REPORT_OFFICE).append(nullCheck(reportData.getOffice())).append(NEW_LINE);
         sb.append("\"bf_list\":[\n");
         sb.append(addBfActionItemsList(reportData.getBfDateCollection()));
@@ -31,7 +37,7 @@ public class BfActionReportDoc {
         return sb;
     }
 
-    private static StringBuilder addBfActionItemsList(List<BFDateTypeItem> bfDateTypeItems) {
+    private StringBuilder addBfActionItemsList(List<BFDateTypeItem> bfDateTypeItems) {
         var bfActionItemsListContent = new StringBuilder();
 
         if (CollectionUtils.isEmpty(bfDateTypeItems)) {
@@ -49,7 +55,7 @@ public class BfActionReportDoc {
         return bfActionItemsListContent;
     }
 
-    private static StringBuilder getBfActionRow(BFDateTypeItem bfActionItem) {
+    private StringBuilder getBfActionRow(BFDateTypeItem bfActionItem) {
         var rowContent = new StringBuilder();
         rowContent.append("{\n\"Case_No\":\"").append(
             nullCheck(bfActionItem.getValue().getCaseReference())).append(NEW_LINE);
@@ -61,8 +67,6 @@ public class BfActionReportDoc {
             nullCheck(bfActionItem.getValue().getBroughtForwardDate())).append(NEW_LINE);
         rowContent.append("\"Comments\":\"").append(nullCheck(bfActionItem.getValue().getBroughtForwardDateReason()))
             .append("\"\n}");
-
         return rowContent;
     }
-
 }

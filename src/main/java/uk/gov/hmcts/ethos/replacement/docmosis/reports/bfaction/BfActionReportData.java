@@ -12,10 +12,6 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BfActionReportData extends ListingData {
-
     @JsonIgnore
     private String office;
-
-    @JsonIgnore
-    private String durationDescription;
 }
