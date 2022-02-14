@@ -24,7 +24,4 @@
     <suppress>
         <vulnerabilityName>CVE-2021-42306</vulnerabilityName>
     </suppress>
-    <suppress>
-        <vulnerabilityName>CVE-2021-42550</vulnerabilityName>
-    </suppress>
 </suppressions>
