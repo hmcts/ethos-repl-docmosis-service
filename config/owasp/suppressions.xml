@@ -15,28 +15,13 @@
         <vulnerabilityName>CVE-2020-23171</vulnerabilityName>
     </suppress>
     <suppress>
-        <notes>
-            <![CDATA[file name: elasticsearch-7.13.4.jar]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/org.elasticsearch/elasticsearch@.*$</packageUrl>
-        <vulnerabilityName>CVE-2021-22147</vulnerabilityName>
+        <notes><![CDATA[
+   file name: netty-tcnative-classes-2.0.48.Final.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.netty/netty\-tcnative\-classes@.*$</packageUrl>
+        <cpe>cpe:/a:netty:netty</cpe>
     </suppress>
     <suppress>
-        <vulnerabilityName>CVE-2021-40690</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <vulnerabilityName>CVE-2021-42340</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <vulnerabilityName>CVE-2021-37136</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <vulnerabilityName>CVE-2021-37137</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <vulnerabilityName>CVE-2021-22096</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <vulnerabilityName>CVE-2021-43797</vulnerabilityName>
+        <vulnerabilityName>CVE-2021-42306</vulnerabilityName>
     </suppress>
 </suppressions>
