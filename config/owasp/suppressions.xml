@@ -24,19 +24,23 @@
     <suppress>
         <vulnerabilityName>CVE-2021-40690</vulnerabilityName>
     </suppress>
+<!--    <suppress>-->
+<!--        <vulnerabilityName>CVE-2021-42340</vulnerabilityName>-->
+<!--    </suppress>-->
+<!--    <suppress>-->
+<!--        <vulnerabilityName>CVE-2021-37136</vulnerabilityName>-->
+<!--    </suppress>-->
+<!--    <suppress>-->
+<!--        <vulnerabilityName>CVE-2021-37137</vulnerabilityName>-->
+<!--    </suppress>-->
+<!--    <suppress>-->
+<!--        <vulnerabilityName>CVE-2021-22096</vulnerabilityName>-->
+<!--    </suppress>-->
+<!--    <suppress>-->
+<!--        <vulnerabilityName>CVE-2021-43797</vulnerabilityName>-->
+<!--    </suppress>-->
+
     <suppress>
-        <vulnerabilityName>CVE-2021-42340</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <vulnerabilityName>CVE-2021-37136</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <vulnerabilityName>CVE-2021-37137</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <vulnerabilityName>CVE-2021-22096</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <vulnerabilityName>CVE-2021-43797</vulnerabilityName>
+        <vulnerabilityName>CVE-2021-42306</vulnerabilityName>
     </suppress>
 </suppressions>
