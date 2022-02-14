@@ -21,9 +21,9 @@
         <packageUrl regex="true">^pkg:maven/org.elasticsearch/elasticsearch@.*$</packageUrl>
         <vulnerabilityName>CVE-2021-22147</vulnerabilityName>
     </suppress>
-    <suppress>
-        <vulnerabilityName>CVE-2021-40690</vulnerabilityName>
-    </suppress>
+<!--    <suppress>-->
+<!--        <vulnerabilityName>CVE-2021-40690</vulnerabilityName>-->
+<!--    </suppress>-->
 <!--    <suppress>-->
 <!--        <vulnerabilityName>CVE-2021-42340</vulnerabilityName>-->
 <!--    </suppress>-->
@@ -42,5 +42,8 @@
 
     <suppress>
         <vulnerabilityName>CVE-2021-42306</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <vulnerabilityName>CVE-2021-42550</vulnerabilityName>
     </suppress>
 </suppressions>
