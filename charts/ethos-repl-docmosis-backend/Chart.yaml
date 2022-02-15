@@ -8,5 +8,5 @@ maintainers:
     email: james.turnbull@justice.gov.uk
 dependencies:
   - name: java
-    version: 3.7.0
+    version: 3.6.1
     repository: https://hmctspublic.azurecr.io/helm/v1/repo/
