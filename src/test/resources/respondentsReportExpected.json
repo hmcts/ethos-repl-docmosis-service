@@ -1,0 +1,17 @@
+{
+"accessKey":"",
+"templateName":"EM-TRB-SCO-ENG-00815.docx",
+"outputName":"document.docx",
+"data":{
+"Listed_date_from":"1 January 2022",
+"Listed_date_to":"10 January 2022",
+"Report_Office":"Manchester",
+"MoreThan1Resp":"2",
+"reportDetails":[
+{"caseNumber":"110001/2022","respondentName":"Resp1","representativeName":"Rep1","representativeHasMoreThanOneRespondent":"Y"},
+{"caseNumber":"110002/2022","respondentName":"Resp2","representativeName":"N/A","representativeHasMoreThanOneRespondent":"N"}
+],
+"Report_Clerk":"Mike Jordan",
+"Today_date":"current-date"
+}
+}
