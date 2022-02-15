@@ -11,6 +11,7 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -74,14 +75,21 @@ public class ReportHelper {
         if (date == null || date.length() < 10) {
             return null;
         }
-        if (date.contains(DATE_TIME_SEPARATOR) && date.endsWith(MILLISECOND_PART)) {
-            return LocalDateTime.parse(date, OLD_DATE_TIME_PATTERN).toLocalDate().toString();
-        } else if (date.contains(DATE_TIME_SEPARATOR)) {
-            return LocalDate.parse(date.split(DATE_TIME_SEPARATOR)[0], OLD_DATE_TIME_PATTERN2).toString();
-        } else if (date.contains(SPACE)) {
-            return LocalDate.parse(date.split(SPACE)[0], OLD_DATE_TIME_PATTERN2).toString();
+
+        try {
+            if (date.contains(DATE_TIME_SEPARATOR) && date.endsWith(MILLISECOND_PART)) {
+                return LocalDateTime.parse(date, OLD_DATE_TIME_PATTERN).toLocalDate().toString();
+            } else if (date.contains(DATE_TIME_SEPARATOR)) {
+                return LocalDate.parse(date.split(DATE_TIME_SEPARATOR)[0], OLD_DATE_TIME_PATTERN2).toString();
+            } else if (date.contains(SPACE)) {
+                return LocalDate.parse(date.split(SPACE)[0], OLD_DATE_TIME_PATTERN2).toString();
+            }
+            return LocalDate.parse(date, OLD_DATE_TIME_PATTERN2).toString();
+        } catch (DateTimeException e) {
+            log.warn(String.format("Unable to parse %s to LocalDate in getFormattedLocalDate "
+                + "method of ReportHelper", date), e);
+            return null;
         }
-        return LocalDate.parse(date, OLD_DATE_TIME_PATTERN2).toString();
     }
 
     public static ListingData processClaimsAcceptedRequest(ListingDetails listingDetails,
