@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_SOURCE_LOCAL_REPORT;
@@ -224,7 +225,8 @@ public class ReportDocHelper {
         var sb = new StringBuilder();
         Map<Boolean, List<AdhocReportTypeItem>> unsortedMap = listingData.getLocalReportsDetail().stream()
                 .collect(Collectors.partitioningBy(localReportDetail ->
-                        localReportDetail.getValue().getMultipleRef() != null));
+                        !isNullOrEmpty(localReportDetail.getValue().getMultipleRef())
+                        && !" ".equals(localReportDetail.getValue().getMultipleRef())));
         sb.append("\"Local_Report_By_Type\":[\n");
         Iterator<Map.Entry<Boolean, List<AdhocReportTypeItem>>> entries =
                 new TreeMap<>(unsortedMap).entrySet().iterator();
