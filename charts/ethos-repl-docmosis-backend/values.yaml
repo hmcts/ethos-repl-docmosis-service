@@ -10,6 +10,7 @@ java:
         - tornado-access-key
         - ethos-repl-service-s2s-secret
         - repl-docmosis-backend-POSTGRES-PASS
+        - repl-docmosis-backend-POSTGRES-PASS-V11
     ethos-shared:
       resourceGroup: ethos
       secrets:
