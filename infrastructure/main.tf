@@ -171,20 +171,20 @@ resource "azurerm_key_vault_secret" "POSTGRES-PASS-V11" {
   key_vault_id = module.key-vault.key_vault_id
 }
 
-resource "azurerm_key_vault_secret" "POSTGRES_HOST_V11" {
-  name         = "${var.component}-POSTGRES-HOST_V11"
+resource "azurerm_key_vault_secret" "POSTGRES_HOST-V11" {
+  name         = "${var.component}-POSTGRES-HOST-V11"
   value        = module.db-v11.host_name
   key_vault_id = module.key-vault.key_vault_id
 }
 
-resource "azurerm_key_vault_secret" "POSTGRES_PORT_V11" {
+resource "azurerm_key_vault_secret" "POSTGRES_PORT-V11" {
   name         = "${var.component}-POSTGRES-PORT-V11"
   value        = module.db-v11.postgresql_listen_port
   key_vault_id = module.key-vault.key_vault_id
 }
 
-resource "azurerm_key_vault_secret" "POSTGRES_DATABASE_V11" {
-  name         = "${var.component}-POSTGRES-DATABASE_V11"
+resource "azurerm_key_vault_secret" "POSTGRES_DATABASE-V11" {
+  name         = "${var.component}-POSTGRES-DATABASE-V11"
   value        = module.db-v11.postgresql_database
   key_vault_id = module.key-vault.key_vault_id
 }
