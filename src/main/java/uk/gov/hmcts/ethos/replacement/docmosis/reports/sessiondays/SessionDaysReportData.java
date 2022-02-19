@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 
 @Getter
-public class SessionDaysReportData {
+public class SessionDaysReportData extends ListingData {
 
     @JsonIgnore
     private final SessionDaysReportSummary reportSummary;

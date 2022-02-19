@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,7 +9,7 @@ import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.HearingSession;
+import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 
 public class SessionDaysReport {
 
@@ -55,21 +54,12 @@ public class SessionDaysReport {
 
         List<CaseData> cases = new ArrayList<>();
         for(CaseData c : cases) {
-            if (checkIfValidCase(c)) {
+           // if (checkIfValidCase(c)) {
 
-            }
+            //}
         }
     }
 
-    private boolean checkIfValidCase(CaseData caseData) {
-        if(isCaseHeard(caseData)) {
-
-        }
-    }
-
-    private boolean isCaseHeard(CaseData c) {
-
-    }
 
     private List<HearingTypeItem> casesHeard(CaseData caseData) {
         var hearingSessions = getHearings(caseData);
@@ -92,6 +82,6 @@ public class SessionDaysReport {
     }
 
     private List<SessionDaysReportDetail> setReportDetail(List<SessionDaysSubmitEvent> submitEvents) {
-
+       return new ArrayList<>();
     }
 }
