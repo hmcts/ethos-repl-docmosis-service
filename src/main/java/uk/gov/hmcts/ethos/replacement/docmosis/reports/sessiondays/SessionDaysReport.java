@@ -1,11 +1,15 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays;
 
+import com.microsoft.azure.servicebus.primitives.StringUtil;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
@@ -194,5 +198,46 @@ public class SessionDaysReport {
         } else {
             reportDetail.setHearingTelConf("");
         }
+    }
+
+    private String calculateDuration(DateListedTypeItem c) {
+        var dateListedType = c.getValue();
+        long duration = 0;
+        long breakDuration = 0;
+
+        var hearingTimingBreak = dateListedType.getHearingTimingBreak();
+        var hearingTimingResume = dateListedType.getHearingTimingResume();
+        //If there was a break and resumption during the hearing
+        if(!StringUtil.isNullOrEmpty(hearingTimingBreak)
+                && !StringUtil.isNullOrEmpty(hearingTimingResume)) {
+            var hearingBreak = LocalDateTime.parse(hearingTimingBreak, OLD_DATE_TIME_PATTERN);
+            var hearingResume = LocalDateTime.parse(hearingTimingResume, OLD_DATE_TIME_PATTERN);
+            breakDuration = ChronoUnit.MINUTES.between(hearingBreak, hearingResume);
+        }
+
+        var hearingTimingStart = dateListedType.getHearingTimingStart();
+        var hearingTimingFinish = dateListedType.getHearingTimingFinish();
+        if(!StringUtil.isNullOrEmpty(hearingTimingStart)
+                && !StringUtil.isNullOrEmpty(hearingTimingFinish)) {
+            var hearingStartTime = LocalDateTime.parse(hearingTimingStart, OLD_DATE_TIME_PATTERN);
+            var hearingEndTime = LocalDateTime.parse(hearingTimingFinish, OLD_DATE_TIME_PATTERN);
+            long startToEndDiffInMinutes = ChronoUnit.MINUTES.between(hearingStartTime, hearingEndTime);
+            duration = startToEndDiffInMinutes - breakDuration;
+        }
+
+        return String.valueOf(duration);
+    }
+
+    private String getSessionDurationType(String hearingDuration) {
+        String sessionType = NONE;
+        var duration = Long.parseLong(hearingDuration);
+        if(duration > 0 && duration < 60) {
+            sessionType = ONE_HOUR;
+        } else if (duration >= 60 && duration <= 180) {
+            sessionType = HALF_DAY;
+        } else if (duration > 180) {
+            sessionType = FULL_DAY;
+        }
+        return sessionType;
     }
 }
