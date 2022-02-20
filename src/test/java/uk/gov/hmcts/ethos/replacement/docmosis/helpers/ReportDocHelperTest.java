@@ -1,13 +1,13 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.helper.Constants;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
@@ -30,7 +30,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
@@ -39,6 +38,10 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANG
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportDetail;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportSummary;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportDetail;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportSummary;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportSummary2;
 
 public class ReportDocHelperTest {
 
@@ -465,6 +468,18 @@ public class ReportDocHelperTest {
         assertEquals(expectedJson, actualJson);
     }
 
+    @Test
+    public void buildSessionDaysReport() throws URISyntaxException, IOException {
+        var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+                .getResource("sessionDaysExpected.json")).toURI())));
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        expectedJson = expectedJson.replace("current-date", today);
+        var reportData = getSessionDaysReportData();
+        var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "",
+                "EM-TRB-SCO-ENG-00817", userDetails).toString();
+        assertEquals(expectedJson, actualJson);
+    }
+
     private CasesAwaitingJudgmentReportData getCasesAwaitingJudgementReportData() {
         var reportSummary = new ReportSummary("Newcastle");
         reportSummary.getPositionTypes()
@@ -595,6 +610,46 @@ public class ReportDocHelperTest {
         reportDetail2.setRepresentativeHasMoreThanOneRespondent("N");
         reportDetail2.setRepresentativeName("N/A");
         reportData.addReportDetail(Arrays.asList(reportDetail1, reportDetail2));
+        return reportData;
+    }
+
+    private SessionDaysReportData getSessionDaysReportData() {
+        var reportSummary = new SessionDaysReportSummary("Manchester");
+        reportSummary.setFtSessionDaysTotal("1");
+        reportSummary.setPtSessionDaysTotal("1");
+        reportSummary.setOtherSessionDaysTotal("1");
+        reportSummary.setSessionDaysTotal("3");
+        reportSummary.setPtSessionDaysPerCent("33");
+
+        var reportData = new SessionDaysReportData(reportSummary);
+        reportData.setReportType(SESSION_DAYS_REPORT);
+        reportData.setDocumentName("TestDocument");
+        reportData.setHearingDateType(Constants.RANGE_HEARING_DATE_TYPE);
+        reportData.setListingDateFrom("2022-01-01");
+        reportData.setListingDateTo("2022-01-10");
+
+        var summary2 = new SessionDaysReportSummary2();
+
+        summary2.setDate("20-1-2022");
+        summary2.setFtSessionDays("1");
+        summary2.setPtSessionDays("1");
+        summary2.setOtherSessionDays("1");
+        summary2.setSessionDaysTotalDetail("3");
+        reportData.addReportSummary2List(Collections.singletonList(summary2));
+
+        var reportDetail1 = new SessionDaysReportDetail();
+        reportDetail1.setSessionType("Full Day");
+        reportDetail1.setHearingTelConf("Y");
+        reportDetail1.setHearingSitAlone("Y");
+        reportDetail1.setJudgeType("Salaried");
+        reportDetail1.setHearingDuration("200");
+        reportDetail1.setHearingJudge("Judge X");
+        reportDetail1.setHearingType("hearing type");
+        reportDetail1.setHearingDate("20-1-2022");
+        reportDetail1.setHearingClerk("Clerk X");
+        reportDetail1.setHearingNumber("1");
+        reportDetail1.setCaseReference("1111/2022");
+        reportData.addReportDetail(Collections.singletonList(reportDetail1));
         return reportData;
     }
 
