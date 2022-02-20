@@ -6,14 +6,23 @@ import java.util.List;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportSubmitEvent;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus;
+import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.FEE_PAID;
+import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.SALARIED;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportDataSource;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReport.FULL_DAY;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReport.NONE;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
 
 public class SessionDaysReportTest {
@@ -27,6 +36,7 @@ public class SessionDaysReportTest {
     static final String DATE_FROM = BASE_DATE.minusDays(1).format(OLD_DATE_TIME_PATTERN);
     static final String DATE_TO = BASE_DATE.plusDays(15).format(OLD_DATE_TIME_PATTERN);
 
+    @BeforeEach
     @Before
     public void setup() {
         submitEvents.clear();
@@ -34,7 +44,16 @@ public class SessionDaysReportTest {
         reportDataSource = mock(SessionDaysReportDataSource.class);
         jpaJudgeService = mock(JpaJudgeService.class);
         when(reportDataSource.getData(MANCHESTER_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
+        when(jpaJudgeService.getJudge("Manchester", "ftcJudge")).thenReturn(getJudge("ftcJudge", SALARIED));
+        when(jpaJudgeService.getJudge("Manchester", "ptcJudge")).thenReturn(getJudge("ptcJudge", FEE_PAID));
         sessionDaysReport = new SessionDaysReport(reportDataSource,jpaJudgeService);
+    }
+
+    private Judge getJudge(String name, JudgeEmploymentStatus status) {
+        Judge judge = new Judge();
+        judge.setEmploymentStatus(status);
+        judge.setName(name);
+        return judge;
     }
 
     @Test
@@ -53,63 +72,81 @@ public class SessionDaysReportTest {
             assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
             assertEquals("0", reportData.getReportSummary().getOtherSessionDaysTotal());
             assertEquals("0", reportData.getReportSummary().getSessionDaysTotal());
-            assertEquals("0.0", reportData.getReportSummary().getPtSessionDaysPerCent());
+            assertEquals("0", reportData.getReportSummary().getPtSessionDaysPerCent());
             assertEquals(0, reportData.getReportSummary2List().size());
             assertEquals(0, reportData.getReportDetails().size());
     }
 
-    @Test
-    public void shouldNotShowCaseWithOneRespondent() {
-        // Given a case has 1 respondent
+    @ParameterizedTest
+    @CsvSource({HEARING_STATUS_LISTED, HEARING_STATUS_SETTLED, HEARING_STATUS_WITHDRAWN, HEARING_STATUS_POSTPONED})
+    public void shouldNotShowCaseWithInValidHearingStatus(String hearingStatus) {
+        // Given a case has invalid hearing status
         // and report data is requested
         // the case should not be in the report data
+        caseDataBuilder.withHearingData(hearingStatus);
+        submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
 
-        caseDataBuilder.withOneRespondent();
-        submitEvents.add(caseDataBuilder
-                .buildAsSubmitEvent());
+        var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID,DATE_FROM, DATE_TO);
+        assertCommonValues(reportData);
+        assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getOtherSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getPtSessionDaysPerCent());
+        assertEquals(0, reportData.getReportSummary2List().size());
+        assertEquals(0, reportData.getReportDetails().size());
+
+    }
+
+    @Test
+    public void shouldShowCaseWithValidHearingStatus() {
+        // Given a case has valid hearing status i.e "Heard"
+        // and report data is requested
+        // the case should be in the report data
+
+        caseDataBuilder.withHearingData(HEARING_STATUS_HEARD);
+        submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
 
         var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID,DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
         assertEquals("1", reportData.getReportSummary().getFtSessionDaysTotal());
         assertEquals("1", reportData.getReportSummary().getPtSessionDaysTotal());
         assertEquals("1", reportData.getReportSummary().getOtherSessionDaysTotal());
-        assertEquals("1", reportData.getReportSummary().getSessionDaysTotal());
+        assertEquals("3", reportData.getReportSummary().getSessionDaysTotal());
         assertEquals("33", reportData.getReportSummary().getPtSessionDaysPerCent());
-        //assertEquals(0, reportData.getReportSummary2List().size());
-        //assertEquals(0, reportData.getReportDetails().size());
+        assertEquals(1, reportData.getReportSummary2List().size());
+        assertEquals(3, reportData.getReportDetails().size());
+        assertReportSummary2Values(reportData);
     }
 
-    @Test
-    public void shouldShowCaseWithMoreThanOneRespondent() {
-        // Given a case has more than 1 respondents
-        // and report data is requested
-        // the cases should be in the report data
+    private void assertReportSummary2Values(SessionDaysReportData reportData) {
+        var reportSummary2 = reportData.getReportSummary2List().get(0);
+        assertEquals("1", reportSummary2.getFtSessionDays());
+        assertEquals("1", reportSummary2.getPtSessionDays());
+        assertEquals("1", reportSummary2.getOtherSessionDays());
+        assertEquals("3", reportSummary2.getSessionDaysTotalDetail());
+        assertEquals("2022-01-20", reportSummary2.getDate());
+    }
 
-        caseDataBuilder.withMoreThanOneRespondents();
+    @ParameterizedTest
+    @CsvSource({"ftcJudge, FTC, 0 ", "ptcJudge, PTC, 1 ", "* Not Allocated,*, 2"})
+    public void assertReportDetailsValues(String judge, String judgeType, int index) {
+        caseDataBuilder.withHearingData(HEARING_STATUS_HEARD);
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
-
-        var reportData = respondentsReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID);
+        var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID,DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
-        assertEquals("1", reportData.getReportSummary().getTotalCasesWithMoreThanOneRespondent());
-        assertFalse(reportData.getReportDetails().isEmpty());
-    }
+        var reportDetail = reportData.getReportDetails().get(index);
+        assertEquals("111", reportDetail.getCaseReference());
+        assertEquals("Clerk A", reportDetail.getHearingClerk());
+        assertEquals("2022-01-20", reportDetail.getHearingDate());
+        assertEquals("1", reportDetail.getHearingNumber());
+        assertEquals("Y", reportDetail.getHearingSitAlone());
+        assertEquals("Y", reportDetail.getHearingTelConf());
+        assertEquals(FULL_DAY, reportDetail.getSessionType());
+        assertEquals(judge, reportDetail.getHearingJudge());
+        assertEquals(judgeType, reportDetail.getJudgeType());
 
-    @Test
-    public void shouldShowCaseDetailsWithMoreThanOneRespondentRepresented() {
-        // Given a case has more than 1 respondents and represented
-        // and report data is requested
-        // the cases should be in the report data details
 
-        caseDataBuilder.withMoreThan1RespondentsRepresented();
-        submitEvents.add(caseDataBuilder
-                .buildAsSubmitEvent());
-        var reportData = respondentsReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID);
-        assertCommonValues(reportData);
-        assertEquals("111", reportData.getReportDetails().get(0).getCaseNumber());
-        assertEquals("Resp1", reportData.getReportDetails().get(0).getRespondentName());
-        assertEquals("Rep1", reportData.getReportDetails().get(0).getRepresentativeName());
-        assertEquals("Y", reportData.getReportDetails()
-                .get(0).getRepresentativeHasMoreThanOneRespondent());
     }
 
     private void assertCommonValues(SessionDaysReportData reportData) {

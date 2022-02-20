@@ -1,12 +1,16 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
 import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 
@@ -37,24 +41,36 @@ public class SessionDaysCaseDataBuilder {
         return item;
     }
 
-    public void withOneRespondent() {
-        caseData.setRespondentCollection(Collections.singletonList(getRespondent("Resp")));
+    public void withHearingData(String hearingStatus) {
+        List<HearingTypeItem> hearings = new ArrayList<>();
+        hearings.add(addHearingSession(hearingStatus, "ftcJudge"));
+        hearings.add(addHearingSession(hearingStatus, "ptcJudge"));
+        hearings.add(addHearingSession(hearingStatus, ""));
+        caseData.setHearingCollection(hearings);
     }
 
-    public void withMoreThanOneRespondents() {
-        RespondentSumTypeItem item1 = getRespondent("Resp1");
-        RespondentSumTypeItem item2 = getRespondent("Resp2");
-        caseData.setRespondentCollection(Arrays.asList(item1, item2));
-    }
-
-    public void withMoreThan1RespondentsRepresented() {
-        RespondentSumTypeItem item1 = getRespondent("Resp1");
-        RespondentSumTypeItem item2 = getRespondent("Resp2");
-        RepresentedTypeRItem rItem1 = getRepresentative("Resp1", "Rep1");
-        RepresentedTypeRItem rItem2 = getRepresentative("Resp2", "Rep1");
-
-        caseData.setRepCollection(Arrays.asList(rItem1, rItem2));
-        caseData.setRespondentCollection(Arrays.asList(item1, item2));
+    private HearingTypeItem addHearingSession(String hearingStatus, String judge) {
+        HearingTypeItem item = new HearingTypeItem();
+        item.setId(UUID.randomUUID().toString());
+        HearingType type = new HearingType();
+        type.setHearingSitAlone("Sit Alone");
+        type.setHearingType(HEARING_TYPE_JUDICIAL_MEDIATION_TCC);
+        type.setJudge(judge);
+        type.setHearingNumber("1");
+        item.setValue(type);
+        DateListedTypeItem dItem = new DateListedTypeItem();
+        dItem.setId(UUID.randomUUID().toString());
+        DateListedType dType = new DateListedType();
+        dType.setHearingStatus(hearingStatus);
+        dType.setHearingClerk("Clerk A");
+        dType.setListedDate("2022-01-20");
+        dType.setHearingTimingStart("2022-01-20T11:00:00.000");
+        dType.setHearingTimingFinish("2022-01-20T17:00:00.000");
+        dType.setHearingTimingBreak("2022-01-20T13:00:00.000");
+        dType.setHearingTimingResume("2022-01-20T13:30:00.000");
+        dItem.setValue(dType);
+        item.getValue().setHearingDateCollection(Collections.singletonList(dItem));
+        return item;
     }
 
     public SessionDaysSubmitEvent buildAsSubmitEvent() {
