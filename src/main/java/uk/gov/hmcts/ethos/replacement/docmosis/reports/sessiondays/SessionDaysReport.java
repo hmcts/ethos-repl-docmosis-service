@@ -9,7 +9,8 @@ import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
+import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
@@ -20,12 +21,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
-
 public class SessionDaysReport {
 
     private final SessionDaysReportDataSource reportDataSource;
     private final JpaJudgeService jpaJudgeService;
+    private static final String ONE_HOUR = "One Hour";
+    private static final String HALF_DAY = "Half Day";
+    private static final String FULL_DAY = "Full Day";
+    private static final String NONE = "None";
 
     public SessionDaysReport(SessionDaysReportDataSource reportDataSource, JpaJudgeService jpaJudgeService) {
         this.reportDataSource = reportDataSource;
@@ -181,7 +184,7 @@ public class SessionDaysReport {
                         reportDetail.setCaseReference(caseData.getEthosCaseReference());
                         reportDetail.setHearingNumber(h.getValue().getHearingNumber());
                         reportDetail.setHearingType(h.getValue().getHearingType());
-                        reportDetail.setHearingSitAlone(Strings.isNullOrEmpty(h.getValue().getHearingSitAlone()) ? "" : "Y");
+                        reportDetail.setHearingSitAlone("Sit Alone".equals(h.getValue().getHearingSitAlone()) ? "Y" : "");
                         setTelCon(h, reportDetail);
 
                         reportDetail.setHearingClerk(d.getValue().getHearingClerk());
@@ -192,8 +195,7 @@ public class SessionDaysReport {
     }
 
     private void setTelCon(HearingTypeItem h, SessionDaysReportDetail reportDetail) {
-        if (CollectionUtils.isNotEmpty(h.getValue().getHearingFormat())
-                && h.getValue().getHearingFormat().contains("Telephone")) {
+        if(HEARING_TYPE_JUDICIAL_MEDIATION_TCC.equals(h.getValue().getHearingType())) {
             reportDetail.setHearingTelConf("Y");
         } else {
             reportDetail.setHearingTelConf("");
@@ -240,4 +242,5 @@ public class SessionDaysReport {
         }
         return sessionType;
     }
+
 }
