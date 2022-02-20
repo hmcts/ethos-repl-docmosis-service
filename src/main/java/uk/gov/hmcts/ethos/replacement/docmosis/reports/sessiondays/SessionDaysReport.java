@@ -1,22 +1,31 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.elasticsearch.common.Strings;
+import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
+import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
+import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.apache.commons.collections4.CollectionUtils;
-import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
+import java.util.Optional;
+
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
-import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 
 public class SessionDaysReport {
 
     private final SessionDaysReportDataSource reportDataSource;
+    private final JpaJudgeService jpaJudgeService;
 
-    public SessionDaysReport(SessionDaysReportDataSource reportDataSource) {
+    public SessionDaysReport(SessionDaysReportDataSource reportDataSource, JpaJudgeService jpaJudgeService) {
         this.reportDataSource = reportDataSource;
+        this.jpaJudgeService = jpaJudgeService;
     }
 
     public SessionDaysReportData generateReport(String caseTypeId, String dateFrom, String dateTo) {
@@ -25,7 +34,7 @@ public class SessionDaysReport {
         var reportData = initReport(caseTypeId);
 
         if (CollectionUtils.isNotEmpty(submitEvents)) {
-            executeReport(reportData, submitEvents);
+            executeReport(submitEvents, reportData);
         }
         return reportData;
     }
@@ -33,8 +42,12 @@ public class SessionDaysReport {
     private SessionDaysReportData initReport(String caseTypeId) {
         var office = UtilHelper.getListingCaseTypeId(caseTypeId);
         var reportSummary = new SessionDaysReportSummary(office);
-        var reportSummary2 = new SessionDaysReportSummary2();
-        return new SessionDaysReportData(reportSummary, reportSummary2);
+        reportSummary.setFtSessionDaysTotal("0");
+        reportSummary.setPtSessionDaysTotal("0");
+        reportSummary.setOtherSessionDaysTotal("0");
+        reportSummary.setSessionDaysTotal("0");
+        reportSummary.setPtSessionDaysPerCent("0.0");
+        return new SessionDaysReportData(reportSummary);
     }
 
     private List<SessionDaysSubmitEvent> getCases(
@@ -43,34 +56,93 @@ public class SessionDaysReport {
                 caseTypeId), listingDateFrom, listingDateTo);
     }
 
-    private void executeReport(SessionDaysReportData sessionDaysReportData,
-                               List<SessionDaysSubmitEvent> submitEvents) {
-        setReportSummary(sessionDaysReportData);
-        setReportSummary2(sessionDaysReportData);
-        sessionDaysReportData.addReportDetail(setReportDetail(submitEvents));
+    private void executeReport(List<SessionDaysSubmitEvent> submitEvents, SessionDaysReportData sessionDaysReportData) {
+        setReportData(submitEvents, sessionDaysReportData);
     }
 
-    private void setReportSummary(SessionDaysReportData sessionDaysReportData) {
+    private void setReportData(List<SessionDaysSubmitEvent> submitEvents, SessionDaysReportData reportData) {
+        List<SessionDaysReportSummary2> sessionDaysReportSummary2List = new ArrayList<>();
+        List<SessionDaysReportDetail> sessionDaysReportDetailList = new ArrayList<>();
+        for(SessionDaysSubmitEvent submitEvent : submitEvents) {
+            var c = submitEvent.getCaseData();
+            setCaseReportSummaries(c, reportData.getReportSummary(), sessionDaysReportSummary2List);
+            setReportDetail(c, sessionDaysReportDetailList);
+        }
+        int ft = Integer.parseInt(reportData.getReportSummary().getFtSessionDaysTotal());
+        int pt = Integer.parseInt(reportData.getReportSummary().getPtSessionDaysTotal());
+        int ot = Integer.parseInt(reportData.getReportSummary().getOtherSessionDaysTotal());
+        int total = ft + pt + ot;
+        int ptPercent = (pt / total) * 100;
+        reportData.getReportSummary().setSessionDaysTotal(String.valueOf(total));
+        reportData.getReportSummary().setPtSessionDaysPerCent(String.valueOf(ptPercent));
+        reportData.addReportSummary2List(sessionDaysReportSummary2List);
+        reportData.addReportDetail(sessionDaysReportDetailList);
+    }
 
-        List<CaseData> cases = new ArrayList<>();
-        for(CaseData c : cases) {
-           // if (checkIfValidCase(c)) {
+    private SessionDaysReportSummary2 getReportSummary2Item(DateListedType d, List<SessionDaysReportSummary2> sessionDaysReportSummary2List) {
+        Optional<SessionDaysReportSummary2> item = sessionDaysReportSummary2List.stream().filter(i -> !Strings.isNullOrEmpty(i.getDate())
+                && i.getDate().equals(d.getListedDate())).findFirst();
+        if (item.isPresent()) {
+            return item.get();
+        }
+        SessionDaysReportSummary2 summary2 = new SessionDaysReportSummary2();
+        summary2.setDate(d.getListedDate());
+        sessionDaysReportSummary2List.add(summary2);
+        return summary2;
+    }
 
-            //}
+        private void setCaseReportSummaries(SessionDaysCaseData caseData, SessionDaysReportSummary reportSummary, List<SessionDaysReportSummary2> sessionDaysReportSummary2List) {
+
+        int ft = 0, pt = 0, ot = 0, ft2 = 0, pt2 = 0, ot2 = 0;
+        for (HearingTypeItem h : getHearings(caseData)) {
+            var dates = h.getValue().getHearingDateCollection();
+            if (CollectionUtils.isNotEmpty(dates)) {
+                for (DateListedTypeItem d : dates) {
+                    if (isHearingStatusValid(d)) {
+                        String judgeStatus = getJudgeStatus(h.getValue().getJudge());
+                        SessionDaysReportSummary2 reportSummary2 = getReportSummary2Item(d.getValue(), sessionDaysReportSummary2List);
+                        switch (judgeStatus) {
+                            case "SALARIED":
+                                 ft = Integer.parseInt(reportSummary.getFtSessionDaysTotal()) + 1;
+                                reportSummary.setFtSessionDaysTotal(String.valueOf(ft));
+                                 ft2 = Integer.parseInt(reportSummary2.getFtSessionDays()) + 1;
+                                reportSummary2.setFtSessionDays(String.valueOf(ft2));
+                                break;
+                            case "FEES_PAID":
+                                 pt = Integer.parseInt(reportSummary.getPtSessionDaysTotal()) + 1;
+                                reportSummary.setPtSessionDaysTotal(String.valueOf(pt));
+                                 pt2 = Integer.parseInt(reportSummary2.getPtSessionDays()) + 1;
+                                reportSummary2.setPtSessionDays(String.valueOf(pt2));
+                                break;
+                            case "":
+                                 ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
+                                reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
+                                 ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
+                                reportSummary2.setOtherSessionDays(String.valueOf(ot2));
+                                break;
+                            default:
+                                break;
+                        }
+                        int total = ft2 + pt2 + ot2;
+                        reportSummary2.setSessionDaysTotalDetail(String.valueOf(total));
+                    }
+                }
+            }
         }
     }
 
-
-    private List<HearingTypeItem> casesHeard(CaseData caseData) {
-        var hearingSessions = getHearings(caseData);
-        return new ArrayList<>();
-        //return hearingSessions.stream()
-                //.filter(h -> HEARING_STATUS_HEARD.equals(h.getDateListedType().getHearingStatus()))
-                //.collect(Collectors.toList());
-
+    private boolean isHearingStatusValid (DateListedTypeItem d) {
+        return HEARING_STATUS_HEARD.equals(d.getValue().getHearingStatus());
+    }
+    private String getJudgeStatus(String judge) {
+      Judge j = jpaJudgeService.getJudge(judge);
+      if (j != null) {
+          return j.getEmploymentStatus().name();
+      }
+      return "";
     }
 
-    private List<HearingTypeItem> getHearings(CaseData caseData) {
+    private List<HearingTypeItem> getHearings(SessionDaysCaseData caseData) {
         var hearings = caseData.getHearingCollection();
         if (hearings == null) {
             return Collections.emptyList();
@@ -78,11 +150,49 @@ public class SessionDaysReport {
         return hearings;
     }
 
-    private void setReportSummary2(SessionDaysReportData sessionDaysReportData) {
+    private void setReportDetail(SessionDaysCaseData caseData, List<SessionDaysReportDetail> reportDetailList) {
+        for (HearingTypeItem h : getHearings(caseData)) {
+            var dates = h.getValue().getHearingDateCollection();
+            if (CollectionUtils.isNotEmpty(dates)) {
+                for (DateListedTypeItem d : dates) {
+                    if (isHearingStatusValid(d)) {
+                        SessionDaysReportDetail reportDetail = new SessionDaysReportDetail();
+                        reportDetail.setHearingDate(d.getValue().getListedDate());
+                        reportDetail.setHearingJudge(Strings.isNullOrEmpty(h.getValue().getJudge()) ? "* Not Allocated" : h.getValue().getJudge());
+                        String judgeStatus = getJudgeStatus(h.getValue().getJudge());
+                        switch (judgeStatus) {
+                            case "SALARIED":
+                             reportDetail.setJudgeType("FTC");
+                                break;
+                            case "FEES_PAID":
+                                reportDetail.setJudgeType("PTC");
+                                break;
+                            case "":
+                                reportDetail.setJudgeType("*");
+                                break;
+                            default:
+                                break;
+                        }
 
+                        reportDetail.setCaseReference(caseData.getEthosCaseReference());
+                        reportDetail.setHearingNumber(h.getValue().getHearingNumber());
+                        reportDetail.setHearingType(h.getValue().getHearingType());
+                        reportDetail.setHearingSitAlone(Strings.isNullOrEmpty(h.getValue().getHearingSitAlone()) ? "" : "Y");
+                        setTelCon(h, reportDetail);
+
+                        reportDetail.setHearingClerk(d.getValue().getHearingClerk());
+                    }
+                }
+            }
+        }
     }
 
-    private List<SessionDaysReportDetail> setReportDetail(List<SessionDaysSubmitEvent> submitEvents) {
-       return new ArrayList<>();
+    private void setTelCon(HearingTypeItem h, SessionDaysReportDetail reportDetail) {
+        if (CollectionUtils.isNotEmpty(h.getValue().getHearingFormat())
+                && h.getValue().getHearingFormat().contains("Telephone")) {
+            reportDetail.setHearingTelConf("Y");
+        } else {
+            reportDetail.setHearingTelConf("");
+        }
     }
 }

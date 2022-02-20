@@ -12,17 +12,23 @@ public class SessionDaysReportData extends ListingData {
     @JsonIgnore
     private final SessionDaysReportSummary reportSummary;
     @JsonIgnore
-    private final SessionDaysReportSummary2 reportSummary2;
+    private final List<SessionDaysReportSummary2> reportSummary2List = new ArrayList<>();
     @JsonIgnore
     private final List<SessionDaysReportDetail> reportDetails = new ArrayList<>();
 
-    public SessionDaysReportData(SessionDaysReportSummary reportSummary, SessionDaysReportSummary2 reportSummary2) {
+    public SessionDaysReportData(SessionDaysReportSummary reportSummary) {
         this.reportSummary = reportSummary;
-        this.reportSummary2 = reportSummary2;
     }
 
     public SessionDaysReportSummary getReportSummary() {
         return reportSummary;
+    }
+
+    public void addReportSummary2List(List<SessionDaysReportSummary2> reportSummary2List) {
+        this.reportSummary2List.addAll(reportSummary2List);
+    }
+    public List<SessionDaysReportSummary2> getReportSummary2List() {
+        return reportSummary2List;
     }
 
     public void addReportDetail(List<SessionDaysReportDetail> reportDetails) {
