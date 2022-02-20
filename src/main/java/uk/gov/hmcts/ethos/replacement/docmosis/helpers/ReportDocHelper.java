@@ -667,8 +667,17 @@ public class ReportDocHelper {
 
         var sb = new StringBuilder();
         sb.append(REPORT_OFFICE).append(reportData.getReportSummary().getOffice()).append(NEW_LINE);
-       // sb.append("\"MoreThan1Resp\":\"").append(
-         //       nullCheck(reportData.getReportSummary().getTotalCasesWithMoreThanOneRespondent())).append(NEW_LINE);
+        sb.append("\"ftcSessionDays\":\"").append(
+               nullCheck(reportData.getReportSummary().getFtSessionDaysTotal())).append(NEW_LINE);
+        sb.append("\"ptcSessionDays\":\"").append(
+                nullCheck(reportData.getReportSummary().getPtSessionDaysTotal())).append(NEW_LINE);
+        sb.append("\"otherSessionDays\":\"").append(
+                nullCheck(reportData.getReportSummary().getOtherSessionDaysTotal())).append(NEW_LINE);
+        sb.append("\"totalSessionDays\":\"").append(
+                nullCheck(reportData.getReportSummary().getSessionDaysTotal())).append(NEW_LINE);
+        sb.append("\"percentPtcSessionDays\":\"").append(
+                nullCheck(reportData.getReportSummary().getPtSessionDaysPerCent())).append(NEW_LINE);
+        addJsonCollection("reportSummary2", reportData.getReportSummary2List().iterator(), sb);
         addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
         return sb;
     }

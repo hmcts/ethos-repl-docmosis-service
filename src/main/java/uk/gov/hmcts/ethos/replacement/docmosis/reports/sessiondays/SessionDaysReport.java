@@ -9,8 +9,6 @@ import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
-import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
@@ -20,6 +18,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 
 public class SessionDaysReport {
 
@@ -180,13 +182,14 @@ public class SessionDaysReport {
                             default:
                                 break;
                         }
-
                         reportDetail.setCaseReference(caseData.getEthosCaseReference());
                         reportDetail.setHearingNumber(h.getValue().getHearingNumber());
                         reportDetail.setHearingType(h.getValue().getHearingType());
                         reportDetail.setHearingSitAlone("Sit Alone".equals(h.getValue().getHearingSitAlone()) ? "Y" : "");
                         setTelCon(h, reportDetail);
-
+                        String duration = calculateDuration(d);
+                        reportDetail.setHearingDuration(duration);
+                        reportDetail.setSessionType(getSessionType(duration));
                         reportDetail.setHearingClerk(d.getValue().getHearingClerk());
                     }
                 }
@@ -230,7 +233,7 @@ public class SessionDaysReport {
         return String.valueOf(duration);
     }
 
-    private String getSessionDurationType(String hearingDuration) {
+    private String getSessionType(String hearingDuration) {
         String sessionType = NONE;
         var duration = Long.parseLong(hearingDuration);
         if(duration > 0 && duration < 60) {
