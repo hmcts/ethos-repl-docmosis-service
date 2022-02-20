@@ -63,9 +63,10 @@ public class SessionDaysReport {
 
     private List<HearingTypeItem> casesHeard(CaseData caseData) {
         var hearingSessions = getHearings(caseData);
-        return hearingSessions.stream()
-                .filter(h -> HEARING_STATUS_HEARD.equals(h.getDateListedType().getHearingStatus()))
-                .collect(Collectors.toList());
+        return new ArrayList<>();
+        //return hearingSessions.stream()
+                //.filter(h -> HEARING_STATUS_HEARD.equals(h.getDateListedType().getHearingStatus()))
+                //.collect(Collectors.toList());
 
     }
 
