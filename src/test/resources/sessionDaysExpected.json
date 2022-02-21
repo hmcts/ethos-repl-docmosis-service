@@ -18,6 +18,6 @@
 {"hearingDate":"20-1-2022","hearingJudge":"Judge X","judgeType":"Salaried","caseReference":"1111/2022","hearingNumber":"1","hearingType":"hearing type","hearingSitAlone":"Y","hearingTelConf":"Y","hearingDuration":"200","sessionType":"Full Day","hearingClerk":"Clerk X"}
 ],
 "Report_Clerk":"Mike Jordan",
-"Today_date":"20 February 2022"
+"Today_date":"current-date"
 }
 }

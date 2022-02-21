@@ -181,10 +181,10 @@ public class SessionDaysReport {
         for (HearingTypeItem h : getHearings(caseData)) {
             var dates = h.getValue().getHearingDateCollection();
             if (CollectionUtils.isNotEmpty(dates)) {
-                for (DateListedTypeItem d : dates) {
-                    if (isHearingStatusValid(d)) {
+                for (DateListedTypeItem dateListedTypeItem : dates) {
+                    if (isHearingStatusValid(dateListedTypeItem)) {
                         SessionDaysReportDetail reportDetail = new SessionDaysReportDetail();
-                        reportDetail.setHearingDate(d.getValue().getListedDate());
+                        reportDetail.setHearingDate(dateListedTypeItem.getValue().getListedDate());
                         reportDetail.setHearingJudge(
                                 Strings.isNullOrEmpty(h.getValue().getJudge())
                                         ? "* Not Allocated" : h.getValue().getJudge());
@@ -208,10 +208,10 @@ public class SessionDaysReport {
                         reportDetail.setHearingSitAlone("Sit Alone".equals(
                                 h.getValue().getHearingSitAlone()) ? "Y" : "");
                         setTelCon(h, reportDetail);
-                        String duration = calculateDuration(d);
+                        String duration = calculateDuration(dateListedTypeItem);
                         reportDetail.setHearingDuration(duration);
                         reportDetail.setSessionType(getSessionType(duration));
-                        reportDetail.setHearingClerk(d.getValue().getHearingClerk());
+                        reportDetail.setHearingClerk(dateListedTypeItem.getValue().getHearingClerk());
                         reportDetailList.add(reportDetail);
                     }
                 }
