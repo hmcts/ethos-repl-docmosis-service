@@ -32,7 +32,6 @@ public class ServingClaimsReport {
     public ListingData generateReportData(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
         initReport(listingDetails);
         executeReport(listingDetails, submitEvents);
-
         return listingDetails.getCaseData();
     }
 
