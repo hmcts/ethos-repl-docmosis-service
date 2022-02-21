@@ -434,35 +434,16 @@ public class ListingHelper {
 
     public static StringBuilder getListingDate(ListingData listingData) {
         var sb = new StringBuilder();
-        if (RANGE_HEARING_DATE_TYPE.equals(listingData.getHearingDateType())
-                && SERVING_CLAIMS_REPORT.equals(listingData.getReportType())) {
-            return getServedClaimsReportPeriod(listingData);
 
-        } else if (RANGE_HEARING_DATE_TYPE.equals(listingData.getHearingDateType())) {
+        if (RANGE_HEARING_DATE_TYPE.equals(listingData.getHearingDateType())) {
             sb.append("\"Listed_date_from\":\"")
-                    .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
+                .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
             sb.append("\"Listed_date_to\":\"")
-                    .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateTo())).append(NEW_LINE);
+                .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateTo())).append(NEW_LINE);
         } else {
             sb.append("\"Listed_date\":\"")
                     .append(UtilHelper.listingFormatLocalDate(listingData.getListingDate())).append(NEW_LINE);
         }
-        return sb;
-    }
-
-    private static StringBuilder getServedClaimsReportPeriod(ListingData listingData) {
-        String listedDate;
-        var sb = new StringBuilder();
-
-        if (listingData.getListingDateFrom() != null && listingData.getListingDateTo() != null) {
-            listedDate = " Between " + UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())
-                    + " and " + UtilHelper.listingFormatLocalDate(listingData.getListingDateTo());
-        } else {
-            listedDate = " On " + UtilHelper.listingFormatLocalDate(listingData.getListingDate());
-        }
-
-        sb.append("\"Listed_date\":\"").append(listedDate).append(NEW_LINE);
-
         return sb;
     }
 
