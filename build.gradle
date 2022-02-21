@@ -246,6 +246,7 @@ dependencies {
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLoggingVersion
     implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLoggingVersion
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.11.3'
+    implementation group: 'com.nimbusds', name: 'lang-tag', version: '1.5'
     implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: feignVersion
     implementation group: 'io.github.openfeign', name: 'feign-core', version: feignVersion
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: springfoxSwagger
@@ -296,6 +297,7 @@ dependencies {
     testImplementation (group: 'org.docx4j', name: 'docx4j', version: '6.1.2') {
         exclude module: 'slf4j-log4j12'
     }
+    testImplementation group: 'org.glassfish', name: 'jakarta.el', version: '4.0.2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // Contract Tests
