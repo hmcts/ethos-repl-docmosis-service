@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays;
 
 import com.microsoft.azure.servicebus.primitives.StringUtil;
+import java.util.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
@@ -10,13 +11,11 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus;
+import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.OTHER_EMPLOYMENT_STATUS;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
@@ -124,31 +123,31 @@ public class SessionDaysReport {
             if (CollectionUtils.isNotEmpty(dates)) {
                 for (DateListedTypeItem dateListedTypeItem : dates) {
                     if (isHearingStatusValid(dateListedTypeItem)) {
-                        String judgeStatus = getJudgeStatus(hearingTypeItem.getValue().getJudge());
+                        JudgeEmploymentStatus judgeStatus = getJudgeStatus(hearingTypeItem.getValue().getJudge());
                         SessionDaysReportSummary2 reportSummary2 = getReportSummary2Item(
                                 dateListedTypeItem.getValue(), sessionDaysReportSummary2List);
-                        switch (judgeStatus) {
-                            case "SALARIED":
-                                ft = Integer.parseInt(reportSummary.getFtSessionDaysTotal()) + 1;
-                                reportSummary.setFtSessionDaysTotal(String.valueOf(ft));
-                                ft2 = Integer.parseInt(reportSummary2.getFtSessionDays()) + 1;
-                                reportSummary2.setFtSessionDays(String.valueOf(ft2));
-                                break;
-                            case "FEE_PAID":
-                                pt = Integer.parseInt(reportSummary.getPtSessionDaysTotal()) + 1;
-                                reportSummary.setPtSessionDaysTotal(String.valueOf(pt));
-                                pt2 = Integer.parseInt(reportSummary2.getPtSessionDays()) + 1;
-                                reportSummary2.setPtSessionDays(String.valueOf(pt2));
-                                break;
-                            case "":
-                                ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
-                                reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
-                                ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
-                                reportSummary2.setOtherSessionDays(String.valueOf(ot2));
-                                break;
-                            default:
-                                break;
-                        }
+                            switch ((judgeStatus != null) ? judgeStatus : OTHER_EMPLOYMENT_STATUS) {
+                                case SALARIED:
+                                    ft = Integer.parseInt(reportSummary.getFtSessionDaysTotal()) + 1;
+                                    reportSummary.setFtSessionDaysTotal(String.valueOf(ft));
+                                    ft2 = Integer.parseInt(reportSummary2.getFtSessionDays()) + 1;
+                                    reportSummary2.setFtSessionDays(String.valueOf(ft2));
+                                    break;
+                                case FEE_PAID:
+                                    pt = Integer.parseInt(reportSummary.getPtSessionDaysTotal()) + 1;
+                                    reportSummary.setPtSessionDaysTotal(String.valueOf(pt));
+                                    pt2 = Integer.parseInt(reportSummary2.getPtSessionDays()) + 1;
+                                    reportSummary2.setPtSessionDays(String.valueOf(pt2));
+                                    break;
+                                case OTHER_EMPLOYMENT_STATUS:
+                                    ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
+                                    reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
+                                    ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
+                                    reportSummary2.setOtherSessionDays(String.valueOf(ot2));
+                                    break;
+                                default:
+                                    break;
+                            }
                         int total = ft2 + pt2 + ot2;
                         reportSummary2.setSessionDaysTotalDetail(String.valueOf(total));
                     }
@@ -161,12 +160,12 @@ public class SessionDaysReport {
         return HEARING_STATUS_HEARD.equals(dateListedTypeItem.getValue().getHearingStatus());
     }
 
-    private String getJudgeStatus(String judgeName) {
+    private JudgeEmploymentStatus getJudgeStatus(String judgeName) {
         Judge j = jpaJudgeService.getJudge(office, judgeName);
         if (j != null) {
-            return j.getEmploymentStatus().name();
+            return j.getEmploymentStatus();
         }
-        return "";
+        return null;
     }
 
     private List<HearingTypeItem> getHearings(SessionDaysCaseData caseData) {
@@ -188,20 +187,22 @@ public class SessionDaysReport {
                         reportDetail.setHearingJudge(
                                 Strings.isNullOrEmpty(hearingTypeItem.getValue().getJudge())
                                         ? "* Not Allocated" : hearingTypeItem.getValue().getJudge());
-                        String judgeStatus = getJudgeStatus(hearingTypeItem.getValue().getJudge());
-                        switch (judgeStatus) {
-                            case "SALARIED":
-                                reportDetail.setJudgeType("FTC");
-                                break;
-                            case "FEE_PAID":
-                                reportDetail.setJudgeType("PTC");
-                                break;
-                            case "":
-                                reportDetail.setJudgeType("*");
-                                break;
-                            default:
-                                break;
-                        }
+                        JudgeEmploymentStatus judgeStatus = getJudgeStatus(hearingTypeItem.getValue().getJudge());
+
+                        switch ((judgeStatus != null) ? judgeStatus : OTHER_EMPLOYMENT_STATUS) {
+                                case SALARIED:
+                                    reportDetail.setJudgeType("FTC");
+                                    break;
+                                case FEE_PAID:
+                                    reportDetail.setJudgeType("PTC");
+                                    break;
+                                case OTHER_EMPLOYMENT_STATUS:
+                                    reportDetail.setJudgeType("*");
+                                    break;
+                                default:
+                                    break;
+                            }
+
                         reportDetail.setCaseReference(caseData.getEthosCaseReference());
                         reportDetail.setHearingNumber(hearingTypeItem.getValue().getHearingNumber());
                         reportDetail.setHearingType(hearingTypeItem.getValue().getHearingType());
@@ -210,7 +211,7 @@ public class SessionDaysReport {
                         setTelCon(hearingTypeItem, reportDetail);
                         String duration = calculateDuration(dateListedTypeItem);
                         reportDetail.setHearingDuration(duration);
-                        reportDetail.setSessionType(getSessionType(duration));
+                        reportDetail.setSessionType(getSessionType(Long.parseLong(duration)));
                         reportDetail.setHearingClerk(dateListedTypeItem.getValue().getHearingClerk());
                         reportDetailList.add(reportDetail);
                     }
@@ -255,17 +256,16 @@ public class SessionDaysReport {
         return String.valueOf(duration);
     }
 
-    private String getSessionType(String hearingDuration) {
-        String sessionType = NONE;
-        var duration = Long.parseLong(hearingDuration);
+    private String getSessionType(long duration) {
         if (duration > 0 && duration < 60) {
-            sessionType = ONE_HOUR;
+            return ONE_HOUR;
         } else if (duration >= 60 && duration <= 180) {
-            sessionType = HALF_DAY;
+            return HALF_DAY;
         } else if (duration > 180) {
-            sessionType = FULL_DAY;
+            return FULL_DAY;
+        } else {
+            return NONE;
         }
-        return sessionType;
     }
 
 }
