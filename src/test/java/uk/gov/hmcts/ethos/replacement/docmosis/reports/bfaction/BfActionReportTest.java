@@ -51,7 +51,6 @@ public class BfActionReportTest {
         casePreAcceptType2.setDateAccepted("2018-08-10");
         caseData.setPreAcceptCase(casePreAcceptType2);
         caseData.setEcmCaseType(SINGLE_CASE_TYPE);
-
     }
 
     @Test

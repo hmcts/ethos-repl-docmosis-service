@@ -43,7 +43,7 @@ public class BfActionReport {
         return bfActionReportData;
     }
 
-    private static void addBfDateTypeItems(SubmitEvent submitEvent, ListingData listingData,
+    private void addBfDateTypeItems(SubmitEvent submitEvent, ListingData listingData,
         List<BFDateTypeItem> bfDateTypeItems) {
         if (!CollectionUtils.isEmpty(submitEvent.getCaseData().getBfActions())) {
             for (var bfActionTypeItem : submitEvent.getCaseData().getBfActions()) {
@@ -56,7 +56,7 @@ public class BfActionReport {
         }
     }
 
-    private static BFDateTypeItem getBFDateTypeItem(BFActionTypeItem bfActionTypeItem,
+    private BFDateTypeItem getBFDateTypeItem(BFActionTypeItem bfActionTypeItem,
                                                     ListingData listingData, CaseData caseData) {
         var bfActionType = bfActionTypeItem.getValue();
         if (!isNullOrEmpty(bfActionType.getBfDate()) && isNullOrEmpty(bfActionType.getCleared())) {
@@ -70,7 +70,7 @@ public class BfActionReport {
         return null;
     }
 
-    private static BFDateTypeItem createBFDateTypeItem(BFActionTypeItem bfActionTypeItem, String bfDate,
+    private BFDateTypeItem createBFDateTypeItem(BFActionTypeItem bfActionTypeItem, String bfDate,
                                              String ethosCaseReference) {
         var bfActionType = bfActionTypeItem.getValue();
         var bfDateType = new BFDateType();
