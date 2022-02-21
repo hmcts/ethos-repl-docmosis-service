@@ -157,8 +157,8 @@ public class SessionDaysReport {
         }
     }
 
-    private boolean isHearingStatusValid(DateListedTypeItem d) {
-        return HEARING_STATUS_HEARD.equals(d.getValue().getHearingStatus());
+    private boolean isHearingStatusValid(DateListedTypeItem dateListedTypeItem) {
+        return HEARING_STATUS_HEARD.equals(dateListedTypeItem.getValue().getHearingStatus());
     }
 
     private String getJudgeStatus(String judgeName) {
@@ -178,17 +178,17 @@ public class SessionDaysReport {
     }
 
     private void setReportDetail(SessionDaysCaseData caseData, List<SessionDaysReportDetail> reportDetailList) {
-        for (HearingTypeItem h : getHearings(caseData)) {
-            var dates = h.getValue().getHearingDateCollection();
+        for (HearingTypeItem hearingTypeItem : getHearings(caseData)) {
+            var dates = hearingTypeItem.getValue().getHearingDateCollection();
             if (CollectionUtils.isNotEmpty(dates)) {
                 for (DateListedTypeItem dateListedTypeItem : dates) {
                     if (isHearingStatusValid(dateListedTypeItem)) {
                         SessionDaysReportDetail reportDetail = new SessionDaysReportDetail();
                         reportDetail.setHearingDate(dateListedTypeItem.getValue().getListedDate());
                         reportDetail.setHearingJudge(
-                                Strings.isNullOrEmpty(h.getValue().getJudge())
-                                        ? "* Not Allocated" : h.getValue().getJudge());
-                        String judgeStatus = getJudgeStatus(h.getValue().getJudge());
+                                Strings.isNullOrEmpty(hearingTypeItem.getValue().getJudge())
+                                        ? "* Not Allocated" : hearingTypeItem.getValue().getJudge());
+                        String judgeStatus = getJudgeStatus(hearingTypeItem.getValue().getJudge());
                         switch (judgeStatus) {
                             case "SALARIED":
                                 reportDetail.setJudgeType("FTC");
@@ -203,11 +203,11 @@ public class SessionDaysReport {
                                 break;
                         }
                         reportDetail.setCaseReference(caseData.getEthosCaseReference());
-                        reportDetail.setHearingNumber(h.getValue().getHearingNumber());
-                        reportDetail.setHearingType(h.getValue().getHearingType());
+                        reportDetail.setHearingNumber(hearingTypeItem.getValue().getHearingNumber());
+                        reportDetail.setHearingType(hearingTypeItem.getValue().getHearingType());
                         reportDetail.setHearingSitAlone("Sit Alone".equals(
-                                h.getValue().getHearingSitAlone()) ? "Y" : "");
-                        setTelCon(h, reportDetail);
+                                hearingTypeItem.getValue().getHearingSitAlone()) ? "Y" : "");
+                        setTelCon(hearingTypeItem, reportDetail);
                         String duration = calculateDuration(dateListedTypeItem);
                         reportDetail.setHearingDuration(duration);
                         reportDetail.setSessionType(getSessionType(duration));
@@ -219,8 +219,8 @@ public class SessionDaysReport {
         }
     }
 
-    private void setTelCon(HearingTypeItem h, SessionDaysReportDetail reportDetail) {
-        if (HEARING_TYPE_JUDICIAL_MEDIATION_TCC.equals(h.getValue().getHearingType())) {
+    private void setTelCon(HearingTypeItem hearingTypeItem, SessionDaysReportDetail reportDetail) {
+        if (HEARING_TYPE_JUDICIAL_MEDIATION_TCC.equals(hearingTypeItem.getValue().getHearingType())) {
             reportDetail.setHearingTelConf("Y");
         } else {
             reportDetail.setHearingTelConf("");
