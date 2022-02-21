@@ -21,6 +21,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.Respond
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportData;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -522,8 +523,7 @@ public class ReportDocHelper {
         var claimsServedDayListUpperBoundary = 5;
 
         if (CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail())) {
-            var listBlockOpeners = List.of(DAY_1_LIST, DAY_2_LIST,
-                    DAY_3_LIST, DAY_4_LIST,
+            var listBlockOpeners = List.of(DAY_1_LIST, DAY_2_LIST, DAY_3_LIST, DAY_4_LIST,
                     DAY_5_LIST, DAY_6_LIST);
             for (var dayIndex = 0; dayIndex <= claimsServedDayListUpperBoundary; dayIndex++) {
                 addEntriesByServingDay(dayIndex, listBlockOpeners.get(dayIndex),
@@ -536,20 +536,22 @@ public class ReportDocHelper {
 
     private static void addEntriesByServingDay(int dayNumber, String listBlockOpener,
                                                StringBuilder reportContent, ListingData listingData) {
-
         var itemsList = listingData.getLocalReportsDetail().get(0);
         var claimServedTypeItems = itemsList.getValue().getClaimServedItems()
-                .stream()
-                .filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) == dayNumber)
+                .stream().filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) == dayNumber)
                 .collect(Collectors.toList());
         int claimServedTypeItemsCount = claimServedTypeItems.size();
         var claimServedTypeItemsListSize = String.valueOf(claimServedTypeItems.size());
+
+        if (dayNumber >= 5) {
+            claimServedTypeItems.sort(Comparator.comparingInt(item ->
+                Integer.parseInt(item.getValue().getActualNumberOfDays())));
+        }
 
         reportContent.append(listBlockOpener);
 
         if (claimServedTypeItemsCount == 0) {
             reportContent.append(CASE_REFERENCE).append(claimServedTypeItemsListSize).append(NEW_LINE);
-
             if (dayNumber >= 5) {
                 reportContent.append("\"Actual_Number_Of_Days\":\"")
                         .append(claimServedTypeItemsListSize).append(NEW_LINE);

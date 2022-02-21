@@ -1,12 +1,27 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.helper.Constants;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_SOURCE_LOCAL_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_TO_JUDGEMENTS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.REPORT_OFFICE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
+import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
+import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
+import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.PositionTypeSummary;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportDetail;
@@ -40,6 +55,7 @@ import java.util.Objects;
 import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
@@ -69,6 +85,7 @@ public class ReportDocHelperTest {
         reportDetails4 = generateReportDetails("reportDetailsTest4.json");
         reportDetails5 = generateReportDetails("reportDetailsTest5.json");
         reportDetails6 = generateReportDetails("reportDetailsTest6.json");
+        reportDetailsClaimsServed = generateReportDetails("reportDetailsTestClaimsServed.json");
         reportDetailsClaimsServed = generateReportDetails("reportDetailsTestClaimsServed.json");
         userDetails = HelperTest.getUserDetails();
     }
@@ -386,10 +403,82 @@ public class ReportDocHelperTest {
     }
 
     @Test
+    public void buildServingClaimsReportWithDay6EntriesSorted() throws URISyntaxException, IOException {
+        ListingData listingData = new ListingData();
+        listingData.setReportType(SERVING_CLAIMS_REPORT);
+        listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
+        listingData.setListingDateFrom("2021-10-02");
+        listingData.setListingDateTo("2021-10-28");
+
+        var adHocReportType = new AdhocReportType();
+        adHocReportType.setReportOffice("Leeds");
+        listingData.setLocalReportsDetailHdr(adHocReportType);
+
+        listingData.setLocalReportsDetail(new ArrayList<>());
+        var adhocReportTypeItem = new AdhocReportTypeItem();
+        var adhocReportType = new AdhocReportType();
+
+        adhocReportType.setClaimServed6PlusDaysTotal("3");
+        adhocReportType.setClaimServed6PlusDaysPercent("100");
+        adhocReportType.setTotalCases("3");
+        adhocReportType.setClaimServedTotal("3");
+        adhocReportType.setClaimServedItems(new ArrayList<>());
+
+        var claimServedType3 = new ClaimServedType();
+        claimServedType3.setReportedNumberOfDays(String.valueOf(5));
+        claimServedType3.setActualNumberOfDays(String.valueOf(365));
+        claimServedType3.setCaseReceiptDate("2020-10-12");
+        claimServedType3.setClaimServedDate("2021-10-12");
+        var claimServedTypeItem3 = new ClaimServedTypeItem();
+        claimServedTypeItem3.setId(String.valueOf(UUID.randomUUID()));
+        claimServedTypeItem3.setValue(claimServedType3);
+
+        var claimServedType = new ClaimServedType();
+        claimServedType.setReportedNumberOfDays(String.valueOf(5));
+        claimServedType.setActualNumberOfDays(String.valueOf(46));
+        claimServedType.setCaseReceiptDate("2021-09-02");
+        claimServedType.setClaimServedDate("2021-10-16");
+        claimServedType.setClaimServedCaseNumber("0098");
+
+        var claimServedTypeItem = new ClaimServedTypeItem();
+        claimServedTypeItem.setId(String.valueOf(UUID.randomUUID()));
+        claimServedTypeItem.setValue(claimServedType);
+
+        var claimServedType2 = new ClaimServedType();
+        claimServedType2.setReportedNumberOfDays(String.valueOf(5));
+        claimServedType2.setActualNumberOfDays(String.valueOf(189));
+        claimServedType2.setCaseReceiptDate("2021-08-12");
+        claimServedType2.setClaimServedDate("2021-02-17");
+        claimServedType2.setClaimServedCaseNumber("185");
+
+        var claimServedTypeItem2 = new ClaimServedTypeItem();
+        claimServedTypeItem2.setId(String.valueOf(UUID.randomUUID()));
+        claimServedTypeItem2.setValue(claimServedType2);
+
+        adhocReportType.getClaimServedItems().add(claimServedTypeItem);
+        adhocReportType.getClaimServedItems().add(claimServedTypeItem2);
+        adhocReportType.getClaimServedItems().add(claimServedTypeItem3);
+        adhocReportType.setTotal("3");
+
+        adhocReportTypeItem.setId(String.valueOf(UUID.randomUUID()));
+        adhocReportTypeItem.setValue(adhocReportType);
+
+        listingData.setLocalReportsDetail(new ArrayList<>());
+        listingData.getLocalReportsDetail().add(adhocReportTypeItem);
+        var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+            .getResource("servingClaimsSorted6DayEntries.json")).toURI())));
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        expectedJson = expectedJson.replace("current-date-place-holder", today);
+        var actualJson = ReportDocHelper.buildReportDocumentContent(listingData,
+            "", "EM-TRB-SCO-ENG-00781", userDetails).toString();
+        assertEquals(expectedJson, actualJson);
+    }
+
+    @Test
     public void buildServingClaimsReport() {
         String expected = "{\n"
                 + "\"accessKey\":\"\",\n"
-                + "\"templateName\":\"EM-TRB-SCO-ENG-00780.docx\",\n"
+                + "\"templateName\":\"EM-TRB-SCO-ENG-00781.docx\",\n"
                 + "\"outputName\":\"document.docx\",\n"
                 + "\"data\":{\n"
                 + "\"Listed_date\":\" Between 2 October 2021 and 28 October 2021\",\n"
@@ -448,7 +537,7 @@ public class ReportDocHelperTest {
                 + "}\n";
 
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetailsClaimsServed.getCaseData(),
-                "", "EM-TRB-SCO-ENG-00780", userDetails).toString());
+                "", "EM-TRB-SCO-ENG-00781", userDetails).toString());
     }
 
     @Test
