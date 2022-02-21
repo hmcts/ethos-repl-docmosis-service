@@ -80,9 +80,9 @@ public class SessionDaysReport {
         List<SessionDaysReportSummary2> sessionDaysReportSummary2List = new ArrayList<>();
         List<SessionDaysReportDetail> sessionDaysReportDetailList = new ArrayList<>();
         for (SessionDaysSubmitEvent submitEvent : submitEvents) {
-            var c = submitEvent.getCaseData();
-            setCaseReportSummaries(c, reportData.getReportSummary(), sessionDaysReportSummary2List);
-            setReportDetail(c, sessionDaysReportDetailList);
+            var caseData = submitEvent.getCaseData();
+            setCaseReportSummaries(caseData, reportData.getReportSummary(), sessionDaysReportSummary2List);
+            setReportDetail(caseData, sessionDaysReportDetailList);
         }
         int ft = Integer.parseInt(reportData.getReportSummary().getFtSessionDaysTotal());
         int pt = Integer.parseInt(reportData.getReportSummary().getPtSessionDaysTotal());
@@ -96,16 +96,16 @@ public class SessionDaysReport {
     }
 
     private SessionDaysReportSummary2 getReportSummary2Item(
-            DateListedType d, List<SessionDaysReportSummary2> sessionDaysReportSummary2List) {
+            DateListedType dateListedType, List<SessionDaysReportSummary2> sessionDaysReportSummary2List) {
         Optional<SessionDaysReportSummary2> item = sessionDaysReportSummary2List.stream()
                 .filter(i -> !Strings.isNullOrEmpty(i.getDate())
-                && i.getDate().equals(d.getListedDate())).findFirst();
+                && i.getDate().equals(dateListedType.getListedDate())).findFirst();
         if (item.isPresent()) {
             return item.get();
         }
         SessionDaysReportSummary2 summary2 = new SessionDaysReportSummary2();
         initReportSummary2(summary2);
-        summary2.setDate(d.getListedDate());
+        summary2.setDate(dateListedType.getListedDate());
         sessionDaysReportSummary2List.add(summary2);
         return summary2;
     }
@@ -119,14 +119,14 @@ public class SessionDaysReport {
         int ft2 = 0;
         int pt2 = 0;
         int ot2 = 0;
-        for (HearingTypeItem h : getHearings(caseData)) {
-            var dates = h.getValue().getHearingDateCollection();
+        for (HearingTypeItem hearingTypeItem : getHearings(caseData)) {
+            var dates = hearingTypeItem.getValue().getHearingDateCollection();
             if (CollectionUtils.isNotEmpty(dates)) {
-                for (DateListedTypeItem d : dates) {
-                    if (isHearingStatusValid(d)) {
-                        String judgeStatus = getJudgeStatus(h.getValue().getJudge());
+                for (DateListedTypeItem dateListedTypeItem : dates) {
+                    if (isHearingStatusValid(dateListedTypeItem)) {
+                        String judgeStatus = getJudgeStatus(hearingTypeItem.getValue().getJudge());
                         SessionDaysReportSummary2 reportSummary2 = getReportSummary2Item(
-                                d.getValue(), sessionDaysReportSummary2List);
+                                dateListedTypeItem.getValue(), sessionDaysReportSummary2List);
                         switch (judgeStatus) {
                             case "SALARIED":
                                 ft = Integer.parseInt(reportSummary.getFtSessionDaysTotal()) + 1;
