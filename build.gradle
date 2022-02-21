@@ -307,7 +307,7 @@ dependencies {
     implementation group: 'org.apache.santuario', name: 'xmlsec', version: '2.3.0'
 
     // CVE-2021-28170
-    testImplementation group: 'org.glassfish', name: 'jakarta.el', version: '3.0.4'
+    testImplementation group: 'org.glassfish', name: 'jakarta.el', version: '4.0.2'
 
     // CVE-202-23171
     implementation group: 'com.nimbusds', name: 'lang-tag', version: '1.5'
