@@ -32,6 +32,7 @@ public class ServingClaimsReport {
     public ListingData generateReportData(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
         initReport(listingDetails);
         executeReport(listingDetails, submitEvents);
+
         return listingDetails.getCaseData();
     }
 
@@ -137,20 +138,9 @@ public class ServingClaimsReport {
     }
 
     private List<ClaimServedTypeItem> getServedClaimItemsByDayNumber(AdhocReportType adhocReportType, int dayNumber) {
-        int claimsServedDayListUpperBoundary = 5;
-        List<ClaimServedTypeItem> acceptedClaimItems;
-
-        if (dayNumber >= claimsServedDayListUpperBoundary) {
-            acceptedClaimItems = adhocReportType.getClaimServedItems().stream()
-                    .filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) >= dayNumber)
-                    .collect(Collectors.toList());
-        } else {
-            acceptedClaimItems = adhocReportType.getClaimServedItems().stream()
-                    .filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) == dayNumber)
-                    .collect(Collectors.toList());
-        }
-
-        return acceptedClaimItems;
+        return adhocReportType.getClaimServedItems().stream()
+            .filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) == dayNumber)
+            .collect(Collectors.toList());
     }
 
     private void setServedClaimsSummary(AdhocReportType adhocReportType, String totalServedClaims,
