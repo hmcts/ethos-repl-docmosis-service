@@ -35,6 +35,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportParams;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims.ServingClaimsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
 
@@ -248,19 +249,22 @@ public class ListingService {
         }
     }
 
-    private RespondentsReportData getRespondentsReport(ListingDetails listingDetails,
-                                                       String authToken) {
+    private RespondentsReportData getRespondentsReport(ListingDetails listingDetails, String authToken) {
         log.info("Respondents Report for {}", listingDetails.getCaseTypeId());
         var reportDataSource = new RespondentsReportCcdDataSource(authToken, ccdClient);
         setListingDateRangeForSearch(listingDetails);
-        var respondentsReport = new RespondentsReport(reportDataSource, listingDateFrom, listingDateTo);
-        var reportData = respondentsReport.generateReport(listingDetails.getCaseTypeId());
-        reportData.setDocumentName(listingDetails.getCaseData().getDocumentName());
-        reportData.setReportType(listingDetails.getCaseData().getReportType());
-        reportData.setHearingDateType(listingDetails.getCaseData().getHearingDateType());
-        reportData.setListingDateFrom(listingDetails.getCaseData().getListingDateFrom());
-        reportData.setListingDateTo(listingDetails.getCaseData().getListingDateTo());
-        reportData.setListingDate(listingDetails.getCaseData().getListingDate());
+        var listingData = listingDetails.getCaseData();
+
+        var params = new RespondentsReportParams(listingDetails.getCaseTypeId(),
+                listingDateFrom, listingDateTo);
+        var respondentsReport = new RespondentsReport(reportDataSource);
+        var reportData = respondentsReport.generateReport(params);
+        reportData.setDocumentName(listingData.getDocumentName());
+        reportData.setReportType(listingData.getReportType());
+        reportData.setHearingDateType(listingData.getHearingDateType());
+        reportData.setListingDateFrom(listingData.getListingDateFrom());
+        reportData.setListingDateTo(listingData.getListingDateTo());
+        reportData.setListingDate(listingData.getListingDate());
         return reportData;
     }
 
