@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments;
 
+import org.elasticsearch.common.Strings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -459,7 +460,7 @@ class HearingsToJudgmentsReportTest {
         assertEquals(1, reportData.getReportDetails().size());
 
         var reportDetail = reportData.getReportDetails().get(0);
-        assertEquals(judge.substring(judge.indexOf('_') + 1), reportDetail.getHearingJudge());
+        assertEquals(Strings.split(judge, "_")[1], reportDetail.getHearingJudge());
         assertEquals(NEWCASTLE_CASE_TYPE_ID, reportDetail.getReportOffice());
         assertEquals(caseReference, reportDetail.getCaseReference());
         assertEquals(NO, reportDetail.getReservedHearing());

@@ -2,11 +2,11 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
@@ -178,7 +178,8 @@ public class HearingsToJudgmentsReport {
                 hearingJudgmentItem.judgmentDateSent = dateJudgmentSent.format(OLD_DATE_TIME_PATTERN2);
                 hearingJudgmentItem.total = hearingListedDate.datesUntil(dateJudgmentSent).count();
                 hearingJudgmentItem.reservedHearing = dateListedType.getHearingReservedJudgement();
-                hearingJudgmentItem.judge = hearingType.getJudge().substring(hearingType.getJudge().indexOf('_') + 1);
+                hearingJudgmentItem.judge = hearingType.getJudge().contains("_")
+                        ? Strings.split(hearingType.getJudge(), "_")[1] : hearingType.getJudge();
                 hearingJudgmentsList.add(hearingJudgmentItem);
             }
         }
