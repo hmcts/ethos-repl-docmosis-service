@@ -439,7 +439,7 @@ class HearingsToJudgmentsReportTest {
         // Then I have correct hearing values for hearing #2
         var expectedTotalDays = "30";
         var caseReference = "2500123/2021";
-        var judge = "Hugh Garfield";
+        var judge = "3756_Hugh Garfield"; // Amended to mimic Judge's ITCO reference
         var judgmentHearingDate = "2021-07-05";
         var dateJudgmentSent = "2021-08-04";
 
@@ -459,7 +459,7 @@ class HearingsToJudgmentsReportTest {
         assertEquals(1, reportData.getReportDetails().size());
 
         var reportDetail = reportData.getReportDetails().get(0);
-        assertEquals(judge, reportDetail.getHearingJudge());
+        assertEquals(judge.substring(judge.indexOf("_") + 1), reportDetail.getHearingJudge());
         assertEquals(NEWCASTLE_CASE_TYPE_ID, reportDetail.getReportOffice());
         assertEquals(caseReference, reportDetail.getCaseReference());
         assertEquals(NO, reportDetail.getReservedHearing());
