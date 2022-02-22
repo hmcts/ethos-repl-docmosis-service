@@ -162,19 +162,12 @@ public class BfActionReportTest {
         listingData.setListingDateTo("2019-12-20");
         listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
         listingDetails.setCaseData(listingData);
-        List<BFActionTypeItem> items = getBFActionTypeItems();
-        var bfActionTypeItem2 = new BFActionTypeItem();
-        bfActionTypeItem2.setId("456");
-        var bFActionType2 = new BFActionType();
-        bFActionType2.setCwActions("Interlocutory order requested");
-        bFActionType2.setBfDate("2019-12-14T13:30:55");
-        bFActionType2.setDateEntered("2019-11-20");
-        bFActionType2.setCleared("2019-12-15");
-        bFActionType2.setNotes("test non-cleared bf");
-        bfActionTypeItem2.setValue(bFActionType2);
-        items.add(bfActionTypeItem2);
-        caseData.setBfActions(items);
 
+        // Two bf action entries added and the second BFActionTypeItem has
+        // the "YYYY-MM-DD HH:MM:SS" date and time pattern without milliseconds for the BfDate
+        List<BFActionTypeItem> items = getBFActionTypeItems();
+
+        caseData.setBfActions(items);
         submitEvent.setCaseId(2);
         submitEvent.setState(ACCEPTED_STATE);
         submitEvent.setCaseData(caseData);
@@ -187,9 +180,22 @@ public class BfActionReportTest {
 
     @Test
     public void shouldNotReturnClearedBfActionsWithInDateRange() {
+        // Given three BFActionTypeItems, where the first two are still open and the third
+        // one is with cleared BF status, only the two open (i.e. not cleared) BFs should be returned.
         List<BFActionTypeItem> items = getBFActionTypeItems();
-        caseData.setBfActions(items);
 
+        var bfActionTypeItem4 = new BFActionTypeItem();
+        bfActionTypeItem4.setId("116");
+        var bFActionType4 = new BFActionType();
+        bFActionType4.setCwActions("Interlocutory order requested");
+        bFActionType4.setBfDate("2019-12-13");
+        bFActionType4.setDateEntered("2019-11-20");
+        bFActionType4.setCleared("2019-12-24");
+        bFActionType4.setNotes("test case with cleared bfs");
+        bfActionTypeItem4.setValue(bFActionType4);
+        items.add(bfActionTypeItem4);
+
+        caseData.setBfActions(items);
         submitEvent.setCaseId(2);
         submitEvent.setState(ACCEPTED_STATE);
         submitEvent.setCaseData(caseData);
