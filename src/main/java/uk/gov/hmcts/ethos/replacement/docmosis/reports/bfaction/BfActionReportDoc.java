@@ -12,10 +12,10 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.REPORT_O
 public class BfActionReportDoc {
 
     public StringBuilder getReportDocPart(ListingData data) {
-        return getMemberDaysReport(data);
+        return getBfActionReportDoc(data);
     }
 
-    private StringBuilder getMemberDaysReport(ListingData listingData) {
+    private StringBuilder getBfActionReportDoc(ListingData listingData) {
         if (!(listingData instanceof BfActionReportData)) {
             throw new IllegalStateException(("ListingData is not instance of BfActionReportData"));
         }
