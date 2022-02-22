@@ -3,7 +3,8 @@
 "templateName":"EM-TRB-SCO-ENG-00781.docx",
 "outputName":"document.docx",
 "data":{
-"Listed_date":" Between 2 October 2021 and 28 October 2021",
+"Listed_date_from":"2 October 2021",
+"Listed_date_to":"28 October 2021",
 "Report_Office":"Leeds",
 "Day_1_Tot":"null",
 "Day_1_Pct":"null",
@@ -63,6 +64,6 @@
 "Date_Of_Service":"2021-10-12"}],
 "day_6_total_count":"3",
 "Report_Clerk":"Mike Jordan",
-"Today_date":"current-date-place-holder"
+"Today_date":"current-date-placeholder"
 }
 }

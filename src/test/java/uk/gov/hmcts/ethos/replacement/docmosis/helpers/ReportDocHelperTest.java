@@ -465,77 +465,19 @@ public class ReportDocHelperTest {
 
         listingData.setLocalReportsDetail(new ArrayList<>());
         listingData.getLocalReportsDetail().add(adhocReportTypeItem);
-        var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
-            .getResource("servingClaimsSorted6DayEntries.json")).toURI())));
+        var expectedJson = getExpectedResult("servingClaimsSorted6DayEntries.json");
         var today = UtilHelper.formatCurrentDate(LocalDate.now());
-        expectedJson = expectedJson.replace("current-date-place-holder", today);
+        expectedJson = expectedJson.replace("current-date-placeholder", today);
         var actualJson = ReportDocHelper.buildReportDocumentContent(listingData,
             "", "EM-TRB-SCO-ENG-00781", userDetails).toString();
         assertEquals(expectedJson, actualJson);
     }
 
     @Test
-    public void buildServingClaimsReport() {
-        String expected = "{\n"
-                + "\"accessKey\":\"\",\n"
-                + "\"templateName\":\"EM-TRB-SCO-ENG-00781.docx\",\n"
-                + "\"outputName\":\"document.docx\",\n"
-                + "\"data\":{\n"
-                + "\"Listed_date\":\" Between 2 October 2021 and 28 October 2021\",\n"
-                + "\"Day_1_Tot\":\"0\",\n"
-                + "\"Day_1_Pct\":\"0\",\n"
-                + "\"Day_2_Tot\":\"1\",\n"
-                + "\"Day_2_Pct\":\"100\",\n"
-                + "\"Day_3_Tot\":\"0\",\n"
-                + "\"Day_3_Pct\":\"0\",\n"
-                + "\"Day_4_Tot\":\"0\",\n"
-                + "\"Day_4_Pct\":\"0\",\n"
-                + "\"Day_5_Tot\":\"0\",\n"
-                + "\"Day_5_Pct\":\"0\",\n"
-                + "\"Day_6_Plus_Tot\":\"0\",\n"
-                + "\"Day_6_Plus_Pct\":\"0\",\n"
-                + "\"Total_Claims\":\"1\",\n"
-                + "\"Day_1_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_1_total_count\":\"0\",\n"
-                + "\"Day_2_List\":[\n"
-                + "{\"Case_Reference\":\"1800001/2021\",\n"
-                + "\"Date_Of_Receipt\":\"2021-10-20\",\n"
-                + "\"Date_Of_Service\":\"2021-10-21\"}],\n"
-                + "\"day_2_total_count\":\"1\",\n"
-                + "\"Day_3_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_3_total_count\":\"0\",\n"
-                + "\"Day_4_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_4_total_count\":\"0\",\n"
-                + "\"Day_5_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_5_total_count\":\"0\",\n"
-                + "\"Day_6_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Actual_Number_Of_Days\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_6_total_count\":\"0\",\n"
-                + "\"Report_Clerk\":\"Mike Jordan\",\n"
-                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n"
-                + "}\n"
-                + "}\n";
-
+    public void buildCorrectServingClaimsReportDocForProvidedAllDaysEntries() throws URISyntaxException, IOException  {
+        var expectedJson = getExpectedResult("servingAllDaysClaimEntries.json");
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        var expected = expectedJson.replace("current-date-placeholder", today);
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetailsClaimsServed.getCaseData(),
                 "", "EM-TRB-SCO-ENG-00781", userDetails).toString());
     }
@@ -861,5 +803,13 @@ public class ReportDocHelperTest {
         reportData.getReportDetailsMultiple().add(reportDetailMultiple);
 
         return reportData;
+    }
+
+    private String getExpectedResult(String resourceFileName) throws URISyntaxException, IOException {
+        var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+            .getResource(resourceFileName)).toURI())));
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        expectedJson = expectedJson.replace("current-date-placeholder", today);
+        return expectedJson;
     }
 }
