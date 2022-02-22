@@ -207,7 +207,7 @@ public class SessionDaysReport {
                                 break;
                             default:
                                 break;
-                            }
+                        }
 
                         reportDetail.setCaseReference(caseData.getEthosCaseReference());
                         reportDetail.setHearingNumber(hearingTypeItem.getValue().getHearingNumber());

@@ -178,9 +178,7 @@ public class HearingsToJudgmentsReport {
                 hearingJudgmentItem.judgmentDateSent = dateJudgmentSent.format(OLD_DATE_TIME_PATTERN2);
                 hearingJudgmentItem.total = hearingListedDate.datesUntil(dateJudgmentSent).count();
                 hearingJudgmentItem.reservedHearing = dateListedType.getHearingReservedJudgement();
-                String[] segments = Strings.split(hearingType.getJudge(), "_");
-                hearingJudgmentItem.judge = segments[segments.length - 1];
-            hearingJudgmentsList.add(hearingJudgmentItem);
+                hearingJudgmentItem.judge = hearingType.getJudge();
             }
         }
 

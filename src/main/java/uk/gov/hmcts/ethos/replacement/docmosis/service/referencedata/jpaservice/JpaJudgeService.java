@@ -8,7 +8,6 @@ import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.JudgeRepository
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.JudgeService;
 import java.util.List;
 
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
