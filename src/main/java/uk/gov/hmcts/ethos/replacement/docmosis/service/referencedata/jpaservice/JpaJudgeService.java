@@ -16,6 +16,6 @@ public class JpaJudgeService implements JudgeService {
 
     @Override
     public Judge getJudge(String office, String name) {
-        return judgeRepository.findByOfficeAndName(office, name);
+        return judgeRepository.findByTribunalOfficeAndName(office, name);
     }
 }
