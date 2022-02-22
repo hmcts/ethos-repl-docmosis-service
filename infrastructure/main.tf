@@ -27,6 +27,12 @@ locals {
 
 }
 
+data "azurerm_subnet" "postgres" {
+  name                 = "core-infra-subnet-0-${var.env}"
+  resource_group_name  = "core-infra-${var.env}"
+  virtual_network_name = "core-infra-vnet-${var.env}"
+}
+
 module "repl-docmosis-backend" {
   source                          = "git@github.com:hmcts/cnp-module-webapp?ref=master"
   product                         = "${var.product}-${local.app}"
@@ -151,4 +157,34 @@ data "azurerm_key_vault" "s2s_key_vault" {
 data "azurerm_key_vault_secret" "microservicekey_ethos_repl_service" {
   name = "microservicekey-ethos-repl-service"
   key_vault_id = data.azurerm_key_vault.s2s_key_vault.id
+}
+
+# POSTGRES v11 DB
+resource "azurerm_key_vault_secret" "POSTGRES-USER-V11" {
+  name         = "${var.component}-POSTGRES-USER-V11"
+  value        = module.db-v11.user_name
+  key_vault_id = module.key-vault.key_vault_id
+}
+resource "azurerm_key_vault_secret" "POSTGRES-PASS-V11" {
+  name         = "${var.component}-POSTGRES-PASS-V11"
+  value        = module.db-v11.postgresql_password
+  key_vault_id = module.key-vault.key_vault_id
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_HOST-V11" {
+  name         = "${var.component}-POSTGRES-HOST-V11"
+  value        = module.db-v11.host_name
+  key_vault_id = module.key-vault.key_vault_id
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_PORT-V11" {
+  name         = "${var.component}-POSTGRES-PORT-V11"
+  value        = module.db-v11.postgresql_listen_port
+  key_vault_id = module.key-vault.key_vault_id
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_DATABASE-V11" {
+  name         = "${var.component}-POSTGRES-DATABASE-V11"
+  value        = module.db-v11.postgresql_database
+  key_vault_id = module.key-vault.key_vault_id
 }
