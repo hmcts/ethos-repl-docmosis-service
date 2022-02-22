@@ -9,6 +9,10 @@ import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
@@ -24,9 +28,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTE
 import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.FEE_PAID;
 import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.SALARIED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReport.FULL_DAY;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SessionDaysReportTest {
 
@@ -35,7 +36,7 @@ public class SessionDaysReportTest {
     SessionDaysReport sessionDaysReport;
     SessionDaysCaseDataBuilder caseDataBuilder = new SessionDaysCaseDataBuilder();
     List<SessionDaysSubmitEvent> submitEvents = new ArrayList<>();
-    static final LocalDateTime BASE_DATE = LocalDateTime.of(2022, 1, 1, 0, 0,0);
+    static final LocalDateTime BASE_DATE = LocalDateTime.of(2022,  1, 1,  0,  0, 0);
     static final String DATE_FROM = BASE_DATE.minusDays(1).format(OLD_DATE_TIME_PATTERN);
     static final String DATE_TO = BASE_DATE.plusDays(15).format(OLD_DATE_TIME_PATTERN);
 
@@ -49,7 +50,7 @@ public class SessionDaysReportTest {
         when(reportDataSource.getData(MANCHESTER_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
         when(jpaJudgeService.getJudge("Manchester", "ftcJudge")).thenReturn(getJudge("ftcJudge", SALARIED));
         when(jpaJudgeService.getJudge("Manchester", "ptcJudge")).thenReturn(getJudge("ptcJudge", FEE_PAID));
-        sessionDaysReport = new SessionDaysReport(reportDataSource,jpaJudgeService);
+        sessionDaysReport = new SessionDaysReport(reportDataSource, jpaJudgeService);
     }
 
     private Judge getJudge(String name, JudgeEmploymentStatus status) {
@@ -65,19 +66,19 @@ public class SessionDaysReportTest {
         // and report data is requested
         // the case should not be in the report data
 
-            caseDataBuilder.withNoHearings();
-            submitEvents.add(caseDataBuilder
+        caseDataBuilder.withNoHearings();
+        submitEvents.add(caseDataBuilder
                     .buildAsSubmitEvent());
 
-            var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID,DATE_FROM, DATE_TO);
-            assertCommonValues(reportData);
-            assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
-            assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
-            assertEquals("0", reportData.getReportSummary().getOtherSessionDaysTotal());
-            assertEquals("0", reportData.getReportSummary().getSessionDaysTotal());
-            assertEquals("0", reportData.getReportSummary().getPtSessionDaysPerCent());
-            assertEquals(0, reportData.getReportSummary2List().size());
-            assertEquals(0, reportData.getReportDetails().size());
+        var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
+        assertCommonValues(reportData);
+        assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getOtherSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getPtSessionDaysPerCent());
+        assertEquals(0, reportData.getReportSummary2List().size());
+        assertEquals(0, reportData.getReportDetails().size());
     }
 
     @ParameterizedTest
@@ -89,7 +90,7 @@ public class SessionDaysReportTest {
         caseDataBuilder.withHearingData(hearingStatus);
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
 
-        var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID,DATE_FROM, DATE_TO);
+        var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
         assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
         assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
@@ -110,7 +111,7 @@ public class SessionDaysReportTest {
         caseDataBuilder.withHearingData(HEARING_STATUS_HEARD);
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
 
-        var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID,DATE_FROM, DATE_TO);
+        var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
         assertEquals("1", reportData.getReportSummary().getFtSessionDaysTotal());
         assertEquals("1", reportData.getReportSummary().getPtSessionDaysTotal());
@@ -136,7 +137,7 @@ public class SessionDaysReportTest {
     public void assertReportDetailsValues(String judge, String judgeType, int index) {
         caseDataBuilder.withHearingData(HEARING_STATUS_HEARD);
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
-        var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID,DATE_FROM, DATE_TO);
+        var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
         var reportDetail = reportData.getReportDetails().get(index);
         assertEquals("111", reportDetail.getCaseReference());
@@ -148,7 +149,6 @@ public class SessionDaysReportTest {
         assertEquals(FULL_DAY, reportDetail.getSessionType());
         assertEquals(judge, reportDetail.getHearingJudge());
         assertEquals(judgeType, reportDetail.getJudgeType());
-
 
     }
 
