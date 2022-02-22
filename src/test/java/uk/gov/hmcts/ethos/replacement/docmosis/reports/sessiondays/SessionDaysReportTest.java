@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays;
 
+import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus;
+import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.JudgeRepository;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
 
     SessionDaysReportDataSource reportDataSource;
     JpaJudgeService jpaJudgeService;
+    JudgeRepository judgeRepository;
     SessionDaysReport sessionDaysReport;
     SessionDaysCaseDataBuilder caseDataBuilder = new SessionDaysCaseDataBuilder();
     List<SessionDaysSubmitEvent> submitEvents = new ArrayList<>();
@@ -49,17 +52,24 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
         caseDataBuilder = new SessionDaysCaseDataBuilder();
         reportDataSource = mock(SessionDaysReportDataSource.class);
         jpaJudgeService = mock(JpaJudgeService.class);
+        judgeRepository = mock(JudgeRepository.class);
         when(reportDataSource.getData(MANCHESTER_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
-        when(jpaJudgeService.getJudges("Manchester")).thenReturn(getJudge("ftcJudge", SALARIED));
-        when(jpaJudgeService.getJudges("Manchester")).thenReturn(getJudge("ptcJudge", FEE_PAID));
+        List<Judge> judges  = getJudges();
+        when(jpaJudgeService.getJudges("Manchester")).thenReturn(judges);
+        when(jpaJudgeService.getJudges("Manchester")).thenReturn(judges);
+        when(judgeRepository.findByTribunalOffice("Manchester")).thenReturn(judges);
+        when(judgeRepository.findByTribunalOffice("Manchester")).thenReturn(judges);
         sessionDaysReport = new SessionDaysReport(reportDataSource, jpaJudgeService);
     }
 
-    private List<Judge> getJudge(String name, JudgeEmploymentStatus status) {
-        Judge judge = new Judge();
-        judge.setEmploymentStatus(status);
-        judge.setName(name);
-        return Collections.singletonList(judge);
+    private List<Judge> getJudges() {
+        Judge judge1 = new Judge();
+        judge1.setEmploymentStatus(SALARIED);
+        judge1.setName("ftcJudge");
+        Judge judge2 = new Judge();
+        judge2.setEmploymentStatus(FEE_PAID);
+        judge2.setName("ptcJudge");
+        return Arrays.asList(judge1, judge2);
     }
 
     @Test

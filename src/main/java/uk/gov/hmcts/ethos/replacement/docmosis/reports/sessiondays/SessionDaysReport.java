@@ -164,7 +164,7 @@ public class SessionDaysReport {
     }
 
     private JudgeEmploymentStatus getJudgeStatus(String judgeName) {
-        List<Judge> judges = jpaJudgeService.getJudges("LEEDS");
+        List<Judge> judges = jpaJudgeService.getJudges(office);
         if (CollectionUtils.isNotEmpty(judges)) {
             Optional<Judge> judge = judges.stream().filter(n -> n.getName().equals(judgeName)).findFirst();
             if (judge.isPresent()) {
