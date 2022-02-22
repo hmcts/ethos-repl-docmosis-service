@@ -31,3 +31,6 @@ psql postgresql://localhost:5050/ethos -U ethos -f ./fn_ethosMultipleCaseRefGen.
 
 echo "Running fn_ethosSubMultipleCaseRefGen.sql"
 psql postgresql://localhost:5050/ethos -U ethos -f ./fn_ethosSubMultipleCaseRefGen.sql
+
+echo "Running tbls_referenceData.sql"
+psql postgresql://localhost:5050/ethos -U ethos -f ./migration/tbls_referenceData.sql

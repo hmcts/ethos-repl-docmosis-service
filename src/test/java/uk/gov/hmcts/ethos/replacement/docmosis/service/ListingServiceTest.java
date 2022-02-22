@@ -308,13 +308,15 @@ public class ListingServiceTest {
     @Test
     public void listingCaseCreationWithHearingDocType() {
         String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null,"
-                + " tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, "
+                + " tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, "
+                + "tribunalCorrespondenceEmail=null, "
                 + "reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, "
                 + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, "
                 + "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=AberdeenVenue, venueDundee=null,"
                 + " venueEdinburgh=null, hearingDocType=ETL Test, hearingDocETCL=null, roomOrNoRoom=null,"
                 + " docMarkUp=null, bfDateCollection=null, clerkResponsible=null, "
-                + "reportType=Brought Forward Report, documentName=ETL Test, showAll=null, localReportsSummaryHdr=null, "
+                + "reportType=Brought Forward Report, documentName=ETL Test, showAll=null, "
+                + "localReportsSummaryHdr=null, "
                 + "localReportsSummary=null, localReportsSummaryHdr2=null, "
                 + "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
         listingDetails.getCaseData().setHearingDocType("ETL Test");
@@ -325,15 +327,21 @@ public class ListingServiceTest {
 
     @Test
     public void listingCaseCreationWithReportType() {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, "
-                + "tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null,"
+        String result = "ListingData(tribunalCorrespondenceAddress=null,"
+                + " tribunalCorrespondenceTelephone=null, "
+                + "tribunalCorrespondenceFax=null, " + "tribunalCorrespondenceDX=null, "
+                + "tribunalCorrespondenceEmail=null,"
                 + " reportDate=null, hearingDateType=Single," + " listingDate=2019-12-12, listingDateFrom=null, "
-                + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, "
-                + "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=AberdeenVenue, venueDundee=null, "
-                + "venueEdinburgh=null, " + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null,"
-                + " bfDateCollection=null, clerkResponsible=null, " + "reportType=Brought Forward Report,"
-                + " documentName=Brought Forward Report, showAll=null, localReportsSummaryHdr=null, localReportsSummary=null, "
-                + "localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
+                + "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], "
+                + "listingVenueOfficeGlas=null, "
+                + "listingVenueOfficeAber=null, " + "venueGlasgow=null, venueAberdeen=AberdeenVenue, "
+                + "venueDundee=null, "
+                + "venueEdinburgh=null, " + "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, "
+                + "docMarkUp=null," + " bfDateCollection=null, clerkResponsible=null, "
+                + "reportType=Brought Forward Report,"
+                + " documentName=Brought Forward Report, showAll=null, localReportsSummaryHdr=null,"
+                + " localReportsSummary=null, " + "localReportsSummaryHdr2=null, localReportsSummary2=null, "
+                + "localReportsDetailHdr=null, localReportsDetail=null)";
         ListingData listingData = listingService.listingCaseCreation(listingDetails);
         assertEquals(result, listingData.toString());
     }
