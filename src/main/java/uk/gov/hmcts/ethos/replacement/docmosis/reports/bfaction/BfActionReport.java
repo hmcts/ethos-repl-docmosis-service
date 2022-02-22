@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction;
 
-import com.google.common.base.Strings;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -76,9 +75,9 @@ public class BfActionReport {
         var bfDateType = new BFDateType();
         bfDateType.setCaseReference(ethosCaseReference);
 
-        if (!Strings.isNullOrEmpty(bfActionType.getAllActions())) {
+        if (!isNullOrEmpty(bfActionType.getAllActions())) {
             bfDateType.setBroughtForwardAction(bfActionType.getAllActions());
-        } else if (!Strings.isNullOrEmpty(bfActionType.getCwActions())) {
+        } else if (!isNullOrEmpty(bfActionType.getCwActions())) {
             bfDateType.setBroughtForwardAction(bfActionType.getCwActions());
         }
 

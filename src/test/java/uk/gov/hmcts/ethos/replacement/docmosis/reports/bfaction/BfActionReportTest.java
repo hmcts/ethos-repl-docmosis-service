@@ -1,15 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction;
 
-import java.util.ArrayList;
-import java.util.List;
-import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_LISTING_CASE_TYPE_ID;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.platform.commons.util.StringUtils;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
@@ -18,6 +8,18 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.BFActionType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.LEEDS_LISTING_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 
 public class BfActionReportTest {
     private List<SubmitEvent> submitEvents;
@@ -128,7 +130,7 @@ public class BfActionReportTest {
         listingData.setListingDateTo("2019-12-28");
         listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
         listingDetails.setCaseData(listingData);
-        List<BFActionTypeItem> items = getBFActionTypeItemsWithClearedBfAction();
+        List<BFActionTypeItem> items = getBFActionTypeItems();
         var bfActionTypeItem = new BFActionTypeItem();
         bfActionTypeItem.setId("123");
         var bFActionType = new BFActionType();
@@ -160,7 +162,7 @@ public class BfActionReportTest {
         listingData.setListingDateTo("2019-12-20");
         listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
         listingDetails.setCaseData(listingData);
-        List<BFActionTypeItem> items = getBFActionTypeItemsWithClearedBfAction();
+        List<BFActionTypeItem> items = getBFActionTypeItems();
         var bfActionTypeItem2 = new BFActionTypeItem();
         bfActionTypeItem2.setId("456");
         var bFActionType2 = new BFActionType();
@@ -185,7 +187,7 @@ public class BfActionReportTest {
 
     @Test
     public void shouldNotReturnClearedBfActionsWithInDateRange() {
-        List<BFActionTypeItem> items = getBFActionTypeItemsWithClearedBfAction();
+        List<BFActionTypeItem> items = getBFActionTypeItems();
         caseData.setBfActions(items);
 
         submitEvent.setCaseId(2);
@@ -204,7 +206,7 @@ public class BfActionReportTest {
         listingData.setListingDateTo("2019-12-25");
         listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
         listingDetails.setCaseData(listingData);
-        List<BFActionTypeItem> items = getBFActionTypeItemsWithClearedBfAction();
+        List<BFActionTypeItem> items = getBFActionTypeItems();
 
         var bfActionTypeItem6 = new BFActionTypeItem();
         bfActionTypeItem6.setId("456");
@@ -236,7 +238,7 @@ public class BfActionReportTest {
         assertEquals(bFActionType3.getCleared(), firstBFDateTypeItem.getBroughtForwardDateCleared());
     }
 
-    private List<BFActionTypeItem> getBFActionTypeItemsWithClearedBfAction() {
+    private List<BFActionTypeItem> getBFActionTypeItems() {
 
         var bfActionTypeItem3 = new BFActionTypeItem();
         bfActionTypeItem3.setId("116");
