@@ -178,6 +178,7 @@ public class HearingsToJudgmentsReport {
                 hearingJudgmentItem.total = hearingListedDate.datesUntil(dateJudgmentSent).count();
                 hearingJudgmentItem.reservedHearing = dateListedType.getHearingReservedJudgement();
                 hearingJudgmentItem.judge = hearingType.getJudge();
+                hearingJudgmentsList.add(hearingJudgmentItem);
             }
         }
 
