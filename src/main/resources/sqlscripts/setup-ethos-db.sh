@@ -34,3 +34,6 @@ psql postgresql://localhost:5050/ethos -U ethos -f ./fn_ethosSubMultipleCaseRefG
 
 echo "Running tbls_referenceData.sql"
 psql postgresql://localhost:5050/ethos -U ethos -f ./migration/tbls_referenceData.sql
+
+echo "Running DevReferenceData.sql"
+psql postgresql://localhost:5050/ethos -U ethos -f ./dev/DevReferenceData.sql
