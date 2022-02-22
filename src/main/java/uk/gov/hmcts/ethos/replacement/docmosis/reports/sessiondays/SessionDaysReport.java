@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays;
 
 import com.microsoft.azure.servicebus.primitives.StringUtil;
-import java.util.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
@@ -12,14 +11,18 @@ import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus;
-import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.OTHER_EMPLOYMENT_STATUS;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.OTHER_EMPLOYMENT_STATUS;
 
 public class SessionDaysReport {
 
@@ -126,28 +129,28 @@ public class SessionDaysReport {
                         JudgeEmploymentStatus judgeStatus = getJudgeStatus(hearingTypeItem.getValue().getJudge());
                         SessionDaysReportSummary2 reportSummary2 = getReportSummary2Item(
                                 dateListedTypeItem.getValue(), sessionDaysReportSummary2List);
-                            switch ((judgeStatus != null) ? judgeStatus : OTHER_EMPLOYMENT_STATUS) {
-                                case SALARIED:
-                                    ft = Integer.parseInt(reportSummary.getFtSessionDaysTotal()) + 1;
-                                    reportSummary.setFtSessionDaysTotal(String.valueOf(ft));
-                                    ft2 = Integer.parseInt(reportSummary2.getFtSessionDays()) + 1;
-                                    reportSummary2.setFtSessionDays(String.valueOf(ft2));
-                                    break;
-                                case FEE_PAID:
-                                    pt = Integer.parseInt(reportSummary.getPtSessionDaysTotal()) + 1;
-                                    reportSummary.setPtSessionDaysTotal(String.valueOf(pt));
-                                    pt2 = Integer.parseInt(reportSummary2.getPtSessionDays()) + 1;
-                                    reportSummary2.setPtSessionDays(String.valueOf(pt2));
-                                    break;
-                                case OTHER_EMPLOYMENT_STATUS:
-                                    ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
-                                    reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
-                                    ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
-                                    reportSummary2.setOtherSessionDays(String.valueOf(ot2));
-                                    break;
-                                default:
-                                    break;
-                            }
+                        switch ((judgeStatus != null) ? judgeStatus : OTHER_EMPLOYMENT_STATUS) {
+                            case SALARIED:
+                                ft = Integer.parseInt(reportSummary.getFtSessionDaysTotal()) + 1;
+                                reportSummary.setFtSessionDaysTotal(String.valueOf(ft));
+                                ft2 = Integer.parseInt(reportSummary2.getFtSessionDays()) + 1;
+                                reportSummary2.setFtSessionDays(String.valueOf(ft2));
+                                break;
+                            case FEE_PAID:
+                                pt = Integer.parseInt(reportSummary.getPtSessionDaysTotal()) + 1;
+                                reportSummary.setPtSessionDaysTotal(String.valueOf(pt));
+                                pt2 = Integer.parseInt(reportSummary2.getPtSessionDays()) + 1;
+                                reportSummary2.setPtSessionDays(String.valueOf(pt2));
+                                break;
+                            case OTHER_EMPLOYMENT_STATUS:
+                                ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
+                                reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
+                                ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
+                                reportSummary2.setOtherSessionDays(String.valueOf(ot2));
+                                break;
+                            default:
+                                break;
+                        }
                         int total = ft2 + pt2 + ot2;
                         reportSummary2.setSessionDaysTotalDetail(String.valueOf(total));
                     }
@@ -161,9 +164,12 @@ public class SessionDaysReport {
     }
 
     private JudgeEmploymentStatus getJudgeStatus(String judgeName) {
-        Judge j = jpaJudgeService.getJudge(office, judgeName);
-        if (j != null) {
-            return j.getEmploymentStatus();
+        List<Judge> judges = jpaJudgeService.getJudges("LEEDS");
+        if (CollectionUtils.isNotEmpty(judges)) {
+            Optional<Judge> judge = judges.stream().filter(n -> n.getName().equals(judgeName)).findFirst();
+            if (judge.isPresent()) {
+                return judge.get().getEmploymentStatus();
+            }
         }
         return null;
     }
@@ -190,17 +196,17 @@ public class SessionDaysReport {
                         JudgeEmploymentStatus judgeStatus = getJudgeStatus(hearingTypeItem.getValue().getJudge());
 
                         switch ((judgeStatus != null) ? judgeStatus : OTHER_EMPLOYMENT_STATUS) {
-                                case SALARIED:
-                                    reportDetail.setJudgeType("FTC");
-                                    break;
-                                case FEE_PAID:
-                                    reportDetail.setJudgeType("PTC");
-                                    break;
-                                case OTHER_EMPLOYMENT_STATUS:
-                                    reportDetail.setJudgeType("*");
-                                    break;
-                                default:
-                                    break;
+                            case SALARIED:
+                                reportDetail.setJudgeType("FTC");
+                                break;
+                            case FEE_PAID:
+                                reportDetail.setJudgeType("PTC");
+                                break;
+                            case OTHER_EMPLOYMENT_STATUS:
+                                reportDetail.setJudgeType("*");
+                                break;
+                            default:
+                                break;
                             }
 
                         reportDetail.setCaseReference(caseData.getEthosCaseReference());

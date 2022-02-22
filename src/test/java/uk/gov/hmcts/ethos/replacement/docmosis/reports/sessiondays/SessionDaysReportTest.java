@@ -1,7 +1,9 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays;
 
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -29,7 +31,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge
 import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.SALARIED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReport.FULL_DAY;
 
-public class SessionDaysReportTest {
+ class SessionDaysReportTest {
 
     SessionDaysReportDataSource reportDataSource;
     JpaJudgeService jpaJudgeService;
@@ -48,16 +50,16 @@ public class SessionDaysReportTest {
         reportDataSource = mock(SessionDaysReportDataSource.class);
         jpaJudgeService = mock(JpaJudgeService.class);
         when(reportDataSource.getData(MANCHESTER_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
-        when(jpaJudgeService.getJudge("Manchester", "ftcJudge")).thenReturn(getJudge("ftcJudge", SALARIED));
-        when(jpaJudgeService.getJudge("Manchester", "ptcJudge")).thenReturn(getJudge("ptcJudge", FEE_PAID));
+        when(jpaJudgeService.getJudges("Manchester")).thenReturn(getJudge("ftcJudge", SALARIED));
+        when(jpaJudgeService.getJudges("Manchester")).thenReturn(getJudge("ptcJudge", FEE_PAID));
         sessionDaysReport = new SessionDaysReport(reportDataSource, jpaJudgeService);
     }
 
-    private Judge getJudge(String name, JudgeEmploymentStatus status) {
+    private List<Judge> getJudge(String name, JudgeEmploymentStatus status) {
         Judge judge = new Judge();
         judge.setEmploymentStatus(status);
         judge.setName(name);
-        return judge;
+        return Collections.singletonList(judge);
     }
 
     @Test
@@ -83,7 +85,7 @@ public class SessionDaysReportTest {
 
     @ParameterizedTest
     @CsvSource({HEARING_STATUS_LISTED, HEARING_STATUS_SETTLED, HEARING_STATUS_WITHDRAWN, HEARING_STATUS_POSTPONED})
-    public void shouldNotShowCaseWithInValidHearingStatus(String hearingStatus) {
+     void shouldNotShowCaseWithInValidHearingStatus(String hearingStatus) {
         // Given a case has invalid hearing status
         // and report data is requested
         // the case should not be in the report data
@@ -92,7 +94,7 @@ public class SessionDaysReportTest {
 
         var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
-        assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
+        Assertions.assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
         assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
         assertEquals("0", reportData.getReportSummary().getOtherSessionDaysTotal());
         assertEquals("0", reportData.getReportSummary().getSessionDaysTotal());
@@ -134,18 +136,18 @@ public class SessionDaysReportTest {
 
     @ParameterizedTest
     @CsvSource({"ftcJudge, FTC, 0 ", "ptcJudge, PTC, 1 ", "* Not Allocated,*, 2"})
-    public void assertReportDetailsValues(String judge, String judgeType, int index) {
+     void assertReportDetailsValues(String judge, String judgeType, int index) {
         caseDataBuilder.withHearingData(HEARING_STATUS_HEARD);
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
         var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
         var reportDetail = reportData.getReportDetails().get(index);
-        assertEquals("111", reportDetail.getCaseReference());
-        assertEquals("Clerk A", reportDetail.getHearingClerk());
-        assertEquals("2022-01-20", reportDetail.getHearingDate());
-        assertEquals("1", reportDetail.getHearingNumber());
-        assertEquals("Y", reportDetail.getHearingSitAlone());
-        assertEquals("Y", reportDetail.getHearingTelConf());
+        Assertions.assertEquals("111", reportDetail.getCaseReference());
+        Assertions.assertEquals("Clerk A", reportDetail.getHearingClerk());
+        Assertions.assertEquals("2022-01-20", reportDetail.getHearingDate());
+        Assertions.assertEquals("1", reportDetail.getHearingNumber());
+        Assertions.assertEquals("Y", reportDetail.getHearingSitAlone());
+        Assertions.assertEquals("Y", reportDetail.getHearingTelConf());
         assertEquals(FULL_DAY, reportDetail.getSessionType());
         assertEquals(judge, reportDetail.getHearingJudge());
         assertEquals(judgeType, reportDetail.getJudgeType());

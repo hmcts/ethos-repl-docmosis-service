@@ -22,6 +22,9 @@ values ('LEEDS002', 'Judge Leeds 2', 'LEEDS', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
 values ('LEEDS003', 'Judge Leeds 3', 'LEEDS', 'FEE_PAID');
+
+insert into judge (code, name, tribunal_office, employment_status)
+values ('LEEDS004', 'A Judge', 'LEEDS', 'SALARIED');
 ------------------------------------------------------------
 -- LONDON CENTRAL
 ------------------------------------------------------------

@@ -2,6 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.elasticsearch.common.Strings;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
@@ -177,9 +178,9 @@ public class HearingsToJudgmentsReport {
                 hearingJudgmentItem.judgmentDateSent = dateJudgmentSent.format(OLD_DATE_TIME_PATTERN2);
                 hearingJudgmentItem.total = hearingListedDate.datesUntil(dateJudgmentSent).count();
                 hearingJudgmentItem.reservedHearing = dateListedType.getHearingReservedJudgement();
-                hearingJudgmentItem.judge = hearingType.getJudge();
-
-                hearingJudgmentsList.add(hearingJudgmentItem);
+                String[] segments = Strings.split(hearingType.getJudge(), "_");
+                hearingJudgmentItem.judge = segments[segments.length - 1];
+            hearingJudgmentsList.add(hearingJudgmentItem);
             }
         }
 

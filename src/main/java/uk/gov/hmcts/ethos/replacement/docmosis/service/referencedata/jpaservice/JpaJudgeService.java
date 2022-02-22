@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.JudgeRepository;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.JudgeService;
+import java.util.List;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -15,7 +17,7 @@ public class JpaJudgeService implements JudgeService {
     private final JudgeRepository judgeRepository;
 
     @Override
-    public Judge getJudge(String office, String name) {
-        return judgeRepository.findByTribunalOfficeAndName(office, name);
+    public List<Judge> getJudges(String tribunalOffice) {
+        return judgeRepository.findByTribunalOffice(tribunalOffice);
     }
 }
