@@ -63,7 +63,7 @@ public class SessionDaysCaseDataBuilder {
         DateListedType dType = new DateListedType();
         dType.setHearingStatus(hearingStatus);
         dType.setHearingClerk("Clerk A");
-        dType.setListedDate("2022-01-20");
+        dType.setListedDate("2022-01-20T11:00:00.000");
         dType.setHearingTimingStart("2022-01-20T11:00:00.000");
         dType.setHearingTimingFinish("2022-01-20T17:00:00.000");
         dType.setHearingTimingBreak("2022-01-20T13:00:00.000");

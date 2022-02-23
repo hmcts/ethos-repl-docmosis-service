@@ -107,7 +107,9 @@ public class SessionDaysReport {
         }
         SessionDaysReportSummary2 summary2 = new SessionDaysReportSummary2();
         initReportSummary2(summary2);
-        summary2.setDate(dateListedType.getListedDate());
+
+        summary2.setDate(LocalDateTime.parse(
+                dateListedType.getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate().toString());
         sessionDaysReportSummary2List.add(summary2);
         return summary2;
     }
@@ -189,7 +191,9 @@ public class SessionDaysReport {
                 for (DateListedTypeItem dateListedTypeItem : dates) {
                     if (isHearingStatusValid(dateListedTypeItem)) {
                         SessionDaysReportDetail reportDetail = new SessionDaysReportDetail();
-                        reportDetail.setHearingDate(dateListedTypeItem.getValue().getListedDate());
+                        reportDetail.setHearingDate(LocalDateTime.parse(
+                                dateListedTypeItem.getValue().getListedDate(), OLD_DATE_TIME_PATTERN)
+                                .toLocalDate().toString());
                         reportDetail.setHearingJudge(
                                 Strings.isNullOrEmpty(hearingTypeItem.getValue().getJudge())
                                         ? "* Not Allocated" : hearingTypeItem.getValue().getJudge());
