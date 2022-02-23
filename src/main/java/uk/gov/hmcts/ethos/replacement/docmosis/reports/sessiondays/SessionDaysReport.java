@@ -23,6 +23,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEAR
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.OTHER_EMPLOYMENT_STATUS;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReport.OLD_DATE_TIME_PATTERN3;
 
 public class SessionDaysReport {
 
@@ -238,6 +239,12 @@ public class SessionDaysReport {
         }
     }
 
+    private LocalDateTime convertHearingTime(String dateToConvert) {
+        return dateToConvert.endsWith(".000")
+                ? LocalDateTime.parse(dateToConvert, OLD_DATE_TIME_PATTERN)
+                : LocalDateTime.parse(dateToConvert, OLD_DATE_TIME_PATTERN3);
+    }
+
     private String calculateDuration(DateListedTypeItem c) {
         var dateListedType = c.getValue();
         long duration = 0;
@@ -248,8 +255,8 @@ public class SessionDaysReport {
         //If there was a break and resumption during the hearing
         if (!StringUtil.isNullOrEmpty(hearingTimingBreak)
                 && !StringUtil.isNullOrEmpty(hearingTimingResume)) {
-            var hearingBreak = LocalDateTime.parse(hearingTimingBreak, OLD_DATE_TIME_PATTERN);
-            var hearingResume = LocalDateTime.parse(hearingTimingResume, OLD_DATE_TIME_PATTERN);
+            var hearingBreak = convertHearingTime(hearingTimingBreak);
+            var hearingResume = convertHearingTime(hearingTimingResume);
             breakDuration = ChronoUnit.MINUTES.between(hearingBreak, hearingResume);
         }
 
@@ -257,8 +264,8 @@ public class SessionDaysReport {
         var hearingTimingFinish = dateListedType.getHearingTimingFinish();
         if (!StringUtil.isNullOrEmpty(hearingTimingStart)
                 && !StringUtil.isNullOrEmpty(hearingTimingFinish)) {
-            var hearingStartTime = LocalDateTime.parse(hearingTimingStart, OLD_DATE_TIME_PATTERN);
-            var hearingEndTime = LocalDateTime.parse(hearingTimingFinish, OLD_DATE_TIME_PATTERN);
+            var hearingStartTime = convertHearingTime(hearingTimingStart);
+            var hearingEndTime = convertHearingTime(hearingTimingFinish);
             long startToEndDiffInMinutes = ChronoUnit.MINUTES.between(hearingStartTime, hearingEndTime);
             duration = startToEndDiffInMinutes - breakDuration;
         }
