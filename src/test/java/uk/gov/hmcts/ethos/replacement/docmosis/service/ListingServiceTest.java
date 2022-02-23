@@ -858,6 +858,26 @@ public class ListingServiceTest {
         listingDetailsRange.getCaseData().setListingDate("2021-09-12");
         listingDetailsRange.getCaseData().setListingDateFrom("2021-09-08");
         listingDetailsRange.getCaseData().setListingDateTo("2021-09-18");
+        var bfActionReportData = new BfActionReportData();
+        bfActionReportData.setDocumentName(docName);
+        bfActionReportData.setOffice("Manchester");
+
+        List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
+        var bFDateTypeItem = new BFDateTypeItem();
+        bFDateTypeItem.setValue(new BFDateType());
+        bfActionReportData.setBfDateCollection(bfDateTypeItems);
+        var mockedBfActionReport = Mockito.mock(BfActionReport.class);
+
+        doReturn(submitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
+                anyString(), anyString(), anyString(), anyString());
+        doReturn(bfActionReportData).when(mockedBfActionReport).runReport(any(ListingDetails.class),
+                Mockito.<SubmitEvent>anyList());
+
+        var listingDataResult = (BfActionReportData) listingService.generateReportData(listingDetailsRange,
+                "authToken");
+
+        assertEquals(BROUGHT_FORWARD_REPORT, listingDataResult.getReportType());
+    }
 
     @Test
     public void generateBFReportDataRangeDatesWithMatchingClerkResponsible() throws IOException {
@@ -880,27 +900,6 @@ public class ListingServiceTest {
         when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
         ListingData listingDataResult = listingService.generateReportData(listingDetailsRange, "authToken");
         assertEquals(result, listingDataResult.toString());
-    }
-
-        var bfActionReportData = new BfActionReportData();
-        bfActionReportData.setDocumentName(docName);
-        bfActionReportData.setOffice("Manchester");
-
-        List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
-        var bFDateTypeItem = new BFDateTypeItem();
-        bFDateTypeItem.setValue(new BFDateType());
-        bfActionReportData.setBfDateCollection(bfDateTypeItems);
-        var mockedBfActionReport = Mockito.mock(BfActionReport.class);
-
-        doReturn(submitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
-            anyString(), anyString(), anyString(), anyString());
-        doReturn(bfActionReportData).when(mockedBfActionReport).runReport(any(ListingDetails.class),
-            Mockito.<SubmitEvent>anyList());
-
-        var listingDataResult = (BfActionReportData) listingService.generateReportData(listingDetailsRange,
-            "authToken");
-
-        assertEquals(BROUGHT_FORWARD_REPORT, listingDataResult.getReportType());
     }
 
     @Test
