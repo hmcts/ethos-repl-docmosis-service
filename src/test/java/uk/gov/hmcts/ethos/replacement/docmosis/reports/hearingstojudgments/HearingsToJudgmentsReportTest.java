@@ -386,6 +386,24 @@ class HearingsToJudgmentsReportTest {
         assertEquals("25.00", reportData.getReportSummary().getTotalX4WkPercent());
     }
 
+    @Test
+    void shouldSortCasesByTotalDays() {
+        // Given I have 2 cases with a judgment outside of 4 weeks
+        // When I request report data
+        // The details section should be ordered by total days ascending
+        submitEvents.add(createValidSubmitEventNotWithin4Wks());
+        submitEvents.add(createValidSubmitEventNotWithin4Wks());
+
+        // Will set the first cases total days to a number larger than the second cases
+        submitEvents.get(0).getCaseData().getJudgementCollection().get(0).getValue().setDateJudgmentSent("2021-12-31");
+
+        var reportData = hearingsToJudgmentsReport.runReport(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        assertCommonValues(reportData);
+        assertEquals(2, reportData.getReportDetails().size());
+        assertTrue(Integer.parseInt(reportData.getReportDetails().get(0).getTotalDays())
+                < Integer.parseInt(reportData.getReportDetails().get(1).getTotalDays()));
+    }
+
     @ParameterizedTest
     @CsvSource({
             "2021-07-16T10:00:00.000,2021-07-16,2021-08-26,2021-08-26,41,2500121/2021,1,One Test,"
