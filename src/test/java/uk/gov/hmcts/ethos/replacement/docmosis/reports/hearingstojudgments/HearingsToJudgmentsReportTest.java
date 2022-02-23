@@ -406,13 +406,13 @@ class HearingsToJudgmentsReportTest {
 
     @ParameterizedTest
     @CsvSource({
-            "2021-07-16T10:00:00.000,2021-07-16,2021-08-26,2021-08-26,41,2500121/2021,1,One Test,"
+            "2021-07-16T10:00:00.000,2021-07-16,2021-08-26,2021-08-26,42,2500121/2021,1,One Test,"
                     + HEARING_TYPE_JUDICIAL_HEARING + "," + YES + "," + ACCEPTED_STATE,
-            "2021-07-17T10:00:00.000,2021-07-17,2021-08-26,2021-08-26,40,2500122/2021,2,Two Test,"
+            "2021-07-17T10:00:00.000,2021-07-17,2021-08-26,2021-08-26,41,2500122/2021,2,Two Test,"
                     + HEARING_TYPE_PERLIMINARY_HEARING + "," + NO + "," + ACCEPTED_STATE,
-            "2021-07-18T10:00:00.000,2021-07-18,2021-08-26,2021-08-26,39,2500123/2021,3,Three Test,"
+            "2021-07-18T10:00:00.000,2021-07-18,2021-08-26,2021-08-26,40,2500123/2021,3,Three Test,"
                     + HEARING_TYPE_PERLIMINARY_HEARING_CM + ",," + CLOSED_STATE,
-            "2021-07-19T10:00:00.000,2021-07-19,2021-08-26,2021-08-26,38,2500124/2021,4,Four Test,"
+            "2021-07-19T10:00:00.000,2021-07-19,2021-08-26,2021-08-26,39,2500124/2021,4,Four Test,"
                     + HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC + "," + YES + "," + CLOSED_STATE})
     void shouldContainCorrectDetailValuesForHearingsWithValidJudgment(String hearingListedDate, String judgmentHearingDate,
                                                                       String dateJudgmentMade, String dateJudgmentSent,
@@ -455,7 +455,7 @@ class HearingsToJudgmentsReportTest {
         // | 2021-07-05 | 2 | 2021-08-03 | 2021-08-04
         // When I request report data
         // Then I have correct hearing values for hearing #2
-        var expectedTotalDays = "30";
+        var expectedTotalDays = "31";
         var caseReference = "2500123/2021";
         var judge = "3756_Hugh Garfield"; // Amended to mimic Judge's ITCO reference
         var judgmentHearingDate = "2021-07-05";
