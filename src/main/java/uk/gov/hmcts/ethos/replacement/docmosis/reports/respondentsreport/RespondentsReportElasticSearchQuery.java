@@ -16,9 +16,7 @@ public class RespondentsReportElasticSearchQuery {
 
         var boolQueryBuilder = boolQuery()
                 .must(new ExistsQueryBuilder("data.respondentCollection"))
-                .filter(new RangeQueryBuilder(
-                "data.receiptDate")
-                        .gte(dateToSearchFrom).lte(dateToSearchTo));
+                .filter(new RangeQueryBuilder("data.receiptDate").gte(dateToSearchFrom).lte(dateToSearchTo));
 
         return new SearchSourceBuilder()
                 .size(MAX_ES_SIZE)

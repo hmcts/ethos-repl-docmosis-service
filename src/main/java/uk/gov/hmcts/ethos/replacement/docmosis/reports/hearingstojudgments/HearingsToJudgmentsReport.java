@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
@@ -23,6 +24,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICI
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM_TCC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NOT_ALLOCATED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
@@ -177,7 +179,12 @@ public class HearingsToJudgmentsReport {
                 hearingJudgmentItem.judgmentDateSent = dateJudgmentSent.format(OLD_DATE_TIME_PATTERN2);
                 hearingJudgmentItem.total = hearingListedDate.datesUntil(dateJudgmentSent).count();
                 hearingJudgmentItem.reservedHearing = dateListedType.getHearingReservedJudgement();
-                hearingJudgmentItem.judge = hearingType.getJudge();
+
+        
+
+                hearingJudgmentItem.judge = isNullOrEmpty(hearingType.getJudge()) ? NOT_ALLOCATED :
+                                        hearingType.getJudge().substring(hearingType.getJudge().indexOf('_') + 1);
+
                 hearingJudgmentsList.add(hearingJudgmentItem);
             }
         }

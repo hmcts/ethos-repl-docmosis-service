@@ -3,8 +3,10 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
-import uk.gov.hmcts.ecm.common.model.ccd.items.*;
-import uk.gov.hmcts.ecm.common.model.ccd.types.*;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
+import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportSubmitEvent;
 

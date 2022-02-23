@@ -1,9 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport;
 
-import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.*;
@@ -31,7 +28,7 @@ public class RespondentsReportTest {
         caseDataBuilder = new RespondentsReportCaseDataBuilder();
         reportDataSource = mock(RespondentsReportDataSource.class);
         when(reportDataSource.getData(MANCHESTER_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
-        respondentsReport = new RespondentsReport(reportDataSource,DATE_FROM, DATE_TO);
+        respondentsReport = new RespondentsReport(reportDataSource);
     }
 
     @Test
@@ -44,7 +41,8 @@ public class RespondentsReportTest {
             submitEvents.add(caseDataBuilder
                     .buildAsSubmitEvent());
 
-            var reportData = respondentsReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID);
+            var reportData = respondentsReport.generateReport(
+                    new RespondentsReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
             assertCommonValues(reportData);
             assertEquals("0", reportData.getReportSummary().getTotalCasesWithMoreThanOneRespondent());
             assertEquals(0, reportData.getReportDetails().size());
@@ -60,7 +58,7 @@ public class RespondentsReportTest {
         submitEvents.add(caseDataBuilder
                 .buildAsSubmitEvent());
 
-        var reportData = respondentsReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID);
+        var reportData = respondentsReport.generateReport(new RespondentsReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         assertCommonValues(reportData);
         assertEquals("0", reportData.getReportSummary().getTotalCasesWithMoreThanOneRespondent());
         assertTrue(reportData.getReportDetails().isEmpty());
@@ -75,7 +73,7 @@ public class RespondentsReportTest {
         caseDataBuilder.withMoreThanOneRespondents();
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
 
-        var reportData = respondentsReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID);
+        var reportData = respondentsReport.generateReport(new RespondentsReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         assertCommonValues(reportData);
         assertEquals("1", reportData.getReportSummary().getTotalCasesWithMoreThanOneRespondent());
         assertFalse(reportData.getReportDetails().isEmpty());
@@ -90,7 +88,7 @@ public class RespondentsReportTest {
         caseDataBuilder.withMoreThan1RespondentsRepresented();
         submitEvents.add(caseDataBuilder
                 .buildAsSubmitEvent());
-        var reportData = respondentsReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID);
+        var reportData = respondentsReport.generateReport(new RespondentsReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         assertCommonValues(reportData);
         assertEquals("111", reportData.getReportDetails().get(0).getCaseNumber());
         assertEquals("Resp1", reportData.getReportDetails().get(0).getRespondentName());

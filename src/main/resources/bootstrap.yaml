@@ -8,4 +8,5 @@ spring:
         tornado-access-key: TORNADO_ACCESS_KEY
         ethos-repl-service-s2s-secret: ETHOS_REPL_SERVICE_S2S_SECRET
         repl-docmosis-backend-POSTGRES-PASS: ETHOS_REPL_DB_PASSWORD
+        repl-docmosis-backend-POSTGRES-PASS-V11: ETHOS_REPL_DB_V11_PASSWORD
         create-updates-queue-send-connection-string: CREATE_UPDATES_QUEUE_SEND_CONNECTION_STRING

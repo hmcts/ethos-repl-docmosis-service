@@ -14,20 +14,15 @@ import java.util.Optional;
 public class RespondentsReport {
 
     private final RespondentsReportDataSource reportDataSource;
-    private final String listingDateFrom;
-    private final String listingDateTo;
 
-    public RespondentsReport(RespondentsReportDataSource reportDataSource,
-                             String listingDateFrom, String listingDateTo) {
+    public RespondentsReport(RespondentsReportDataSource reportDataSource) {
         this.reportDataSource = reportDataSource;
-        this.listingDateFrom = listingDateFrom;
-        this.listingDateTo = listingDateTo;
     }
 
-    public RespondentsReportData generateReport(String caseTypeId) {
+    public RespondentsReportData generateReport(RespondentsReportParams params) {
 
-        var submitEvents = getCases(caseTypeId, listingDateFrom, listingDateTo);
-        var reportData = initReport(caseTypeId);
+        var submitEvents = getCases(params);
+        var reportData = initReport(params.getCaseTypeId());
 
         if (CollectionUtils.isNotEmpty(submitEvents)) {
             executeReport(reportData, submitEvents);
@@ -39,18 +34,18 @@ public class RespondentsReport {
         var office = UtilHelper.getListingCaseTypeId(caseTypeId);
         var reportSummary = new RespondentsReportSummary();
         reportSummary.setOffice(office);
+        reportSummary.setTotalCasesWithMoreThanOneRespondent("0");
         return new RespondentsReportData(reportSummary);
     }
 
-    private List<RespondentsReportSubmitEvent> getCases(
-            String caseTypeId, String listingDateFrom, String listingDateTo) {
+    private List<RespondentsReportSubmitEvent> getCases(RespondentsReportParams params) {
         return reportDataSource.getData(UtilHelper.getListingCaseTypeId(
-                caseTypeId), listingDateFrom, listingDateTo);
+                params.getCaseTypeId()), params.getDateFrom(), params.getDateTo());
     }
 
     private void executeReport(RespondentsReportData respondentReportData,
                                List<RespondentsReportSubmitEvent> submitEvents) {
-        var moreThan1Resp =  (int) submitEvents.stream()
+        var moreThan1Resp = (int) submitEvents.stream()
                 .filter(s -> CollectionUtils.isNotEmpty(s.getCaseData().getRespondentCollection())
                && s.getCaseData().getRespondentCollection().size() > 1).count();
 
@@ -81,12 +76,7 @@ public class RespondentsReport {
     }
 
     private boolean hasMultipleRespondents(RespondentsReportCaseData caseData) {
-        if (CollectionUtils.isNotEmpty(caseData.getRespondentCollection())
-                && caseData.getRespondentCollection().size() > 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return CollectionUtils.size(caseData.getRespondentCollection()) > 1;
     }
 
     private boolean isRepresentativeRepresentingMoreThanOneRespondent(String rep, RespondentsReportCaseData caseData) {
