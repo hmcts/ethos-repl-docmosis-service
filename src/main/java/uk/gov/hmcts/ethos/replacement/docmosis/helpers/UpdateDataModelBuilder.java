@@ -16,6 +16,10 @@ import uk.gov.hmcts.ecm.common.model.servicebus.datamodel.UpdateDataModel;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
+
 public class UpdateDataModelBuilder {
 
     private UpdateDataModelBuilder() {
@@ -43,7 +47,17 @@ public class UpdateDataModelBuilder {
                 .respondentSumType(getRespondentSumType(multipleData, caseData))
                 .judgementType(getJudgementType(multipleData, caseData))
                 .representedType(getRespondentRepType(multipleData, caseData))
+                .isFixCase(getFixCase(multipleData))
                 .build();
+    }
+
+    private static String getFixCase(MultipleData multipleData) {
+        if (isNullOrEmpty(multipleData.getIsFixCase())
+            || NO.equals(multipleData.getIsFixCase())) {
+            return NO;
+        } else {
+            return YES;
+        }
     }
 
     private static JurCodesType getJurCodesType(MultipleData multipleData, CaseData caseData) {
