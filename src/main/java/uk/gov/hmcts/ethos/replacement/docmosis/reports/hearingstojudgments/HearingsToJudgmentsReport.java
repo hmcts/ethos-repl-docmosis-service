@@ -179,7 +179,7 @@ public class HearingsToJudgmentsReport {
                 hearingJudgmentItem.judgmentWithin4Weeks = dateJudgmentMade.isBefore(hearingDatePlus4Wks);
                 hearingJudgmentItem.hearingDate = hearingListedDate.format(OLD_DATE_TIME_PATTERN2);
                 hearingJudgmentItem.judgmentDateSent = dateJudgmentSent.format(OLD_DATE_TIME_PATTERN2);
-                hearingJudgmentItem.total = hearingListedDate.datesUntil(dateJudgmentSent).count();
+                hearingJudgmentItem.total = hearingListedDate.datesUntil(dateJudgmentSent.plusDays(1)).count();
                 hearingJudgmentItem.reservedHearing = dateListedType.getHearingReservedJudgement();
                 hearingJudgmentItem.judge = isNullOrEmpty(hearingType.getJudge()) ? NOT_ALLOCATED :
                                         hearingType.getJudge().substring(hearingType.getJudge().indexOf('_') + 1);
