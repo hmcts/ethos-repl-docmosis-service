@@ -1,0 +1,23 @@
+{
+"accessKey":"",
+"templateName":"EM-TRB-SCO-ENG-00817.docx",
+"outputName":"document.docx",
+"data":{
+"Listed_date_from":"1 January 2022",
+"Listed_date_to":"10 January 2022",
+"Report_Office":"Manchester",
+"ftcSessionDays":"1",
+"ptcSessionDays":"1",
+"otherSessionDays":"1",
+"totalSessionDays":"3",
+"percentPtcSessionDays":"33",
+"reportSummary2":[
+{"date":"20-1-2022","ftSessionDays":"1","ptSessionDays":"1","otherSessionDays":"1","sessionDaysTotalDetail":"3"}
+],
+"reportDetails":[
+{"hearingDate":"20-1-2022","hearingJudge":"Judge X","judgeType":"Salaried","caseReference":"1111/2022","hearingNumber":"1","hearingType":"hearing type","hearingSitAlone":"Y","hearingTelConf":"Y","hearingDuration":"200","sessionType":"Full Day","hearingClerk":"Clerk X"}
+],
+"Report_Clerk":"Mike Jordan",
+"Today_date":"current-date"
+}
+}

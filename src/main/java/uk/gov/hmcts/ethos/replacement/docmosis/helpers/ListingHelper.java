@@ -74,6 +74,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RULE_50_APPLIES;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.STAFF_CASE_CAUSE_LIST_ROOM_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.STAFF_CASE_CAUSE_LIST_TEMPLATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
@@ -95,7 +96,7 @@ public class ListingHelper {
         LIVE_CASELOAD_REPORT, CASES_COMPLETED_REPORT, CASES_AWAITING_JUDGMENT_REPORT, TIME_TO_FIRST_HEARING_REPORT,
         SERVING_CLAIMS_REPORT, CASE_SOURCE_LOCAL_REPORT, HEARINGS_TO_JUDGEMENTS_REPORT,
             HEARINGS_BY_HEARING_TYPE_REPORT, NO_CHANGE_IN_CURRENT_POSITION_REPORT,
-            MEMBER_DAYS_REPORT, RESPONDENTS_REPORT);
+            MEMBER_DAYS_REPORT, RESPONDENTS_REPORT, SESSION_DAYS_REPORT);
     private static final List<String> SCOTLAND_HEARING_LIST = List.of("Reading Day", "Deliberation Day",
             "Members meeting", "In Chambers");
 
@@ -871,6 +872,8 @@ public class ListingHelper {
                 return "EM-TRB-SCO-ENG-00800";
             case RESPONDENTS_REPORT:
                 return "EM-TRB-SCO-ENG-00815";
+            case SESSION_DAYS_REPORT:
+                return "EM-TRB-SCO-ENG-00817";
             default:
                 return NO_DOCUMENT_FOUND;
         }
