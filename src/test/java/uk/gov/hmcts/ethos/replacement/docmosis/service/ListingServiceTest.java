@@ -826,27 +826,6 @@ public class ListingServiceTest {
         assertEquals(result, listingData.toString());
     }
 
-    @Test
-    public void generateBFReportDataSingleDateMatch() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null," +
-                " tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null," +
-                " reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null," +
-                " listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null," +
-                " listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null," +
-                " venueEdinburgh=null, hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null," +
-                " docMarkUp=null, bfDateCollection=[BFDateTypeItem(id=222, " +
-                "value=BFDateType(caseReference=4210000/2019, broughtForwardAction=null," +
-                " broughtForwardDate=2019-12-12, broughtForwardDateCleared=, " +
-                "broughtForwardEnteredDate=null, broughtForwardDateReason=null))]," +
-                " clerkResponsible=null, reportType=Brought Forward Report, " +
-                "documentName=null, showAll=null, localReportsSummaryHdr=null," +
-                " localReportsSummary=null, localReportsSummaryHdr2=null, " +
-                "localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
-        ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
-        assertEquals(result, listingDataResult.toString());
-    }
-
     public void generateBFReportData() throws IOException {
         String docName = "Brought Forward Report - Test";
         listingDetailsRange.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
@@ -877,29 +856,6 @@ public class ListingServiceTest {
                 "authToken");
 
         assertEquals(BROUGHT_FORWARD_REPORT, listingDataResult.getReportType());
-    }
-
-    @Test
-    public void generateBFReportDataRangeDatesWithMatchingClerkResponsible() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, " +
-                "tribunalCorrespondenceFax=null, tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null," +
-                " reportDate=null, hearingDateType=Range, listingDate=null, listingDateFrom=2019-12-09," +
-                " listingDateTo=2019-12-12, listingVenue=Aberdeen, listingCollection=[]," +
-                " listingVenueOfficeGlas=null, listingVenueOfficeAber=null, venueGlasgow=null," +
-                " venueAberdeen=null, venueDundee=null, venueEdinburgh=null, hearingDocType=null," +
-                " hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=" +
-                "[BFDateTypeItem(id=111, value=BFDateType(caseReference=4210000/2019, " +
-                "broughtForwardAction=null, broughtForwardDate=2019-12-11, broughtForwardDateCleared=, " +
-                "broughtForwardEnteredDate=null, broughtForwardDateReason=null)), BFDateTypeItem(id=222, " +
-                "value=BFDateType(caseReference=4210000/2019, broughtForwardAction=null, " +
-                "broughtForwardDate=2019-12-12, broughtForwardDateCleared=," +
-                " broughtForwardEnteredDate=null, broughtForwardDateReason=null))], clerkResponsible=null, " +
-                "reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null," +
-                " localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, " +
-                "localReportsDetailHdr=null, localReportsDetail=null)";
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
-        ListingData listingDataResult = listingService.generateReportData(listingDetailsRange, "authToken");
-        assertEquals(result, listingDataResult.toString());
     }
 
     @Test
