@@ -19,6 +19,7 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CcdReportDataSource;
@@ -317,7 +318,7 @@ public class ListingService {
 
         switch (listingDetails.getCaseData().getReportType()) {
             case BROUGHT_FORWARD_REPORT:
-                return ReportHelper.processBroughtForwardDatesRequest(listingDetails, submitEvents);
+                return new BfActionReport().runReport(listingDetails, submitEvents);
             case CLAIMS_ACCEPTED_REPORT:
                 return ReportHelper.processClaimsAcceptedRequest(listingDetails, submitEvents);
             case LIVE_CASELOAD_REPORT:

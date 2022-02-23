@@ -34,7 +34,9 @@ import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
+import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
 import uk.gov.hmcts.ecm.common.model.multiples.SubmitMultipleEvent;
 import uk.gov.hmcts.ecm.common.model.reports.hearingstojudgments.HearingsToJudgmentsSubmitEvent;
@@ -42,6 +44,8 @@ import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReport
 import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.BFHelperTest;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CaseDataBuilder;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.CasesCompletedReport;
@@ -749,69 +753,37 @@ public class ListingServiceTest {
     }
 
     @Test
-    public void generateBFReportDataSingleDateMatch() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Single, listingDate=2019-12-12, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=[BFDateTypeItem(id=222, " +
-                "value=BFDateType(caseReference=4210000/2019, broughtForwardAction=null, broughtForwardDate=2019-12-12, broughtForwardDateCleared=, " +
-                "broughtForwardDateReason=null))], clerkResponsible=null, reportType=Brought Forward Report, documentName=null, showAll=null, " +
-                "localReportsSummaryHdr=null, localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, " +
-                "localReportsDetailHdr=null, localReportsDetail=null)";
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
-        ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
-        assertEquals(result, listingDataResult.toString());
-    }
+    public void generateBFReportData() throws IOException {
+        String docName = "Brought Forward Report - Test";
+        listingDetailsRange.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
+        listingDetailsRange.getCaseData().setDocumentName(docName);
 
-    @Test
-    public void generateBFReportDataSingleDateMisMatch() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Single, listingDate=2019-12-30, listingDateFrom=null, " +
-                "listingDateTo=null, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, " +
-                "bfDateCollection=[], clerkResponsible=null, reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, " +
-                "localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
-        listingDetails.getCaseData().setListingDate("2019-12-30");
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
-        ListingData listingDataResult = listingService.generateReportData(listingDetails, "authToken");
-        assertEquals(result, listingDataResult.toString());
-        listingDetails.getCaseData().setListingDate("2019-12-12");
-    }
+        //set up search criteria
+        listingDetailsRange.getCaseData().setReportType(BROUGHT_FORWARD_REPORT);
+        listingDetailsRange.getCaseData().setHearingDateType("Range");
+        listingDetailsRange.getCaseData().setListingDate("2021-09-12");
+        listingDetailsRange.getCaseData().setListingDateFrom("2021-09-08");
+        listingDetailsRange.getCaseData().setListingDateTo("2021-09-18");
 
-    @Test
-    public void generateBFReportDataRangeDatesWithMatchingClerkResponsible() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Range, listingDate=null, " +
-                "listingDateFrom=2019-12-09, listingDateTo=2019-12-12, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, " +
-                "listingVenueOfficeAber=null, venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, bfDateCollection=[BFDateTypeItem(id=111, " +
-                "value=BFDateType(caseReference=4210000/2019, broughtForwardAction=null, broughtForwardDate=2019-12-11, " +
-                "broughtForwardDateCleared=, broughtForwardDateReason=null)), BFDateTypeItem(id=222, value=BFDateType(caseReference=4210000/2019, " +
-                "broughtForwardAction=null, broughtForwardDate=2019-12-12, broughtForwardDateCleared=, broughtForwardDateReason=null))], " +
-                "clerkResponsible=null, reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, " +
-                "localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, " +
-                "localReportsDetail=null)";
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
-        ListingData listingDataResult = listingService.generateReportData(listingDetailsRange, "authToken");
-        assertEquals(result, listingDataResult.toString());
-    }
+        var bfActionReportData = new BfActionReportData();
+        bfActionReportData.setDocumentName(docName);
+        bfActionReportData.setOffice("Manchester");
 
-    @Test
-    public void generateBFReportDataRangeDatesWithMisMatchedClerkResponsible() throws IOException {
-        String result = "ListingData(tribunalCorrespondenceAddress=null, tribunalCorrespondenceTelephone=null, tribunalCorrespondenceFax=null, " +
-                "tribunalCorrespondenceDX=null, tribunalCorrespondenceEmail=null, reportDate=null, hearingDateType=Range, listingDate=null, listingDateFrom=2019-12-09, " +
-                "listingDateTo=2019-12-12, listingVenue=Aberdeen, listingCollection=[], listingVenueOfficeGlas=null, listingVenueOfficeAber=null, " +
-                "venueGlasgow=null, venueAberdeen=null, venueDundee=null, venueEdinburgh=null, " +
-                "hearingDocType=null, hearingDocETCL=null, roomOrNoRoom=null, docMarkUp=null, " +
-                "bfDateCollection=[], clerkResponsible=null, reportType=Brought Forward Report, documentName=null, showAll=null, localReportsSummaryHdr=null, " +
-                "localReportsSummary=null, localReportsSummaryHdr2=null, localReportsSummary2=null, localReportsDetailHdr=null, localReportsDetail=null)";
-        listingDetailsRange.getCaseData().setClerkResponsible("not there");
-        when(ccdClient.retrieveCasesGenericReportElasticSearch(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(submitEvents);
-        ListingData listingDataResult = listingService.generateReportData(listingDetailsRange, "authToken");
-        assertEquals(result, listingDataResult.toString());
-        listingDetailsRange.getCaseData().setClerkResponsible("Steve Jones");
+        List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
+        var bFDateTypeItem = new BFDateTypeItem();
+        bFDateTypeItem.setValue(new BFDateType());
+        bfActionReportData.setBfDateCollection(bfDateTypeItems);
+        var mockedBfActionReport = Mockito.mock(BfActionReport.class);
+
+        doReturn(submitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
+            anyString(), anyString(), anyString(), anyString());
+        doReturn(bfActionReportData).when(mockedBfActionReport).runReport(any(ListingDetails.class),
+            Mockito.<SubmitEvent>anyList());
+
+        var listingDataResult = (BfActionReportData) listingService.generateReportData(listingDetailsRange,
+            "authToken");
+
+        assertEquals(BROUGHT_FORWARD_REPORT, listingDataResult.getReportType());
     }
 
     @Test
