@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction;
 import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import java.util.List;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
@@ -21,15 +22,7 @@ public class BfActionReportDoc {
         }
 
         var reportData = (BfActionReportData) listingData;
-        var startDate = reportData.getListingDate();
-        reportData.setListingDate(null);
-        var sb = new StringBuilder();
-        sb.append("\"Listed_date\":\"")
-            .append(nullCheck(startDate)).append(NEW_LINE);
-        sb.append("\"Listed_date_from\":\"")
-            .append(nullCheck(reportData.getListingDateFrom())).append(NEW_LINE);
-        sb.append("\"Listed_date_to\":\"")
-            .append(nullCheck(reportData.getListingDateTo())).append(NEW_LINE);
+        var sb = ListingHelper.getListingDate(reportData);
         sb.append(REPORT_OFFICE).append(nullCheck(reportData.getOffice())).append(NEW_LINE);
         sb.append("\"bf_list\":[\n");
         sb.append(addBfActionItemsList(reportData.getBfDateCollection()));

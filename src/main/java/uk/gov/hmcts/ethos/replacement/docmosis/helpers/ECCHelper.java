@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.COMPANY_TYPE_CLAIMANT;
@@ -122,7 +123,7 @@ public class ECCHelper {
         var jurCodesType = new JurCodesType();
         jurCodesType.setJuridictionCodesList(JURISDICTION_CODE_ECC);
         var jurCodesTypeItem = new JurCodesTypeItem();
-        jurCodesTypeItem.setId(JURISDICTION_CODE_ECC);
+        jurCodesTypeItem.setId(UUID.randomUUID().toString());
         jurCodesTypeItem.setValue(jurCodesType);
         caseData.setJurCodesCollection(new ArrayList<>(Collections.singleton(jurCodesTypeItem)));
     }

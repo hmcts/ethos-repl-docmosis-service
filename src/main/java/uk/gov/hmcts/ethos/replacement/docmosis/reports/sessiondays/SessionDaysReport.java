@@ -11,14 +11,18 @@ import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
@@ -29,6 +33,8 @@ public class SessionDaysReport {
 
     private final SessionDaysReportDataSource reportDataSource;
     private final JpaJudgeService jpaJudgeService;
+    private String dateFrom;
+    private String dateTo;
     public static final String ONE_HOUR = "One Hour";
     public static final String HALF_DAY = "Half Day";
     public static final String FULL_DAY = "Full Day";
@@ -44,7 +50,8 @@ public class SessionDaysReport {
 
         var submitEvents = getCases(caseTypeId, dateFrom, dateTo);
         var reportData = initReport(caseTypeId);
-
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
         if (CollectionUtils.isNotEmpty(submitEvents)) {
             executeReport(submitEvents, reportData);
         }
@@ -60,6 +67,20 @@ public class SessionDaysReport {
         reportSummary.setSessionDaysTotal("0");
         reportSummary.setPtSessionDaysPerCent("0.0");
         return new SessionDaysReportData(reportSummary);
+    }
+
+    public List<DateListedTypeItem> filterValidHearingDates(List<DateListedTypeItem> dateListedTypeItems) {
+        return dateListedTypeItems.stream()
+                .filter(x -> isHearingDateInRange(x.getValue().getListedDate()))
+                .collect(Collectors.toList());
+    }
+
+    private boolean isHearingDateInRange(String dateListed) {
+        var hearingListedDate = LocalDate.parse(ReportHelper.getFormattedLocalDate(dateListed));
+        var hearingDatesFrom = LocalDate.parse(ReportHelper.getFormattedLocalDate(dateFrom));
+        var hearingDatesTo = LocalDate.parse(ReportHelper.getFormattedLocalDate(dateTo));
+        return  (hearingListedDate.isEqual(hearingDatesFrom) ||  hearingListedDate.isAfter(hearingDatesFrom))
+                && (hearingListedDate.isEqual(hearingDatesTo) || hearingListedDate.isBefore(hearingDatesTo));
     }
 
     private void initReportSummary2(SessionDaysReportSummary2 reportSummary2) {
@@ -126,6 +147,7 @@ public class SessionDaysReport {
         int ot2 = 0;
         for (HearingTypeItem hearingTypeItem : getHearings(caseData)) {
             var dates = hearingTypeItem.getValue().getHearingDateCollection();
+            dates = filterValidHearingDates(dates);
             if (CollectionUtils.isNotEmpty(dates)) {
                 for (DateListedTypeItem dateListedTypeItem : dates) {
                     if (isHearingStatusValid(dateListedTypeItem)) {
@@ -188,6 +210,7 @@ public class SessionDaysReport {
     private void setReportDetail(SessionDaysCaseData caseData, List<SessionDaysReportDetail> reportDetailList) {
         for (HearingTypeItem hearingTypeItem : getHearings(caseData)) {
             var dates = hearingTypeItem.getValue().getHearingDateCollection();
+            dates = filterValidHearingDates(dates);
             if (CollectionUtils.isNotEmpty(dates)) {
                 for (DateListedTypeItem dateListedTypeItem : dates) {
                     if (isHearingStatusValid(dateListedTypeItem)) {

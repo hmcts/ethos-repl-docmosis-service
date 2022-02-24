@@ -4,137 +4,137 @@ DELETE FROM judge ; -- remove any existing values in case the script is ran more
 -- BRISTOL
 ------------------------------------------------------------
 insert into judge (code, name, tribunal_office, employment_status)
-values ('BRISTOL001', 'Judge Bristol 1', 'BRISTOL', 'SALARIED');
+values ('BRISTOL001', 'Judge Bristol 1', 'Bristol', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('BRISTOL002', 'Judge Bristol 2', 'BRISTOL', 'SALARIED');
+values ('BRISTOL002', 'Judge Bristol 2', 'Bristol', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('BRISTOL003', 'Judge Bristol 3', 'BRISTOL', 'FEE_PAID');
+values ('BRISTOL003', 'Judge Bristol 3', 'Bristol', 'FEE_PAID');
 ------------------------------------------------------------
 -- LEEDS
 ------------------------------------------------------------
 insert into judge (code, name, tribunal_office, employment_status)
-values ('LEEDS001', 'Judge Leeds 1', 'LEEDS', 'SALARIED');
+values ('LEEDS001', 'Judge Leeds 1', 'Leeds', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('LEEDS002', 'Judge Leeds 2', 'LEEDS', 'SALARIED');
+values ('LEEDS002', 'Judge Leeds 2', 'Leeds', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('LEEDS003', 'Judge Leeds 3', 'LEEDS', 'FEE_PAID');
+values ('LEEDS003', 'Judge Leeds 3', 'Leeds', 'FEE_PAID');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('LEEDS004', 'A Judge', 'LEEDS', 'SALARIED');
+values ('LEEDS004', 'A Judge', 'Leeds', 'SALARIED');
 ------------------------------------------------------------
 -- LONDON CENTRAL
 ------------------------------------------------------------
 insert into judge (code, name, tribunal_office, employment_status)
-values ('LONDONCENTRAL001', 'Judge LONDON CENTRAL 1', 'LONDONCENTRAL', 'SALARIED');
+values ('LONDONCENTRAL001', 'Judge LONDON CENTRAL 1', 'LondonCentral', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('LONDONCENTRAL002', 'Judge LONDON CENTRAL 2', 'LONDONCENTRAL', 'SALARIED');
+values ('LONDONCENTRAL002', 'Judge LONDON CENTRAL 2', 'LondonCentral', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('LONDONCENTRAL003', 'Judge LONDON CENTRAL 3', 'LONDONCENTRAL', 'FEE_PAID');
+values ('LONDONCENTRAL003', 'Judge LONDON CENTRAL 3', 'LondonCentral', 'FEE_PAID');
 ------------------------------------------------------------
 -- LONDON EAST
 ------------------------------------------------------------
 insert into judge (code, name, tribunal_office, employment_status)
-values ('LONDONEAST001', 'Judge London East 1', 'LONDONEAST', 'SALARIED');
+values ('LONDONEAST001', 'Judge London East 1', 'LondonEast', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('LONDONEAST002', 'Judge London East 2', 'LONDONEAST', 'SALARIED');
+values ('LONDONEAST002', 'Judge London East 2', 'LondonEast', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('LONDONEAST003', 'Judge London East 3', 'LONDONEAST', 'FEE_PAID');
+values ('LONDONEAST003', 'Judge London East 3', 'LondonEast', 'FEE_PAID');
 ------------------------------------------------------------
 -- LONDON SOUTH
 ------------------------------------------------------------
 insert into judge (code, name, tribunal_office, employment_status)
-values ('LONDONSOUTH001', 'Judge London South 1', 'LONDONSOUTH', 'SALARIED');
+values ('LONDONSOUTH001', 'Judge London South 1', 'LondonSouth', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('LONDONSOUTH002', 'Judge London South 2', 'LONDONSOUTH', 'SALARIED');
+values ('LONDONSOUTH002', 'Judge London South 2', 'LondonSouth', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('LONDONSOUTH003', 'Judge London South 3', 'LONDONSOUTH', 'FEE_PAID');
+values ('LONDONSOUTH003', 'Judge London South 3', 'LondonSouth', 'FEE_PAID');
 ------------------------------------------------------------
 -- MANCHESTER
 ------------------------------------------------------------
 insert into judge (code, name, tribunal_office, employment_status)
-values ('MANCHESTER001', 'Judge Manchester 1', 'MANCHESTER', 'SALARIED');
+values ('MANCHESTER001', 'Judge Manchester 1', 'Manchester', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('MANCHESTER002', 'Judge Manchester 2', 'MANCHESTER', 'SALARIED');
+values ('MANCHESTER002', 'Judge Manchester 2', 'Manchester', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('MANCHESTER003', 'Judge Manchester 3', 'MANCHESTER', 'FEE_PAID');
+values ('MANCHESTER003', 'Judge Manchester 3', 'Manchester', 'FEE_PAID');
 ------------------------------------------------------------
 -- MIDLANDS EAST
 ------------------------------------------------------------
 insert into judge (code, name, tribunal_office, employment_status)
-values ('MIDLANDSEAST001', 'Judge Midlands East 1', 'MIDLANDSEAST', 'SALARIED');
+values ('MIDLANDSEAST001', 'Judge Midlands East 1', 'MidlandsEast', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('MIDLANDSEAST002', 'Judge Midlands East 2', 'MIDLANDSEAST', 'SALARIED');
+values ('MIDLANDSEAST002', 'Judge Midlands East 2', 'MidlandsEast', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('MIDLANDSEAST003', 'Judge Midlands East 3', 'MIDLANDSEAST', 'FEE_PAID');
+values ('MIDLANDSEAST003', 'Judge Midlands East 3', 'MidlandsEast', 'FEE_PAID');
 ------------------------------------------------------------
 -- MIDLANDS WEST
 ------------------------------------------------------------
 insert into judge (code, name, tribunal_office, employment_status)
-values ('MIDLANDSWEST001', 'Judge Midlands West 1', 'MIDLANDSWEST', 'SALARIED');
+values ('MIDLANDSWEST001', 'Judge Midlands West 1', 'MidlandsWest', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('MIDLANDSWEST002', 'Judge Midlands West 2', 'MIDLANDSWEST', 'SALARIED');
+values ('MIDLANDSWEST002', 'Judge Midlands West 2', 'MidlandsWest', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('MIDLANDSWEST003', 'Judge Midlands West 3', 'MIDLANDSWEST', 'FEE_PAID');
+values ('MIDLANDSWEST003', 'Judge Midlands West 3', 'MidlandsWest', 'FEE_PAID');
 ------------------------------------------------------------
 -- NEWCASTLE
 ------------------------------------------------------------
 insert into judge (code, name, tribunal_office, employment_status)
-values ('NEWCASTLE001', 'Judge Newcastle 1', 'NEWCASTLE', 'SALARIED');
+values ('NEWCASTLE001', 'Judge Newcastle 1', 'NewCastle', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('NEWCASTLE002', 'Judge Newcastle 2', 'NEWCASTLE', 'SALARIED');
+values ('NEWCASTLE002', 'Judge Newcastle 2', 'NewCastle', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('NEWCASTLE003', 'Judge Newcastle 3', 'NEWCASTLE', 'FEE_PAID');
+values ('NEWCASTLE003', 'Judge Newcastle 3', 'NewCastle', 'FEE_PAID');
 ------------------------------------------------------------
 -- SCOTLAND
 ------------------------------------------------------------
 insert into judge (code, name, tribunal_office, employment_status)
-values ('SCOTLAND001', 'Judge Scotland 1', 'SCOTLAND', 'SALARIED');
+values ('SCOTLAND001', 'Judge Scotland 1', 'Scotland', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('SCOTLAND002', 'Judge Scotland 2', 'SCOTLAND', 'SALARIED');
+values ('SCOTLAND002', 'Judge Scotland 2', 'Scotland', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('SCOTLAND003', 'Judge Scotland 3', 'SCOTLAND', 'FEE_PAID');
+values ('SCOTLAND003', 'Judge Scotland 3', 'Scotland', 'FEE_PAID');
 ------------------------------------------------------------
 -- WALES
 ------------------------------------------------------------
 insert into judge (code, name, tribunal_office, employment_status)
-values ('WALES001', 'Judge Wales 1', 'WALES', 'SALARIED');
+values ('WALES001', 'Judge Wales 1', 'Wales', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('WALES002', 'Judge Wales 2', 'WALES', 'SALARIED');
+values ('WALES002', 'Judge Wales 2', 'Wales', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('WALES003', 'Judge Wales 3', 'WALES', 'FEE_PAID');
+values ('WALES003', 'Judge Wales 3', 'Wales', 'FEE_PAID');
 ------------------------------------------------------------
 -- WATFORD
 ------------------------------------------------------------
 insert into judge (code, name, tribunal_office, employment_status)
-values ('WATFORD001', 'Judge Watford 1', 'WATFORD', 'SALARIED');
+values ('WATFORD001', 'Judge Watford 1', 'Watford', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('WATFORD002', 'Judge Watford 2', 'WATFORD', 'SALARIED');
+values ('WATFORD002', 'Judge Watford 2', 'Watford', 'SALARIED');
 
 insert into judge (code, name, tribunal_office, employment_status)
-values ('WATFORD003', 'Judge Watford 3', 'WATFORD', 'FEE_PAID');
+values ('WATFORD003', 'Judge Watford 3', 'Watford', 'FEE_PAID');
 
 
 

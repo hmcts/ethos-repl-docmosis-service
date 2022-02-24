@@ -435,12 +435,11 @@ public class ListingHelper {
 
     public static StringBuilder getListingDate(ListingData listingData) {
         var sb = new StringBuilder();
-
         if (RANGE_HEARING_DATE_TYPE.equals(listingData.getHearingDateType())) {
             sb.append("\"Listed_date_from\":\"")
-                .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
+                    .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateFrom())).append(NEW_LINE);
             sb.append("\"Listed_date_to\":\"")
-                .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateTo())).append(NEW_LINE);
+                    .append(UtilHelper.listingFormatLocalDate(listingData.getListingDateTo())).append(NEW_LINE);
         } else {
             sb.append("\"Listed_date\":\"")
                     .append(UtilHelper.listingFormatLocalDate(listingData.getListingDate())).append(NEW_LINE);
