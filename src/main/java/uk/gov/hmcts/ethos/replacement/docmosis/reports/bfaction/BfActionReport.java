@@ -21,6 +21,8 @@ public class BfActionReport {
     public ListingData runReport(ListingDetails listingDetails, List<SubmitEvent> submitEvents) {
         BfActionReportData bfActionReportData = new BfActionReportData();
         var caseData = listingDetails.getCaseData();
+        bfActionReportData.setHearingDateType(caseData.getHearingDateType());
+
         if (!CollectionUtils.isEmpty(submitEvents)) {
             List<BFDateTypeItem> bfDateTypeItems = new ArrayList<>();
             for (SubmitEvent submitEvent : submitEvents) {
