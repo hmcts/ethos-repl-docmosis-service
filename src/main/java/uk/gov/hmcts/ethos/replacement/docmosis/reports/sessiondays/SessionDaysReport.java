@@ -151,7 +151,8 @@ public class SessionDaysReport {
             if (CollectionUtils.isNotEmpty(dates)) {
                 for (DateListedTypeItem dateListedTypeItem : dates) {
                     if (isHearingStatusValid(dateListedTypeItem)) {
-                        JudgeEmploymentStatus judgeStatus = getJudgeStatus(hearingTypeItem.getValue().getJudge());
+                        String judgeName = getJudgeName(hearingTypeItem.getValue().getJudge());
+                        JudgeEmploymentStatus judgeStatus = getJudgeStatus(judgeName);
                         SessionDaysReportSummary2 reportSummary2 = getReportSummary2Item(
                                 dateListedTypeItem.getValue(), sessionDaysReportSummary2List);
                         switch ((judgeStatus != null) ? judgeStatus : OTHER_EMPLOYMENT_STATUS) {
@@ -218,10 +219,12 @@ public class SessionDaysReport {
                         reportDetail.setHearingDate(LocalDateTime.parse(
                                 dateListedTypeItem.getValue().getListedDate(), OLD_DATE_TIME_PATTERN)
                                 .toLocalDate().toString());
+                        String judgeName = getJudgeName(hearingTypeItem.getValue().getJudge());
+
                         reportDetail.setHearingJudge(
-                                Strings.isNullOrEmpty(hearingTypeItem.getValue().getJudge())
-                                        ? "* Not Allocated" : hearingTypeItem.getValue().getJudge());
-                        JudgeEmploymentStatus judgeStatus = getJudgeStatus(hearingTypeItem.getValue().getJudge());
+                                Strings.isNullOrEmpty(judgeName)
+                                        ? "* Not Allocated" : judgeName);
+                        JudgeEmploymentStatus judgeStatus = getJudgeStatus(judgeName);
 
                         switch ((judgeStatus != null) ? judgeStatus : OTHER_EMPLOYMENT_STATUS) {
                             case SALARIED:
@@ -252,6 +255,13 @@ public class SessionDaysReport {
                 }
             }
         }
+    }
+
+    private String getJudgeName(String name) {
+        if (!Strings.isNullOrEmpty(name) && name.contains("_")) {
+            return name.split("_")[1];
+        }
+        return name;
     }
 
     private void setTelCon(HearingTypeItem hearingTypeItem, SessionDaysReportDetail reportDetail) {
