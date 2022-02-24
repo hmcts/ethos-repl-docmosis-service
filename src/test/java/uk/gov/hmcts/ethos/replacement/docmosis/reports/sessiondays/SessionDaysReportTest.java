@@ -65,7 +65,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
     private List<Judge> getJudges() {
         Judge judge1 = new Judge();
         judge1.setEmploymentStatus(SALARIED);
-        judge1.setName("0001_ftcJudge");
+        judge1.setName("ftcJudge");
         Judge judge2 = new Judge();
         judge2.setEmploymentStatus(FEE_PAID);
         judge2.setName("ptcJudge");
