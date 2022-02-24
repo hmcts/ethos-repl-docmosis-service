@@ -1,10 +1,13 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service.excel;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleDetails;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultipleUtil;
@@ -21,7 +24,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class FixMultipleCaseServiceApiTest {
+@ExtendWith(SpringExtension.class)
+class FixMultipleCaseServiceApiTest {
     @Mock
     private MultipleHelperService multipleHelperService;
     @Mock
@@ -33,7 +37,7 @@ public class FixMultipleCaseServiceApiTest {
     private MultipleDetails multipleDetails;
     private String userToken;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         multipleObjects = MultipleUtil.getMultipleObjectsAll();
         multipleDetails = new MultipleDetails();
@@ -41,8 +45,11 @@ public class FixMultipleCaseServiceApiTest {
         userToken = "authString";
     }
 
-    @Test
-    public void fixMultipleCase() {
+    @ParameterizedTest
+    @CsvSource({"Yes", "No"})
+     void fixMultipleCase(String fixCase) {
+        multipleDetails.getCaseData().setIsFixCase(fixCase);
+
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjects);
         fixMultipleCaseApiService.fixMultipleCase(userToken, multipleDetails, new ArrayList<>());
