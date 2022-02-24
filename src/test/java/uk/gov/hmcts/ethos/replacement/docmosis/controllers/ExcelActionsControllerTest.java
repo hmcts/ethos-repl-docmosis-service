@@ -898,6 +898,16 @@ public class ExcelActionsControllerTest {
     }
 
     @Test
+    public void fixMultipleCaseForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(FIX_MULTIPLE_CASE_API_URL)
+                .content(requestContent.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void updatePayloadMultipleForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(UPDATE_PAYLOAD_MULTIPLE_URL)
