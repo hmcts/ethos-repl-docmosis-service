@@ -25,6 +25,18 @@ values ('LEEDS003', 'Judge Leeds 3', 'Leeds', 'FEE_PAID');
 
 insert into judge (code, name, tribunal_office, employment_status)
 values ('LEEDS004', 'A Judge', 'Leeds', 'SALARIED');
+
+insert into judge (code, name, tribunal_office, employment_status)
+values ('LEEDS005', 'B Judge', 'Leeds', 'SALARIED');
+
+insert into judge (code, name, tribunal_office, employment_status)
+values ('LEEDS006', 'C Judge', 'Leeds', 'FEE_PAID');
+
+insert into judge (code, name, tribunal_office, employment_status)
+values ('LEEDS007', 'D Judge', 'Leeds', 'UNKNOWN');
+
+insert into judge (code, name, tribunal_office, employment_status)
+values ('0000_ITCO Judge', 'ITCO Judge', 'Leeds', 'UNKNOWN');
 ------------------------------------------------------------
 -- LONDON CENTRAL
 ------------------------------------------------------------
