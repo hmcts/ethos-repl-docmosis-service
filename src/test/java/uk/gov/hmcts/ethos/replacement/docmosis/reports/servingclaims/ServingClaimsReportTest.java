@@ -289,11 +289,11 @@ public class ServingClaimsReportTest {
         var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
         var claimServedItems = resultListingData.getLocalReportsDetail()
                 .get(0).getValue().getClaimServedItems();
-        var hasNoCaseOneEntry = claimServedItems.stream()
+        var itemsListDoesNotContainCaseOneEntry = claimServedItems.stream()
                 .filter(x -> x.getValue().getClaimServedCaseNumber() == caseOne.getCaseData().getEthosCaseReference())
                 .collect(Collectors.toList()).isEmpty();
         assertEquals(4, claimServedItems.size());
-        assertEquals(true, hasNoCaseOneEntry);
+        assertEquals(true, itemsListDoesNotContainCaseOneEntry);
     }
 
     @Test

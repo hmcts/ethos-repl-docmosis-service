@@ -3,6 +3,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.common.Strings;
+import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 
+@Service
 @Slf4j
 public class ServingClaimsReport {
 
@@ -126,7 +128,6 @@ public class ServingClaimsReport {
                 setServedClaimsDetailsByDay(adhocReportType, dayNumber);
             }
         }
-
     }
 
     private void setServedClaimsDetailsByDay(AdhocReportType adhocReportType, int dayNumber) {

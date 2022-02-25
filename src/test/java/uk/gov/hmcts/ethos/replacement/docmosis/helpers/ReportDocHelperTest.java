@@ -8,16 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.helper.Constants;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_SOURCE_LOCAL_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARINGS_TO_JUDGEMENTS_REPORT;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.REPORT_OFFICE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
+
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
@@ -49,22 +43,17 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
-import java.util.Arrays;
-import org.junit.Before;
-import org.junit.Test;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
-
 
 public class ReportDocHelperTest {
 
@@ -403,67 +392,6 @@ public class ReportDocHelperTest {
     }
 
     @Test
-    public void buildServingClaimsReport() {
-        String expected = "{\n"
-                + "\"accessKey\":\"\",\n"
-                + "\"templateName\":\"EM-TRB-SCO-ENG-00780.docx\",\n"
-                + "\"outputName\":\"document.docx\",\n"
-                + "\"data\":{\n"
-                + "\"Listed_date_from\":\"2 October 2021\",\n"
-                + "\"Listed_date_to\":\"28 October 2021\",\n"
-                + "\"Day_1_Tot\":\"0\",\n"
-                + "\"Day_1_Pct\":\"0\",\n"
-                + "\"Day_2_Tot\":\"1\",\n"
-                + "\"Day_2_Pct\":\"100\",\n"
-                + "\"Day_3_Tot\":\"0\",\n"
-                + "\"Day_3_Pct\":\"0\",\n"
-                + "\"Day_4_Tot\":\"0\",\n"
-                + "\"Day_4_Pct\":\"0\",\n"
-                + "\"Day_5_Tot\":\"0\",\n"
-                + "\"Day_5_Pct\":\"0\",\n"
-                + "\"Day_6_Plus_Tot\":\"0\",\n"
-                + "\"Day_6_Plus_Pct\":\"0\",\n"
-                + "\"Total_Claims\":\"1\",\n"
-                + "\"Day_1_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_1_total_count\":\"0\",\n"
-                + "\"Day_2_List\":[\n"
-                + "{\"Case_Reference\":\"1800001/2021\",\n"
-                + "\"Date_Of_Receipt\":\"2021-10-20\",\n"
-                + "\"Date_Of_Service\":\"2021-10-21\"}],\n"
-                + "\"day_2_total_count\":\"1\",\n"
-                + "\"Day_3_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_3_total_count\":\"0\",\n"
-                + "\"Day_4_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_4_total_count\":\"0\",\n"
-                + "\"Day_5_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_5_total_count\":\"0\",\n"
-                + "\"Day_6_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Actual_Number_Of_Days\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_6_total_count\":\"0\",\n"
-                + "\"Report_Clerk\":\"Mike Jordan\",\n"
-                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n"
-                + "}\n"
-                + "}\n";
     public void buildServingClaimsReportWithDay6EntriesSorted() throws URISyntaxException, IOException {
         ListingData listingData = new ListingData();
         listingData.setReportType(SERVING_CLAIMS_REPORT);
@@ -526,7 +454,7 @@ public class ReportDocHelperTest {
 
         listingData.setLocalReportsDetail(new ArrayList<>());
         listingData.getLocalReportsDetail().add(adhocReportTypeItem);
-        var expectedJson = getExpectedResult("servingClaimsSorted6DayEntries.json");
+        var expectedJson = getExpectedResult("servingClaimsDay6EntriesSorted.json");
         var today = UtilHelper.formatCurrentDate(LocalDate.now());
         expectedJson = expectedJson.replace("current-date-placeholder", today);
         var actualJson = ReportDocHelper.buildReportDocumentContent(listingData,
@@ -536,7 +464,7 @@ public class ReportDocHelperTest {
 
     @Test
     public void buildCorrectServingClaimsReportDocForProvidedAllDaysEntries() throws URISyntaxException, IOException  {
-        var expectedJson = getExpectedResult("servingAllDaysClaimEntries.json");
+        var expectedJson = getExpectedResult("servingClaimsAllDaysEntries.json");
         var today = UtilHelper.formatCurrentDate(LocalDate.now());
         var expected = expectedJson.replace("current-date-placeholder", today);
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetailsClaimsServed.getCaseData(),
