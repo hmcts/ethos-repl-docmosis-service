@@ -46,6 +46,7 @@ public class SessionDaysCaseDataBuilder {
         hearings.add(addHearingSession(hearingStatus, "0001_ftcJudge"));
         hearings.add(addHearingSession(hearingStatus, "ptcJudge"));
         hearings.add(addHearingSession(hearingStatus, ""));
+        hearings.add(addHearingSession(hearingStatus, "unknownJudge"));
         caseData.setHearingCollection(hearings);
     }
 

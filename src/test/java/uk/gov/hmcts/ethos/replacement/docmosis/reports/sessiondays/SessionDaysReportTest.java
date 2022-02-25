@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays;
 
 import java.util.Arrays;
-import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -10,7 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
-import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus;
+import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.JudgeRepository;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
 import java.time.LocalDateTime;
@@ -29,8 +28,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITH
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
-import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.FEE_PAID;
-import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.SALARIED;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReport.FULL_DAY;
 
  class SessionDaysReportTest {
@@ -69,7 +66,10 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
         Judge judge2 = new Judge();
         judge2.setEmploymentStatus(FEE_PAID);
         judge2.setName("ptcJudge");
-        return Arrays.asList(judge1, judge2);
+        Judge judge3 = new Judge();
+        judge3.setEmploymentStatus(UNKNOWN);
+        judge3.setName("unknownJudge");
+        return Arrays.asList(judge1, judge2, judge3);
     }
 
     @Test
@@ -145,7 +145,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
     }
 
     @ParameterizedTest
-    @CsvSource({"ftcJudge, FTC, 0 ", "ptcJudge, PTC, 1 ", "* Not Allocated,*, 2"})
+    @CsvSource({"ftcJudge, FTC, 0 ", "ptcJudge, PTC, 1 ", "* Not Allocated,, 2", "unknownJudge, UNKNOWN, 3"})
      void assertReportDetailsValues(String judge, String judgeType, int index) {
         caseDataBuilder.withHearingData(HEARING_STATUS_HEARD);
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
