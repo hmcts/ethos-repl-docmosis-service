@@ -279,9 +279,8 @@ public class SessionDaysReport {
 
     private void setTelCon(HearingTypeItem hearingTypeItem, SessionDaysReportDetail reportDetail) {
         var telConf = CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingFormat())
-                && hearingTypeItem.getValue().getHearingFormat()
-                .contains("Telephone") ? "Y" : "";
-                 reportDetail.setHearingTelConf(telConf);
+                && hearingTypeItem.getValue().getHearingFormat().contains("Telephone") ? "Y" : "";
+        reportDetail.setHearingTelConf(telConf);
 
     }
 
