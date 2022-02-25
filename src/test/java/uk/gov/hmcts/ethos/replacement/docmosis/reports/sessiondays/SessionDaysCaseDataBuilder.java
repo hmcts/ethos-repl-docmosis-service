@@ -3,14 +3,9 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays;
 import java.util.*;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RepresentedTypeR;
-import uk.gov.hmcts.ecm.common.model.ccd.types.RespondentSumType;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_MEDIATION_TCC;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysCaseData;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 
@@ -20,25 +15,6 @@ public class SessionDaysCaseDataBuilder {
 
     public void withNoHearings() {
         caseData.setHearingCollection(null);
-    }
-
-    public RespondentSumTypeItem getHearing(String respName) {
-        RespondentSumTypeItem item = new RespondentSumTypeItem();
-        RespondentSumType type = new RespondentSumType();
-        type.setRespondentName(respName);
-        item.setId(UUID.randomUUID().toString());
-        item.setValue(type);
-        return item;
-    }
-
-    public RepresentedTypeRItem getRepresentative(String respName, String repName) {
-        RepresentedTypeRItem item = new RepresentedTypeRItem();
-        RepresentedTypeR type = new RepresentedTypeR();
-        type.setRespRepName(respName);
-        type.setNameOfRepresentative(repName);
-        item.setId(UUID.randomUUID().toString());
-        item.setValue(type);
-        return item;
     }
 
     public void withHearingData(String hearingStatus) {
@@ -55,7 +31,8 @@ public class SessionDaysCaseDataBuilder {
         item.setId(UUID.randomUUID().toString());
         HearingType type = new HearingType();
         type.setHearingSitAlone("Sit Alone");
-        type.setHearingType(HEARING_TYPE_JUDICIAL_MEDIATION_TCC);
+        type.setHearingFormat(Collections.singletonList("Telephone"));
+        type.setHearingType(HEARING_TYPE_JUDICIAL_HEARING);
         type.setJudge(judge);
         type.setHearingNumber("1");
         item.setValue(type);
