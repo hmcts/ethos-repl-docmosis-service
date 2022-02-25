@@ -279,11 +279,11 @@ public class SessionDaysReport {
     }
 
     private void setTelCon(HearingTypeItem hearingTypeItem, SessionDaysReportDetail reportDetail) {
-        if (HEARING_TYPE_JUDICIAL_MEDIATION_TCC.equals(hearingTypeItem.getValue().getHearingType())) {
-            reportDetail.setHearingTelConf("Y");
-        } else {
-            reportDetail.setHearingTelConf("");
-        }
+        var telConf = CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingFormat())
+                && hearingTypeItem.getValue().getHearingFormat()
+                .contains("Telephone") ? "Y" : "";
+                 reportDetail.setHearingTelConf(telConf);
+
     }
 
     private LocalDateTime convertHearingTime(String dateToConvert) {
