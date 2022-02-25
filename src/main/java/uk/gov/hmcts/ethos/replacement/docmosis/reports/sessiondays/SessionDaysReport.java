@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -106,6 +107,7 @@ public class SessionDaysReport {
             setCaseReportSummaries(caseData, reportData.getReportSummary(), sessionDaysReportSummary2List);
             setReportDetail(caseData, sessionDaysReportDetailList);
         }
+        sessionDaysReportDetailList.sort(Comparator.comparing(SessionDaysReportDetail::getHearingDate));
         int ft = Integer.parseInt(reportData.getReportSummary().getFtSessionDaysTotal());
         int pt = Integer.parseInt(reportData.getReportSummary().getPtSessionDaysTotal());
         int ot = Integer.parseInt(reportData.getReportSummary().getOtherSessionDaysTotal());
@@ -149,6 +151,7 @@ public class SessionDaysReport {
         int ft2 = 0;
         int pt2 = 0;
         int ot2 = 0;
+        int total2 = 0;
         for (HearingTypeItem hearingTypeItem : getHearings(caseData)) {
             var dates = hearingTypeItem.getValue().getHearingDateCollection();
             dates = filterValidHearingDates(dates);
@@ -166,18 +169,24 @@ public class SessionDaysReport {
                                     reportSummary.setFtSessionDaysTotal(String.valueOf(ft));
                                     ft2 = Integer.parseInt(reportSummary2.getFtSessionDays()) + 1;
                                     reportSummary2.setFtSessionDays(String.valueOf(ft2));
+                                    total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
+                                    reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
                                     break;
                                 case FEE_PAID:
                                     pt = Integer.parseInt(reportSummary.getPtSessionDaysTotal()) + 1;
                                     reportSummary.setPtSessionDaysTotal(String.valueOf(pt));
                                     pt2 = Integer.parseInt(reportSummary2.getPtSessionDays()) + 1;
                                     reportSummary2.setPtSessionDays(String.valueOf(pt2));
+                                    total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
+                                    reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
                                     break;
                                 case UNKNOWN:
                                     ot = Integer.parseInt(reportSummary.getOtherSessionDaysTotal()) + 1;
                                     reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
                                     ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
                                     reportSummary2.setOtherSessionDays(String.valueOf(ot2));
+                                    total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
+                                    reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
                                     break;
                                 default:
                                     break;
@@ -187,10 +196,9 @@ public class SessionDaysReport {
                             reportSummary.setOtherSessionDaysTotal(String.valueOf(ot));
                             ot2 = Integer.parseInt(reportSummary2.getOtherSessionDays()) + 1;
                             reportSummary2.setOtherSessionDays(String.valueOf(ot2));
+                            total2 = Integer.parseInt(reportSummary2.getSessionDaysTotalDetail()) + 1;
+                            reportSummary2.setSessionDaysTotalDetail(String.valueOf(total2));
                         }
-
-                        int total = ft2 + pt2 + ot2;
-                        reportSummary2.setSessionDaysTotalDetail(String.valueOf(total));
                     }
                 }
             }
