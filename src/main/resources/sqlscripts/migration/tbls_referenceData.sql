@@ -1,6 +1,8 @@
-CREATE TYPE emp_status AS ENUM('SALARIED', 'FEE_PAID');
-
 DROP TABLE IF EXISTS judge;
+Drop type emp_status;
+CREATE TYPE emp_status AS ENUM('SALARIED', 'FEE_PAID', 'UNKNOWN');
+
+
 CREATE TABLE judge (
                        id SERIAL PRIMARY KEY,
                        tribunal_office VARCHAR(100),
