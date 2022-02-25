@@ -118,11 +118,17 @@ public class SessionDaysReport {
         reportData.addReportDetail(sessionDaysReportDetailList);
     }
 
+    private boolean areDatesEqual(String date1, String date2) {
+        var date2Formatted =  LocalDateTime.parse(date2, OLD_DATE_TIME_PATTERN).toLocalDate().toString();
+        return date1.equals(date2Formatted);
+
+    }
+
     private SessionDaysReportSummary2 getReportSummary2Item(
             DateListedType dateListedType, List<SessionDaysReportSummary2> sessionDaysReportSummary2List) {
         Optional<SessionDaysReportSummary2> item = sessionDaysReportSummary2List.stream()
                 .filter(i -> !Strings.isNullOrEmpty(i.getDate())
-                && i.getDate().equals(dateListedType.getListedDate())).findFirst();
+                && areDatesEqual(i.getDate(), dateListedType.getListedDate())).findFirst();
         if (item.isPresent()) {
             return item.get();
         }
