@@ -107,6 +107,7 @@ public class SessionDaysReport {
             setCaseReportSummaries(caseData, reportData.getReportSummary(), sessionDaysReportSummary2List);
             setReportDetail(caseData, sessionDaysReportDetailList);
         }
+        sessionDaysReportSummary2List.sort(Comparator.comparing(SessionDaysReportSummary2::getDate));
         sessionDaysReportDetailList.sort(Comparator.comparing(SessionDaysReportDetail::getHearingDate));
         int ft = Integer.parseInt(reportData.getReportSummary().getFtSessionDaysTotal());
         int pt = Integer.parseInt(reportData.getReportSummary().getPtSessionDaysTotal());
