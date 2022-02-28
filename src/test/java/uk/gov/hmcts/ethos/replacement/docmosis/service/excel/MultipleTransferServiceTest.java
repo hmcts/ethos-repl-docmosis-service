@@ -39,6 +39,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MIGRATION_CASE_SOURCE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.UPDATING_STATE;
@@ -68,7 +69,9 @@ public class MultipleTransferServiceTest {
     private TreeMap<String, Object> multipleObjects;
     private MultipleDetails multipleDetails;
     private List<SubmitMultipleEvent> submitMultipleEvents;
+    private List<SubmitEvent> submitEvents;
     private String userToken;
+    private List<String> errors;
 
     @Before
     public void setUp() {
@@ -79,6 +82,8 @@ public class MultipleTransferServiceTest {
         multipleDetails.setCaseData(MultipleUtil.getMultipleData());
         submitMultipleEvents = MultipleUtil.getSubmitMultipleEvents();
         userToken = "authString";
+        submitEvents = MultipleUtil.getSubmitEvents();
+        errors = new ArrayList<>();
     }
 
     @Test
@@ -86,18 +91,20 @@ public class MultipleTransferServiceTest {
 
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjects);
-
+        when(singleCasesReadingService.retrieveSingleCases(anyString(), anyString(), anyList(), anyString()))
+                .thenReturn(submitEvents);
         multipleTransferService.multipleTransferLogic(userToken,
                 multipleDetails,
-                new ArrayList<>());
+                errors);
 
+        assertEquals(0, errors.size());
         assertEquals(UPDATING_STATE, multipleDetails.getCaseData().getState());
         verify(persistentQHelperService,
                 times(1)).sendCreationEventToSingles(
                 userToken,
                 multipleDetails.getCaseTypeId(),
                 multipleDetails.getJurisdiction(),
-                new ArrayList<>(),
+                errors,
                 new ArrayList<>(multipleObjects.keySet()),
                 "Manchester",
                 "PositionTypeCT",
@@ -121,7 +128,7 @@ public class MultipleTransferServiceTest {
                 .thenReturn(new TreeMap<>());
         multipleTransferService.multipleTransferLogic(userToken,
                 multipleDetails,
-                new ArrayList<>());
+                errors);
         verifyNoMoreInteractions(persistentQHelperService);
 
     }
@@ -141,7 +148,7 @@ public class MultipleTransferServiceTest {
 
         multipleTransferService.populateDataIfComingFromCT(userToken,
                 multipleDetails,
-                new ArrayList<>());
+                errors);
 
         assertEquals("<a target=\"_blank\" href=\"null/cases/case-details/0\">246000</a>",
                 multipleDetails.getCaseData().getLinkedMultipleCT());
@@ -157,7 +164,6 @@ public class MultipleTransferServiceTest {
 
     @Test
     public void validateCasesBeforeTransfer() {
-        List<String> errors = new ArrayList<>();
         var caseData = new CaseData();
         caseData.setEthosCaseReference("245004/2020");
 
@@ -195,6 +201,47 @@ public class MultipleTransferServiceTest {
         assertEquals(String.format(BF_ACTIONS_ERROR_MSG, caseData.getEthosCaseReference()), errors.get(0));
         assertEquals(String.format(HEARINGS_ERROR_MSG, caseData.getEthosCaseReference()), errors.get(1));
 
+    }
+
+    @Test
+    public void validateCasesBeforeTransfer_withoutErrors() {
+        var caseData = new CaseData();
+        caseData.setEthosCaseReference("245004/2020");
+
+        // Cleared BF
+        var bfActionType = new BFActionType();
+        bfActionType.setDateEntered("2020-11-11");
+        bfActionType.setCleared("2020-11-10");
+        var bfActionTypeItem = new BFActionTypeItem();
+        bfActionTypeItem.setValue(bfActionType);
+        caseData.setBfActions(List.of(bfActionTypeItem));
+
+        // 'Heard' hearing
+        var dateListedType = new DateListedType();
+        dateListedType.setHearingStatus(HEARING_STATUS_HEARD);
+        var dateListedTypeItem = new DateListedTypeItem();
+        dateListedTypeItem.setValue(dateListedType);
+        var hearingType = new HearingType();
+        hearingType.setHearingDateCollection(List.of(dateListedTypeItem));
+        var hearingTypeItem = new HearingTypeItem();
+        hearingTypeItem.setValue(hearingType);
+        caseData.setHearingCollection(List.of(hearingTypeItem));
+
+        var submitEvent = new SubmitEvent();
+        submitEvent.setCaseData(caseData);
+        submitEvent.setState(ACCEPTED_STATE);
+        submitEvent.setCaseId(1232121232);
+
+        when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
+                .thenReturn(multipleObjects);
+        when(singleCasesReadingService.retrieveSingleCases(anyString(), anyString(), anyList(), anyString()))
+                .thenReturn(new ArrayList<>(Collections.singletonList(submitEvent)));
+        doCallRealMethod().when(caseTransferService).validateCase(isA(CaseData.class), anyList());
+        multipleTransferService.multipleTransferLogic(userToken,
+                multipleDetails,
+                errors);
+
+        assertEquals(0, errors.size());
     }
 
 }

@@ -59,7 +59,6 @@ public class MultipleTransferService {
             validateCaseBeforeTransfer(userToken, multipleDetails, errors, multipleObjects);
 
             if (errors.isEmpty()) {
-                log.info("Send updates to single cases");
                 multipleDetails.getCaseData().setState(UPDATING_STATE);
                 sendUpdatesToSinglesCT(userToken, multipleDetails, errors, multipleObjects);
             }
