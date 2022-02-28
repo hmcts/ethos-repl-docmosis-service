@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.round;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReport.OLD_DATE_TIME_PATTERN3;
@@ -113,7 +114,7 @@ public class SessionDaysReport {
         int pt = Integer.parseInt(reportData.getReportSummary().getPtSessionDaysTotal());
         int ot = Integer.parseInt(reportData.getReportSummary().getOtherSessionDaysTotal());
         int total = ft + pt + ot;
-        int ptPercent = total > 0 ? (pt * 100) / total : 0;
+        long ptPercent = total > 0 ? round(((double)pt * 100) / total) : 0;
         reportData.getReportSummary().setSessionDaysTotal(String.valueOf(total));
         reportData.getReportSummary().setPtSessionDaysPerCent(String.valueOf(ptPercent));
         reportData.addReportSummary2List(sessionDaysReportSummary2List);
