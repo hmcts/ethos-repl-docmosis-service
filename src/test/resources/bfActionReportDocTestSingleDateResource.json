@@ -1,0 +1,18 @@
+{"Listed_date":"18 June 2019",
+"Report_Office":"Leeds",
+"bf_list":[
+{
+"Case_No":"1800909/2020",
+"Bf_Action":"Application of letter to ACAS/RPO",
+"Date_Taken":"2019-11-20",
+"Bf_Date":"2019-06-18",
+"Comments":"test"
+},
+{
+"Case_No":"1800888/2020",
+"Bf_Action":"Interlocutory order requested",
+"Date_Taken":"2019-11-20",
+"Bf_Date":"2019-06-18",
+"Comments":"test reason two"
+}],
+}

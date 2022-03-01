@@ -14,6 +14,9 @@ import uk.gov.hmcts.ecm.common.model.listing.items.BFDateTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.BFDateType;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +27,8 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.DUNDEE_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.EDINBURGH_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.GLASGOW_OFFICE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_CLOSED;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_INPUT_IN_ERROR;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.POSITION_TYPE_CASE_TRANSFERRED_OTHER_COUNTRY;
@@ -37,6 +42,9 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 public class ReportHelper {
 
     public static final String CASES_SEARCHED = "Cases searched: ";
+    private static final String SPACE = " ";
+    private static final String DATE_TIME_SEPARATOR = "T";
+    private static final String MILLISECOND_PART = ".000";
 
     private ReportHelper() {
     }
@@ -81,6 +89,27 @@ public class ReportHelper {
                     bfDateTypeItems.add(bfDateTypeItem);
                 }
             }
+        }
+    }
+
+    public static String getFormattedLocalDate(String date) {
+        if (date == null || date.length() < 10) {
+            return null;
+        }
+
+        try {
+            if (date.contains(DATE_TIME_SEPARATOR) && date.endsWith(MILLISECOND_PART)) {
+                return LocalDateTime.parse(date, OLD_DATE_TIME_PATTERN).toLocalDate().toString();
+            } else if (date.contains(DATE_TIME_SEPARATOR)) {
+                return LocalDate.parse(date.split(DATE_TIME_SEPARATOR)[0], OLD_DATE_TIME_PATTERN2).toString();
+            } else if (date.contains(SPACE)) {
+                return LocalDate.parse(date.split(SPACE)[0], OLD_DATE_TIME_PATTERN2).toString();
+            }
+            return LocalDate.parse(date, OLD_DATE_TIME_PATTERN2).toString();
+        } catch (DateTimeException e) {
+            log.warn(String.format("Unable to parse %s to LocalDate in getFormattedLocalDate "
+                + "method of ReportHelper", date), e);
+            return null;
         }
     }
 
