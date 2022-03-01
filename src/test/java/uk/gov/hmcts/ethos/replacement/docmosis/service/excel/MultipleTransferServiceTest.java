@@ -232,10 +232,17 @@ public class MultipleTransferServiceTest {
         submitEvent.setState(ACCEPTED_STATE);
         submitEvent.setCaseId(1232121232);
 
+        var submitEvent2 = new SubmitEvent();
+        submitEvent2.setCaseData(caseData);
+        submitEvent2.setState(ACCEPTED_STATE);
+        submitEvent2.setCaseId(1232121232);
+
         when(excelReadingService.readExcel(anyString(), anyString(), anyList(), any(), any()))
                 .thenReturn(multipleObjects);
-        when(singleCasesReadingService.retrieveSingleCases(anyString(), anyString(), anyList(), anyString()))
-                .thenReturn(new ArrayList<>(Collections.singletonList(submitEvent)));
+        List<String> ethosCaseRefCollection = new ArrayList<>(multipleObjects.keySet());
+        when(singleCasesReadingService.retrieveSingleCases(userToken, multipleDetails.getCaseTypeId(),
+                ethosCaseRefCollection, multipleDetails.getCaseData().getMultipleSource()))
+                .thenReturn(List.of(submitEvent, submitEvent2));
         doCallRealMethod().when(caseTransferService).validateCase(isA(CaseData.class), anyList());
         multipleTransferService.multipleTransferLogic(userToken,
                 multipleDetails,
