@@ -280,17 +280,17 @@ public class MemberDaysReport {
         var summaryItems = reportData.getMemberDaySummaryItems();
 
         var fullDaysTotal = String.valueOf(summaryItems.stream()
-                .map(item -> Integer.parseInt(item.fullDays))
+                .map(item -> Integer.parseInt(item.getFullDays()))
                 .reduce(0, Integer::sum));
         reportData.setFullDaysTotal(fullDaysTotal);
 
         var halfDaysTotal = String.valueOf(summaryItems.stream()
-            .map(item -> Integer.parseInt(item.halfDays))
+            .map(item -> Integer.parseInt(item.getHalfDays()))
             .reduce(0, Integer::sum));
         reportData.setHalfDaysTotal(halfDaysTotal);
 
         var totalDays = String.valueOf(summaryItems.stream()
-            .map(item -> Double.parseDouble(item.totalDays))
+            .map(item -> Double.parseDouble(item.getTotalDays()))
             .reduce(0.0, Double::sum));
         reportData.setTotalDays(totalDays);
     }

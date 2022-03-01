@@ -34,8 +34,8 @@ public class MemberDaysReportTest {
 
     private List<SubmitEvent> submitEvents;
     private ListingDetails listingDetails;
-    private static String SIT_ALONE_PANEL = "Sit Alone";
-    private static String FULL_PANEL = "Full Panel";
+    private static final String SIT_ALONE_PANEL = "Sit Alone";
+    private static final String FULL_PANEL = "Full Panel";
     @Before
     public void setUp() {
         listingDetails = new ListingDetails();
@@ -132,8 +132,8 @@ public class MemberDaysReportTest {
         hearingType.setHearingEstLengthNum("2");
         hearingType.setHearingEstLengthNumType("hours");
         hearingType.setHearingType(HEARING_TYPE_PERLIMINARY_HEARING);
-        hearingType.setHearingERMember("er memb 0");
-        hearingType.setHearingEEMember("ee memb 0");
+        hearingType.setHearingERMember("er member 0");
+        hearingType.setHearingEEMember("ee member 0");
         hearingTypeItem.setId("12345");
         hearingTypeItem.setValue(hearingType);
         hearingType.setHearingDateCollection(new ArrayList<>(Arrays.asList(dateListedTypeItem,
@@ -168,8 +168,8 @@ public class MemberDaysReportTest {
         hearingType2.setHearingEstLengthNumType("hours");
         hearingType2.setHearingType(HEARING_TYPE_PERLIMINARY_HEARING);
         hearingTypeItem2.setId("12345000");
-        hearingType2.setHearingEEMember("ee memb 2");
-        hearingType2.setHearingERMember("er memb 2");
+        hearingType2.setHearingEEMember("ee member 2");
+        hearingType2.setHearingERMember("er member 2");
         hearingType2.setHearingDateCollection(new ArrayList<>(Arrays.asList(dateListedTypeItem,
             dateListedTypeItem1, dateListedTypeItem2, dateListedTypeItem3)));
         hearingTypeItem2.setValue(hearingType2);
@@ -214,8 +214,8 @@ public class MemberDaysReportTest {
         hearingType3.setHearingEstLengthNum("1");
         hearingType3.setHearingEstLengthNumType("hours");
         hearingType3.setHearingType(HEARING_TYPE_PERLIMINARY_HEARING);
-        hearingType3.setHearingEEMember("ee memb 1");
-        hearingType3.setHearingERMember("er memb 1");
+        hearingType3.setHearingEEMember("ee member 1");
+        hearingType3.setHearingERMember("er member 1");
         hearingTypeItem3.setId("1234500033");
 
         var hearingTypeItems3 = new ArrayList<HearingTypeItem>();
@@ -263,7 +263,7 @@ public class MemberDaysReportTest {
     public void shouldIncludeOnlyCasesWithHeardHearingStatus() {
         var memberDaysReport = new MemberDaysReport();
         var resultListingData = memberDaysReport.runReport(listingDetails, submitEvents);
-        var actualHeardHearingsCount  = resultListingData.getReportDetails().stream().count();
+        var actualHeardHearingsCount  = resultListingData.getReportDetails().size(); //.stream().count();
         var expectedHeardHearingsCount = 5;
         assertEquals(expectedHeardHearingsCount, actualHeardHearingsCount);
     }
@@ -271,18 +271,14 @@ public class MemberDaysReportTest {
     @Test
     public void shouldIncludeOnlyCasesWithFullPanelHearing() {
         var memberDaysReport = new MemberDaysReport();
-        List<Integer> validHearingsCountList = new ArrayList<>();
+        List<Long> validHearingsCountList = new ArrayList<>();
 
         //filter listed hearings with full panel
-        submitEvents.stream().forEach(s ->
-            validHearingsCountList.add(s.getCaseData().getHearingCollection().stream()
-                .filter(h -> FULL_PANEL.equals(h.getValue().getHearingSitAlone()))
-                .collect(Collectors.toList()).size()));
+        submitEvents.forEach(s -> validHearingsCountList.add(getValidHearingsInCurrentSubmitEvent(s)));
 
-        var expectedFullPanelHearingsCount = validHearingsCountList.stream().filter(x->x.intValue() > 0).count();
+        var expectedFullPanelHearingsCount = validHearingsCountList.stream().filter(x->x > 0).count();
         var expectedReportDateType = "Range";
         var resultListingData = memberDaysReport.runReport(listingDetails, submitEvents);
-
         var actualFullPanelHearingsCount  = resultListingData.getReportDetails()
             .stream().map(MemberDaysReportDetail::getParentHearingId)
             .collect(Collectors.toList()).stream().distinct().count();
@@ -314,23 +310,16 @@ public class MemberDaysReportTest {
         dateListedTypeItem6.setValue(dateListedType6);
 
         hearingWithInvalidDate.getValue().getHearingDateCollection().add(dateListedTypeItem6);
-
-        List<Integer> validHearingsCountList = new ArrayList<>();
-        submitEvents.stream().forEach(caseData ->
-            validHearingsCountList.add(caseData.getCaseData().getHearingCollection().stream()
-                .filter(h -> FULL_PANEL.equals(h.getValue().getHearingSitAlone()))
-                .collect(Collectors.toList()).size()));
-
         List<DateListedTypeItem> dateListedTypeItems = new ArrayList<>();
         //filter listed hearings with full panel
-        for(var submitEvent :submitEvents) {
+        for(var submitEvent : submitEvents) {
             for(var hearing : submitEvent.getCaseData().getHearingCollection()) {
                 var validDates = hearing.getValue().getHearingDateCollection()
                     .stream().filter(h -> isValidDate(h.getValue().getListedDate(),
                         listingDetails.getCaseData().getListingDateFrom(),
                         listingDetails.getCaseData().getListingDateTo()))
                     .collect(Collectors.toList());
-                validDates.forEach(vd -> dateListedTypeItems.add(vd));
+                dateListedTypeItems.addAll(validDates);
             }
         }
 
@@ -343,6 +332,11 @@ public class MemberDaysReportTest {
 
         assertEquals(expectedValidHearingDatesCount, actualValidHearingDatesCount);
         assertEquals(expectedReportDateType, actualReportDateType);
+    }
+
+    private Long getValidHearingsInCurrentSubmitEvent(SubmitEvent submitEvent) {
+        return submitEvent.getCaseData().getHearingCollection().stream()
+            .filter(h -> FULL_PANEL.equals(h.getValue().getHearingSitAlone())).count();
     }
 
     private boolean isValidDate(String dateListed, String dateFrom, String dateTo){
@@ -377,12 +371,6 @@ public class MemberDaysReportTest {
 
         hearingWithInvalidDate.getValue().getHearingDateCollection().add(dateListedTypeItem6);
 
-        List<Integer> validHearingsCountList = new ArrayList<>();
-        submitEvents.stream().forEach(caseData ->
-            validHearingsCountList.add(caseData.getCaseData().getHearingCollection().stream()
-                .filter(h -> FULL_PANEL.equals(h.getValue().getHearingSitAlone()))
-                .collect(Collectors.toList()).size()));
-
         List<DateListedTypeItem> dateListedTypeItems = new ArrayList<>();
         //filter listed hearings with full panel
         for(var submitEvent :submitEvents) {
@@ -392,14 +380,13 @@ public class MemberDaysReportTest {
                         listingDetails.getCaseData().getListingDateFrom(),
                         listingDetails.getCaseData().getListingDateTo()))
                     .collect(Collectors.toList());
-                validDates.forEach(vd -> dateListedTypeItems.add(vd));
+                dateListedTypeItems.addAll(validDates);
             }
         }
 
         var expectedValidHearingDatesCount = dateListedTypeItems.stream().distinct().count();
         var expectedReportDateType = "Range";
         var resultListingData = memberDaysReport.runReport(listingDetails, submitEvents);
-
         var actualValidHearingDatesCount  = resultListingData.getReportDetails().size();
         var actualReportDateType = resultListingData.getHearingDateType();
 
