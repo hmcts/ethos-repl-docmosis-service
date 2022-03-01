@@ -11,6 +11,7 @@ import uk.gov.hmcts.ecm.common.model.multiples.items.CaseMultipleTypeItem;
 import uk.gov.hmcts.ecm.common.model.multiples.types.MultipleObjectType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FilterExcelType;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesHelper;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseTransferService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.PersistentQHelperService;
 
 import java.util.ArrayList;
@@ -30,12 +31,13 @@ public class MultipleTransferService {
     private final ExcelReadingService excelReadingService;
     private final PersistentQHelperService persistentQHelperService;
     private final MultipleCasesReadingService multipleCasesReadingService;
+    private final SingleCasesReadingService singleCasesReadingService;
+    private final CaseTransferService caseTransferService;
 
     @Value("${ccd_gateway_base_url}")
     private String ccdGatewayBaseUrl;
 
     public void multipleTransferLogic(String userToken, MultipleDetails multipleDetails, List<String> errors) {
-
         log.info("Multiple transfer logic");
 
         SortedMap<String, Object> multipleObjects =
@@ -54,17 +56,30 @@ public class MultipleTransferService {
 
         } else {
 
-            log.info("Send updates to single cases");
+            validateCaseBeforeTransfer(userToken, multipleDetails, errors, multipleObjects);
 
-            multipleDetails.getCaseData().setState(UPDATING_STATE);
-
-            sendUpdatesToSinglesCT(userToken, multipleDetails, errors, multipleObjects);
+            if (errors.isEmpty()) {
+                multipleDetails.getCaseData().setState(UPDATING_STATE);
+                sendUpdatesToSinglesCT(userToken, multipleDetails, errors, multipleObjects);
+            }
 
         }
 
         log.info("Resetting mid fields");
 
         MultiplesHelper.resetMidFields(multipleDetails.getCaseData());
+
+    }
+
+    private void validateCaseBeforeTransfer(String userToken, MultipleDetails multipleDetails, List<String> errors,
+                                            SortedMap<String, Object> multipleObjects) {
+        List<String> ethosCaseRefCollection = new ArrayList<>(multipleObjects.keySet());
+        var submitEvents = singleCasesReadingService.retrieveSingleCases(userToken,
+                multipleDetails.getCaseTypeId(), ethosCaseRefCollection,
+                multipleDetails.getCaseData().getMultipleSource());
+        for (var submitEvent : submitEvents) {
+            caseTransferService.validateCase(submitEvent.getCaseData(), errors);
+        }
 
     }
 
