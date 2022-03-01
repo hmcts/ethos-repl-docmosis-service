@@ -256,7 +256,7 @@ public class ServingClaimsReportTest {
         var reportedNumberOfDays = firstClaimServedItem.getValue().getReportedNumberOfDays();
         var actualNumberOfDays = firstClaimServedItem.getValue().getActualNumberOfDays();
         assertEquals("5", reportedNumberOfDays);
-        assertEquals("127", actualNumberOfDays);
+        assertEquals("128", actualNumberOfDays);
     }
 
     @Test
@@ -267,14 +267,13 @@ public class ServingClaimsReportTest {
                 .get(0).getValue().getClaimServedItems();
         var secondClaimServedItem = claimServedItems.get(1);
         var numberOfDays = secondClaimServedItem.getValue().getActualNumberOfDays();
-        assertEquals("3", numberOfDays);
+        assertEquals("4", numberOfDays);
     }
 
     @Test
     public void shouldNotAddServedClaimItemWhenNoClaimsServedFound() {
         var servingClaimsReport = new ServingClaimsReport();
-        submitEvents = null;
-        var resultListingData = servingClaimsReport.generateReportData(listingDetails, submitEvents);
+        var resultListingData = servingClaimsReport.generateReportData(listingDetails, null);
         var claimServedItemsCount = resultListingData.getLocalReportsDetail().get(0).getValue()
                 .getClaimServedItems().size();
         assertEquals("0", String.valueOf(claimServedItemsCount));
@@ -290,10 +289,10 @@ public class ServingClaimsReportTest {
         var claimServedItems = resultListingData.getLocalReportsDetail()
                 .get(0).getValue().getClaimServedItems();
         var itemsListDoesNotContainCaseOneEntry = claimServedItems.stream()
-                .filter(x -> x.getValue().getClaimServedCaseNumber() == caseOne.getCaseData().getEthosCaseReference())
-                .collect(Collectors.toList()).isEmpty();
+                .filter(x -> x.getValue().getClaimServedCaseNumber()
+                    .equals(caseOne.getCaseData().getEthosCaseReference())).count();
         assertEquals(4, claimServedItems.size());
-        assertEquals(true, itemsListDoesNotContainCaseOneEntry);
+        assertEquals(0, itemsListDoesNotContainCaseOneEntry);
     }
 
     @Test
