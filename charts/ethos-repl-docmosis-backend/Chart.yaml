@@ -1,12 +1,12 @@
 apiVersion: v2
 name: ethos-repl-docmosis-backend
 home: https://github.com/hmcts/ethos-repl-docmosis-service
-version: 0.3.5
+version: 0.3.6
 description: HMCTS Ethos Replacement Docmosis Service
 maintainers:
   - name: HMCTS ETHOS Team
     email: james.turnbull@justice.gov.uk
 dependencies:
   - name: java
-    version: 3.7.1
+    version: 3.7.2
     repository: https://hmctspublic.azurecr.io/helm/v1/repo/
