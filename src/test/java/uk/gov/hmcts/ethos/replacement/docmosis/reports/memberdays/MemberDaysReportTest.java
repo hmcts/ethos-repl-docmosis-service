@@ -263,7 +263,7 @@ public class MemberDaysReportTest {
     public void shouldIncludeOnlyCasesWithHeardHearingStatus() {
         var memberDaysReport = new MemberDaysReport();
         var resultListingData = memberDaysReport.runReport(listingDetails, submitEvents);
-        var actualHeardHearingsCount  = resultListingData.getReportDetails().size(); //.stream().count();
+        var actualHeardHearingsCount  = resultListingData.getReportDetails().size();
         var expectedHeardHearingsCount = 5;
         assertEquals(expectedHeardHearingsCount, actualHeardHearingsCount);
     }
@@ -276,7 +276,7 @@ public class MemberDaysReportTest {
         //filter listed hearings with full panel
         submitEvents.forEach(s -> validHearingsCountList.add(getValidHearingsInCurrentSubmitEvent(s)));
 
-        var expectedFullPanelHearingsCount = validHearingsCountList.stream().filter(x->x > 0).count();
+        var expectedFullPanelHearingsCount = validHearingsCountList.stream().filter(x -> x > 0).count();
         var expectedReportDateType = "Range";
         var resultListingData = memberDaysReport.runReport(listingDetails, submitEvents);
         var actualFullPanelHearingsCount  = resultListingData.getReportDetails()

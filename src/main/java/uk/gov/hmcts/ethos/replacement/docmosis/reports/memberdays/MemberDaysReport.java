@@ -85,7 +85,7 @@ public class MemberDaysReport {
         }
 
         var sortedReportDetails = interimReportDetails.stream()
-            .sorted((o1, o2) -> o1.comparedTo(o2)).collect(Collectors.toList());
+            .sorted(MemberDaysReportDetail::comparedTo).collect(Collectors.toList());
         reportData.getReportDetails().clear();
         sortedReportDetails.forEach(d -> reportData.getReportDetails().add(d));
     }
