@@ -13,15 +13,15 @@ import lombok.Setter;
 public class MemberDaySummaryItem {
 
     @JsonProperty("hearingDate")
-    public String hearingDate;
+    private String hearingDate;
 
     @JsonProperty("fullDays")
-    public String fullDays;
+    private String fullDays;
 
     @JsonProperty("halfDays")
-    public String halfDays;
+    private String halfDays;
 
     @JsonProperty("totalDays")
-    public String totalDays;
+    private String totalDays;
 
 }
