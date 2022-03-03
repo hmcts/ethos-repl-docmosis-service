@@ -1,23 +1,19 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays;
 
 import java.util.Arrays;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import uk.gov.hmcts.ecm.common.model.reports.sessiondays.SessionDaysSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.Judge;
-import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.domain.repository.JudgeRepository;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
@@ -28,6 +24,9 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_WITH
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MANCHESTER_LISTING_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
+import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.FEE_PAID;
+import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.SALARIED;
+import static uk.gov.hmcts.ethos.replacement.docmosis.domain.referencedata.JudgeEmploymentStatus.UNKNOWN;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReport.FULL_DAY;
 
  class SessionDaysReportTest {
@@ -43,18 +42,14 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
     static final String DATE_TO = BASE_DATE.plusDays(24).format(OLD_DATE_TIME_PATTERN);
 
     @BeforeEach
-    @Before
     public void setup() {
         submitEvents.clear();
         caseDataBuilder = new SessionDaysCaseDataBuilder();
         reportDataSource = mock(SessionDaysReportDataSource.class);
-        jpaJudgeService = mock(JpaJudgeService.class);
         judgeRepository = mock(JudgeRepository.class);
+        jpaJudgeService = new JpaJudgeService(judgeRepository);
         when(reportDataSource.getData(MANCHESTER_CASE_TYPE_ID, DATE_FROM, DATE_TO)).thenReturn(submitEvents);
         List<Judge> judges  = getJudges();
-        when(jpaJudgeService.getJudges("Manchester")).thenReturn(judges);
-        when(jpaJudgeService.getJudges("Manchester")).thenReturn(judges);
-        when(judgeRepository.findByTribunalOffice("Manchester")).thenReturn(judges);
         when(judgeRepository.findByTribunalOffice("Manchester")).thenReturn(judges);
         sessionDaysReport = new SessionDaysReport(reportDataSource, jpaJudgeService);
     }
@@ -73,7 +68,7 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
     }
 
     @Test
-    public void shouldNotShowCaseWithNoHearings() {
+     void shouldNotShowCaseWithNoHearings() {
         // Given a case has no hearing
         // and report data is requested
         // the case should not be in the report data
@@ -84,13 +79,13 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
 
         var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
-        assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
-        assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
-        assertEquals("0", reportData.getReportSummary().getOtherSessionDaysTotal());
-        assertEquals("0", reportData.getReportSummary().getSessionDaysTotal());
-        assertEquals("0", reportData.getReportSummary().getPtSessionDaysPerCent());
-        assertEquals(0, reportData.getReportSummary2List().size());
-        assertEquals(0, reportData.getReportDetails().size());
+        Assertions.assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
+        Assertions.assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
+        Assertions.assertEquals("0", reportData.getReportSummary().getOtherSessionDaysTotal());
+        Assertions.assertEquals("0", reportData.getReportSummary().getSessionDaysTotal());
+        Assertions.assertEquals("0", reportData.getReportSummary().getPtSessionDaysPerCent());
+        Assertions.assertEquals(0, reportData.getReportSummary2List().size());
+        Assertions.assertEquals(0, reportData.getReportDetails().size());
     }
 
     @ParameterizedTest
@@ -105,17 +100,17 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
         var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
         Assertions.assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
-        assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
-        assertEquals("0", reportData.getReportSummary().getOtherSessionDaysTotal());
-        assertEquals("0", reportData.getReportSummary().getSessionDaysTotal());
-        assertEquals("0", reportData.getReportSummary().getPtSessionDaysPerCent());
-        assertEquals(0, reportData.getReportSummary2List().size());
-        assertEquals(0, reportData.getReportDetails().size());
+        Assertions.assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
+        Assertions.assertEquals("0", reportData.getReportSummary().getOtherSessionDaysTotal());
+        Assertions.assertEquals("0", reportData.getReportSummary().getSessionDaysTotal());
+        Assertions.assertEquals("0", reportData.getReportSummary().getPtSessionDaysPerCent());
+        Assertions.assertEquals(0, reportData.getReportSummary2List().size());
+        Assertions.assertEquals(0, reportData.getReportDetails().size());
 
     }
 
     @Test
-    public void shouldShowCaseWithValidHearingStatus() {
+     void shouldShowCaseWithValidHearingStatus() {
         // Given a case has valid hearing status i.e "Heard"
         // and report data is requested
         // the case should be in the report data
@@ -125,23 +120,23 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
 
         var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
-        assertEquals("1", reportData.getReportSummary().getFtSessionDaysTotal());
-        assertEquals("1", reportData.getReportSummary().getPtSessionDaysTotal());
-        assertEquals("1", reportData.getReportSummary().getOtherSessionDaysTotal());
-        assertEquals("3", reportData.getReportSummary().getSessionDaysTotal());
-        assertEquals("33", reportData.getReportSummary().getPtSessionDaysPerCent());
-        assertEquals(1, reportData.getReportSummary2List().size());
-        assertEquals(3, reportData.getReportDetails().size());
+        Assertions.assertEquals("1", reportData.getReportSummary().getFtSessionDaysTotal());
+        Assertions.assertEquals("1", reportData.getReportSummary().getPtSessionDaysTotal());
+        Assertions.assertEquals("2", reportData.getReportSummary().getOtherSessionDaysTotal());
+        Assertions.assertEquals("4", reportData.getReportSummary().getSessionDaysTotal());
+        Assertions.assertEquals("25", reportData.getReportSummary().getPtSessionDaysPerCent());
+        Assertions.assertEquals(1, reportData.getReportSummary2List().size());
+        Assertions.assertEquals(4, reportData.getReportDetails().size());
         assertReportSummary2Values(reportData);
     }
 
     private void assertReportSummary2Values(SessionDaysReportData reportData) {
         var reportSummary2 = reportData.getReportSummary2List().get(0);
-        assertEquals("1", reportSummary2.getFtSessionDays());
-        assertEquals("1", reportSummary2.getPtSessionDays());
-        assertEquals("1", reportSummary2.getOtherSessionDays());
-        assertEquals("3", reportSummary2.getSessionDaysTotalDetail());
-        assertEquals("2022-01-20", reportSummary2.getDate());
+        Assertions.assertEquals("1", reportSummary2.getFtSessionDays());
+        Assertions.assertEquals("1", reportSummary2.getPtSessionDays());
+        Assertions.assertEquals("2", reportSummary2.getOtherSessionDays());
+        Assertions.assertEquals("4", reportSummary2.getSessionDaysTotalDetail());
+        Assertions.assertEquals("2022-01-20", reportSummary2.getDate());
     }
 
     @ParameterizedTest
@@ -158,14 +153,14 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
         Assertions.assertEquals("1", reportDetail.getHearingNumber());
         Assertions.assertEquals("Y", reportDetail.getHearingSitAlone());
         Assertions.assertEquals("Y", reportDetail.getHearingTelConf());
-        assertEquals(FULL_DAY, reportDetail.getSessionType());
-        assertEquals(judge, reportDetail.getHearingJudge());
-        assertEquals(judgeType, reportDetail.getJudgeType());
+        Assertions.assertEquals(FULL_DAY, reportDetail.getSessionType());
+        Assertions.assertEquals(judge, reportDetail.getHearingJudge());
+        Assertions.assertEquals(judgeType, reportDetail.getJudgeType());
 
     }
 
     private void assertCommonValues(SessionDaysReportData reportData) {
-        assertNotNull(reportData);
-        assertEquals("Manchester", reportData.getReportSummary().getOffice());
+        Assertions.assertNotNull(reportData);
+        Assertions.assertEquals("Manchester", reportData.getReportSummary().getOffice());
     }
 }
