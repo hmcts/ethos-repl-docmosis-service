@@ -246,7 +246,7 @@ dependencies {
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: versions.tomcat_embed
 
 // For pdfbox and elasticsearch CVEs
-    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.24'
+    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.25'
     implementation('org.elasticsearch:elasticsearch') {
         version {
             strictly '7.17.0'
