@@ -2,7 +2,6 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays;
 
 import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
-
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -79,10 +78,10 @@ public class MemberDaysReportDoc {
         summaryRowContent.append("{\n\"Hearing_Date\":\"").append(
             nullCheck(summaryItem.getHearingDate())).append(NEW_LINE);
         summaryRowContent.append("\"Full_Days\":\"").append(
-            nullCheck(summaryItem.fullDays)).append(NEW_LINE);
+            nullCheck(summaryItem.getFullDays())).append(NEW_LINE);
         summaryRowContent.append("\"Half_Days\":\"").append(
-            nullCheck(summaryItem.halfDays)).append(NEW_LINE);
-        summaryRowContent.append("\"Total_Days\":\"").append(nullCheck(summaryItem.totalDays))
+            nullCheck(summaryItem.getHalfDays())).append(NEW_LINE);
+        summaryRowContent.append("\"Total_Days\":\"").append(nullCheck(summaryItem.getTotalDays()))
             .append("\"\n}");
 
         return summaryRowContent;
