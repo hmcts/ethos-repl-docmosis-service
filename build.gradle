@@ -218,6 +218,41 @@ ext {
     log4JVersion = '2.17.1'
 }
 
+dependencyManagement {
+    dependencies {
+        dependencySet(group: 'io.netty', version: versions.netty) {
+            // CVE-2021-37136, CVE-2021-37137, CVE-2021-43797
+            entry 'netty-all'
+            entry 'netty-buffer'
+            entry 'netty-codec'
+            entry 'netty-codec-http'
+            entry 'netty-codec-http2'
+            entry 'netty-codec-socks'
+            entry 'netty-common'
+            entry 'netty-handler'
+            entry 'netty-handler-proxy'
+            entry 'netty-resolver'
+            entry 'netty-transport'
+            entry 'netty-transport-native-epoll'
+            entry 'netty-transport-native-kqueue'
+            entry 'netty-transport-native-unix-common'
+            entry 'netty-resolver-dns-native-macos'
+            entry 'netty-codec-dns'
+            entry 'netty-codec-haproxy'
+            entry 'netty-codec-memcache'
+            entry 'netty-codec-mqtt'
+            entry 'netty-codec-redis'
+            entry 'netty-codec-smtp'
+            entry 'netty-codec-stomp'
+            entry 'netty-codec-xml'
+            entry 'netty-resolver-dns'
+            entry 'netty-transport-rxtx'
+            entry 'netty-transport-sctp'
+            entry 'netty-transport-udt'
+        }
+    }
+}
+
 dependencies {
     implementation group: 'com.github.hmcts', name: 'ecm-common', version: '0.1.178'
     implementation group: 'com.github.hmcts', name: 'ccd-case-document-am-client', version: '1.7.3'
@@ -273,35 +308,6 @@ dependencies {
 
     //CVE-2021-22060
     implementation group: 'org.springframework', name: 'spring-core', version: '5.3.16'
-
-    // CVE-2021-37136, CVE-2021-37137, CVE-2021-43797
-    implementation group: 'io.netty', name: 'netty-all', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-buffer', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-codec', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-codec-http', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-codec-http2', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-codec-socks', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-common', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-handler', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-handler-proxy', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-resolver', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-transport', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-transport-native-epoll', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-transport-native-kqueue', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-transport-native-unix-common', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-resolver-dns-native-macos', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-codec-dns', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-codec-haproxy', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-codec-memcache', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-codec-mqtt', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-codec-redis', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-codec-smtp', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-codec-stomp', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-codec-xml', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-resolver-dns', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-transport-rxtx', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-transport-sctp', version: versions.netty
-    implementation group: 'io.netty', name: 'netty-transport-udt', version: versions.netty
 
     // CVE-2021-40690
     implementation group: 'org.apache.santuario', name: 'xmlsec', version: '2.3.0'
