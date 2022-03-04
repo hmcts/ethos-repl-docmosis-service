@@ -209,8 +209,7 @@ def versions = [
         springfoxSwagger: '2.9.2',
         serenity        : '2.3.31',
         pact_version    : '4.1.7',
-        tomcat_embed    : '9.0.58',
-        netty           : '4.1.74.Final'
+        tomcat_embed    : '9.0.58'
 ]
 
 ext {
@@ -220,7 +219,7 @@ ext {
 
 dependencyManagement {
     dependencies {
-        dependencySet(group: 'io.netty', version: versions.netty) {
+        dependencySet(group: 'io.netty', version: '4.1.74.Final') {
             // CVE-2021-37136, CVE-2021-37137, CVE-2021-43797, CVE-2021-21295
             entry 'netty-all'
             entry 'netty-buffer'
