@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays;
 
 import java.util.Arrays;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
@@ -79,13 +80,13 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
 
         var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
-        Assertions.assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
-        Assertions.assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
-        Assertions.assertEquals("0", reportData.getReportSummary().getOtherSessionDaysTotal());
-        Assertions.assertEquals("0", reportData.getReportSummary().getSessionDaysTotal());
-        Assertions.assertEquals("0", reportData.getReportSummary().getPtSessionDaysPerCent());
-        Assertions.assertEquals(0, reportData.getReportSummary2List().size());
-        Assertions.assertEquals(0, reportData.getReportDetails().size());
+        assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getOtherSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getPtSessionDaysPerCent());
+        assertEquals(0, reportData.getReportSummary2List().size());
+        assertEquals(0, reportData.getReportDetails().size());
     }
 
     @ParameterizedTest
@@ -99,13 +100,13 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
 
         var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
-        Assertions.assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
-        Assertions.assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
-        Assertions.assertEquals("0", reportData.getReportSummary().getOtherSessionDaysTotal());
-        Assertions.assertEquals("0", reportData.getReportSummary().getSessionDaysTotal());
-        Assertions.assertEquals("0", reportData.getReportSummary().getPtSessionDaysPerCent());
-        Assertions.assertEquals(0, reportData.getReportSummary2List().size());
-        Assertions.assertEquals(0, reportData.getReportDetails().size());
+        assertEquals("0", reportData.getReportSummary().getFtSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getPtSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getOtherSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getSessionDaysTotal());
+        assertEquals("0", reportData.getReportSummary().getPtSessionDaysPerCent());
+        assertEquals(0, reportData.getReportSummary2List().size());
+        assertEquals(0, reportData.getReportDetails().size());
 
     }
 
@@ -120,23 +121,23 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
 
         var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
-        Assertions.assertEquals("1", reportData.getReportSummary().getFtSessionDaysTotal());
-        Assertions.assertEquals("1", reportData.getReportSummary().getPtSessionDaysTotal());
-        Assertions.assertEquals("2", reportData.getReportSummary().getOtherSessionDaysTotal());
-        Assertions.assertEquals("4", reportData.getReportSummary().getSessionDaysTotal());
-        Assertions.assertEquals("25", reportData.getReportSummary().getPtSessionDaysPerCent());
-        Assertions.assertEquals(1, reportData.getReportSummary2List().size());
-        Assertions.assertEquals(4, reportData.getReportDetails().size());
+        assertEquals("1", reportData.getReportSummary().getFtSessionDaysTotal());
+        assertEquals("1", reportData.getReportSummary().getPtSessionDaysTotal());
+        assertEquals("2", reportData.getReportSummary().getOtherSessionDaysTotal());
+        assertEquals("4", reportData.getReportSummary().getSessionDaysTotal());
+        assertEquals("25", reportData.getReportSummary().getPtSessionDaysPerCent());
+        assertEquals(1, reportData.getReportSummary2List().size());
+        assertEquals(4, reportData.getReportDetails().size());
         assertReportSummary2Values(reportData);
     }
 
     private void assertReportSummary2Values(SessionDaysReportData reportData) {
         var reportSummary2 = reportData.getReportSummary2List().get(0);
-        Assertions.assertEquals("1", reportSummary2.getFtSessionDays());
-        Assertions.assertEquals("1", reportSummary2.getPtSessionDays());
-        Assertions.assertEquals("2", reportSummary2.getOtherSessionDays());
-        Assertions.assertEquals("4", reportSummary2.getSessionDaysTotalDetail());
-        Assertions.assertEquals("2022-01-20", reportSummary2.getDate());
+        assertEquals("1", reportSummary2.getFtSessionDays());
+        assertEquals("1", reportSummary2.getPtSessionDays());
+        assertEquals("2", reportSummary2.getOtherSessionDays());
+        assertEquals("4", reportSummary2.getSessionDaysTotalDetail());
+        assertEquals("2022-01-20", reportSummary2.getDate());
     }
 
     @ParameterizedTest
@@ -147,20 +148,20 @@ import static uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.Sessio
         var reportData = sessionDaysReport.generateReport(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO);
         assertCommonValues(reportData);
         var reportDetail = reportData.getReportDetails().get(index);
-        Assertions.assertEquals("111", reportDetail.getCaseReference());
-        Assertions.assertEquals("Clerk A", reportDetail.getHearingClerk());
-        Assertions.assertEquals("2022-01-20", reportDetail.getHearingDate());
-        Assertions.assertEquals("1", reportDetail.getHearingNumber());
-        Assertions.assertEquals("Y", reportDetail.getHearingSitAlone());
-        Assertions.assertEquals("Y", reportDetail.getHearingTelConf());
-        Assertions.assertEquals(FULL_DAY, reportDetail.getSessionType());
-        Assertions.assertEquals(judge, reportDetail.getHearingJudge());
-        Assertions.assertEquals(judgeType, reportDetail.getJudgeType());
+        assertEquals("111", reportDetail.getCaseReference());
+        assertEquals("Clerk A", reportDetail.getHearingClerk());
+        assertEquals("2022-01-20", reportDetail.getHearingDate());
+        assertEquals("1", reportDetail.getHearingNumber());
+        assertEquals("Y", reportDetail.getHearingSitAlone());
+        assertEquals("Y", reportDetail.getHearingTelConf());
+        assertEquals(FULL_DAY, reportDetail.getSessionType());
+        assertEquals(judge, reportDetail.getHearingJudge());
+        assertEquals(judgeType, reportDetail.getJudgeType());
 
     }
 
     private void assertCommonValues(SessionDaysReportData reportData) {
-        Assertions.assertNotNull(reportData);
-        Assertions.assertEquals("Manchester", reportData.getReportSummary().getOffice());
+        assertNotNull(reportData);
+        assertEquals("Manchester", reportData.getReportSummary().getOffice());
     }
 }
