@@ -1,6 +1,6 @@
 {
 "accessKey":"",
-"templateName":"EM-TRB-SCO-ENG-00820.docx",
+"templateName":"EM-TRB-SCO-ENG-00818.docx",
 "outputName":"document.docx",
 "data":{
 "Listed_date_from":"1 January 2022",
@@ -10,6 +10,6 @@
 {"office":"Manchester","caseNumber":"1111212/2022","date":"20-1-2022","state":"Accepted","respondentsCount":"2","eccCasesCount":"2","eccCaseList":"ecc1\necc2"}
 ],
 "Report_Clerk":"Mike Jordan",
-"Today_date":"6 March 2022"
+"Today_date":"current-date"
 }
 }

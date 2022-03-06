@@ -856,7 +856,7 @@ public class ListingHelper {
             case SESSION_DAYS_REPORT:
                 return "EM-TRB-SCO-ENG-00817";
             case ECC_REPORT:
-                return "EM-TRB-SCO-ENG-00820";
+                return "EM-TRB-SCO-ENG-00818";
             default:
                 return NO_DOCUMENT_FOUND;
         }
