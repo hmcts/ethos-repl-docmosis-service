@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Before;
@@ -8,8 +9,13 @@ import org.junit.Test;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.idam.models.UserDetails;
 import uk.gov.hmcts.ecm.common.model.helper.Constants;
+import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
+
+import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
+import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
+import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
+import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.PositionTypeSummary;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportDetail;
@@ -24,6 +30,13 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportDetailMultiple;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportDetailSingle;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportSummary;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportDetail;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportSummary;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportDetail;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportSummary;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportSummary2;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -31,14 +44,16 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportDetail;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportSummary;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 
 public class ReportDocHelperTest {
 
@@ -59,6 +74,7 @@ public class ReportDocHelperTest {
         reportDetails4 = generateReportDetails("reportDetailsTest4.json");
         reportDetails5 = generateReportDetails("reportDetailsTest5.json");
         reportDetails6 = generateReportDetails("reportDetailsTest6.json");
+        reportDetailsClaimsServed = generateReportDetails("reportDetailsTestClaimsServed.json");
         reportDetailsClaimsServed = generateReportDetails("reportDetailsTestClaimsServed.json");
         userDetails = HelperTest.getUserDetails();
     }
@@ -376,69 +392,83 @@ public class ReportDocHelperTest {
     }
 
     @Test
-    public void buildServingClaimsReport() {
-        String expected = "{\n"
-                + "\"accessKey\":\"\",\n"
-                + "\"templateName\":\"EM-TRB-SCO-ENG-00780.docx\",\n"
-                + "\"outputName\":\"document.docx\",\n"
-                + "\"data\":{\n"
-                + "\"Listed_date\":\" Between 2 October 2021 and 28 October 2021\",\n"
-                + "\"Day_1_Tot\":\"0\",\n"
-                + "\"Day_1_Pct\":\"0\",\n"
-                + "\"Day_2_Tot\":\"1\",\n"
-                + "\"Day_2_Pct\":\"100\",\n"
-                + "\"Day_3_Tot\":\"0\",\n"
-                + "\"Day_3_Pct\":\"0\",\n"
-                + "\"Day_4_Tot\":\"0\",\n"
-                + "\"Day_4_Pct\":\"0\",\n"
-                + "\"Day_5_Tot\":\"0\",\n"
-                + "\"Day_5_Pct\":\"0\",\n"
-                + "\"Day_6_Plus_Tot\":\"0\",\n"
-                + "\"Day_6_Plus_Pct\":\"0\",\n"
-                + "\"Total_Claims\":\"1\",\n"
-                + "\"Day_1_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_1_total_count\":\"0\",\n"
-                + "\"Day_2_List\":[\n"
-                + "{\"Case_Reference\":\"1800001/2021\",\n"
-                + "\"Date_Of_Receipt\":\"2021-10-20\",\n"
-                + "\"Date_Of_Service\":\"2021-10-21\"}],\n"
-                + "\"day_2_total_count\":\"1\",\n"
-                + "\"Day_3_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_3_total_count\":\"0\",\n"
-                + "\"Day_4_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_4_total_count\":\"0\",\n"
-                + "\"Day_5_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_5_total_count\":\"0\",\n"
-                + "\"Day_6_List\":[\n"
-                + "{\"Case_Reference\":\"0\",\n"
-                + "\"Actual_Number_Of_Days\":\"0\",\n"
-                + "\"Date_Of_Receipt\":\"0\",\n"
-                + "\"Date_Of_Service\":\"0\"},\n"
-                + "],\n"
-                + "\"day_6_total_count\":\"0\",\n"
-                + "\"Report_Clerk\":\"Mike Jordan\",\n"
-                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n"
-                + "}\n"
-                + "}\n";
+    public void buildServingClaimsReportWithDay6EntriesSorted() throws URISyntaxException, IOException {
+        ListingData listingData = new ListingData();
+        listingData.setReportType(SERVING_CLAIMS_REPORT);
+        listingData.setHearingDateType(RANGE_HEARING_DATE_TYPE);
+        listingData.setListingDateFrom("2021-10-02");
+        listingData.setListingDateTo("2021-10-28");
 
+        var adHocReportType = new AdhocReportType();
+        adHocReportType.setReportOffice("Leeds");
+        listingData.setLocalReportsDetailHdr(adHocReportType);
+
+        listingData.setLocalReportsDetail(new ArrayList<>());
+        var adhocReportTypeItem = new AdhocReportTypeItem();
+        var adhocReportType = new AdhocReportType();
+
+        adhocReportType.setClaimServed6PlusDaysTotal("3");
+        adhocReportType.setClaimServed6PlusDaysPercent("100");
+        adhocReportType.setTotalCases("3");
+        adhocReportType.setClaimServedTotal("3");
+        adhocReportType.setClaimServedItems(new ArrayList<>());
+
+        var claimServedType3 = new ClaimServedType();
+        claimServedType3.setReportedNumberOfDays(String.valueOf(5));
+        claimServedType3.setActualNumberOfDays(String.valueOf(365));
+        claimServedType3.setCaseReceiptDate("2020-10-12");
+        claimServedType3.setClaimServedDate("2021-10-12");
+        var claimServedTypeItem3 = new ClaimServedTypeItem();
+        claimServedTypeItem3.setId(String.valueOf(UUID.randomUUID()));
+        claimServedTypeItem3.setValue(claimServedType3);
+
+        var claimServedType = new ClaimServedType();
+        claimServedType.setReportedNumberOfDays(String.valueOf(5));
+        claimServedType.setActualNumberOfDays(String.valueOf(46));
+        claimServedType.setCaseReceiptDate("2021-09-02");
+        claimServedType.setClaimServedDate("2021-10-16");
+        claimServedType.setClaimServedCaseNumber("0098");
+
+        var claimServedTypeItem = new ClaimServedTypeItem();
+        claimServedTypeItem.setId(String.valueOf(UUID.randomUUID()));
+        claimServedTypeItem.setValue(claimServedType);
+
+        var claimServedType2 = new ClaimServedType();
+        claimServedType2.setReportedNumberOfDays(String.valueOf(5));
+        claimServedType2.setActualNumberOfDays(String.valueOf(189));
+        claimServedType2.setCaseReceiptDate("2021-08-12");
+        claimServedType2.setClaimServedDate("2021-02-17");
+        claimServedType2.setClaimServedCaseNumber("185");
+
+        var claimServedTypeItem2 = new ClaimServedTypeItem();
+        claimServedTypeItem2.setId(String.valueOf(UUID.randomUUID()));
+        claimServedTypeItem2.setValue(claimServedType2);
+
+        adhocReportType.getClaimServedItems().add(claimServedTypeItem);
+        adhocReportType.getClaimServedItems().add(claimServedTypeItem2);
+        adhocReportType.getClaimServedItems().add(claimServedTypeItem3);
+        adhocReportType.setTotal("3");
+
+        adhocReportTypeItem.setId(String.valueOf(UUID.randomUUID()));
+        adhocReportTypeItem.setValue(adhocReportType);
+
+        listingData.setLocalReportsDetail(new ArrayList<>());
+        listingData.getLocalReportsDetail().add(adhocReportTypeItem);
+        var expectedJson = getExpectedResult("servingClaimsDay6EntriesSorted.json");
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        expectedJson = expectedJson.replace("current-date-placeholder", today);
+        var actualJson = ReportDocHelper.buildReportDocumentContent(listingData,
+            "", "EM-TRB-SCO-ENG-00781", userDetails).toString();
+        assertEquals(expectedJson, actualJson);
+    }
+
+    @Test
+    public void buildCorrectServingClaimsReportDocForProvidedAllDaysEntries() throws URISyntaxException, IOException  {
+        var expectedJson = getExpectedResult("servingClaimsAllDaysEntries.json");
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        var expected = expectedJson.replace("current-date-placeholder", today);
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetailsClaimsServed.getCaseData(),
-                "", "EM-TRB-SCO-ENG-00780", userDetails).toString());
+                "", "EM-TRB-SCO-ENG-00781", userDetails).toString());
     }
 
     @Test
@@ -462,6 +492,18 @@ public class ReportDocHelperTest {
         var reportData = getRespondentsReportData();
         var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "",
                 "EM-TRB-SCO-ENG-00815", userDetails).toString();
+        assertEquals(expectedJson, actualJson);
+    }
+
+    @Test
+    public void buildSessionDaysReport() throws URISyntaxException, IOException {
+        var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+                .getResource("sessionDaysExpected.json")).toURI())));
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        expectedJson = expectedJson.replace("current-date", today);
+        var reportData = getSessionDaysReportData();
+        var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "",
+                "EM-TRB-SCO-ENG-00817", userDetails).toString();
         assertEquals(expectedJson, actualJson);
     }
 
@@ -598,66 +640,106 @@ public class ReportDocHelperTest {
         return reportData;
     }
 
+    private SessionDaysReportData getSessionDaysReportData() {
+        var reportSummary = new SessionDaysReportSummary("Manchester");
+        reportSummary.setFtSessionDaysTotal("1");
+        reportSummary.setPtSessionDaysTotal("1");
+        reportSummary.setOtherSessionDaysTotal("1");
+        reportSummary.setSessionDaysTotal("3");
+        reportSummary.setPtSessionDaysPerCent("33");
+
+        var reportData = new SessionDaysReportData(reportSummary);
+        reportData.setReportType(SESSION_DAYS_REPORT);
+        reportData.setDocumentName("TestDocument");
+        reportData.setHearingDateType(Constants.RANGE_HEARING_DATE_TYPE);
+        reportData.setListingDateFrom("2022-01-01");
+        reportData.setListingDateTo("2022-01-10");
+
+        var summary2 = new SessionDaysReportSummary2();
+
+        summary2.setDate("20-1-2022");
+        summary2.setFtSessionDays("1");
+        summary2.setPtSessionDays("1");
+        summary2.setOtherSessionDays("1");
+        summary2.setSessionDaysTotalDetail("3");
+        reportData.addReportSummary2List(Collections.singletonList(summary2));
+
+        var reportDetail1 = new SessionDaysReportDetail();
+        reportDetail1.setSessionType("Full Day");
+        reportDetail1.setHearingTelConf("Y");
+        reportDetail1.setHearingSitAlone("Y");
+        reportDetail1.setJudgeType("Salaried");
+        reportDetail1.setHearingDuration("200");
+        reportDetail1.setHearingJudge("Judge X");
+        reportDetail1.setHearingType("hearing type");
+        reportDetail1.setHearingDate("20-1-2022");
+        reportDetail1.setHearingClerk("Clerk X");
+        reportDetail1.setHearingNumber("1");
+        reportDetail1.setCaseReference("1111/2022");
+        reportData.addReportDetail(Collections.singletonList(reportDetail1));
+        return reportData;
+    }
+
     @Test
     public void buildHearingsByHearingType() {
         String expected = "{\n" +
                 "\"accessKey\":\"\",\n" +
-                "\"templateName\":\"EM-TRB-SCO-ENG-00785.docx\",\n" +
-                "\"outputName\":\"document.docx\",\n" +
-                "\"data\":{\n" +
-                "\"Listed_date_from\":\"1 December 2021\",\n" +
-                "\"Listed_date_to\":\"3 December 2021\",\n" +
-                "\"Report_Office\":\"\",\n" +
-                "\"cm_summary1\":\"2\",\n" +
-                "\"costs_summary1\":\"2\",\n" +
-                "\"hearing_summary1\":\"2\",\n" +
-                "\"hearingPrelim_summary1\":\"2\",\n" +
-                "\"reconsider_summary1\":\"2\",\n" +
-                "\"remedy_summary1\":\"2\",\n" +
-                "\"total_summary1\":\"12\",\n" +
-                "\"Report_List\":[\n" +
-                "{\"date_summary1_list\":\"20 October 2021\",\n" +
-                "\"cm_summary1_list\":\"2\",\n" +
-                "\"costs_summary1_list\":\"2\",\n" +
-                "\"hearing_summary1_list\":\"2\",\n" +
-                "\"hearingPrelim_summary1_list\":\"2\",\n" +
-                "\"reconsider_summary1_list\":\"2\",\n" +
-                "\"remedy_summary1_list\":\"2\",\n" +
-                "\"total_summary1_list\":\"12\"}],\n" +
-                "\"reportSummaryHdr2\":[\n" +
-                "{\"subSplit_summary2\":\"JM\",\n" +
-                "\"cm_summary2\":\"1\",\n" +
-                "\"costs_summary2\":\"1\",\n" +
-                "\"hearing_summary2\":\"1\",\n" +
-                "\"hearingPrelim_summary2\":\"1\",\n" +
-                "\"reconsider_summary2\":\"1\",\n" +
-                "\"remedy_summary2\":\"1\",\n" +
-                "\"total_summary2\":\"6\"}],\n" +
-                "\"reportSummary2\":[\n" +
-                "{\"date_summary2_list\":\"20 October 2021\",\n" +
-                "\"subSplit_summary2_list\":\"JM\",\n" +
-                "\"cm_summary2_list\":\"2\",\n" +
-                "\"costs_summary2_list\":\"2\",\n" +
-                "\"hearing_summary2_list\":\"2\",\n" +
-                "\"hearingPrelim_summary2_list\":\"2\",\n" +
-                "\"reconsider_summary2_list\":\"2\",\n" +
-                "\"remedy_summary2_list\":\"2\",\n" +
-                "\"total_summary2_list\":\"12\"}],\n" +
-                "\"reportDetails\":[\n" +
-                "{\"date_detail\":\"2020-10-20T10:00:00.000\",\n" +
-                "\"multiple_sub_detail\":\"multSub\",\n" +
-                "\"case_no_detail\":\"1112\",\n" +
-                "\"lead_detail\":\"212323\",\n" +
-                "\"hear_no_detail\":\"1\",\n" +
-                "\"type_detail\":\"Hearing\",\n" +
-                "\"tel_detail\":\"Y\",\n" +
-                "\"jm_detail\":\"Y\",\n" +
-                "\"dur_detail\":\"430\",\n" +
-                "\"clerk_detail\":\"clerk1\"}],\n" +
-                "\"Report_Clerk\":\"Mike Jordan\",\n" +
-                "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n" +
-                "}\n" +
-                "}\n";
+                "\"templateName\":\"EM-TRB-SCO-ENG-00785.docx\",\n"
+                + "\"outputName\":\"document.docx\",\n"
+                + "\"data\":{\n"
+                + "\"Listed_date_from\":\"1 December 2021\",\n"
+                + "\"Listed_date_to\":\"3 December 2021\",\n"
+                + "\"Report_Office\":\"\",\n"
+                + "\"cm_summary1\":\"2\",\n"
+                + "\"costs_summary1\":\"2\",\n"
+                + "\"hearing_summary1\":\"2\",\n"
+                + "\"hearingPrelim_summary1\":\"2\",\n"
+                + "\"reconsider_summary1\":\"2\",\n"
+                + "\"remedy_summary1\":\"2\",\n"
+                + "\"total_summary1\":\"12\",\n"
+                + "\"Report_List\":[\n"
+                + "{\"date_summary1_list\":\"20 October 2021\",\n"
+                + "\"cm_summary1_list\":\"2\",\n"
+                + "\"costs_summary1_list\":\"2\",\n"
+                + "\"hearing_summary1_list\":\"2\",\n"
+                + "\"hearingPrelim_summary1_list\":\"2\",\n"
+                + "\"reconsider_summary1_list\":\"2\",\n"
+                + "\"remedy_summary1_list\":\"2\",\n"
+                + "\"total_summary1_list\":\"12\"}],\n"
+                + "\"reportSummaryHdr2\":[\n"
+                + "{\"subSplit_summary2\":\"JM\",\n"
+                + "\"cm_summary2\":\"1\",\n"
+                + "\"costs_summary2\":\"1\",\n"
+                + "\"hearing_summary2\":\"1\",\n"
+                + "\"hearingPrelim_summary2\":\"1\",\n"
+                + "\"reconsider_summary2\":\"1\",\n"
+                + "\"remedy_summary2\":\"1\",\n"
+                + "\"total_summary2\":\"6\"}],\n"
+                + "\"reportSummary2\":[\n"
+                + "{\"date_summary2_list\":\"20 October 2021\",\n"
+                + "\"subSplit_summary2_list\":\"JM\",\n"
+                + "\"cm_summary2_list\":\"2\",\n"
+                + "\"costs_summary2_list\":\"2\",\n"
+                + "\"hearing_summary2_list\":\"2\",\n"
+                + "\"hearingPrelim_summary2_list\":\"2\",\n"
+                + "\"reconsider_summary2_list\":\"2\",\n"
+                + "\"remedy_summary2_list\":\"2\",\n"
+                + "\"total_summary2_list\":\"12\"}],\n"
+                + "\"reportDetails\":[\n"
+                + "{\"date_detail\":\"2020-10-20T10:00:00.000\",\n"
+                + "\"multiple_sub_detail\":\"multSub\",\n"
+                + "\"case_no_detail\":\"1112\",\n"
+                + "\"lead_detail\":\"212323\",\n"
+                + "\"hear_no_detail\":\"1\",\n"
+                + "\"type_detail\":\"Hearing\",\n"
+                + "\"tel_detail\":\"Y\",\n"
+                + "\"jm_detail\":\"Y\",\n"
+                + "\"dur_detail\":\"430\",\n"
+                + "\"clerk_detail\":\"clerk1\"}],\n"
+                + "\"Report_Clerk\":\"Mike Jordan\",\n"
+                + "\"Today_date\":\"" + UtilHelper.formatCurrentDate(LocalDate.now()) + "\"\n"
+                + "}\n"
+                + "}\n";
 
         assertEquals(expected, ReportDocHelper.buildReportDocumentContent(reportDetails6.getCaseData(), "",
                 "EM-TRB-SCO-ENG-00785", userDetails).toString());
@@ -710,5 +792,13 @@ public class ReportDocHelperTest {
         reportData.getReportDetailsMultiple().add(reportDetailMultiple);
 
         return reportData;
+    }
+
+    private String getExpectedResult(String resourceFileName) throws URISyntaxException, IOException {
+        var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+            .getResource(resourceFileName)).toURI())));
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        expectedJson = expectedJson.replace("current-date-placeholder", today);
+        return expectedJson;
     }
 }

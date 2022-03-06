@@ -128,7 +128,6 @@ public class ServingClaimsReport {
                 setServedClaimsDetailsByDay(adhocReportType, dayNumber);
             }
         }
-
     }
 
     private void setServedClaimsDetailsByDay(AdhocReportType adhocReportType, int dayNumber) {
@@ -137,20 +136,9 @@ public class ServingClaimsReport {
     }
 
     private List<ClaimServedTypeItem> getServedClaimItemsByDayNumber(AdhocReportType adhocReportType, int dayNumber) {
-        int claimsServedDayListUpperBoundary = 5;
-        List<ClaimServedTypeItem> acceptedClaimItems;
-
-        if (dayNumber >= claimsServedDayListUpperBoundary) {
-            acceptedClaimItems = adhocReportType.getClaimServedItems().stream()
-                    .filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) >= dayNumber)
-                    .collect(Collectors.toList());
-        } else {
-            acceptedClaimItems = adhocReportType.getClaimServedItems().stream()
-                    .filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) == dayNumber)
-                    .collect(Collectors.toList());
-        }
-
-        return acceptedClaimItems;
+        return adhocReportType.getClaimServedItems().stream()
+            .filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) == dayNumber)
+            .collect(Collectors.toList());
     }
 
     private void setServedClaimsSummary(AdhocReportType adhocReportType, String totalServedClaims,
@@ -192,5 +180,4 @@ public class ServingClaimsReport {
                 break;
         }
     }
-
 }

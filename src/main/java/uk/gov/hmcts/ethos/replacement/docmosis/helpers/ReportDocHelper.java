@@ -12,19 +12,23 @@ import uk.gov.hmcts.ecm.common.model.listing.items.ReportListingsTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportDoc;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReportDoc;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportData;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.BROUGHT_FORWARD_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_AWAITING_JUDGMENT_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASES_COMPLETED_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_SOURCE_LOCAL_REPORT;
@@ -37,6 +41,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEW_LINE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OUTPUT_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
@@ -130,8 +135,19 @@ public class ReportDocHelper {
                     throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
                 }
                 break;
+            case SESSION_DAYS_REPORT:
+                try {
+                    sb.append(ListingHelper.getListingDate(listingData));
+                    sb.append(getSessionDaysReport(listingData));
+                } catch (JsonProcessingException e) {
+                    throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
+                }
+                break;
             case NO_CHANGE_IN_CURRENT_POSITION_REPORT:
                 sb.append(getNoPositionChangeReport(listingData));
+                break;
+            case BROUGHT_FORWARD_REPORT:
+                sb.append(new BfActionReportDoc().getReportDocPart(listingData));
                 break;
             case MEMBER_DAYS_REPORT:
                 sb.append(new MemberDaysReportDoc().getReportDocPart(listingData));
@@ -507,8 +523,7 @@ public class ReportDocHelper {
         var claimsServedDayListUpperBoundary = 5;
 
         if (CollectionUtils.isNotEmpty(listingData.getLocalReportsDetail())) {
-            var listBlockOpeners = List.of(DAY_1_LIST, DAY_2_LIST,
-                    DAY_3_LIST, DAY_4_LIST,
+            var listBlockOpeners = List.of(DAY_1_LIST, DAY_2_LIST, DAY_3_LIST, DAY_4_LIST,
                     DAY_5_LIST, DAY_6_LIST);
             for (var dayIndex = 0; dayIndex <= claimsServedDayListUpperBoundary; dayIndex++) {
                 addEntriesByServingDay(dayIndex, listBlockOpeners.get(dayIndex),
@@ -521,20 +536,22 @@ public class ReportDocHelper {
 
     private static void addEntriesByServingDay(int dayNumber, String listBlockOpener,
                                                StringBuilder reportContent, ListingData listingData) {
-
         var itemsList = listingData.getLocalReportsDetail().get(0);
         var claimServedTypeItems = itemsList.getValue().getClaimServedItems()
-                .stream()
-                .filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) == dayNumber)
+                .stream().filter(item -> Integer.parseInt(item.getValue().getReportedNumberOfDays()) == dayNumber)
                 .collect(Collectors.toList());
         int claimServedTypeItemsCount = claimServedTypeItems.size();
         var claimServedTypeItemsListSize = String.valueOf(claimServedTypeItems.size());
+
+        if (dayNumber >= 5) {
+            claimServedTypeItems.sort(Comparator.comparingInt(item ->
+                Integer.parseInt(item.getValue().getActualNumberOfDays())));
+        }
 
         reportContent.append(listBlockOpener);
 
         if (claimServedTypeItemsCount == 0) {
             reportContent.append(CASE_REFERENCE).append(claimServedTypeItemsListSize).append(NEW_LINE);
-
             if (dayNumber >= 5) {
                 reportContent.append("\"Actual_Number_Of_Days\":\"")
                         .append(claimServedTypeItemsListSize).append(NEW_LINE);
@@ -657,6 +674,30 @@ public class ReportDocHelper {
         sb.append(REPORT_OFFICE).append(reportData.getReportSummary().getOffice()).append(NEW_LINE);
         sb.append("\"MoreThan1Resp\":\"").append(
                 nullCheck(reportData.getReportSummary().getTotalCasesWithMoreThanOneRespondent())).append(NEW_LINE);
+        addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
+        return sb;
+    }
+
+    private static StringBuilder getSessionDaysReport(ListingData listingData)
+            throws JsonProcessingException {
+        if (!(listingData instanceof SessionDaysReportData)) {
+            throw new IllegalStateException((LISTING_DATA_STATE_EXCEPTION + "SessionDaysReportData"));
+        }
+        var reportData = (SessionDaysReportData) listingData;
+
+        var sb = new StringBuilder();
+        sb.append(REPORT_OFFICE).append(reportData.getReportSummary().getOffice()).append(NEW_LINE);
+        sb.append("\"ftcSessionDays\":\"").append(
+               nullCheck(reportData.getReportSummary().getFtSessionDaysTotal())).append(NEW_LINE);
+        sb.append("\"ptcSessionDays\":\"").append(
+                nullCheck(reportData.getReportSummary().getPtSessionDaysTotal())).append(NEW_LINE);
+        sb.append("\"otherSessionDays\":\"").append(
+                nullCheck(reportData.getReportSummary().getOtherSessionDaysTotal())).append(NEW_LINE);
+        sb.append("\"totalSessionDays\":\"").append(
+                nullCheck(reportData.getReportSummary().getSessionDaysTotal())).append(NEW_LINE);
+        sb.append("\"percentPtcSessionDays\":\"").append(
+                nullCheck(reportData.getReportSummary().getPtSessionDaysPerCent())).append(NEW_LINE);
+        addJsonCollection("reportSummary2", reportData.getReportSummary2List().iterator(), sb);
         addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
         return sb;
     }

@@ -27,6 +27,7 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
@@ -502,6 +503,8 @@ public class CaseManagementForCaseWorkerServiceTest {
                 new ArrayList<>(), ABOUT_TO_SUBMIT_EVENT_CALLBACK);
         assertEquals("11111", casedata.getCaseRefECC());
         assertEquals(FLAG_ECC, casedata.getCaseSource());
+        assertTrue(casedata.getJurCodesCollection().get(0).getId().matches(
+                "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"));
     }
 
     @Test

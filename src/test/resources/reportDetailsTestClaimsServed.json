@@ -7,10 +7,10 @@
       "PostCode": "M3 2JA",
       "PostTown": "Leeds"
     },
-    "tribunalCorrespondenceTelephone" : "03577131270",
-    "tribunalCorrespondenceFax" : "07577126570",
-    "tribunalCorrespondenceDX" : "123456",
-    "tribunalCorrespondenceEmail" : "ManchesterOfficeET@hmcts.gov.uk",
+    "tribunalCorrespondenceTelephone": "03577131270",
+    "tribunalCorrespondenceFax": "07577126570",
+    "tribunalCorrespondenceDX": "123456",
+    "tribunalCorrespondenceEmail": "ManchesterOfficeET@hmcts.gov.uk",
     "listingDate": "2021-10-22",
     "receiptDate": "2021-10-20",
     "claimServedDate": "2021-10-21",
@@ -58,7 +58,6 @@
           "clerk": "Anne Fox",
           "hearingNumber": "3",
           "resp_others": "Mark Taylor, Tony Jones, Steve Thomas",
-
           "claimServedDay1Total": "0",
           "claimServedDay1Percent": "0",
           "claimServedDay2Total": "1",
@@ -73,18 +72,17 @@
           "claimServed6PlusDaysPercent": "0",
           "claimServedTotal": "1",
           "claimServedItems": [
-              {
-                  "value":
-                  {
-                      "reportedNumberOfDays": "1",
-                      "actualNumberOfDays": "1",
-                      "claimServedType": "",
-                      "claimServedCaseNumber": "1800001/2021",
-                      "caseReceiptDate": "2021-10-20",
-                      "claimServedDate": "2021-10-21"
-                  },
-                  "id": "97087d19-795a-4886-8cdb-06489b8b2ef5"
-              }
+            {
+              "value": {
+                "reportedNumberOfDays": "1",
+                "actualNumberOfDays": "1",
+                "claimServedType": "",
+                "claimServedCaseNumber": "1800001/2021",
+                "caseReceiptDate": "2021-10-20",
+                "claimServedDate": "2021-10-21"
+              },
+              "id": "97087d19-795a-4886-8cdb-06489b8b2ef5"
+            }
           ]
         },
         "id": "97087d19-795a-4886-8cdb-06489b8b2ef5"

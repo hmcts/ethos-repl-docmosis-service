@@ -34,7 +34,7 @@ public class MemberDaysReport {
     private static final String FULL_PANEL = "Full Panel";
     private static final String SINGLE_DATE_HEARING_REPORT = "Single";
     private static final String DATE_RANGE_HEARING_REPORT = "Range";
-    private static final DateTimeFormatter OLD_DATE_TIME_PATTERN3 =
+    public static final DateTimeFormatter OLD_DATE_TIME_PATTERN3 =
         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     public MemberDaysReportData runReport(ListingDetails listings, List<SubmitEvent> submitEventList) {
