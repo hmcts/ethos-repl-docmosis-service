@@ -5,14 +5,15 @@ import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportSubmitEvent;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import java.util.ArrayList;
 import java.util.List;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.ReportParams;
 
 public class EccReport {
 
     private final EccReportDataSource reportDataSource;
     private String office;
+
     public EccReport(EccReportDataSource reportDataSource) {
         this.reportDataSource = reportDataSource;
     }
@@ -48,7 +49,8 @@ public class EccReport {
         for (EccReportSubmitEvent submitEvent : submitEvents) {
             var eccReportDetail = new EccReportDetail();
             var caseData = submitEvent.getCaseData();
-            if (CollectionUtils.isNotEmpty(caseData.getEccCases()) && CollectionUtils.isNotEmpty(caseData.getRespondentCollection())) {
+            if (CollectionUtils.isNotEmpty(caseData.getEccCases())
+                    && CollectionUtils.isNotEmpty(caseData.getRespondentCollection())) {
                 eccReportDetail.setState(submitEvent.getState());
                 eccReportDetail.setDate(caseData.getReceiptDate());
                 eccReportDetail.setOffice(office);
@@ -59,13 +61,12 @@ public class EccReport {
                 eccReportDetailList.add(eccReportDetail);
             }
 
-
         }
         return eccReportDetailList;
     }
 
     private String getEccCases(List<EccCounterClaimTypeItem> eccItems) {
-       StringBuilder eccCasesList = new StringBuilder(Strings.EMPTY);
+        StringBuilder eccCasesList = new StringBuilder(Strings.EMPTY);
         for (EccCounterClaimTypeItem eccItem : eccItems) {
             eccCasesList.append(eccItem.getValue().getCounterClaim()).append("\n");
         }

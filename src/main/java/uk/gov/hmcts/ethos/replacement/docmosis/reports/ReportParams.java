@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport;
+package uk.gov.hmcts.ethos.replacement.docmosis.reports;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

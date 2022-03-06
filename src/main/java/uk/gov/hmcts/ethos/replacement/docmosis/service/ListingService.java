@@ -19,7 +19,7 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.*;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
@@ -40,12 +40,12 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.ReportParams;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims.ServingClaimsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysCcdReportDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -84,7 +84,9 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
-import uk.gov.hmcts.ethos.replacement.docmosis.service.referencedata.jpaservice.JpaJudgeService;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 
 @RequiredArgsConstructor
 @Slf4j

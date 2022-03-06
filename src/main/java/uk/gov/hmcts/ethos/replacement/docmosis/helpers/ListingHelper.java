@@ -81,7 +81,9 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARI
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.MultiplesScheduleHelper.NOT_ALLOCATED;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.*;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 
 @Slf4j
 public class ListingHelper {

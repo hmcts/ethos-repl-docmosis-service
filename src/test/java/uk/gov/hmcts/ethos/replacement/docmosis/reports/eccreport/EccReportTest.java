@@ -6,16 +6,11 @@ import java.util.List;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportSubmitEvent;
-import uk.gov.hmcts.ecm.common.model.reports.respondentsreport.RespondentsReportSubmitEvent;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.ReportParams;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReport;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportDataSource;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 
 public class EccReportTest {
 
