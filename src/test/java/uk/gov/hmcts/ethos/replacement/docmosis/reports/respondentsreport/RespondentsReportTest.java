@@ -42,7 +42,7 @@ public class RespondentsReportTest {
                     .buildAsSubmitEvent());
 
             var reportData = respondentsReport.generateReport(
-                    new RespondentsReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
+                    new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
             assertCommonValues(reportData);
             assertEquals("0", reportData.getReportSummary().getTotalCasesWithMoreThanOneRespondent());
             assertEquals(0, reportData.getReportDetails().size());
@@ -58,7 +58,7 @@ public class RespondentsReportTest {
         submitEvents.add(caseDataBuilder
                 .buildAsSubmitEvent());
 
-        var reportData = respondentsReport.generateReport(new RespondentsReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
+        var reportData = respondentsReport.generateReport(new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         assertCommonValues(reportData);
         assertEquals("0", reportData.getReportSummary().getTotalCasesWithMoreThanOneRespondent());
         assertTrue(reportData.getReportDetails().isEmpty());
@@ -73,7 +73,7 @@ public class RespondentsReportTest {
         caseDataBuilder.withMoreThanOneRespondents();
         submitEvents.add(caseDataBuilder.buildAsSubmitEvent());
 
-        var reportData = respondentsReport.generateReport(new RespondentsReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
+        var reportData = respondentsReport.generateReport(new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         assertCommonValues(reportData);
         assertEquals("1", reportData.getReportSummary().getTotalCasesWithMoreThanOneRespondent());
         assertFalse(reportData.getReportDetails().isEmpty());
@@ -88,7 +88,7 @@ public class RespondentsReportTest {
         caseDataBuilder.withMoreThan1RespondentsRepresented();
         submitEvents.add(caseDataBuilder
                 .buildAsSubmitEvent());
-        var reportData = respondentsReport.generateReport(new RespondentsReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
+        var reportData = respondentsReport.generateReport(new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
         assertCommonValues(reportData);
         assertEquals("111", reportData.getReportDetails().get(0).getCaseNumber());
         assertEquals("Resp1", reportData.getReportDetails().get(0).getRespondentName());

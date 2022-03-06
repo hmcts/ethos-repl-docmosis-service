@@ -5,7 +5,7 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class RespondentsReportParams {
+public class ReportParams {
     private final String caseTypeId;
     private final String dateFrom;
     private final String dateTo;

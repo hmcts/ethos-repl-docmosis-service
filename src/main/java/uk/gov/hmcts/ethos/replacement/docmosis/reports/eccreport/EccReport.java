@@ -7,6 +7,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportSubmitEvent;
 import java.util.ArrayList;
 import java.util.List;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.ReportParams;
 
 public class EccReport {
 
@@ -16,10 +17,10 @@ public class EccReport {
         this.reportDataSource = reportDataSource;
     }
 
-    public EccReportData generateReport(String caseTypeId, String dateFrom, String dateTo) {
+    public EccReportData generateReport(ReportParams params) {
 
-        var submitEvents = getCases(caseTypeId, dateFrom, dateTo);
-        var reportData = initReport(caseTypeId);
+        var submitEvents = getCases(params);
+        var reportData = initReport(params.getCaseTypeId());
 
         if (CollectionUtils.isNotEmpty(submitEvents)) {
             executeReport(reportData, submitEvents);
@@ -32,9 +33,9 @@ public class EccReport {
         return new EccReportData();
     }
 
-    private List<EccReportSubmitEvent> getCases(String caseTypeId, String dateFrom, String dateTo) {
+    private List<EccReportSubmitEvent> getCases(ReportParams params) {
         return reportDataSource.getData(UtilHelper.getListingCaseTypeId(
-                caseTypeId), dateFrom, dateTo);
+                params.getCaseTypeId()), params.getDateFrom(), params.getDateTo());
     }
 
     private void executeReport(EccReportData eccReportData,

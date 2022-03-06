@@ -19,7 +19,7 @@ public class RespondentsReport {
         this.reportDataSource = reportDataSource;
     }
 
-    public RespondentsReportData generateReport(RespondentsReportParams params) {
+    public RespondentsReportData generateReport(ReportParams params) {
 
         var submitEvents = getCases(params);
         var reportData = initReport(params.getCaseTypeId());
@@ -38,7 +38,7 @@ public class RespondentsReport {
         return new RespondentsReportData(reportSummary);
     }
 
-    private List<RespondentsReportSubmitEvent> getCases(RespondentsReportParams params) {
+    private List<RespondentsReportSubmitEvent> getCases(ReportParams params) {
         return reportDataSource.getData(UtilHelper.getListingCaseTypeId(
                 params.getCaseTypeId()), params.getDateFrom(), params.getDateTo());
     }

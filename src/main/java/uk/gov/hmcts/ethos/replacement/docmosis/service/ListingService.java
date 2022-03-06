@@ -19,11 +19,15 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.ListingTypeItem;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CcdReportDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casescompleted.CasesCompletedReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesourcelocalreport.CaseSourceLocalReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReport;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReportCcdDataSource;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype.HearingsByHearingTypeReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsCcdReportDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReport;
@@ -35,7 +39,7 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportCcdDataSource;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportData;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.RespondentsReportParams;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.respondentsreport.ReportParams;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.servingclaims.ServingClaimsReport;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.timetofirsthearing.TimeToFirstHearingReport;
 
@@ -75,8 +79,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper.CASES_SEARCHED;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -241,6 +243,8 @@ public class ListingService {
                     return getNoPositionChangeReport(listingDetails, authToken);
                 case RESPONDENTS_REPORT:
                     return getRespondentsReport(listingDetails, authToken);
+                case ECC_REPORT:
+                    return getEccReport(listingDetails, authToken);
                 default:
                     return getDateRangeReport(listingDetails, authToken);
             }
@@ -249,22 +253,38 @@ public class ListingService {
         }
     }
 
-    private RespondentsReportData getRespondentsReport(ListingDetails listingDetails, String authToken) {
-        log.info("Respondents Report for {}", listingDetails.getCaseTypeId());
-        var reportDataSource = new RespondentsReportCcdDataSource(authToken, ccdClient);
+    private EccReportData getEccReport(ListingDetails listingDetails, String authToken) {
+        log.info("Ecc Report for {}", listingDetails.getCaseTypeId());
+        var reportDataSource = new EccReportCcdDataSource(authToken, ccdClient);
         setListingDateRangeForSearch(listingDetails);
         var listingData = listingDetails.getCaseData();
-
-        var params = new RespondentsReportParams(listingDetails.getCaseTypeId(),
+        var params = new ReportParams(listingDetails.getCaseTypeId(),
                 listingDateFrom, listingDateTo);
-        var respondentsReport = new RespondentsReport(reportDataSource);
-        var reportData = respondentsReport.generateReport(params);
+        var eccReport = new EccReport(reportDataSource);
+        var reportData = eccReport.generateReport(params);
+        setReportData(reportData, listingData);
+        return reportData;
+    }
+
+    private void setReportData(ListingData reportData, ListingData listingData) {
         reportData.setDocumentName(listingData.getDocumentName());
         reportData.setReportType(listingData.getReportType());
         reportData.setHearingDateType(listingData.getHearingDateType());
         reportData.setListingDateFrom(listingData.getListingDateFrom());
         reportData.setListingDateTo(listingData.getListingDateTo());
         reportData.setListingDate(listingData.getListingDate());
+    }
+
+    private RespondentsReportData getRespondentsReport(ListingDetails listingDetails, String authToken) {
+        log.info("Respondents Report for {}", listingDetails.getCaseTypeId());
+        var reportDataSource = new RespondentsReportCcdDataSource(authToken, ccdClient);
+        setListingDateRangeForSearch(listingDetails);
+        var listingData = listingDetails.getCaseData();
+        var params = new ReportParams(listingDetails.getCaseTypeId(),
+                listingDateFrom, listingDateTo);
+        var respondentsReport = new RespondentsReport(reportDataSource);
+        var reportData = respondentsReport.generateReport(params);
+        setReportData(reportData, listingData);
         return reportData;
     }
 
