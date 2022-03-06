@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport;
 
-import java.util.Comparator;
 import joptsimple.internal.Strings;
 import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
@@ -8,6 +7,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
 import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class EccReport {
