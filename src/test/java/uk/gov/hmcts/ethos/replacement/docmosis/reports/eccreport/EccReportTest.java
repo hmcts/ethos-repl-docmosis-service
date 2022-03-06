@@ -27,7 +27,7 @@ public class EccReportTest {
     static final String DATE_FROM = BASE_DATE.minusDays(1).format(OLD_DATE_TIME_PATTERN);
     static final String DATE_TO = BASE_DATE.plusDays(15).format(OLD_DATE_TIME_PATTERN);
 
-    @BeforeEach
+    @Before
     public void setup() {
         submitEvents.clear();
         caseDataBuilder = new EccReportCaseDataBuilder();
@@ -42,19 +42,17 @@ public class EccReportTest {
         // and report data is requested
         // the case should not be in the report data
 
-            caseDataBuilder.withNoEcc();
-            submitEvents.add(caseDataBuilder
-                    .buildAsSubmitEvent());
-
-            var reportData = eccReport.generateReport(
-                    new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
-            assertCommonValues(reportData);
-            assertEquals(0, reportData.getReportDetails().size());
+        caseDataBuilder.withNoEcc();
+        submitEvents.add(caseDataBuilder
+                .buildAsSubmitEvent());
+        var reportData = eccReport.generateReport(
+                new ReportParams(MANCHESTER_LISTING_CASE_TYPE_ID, DATE_FROM, DATE_TO));
+        assertEquals(0, reportData.getReportDetails().size());
     }
 
     @Test
     public void shouldShowCaseWithRespondentsAndEcc() {
-        // Given a case has more than 1 respondents
+        // Given a case has respondents and ecc
         // and report data is requested
         // the cases should be in the report data
 

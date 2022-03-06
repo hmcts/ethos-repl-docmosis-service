@@ -11,9 +11,11 @@ import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.items.ReportListingsTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
 import uk.gov.hmcts.ecm.common.model.listing.types.ClaimServedType;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportException;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.bfaction.BfActionReportDoc;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.CasesAwaitingJudgmentReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays.MemberDaysReportDoc;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.nochangeincurrentposition.NoPositionChangeReportData;
@@ -44,10 +46,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPO
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.TIME_TO_FIRST_HEARING_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.REPORT_OFFICE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.TOTAL_CASES;
 
 @Slf4j
 public class ReportDocHelper {
@@ -139,6 +137,14 @@ public class ReportDocHelper {
                 try {
                     sb.append(ListingHelper.getListingDate(listingData));
                     sb.append(getSessionDaysReport(listingData));
+                } catch (JsonProcessingException e) {
+                    throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
+                }
+                break;
+            case ECC_REPORT:
+                try {
+                    sb.append(ListingHelper.getListingDate(listingData));
+                    sb.append(getEccReport(listingData));
                 } catch (JsonProcessingException e) {
                     throw new ReportException(CANNOT_CREATE_REPORT_DATA_EXCEPTION, e);
                 }
@@ -698,6 +704,18 @@ public class ReportDocHelper {
         sb.append("\"percentPtcSessionDays\":\"").append(
                 nullCheck(reportData.getReportSummary().getPtSessionDaysPerCent())).append(NEW_LINE);
         addJsonCollection("reportSummary2", reportData.getReportSummary2List().iterator(), sb);
+        addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
+        return sb;
+    }
+
+    private static StringBuilder getEccReport(ListingData listingData)
+            throws JsonProcessingException {
+        if (!(listingData instanceof EccReportData)) {
+            throw new IllegalStateException((LISTING_DATA_STATE_EXCEPTION + "EccReportData"));
+        }
+        var reportData = (EccReportData) listingData;
+        var sb = new StringBuilder();
+        sb.append(REPORT_OFFICE).append(reportData.getReportDetails().get(0).getOffice()).append(NEW_LINE);
         addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
         return sb;
     }

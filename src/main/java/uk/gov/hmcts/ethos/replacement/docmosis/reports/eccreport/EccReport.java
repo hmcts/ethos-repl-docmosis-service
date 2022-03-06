@@ -48,14 +48,17 @@ public class EccReport {
         for (EccReportSubmitEvent submitEvent : submitEvents) {
             var eccReportDetail = new EccReportDetail();
             var caseData = submitEvent.getCaseData();
-            eccReportDetail.setState(submitEvent.getState());
-            eccReportDetail.setDate(caseData.getReceiptDate());
-            eccReportDetail.setOffice(office);
-            eccReportDetail.setCaseNumber(caseData.getEthosCaseReference());
-            eccReportDetail.setEccCasesCount(String.valueOf(caseData.getEccCases().size()));
-            eccReportDetail.setRespondentsCount(String.valueOf(caseData.getRespondentCollection().size()));
-            eccReportDetail.setEccCaseList(getEccCases(caseData.getEccCases()));
-            eccReportDetailList.add(eccReportDetail);
+            if (CollectionUtils.isNotEmpty(caseData.getEccCases()) && CollectionUtils.isNotEmpty(caseData.getRespondentCollection())) {
+                eccReportDetail.setState(submitEvent.getState());
+                eccReportDetail.setDate(caseData.getReceiptDate());
+                eccReportDetail.setOffice(office);
+                eccReportDetail.setCaseNumber(caseData.getEthosCaseReference());
+                eccReportDetail.setEccCasesCount(String.valueOf(caseData.getEccCases().size()));
+                eccReportDetail.setEccCaseList(getEccCases(caseData.getEccCases()));
+                eccReportDetail.setRespondentsCount(String.valueOf(caseData.getRespondentCollection().size()));
+                eccReportDetailList.add(eccReportDetail);
+            }
+
 
         }
         return eccReportDetailList;
