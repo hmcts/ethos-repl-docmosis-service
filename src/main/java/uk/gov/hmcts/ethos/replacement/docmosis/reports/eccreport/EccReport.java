@@ -9,7 +9,6 @@ import uk.gov.hmcts.ecm.common.model.reports.eccreport.EccReportSubmitEvent;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.ReportParams;
 import java.util.ArrayList;
 import java.util.List;
-import uk.gov.hmcts.ethos.replacement.docmosis.reports.sessiondays.SessionDaysReportDetail;
 
 public class EccReport {
 
