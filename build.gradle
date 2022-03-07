@@ -269,7 +269,7 @@ dependencies {
 
     //CVE-2021-42550
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
 
     //CVE-2021-22060
     implementation group: 'org.springframework', name: 'spring-core', version: '5.3.15'
