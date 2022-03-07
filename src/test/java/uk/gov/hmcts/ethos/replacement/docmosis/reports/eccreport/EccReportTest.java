@@ -68,6 +68,6 @@ public class EccReportTest {
 
     private void assertCommonValues(EccReportData reportData) {
         assertNotNull(reportData);
-        assertEquals("Manchester", reportData.getReportDetails().get(0).getOffice());
+        assertEquals("Manchester", reportData.getOffice());
     }
 }

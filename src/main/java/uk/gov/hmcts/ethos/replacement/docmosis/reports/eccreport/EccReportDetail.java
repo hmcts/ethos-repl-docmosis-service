@@ -8,9 +8,6 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EccReportDetail {
 
-    @JsonProperty("office")
-    private String office;
-
     @JsonProperty("caseNumber")
     private String caseNumber;
 

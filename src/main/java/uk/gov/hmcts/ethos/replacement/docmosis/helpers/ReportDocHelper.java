@@ -719,7 +719,7 @@ public class ReportDocHelper {
         var reportData = (EccReportData) listingData;
         var sb = new StringBuilder();
         if (CollectionUtils.isNotEmpty(reportData.getReportDetails())) {
-            sb.append(REPORT_OFFICE).append(reportData.getReportDetails().get(0).getOffice()).append(NEW_LINE);
+            sb.append(REPORT_OFFICE).append(reportData.getOffice()).append(NEW_LINE);
             addJsonCollection("reportDetails", reportData.getReportDetails().iterator(), sb);
         }
         return sb;

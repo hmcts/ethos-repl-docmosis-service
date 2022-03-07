@@ -10,11 +10,22 @@ public class EccReportData extends ListingData {
     @JsonIgnore
     private final List<EccReportDetail> reportDetails = new ArrayList<>();
 
+    @JsonIgnore
+    private String office;
+
+    public EccReportData(String office) {
+        this.office = office;
+    }
+
     public void addReportDetail(List<EccReportDetail> reportDetails) {
         this.reportDetails.addAll(reportDetails);
     }
 
     public List<EccReportDetail> getReportDetails() {
         return reportDetails;
+    }
+
+    public String getOffice() {
+        return office;
     }
 }

@@ -696,7 +696,7 @@ public class ReportDocHelperTest {
     }
 
     private EccReportData getEccReportData() {
-        var reportData = new EccReportData();
+        var reportData = new EccReportData("Manchester");
         reportData.setReportType(ECC_REPORT);
         reportData.setDocumentName("TestDocument");
         reportData.setHearingDateType(Constants.RANGE_HEARING_DATE_TYPE);
@@ -708,7 +708,6 @@ public class ReportDocHelperTest {
         reportDetail1.setEccCaseList("ecc1\necc2");
         reportDetail1.setEccCasesCount("2");
         reportDetail1.setState("Accepted");
-        reportDetail1.setOffice("Manchester");
         reportDetail1.setDate("20-1-2022");
         reportDetail1.setCaseNumber("1111212/2022");
         reportData.addReportDetail(Collections.singletonList(reportDetail1));

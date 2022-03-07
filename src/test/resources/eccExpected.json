@@ -7,7 +7,7 @@
 "Listed_date_to":"10 January 2022",
 "Report_Office":"Manchester",
 "reportDetails":[
-{"office":"Manchester","caseNumber":"1111212/2022","date":"20-1-2022","state":"Accepted","respondentsCount":"2","eccCasesCount":"2","eccCaseList":"ecc1\necc2"}
+{"caseNumber":"1111212/2022","date":"20-1-2022","state":"Accepted","respondentsCount":"2","eccCasesCount":"2","eccCaseList":"ecc1\necc2"}
 ],
 "Report_Clerk":"Mike Jordan",
 "Today_date":"current-date"
