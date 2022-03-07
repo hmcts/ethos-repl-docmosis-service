@@ -20,6 +20,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.Cas
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.PositionTypeSummary;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportDetail;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.casesawaitingjudgment.ReportSummary;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReportData;
+import uk.gov.hmcts.ethos.replacement.docmosis.reports.eccreport.EccReportDetail;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportData;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportDetail;
 import uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingstojudgments.HearingsToJudgmentsReportSummary;
@@ -47,13 +49,14 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MEMBER_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.RANGE_HEARING_DATE_TYPE;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SESSION_DAYS_REPORT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SERVING_CLAIMS_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.ECC_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
+import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 
 public class ReportDocHelperTest {
 
@@ -507,6 +510,18 @@ public class ReportDocHelperTest {
         assertEquals(expectedJson, actualJson);
     }
 
+    @Test
+    public void buildEccReport() throws URISyntaxException, IOException {
+        var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
+                .getResource("eccExpected.json")).toURI())));
+        var today = UtilHelper.formatCurrentDate(LocalDate.now());
+        expectedJson = expectedJson.replace("current-date", today);
+        var reportData = getEccReportData();
+        var actualJson = ReportDocHelper.buildReportDocumentContent(reportData, "",
+                "EM-TRB-SCO-ENG-00818", userDetails).toString();
+        assertEquals(expectedJson, actualJson);
+    }
+
     private CasesAwaitingJudgmentReportData getCasesAwaitingJudgementReportData() {
         var reportSummary = new ReportSummary("Newcastle");
         reportSummary.getPositionTypes()
@@ -676,6 +691,25 @@ public class ReportDocHelperTest {
         reportDetail1.setHearingClerk("Clerk X");
         reportDetail1.setHearingNumber("1");
         reportDetail1.setCaseReference("1111/2022");
+        reportData.addReportDetail(Collections.singletonList(reportDetail1));
+        return reportData;
+    }
+
+    private EccReportData getEccReportData() {
+        var reportData = new EccReportData("Manchester");
+        reportData.setReportType(ECC_REPORT);
+        reportData.setDocumentName("TestDocument");
+        reportData.setHearingDateType(Constants.RANGE_HEARING_DATE_TYPE);
+        reportData.setListingDateFrom("2022-01-01");
+        reportData.setListingDateTo("2022-01-10");
+
+        var reportDetail1 = new EccReportDetail();
+        reportDetail1.setRespondentsCount("2");
+        reportDetail1.setEccCaseList("ecc1\necc2");
+        reportDetail1.setEccCasesCount("2");
+        reportDetail1.setState("Accepted");
+        reportDetail1.setDate("20-1-2022");
+        reportDetail1.setCaseNumber("1111212/2022");
         reportData.addReportDetail(Collections.singletonList(reportDetail1));
         return reportData;
     }
