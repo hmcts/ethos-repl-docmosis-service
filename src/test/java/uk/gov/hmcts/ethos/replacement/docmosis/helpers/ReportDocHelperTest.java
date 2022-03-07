@@ -513,7 +513,7 @@ public class ReportDocHelperTest {
     @Test
     public void buildEccReport() throws URISyntaxException, IOException {
         var expectedJson = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getClassLoader()
-                .getResource("EccExpected.json")).toURI())));
+                .getResource("eccExpected.json")).toURI())));
         var today = UtilHelper.formatCurrentDate(LocalDate.now());
         expectedJson = expectedJson.replace("current-date", today);
         var reportData = getEccReportData();
