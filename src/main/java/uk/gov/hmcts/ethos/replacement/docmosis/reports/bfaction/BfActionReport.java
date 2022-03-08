@@ -85,7 +85,12 @@ public class BfActionReport {
 
         bfDateType.setBroughtForwardEnteredDate(bfActionType.getDateEntered());
         bfDateType.setBroughtForwardDate(bfDate);
-        bfDateType.setBroughtForwardDateReason(bfActionType.getNotes());
+
+        if (!isNullOrEmpty(bfActionType.getNotes())) {
+            var bfReason = bfActionType.getNotes().replace("\n", ". ");
+            bfDateType.setBroughtForwardDateReason(bfReason);
+        }
+
         var bfDateTypeItem = new BFDateTypeItem();
         bfDateTypeItem.setId(String.valueOf(bfActionTypeItem.getId()));
         bfDateTypeItem.setValue(bfDateType);
