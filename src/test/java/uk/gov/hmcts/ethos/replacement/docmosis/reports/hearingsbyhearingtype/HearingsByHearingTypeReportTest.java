@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.hearingsbyhearingtype;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
@@ -14,11 +8,28 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
-import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
 import uk.gov.hmcts.ecm.common.model.listing.items.AdhocReportTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.types.AdhocReportType;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_HEARD;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LISTED;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_COSTS_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_RECONSIDERATION;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_REMEDY;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.NEWCASTLE_LISTING_CASE_TYPE_ID;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 
 public class HearingsByHearingTypeReportTest {
     List<SubmitEvent> submitEvents = new ArrayList<>();
@@ -401,6 +412,35 @@ public class HearingsByHearingTypeReportTest {
         List<HearingTypeItem> hearingTypeItems = new ArrayList<>();
         Collections.addAll(hearingTypeItems, hearings);
         return hearingTypeItems;
+    }
+
+    @Test
+    public void multipleHearingsWithOneInRangeAndOneOutOfRange() {
+        // Hearing outside of range
+        var dateListedTypeItem = createHearingDateListed("2021-05-30T00:00:00.000", HEARING_STATUS_HEARD);
+        List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING, "Video",
+                dateListedTypeItem));
+
+        // Hearing inside of search range
+        dateListedTypeItem = createHearingDateListed("2021-06-01T00:00:00.000", HEARING_STATUS_HEARD);
+        var hearingTypeItem = createHearing(HEARING_TYPE_JUDICIAL_COSTS_HEARING, "Video", dateListedTypeItem);
+        hearings.add(hearingTypeItem);
+
+        var submitEvent = createSubmitEvent(hearings, "123456", "No");
+        var submitEventList = List.of(submitEvent);
+
+        var listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        var listingData = new ListingData();
+        listingDetails.setCaseData(listingData);
+        var report = new HearingsByHearingTypeReport();
+        var reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventList,
+                DATE_FROM, DATE_TO);
+
+        var adhocReportType = reportListingData.getLocalReportsSummaryHdr();
+        assertEquals("1", adhocReportType.getTotal());
+        assertEquals("1", adhocReportType.getHearingCM());
+
     }
 
 }

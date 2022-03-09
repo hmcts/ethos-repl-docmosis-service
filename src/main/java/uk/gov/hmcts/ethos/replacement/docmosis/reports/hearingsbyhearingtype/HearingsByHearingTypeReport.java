@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.common.Strings;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
+import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
@@ -173,7 +174,7 @@ public class HearingsByHearingTypeReport {
         return datesList;
     }
 
-    private Boolean checkIfValidHearing(DateListedType dateListedType) {
+    private boolean checkIfValidHearing(DateListedType dateListedType) {
         LocalDate listedDate;
         var startDate = LocalDate.parse(ReportHelper.getFormattedLocalDate(listingDateFrom));
         var endDate = LocalDate.parse(ReportHelper.getFormattedLocalDate(listingDateTo));
@@ -444,43 +445,52 @@ public class HearingsByHearingTypeReport {
                 if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
                     continue;
                 }
-                for (var hearingTypeItem : caseData.getHearingCollection()) {
-                    if (CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
-                        continue;
-                    }
-                    for (var dateListedTypedItem : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        if (!checkIfValidHearing(dateListedTypedItem.getValue())) {
-                            continue;
-                        }
-                        var adhocReportType = new AdhocReportType();
-                        adhocReportType.setDate(dateListedTypedItem.getValue().getListedDate().replace("T", " "));
-                        var mulRef = StringUtils.defaultString(caseData.getMultipleReference(), "0 -  Not Allocated");
-                        var subMul = StringUtils.defaultString(caseData.getSubMultipleName(), "0 -  Not Allocated");
-                        adhocReportType.setMultSub(mulRef + ", " + subMul);
-                        adhocReportType.setCaseReference(caseData.getEthosCaseReference());
-                        adhocReportType.setLeadCase(Strings.isNullOrEmpty(caseData.getLeadClaimant()) ? "" : "Y");
-                        adhocReportType.setHearingNumber(hearingTypeItem.getValue().getHearingNumber());
-                        adhocReportType.setHearingType(hearingTypeItem.getValue().getHearingType());
-                        adhocReportType.setHearingTelConf(CollectionUtils.isNotEmpty(
-                                hearingTypeItem.getValue().getHearingFormat())
-                                && hearingTypeItem.getValue().getHearingFormat()
-                                .contains("Telephone") ? "Y" : "");
-                        adhocReportType.setJudicialMediation("JM".equals(
-                                hearingTypeItem.getValue().getJudicialMediation()) ? "Y" : "");
-                        adhocReportType.setHearingClerk(Strings.isNullOrEmpty(
-                                dateListedTypedItem.getValue().getHearingClerk()) ? ""
-                                : dateListedTypedItem.getValue().getHearingClerk());
-                        adhocReportType.setHearingDuration(getHearingDuration(dateListedTypedItem));
-                        var adhocReportTypeItem = new AdhocReportTypeItem();
-                        adhocReportTypeItem.setId(UUID.randomUUID().toString());
-                        adhocReportTypeItem.setValue(adhocReportType);
-                        adhocReportTypeItemList.add(adhocReportTypeItem);
-                    }
-                }
+                checkHearingCollection(adhocReportTypeItemList, caseData);
             }
         }
         adhocReportTypeItemList.sort(Comparator.comparing(o -> o.getValue().getDate()));
         listingData.setLocalReportsDetail(adhocReportTypeItemList);
+    }
+
+    private void checkHearingCollection(List<AdhocReportTypeItem> adhocReportTypeItemList, CaseData caseData) {
+        for (var hearingTypeItem : caseData.getHearingCollection()) {
+            if (CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                continue;
+            }
+            checkDatesInHearingCollection(adhocReportTypeItemList, caseData, hearingTypeItem);
+        }
+    }
+
+    private void checkDatesInHearingCollection(List<AdhocReportTypeItem> adhocReportTypeItemList,
+                                               CaseData caseData, HearingTypeItem hearingTypeItem) {
+        for (var dateListedTypedItem : hearingTypeItem.getValue().getHearingDateCollection()) {
+            if (!checkIfValidHearing(dateListedTypedItem.getValue())) {
+                continue;
+            }
+            var adhocReportType = new AdhocReportType();
+            adhocReportType.setDate(dateListedTypedItem.getValue().getListedDate().replace("T", " "));
+            var mulRef = StringUtils.defaultString(caseData.getMultipleReference(), "0 -  Not Allocated");
+            var subMul = StringUtils.defaultString(caseData.getSubMultipleName(), "0 -  Not Allocated");
+            adhocReportType.setMultSub(mulRef + ", " + subMul);
+            adhocReportType.setCaseReference(caseData.getEthosCaseReference());
+            adhocReportType.setLeadCase(Strings.isNullOrEmpty(caseData.getLeadClaimant()) ? "" : "Y");
+            adhocReportType.setHearingNumber(hearingTypeItem.getValue().getHearingNumber());
+            adhocReportType.setHearingType(hearingTypeItem.getValue().getHearingType());
+            adhocReportType.setHearingTelConf(CollectionUtils.isNotEmpty(
+                    hearingTypeItem.getValue().getHearingFormat())
+                    && hearingTypeItem.getValue().getHearingFormat()
+                    .contains("Telephone") ? "Y" : "");
+            adhocReportType.setJudicialMediation("JM".equals(
+                    hearingTypeItem.getValue().getJudicialMediation()) ? "Y" : "");
+            adhocReportType.setHearingClerk(Strings.isNullOrEmpty(
+                    dateListedTypedItem.getValue().getHearingClerk()) ? ""
+                    : dateListedTypedItem.getValue().getHearingClerk());
+            adhocReportType.setHearingDuration(getHearingDuration(dateListedTypedItem));
+            var adhocReportTypeItem = new AdhocReportTypeItem();
+            adhocReportTypeItem.setId(UUID.randomUUID().toString());
+            adhocReportTypeItem.setValue(adhocReportType);
+            adhocReportTypeItemList.add(adhocReportTypeItem);
+        }
     }
 
     private String getHearingDuration(DateListedTypeItem d) {
