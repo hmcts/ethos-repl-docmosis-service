@@ -25,6 +25,10 @@ public class HearingsByHearingTypeReportTest {
     List<SubmitEvent> submitEventsWithoutHearings = new ArrayList<>();
     List<SubmitEvent> submitEventsWithoutDates = new ArrayList<>();
 
+    static final LocalDateTime BASE_DATE = LocalDateTime.of(2021,  6, 1,  0,  0, 0);
+    static final String DATE_FROM = BASE_DATE.minusDays(1).format(OLD_DATE_TIME_PATTERN);
+    static final String DATE_TO = BASE_DATE.plusDays(24).format(OLD_DATE_TIME_PATTERN);
+
     @Before
     public void setup() {
 
@@ -90,7 +94,8 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseData(caseData);
         List<SubmitEvent> submitEvents = new ArrayList<>();
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
-        ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents);
+        ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
+                DATE_FROM, DATE_TO);
         verifyReportHeaderIsZeroWithNoHearings(listingData);
     }
 
@@ -102,7 +107,8 @@ public class HearingsByHearingTypeReportTest {
         ListingData caseData = new ListingData();
         listingDetails.setCaseData(caseData);
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
-        ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventsWithoutHearings);
+        ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventsWithoutHearings,
+                DATE_FROM, DATE_TO);
         verifyReportHeaderIsZeroWithNoHearings(listingData);
     }
 
@@ -114,13 +120,9 @@ public class HearingsByHearingTypeReportTest {
         ListingData caseData = new ListingData();
         listingDetails.setCaseData(caseData);
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
-        ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventsWithoutDates);
+        ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventsWithoutDates,
+                DATE_FROM, DATE_TO);
         verifyReportHeaderIsZeroWithNoHearings(listingData);
-    }
-
-    private void verifyReportHeaderIsZeroWhenNoCasesExist(ListingData listingData) {
-        AdhocReportType adhocReportType = listingData.getLocalReportsSummaryHdr();
-        assertNull(adhocReportType);
     }
 
     private void verifyReportHeaderIsZeroWithNoHearings(ListingData listingData) {
@@ -151,7 +153,8 @@ public class HearingsByHearingTypeReportTest {
         submitEvents.add(createSubmitEvent(hearings, "1", "lead1"));
 
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
-        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents);
+        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
+                DATE_FROM, DATE_TO);
 
         verifyReportHeaderIsZeroWithNoHearings(reportListingData);
     }
@@ -164,16 +167,17 @@ public class HearingsByHearingTypeReportTest {
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
-        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents);
+        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
+                DATE_FROM, DATE_TO);
 
         AdhocReportType adhocReportType = reportListingData.getLocalReportsSummaryHdr();
-        assertEquals("6", adhocReportType.getTotal());
-        assertEquals("1", adhocReportType.getHearing());
-        assertEquals("1", adhocReportType.getHearingCM());
+        assertEquals("1", adhocReportType.getTotal());
+        assertEquals("0", adhocReportType.getHearing());
+        assertEquals("0", adhocReportType.getHearingCM());
         assertEquals("1", adhocReportType.getCosts());
-        assertEquals("1", adhocReportType.getHearingPrelim());
-        assertEquals("1", adhocReportType.getReconsider());
-        assertEquals("1", adhocReportType.getRemedy());
+        assertEquals("0", adhocReportType.getHearingPrelim());
+        assertEquals("0", adhocReportType.getReconsider());
+        assertEquals("0", adhocReportType.getRemedy());
 
     }
 
@@ -185,18 +189,19 @@ public class HearingsByHearingTypeReportTest {
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
-        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents);
+        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
+                DATE_FROM, DATE_TO);
 
         List<AdhocReportTypeItem> adhocReportTypeItemList = reportListingData.getLocalReportsSummary();
         AdhocReportType adhocReportType = adhocReportTypeItemList.get(0).getValue();
         assertEquals("1", adhocReportType.getTotal());
-        assertEquals("1", adhocReportType.getHearing());
+        assertEquals("0", adhocReportType.getHearing());
         assertEquals("0", adhocReportType.getHearingCM());
-        assertEquals("0", adhocReportType.getCosts());
+        assertEquals("1", adhocReportType.getCosts());
         assertEquals("0", adhocReportType.getHearingPrelim());
         assertEquals("0", adhocReportType.getReconsider());
         assertEquals("0", adhocReportType.getRemedy());
-        assertEquals("1970-06-01T00:00:00.000", adhocReportType.getDate());
+        assertEquals("2021-06-01 00:00:00.000", adhocReportType.getDate());
 
     }
 
@@ -208,20 +213,20 @@ public class HearingsByHearingTypeReportTest {
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
-        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents);
+        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
+                DATE_FROM, DATE_TO);
 
         AdhocReportType adhocReportType = reportListingData.getLocalReportsSummaryHdr2();
         var listingHistory = adhocReportType.getListingHistory();
-        var number = listingHistory.get(2).getValue().getHearingNumber();
+        var number = listingHistory.get(7).getValue().getHearingNumber();
         var numbers = number.split("[|]");
+        assertEquals("1", numbers[5]);
         assertEquals("1", numbers[6]);
-        assertEquals("1", numbers[0]);
-        assertEquals("0", numbers[2]);
         assertNull(adhocReportType.getCosts());
         assertNull(adhocReportType.getHearingPrelim());
         assertNull(adhocReportType.getReconsider());
         assertNull(adhocReportType.getRemedy());
-        assertEquals("JM", numbers[7]);
+        assertEquals("Stage 1", numbers[7]);
 
     }
 
@@ -233,60 +238,53 @@ public class HearingsByHearingTypeReportTest {
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
-        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents);
+        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
+                DATE_FROM, DATE_TO);
 
         List<AdhocReportTypeItem> adhocReportTypeItemList = reportListingData.getLocalReportsSummary2();
-
-        AdhocReportType adhocReportType = adhocReportTypeItemList.get(2).getValue();
+        AdhocReportType adhocReportType = adhocReportTypeItemList.get(7).getValue();
         assertEquals("1", adhocReportType.getTotal());
-        assertEquals("1", adhocReportType.getHearing());
+        assertEquals("0", adhocReportType.getHearing());
         assertEquals("0", adhocReportType.getHearingCM());
-        assertEquals("0", adhocReportType.getCosts());
+        assertEquals("1", adhocReportType.getCosts());
         assertEquals("0", adhocReportType.getHearingPrelim());
         assertEquals("0", adhocReportType.getReconsider());
         assertEquals("0", adhocReportType.getRemedy());
-        assertEquals("1970-06-01T00:00:00.000", adhocReportType.getDate());
-        assertEquals("JM", adhocReportType.getSubSplit());
+        assertEquals("2021-06-01 00:00:00.000", adhocReportType.getDate());
+        assertEquals("Stage 1", adhocReportType.getSubSplit());
 
     }
 
     @Test
     public void testConsiderCaseIfValidHearingStatusReportDetail() {
-
         ListingDetails listingDetails = new ListingDetails();
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
-        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents);
-
+        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
+                DATE_FROM, DATE_TO);
         List<AdhocReportTypeItem> adhocReportTypeItemList = reportListingData.getLocalReportsDetail();
 
         AdhocReportType adhocReportType = adhocReportTypeItemList.get(0).getValue();
-        assertEquals("1", adhocReportType.getCaseReference());
+        assertEquals("3", adhocReportType.getCaseReference());
         assertEquals("Y", adhocReportType.getLeadCase());
         assertEquals("471", adhocReportType.getHearingDuration());
         assertEquals("multiRef, subMulti", adhocReportType.getMultSub());
-        assertEquals("Hearing", adhocReportType.getHearingType());
+        assertEquals("Costs Hearing", adhocReportType.getHearingType());
         assertEquals("", adhocReportType.getHearingTelConf());
-        assertEquals("Y", adhocReportType.getJudicialMediation());
         assertEquals("clerk1", adhocReportType.getHearingClerk());
-
-        assertEquals("1970-06-01T00:00:00.000", adhocReportType.getDate());
-
-
+        assertEquals("2021-06-01 00:00:00.000", adhocReportType.getDate());
     }
 
     @Test
-    public void testConsiderCaseIfNullMultSubInReportDetail() {
-
-
+    public void testConsiderCaseIfNullMultiSubInReportDetail() {
         ListingDetails listingDetails = new ListingDetails();
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
-        DateListedTypeItem dateListedTypeItem = createHearingDateListed("1970-06-01T00:00:00.000",
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed("2021-06-01T00:00:00.000",
                 HEARING_STATUS_HEARD);
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING, "JM",
                 dateListedTypeItem));
@@ -294,20 +292,21 @@ public class HearingsByHearingTypeReportTest {
         CaseData caseData = new CaseData();
         caseData.setHearingCollection(hearings);
         submitEvent.setCaseData(caseData);
-        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, List.of(submitEvent));
+        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, List.of(submitEvent),
+                DATE_FROM, DATE_TO);
         List<AdhocReportTypeItem> adhocReportTypeItemList = reportListingData.getLocalReportsDetail();
         AdhocReportType adhocReportType = adhocReportTypeItemList.get(0).getValue();
         assertEquals("0 -  Not Allocated, 0 -  Not Allocated", adhocReportType.getMultSub());
     }
 
     @Test
-    public void testConsiderCaseIfNotNullMultSubInReportDetail() {
+    public void testConsiderCaseIfNotNullMultiSubInReportDetail() {
         ListingDetails listingDetails = new ListingDetails();
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
         HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
-        DateListedTypeItem dateListedTypeItem = createHearingDateListed("1970-06-01T00:00:00.000",
+        DateListedTypeItem dateListedTypeItem = createHearingDateListed("2021-06-01T00:00:00.000",
                 HEARING_STATUS_HEARD);
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING, "JM",
                 dateListedTypeItem));
@@ -317,7 +316,8 @@ public class HearingsByHearingTypeReportTest {
         caseData.setMultipleReference("multiRef");
         caseData.setSubMultipleName("subMulti");
         submitEvent.setCaseData(caseData);
-        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, List.of(submitEvent));
+        ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, List.of(submitEvent),
+                DATE_FROM, DATE_TO);
         List<AdhocReportTypeItem> adhocReportTypeItemList = reportListingData.getLocalReportsDetail();
         AdhocReportType adhocReportType = adhocReportTypeItemList.get(0).getValue();
         assertEquals("multiRef, subMulti", adhocReportType.getMultSub());
