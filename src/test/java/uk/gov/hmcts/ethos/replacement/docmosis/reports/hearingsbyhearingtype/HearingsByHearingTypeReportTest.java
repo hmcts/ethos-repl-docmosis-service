@@ -439,7 +439,7 @@ public class HearingsByHearingTypeReportTest {
 
         var adhocReportType = reportListingData.getLocalReportsSummaryHdr();
         assertEquals("1", adhocReportType.getTotal());
-        assertEquals("1", adhocReportType.getHearingCM());
+        assertEquals("1", adhocReportType.getCosts());
 
     }
 
