@@ -205,7 +205,7 @@ public class HearingsByHearingTypeReport {
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType())
                         && b.getValue().getHearingDateCollection().stream().anyMatch(
-                                    c -> checkIfValidHearing(c.getValue())
+                            c -> checkIfValidHearing(c.getValue())
                         ))).count();
             fields.hearingPrelimCM =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                     a.getCaseData().getHearingCollection())
@@ -219,7 +219,7 @@ public class HearingsByHearingTypeReport {
                     && a.getCaseData().getHearingCollection().stream().anyMatch(
                         b -> HEARING_TYPE_PERLIMINARY_HEARING.equals(b.getValue().getHearingType())
                         && b.getValue().getHearingDateCollection().stream().anyMatch(
-                                    c -> checkIfValidHearing(c.getValue())
+                            c -> checkIfValidHearing(c.getValue())
                         ))).count();
             fields.costs = (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                     a.getCaseData().getHearingCollection())
@@ -312,7 +312,7 @@ public class HearingsByHearingTypeReport {
                         && a.getCaseData().getHearingCollection().stream().anyMatch(
                             b -> HEARING_TYPE_JUDICIAL_HEARING.equals(b.getValue().getHearingType())
                                 && b.getValue().getHearingDateCollection().stream().anyMatch(
-                                        c -> checkIfValidHearing(c.getValue()))
+                                    c -> checkIfValidHearing(c.getValue()))
                                 && isHearingFormatValid(subSplitHeader, b))).count();
                 fields.hearingPrelimCM =  (int) submitEventList.stream().filter(a -> CollectionUtils.isNotEmpty(
                         a.getCaseData().getHearingCollection())
