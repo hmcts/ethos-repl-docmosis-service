@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ecm.common.helpers.UtilHelper;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
@@ -59,7 +60,7 @@ public class MemberDaysReport {
         List<MemberDaysReportDetail> interimReportDetails = new ArrayList<>();
 
         for (var submitEvent : submitEvents) {
-            if (submitEvent.getCaseData().getHearingCollection().isEmpty()) {
+            if (CollectionUtils.isEmpty(submitEvent.getCaseData().getHearingCollection())) {
                 continue;
             }
             addValidHearingsFromCurrentCase(submitEvent.getCaseData(), interimReportDetails, listingData);
@@ -98,7 +99,7 @@ public class MemberDaysReport {
 
         for (var hearingDate : hearingsWithHeardStatus) {
             if (isValidHearingDate(hearingDate.getValue().getListedDate(), listingData)) {
-                var hearingDatePart = getDatePart(hearingDate.getValue().getListedDate());
+                var hearingDatePart = getDatePart(getFormattedListedDate(hearingDate.getValue().getListedDate()));
                 var currentHearingDate = hearingDatePart != null
                     ? LocalDate.parse(hearingDatePart) : null;
 
@@ -131,12 +132,16 @@ public class MemberDaysReport {
     }
 
     private boolean isDateInRange(String dateListed, String dateFrom, String dateTo) {
-        var hearingListedDate = LocalDate.parse(dateListed, OLD_DATE_TIME_PATTERN);
+        var hearingListedDate = LocalDate.parse(getFormattedListedDate(dateListed), OLD_DATE_TIME_PATTERN);
         var hearingDatesFrom = LocalDate.parse(dateFrom);
         var hearingDatesTo = LocalDate.parse(dateTo);
 
         return  (hearingListedDate.isEqual(hearingDatesFrom) ||  hearingListedDate.isAfter(hearingDatesFrom))
             && (hearingListedDate.isEqual(hearingDatesTo) || hearingListedDate.isBefore(hearingDatesTo));
+    }
+
+    private String getFormattedListedDate(String dateTimeValue) {
+        return dateTimeValue.replace(" ", "T");
     }
 
     private String getDatePart(String dateTimeValue) {

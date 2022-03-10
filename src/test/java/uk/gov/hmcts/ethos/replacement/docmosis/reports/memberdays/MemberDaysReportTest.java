@@ -81,10 +81,10 @@ public class MemberDaysReportTest {
 
         var dateListedType1 = new DateListedType();
         dateListedType1.setHearingStatus(HEARING_STATUS_HEARD);
-        dateListedType1.setHearingClerk("Clerk B");
-        dateListedType1.setHearingRoomGlasgow("Tribunal 4");
-        dateListedType1.setHearingAberdeen("AberdeenVenue");
-        dateListedType1.setHearingVenueDay("Aberdeen");
+        dateListedType1.setHearingClerk("Clerk Man");
+        dateListedType1.setHearingRoomGlasgow("Tribunal 55");
+        dateListedType1.setHearingAberdeen("Test Venue");
+        dateListedType1.setHearingVenueDay("Test");
         dateListedType1.setListedDate("2019-12-10T12:11:00.000");
         dateListedType1.setHearingTimingStart("2019-12-10T11:00:00.000");
         dateListedType1.setHearingTimingBreak("2019-12-10T12:00:00");
@@ -97,9 +97,9 @@ public class MemberDaysReportTest {
 
         var dateListedType2 = new DateListedType();
         dateListedType2.setHearingStatus(HEARING_STATUS_LISTED);
-        dateListedType2.setHearingClerk("Clerk1");
-        dateListedType2.setHearingRoomGlasgow("Tribunal 5");
-        dateListedType2.setHearingAberdeen("AberdeenVenue2");
+        dateListedType2.setHearingClerk("Clerk Space");
+        dateListedType2.setHearingRoomGlasgow("Tribunal 22");
+        dateListedType2.setHearingAberdeen("Venue");
         dateListedType2.setHearingVenueDay("Aberdeen");
         dateListedType2.setListedDate("2019-12-12T12:11:30.000");
         dateListedType2.setHearingTimingStart("2019-12-12T12:30:00.000");
@@ -340,7 +340,15 @@ public class MemberDaysReportTest {
     }
 
     private boolean isValidDate(String dateListed, String dateFrom, String dateTo){
-        var hearingListedDate = LocalDate.parse(dateListed.split("T")[0]);
+        String datePart = null;
+            if (dateListed.contains("T")) {
+                datePart = dateListed.split("T")[0];
+            }
+            if(dateListed.contains(" ")) {
+                datePart = dateListed.split(" ")[0];
+            }
+
+        var hearingListedDate = LocalDate.parse(datePart);
         var hearingDatesFrom = LocalDate.parse(dateFrom);
         var hearingDatesTo = LocalDate.parse(dateTo);
 
@@ -368,8 +376,24 @@ public class MemberDaysReportTest {
         dateListedType6.setHearingTimingFinish("2019-12-29T19:30:55.000");
         dateListedTypeItem6.setId("3456");
         dateListedTypeItem6.setValue(dateListedType6);
-
         hearingWithInvalidDate.getValue().getHearingDateCollection().add(dateListedTypeItem6);
+
+        var dateListedTypeItem7 = new DateListedTypeItem();
+        var dateListedType7 = new DateListedType();
+        dateListedType7.setHearingStatus(HEARING_STATUS_HEARD);
+        dateListedType7.setHearingClerk("Clerk test");
+        dateListedType7.setHearingRoomGlasgow("Tribunal 04");
+        dateListedType7.setHearingAberdeen("Venue 26");
+        dateListedType7.setHearingVenueDay("Test Venue eDay");
+        dateListedType7.setListedDate("2019-12-29 12:11:55.000");
+        dateListedType7.setHearingTimingStart("2019-12-29T13:11:55.000");
+        dateListedType7.setHearingTimingBreak("2019-12-29T15:11:55.000");
+        dateListedType7.setHearingTimingResume("2019-12-29T15:30:55.000");
+        dateListedType7.setHearingTimingFinish("2019-12-29T19:30:55.000");
+        dateListedTypeItem7.setId("9234");
+        dateListedTypeItem7.setValue(dateListedType7);
+
+        hearingWithInvalidDate.getValue().getHearingDateCollection().add(dateListedTypeItem7);
 
         List<DateListedTypeItem> dateListedTypeItems = new ArrayList<>();
         //filter listed hearings with full panel
