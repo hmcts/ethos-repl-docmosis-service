@@ -9,6 +9,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 import uk.gov.hmcts.ecm.common.model.listing.ListingDetails;
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ReportHelper;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -31,6 +32,8 @@ public class MemberDaysReport {
     private static final String FULL_PANEL = "Full Panel";
     public static final DateTimeFormatter OLD_DATE_TIME_PATTERN3 =
         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    public static final DateTimeFormatter DATE_TIME_PATTERN_WITH_SPACE =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public MemberDaysReportData runReport(ListingDetails listings, List<SubmitEvent> submitEventList) {
         var memberDaysReportData = initiateReport(listings);
@@ -94,29 +97,24 @@ public class MemberDaysReport {
     private void extractValidHearingDates(HearingTypeItem hearing,
                                                  List<MemberDaysReportDetail> interimReportDetails,
                                                  ListingData listingData, String ethosCaseReference) {
-        var hearingsWithHeardStatus = hearing.getValue().getHearingDateCollection().stream()
+        var hearingDatesWithHeardStatus = hearing.getValue().getHearingDateCollection().stream()
             .filter(this::isHeardHearingDate).collect(Collectors.toList());
 
-        for (var hearingDate : hearingsWithHeardStatus) {
-            if (isValidHearingDate(hearingDate.getValue().getListedDate(), listingData)) {
-                var hearingDatePart = getDatePart(getFormattedListedDate(hearingDate.getValue().getListedDate()));
-                var currentHearingDate = hearingDatePart != null
-                    ? LocalDate.parse(hearingDatePart) : null;
-
-                if (currentHearingDate != null) {
-                    var reportDetail = new MemberDaysReportDetail();
-                    reportDetail.setSortingHearingDate(currentHearingDate.toString());
-                    reportDetail.setHearingDate(UtilHelper.formatCurrentDate(currentHearingDate));
-                    reportDetail.setEmployeeMember(hearing.getValue().getHearingEEMember());
-                    reportDetail.setEmployerMember(hearing.getValue().getHearingERMember());
-                    reportDetail.setCaseReference(ethosCaseReference);
-                    reportDetail.setHearingNumber(hearing.getValue().getHearingNumber());
-                    reportDetail.setHearingType(hearing.getValue().getHearingType());
-                    reportDetail.setHearingClerk(hearingDate.getValue().getHearingClerk());
-                    reportDetail.setHearingDuration(getHearingDuration(hearingDate));
-                    reportDetail.setParentHearingId(hearing.getId());
-                    interimReportDetails.add(reportDetail);
-                }
+        for (var hearingDate : hearingDatesWithHeardStatus) {
+            var currentHearingDate = ReportHelper.getFormattedLocalDate(hearingDate.getValue().getListedDate());
+            if (currentHearingDate != null && isValidHearingDate(currentHearingDate, listingData)) {
+                var reportDetail = new MemberDaysReportDetail();
+                reportDetail.setSortingHearingDate(currentHearingDate);
+                reportDetail.setHearingDate(UtilHelper.formatCurrentDate(LocalDate.parse(currentHearingDate)));
+                reportDetail.setEmployeeMember(hearing.getValue().getHearingEEMember());
+                reportDetail.setEmployerMember(hearing.getValue().getHearingERMember());
+                reportDetail.setCaseReference(ethosCaseReference);
+                reportDetail.setHearingNumber(hearing.getValue().getHearingNumber());
+                reportDetail.setHearingType(hearing.getValue().getHearingType());
+                reportDetail.setHearingClerk(hearingDate.getValue().getHearingClerk());
+                reportDetail.setHearingDuration(getHearingDuration(hearingDate));
+                reportDetail.setParentHearingId(hearing.getId());
+                interimReportDetails.add(reportDetail);
             }
         }
     }
@@ -131,8 +129,8 @@ public class MemberDaysReport {
         }
     }
 
-    private boolean isDateInRange(String dateListed, String dateFrom, String dateTo) {
-        var hearingListedDate = LocalDate.parse(getFormattedListedDate(dateListed), OLD_DATE_TIME_PATTERN);
+    private boolean isDateInRange(String listedDate, String dateFrom, String dateTo) {
+        var hearingListedDate = LocalDate.parse(listedDate);
         var hearingDatesFrom = LocalDate.parse(dateFrom);
         var hearingDatesTo = LocalDate.parse(dateTo);
 
@@ -140,38 +138,30 @@ public class MemberDaysReport {
             && (hearingListedDate.isEqual(hearingDatesTo) || hearingListedDate.isBefore(hearingDatesTo));
     }
 
-    private String getFormattedListedDate(String dateTimeValue) {
-        return dateTimeValue.replace(" ", "T");
-    }
-
-    private String getDatePart(String dateTimeValue) {
-        return dateTimeValue.split("T")[0];
-    }
-
     private String getHearingDuration(DateListedTypeItem dateListedTypeItem) {
         long startFinishDuration = 0;
+        long breakResumeDuration = 0;
+        long duration = 0;
 
         if (dateListedTypeItem.getValue().getHearingTimingStart() != null
             && dateListedTypeItem.getValue().getHearingTimingFinish() != null) {
-
             var hearingStart = convertHearingTime(
                 dateListedTypeItem.getValue().getHearingTimingStart());
             var hearingFinish = convertHearingTime(
                 dateListedTypeItem.getValue().getHearingTimingFinish());
             startFinishDuration = Duration.between(hearingStart, hearingFinish).toMinutes();
-        }
 
-        long breakResumeDuration = 0;
-        if (dateListedTypeItem.getValue().getHearingTimingBreak() != null
-            && dateListedTypeItem.getValue().getHearingTimingResume() != null) {
-            var hearingBreak = convertHearingTime(
-                dateListedTypeItem.getValue().getHearingTimingBreak());
-            var hearingResume = convertHearingTime(
-                dateListedTypeItem.getValue().getHearingTimingResume());
-            breakResumeDuration = Duration.between(hearingBreak, hearingResume).toMinutes();
-        }
+            if (dateListedTypeItem.getValue().getHearingTimingBreak() != null
+                && dateListedTypeItem.getValue().getHearingTimingResume() != null) {
+                var hearingBreak = convertHearingTime(
+                    dateListedTypeItem.getValue().getHearingTimingBreak());
+                var hearingResume = convertHearingTime(
+                    dateListedTypeItem.getValue().getHearingTimingResume());
+                breakResumeDuration = Duration.between(hearingBreak, hearingResume).toMinutes();
+            }
 
-        var duration = Math.abs(startFinishDuration - breakResumeDuration);
+            duration = Math.abs(startFinishDuration - breakResumeDuration);
+        }
 
         return String.valueOf(duration);
     }
