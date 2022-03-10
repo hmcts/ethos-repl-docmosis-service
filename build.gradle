@@ -261,7 +261,7 @@ dependencies {
     implementation group: 'io.netty', name: 'netty-codec-http2', version: '4.1.66.Final'
 
     //To Remove vulnerability CVE-2021-21295
-    implementation group: 'io.netty', name: 'netty-all', version: '4.1.61.Final'
+    implementation group: 'io.netty', name: 'netty-all', version: '4.1.75.Final'
     implementation group: 'io.netty', name: 'netty-codec-http', version: '4.1.61.Final'
 
     //To Remove vulnerability CVE-2020-11988
