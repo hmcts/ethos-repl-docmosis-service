@@ -35,6 +35,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICI
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_JUDICIAL_REMEDY;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_TYPE_PERLIMINARY_HEARING_CM;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.MSL_HEARING_FORMAT_TELEPHONE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 
 @Service
@@ -42,7 +43,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 public class HearingsByHearingTypeReport {
 
     private static final List<String> subSplitList = List.of("EJ Sit Alone", "Full Panel", "JM",
-            "Tel Con", "Video", "Hybrid", "In Person", "Stage 1", "Stage 2", "Stage 3");
+            "Tel Con", "Video", "Hybrid", "In person", "Stage 1", "Stage 2", "Stage 3");
     private static final List<String> datesList = new ArrayList<>();
     private String costsHearingType = "Costs Hearing";
     private boolean casesExistWithHearingStatusHeard;
@@ -94,7 +95,7 @@ public class HearingsByHearingTypeReport {
     }
 
     private void initReport(ListingDetails listingDetails) {
-
+        datesList.clear();
         var reportListingsType = new ReportListingsType();
         reportListingsType.setHearingNumber(HEARING_NUMBER);
         var item = new ReportListingsTypeItem();
@@ -493,38 +494,37 @@ public class HearingsByHearingTypeReport {
         }
     }
 
-    private String getHearingDuration(DateListedTypeItem d) {
-        LocalDateTime s;
-        LocalDateTime f;
-        LocalDateTime r;
-        LocalDateTime b;
-        if (!Strings.isNullOrEmpty(d.getValue().getHearingTimingStart())) {
-            s = LocalDateTime.parse(d.getValue().getHearingTimingStart());
+    private String getHearingDuration(DateListedTypeItem dateListedTypeItem) {
+        LocalDateTime startTime;
+        LocalDateTime finishTime;
+        LocalDateTime resumeTime;
+        LocalDateTime breakTime;
+        if (!Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingTimingStart())) {
+            startTime = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingStart());
         } else {
             return "0";
         }
-        if (!Strings.isNullOrEmpty(d.getValue().getHearingTimingFinish())) {
-            f = LocalDateTime.parse(d.getValue().getHearingTimingFinish());
+        if (!Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingTimingFinish())) {
+            finishTime = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingFinish());
         } else {
             return "0";
         }
-        long g = ChronoUnit.MINUTES.between(f, s);
-        if (!Strings.isNullOrEmpty(d.getValue().getHearingTimingResume())) {
-            r = LocalDateTime.parse(d.getValue().getHearingTimingResume());
+        long hearingDuration = ChronoUnit.MINUTES.between(startTime, finishTime);
+        if (!Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingTimingResume())) {
+            resumeTime = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingResume());
         } else {
-            return String.valueOf(g);
+            return String.valueOf(hearingDuration);
         }
-        if (!Strings.isNullOrEmpty(d.getValue().getHearingTimingBreak())) {
-            b = LocalDateTime.parse(d.getValue().getHearingTimingBreak());
+        if (!Strings.isNullOrEmpty(dateListedTypeItem.getValue().getHearingTimingBreak())) {
+            breakTime = LocalDateTime.parse(dateListedTypeItem.getValue().getHearingTimingBreak());
         } else {
-            return String.valueOf(g);
+            return String.valueOf(hearingDuration);
         }
-        long diff = g - (ChronoUnit.MINUTES.between(r, b));
+        long diff = hearingDuration - ChronoUnit.MINUTES.between(breakTime, resumeTime);
         return String.valueOf(abs(diff));
     }
 
     private boolean isHearingFormatValid(String subSplitHeader, HearingTypeItem hearingTypeItem) {
-
         switch (subSplitHeader) {
             case "Full Panel":
                 return "Full".equals(hearingTypeItem.getValue().getHearingSitAlone());
@@ -534,10 +534,10 @@ public class HearingsByHearingTypeReport {
                 return "JM".equals(hearingTypeItem.getValue().getJudicialMediation());
             case "Tel Con":
                 return CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingFormat())
-                        && hearingTypeItem.getValue().getHearingFormat().contains("Telephone");
+                        && hearingTypeItem.getValue().getHearingFormat().contains(MSL_HEARING_FORMAT_TELEPHONE);
             case "Video":
             case "Hybrid":
-            case "In Person":
+            case "In person":
                 return CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingFormat())
                         && hearingTypeItem.getValue().getHearingFormat().contains(subSplitHeader);
             case "Stage 1":
