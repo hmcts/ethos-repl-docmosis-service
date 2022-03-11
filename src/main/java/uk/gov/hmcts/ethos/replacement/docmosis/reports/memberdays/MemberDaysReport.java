@@ -32,14 +32,16 @@ public class MemberDaysReport {
     private static final String FULL_PANEL = "Full Panel";
     public static final DateTimeFormatter OLD_DATE_TIME_PATTERN3 =
         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-    public static final DateTimeFormatter DATE_TIME_PATTERN_WITH_SPACE =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public MemberDaysReportData runReport(ListingDetails listings, List<SubmitEvent> submitEventList) {
+
         var memberDaysReportData = initiateReport(listings);
-        addReportDetails(memberDaysReportData, submitEventList, listings.getCaseData());
-        addReportSummary(memberDaysReportData);
-        addReportSummaryHeader(memberDaysReportData);
+
+        if (!CollectionUtils.isEmpty(submitEventList)) {
+            addReportDetails(memberDaysReportData, submitEventList, listings.getCaseData());
+            addReportSummary(memberDaysReportData);
+            addReportSummaryHeader(memberDaysReportData);
+        }
 
         return memberDaysReportData;
     }
@@ -60,6 +62,7 @@ public class MemberDaysReport {
 
     private void addReportDetails(MemberDaysReportData reportData, List<SubmitEvent> submitEvents,
                                   ListingData listingData) {
+
         List<MemberDaysReportDetail> interimReportDetails = new ArrayList<>();
 
         for (var submitEvent : submitEvents) {
@@ -81,8 +84,10 @@ public class MemberDaysReport {
         var fullPanelHearings = caseData.getHearingCollection().stream()
             .filter(this::isFullPanelHearing).collect(Collectors.toList());
 
-        for (var hearing : fullPanelHearings) {
-            extractValidHearingDates(hearing, reportDetails, listingData, caseData.getEthosCaseReference());
+        if (!CollectionUtils.isEmpty(fullPanelHearings)) {
+            for (var hearing : fullPanelHearings) {
+                extractValidHearingDates(hearing, reportDetails, listingData, caseData.getEthosCaseReference());
+            }
         }
     }
 

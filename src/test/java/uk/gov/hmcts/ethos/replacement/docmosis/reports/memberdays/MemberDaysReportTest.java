@@ -254,6 +254,15 @@ public class MemberDaysReportTest {
     }
 
     @Test
+    public void shouldReturnZeroReportDetailsEntriesForEmptySubmitEvents() {
+        var memberDaysReport = new MemberDaysReport();
+        var resultListingData = memberDaysReport.runReport(listingDetails, null);
+        var actualHeardHearingsCount  = resultListingData.getReportDetails().size();
+        var expectedHeardHearingsCount = 0;
+        assertEquals(expectedHeardHearingsCount, actualHeardHearingsCount);
+    }
+
+    @Test
     public void shouldIncludeOnlyCasesWithHeardHearingStatus() {
         var memberDaysReport = new MemberDaysReport();
         var resultListingData = memberDaysReport.runReport(listingDetails, submitEvents);
@@ -275,6 +284,22 @@ public class MemberDaysReportTest {
             .collect(Collectors.toList()).stream().distinct().count();
         var actualReportDateType = resultListingData.getHearingDateType();
         assertEquals(expectedFullPanelHearingsCount, actualFullPanelHearingsCount);
+        assertEquals(expectedReportDateType, actualReportDateType);
+    }
+
+    @Test
+    public void shouldReturnZeroCasesWhenForNoHearingsWithFullPanelHearing() {
+        var memberDaysReport = new MemberDaysReport();
+        List<Long> validHearingsCountList = new ArrayList<>();
+        submitEvents.forEach(s -> s.getCaseData().getHearingCollection()
+            .forEach(h -> h.getValue().setHearingSitAlone(SIT_ALONE_PANEL)));
+        var expectedReportDateType = "Range";
+        var resultListingData = memberDaysReport.runReport(listingDetails, submitEvents);
+        var actualFullPanelHearingsCount  = resultListingData.getReportDetails()
+            .stream().map(MemberDaysReportDetail::getParentHearingId)
+            .collect(Collectors.toList()).stream().distinct().count();
+        var actualReportDateType = resultListingData.getHearingDateType();
+        assertEquals(0, actualFullPanelHearingsCount);
         assertEquals(expectedReportDateType, actualReportDateType);
     }
 
