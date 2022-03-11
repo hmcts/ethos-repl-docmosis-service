@@ -19,9 +19,6 @@ public class MemberDaysReportData extends ListingData {
     public String office;
 
     @JsonIgnore
-    public String durationDescription;
-
-    @JsonIgnore
     private String fullDaysTotal;
 
     @JsonIgnore

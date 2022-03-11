@@ -311,7 +311,7 @@ public class ReportDocHelperTest {
         detailItem.setHearingClerk("Tester Clerk");
         detailItem.setHearingDuration("420");
         listingData.getReportDetails().add(detailItem);
-        listingData.setDurationDescription("On 2021-09-15");
+        listingData.setListingDate("2021-09-15");
         listingData.setOffice("MukeraCity");
         listingData.setHalfDaysTotal("0");
         listingData.setFullDaysTotal("2");
@@ -330,7 +330,7 @@ public class ReportDocHelperTest {
             + "\"templateName\":\"EM-TRB-SCO-ENG-00800.docx\",\n"
             + "\"outputName\":\"document.docx\",\n"
             + "\"data\":{\n"
-            + "\"Duration_Description\":\"On 2021-09-15\",\n"
+            + "\"Listed_date\":\"15 September 2021\",\n"
             + "\"Report_Office\":\"MukeraCity\",\n"
             + "\"Total_Full_Days\":\"2\",\n"
             + "\"Total_Half_Days\":\"0\",\n"
