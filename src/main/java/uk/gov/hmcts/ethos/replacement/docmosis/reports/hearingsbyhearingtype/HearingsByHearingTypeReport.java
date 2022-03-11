@@ -534,7 +534,7 @@ public class HearingsByHearingTypeReport {
                 return "JM".equals(hearingTypeItem.getValue().getJudicialMediation());
             case "Tel Con":
                 return CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingFormat())
-                        && hearingTypeItem.getValue().getHearingFormat().contains(MSL_HEARING_FORMAT_TELEPHONE);
+                        && hearingTypeItem.getValue().getHearingFormat().contains("Telephone");
             case "Video":
             case "Hybrid":
             case "In person":
