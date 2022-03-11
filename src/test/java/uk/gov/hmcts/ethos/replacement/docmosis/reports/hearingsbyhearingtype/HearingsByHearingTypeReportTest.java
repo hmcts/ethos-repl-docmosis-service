@@ -443,4 +443,96 @@ public class HearingsByHearingTypeReportTest {
 
     }
 
+    @Test
+    public void nullStartTimeOnHearing() {
+        List<HearingTypeItem> hearings = new ArrayList<>();
+        var dateListedTypeItem = createHearingDateListed("2021-06-01T00:00:00.000", HEARING_STATUS_HEARD);
+        dateListedTypeItem.getValue().setHearingTimingStart(null);
+        var hearingTypeItem = createHearing(HEARING_TYPE_JUDICIAL_COSTS_HEARING, "Tel Con", dateListedTypeItem);
+        hearings.add(hearingTypeItem);
+
+        var submitEvent = createSubmitEvent(hearings, "123456", "No");
+        var submitEventList = List.of(submitEvent);
+
+        var listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        var listingData = new ListingData();
+        listingDetails.setCaseData(listingData);
+        var report = new HearingsByHearingTypeReport();
+        var reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventList,
+                DATE_FROM, DATE_TO);
+
+        var adhocReportType = reportListingData.getLocalReportsDetail().get(0).getValue();
+        assertEquals("0", adhocReportType.getHearingDuration());
+    }
+
+    @Test
+    public void nullFinishTimeOnHearing() {
+        List<HearingTypeItem> hearings = new ArrayList<>();
+        var dateListedTypeItem = createHearingDateListed("2021-06-01T00:00:00.000", HEARING_STATUS_HEARD);
+        dateListedTypeItem.getValue().setHearingTimingFinish(null);
+        var hearingTypeItem = createHearing(HEARING_TYPE_JUDICIAL_COSTS_HEARING, "Tel Con", dateListedTypeItem);
+        hearings.add(hearingTypeItem);
+
+        var submitEvent = createSubmitEvent(hearings, "123456", "No");
+        var submitEventList = List.of(submitEvent);
+
+        var listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        var listingData = new ListingData();
+        listingDetails.setCaseData(listingData);
+        var report = new HearingsByHearingTypeReport();
+        var reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventList,
+                DATE_FROM, DATE_TO);
+
+        var adhocReportType = reportListingData.getLocalReportsDetail().get(0).getValue();
+        assertEquals("0", adhocReportType.getHearingDuration());
+    }
+
+    @Test
+    public void nullBreakTimeOnHearing() {
+        List<HearingTypeItem> hearings = new ArrayList<>();
+        var dateListedTypeItem = createHearingDateListed("2021-06-01T00:00:00.000", HEARING_STATUS_HEARD);
+        dateListedTypeItem.getValue().setHearingTimingBreak(null);
+        var hearingTypeItem = createHearing(HEARING_TYPE_JUDICIAL_COSTS_HEARING, "Tel Con", dateListedTypeItem);
+        hearings.add(hearingTypeItem);
+
+        var submitEvent = createSubmitEvent(hearings, "123456", "No");
+        var submitEventList = List.of(submitEvent);
+
+        var listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        var listingData = new ListingData();
+        listingDetails.setCaseData(listingData);
+        var report = new HearingsByHearingTypeReport();
+        var reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventList,
+                DATE_FROM, DATE_TO);
+
+        var adhocReportType = reportListingData.getLocalReportsDetail().get(0).getValue();
+        assertEquals("480", adhocReportType.getHearingDuration());
+    }
+
+    @Test
+    public void nullResumeTimeOnHearing() {
+        List<HearingTypeItem> hearings = new ArrayList<>();
+        var dateListedTypeItem = createHearingDateListed("2021-06-01T00:00:00.000", HEARING_STATUS_HEARD);
+        dateListedTypeItem.getValue().setHearingTimingResume(null);
+        var hearingTypeItem = createHearing(HEARING_TYPE_JUDICIAL_COSTS_HEARING, "Tel Con", dateListedTypeItem);
+        hearings.add(hearingTypeItem);
+
+        var submitEvent = createSubmitEvent(hearings, "123456", "No");
+        var submitEventList = List.of(submitEvent);
+
+        var listingDetails = new ListingDetails();
+        listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
+        var listingData = new ListingData();
+        listingDetails.setCaseData(listingData);
+        var report = new HearingsByHearingTypeReport();
+        var reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventList,
+                DATE_FROM, DATE_TO);
+
+        var adhocReportType = reportListingData.getLocalReportsDetail().get(0).getValue();
+        assertEquals("480", adhocReportType.getHearingDuration());
+    }
+
 }
