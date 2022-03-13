@@ -12,6 +12,7 @@ import java.util.SortedMap;
 
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BATCH_UPDATE_TYPE_1;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.BATCH_UPDATE_TYPE_2;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OPEN_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.UPDATING_STATE;
 
 @Slf4j
@@ -49,6 +50,8 @@ public class MultipleUpdateService {
             multipleDetails.getCaseData().setState(UPDATING_STATE);
 
             batchUpdateLogic(userToken, multipleDetails, errors, multipleObjects);
+
+            multipleDetails.getCaseData().setState(OPEN_STATE);
 
         }
 

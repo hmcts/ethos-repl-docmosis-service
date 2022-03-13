@@ -51,7 +51,7 @@ public class MultipleUpdateServiceTest {
         multipleUpdateService.bulkUpdateLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());
-        assertEquals(UPDATING_STATE, multipleDetails.getCaseData().getState());
+        assertEquals(OPEN_STATE, multipleDetails.getCaseData().getState());
         verify(multipleBatchUpdate1Service, times(1)).batchUpdate1Logic(userToken,
                 multipleDetails,
                 new ArrayList<>(),
@@ -67,7 +67,7 @@ public class MultipleUpdateServiceTest {
         multipleUpdateService.bulkUpdateLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());
-        assertEquals(UPDATING_STATE, multipleDetails.getCaseData().getState());
+        assertEquals(OPEN_STATE, multipleDetails.getCaseData().getState());
         verify(multipleBatchUpdate2Service, times(1)).batchUpdate2Logic(userToken,
                 multipleDetails,
                 new ArrayList<>(),
@@ -82,7 +82,7 @@ public class MultipleUpdateServiceTest {
         multipleUpdateService.bulkUpdateLogic(userToken,
                 multipleDetails,
                 new ArrayList<>());
-        assertEquals(UPDATING_STATE, multipleDetails.getCaseData().getState());
+        assertEquals(OPEN_STATE, multipleDetails.getCaseData().getState());
         verify(multipleBatchUpdate3Service, times(1)).batchUpdate3Logic(userToken,
                 multipleDetails,
                 new ArrayList<>(),
