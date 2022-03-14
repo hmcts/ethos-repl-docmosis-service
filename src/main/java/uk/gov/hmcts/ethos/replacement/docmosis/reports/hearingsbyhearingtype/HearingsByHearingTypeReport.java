@@ -24,7 +24,9 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -43,7 +45,7 @@ public class HearingsByHearingTypeReport {
 
     private static final List<String> subSplitList = List.of("EJ Sit Alone", "Full Panel", "JM",
             "Tel Con", "Video", "Hybrid", "In person", "Stage 1", "Stage 2", "Stage 3");
-    private static final List<String> datesList = new ArrayList<>();
+    private static final Set<String> datesList = new HashSet<>();
     private String costsHearingType = "Costs Hearing";
     private boolean casesExistWithHearingStatusHeard;
     private String listingDateFrom;
@@ -154,7 +156,7 @@ public class HearingsByHearingTypeReport {
         }
     }
 
-    private List<String> getDatesList(List<SubmitEvent> submitEventList) {
+    private Set<String> getDatesList(List<SubmitEvent> submitEventList) {
         for (var submitEvent : submitEventList) {
             var caseData = submitEvent.getCaseData();
             if (CollectionUtils.isEmpty(caseData.getHearingCollection())) {
