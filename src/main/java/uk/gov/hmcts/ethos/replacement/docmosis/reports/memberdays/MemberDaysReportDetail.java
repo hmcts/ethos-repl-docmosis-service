@@ -15,12 +15,10 @@ public class MemberDaysReportDetail {
     private String sortingHearingDate;
     @JsonProperty("parentHearingId")
     private String parentHearingId;
-
     @JsonProperty("employeeMember")
     private String employeeMember;
     @JsonProperty("employerMember")
     private String employerMember;
-
     @JsonProperty("caseReference")
     private String caseReference;
     @JsonProperty("hearingNumber")

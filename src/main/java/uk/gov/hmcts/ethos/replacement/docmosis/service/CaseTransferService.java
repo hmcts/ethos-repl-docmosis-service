@@ -30,10 +30,10 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 @Service("caseTransferService")
 public class CaseTransferService {
 
-    static final String BF_ACTIONS_ERROR_MSG = "There are one or more open Brought Forward actions that must be "
+    public static final String BF_ACTIONS_ERROR_MSG = "There are one or more open Brought Forward actions that must be "
             + "cleared before the case %s can be transferred";
 
-    static final String HEARINGS_ERROR_MSG = "There are one or more hearings that have the status Listed. "
+    public static final String HEARINGS_ERROR_MSG = "There are one or more hearings that have the status Listed. "
             + "These must be updated before the case %s can be transferred";
 
     private final PersistentQHelperService persistentQHelperService;
@@ -125,7 +125,7 @@ public class CaseTransferService {
         return true;
     }
 
-    private void validateCase(CaseData caseData, List<String> errors) {
+    public void validateCase(CaseData caseData, List<String> errors) {
         if (!checkBfActionsCleared(caseData)) {
             errors.add(String.format(BF_ACTIONS_ERROR_MSG, caseData.getEthosCaseReference()));
         }

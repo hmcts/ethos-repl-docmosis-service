@@ -76,7 +76,8 @@ public class ServingClaimsReport {
                 && !Strings.isNullOrEmpty(caseData.getClaimServedDate())) {
             LocalDate caseReceiptDate = LocalDate.parse(caseData.getReceiptDate(), OLD_DATE_TIME_PATTERN2);
             LocalDate caseClaimServedDate = LocalDate.parse(caseData.getClaimServedDate(), OLD_DATE_TIME_PATTERN2);
-            long actualNumberOfDaysToServingClaim = ChronoUnit.DAYS.between(caseReceiptDate, caseClaimServedDate);
+            long actualNumberOfDaysToServingClaim = ChronoUnit.DAYS.between(caseReceiptDate,
+                caseClaimServedDate.plusDays(1));
             var reportedNumberOfDaysToServingClaim = getReportedNumberOfDays(caseReceiptDate, caseClaimServedDate);
 
             var claimServedType = new ClaimServedType();

@@ -2,7 +2,7 @@ package uk.gov.hmcts.ethos.replacement.docmosis.reports.memberdays;
 
 import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.ecm.common.model.listing.ListingData;
-
+import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ListingHelper;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -22,21 +22,15 @@ public class MemberDaysReportDoc {
         }
 
         var reportData = (MemberDaysReportData) listingData;
-        var sb = new StringBuilder();
-        sb.append("\"Duration_Description\":\"").append(
-            nullCheck(reportData.durationDescription)).append(NEW_LINE);
+        var sb = ListingHelper.getListingDate(reportData);
         sb.append(REPORT_OFFICE).append(nullCheck(reportData.office)).append(NEW_LINE);
-
         sb.append(addMemberDaysReportSummaryHeader(reportData));
-
         sb.append("\"memberDaySummaryItems\":[\n");
         sb.append(addMemberDaysReportSummary(reportData.getMemberDaySummaryItems()));
         sb.append("],\n");
-
         sb.append("\"reportDetails\":[\n");
         sb.append(addMemberDaysReportDetails(reportData.getReportDetails()));
         sb.append("],\n");
-
         return sb;
     }
 
@@ -79,10 +73,10 @@ public class MemberDaysReportDoc {
         summaryRowContent.append("{\n\"Hearing_Date\":\"").append(
             nullCheck(summaryItem.getHearingDate())).append(NEW_LINE);
         summaryRowContent.append("\"Full_Days\":\"").append(
-            nullCheck(summaryItem.fullDays)).append(NEW_LINE);
+            nullCheck(summaryItem.getFullDays())).append(NEW_LINE);
         summaryRowContent.append("\"Half_Days\":\"").append(
-            nullCheck(summaryItem.halfDays)).append(NEW_LINE);
-        summaryRowContent.append("\"Total_Days\":\"").append(nullCheck(summaryItem.totalDays))
+            nullCheck(summaryItem.getHalfDays())).append(NEW_LINE);
+        summaryRowContent.append("\"Total_Days\":\"").append(nullCheck(summaryItem.getTotalDays()))
             .append("\"\n}");
 
         return summaryRowContent;
@@ -135,5 +129,4 @@ public class MemberDaysReportDoc {
             .append("\"\n}");
         return detailRowContent;
     }
-
 }

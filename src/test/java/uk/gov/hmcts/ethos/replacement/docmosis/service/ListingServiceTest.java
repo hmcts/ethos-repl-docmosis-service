@@ -107,7 +107,6 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_HEARING_DATE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.NO_CHANGE_IN_CURRENT_POSITION_REPORT;
-import static uk.gov.hmcts.ethos.replacement.docmosis.reports.Constants.RESPONDENTS_REPORT;
 import static uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException.ERROR_MESSAGE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -826,6 +825,7 @@ public class ListingServiceTest {
         assertEquals(result, listingData.toString());
     }
 
+    @Test
     public void generateBFReportData() throws IOException {
         String docName = "Brought Forward Report - Test";
         listingDetailsRange.setCaseTypeId(MANCHESTER_LISTING_CASE_TYPE_ID);
@@ -850,7 +850,7 @@ public class ListingServiceTest {
         doReturn(submitEvents).when(ccdClient).retrieveCasesGenericReportElasticSearch(anyString(),
                 anyString(), anyString(), anyString(), anyString());
         doReturn(bfActionReportData).when(mockedBfActionReport).runReport(any(ListingDetails.class),
-                Mockito.<SubmitEvent>anyList());
+                Mockito.anyList());
 
         var listingDataResult = (BfActionReportData) listingService.generateReportData(listingDetailsRange,
                 "authToken");
@@ -1377,7 +1377,7 @@ public class ListingServiceTest {
             anyString(), anyString(), anyString(), anyString());
 
         doReturn(memberDaysReportData).when(memberDaysReport).runReport(any(ListingDetails.class),
-            Mockito.<SubmitEvent>anyList());
+            Mockito.anyList());
 
         var listingDataResult = (MemberDaysReportData) listingService.generateReportData(listingDetailsRange,
             "authToken");

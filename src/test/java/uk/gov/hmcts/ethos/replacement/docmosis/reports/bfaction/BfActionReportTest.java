@@ -215,6 +215,7 @@ public class BfActionReportTest {
         caseData.setBfActions(items);
         submitEvent.setCaseData(caseData);
         submitEvents.add(submitEvent);
+
         var bfActionReport = new BfActionReport();
         var resultListingData = bfActionReport.runReport(listingDetails, submitEvents);
         // bFActionType3 is added last. But it has the earliest bfDate. As the returned listingData from

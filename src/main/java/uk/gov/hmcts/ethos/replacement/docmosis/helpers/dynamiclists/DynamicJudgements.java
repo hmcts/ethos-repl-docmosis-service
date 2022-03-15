@@ -13,6 +13,8 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.HearingsHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 public class DynamicJudgements {
     private DynamicJudgements() {
     }
@@ -65,7 +67,13 @@ public class DynamicJudgements {
             if (StringUtils.isNotEmpty(judgementType.getJudgmentHearingDate())) {
                 var judgementHearingDate = judgementType.getJudgmentHearingDate();
                 var hearingNumber = HearingsHelper.findHearingNumber(caseData, judgementHearingDate);
-                dynamicValueType = DynamicListHelper.findDynamicValue(hearingDynamicList.getListItems(), hearingNumber);
+                if (isNullOrEmpty(hearingNumber)) { // Check needed if hearing number cannot be found
+                    judgementType.setJudgmentHearingDate(null);
+                    return;
+                } else {
+                    dynamicValueType = DynamicListHelper.findDynamicValue(hearingDynamicList.getListItems(),
+                            hearingNumber);
+                }
             } else {
                 dynamicValueType = hearingDynamicList.getListItems().get(0);
             }
