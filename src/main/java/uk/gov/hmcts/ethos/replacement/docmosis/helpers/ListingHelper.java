@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,6 +101,7 @@ public class ListingHelper {
             MEMBER_DAYS_REPORT, RESPONDENTS_REPORT, SESSION_DAYS_REPORT, ECC_REPORT);
     private static final List<String> SCOTLAND_HEARING_LIST = List.of("Reading Day", "Deliberation Day",
             "Members meeting", "In Chambers");
+    public static final DateTimeFormatter dateTimePattern = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
     private ListingHelper() {
     }
@@ -113,7 +115,8 @@ public class ListingHelper {
             log.info("started getListingTypeFromCaseData");
             listingType.setElmoCaseReference(caseData.getEthosCaseReference());
             String listedDate = dateListedType.getListedDate();
-            listingType.setCauseListDate(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalDate(listedDate) : " ");
+            listingType.setCauseListDate(!isNullOrEmpty(listedDate)
+                    ? LocalDate.parse(listedDate, OLD_DATE_TIME_PATTERN).format(dateTimePattern) : " ");
             listingType.setCauseListTime(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalTime(listedDate) : " ");
             log.info("getJurCodesCollection");
 

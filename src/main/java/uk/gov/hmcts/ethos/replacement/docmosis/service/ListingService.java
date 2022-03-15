@@ -51,6 +51,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -162,6 +163,7 @@ public class ListingService {
                         addListingTypeItems(submitEvent, listingTypeItems, listingDetails);
                     }
                 }
+                listingTypeItems.sort(Comparator.comparing(o -> o.getValue().getCauseListDate()));
                 listingDetails.getCaseData().setListingCollection(listingTypeItems);
             }
 
