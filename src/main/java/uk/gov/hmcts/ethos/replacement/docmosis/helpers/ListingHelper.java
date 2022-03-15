@@ -101,7 +101,7 @@ public class ListingHelper {
             MEMBER_DAYS_REPORT, RESPONDENTS_REPORT, SESSION_DAYS_REPORT, ECC_REPORT);
     private static final List<String> SCOTLAND_HEARING_LIST = List.of("Reading Day", "Deliberation Day",
             "Members meeting", "In Chambers");
-    public static final DateTimeFormatter dateTimePattern = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+    private static final DateTimeFormatter dateTimePattern = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
     private ListingHelper() {
     }
