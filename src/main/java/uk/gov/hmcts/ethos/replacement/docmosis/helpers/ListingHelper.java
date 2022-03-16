@@ -101,7 +101,7 @@ public class ListingHelper {
             MEMBER_DAYS_REPORT, RESPONDENTS_REPORT, SESSION_DAYS_REPORT, ECC_REPORT);
     private static final List<String> SCOTLAND_HEARING_LIST = List.of("Reading Day", "Deliberation Day",
             "Members meeting", "In Chambers");
-    private static final DateTimeFormatter dateTimePattern = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+    public static final DateTimeFormatter CAUSE_LIST_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
     private ListingHelper() {
     }
@@ -116,7 +116,7 @@ public class ListingHelper {
             listingType.setElmoCaseReference(caseData.getEthosCaseReference());
             String listedDate = dateListedType.getListedDate();
             listingType.setCauseListDate(!isNullOrEmpty(listedDate)
-                    ? LocalDate.parse(listedDate, OLD_DATE_TIME_PATTERN).format(dateTimePattern) : " ");
+                    ? LocalDate.parse(listedDate, OLD_DATE_TIME_PATTERN).format(CAUSE_LIST_DATE_TIME_PATTERN) : " ");
             listingType.setCauseListTime(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalTime(listedDate) : " ");
             log.info("getJurCodesCollection");
 
