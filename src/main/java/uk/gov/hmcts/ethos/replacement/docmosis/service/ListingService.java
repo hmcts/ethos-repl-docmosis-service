@@ -380,8 +380,9 @@ public class ListingService {
             case CASE_SOURCE_LOCAL_REPORT:
                 return caseSourceLocalReport.generateReportData(listingDetails, submitEvents);
             case HEARINGS_BY_HEARING_TYPE_REPORT:
+                setListingDateRangeForSearch(listingDetails);
                 return hearingsByHearingTypeReport.processHearingsByHearingTypeRequest(
-                        listingDetails, submitEvents);
+                        listingDetails, submitEvents, listingDateFrom, listingDateTo);
             case MEMBER_DAYS_REPORT:
                 return new MemberDaysReport().runReport(listingDetails, submitEvents);
             default:
@@ -410,7 +411,7 @@ public class ListingService {
             listingDateFrom = LocalDate.parse(listingData.getListingDateFrom(), OLD_DATE_TIME_PATTERN2)
                     .atStartOfDay().format(OLD_DATE_TIME_PATTERN);
             listingDateTo = LocalDate.parse(listingData.getListingDateTo(), OLD_DATE_TIME_PATTERN2)
-                    .atStartOfDay().format(OLD_DATE_TIME_PATTERN);
+                    .atStartOfDay().plusDays(1).minusSeconds(1).format(OLD_DATE_TIME_PATTERN);
         }
     }
 

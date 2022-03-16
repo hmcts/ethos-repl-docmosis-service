@@ -138,7 +138,6 @@ public class BfActionReportTest {
         bFActionType.setNotes("test comment one");
         bfActionTypeItem.setValue(bFActionType);
         items.add(bfActionTypeItem);
-
         caseData.setBfActions(items);
         submitEvent.setCaseData(caseData);
         submitEvents.add(submitEvent);
@@ -162,7 +161,6 @@ public class BfActionReportTest {
         // Two bf action entries added and the second BFActionTypeItem has
         // the "YYYY-MM-DD HH:MM:SS" date and time pattern without milliseconds for the BfDate
         List<BFActionTypeItem> items = getBFActionTypeItems();
-
         caseData.setBfActions(items);
         submitEvent.setCaseData(caseData);
         submitEvents.add(submitEvent);
@@ -188,7 +186,6 @@ public class BfActionReportTest {
         bFActionType4.setNotes("test case with cleared bfs");
         bfActionTypeItem4.setValue(bFActionType4);
         items.add(bfActionTypeItem4);
-
         caseData.setBfActions(items);
         submitEvent.setCaseData(caseData);
         submitEvents.add(submitEvent);
