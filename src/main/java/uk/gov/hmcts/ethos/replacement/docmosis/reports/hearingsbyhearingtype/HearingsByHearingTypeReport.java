@@ -43,14 +43,15 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 @Slf4j
 public class HearingsByHearingTypeReport {
 
-    private static final List<String> subSplitList = List.of("EJ Sit Alone", "Full Panel", "JM",
-            "Tel Con", "Video", "Hybrid", "In person", "Stage 1", "Stage 2", "Stage 3");
     private static final Set<String> datesList = new HashSet<>();
     private String costsHearingType = "Costs Hearing";
     private boolean casesExistWithHearingStatusHeard;
     private String listingDateFrom;
     private String listingDateTo;
     private static final String ZERO = "0";
+    private static final String FULL_PANEL = "Full Panel";
+    private static final List<String> subSplitList = List.of("EJ Sit Alone", FULL_PANEL, "JM",
+            "Tel Con", "Video", "Hybrid", "In person", "Stage 1", "Stage 2", "Stage 3");
     private static final String HEARING_NUMBER = ZERO + "|"
             + ZERO + "|"
             + ZERO + "|"
@@ -527,8 +528,8 @@ public class HearingsByHearingTypeReport {
 
     private boolean isHearingFormatValid(String subSplitHeader, HearingTypeItem hearingTypeItem) {
         switch (subSplitHeader) {
-            case "Full Panel":
-                return "Full Panel".equals(hearingTypeItem.getValue().getHearingSitAlone());
+            case FULL_PANEL:
+                return FULL_PANEL.equals(hearingTypeItem.getValue().getHearingSitAlone());
             case "EJ Sit Alone":
                 return "Sit Alone".equals(hearingTypeItem.getValue().getHearingSitAlone());
             case "JM":
