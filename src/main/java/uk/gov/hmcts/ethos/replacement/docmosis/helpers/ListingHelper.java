@@ -118,7 +118,6 @@ public class ListingHelper {
             listingType.setCauseListDate(!isNullOrEmpty(listedDate)
                     ? LocalDate.parse(listedDate, OLD_DATE_TIME_PATTERN).format(CAUSE_LIST_DATE_TIME_PATTERN) : " ");
             listingType.setCauseListTime(!isNullOrEmpty(listedDate) ? UtilHelper.formatLocalTime(listedDate) : " ");
-            log.info("getJurCodesCollection");
 
             listingType.setJurisdictionCodesList(BulkHelper.getJurCodesCollectionWithHide(
                     caseData.getJurCodesCollection()));
