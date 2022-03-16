@@ -11,14 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MULTIPLE_CASE_TYPE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN2;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.REJECTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SINGLE_CASE_TYPE;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.SUBMITTED_STATE;
 
 @Slf4j
 public class NoPositionChangeReport {
     private final NoPositionChangeDataSource noPositionChangeDataSource;
     private final String reportDate;
+    public static final List<String> VALID_CASE_STATES = List.of(ACCEPTED_STATE, REJECTED_STATE, SUBMITTED_STATE);
 
     public NoPositionChangeReport(NoPositionChangeDataSource noPositionChangeDataSource, String reportDate) {
         this.noPositionChangeDataSource = noPositionChangeDataSource;
@@ -33,6 +37,8 @@ public class NoPositionChangeReport {
         if (CollectionUtils.isEmpty(submitEvents)) {
             return reportData;
         }
+
+        submitEvents.removeIf(submitEvent -> !VALID_CASE_STATES.contains(submitEvent.getState()));
 
         var multipleIds = submitEvents.parallelStream()
                 .filter(se -> se.getCaseData().getCaseType().equals(MULTIPLE_CASE_TYPE)
