@@ -307,6 +307,7 @@ dependencies {
     testImplementation (group: 'org.docx4j', name: 'docx4j', version: '6.1.2') {
         exclude module: 'slf4j-log4j12'
     }
+    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: junitJupiterVersion
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // Contract Tests
