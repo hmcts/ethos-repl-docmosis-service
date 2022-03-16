@@ -482,7 +482,7 @@ public class HearingsByHearingTypeReport {
                     hearingTypeItem.getValue().getHearingFormat())
                     && hearingTypeItem.getValue().getHearingFormat()
                     .contains("Telephone") ? "Y" : "");
-            adhocReportType.setJudicialMediation("JM".equals(
+            adhocReportType.setJudicialMediation(YES.equals(
                     hearingTypeItem.getValue().getJudicialMediation()) ? "Y" : "");
             adhocReportType.setHearingClerk(Strings.isNullOrEmpty(
                     dateListedTypedItem.getValue().getHearingClerk()) ? ""
@@ -528,11 +528,11 @@ public class HearingsByHearingTypeReport {
     private boolean isHearingFormatValid(String subSplitHeader, HearingTypeItem hearingTypeItem) {
         switch (subSplitHeader) {
             case "Full Panel":
-                return "Full".equals(hearingTypeItem.getValue().getHearingSitAlone());
+                return "Full Panel".equals(hearingTypeItem.getValue().getHearingSitAlone());
             case "EJ Sit Alone":
-                return YES.equals(hearingTypeItem.getValue().getHearingSitAlone());
+                return "Sit Alone".equals(hearingTypeItem.getValue().getHearingSitAlone());
             case "JM":
-                return "JM".equals(hearingTypeItem.getValue().getJudicialMediation());
+                return YES.equals(hearingTypeItem.getValue().getJudicialMediation());
             case "Tel Con":
                 return CollectionUtils.isNotEmpty(hearingTypeItem.getValue().getHearingFormat())
                         && hearingTypeItem.getValue().getHearingFormat().contains("Telephone");
