@@ -21,6 +21,7 @@ import uk.gov.hmcts.ecm.common.model.ccd.SubmitEvent;
 import uk.gov.hmcts.ecm.common.model.helper.DefaultValues;
 import uk.gov.hmcts.ethos.replacement.docmosis.DocmosisApplication;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.AddSingleCaseToMultipleService;
+import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCreationForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseManagementForCaseWorkerService;
 import uk.gov.hmcts.ethos.replacement.docmosis.service.CaseRetrievalForCaseWorkerService;
@@ -109,9 +110,13 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String DYNAMIC_DEPOSIT_ORDER_URL = "/dynamicDepositOrder";
     private static final String DYNAMIC_JUDGMENT_URL = "/dynamicJudgments";
     private static final String JUDGEMENT_SUBMITTED_URL = "/judgementSubmitted";
+    private static final String REINSTATE_CLOSED_CASE_MID_EVENT_VALIDATION_URL = "/reinstateClosedCaseMidEventValidation";
 
     @Autowired
     private WebApplicationContext applicationContext;
+
+    @MockBean
+    private CaseCloseService caseCloseService;
 
     @MockBean
     private CaseCreationForCaseWorkerService caseCreationForCaseWorkerService;
@@ -1088,6 +1093,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void reinstateClosedCaseError400() throws Exception {
+        mvc.perform(post(REINSTATE_CLOSED_CASE_MID_EVENT_VALIDATION_URL)
+                        .content("error")
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        verify(caseCloseService, never()).validateReinstateClosedCaseMidEvent(any(CaseData.class));
+    }
+
+    @Test
     public void createCaseError500() throws Exception {
         when(caseCreationForCaseWorkerService.caseCreationRequest(isA(CCDRequest.class),
                 eq(AUTH_TOKEN))).thenThrow(new InternalException(ERROR_MESSAGE));
@@ -1592,6 +1607,18 @@ public class CaseActionsForCaseWorkerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
         verify(fixCaseApiService, never()).checkUpdateMultipleReference(caseDetails, AUTH_TOKEN);
+    }
+
+    @Test
+    public void reinstateClosedCaseForbidden() throws Exception {
+        CaseData caseData = new CaseData();
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(REINSTATE_CLOSED_CASE_MID_EVENT_VALIDATION_URL)
+                        .content(requestContent2.toString())
+                        .header("Authorization", AUTH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+        verify(caseCloseService, never()).validateReinstateClosedCaseMidEvent(caseData);
     }
 
 }
