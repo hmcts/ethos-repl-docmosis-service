@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.auth.AUTH;
 import org.joda.time.LocalDate;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,11 +13,10 @@ import uk.gov.hmcts.ecm.common.client.CcdClient;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicFixedListType;
 import uk.gov.hmcts.ecm.common.model.bulk.types.DynamicValueType;
 import uk.gov.hmcts.ecm.common.model.ccd.*;
-import uk.gov.hmcts.ecm.common.model.ccd.items.EccCounterClaimTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RepresentedTypeRItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.RespondentSumTypeItem;
+import uk.gov.hmcts.ecm.common.model.ccd.items.*;
 import uk.gov.hmcts.ecm.common.model.ccd.types.*;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseManagementForCaseWorkerService.LISTED_DATE_ON_WEEKEND_MESSAGE;
 import uk.gov.hmcts.ethos.replacement.docmosis.utils.InternalException;
 
 import java.io.IOException;
@@ -25,9 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.*;
@@ -420,7 +416,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void amendHearingNonScotland() {
         CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.amendHearing(caseData, MANCHESTER_CASE_TYPE_ID);
+        caseManagementForCaseWorkerService.amendHearing(caseData, MANCHESTER_CASE_TYPE_ID, new ArrayList<>());
         assertEquals(HEARING_STATUS_LISTED, caseData.getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().getHearingStatus());
         assertEquals(HEARING_STATUS_LISTED, caseData.getHearingCollection().get(1).getValue()
@@ -438,9 +434,53 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
+    public void amendHearingDateOnWeekend() {
+        CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
+        var errors = new ArrayList<String>();
+        caseData.getHearingCollection().get(0).getValue().getHearingDateCollection().get(0).getValue().setListedDate("2022-03-19T12:11:00.000");
+        caseManagementForCaseWorkerService.amendHearing(caseData, MANCHESTER_CASE_TYPE_ID, errors);
+        assertFalse(errors.isEmpty());
+        assertEquals(LISTED_DATE_ON_WEEKEND_MESSAGE, errors.get(0));
+    }
+
+    @Test
+    public void amendHearingDateFridayNight() {
+        CaseData caseData = createCaseWithHearingDate("2022-03-18T23:59:00.000");
+        var errors = new ArrayList<String>();
+        caseManagementForCaseWorkerService.amendHearing(caseData, MANCHESTER_CASE_TYPE_ID, errors);
+        assertTrue(errors.isEmpty());
+    }
+
+    @Test
+    public void amendHearingDateMondayMorning() {
+        CaseData caseData = createCaseWithHearingDate("2022-03-21T00:00:00.000");
+        var errors = new ArrayList<String>();
+        caseManagementForCaseWorkerService.amendHearing(caseData, MANCHESTER_CASE_TYPE_ID, errors);
+        assertTrue(errors.isEmpty());
+    }
+
+    private CaseData createCaseWithHearingDate(String date) {
+        var caseData = new CaseData();
+        List<HearingTypeItem> hearings = new ArrayList<>();
+        HearingTypeItem hearing = new HearingTypeItem();
+        hearing.setId(UUID.randomUUID().toString());
+        HearingType hearingType = new HearingType();
+        DateListedTypeItem dateListedTypeItem = new DateListedTypeItem();
+        DateListedType dateListedType = new DateListedType();
+        dateListedType.setListedDate(date);
+        dateListedTypeItem.setId(UUID.randomUUID().toString());
+        dateListedTypeItem.setValue(dateListedType);
+        hearingType.setHearingDateCollection(Collections.singletonList(dateListedTypeItem));
+        hearing.setValue(hearingType);
+        hearings.add(hearing);
+        caseData.setHearingCollection(hearings);
+        return caseData;
+    }
+
+    @Test
     public void amendHearingScotland() {
         CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.amendHearing(caseData, SCOTLAND_CASE_TYPE_ID);
+        caseManagementForCaseWorkerService.amendHearing(caseData, SCOTLAND_CASE_TYPE_ID, new ArrayList<>());
         assertEquals(HEARING_STATUS_LISTED, caseData.getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().getHearingStatus());
         assertEquals(ABERDEEN_OFFICE, caseData.getHearingCollection().get(0).getValue()

@@ -22,7 +22,9 @@ import uk.gov.hmcts.ethos.replacement.docmosis.helpers.ECCHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.FlagsImageHelper;
 import uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,6 +40,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.HEARING_STATUS_LIST
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.INDIVIDUAL_TYPE_CLAIMANT;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.MID_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.NO;
+import static uk.gov.hmcts.ecm.common.model.helper.Constants.OLD_DATE_TIME_PATTERN;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.SCOTLAND_CASE_TYPE_ID;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.YES;
 import static uk.gov.hmcts.ethos.replacement.docmosis.helpers.Helper.nullCheck;
@@ -53,6 +56,8 @@ public class CaseManagementForCaseWorkerService {
     private static final String MISSING_RESPONDENT = "Missing respondent";
     private static final String MESSAGE = "Failed to link ECC case for case id : ";
     private static final String CASE_NOT_FOUND_MESSAGE = "Case Reference Number not found.";
+    public static final String LISTED_DATE_ON_WEEKEND_MESSAGE = "A hearing date you have entered "
+            + "falls on a weekend. You cannot list this case on a weekend. Please amend the date of hearing.";
 
     @Autowired
     public CaseManagementForCaseWorkerService(CaseRetrievalForCaseWorkerService caseRetrievalForCaseWorkerService,
@@ -213,20 +218,28 @@ public class CaseManagementForCaseWorkerService {
                     for (DateListedTypeItem dateListedTypeItem
                             : hearingTypeItem.getValue().getHearingDateCollection()) {
                         var dateListedType = dateListedTypeItem.getValue();
-                        if (dateListedType.getHearingStatus() == null) {
-                            dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
-                            dateListedType.setHearingTimingStart(dateListedType.getListedDate());
-                            dateListedType.setHearingTimingFinish(dateListedType.getListedDate());
+                        var validDate = isDateValid(dateListedType.getListedDate(), errors);
+                        if (validDate) {
+                            if (dateListedType.getHearingStatus() == null) {
+                                dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
+                                dateListedType.setHearingTimingStart(dateListedType.getListedDate());
+                                dateListedType.setHearingTimingFinish(dateListedType.getListedDate());
+                            }
+                            populateHearingVenueFromHearingLevelToDayLevel(dateListedType, hearingType, caseTypeId);
                         }
-                        populateHearingVenueFromHearingLevelToDayLevel(dateListedType, hearingType, caseTypeId);
                     }
                 }
             }
         }
     }
 
-    private boolean isDateValid(String date) {
-
+    private boolean isDateValid(String listedDate, List<String> errors) {
+        var date = LocalDateTime.parse(listedDate, OLD_DATE_TIME_PATTERN).toLocalDate();
+        if (DayOfWeek.SUNDAY.equals(date.getDayOfWeek()) || DayOfWeek.SATURDAY.equals(date.getDayOfWeek())) {
+            errors.add(LISTED_DATE_ON_WEEKEND_MESSAGE);
+            return false;
+        }
+        return true;
     }
 
     private void populateHearingVenueFromHearingLevelToDayLevel(DateListedType dateListedType, HearingType hearingType,
