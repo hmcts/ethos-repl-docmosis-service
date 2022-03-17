@@ -205,12 +205,11 @@ public class CaseManagementForCaseWorkerService {
                 || !caseData.getPositionType().equals(caseData.getCurrentPosition()));
     }
 
-    public void amendHearing(CaseData caseData, String caseTypeId) {
-        if (caseData.getHearingCollection() != null && !caseData.getHearingCollection().isEmpty()) {
+    public void amendHearing(CaseData caseData, String caseTypeId, List<String> errors) {
+        if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
                 var hearingType =  hearingTypeItem.getValue();
-                if (hearingTypeItem.getValue().getHearingDateCollection() != null
-                        && !hearingTypeItem.getValue().getHearingDateCollection().isEmpty()) {
+                if (!CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
                     for (DateListedTypeItem dateListedTypeItem
                             : hearingTypeItem.getValue().getHearingDateCollection()) {
                         var dateListedType = dateListedTypeItem.getValue();
@@ -224,6 +223,10 @@ public class CaseManagementForCaseWorkerService {
                 }
             }
         }
+    }
+
+    private boolean isDateValid(String date) {
+
     }
 
     private void populateHearingVenueFromHearingLevelToDayLevel(DateListedType dateListedType, HearingType hearingType,
