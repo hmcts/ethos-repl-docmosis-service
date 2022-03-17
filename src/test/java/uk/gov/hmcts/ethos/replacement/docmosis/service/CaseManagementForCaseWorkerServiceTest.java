@@ -455,7 +455,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void amendHearingNonScotland() {
         CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.amendHearing(caseData, MANCHESTER_CASE_TYPE_ID, new ArrayList<>());
+        caseManagementForCaseWorkerService.amendHearing(caseData, MANCHESTER_CASE_TYPE_ID);
         assertEquals(HEARING_STATUS_LISTED, caseData.getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().getHearingStatus());
         assertEquals(HEARING_STATUS_LISTED, caseData.getHearingCollection().get(1).getValue()
@@ -473,28 +473,28 @@ public class CaseManagementForCaseWorkerServiceTest {
     }
 
     @Test
-    public void amendHearingDateOnWeekend() {
+    public void midEventAmendHearingDateOnWeekend() {
         CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
         var errors = new ArrayList<String>();
         caseData.getHearingCollection().get(0).getValue().getHearingDateCollection().get(0).getValue().setListedDate("2022-03-19T12:11:00.000");
-        caseManagementForCaseWorkerService.amendHearing(caseData, MANCHESTER_CASE_TYPE_ID, errors);
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, MANCHESTER_CASE_TYPE_ID, errors);
         assertFalse(errors.isEmpty());
         assertEquals(LISTED_DATE_ON_WEEKEND_MESSAGE, errors.get(0));
     }
 
     @Test
-    public void amendHearingDateFridayNight() {
+    public void amendMidEventHearingDateFridayNight() {
         CaseData caseData = createCaseWithHearingDate("2022-03-18T23:59:00.000");
         var errors = new ArrayList<String>();
-        caseManagementForCaseWorkerService.amendHearing(caseData, MANCHESTER_CASE_TYPE_ID, errors);
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, MANCHESTER_CASE_TYPE_ID, errors);
         assertTrue(errors.isEmpty());
     }
 
     @Test
-    public void amendHearingDateMondayMorning() {
+    public void amendMidEventHearingDateMondayMorning() {
         CaseData caseData = createCaseWithHearingDate("2022-03-21T00:00:00.000");
         var errors = new ArrayList<String>();
-        caseManagementForCaseWorkerService.amendHearing(caseData, MANCHESTER_CASE_TYPE_ID, errors);
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, MANCHESTER_CASE_TYPE_ID, errors);
         assertTrue(errors.isEmpty());
     }
 
@@ -519,7 +519,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     @Test
     public void amendHearingScotland() {
         CaseData caseData = scotlandCcdRequest3.getCaseDetails().getCaseData();
-        caseManagementForCaseWorkerService.amendHearing(caseData, SCOTLAND_CASE_TYPE_ID, new ArrayList<>());
+        caseManagementForCaseWorkerService.amendHearing(caseData, SCOTLAND_CASE_TYPE_ID);
         assertEquals(HEARING_STATUS_LISTED, caseData.getHearingCollection().get(0).getValue()
                 .getHearingDateCollection().get(0).getValue().getHearingStatus());
         assertEquals(ABERDEEN_OFFICE, caseData.getHearingCollection().get(0).getValue()

@@ -87,6 +87,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     private static final String ALLOCATE_HEARING_URL = "/allocateHearing";
     private static final String RESTRICTED_CASES_URL = "/restrictedCases";
     private static final String AMEND_HEARING_URL = "/amendHearing";
+    private static final String MID_EVENT_AMEND_HEARING_URL = "/midEventAmendHearing";
     private static final String AMEND_CASE_STATE_URL = "/amendCaseState";
     private static final String AMEND_FIX_CASE_API_URL = "/amendFixCaseAPI";
     private static final String MID_RESPONDENT_ADDRESS_URL = "/midRespondentAddress";
@@ -457,6 +458,19 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void amendHearing() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         mvc.perform(post(AMEND_HEARING_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andExpect(jsonPath("$.errors", nullValue()))
+                .andExpect(jsonPath("$.warnings", nullValue()));
+    }
+
+    @Test
+    public void midEventAmendHearing() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
+        mvc.perform(post(MID_EVENT_AMEND_HEARING_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))

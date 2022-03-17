@@ -210,7 +210,7 @@ public class CaseManagementForCaseWorkerService {
                 || !caseData.getPositionType().equals(caseData.getCurrentPosition()));
     }
 
-    public void amendHearing(CaseData caseData, String caseTypeId, List<String> errors) {
+    public void amendHearing(CaseData caseData, String caseTypeId) {
         if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
                 var hearingType =  hearingTypeItem.getValue();
@@ -218,28 +218,34 @@ public class CaseManagementForCaseWorkerService {
                     for (DateListedTypeItem dateListedTypeItem
                             : hearingTypeItem.getValue().getHearingDateCollection()) {
                         var dateListedType = dateListedTypeItem.getValue();
-                        var validDate = isDateValid(dateListedType.getListedDate(), errors);
-                        if (validDate) {
-                            if (dateListedType.getHearingStatus() == null) {
-                                dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
-                                dateListedType.setHearingTimingStart(dateListedType.getListedDate());
-                                dateListedType.setHearingTimingFinish(dateListedType.getListedDate());
-                            }
-                            populateHearingVenueFromHearingLevelToDayLevel(dateListedType, hearingType, caseTypeId);
+                        if (dateListedType.getHearingStatus() == null) {
+                            dateListedType.setHearingStatus(HEARING_STATUS_LISTED);
+                            dateListedType.setHearingTimingStart(dateListedType.getListedDate());
+                            dateListedType.setHearingTimingFinish(dateListedType.getListedDate());
                         }
+                        populateHearingVenueFromHearingLevelToDayLevel(dateListedType, hearingType, caseTypeId);
                     }
                 }
             }
         }
     }
 
-    private boolean isDateValid(String listedDate, List<String> errors) {
-        var date = LocalDateTime.parse(listedDate, OLD_DATE_TIME_PATTERN).toLocalDate();
-        if (DayOfWeek.SUNDAY.equals(date.getDayOfWeek()) || DayOfWeek.SATURDAY.equals(date.getDayOfWeek())) {
-            errors.add(LISTED_DATE_ON_WEEKEND_MESSAGE);
-            return false;
+    public void midEventAmendHearing(CaseData caseData, String caseTypeId, List<String> errors) {
+        if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
+            for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
+                if (!CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
+                    for (DateListedTypeItem dateListedTypeItem
+                            : hearingTypeItem.getValue().getHearingDateCollection()) {
+                        var date = LocalDateTime.parse(
+                                dateListedTypeItem.getValue().getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate();
+                        if (DayOfWeek.SUNDAY.equals(date.getDayOfWeek())
+                                || DayOfWeek.SATURDAY.equals(date.getDayOfWeek())) {
+                            errors.add(LISTED_DATE_ON_WEEKEND_MESSAGE);
+                        }
+                    }
+                }
+            }
         }
-        return true;
     }
 
     private void populateHearingVenueFromHearingLevelToDayLevel(DateListedType dateListedType, HearingType hearingType,
