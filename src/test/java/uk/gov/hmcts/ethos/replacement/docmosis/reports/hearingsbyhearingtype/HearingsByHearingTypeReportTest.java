@@ -104,7 +104,7 @@ public class HearingsByHearingTypeReportTest {
         ListingData caseData = new ListingData();
         listingDetails.setCaseData(caseData);
         List<SubmitEvent> submitEvents = new ArrayList<>();
-        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        HearingsByHearingTypeReportOld report = new HearingsByHearingTypeReportOld();
         ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
                 DATE_FROM, DATE_TO);
         verifyReportHeaderIsZeroWithNoHearings(listingData);
@@ -117,7 +117,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         ListingData caseData = new ListingData();
         listingDetails.setCaseData(caseData);
-        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        HearingsByHearingTypeReportOld report = new HearingsByHearingTypeReportOld();
         ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventsWithoutHearings,
                 DATE_FROM, DATE_TO);
         verifyReportHeaderIsZeroWithNoHearings(listingData);
@@ -130,7 +130,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         ListingData caseData = new ListingData();
         listingDetails.setCaseData(caseData);
-        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        HearingsByHearingTypeReportOld report = new HearingsByHearingTypeReportOld();
         ListingData listingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventsWithoutDates,
                 DATE_FROM, DATE_TO);
         verifyReportHeaderIsZeroWithNoHearings(listingData);
@@ -163,7 +163,7 @@ public class HearingsByHearingTypeReportTest {
                 dateListedTypeItem));
         submitEvents.add(createSubmitEvent(hearings, "1", "lead1"));
 
-        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        HearingsByHearingTypeReportOld report = new HearingsByHearingTypeReportOld();
         ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
                 DATE_FROM, DATE_TO);
 
@@ -177,7 +177,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
-        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        HearingsByHearingTypeReportOld report = new HearingsByHearingTypeReportOld();
         ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
                 DATE_FROM, DATE_TO);
 
@@ -199,7 +199,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
-        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        HearingsByHearingTypeReportOld report = new HearingsByHearingTypeReportOld();
         ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
                 DATE_FROM, DATE_TO);
 
@@ -223,7 +223,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
-        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        HearingsByHearingTypeReportOld report = new HearingsByHearingTypeReportOld();
         ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
                 DATE_FROM, DATE_TO);
 
@@ -248,7 +248,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
-        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        HearingsByHearingTypeReportOld report = new HearingsByHearingTypeReportOld();
         ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
                 DATE_FROM, DATE_TO);
 
@@ -272,7 +272,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
-        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        HearingsByHearingTypeReportOld report = new HearingsByHearingTypeReportOld();
         ListingData reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEvents,
                 DATE_FROM, DATE_TO);
         List<AdhocReportTypeItem> adhocReportTypeItemList = reportListingData.getLocalReportsDetail();
@@ -294,7 +294,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
-        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        HearingsByHearingTypeReportOld report = new HearingsByHearingTypeReportOld();
         DateListedTypeItem dateListedTypeItem = createHearingDateListed("2021-06-01T00:00:00.000",
                 HEARING_STATUS_HEARD);
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING, "JM",
@@ -316,7 +316,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         ListingData listingData = new ListingData();
         listingDetails.setCaseData(listingData);
-        HearingsByHearingTypeReport report = new HearingsByHearingTypeReport();
+        HearingsByHearingTypeReportOld report = new HearingsByHearingTypeReportOld();
         DateListedTypeItem dateListedTypeItem = createHearingDateListed("2021-06-01T00:00:00.000",
                 HEARING_STATUS_HEARD);
         List<HearingTypeItem> hearings = createHearingCollection(createHearing(HEARING_TYPE_JUDICIAL_HEARING, "JM",
@@ -433,7 +433,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         var listingData = new ListingData();
         listingDetails.setCaseData(listingData);
-        var report = new HearingsByHearingTypeReport();
+        var report = new HearingsByHearingTypeReportOld();
         var reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventList,
                 DATE_FROM, DATE_TO);
 
@@ -458,7 +458,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         var listingData = new ListingData();
         listingDetails.setCaseData(listingData);
-        var report = new HearingsByHearingTypeReport();
+        var report = new HearingsByHearingTypeReportOld();
         var reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventList,
                 DATE_FROM, DATE_TO);
 
@@ -481,7 +481,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         var listingData = new ListingData();
         listingDetails.setCaseData(listingData);
-        var report = new HearingsByHearingTypeReport();
+        var report = new HearingsByHearingTypeReportOld();
         var reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventList,
                 DATE_FROM, DATE_TO);
 
@@ -504,7 +504,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         var listingData = new ListingData();
         listingDetails.setCaseData(listingData);
-        var report = new HearingsByHearingTypeReport();
+        var report = new HearingsByHearingTypeReportOld();
         var reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventList,
                 DATE_FROM, DATE_TO);
 
@@ -527,7 +527,7 @@ public class HearingsByHearingTypeReportTest {
         listingDetails.setCaseTypeId(NEWCASTLE_LISTING_CASE_TYPE_ID);
         var listingData = new ListingData();
         listingDetails.setCaseData(listingData);
-        var report = new HearingsByHearingTypeReport();
+        var report = new HearingsByHearingTypeReportOld();
         var reportListingData = report.processHearingsByHearingTypeRequest(listingDetails, submitEventList,
                 DATE_FROM, DATE_TO);
 
