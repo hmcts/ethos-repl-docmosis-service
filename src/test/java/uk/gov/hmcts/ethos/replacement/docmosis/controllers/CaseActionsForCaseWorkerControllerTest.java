@@ -912,6 +912,15 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
+    public void midEventAmendHearingError400() throws Exception {
+        mvc.perform(post(MID_EVENT_AMEND_HEARING_URL)
+                .content("error")
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void amendCaseStateError400() throws Exception {
         mvc.perform(post(AMEND_CASE_STATE_URL)
                 .content("error")
@@ -1370,6 +1379,16 @@ public class CaseActionsForCaseWorkerControllerTest {
     public void amendHearingForbidden() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
         mvc.perform(post(AMEND_HEARING_URL)
+                .content(requestContent2.toString())
+                .header("Authorization", AUTH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void midEventAmendHearingForbidden() throws Exception {
+        when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(false);
+        mvc.perform(post(MID_EVENT_AMEND_HEARING_URL)
                 .content(requestContent2.toString())
                 .header("Authorization", AUTH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON))
