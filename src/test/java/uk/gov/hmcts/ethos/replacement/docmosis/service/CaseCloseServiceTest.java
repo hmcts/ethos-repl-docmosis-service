@@ -8,6 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITION;
+import static uk.gov.hmcts.ethos.replacement.docmosis.service.CaseCloseService.REINSTATE_CANNOT_CASE_CLOSED_ERROR_MESSAGE;
 
 class CaseCloseServiceTest {
 
@@ -22,12 +23,10 @@ class CaseCloseServiceTest {
 
     @Test
     void shouldValidateReinstateClosedCase_IsCaseClose_ReturnOne() {
-        String errorMessage = "This case cannot be reinstated with a "
-                + "current position of Case closed. Please select a different current position.";
         caseData.setPositionType(CASE_CLOSED_POSITION);
         List<String> errors = caseCloseService.validateReinstateClosedCaseMidEvent(caseData);
         assertEquals(1, errors.size());
-        assertEquals(errorMessage, errors.get(0));
+        assertEquals(REINSTATE_CANNOT_CASE_CLOSED_ERROR_MESSAGE, errors.get(0));
     }
 
     @Test

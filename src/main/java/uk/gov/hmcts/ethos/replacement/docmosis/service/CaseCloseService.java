@@ -13,7 +13,7 @@ import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITIO
 @Service("caseCloseService")
 public class CaseCloseService {
 
-    private static final String REINSTATE_CANNOT_CASE_CLOSED_ERROR_MESSAGE = "This case cannot be reinstated with a "
+    static final String REINSTATE_CANNOT_CASE_CLOSED_ERROR_MESSAGE = "This case cannot be reinstated with a "
             + "current position of Case closed. Please select a different current position.";
 
     public List<String> validateReinstateClosedCaseMidEvent(CaseData caseData) {
