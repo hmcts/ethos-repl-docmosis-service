@@ -552,11 +552,14 @@ public class CaseActionsForCaseWorkerController {
     }
 
     @PostMapping(value = "/midEventAmendHearing", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "mid event amend hearing details for a single case.")
+    @Operation(summary = "mid event amend hearing details for a single case.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(responseCode = "200", description = "Accessed successfully",
+            content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CCDCallbackResponse.class))
+            }),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public ResponseEntity<CCDCallbackResponse> midEventAmendHearing(
             @RequestBody CCDRequest ccdRequest,
