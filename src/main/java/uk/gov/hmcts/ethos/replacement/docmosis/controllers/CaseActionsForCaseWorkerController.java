@@ -551,6 +551,30 @@ public class CaseActionsForCaseWorkerController {
         return getCallbackRespEntityNoErrors(caseData);
     }
 
+    @PostMapping(value = "/midEventAmendHearing", consumes = APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "mid event amend hearing details for a single case.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<CCDCallbackResponse> midEventAmendHearing(
+            @RequestBody CCDRequest ccdRequest,
+            @RequestHeader(value = "Authorization") String userToken) {
+        log.info("MID EVENT AMEND HEARING ---> " + LOG_MESSAGE + ccdRequest.getCaseDetails().getCaseId());
+
+        if (!verifyTokenService.verifyTokenSignature(userToken)) {
+            log.error(INVALID_TOKEN, userToken);
+            return ResponseEntity.status(FORBIDDEN.value()).build();
+        }
+
+        var caseData = ccdRequest.getCaseDetails().getCaseData();
+        List<String> errors = new ArrayList<>();
+        caseManagementForCaseWorkerService.midEventAmendHearing(
+                caseData, errors);
+        return getCallbackRespEntityErrors(errors, caseData);
+    }
+
     @PostMapping(value = "/amendCaseState", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "amend the case state for a single case.")
     @ApiResponses(value = {
