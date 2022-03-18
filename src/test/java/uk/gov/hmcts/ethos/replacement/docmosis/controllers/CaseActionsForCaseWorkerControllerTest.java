@@ -791,7 +791,7 @@ public class CaseActionsForCaseWorkerControllerTest {
     }
 
     @Test
-    public void reinstateClosedCaseMidEventValidationValidationErrors() throws Exception {
+    public void reinstateClosedCaseMidEventValidationErrors() throws Exception {
         when(verifyTokenService.verifyTokenSignature(AUTH_TOKEN)).thenReturn(true);
         when(caseCloseService.validateReinstateClosedCaseMidEvent(isA(CaseData.class)))
                 .thenReturn(List.of("test error"));
