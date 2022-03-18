@@ -503,7 +503,7 @@ public class CaseActionsForCaseWorkerController {
     }
 
     @PostMapping(value = "/midEventAmendHearing", consumes = APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Mid event amend hearing details for a single case.")
+    @ApiOperation(value = "mid event amend hearing details for a single case.")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Accessed successfully", response = CCDCallbackResponse.class),
         @ApiResponse(code = 400, message = "Bad Request"),
