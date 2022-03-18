@@ -236,14 +236,14 @@ public class CaseManagementForCaseWorkerService {
                 if (!CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
                     for (DateListedTypeItem dateListedTypeItem
                             : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        addError(dateListedTypeItem, errors);
+                        addHearingsOnWeekendError(dateListedTypeItem, errors);
                     }
                 }
             }
         }
     }
 
-    private void addError(DateListedTypeItem dateListedTypeItem, List<String> errors) {
+    private void addHearingsOnWeekendError(DateListedTypeItem dateListedTypeItem, List<String> errors) {
         var date = LocalDateTime.parse(
                 dateListedTypeItem.getValue().getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate();
         if (DayOfWeek.SUNDAY.equals(date.getDayOfWeek())
@@ -255,7 +255,7 @@ public class CaseManagementForCaseWorkerService {
     private void populateHearingVenueFromHearingLevelToDayLevel(DateListedType dateListedType, HearingType hearingType,
                                                                 String caseTypeId) {
         if (caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)) {
-         setHearingScottishOffices(dateListedType, hearingType);
+            setHearingScottishOffices(dateListedType, hearingType);
         }
         setHearingVenueDay(dateListedType, hearingType);
     }
