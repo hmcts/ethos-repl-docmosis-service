@@ -522,7 +522,7 @@ public class CaseActionsForCaseWorkerController {
         var caseData = ccdRequest.getCaseDetails().getCaseData();
         List<String> errors = new ArrayList<>();
         caseManagementForCaseWorkerService.midEventAmendHearing(
-                caseData, ccdRequest.getCaseDetails().getCaseTypeId(), errors);
+                caseData, errors);
         return getCallbackRespEntityErrors(errors, caseData);
     }
 

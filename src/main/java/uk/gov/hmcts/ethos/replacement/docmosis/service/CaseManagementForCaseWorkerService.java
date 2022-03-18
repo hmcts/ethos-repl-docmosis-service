@@ -230,51 +230,63 @@ public class CaseManagementForCaseWorkerService {
         }
     }
 
-    public void midEventAmendHearing(CaseData caseData, String caseTypeId, List<String> errors) {
+    public void midEventAmendHearing(CaseData caseData, List<String> errors) {
         if (!CollectionUtils.isEmpty(caseData.getHearingCollection())) {
             for (HearingTypeItem hearingTypeItem : caseData.getHearingCollection()) {
                 if (!CollectionUtils.isEmpty(hearingTypeItem.getValue().getHearingDateCollection())) {
                     for (DateListedTypeItem dateListedTypeItem
                             : hearingTypeItem.getValue().getHearingDateCollection()) {
-                        var date = LocalDateTime.parse(
-                                dateListedTypeItem.getValue().getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate();
-                        if (DayOfWeek.SUNDAY.equals(date.getDayOfWeek())
-                                || DayOfWeek.SATURDAY.equals(date.getDayOfWeek())) {
-                            errors.add(LISTED_DATE_ON_WEEKEND_MESSAGE);
-                        }
+                        addError(dateListedTypeItem, errors);
                     }
                 }
             }
         }
     }
 
+    private void addError(DateListedTypeItem dateListedTypeItem, List<String> errors) {
+        var date = LocalDateTime.parse(
+                dateListedTypeItem.getValue().getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate();
+        if (DayOfWeek.SUNDAY.equals(date.getDayOfWeek())
+                || DayOfWeek.SATURDAY.equals(date.getDayOfWeek())) {
+            errors.add(LISTED_DATE_ON_WEEKEND_MESSAGE);
+        }
+    }
+
     private void populateHearingVenueFromHearingLevelToDayLevel(DateListedType dateListedType, HearingType hearingType,
                                                                 String caseTypeId) {
         if (caseTypeId.equals(SCOTLAND_CASE_TYPE_ID)) {
-            if (hearingType.getHearingAberdeen() != null) {
-                if (dateListedType.getHearingAberdeen() == null) {
-                    log.info("Adding hearing day level Aberdeen");
-                    dateListedType.setHearingAberdeen(hearingType.getHearingAberdeen());
-                }
-            } else if (hearingType.getHearingDundee() != null) {
-                if (dateListedType.getHearingDundee() == null) {
-                    log.info("Adding hearing day level Dundee");
-                    dateListedType.setHearingDundee(hearingType.getHearingDundee());
-                }
-            } else if (hearingType.getHearingEdinburgh() != null) {
-                if (dateListedType.getHearingEdinburgh() == null) {
-                    log.info("Adding hearing day level Edinburgh");
-                    dateListedType.setHearingEdinburgh(hearingType.getHearingEdinburgh());
-                }
-            } else {
-                if (dateListedType.getHearingGlasgow() == null) {
-                    log.info("Adding hearing day level Glasgow");
-                    dateListedType.setHearingGlasgow(hearingType.getHearingGlasgow());
-                }
-            }
+         setHearingScottishOffices(dateListedType, hearingType);
         }
+        setHearingVenueDay(dateListedType, hearingType);
+    }
+
+    private void setHearingVenueDay(DateListedType dateListedType, HearingType hearingType) {
         if (dateListedType.getHearingVenueDay() == null) {
             dateListedType.setHearingVenueDay(hearingType.getHearingVenue());
+        }
+    }
+
+    private void setHearingScottishOffices(DateListedType dateListedType, HearingType hearingType) {
+        if (hearingType.getHearingAberdeen() != null) {
+            if (dateListedType.getHearingAberdeen() == null) {
+                log.info("Adding hearing day level Aberdeen");
+                dateListedType.setHearingAberdeen(hearingType.getHearingAberdeen());
+            }
+        } else if (hearingType.getHearingDundee() != null) {
+            if (dateListedType.getHearingDundee() == null) {
+                log.info("Adding hearing day level Dundee");
+                dateListedType.setHearingDundee(hearingType.getHearingDundee());
+            }
+        } else if (hearingType.getHearingEdinburgh() != null) {
+            if (dateListedType.getHearingEdinburgh() == null) {
+                log.info("Adding hearing day level Edinburgh");
+                dateListedType.setHearingEdinburgh(hearingType.getHearingEdinburgh());
+            }
+        } else {
+            if (dateListedType.getHearingGlasgow() == null) {
+                log.info("Adding hearing day level Glasgow");
+                dateListedType.setHearingGlasgow(hearingType.getHearingGlasgow());
+            }
         }
     }
 

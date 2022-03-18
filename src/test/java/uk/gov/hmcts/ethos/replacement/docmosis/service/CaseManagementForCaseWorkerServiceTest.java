@@ -477,7 +477,7 @@ public class CaseManagementForCaseWorkerServiceTest {
         CaseData caseData = ccdRequest13.getCaseDetails().getCaseData();
         var errors = new ArrayList<String>();
         caseData.getHearingCollection().get(0).getValue().getHearingDateCollection().get(0).getValue().setListedDate("2022-03-19T12:11:00.000");
-        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, MANCHESTER_CASE_TYPE_ID, errors);
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors);
         assertFalse(errors.isEmpty());
         assertEquals(LISTED_DATE_ON_WEEKEND_MESSAGE, errors.get(0));
     }
@@ -486,7 +486,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void amendMidEventHearingDateFridayNight() {
         CaseData caseData = createCaseWithHearingDate("2022-03-18T23:59:00.000");
         var errors = new ArrayList<String>();
-        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, MANCHESTER_CASE_TYPE_ID, errors);
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors);
         assertTrue(errors.isEmpty());
     }
 
@@ -494,7 +494,7 @@ public class CaseManagementForCaseWorkerServiceTest {
     public void amendMidEventHearingDateMondayMorning() {
         CaseData caseData = createCaseWithHearingDate("2022-03-21T00:00:00.000");
         var errors = new ArrayList<String>();
-        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, MANCHESTER_CASE_TYPE_ID, errors);
+        caseManagementForCaseWorkerService.midEventAmendHearing(caseData, errors);
         assertTrue(errors.isEmpty());
     }
 
