@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class HearingsByHearingTypeReportSummary {
-    private final String office;
     private String date;
     private ReportFields fields;
 }

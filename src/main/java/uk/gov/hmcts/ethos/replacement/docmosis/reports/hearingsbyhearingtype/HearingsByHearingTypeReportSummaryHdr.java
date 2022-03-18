@@ -7,11 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class HearingsByHearingTypeReportSummary2Hdr {
-
-    HearingsByHearingTypeReportSummary2Hdr(String subSplit) {
-        this.subSplit = subSplit;
-    }
+public class HearingsByHearingTypeReportSummaryHdr {
     private ReportFields fields;
-    private String subSplit;
+    private String office;
 }

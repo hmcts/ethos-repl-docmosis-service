@@ -10,7 +10,7 @@ import uk.gov.hmcts.ecm.common.model.listing.ListingData;
 public class HearingsByHearingTypeReportData extends ListingData {
 
     @JsonIgnore
-    private final ReportFields reportSummaryHdr;
+    private final HearingsByHearingTypeReportSummaryHdr reportSummaryHdr;
     @JsonIgnore
     private final List<HearingsByHearingTypeReportSummary> reportSummaryList = new ArrayList<>();
     @JsonIgnore
@@ -20,11 +20,11 @@ public class HearingsByHearingTypeReportData extends ListingData {
     @JsonIgnore
     private final List<HearingsByHearingTypeReportDetail> reportDetails = new ArrayList<>();
 
-    public HearingsByHearingTypeReportData(ReportFields reportSummaryHdr) {
+    public HearingsByHearingTypeReportData(HearingsByHearingTypeReportSummaryHdr reportSummaryHdr) {
         this.reportSummaryHdr = reportSummaryHdr;
     }
 
-    public ReportFields getReportSummaryHdr() {
+    public HearingsByHearingTypeReportSummaryHdr getReportSummaryHdr() {
         return reportSummaryHdr;
     }
     public List<HearingsByHearingTypeReportSummary> getReportSummaryList() {
