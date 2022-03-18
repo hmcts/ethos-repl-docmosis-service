@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.time.DayOfWeek.SATURDAY;
+import static java.time.DayOfWeek.SUNDAY;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ABOUT_TO_SUBMIT_EVENT_CALLBACK;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.DEFAULT_FLAGS_IMAGE_FILE_NAME;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.FLAG_ECC;
@@ -246,8 +248,9 @@ public class CaseManagementForCaseWorkerService {
     private void addHearingsOnWeekendError(DateListedTypeItem dateListedTypeItem, List<String> errors) {
         var date = LocalDateTime.parse(
                 dateListedTypeItem.getValue().getListedDate(), OLD_DATE_TIME_PATTERN).toLocalDate();
-        if (DayOfWeek.SUNDAY.equals(date.getDayOfWeek())
-                || DayOfWeek.SATURDAY.equals(date.getDayOfWeek())) {
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        if (SUNDAY.equals(dayOfWeek)
+                || SATURDAY.equals(dayOfWeek)) {
             errors.add(LISTED_DATE_ON_WEEKEND_MESSAGE);
         }
     }
