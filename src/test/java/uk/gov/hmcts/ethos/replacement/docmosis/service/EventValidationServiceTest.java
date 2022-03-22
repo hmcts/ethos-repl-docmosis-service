@@ -1,8 +1,6 @@
 package uk.gov.hmcts.ethos.replacement.docmosis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.UUID;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,12 +10,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseData;
 import uk.gov.hmcts.ecm.common.model.ccd.CaseDetails;
-import uk.gov.hmcts.ecm.common.model.ccd.items.DateListedTypeItem;
-import uk.gov.hmcts.ecm.common.model.ccd.items.HearingTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.items.JudgementTypeItem;
 import uk.gov.hmcts.ecm.common.model.ccd.types.CasePreAcceptType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.DateListedType;
-import uk.gov.hmcts.ecm.common.model.ccd.types.HearingType;
 import uk.gov.hmcts.ecm.common.model.ccd.types.JudgementType;
 import uk.gov.hmcts.ecm.common.model.listing.ListingRequest;
 import uk.gov.hmcts.ecm.common.model.multiples.MultipleData;
@@ -28,8 +22,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.ACCEPTED_STATE;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CASE_CLOSED_POSITION;
 import static uk.gov.hmcts.ecm.common.model.helper.Constants.CLOSED_STATE;
@@ -571,8 +569,6 @@ class EventValidationServiceTest {
         assertEquals(1, errors.size());
         assertEquals(JURISDICTION_CODES_EXISTENCE_ERROR + "ADG, COM", errors.get(0));
     }
-
-
 
     @Test
     void shouldValidateReportDateRangeValidDates() {
